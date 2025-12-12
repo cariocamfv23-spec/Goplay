@@ -15,46 +15,128 @@ export const mockStories = Array.from({ length: 8 }).map((_, i) => ({
   hasStory: i < 5,
 }))
 
+export interface Comment {
+  id: number
+  user: { name: string; avatar: string }
+  text: string
+  time: string
+  likes: number
+  replies?: Comment[]
+}
+
+export const mockComments: Comment[] = [
+  {
+    id: 1,
+    user: {
+      name: 'Pedro Santos',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=33',
+    },
+    text: 'Que jogada incrível! 👏👏',
+    time: '10 min',
+    likes: 5,
+    replies: [
+      {
+        id: 11,
+        user: {
+          name: 'Carlos Silva',
+          avatar:
+            'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=10',
+        },
+        text: 'Valeu Pedro! Estamos treinando forte.',
+        time: '5 min',
+        likes: 2,
+      },
+    ],
+  },
+  {
+    id: 2,
+    user: {
+      name: 'Mariana Costa',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=44',
+    },
+    text: 'Quero ver esse desempenho no próximo jogo!',
+    time: '25 min',
+    likes: 12,
+  },
+]
+
 export const mockPosts = [
   {
     id: 1,
+    type: 'image',
     user: {
       name: 'Carlos Silva',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=10',
       type: 'Atleta',
     },
     content: 'Treino intenso hoje! Preparando para o campeonato regional. ⚽🔥',
-    image: 'https://img.usecurling.com/p/600/400?q=soccer%20training',
+    media: ['https://img.usecurling.com/p/600/400?q=soccer%20training'],
     likes: 124,
     comments: 18,
+    shares: 5,
+    applauds: 45,
+    supports: 12,
     time: '2h',
   },
   {
     id: 2,
+    type: 'video',
     user: {
       name: 'Clube Atlético',
       avatar: 'https://img.usecurling.com/i?q=shield&shape=fill&color=violet',
       type: 'Clube',
     },
-    content:
-      'Abertas as inscrições para a peneira sub-17! Venha fazer parte do nosso time. #futebol #peneira',
-    image: 'https://img.usecurling.com/p/600/400?q=soccer%20team',
+    title: 'Golaço do Sub-17',
+    hashtags: ['#futebol', '#base', '#golaço'],
+    content: 'Olha o que rolou no treino de hoje! A base vem forte.',
+    media: ['https://img.usecurling.com/p/600/400?q=soccer%20goal'], // Thumbnail
+    videoDuration: '0:20',
     likes: 450,
     comments: 89,
+    shares: 120,
+    applauds: 300,
+    supports: 50,
     time: '4h',
   },
   {
     id: 3,
+    type: 'carousel',
     user: {
       name: 'Ana Souza',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=22',
       type: 'Treinadora',
     },
-    content:
-      'Dica do dia: A recuperação é tão importante quanto o treino. Não pule o alongamento! 🧘‍♀️',
+    content: 'Dicas de alongamento para evitar lesões. Arraste para o lado! 🧘‍♀️',
+    media: [
+      'https://img.usecurling.com/p/600/600?q=stretching',
+      'https://img.usecurling.com/p/600/600?q=yoga',
+      'https://img.usecurling.com/p/600/600?q=warmup',
+    ],
     likes: 89,
     comments: 5,
+    shares: 20,
+    applauds: 15,
+    supports: 8,
     time: '6h',
+  },
+  {
+    id: 4,
+    type: 'article',
+    user: {
+      name: 'NutriSports',
+      avatar: 'https://img.usecurling.com/i?q=apple&shape=outline&color=green',
+      type: 'Empresa',
+    },
+    content: 'A importância da hidratação antes, durante e depois dos treinos.',
+    articleTitle: 'Guia Completo de Hidratação',
+    articleDomain: 'nutrisports.com.br',
+    media: ['https://img.usecurling.com/p/600/300?q=water%20bottle'],
+    likes: 230,
+    comments: 12,
+    shares: 45,
+    applauds: 20,
+    supports: 5,
+    time: '1d',
   },
 ]
 
