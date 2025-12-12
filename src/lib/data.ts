@@ -993,3 +993,83 @@ export const mockInternationalMatches = [
     avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=77',
   },
 ]
+
+// --- MISSING EXPORTS FIXED ---
+
+export const photographerCategories = [
+  'Eventos Esportivos',
+  'Ensaios Individuais',
+  'Times e Clubes',
+  'Produtos Esportivos',
+  'Aéreo / Drone',
+]
+
+export const mockRewards = [
+  {
+    id: 1,
+    title: 'Voucher de R$ 50',
+    description: 'Válido para loja de equipamentos',
+    points: 500,
+    cost: 500,
+    image: 'https://img.usecurling.com/i?q=voucher&color=blue',
+  },
+  {
+    id: 2,
+    title: 'Isenção de Taxa',
+    description: '3 corridas sem taxa de serviço',
+    points: 300,
+    cost: 300,
+    image: 'https://img.usecurling.com/i?q=discount&color=green',
+  },
+]
+
+export const mockScheduledRides = [
+  {
+    id: '1',
+    passenger: {
+      name: 'Maria Silva',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=10',
+      rating: 4.8,
+    },
+    pickup: 'Rua das Flores, 123',
+    dropoff: 'Arena Central',
+    date: 'Amanhã, 14:00',
+    distance: '5.2 km',
+    price: 'R$ 25,00',
+    status: 'confirmed',
+  },
+]
+
+export const mockRideHistory = [
+  {
+    id: '1',
+    date: 'Ontem, 18:30',
+    passenger: 'João Santos',
+    from: 'Centro',
+    to: 'Estádio',
+    earnings: 'R$ 32,50',
+    rating: 5,
+  },
+  {
+    id: '2',
+    date: '10/08/2024',
+    passenger: 'Ana Oliveira',
+    from: 'Shopping',
+    to: 'Casa',
+    earnings: 'R$ 18,00',
+    rating: 4,
+  },
+]
+
+export const mockDriverStats = {
+  rating: 4.9,
+  totalRides: 1245,
+  acceptanceRate: 98,
+  cancellationRate: 1,
+  earnings: {
+    today: 'R$ 150,00',
+    week: 'R$ 890,00',
+    month: 'R$ 3.450,00',
+  },
+  hoursOnline: 145,
+}
