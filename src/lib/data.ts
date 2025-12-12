@@ -441,6 +441,18 @@ export const mockBadges: BadgeData[] = [
   { id: '1', name: 'Artilheiro', icon: 'Target', color: 'text-red-500' },
   { id: '2', name: 'MVP', icon: 'Trophy', color: 'text-yellow-500' },
   { id: '3', name: 'Líder', icon: 'Flag', color: 'text-blue-500' },
+  {
+    id: '4',
+    name: 'Check-in Confirmado',
+    icon: 'MapPin',
+    color: 'text-green-500',
+  },
+  {
+    id: '5',
+    name: 'Jogador Presente',
+    icon: 'UserCheck',
+    color: 'text-purple-500',
+  },
 ]
 
 export const mockProfiles: ProfileData[] = [
@@ -461,7 +473,7 @@ export const mockProfiles: ProfileData[] = [
     position: 'Meia-Atacante',
     points: 1250,
     rank: 12,
-    badges: [mockBadges[0], mockBadges[1]],
+    badges: [mockBadges[0], mockBadges[1], mockBadges[3]],
     stats: [
       { label: 'Jogos', value: '89' },
       { label: 'Gols', value: '34' },
@@ -759,5 +771,159 @@ export const mockRideHistory = [
     rating: 4,
     pickup: 'Aeroporto',
     dropoff: 'Hotel Central',
+  },
+]
+
+// New Data for Invitations and Matches
+export interface Invitation {
+  id: string
+  teamName: string
+  teamLogo: string
+  modality: string
+  location: string
+  time: string
+  level: string
+  confirmedPlayersCount: number
+}
+
+export const mockInvitations: Invitation[] = [
+  {
+    id: 'inv-1',
+    teamName: 'Furia FC',
+    teamLogo: 'https://img.usecurling.com/i?q=panther%20logo&color=black',
+    modality: 'Futsal',
+    location: 'Arena Central',
+    time: 'Hoje, 20:00',
+    level: 'Intermediário',
+    confirmedPlayersCount: 8,
+  },
+  {
+    id: 'inv-2',
+    teamName: 'Real Matismo',
+    teamLogo: 'https://img.usecurling.com/i?q=crown%20logo&color=gold',
+    modality: 'Society',
+    location: 'Quadra 10',
+    time: 'Amanhã, 19:30',
+    level: 'Amador',
+    confirmedPlayersCount: 12,
+  },
+]
+
+export interface MatchPlayer {
+  id: string
+  name: string
+  avatar: string
+  status: 'confirmed' | 'absent' | 'pending'
+  pointsEarned?: number
+  checkInTime?: string
+}
+
+export interface Match {
+  id: string
+  teamName: string
+  teamLogo: string
+  modality: string
+  location: string
+  time: string
+  status: 'pending_checkin' | 'approved' | 'finished'
+  players: MatchPlayer[]
+}
+
+export const mockMatches: Match[] = [
+  {
+    id: 'match-1',
+    teamName: 'Furia FC',
+    teamLogo: 'https://img.usecurling.com/i?q=panther%20logo&color=black',
+    modality: 'Futsal',
+    location: 'Arena Central',
+    time: 'Hoje, 20:00',
+    status: 'pending_checkin',
+    players: [
+      {
+        id: '1',
+        name: 'Lucas Oliveira',
+        avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
+        status: 'pending',
+      },
+      {
+        id: '2',
+        name: 'Ana Silva',
+        avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=2',
+        status: 'confirmed',
+        pointsEarned: 50,
+        checkInTime: '19:45',
+      },
+      {
+        id: '5',
+        name: 'Pedro Santos',
+        avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=33',
+        status: 'confirmed',
+        pointsEarned: 50,
+        checkInTime: '19:50',
+      },
+    ],
+  },
+]
+
+export interface RewardProduct {
+  id: string
+  name: string
+  points: number
+  image: string
+  category: string
+}
+
+export const mockRewards: RewardProduct[] = [
+  {
+    id: 'rew-1',
+    name: 'Camisa Oficial Goplay',
+    points: 2500,
+    image: 'https://img.usecurling.com/p/300/300?q=purple%20sports%20shirt',
+    category: 'Vestuário',
+  },
+  {
+    id: 'rew-2',
+    name: 'Boné Goplay Premium',
+    points: 1200,
+    image: 'https://img.usecurling.com/p/300/300?q=black%20cap',
+    category: 'Acessórios',
+  },
+  {
+    id: 'rew-3',
+    name: 'Desconto R$ 50 em Quadras',
+    points: 800,
+    image: 'https://img.usecurling.com/p/300/300?q=voucher',
+    category: 'Créditos',
+  },
+  {
+    id: 'rew-4',
+    name: 'Garrafa Térmica',
+    points: 1500,
+    image: 'https://img.usecurling.com/p/300/300?q=water%20bottle',
+    category: 'Acessórios',
+  },
+]
+
+export const mockPointsHistory = [
+  {
+    id: 1,
+    title: 'Check-in Confirmado',
+    date: 'Hoje, 20:10',
+    points: 50,
+    type: 'earned',
+  },
+  {
+    id: 2,
+    title: 'Convite Aceito',
+    date: 'Ontem, 14:00',
+    points: 20,
+    type: 'earned',
+  },
+  {
+    id: 3,
+    title: 'Compra na Loja',
+    date: '10 Ago',
+    points: -1200,
+    type: 'spent',
   },
 ]

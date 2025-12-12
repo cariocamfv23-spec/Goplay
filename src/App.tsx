@@ -50,6 +50,13 @@ const DriverHistory = lazy(() => import('./pages/driver/DriverHistory'))
 const DriverSettings = lazy(() => import('./pages/driver/DriverSettings'))
 const ActiveRide = lazy(() => import('./pages/driver/ActiveRide'))
 
+// New Invitations and Matches Pages
+const ReceivedInvitations = lazy(
+  () => import('./pages/invitations/ReceivedInvitations'),
+)
+const MatchDetails = lazy(() => import('./pages/matches/MatchDetails'))
+const MyPoints = lazy(() => import('./pages/gamification/MyPoints'))
+
 const App = () => (
   <BrowserRouter
     future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
@@ -107,6 +114,11 @@ const App = () => (
               <Route path="/driver/history" element={<DriverHistory />} />
               <Route path="/driver/settings" element={<DriverSettings />} />
               <Route path="/driver/active/:id" element={<ActiveRide />} />
+
+              {/* New Invitations and Matches Routes */}
+              <Route path="/invitations" element={<ReceivedInvitations />} />
+              <Route path="/matches/:id" element={<MatchDetails />} />
+              <Route path="/my-points" element={<MyPoints />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

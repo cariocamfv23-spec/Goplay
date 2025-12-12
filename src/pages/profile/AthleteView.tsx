@@ -17,9 +17,11 @@ import {
   Award,
   Video,
   Sparkles,
+  Mail,
+  Zap,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
-import { mockVideos, mockPosts } from '@/lib/data'
+import { mockPosts } from '@/lib/data'
 import { PostCard } from '@/components/PostCard'
 import {
   Tooltip,
@@ -28,6 +30,7 @@ import {
 } from '@/components/ui/tooltip'
 import * as LucideIcons from 'lucide-react'
 import { toast } from 'sonner'
+import { Link } from 'react-router-dom'
 
 export default function AthleteView({ profile }: { profile: ProfileData }) {
   const renderIcon = (iconName: string, className?: string) => {
@@ -88,6 +91,26 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
             </Badge>
           </div>
 
+          {/* New Profile Quick Actions for Invites and Points */}
+          <div className="flex gap-3 mt-4">
+            <Link to="/invitations" className="flex-1">
+              <Button
+                variant="outline"
+                className="w-full text-xs h-9 border-primary/20 bg-primary/5 text-primary hover:bg-primary/10"
+              >
+                <Mail className="h-3 w-3 mr-2" /> Convites
+              </Button>
+            </Link>
+            <Link to="/my-points" className="flex-1">
+              <Button
+                variant="outline"
+                className="w-full text-xs h-9 border-gold/30 bg-gold/5 text-yellow-700 hover:bg-gold/10"
+              >
+                <Zap className="h-3 w-3 mr-2 text-gold" /> Pontos
+              </Button>
+            </Link>
+          </div>
+
           {profile.points && (
             <div className="flex items-center gap-4 mt-3 mb-2">
               <div className="flex items-center gap-1.5 text-sm font-semibold text-primary">
@@ -104,16 +127,16 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
           <p className="text-sm mt-2 text-foreground/80">{profile.bio}</p>
 
           {profile.badges && profile.badges.length > 0 && (
-            <div className="flex gap-2 mt-4 mb-2">
+            <div className="flex gap-2 mt-4 mb-2 overflow-x-auto pb-2">
               {profile.badges.map((badge) => (
                 <Tooltip key={badge.id}>
                   <TooltipTrigger>
-                    <div className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center border border-border shadow-sm">
-                      {renderIcon(badge.icon, `h-4 w-4 ${badge.color}`)}
+                    <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center border border-border shadow-sm">
+                      {renderIcon(badge.icon, `h-5 w-5 ${badge.color}`)}
                     </div>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>{badge.name}</p>
+                    <p className="font-bold">{badge.name}</p>
                   </TooltipContent>
                 </Tooltip>
               ))}
