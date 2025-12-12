@@ -2,9 +2,14 @@ import { useState, useRef, useEffect } from 'react'
 import { Heart, MessageCircle, Share2, Music2, Plus } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { mockVideos } from '@/lib/data'
+import { AiAnalysisDrawer } from '@/components/AiAnalysisDrawer'
 
 export default function Move() {
   const [activeVideo, setActiveVideo] = useState(0)
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [selectedVideo, setSelectedVideo] = useState<
+    (typeof mockVideos)[0] | null
+  >(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
   // Intersection Observer for snap scrolling detection
@@ -26,6 +31,11 @@ export default function Move() {
 
     return () => observer.disconnect()
   }, [])
+
+  const handleOpenAiAnalysis = (video: (typeof mockVideos)[0]) => {
+    setSelectedVideo(video)
+    setDrawerOpen(true)
+  }
 
   return (
     <div
@@ -129,15 +139,24 @@ export default function Move() {
 
               {video.aiAction && (
                 <div className="mt-3 flex items-center gap-2">
-                  <div className="bg-primary/20 border border-primary/50 text-white px-3 py-1 rounded-md text-xs font-bold flex items-center gap-1 backdrop-blur-md">
+                  <button
+                    onClick={() => handleOpenAiAnalysis(video)}
+                    className="bg-primary/20 border border-primary/50 text-white px-3 py-1 rounded-md text-xs font-bold flex items-center gap-1 backdrop-blur-md hover:bg-primary/30 transition-colors"
+                  >
                     ✨ AI: {video.aiAction}
-                  </div>
+                  </button>
                 </div>
               )}
             </div>
           </div>
         </div>
       ))}
+
+      <AiAnalysisDrawer
+        open={drawerOpen}
+        onOpenChange={setDrawerOpen}
+        data={selectedVideo}
+      />
     </div>
   )
 }
