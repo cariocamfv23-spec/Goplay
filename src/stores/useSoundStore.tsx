@@ -64,7 +64,7 @@ const useSoundStore = create<SoundStore>()(
           let rate = 1.2
 
           switch (category) {
-            case 'like_football':
+            case 'like_football': {
               // Randomize football slang
               const footballSounds = [
                 'Que isso hein?!',
@@ -77,6 +77,7 @@ const useSoundStore = create<SoundStore>()(
                 ]
               pitch = 0.8
               break
+            }
             case 'like_basketball':
               textToSpeak = 'Splash!'
               rate = 1.5
@@ -106,11 +107,12 @@ const useSoundStore = create<SoundStore>()(
             case 'notification_checkin':
               textToSpeak = 'Check-in aprovado!'
               break
-            case 'notification_uber':
+            case 'notification_uber': {
               const uberSounds = ['Hoje é só chegar!', 'Uber do brabo tá pago!']
               textToSpeak =
                 uberSounds[Math.floor(Math.random() * uberSounds.length)]
               break
+            }
             case 'notification_points':
               // Coin sound simulation
               textToSpeak = 'Goplay!'
