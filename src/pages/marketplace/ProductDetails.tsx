@@ -1,8 +1,16 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { mockProducts } from '@/lib/data'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Star, ShoppingCart, Heart } from 'lucide-react'
+import {
+  ArrowLeft,
+  Star,
+  ShoppingCart,
+  Heart,
+  MessageSquare,
+} from 'lucide-react'
 import { toast } from 'sonner'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Progress } from '@/components/ui/progress'
 
 export default function ProductDetails() {
   const { id } = useParams()
@@ -62,7 +70,7 @@ export default function ProductDetails() {
           <Star className="h-4 w-4 fill-gold text-gold" />
           <span className="font-medium">{product.rating}</span>
           <span className="text-muted-foreground text-sm ml-2">
-            (120 avaliações)
+            ({product.reviews?.length || 120} avaliações)
           </span>
         </div>
 
@@ -71,6 +79,79 @@ export default function ProductDetails() {
           <p className="text-muted-foreground leading-relaxed">
             {product.description}
           </p>
+        </div>
+
+        {/* Reviews Section */}
+        <div className="mb-8">
+          <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+            Avaliações dos Usuários
+          </h3>
+
+          <div className="bg-secondary/20 rounded-xl p-4 mb-6">
+            <div className="flex items-center gap-4 mb-2">
+              <div className="text-center">
+                <span className="text-3xl font-bold text-primary">
+                  {product.rating}
+                </span>
+                <div className="flex text-gold text-xs">
+                  <Star className="h-3 w-3 fill-current" />
+                  <Star className="h-3 w-3 fill-current" />
+                  <Star className="h-3 w-3 fill-current" />
+                  <Star className="h-3 w-3 fill-current" />
+                  <Star className="h-3 w-3 fill-current" />
+                </div>
+              </div>
+              <div className="flex-1 space-y-1">
+                <div className="flex items-center gap-2 text-xs">
+                  <span>5</span> <Progress value={80} className="h-1.5" />
+                </div>
+                <div className="flex items-center gap-2 text-xs">
+                  <span>4</span> <Progress value={15} className="h-1.5" />
+                </div>
+                <div className="flex items-center gap-2 text-xs">
+                  <span>3</span> <Progress value={5} className="h-1.5" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            {product.reviews && product.reviews.length > 0 ? (
+              product.reviews.map((review) => (
+                <div
+                  key={review.id}
+                  className="border-b border-border/50 pb-4 last:border-0"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={review.avatar} />
+                        <AvatarFallback>{review.user[0]}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="text-sm font-semibold">{review.user}</p>
+                        <div className="flex text-gold text-[10px]">
+                          {Array.from({ length: review.rating }).map((_, i) => (
+                            <Star key={i} className="h-3 w-3 fill-current" />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      {review.date}
+                    </span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {review.comment}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-4">
+                Seja o primeiro a avaliar este produto!
+              </p>
+            )}
+          </div>
         </div>
 
         <Button

@@ -3,33 +3,36 @@ import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import Layout from './components/Layout'
+import { Suspense, lazy } from 'react'
+import { PageLoader } from './components/PageLoader'
 
-import Index from './pages/Index'
-import Login from './pages/auth/Login'
-import Register from './pages/auth/Register'
-import Onboarding from './pages/auth/Onboarding'
-import ProfileSelection from './pages/auth/ProfileSelection'
-import Home from './pages/home/Home'
-import Move from './pages/move/Move'
-import Explore from './pages/explore/Explore'
-import Profile from './pages/profile/Profile'
-import MessagesList from './pages/messages/MessagesList'
-import ChatRoom from './pages/messages/ChatRoom'
-import Marketplace from './pages/marketplace/Marketplace'
-import ProductDetails from './pages/marketplace/ProductDetails'
-import Cart from './pages/marketplace/Cart'
-import JobsList from './pages/jobs/JobsList'
-import JobDetails from './pages/jobs/JobDetails'
-import RecruiterDashboard from './pages/jobs/RecruiterDashboard'
-import Settings from './pages/settings/Settings'
-import NotFound from './pages/NotFound'
-import EventDetails from './pages/explore/EventDetails'
-import NewChat from './pages/messages/NewChat'
-import Ranking from './pages/gamification/Ranking'
-import Wallet from './pages/wallet/Wallet'
-import WithdrawPix from './pages/wallet/WithdrawPix'
-import PaymentMethods from './pages/wallet/PaymentMethods'
-import RideRequest from './pages/services/RideRequest'
+// Lazy load pages for performance optimization
+const Index = lazy(() => import('./pages/Index'))
+const Login = lazy(() => import('./pages/auth/Login'))
+const Register = lazy(() => import('./pages/auth/Register'))
+const Onboarding = lazy(() => import('./pages/auth/Onboarding'))
+const ProfileSelection = lazy(() => import('./pages/auth/ProfileSelection'))
+const Home = lazy(() => import('./pages/home/Home'))
+const Move = lazy(() => import('./pages/move/Move'))
+const Explore = lazy(() => import('./pages/explore/Explore'))
+const Profile = lazy(() => import('./pages/profile/Profile'))
+const MessagesList = lazy(() => import('./pages/messages/MessagesList'))
+const ChatRoom = lazy(() => import('./pages/messages/ChatRoom'))
+const Marketplace = lazy(() => import('./pages/marketplace/Marketplace'))
+const ProductDetails = lazy(() => import('./pages/marketplace/ProductDetails'))
+const Cart = lazy(() => import('./pages/marketplace/Cart'))
+const JobsList = lazy(() => import('./pages/jobs/JobsList'))
+const JobDetails = lazy(() => import('./pages/jobs/JobDetails'))
+const RecruiterDashboard = lazy(() => import('./pages/jobs/RecruiterDashboard'))
+const Settings = lazy(() => import('./pages/settings/Settings'))
+const NotFound = lazy(() => import('./pages/NotFound'))
+const EventDetails = lazy(() => import('./pages/explore/EventDetails'))
+const NewChat = lazy(() => import('./pages/messages/NewChat'))
+const Ranking = lazy(() => import('./pages/gamification/Ranking'))
+const Wallet = lazy(() => import('./pages/wallet/Wallet'))
+const WithdrawPix = lazy(() => import('./pages/wallet/WithdrawPix'))
+const PaymentMethods = lazy(() => import('./pages/wallet/PaymentMethods'))
+const RideRequest = lazy(() => import('./pages/services/RideRequest'))
 
 const App = () => (
   <BrowserRouter
@@ -38,38 +41,43 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/onboarding" element={<Onboarding />} />
-        <Route path="/profile-selection" element={<ProfileSelection />} />
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/profile-selection" element={<ProfileSelection />} />
 
-        <Route element={<Layout />}>
-          <Route path="/home" element={<Home />} />
-          <Route path="/move" element={<Move />} />
-          <Route path="/explore" element={<Explore />} />
-          <Route path="/events/:id" element={<EventDetails />} />
-          <Route path="/marketplace" element={<Marketplace />} />
-          <Route path="/marketplace/product/:id" element={<ProductDetails />} />
-          <Route path="/marketplace/cart" element={<Cart />} />
-          <Route path="/jobs" element={<JobsList />} />
-          <Route path="/jobs/:id" element={<JobDetails />} />
-          <Route path="/jobs/dashboard" element={<RecruiterDashboard />} />
-          <Route path="/ranking" element={<Ranking />} />
-          <Route path="/profile/:id" element={<Profile />} />
-          <Route path="/messages" element={<MessagesList />} />
-          <Route path="/messages/:id" element={<ChatRoom />} />
-          <Route path="/messages/new" element={<NewChat />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/wallet" element={<Wallet />} />
-          <Route path="/wallet/withdraw" element={<WithdrawPix />} />
-          <Route path="/wallet/cards" element={<PaymentMethods />} />
-          <Route path="/ride/request/:driverId" element={<RideRequest />} />
-        </Route>
+          <Route element={<Layout />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/move" element={<Move />} />
+            <Route path="/explore" element={<Explore />} />
+            <Route path="/events/:id" element={<EventDetails />} />
+            <Route path="/marketplace" element={<Marketplace />} />
+            <Route
+              path="/marketplace/product/:id"
+              element={<ProductDetails />}
+            />
+            <Route path="/marketplace/cart" element={<Cart />} />
+            <Route path="/jobs" element={<JobsList />} />
+            <Route path="/jobs/:id" element={<JobDetails />} />
+            <Route path="/jobs/dashboard" element={<RecruiterDashboard />} />
+            <Route path="/ranking" element={<Ranking />} />
+            <Route path="/profile/:id" element={<Profile />} />
+            <Route path="/messages" element={<MessagesList />} />
+            <Route path="/messages/:id" element={<ChatRoom />} />
+            <Route path="/messages/new" element={<NewChat />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/wallet" element={<Wallet />} />
+            <Route path="/wallet/withdraw" element={<WithdrawPix />} />
+            <Route path="/wallet/cards" element={<PaymentMethods />} />
+            <Route path="/ride/request/:driverId" element={<RideRequest />} />
+          </Route>
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </TooltipProvider>
   </BrowserRouter>
 )

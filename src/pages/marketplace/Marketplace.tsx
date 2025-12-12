@@ -1,13 +1,23 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Star, ShoppingCart, Filter } from 'lucide-react'
+import { Star, ShoppingCart, Filter, Search } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockProducts, mockCourts, mockProfiles } from '@/lib/data'
 import { Badge } from '@/components/ui/badge'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import { useState } from 'react'
 
 const Marketplace = () => {
   const navigate = useNavigate()
+  const [activeCategory, setActiveCategory] = useState('Todos')
+
+  const productCategories = ['Todos', 'Equipamentos', 'Nutrição', 'Wearables']
+
+  const filteredProducts =
+    activeCategory === 'Todos'
+      ? mockProducts
+      : mockProducts.filter((p) => p.category === activeCategory)
 
   return (
     <div className="pb-24 bg-background min-h-screen">
@@ -16,7 +26,7 @@ const Marketplace = () => {
           <h1 className="text-2xl font-bold">Loja & Serviços</h1>
           <div className="flex gap-2">
             <Button size="icon" variant="ghost" className="rounded-full">
-              <Filter className="h-5 w-5" />
+              <Search className="h-5 w-5" />
             </Button>
             <Button
               size="icon"
@@ -53,8 +63,24 @@ const Marketplace = () => {
 
           <div className="p-4">
             <TabsContent value="products" className="mt-0">
+              <ScrollArea className="w-full whitespace-nowrap mb-4">
+                <div className="flex space-x-2 pb-2">
+                  {productCategories.map((cat) => (
+                    <Badge
+                      key={cat}
+                      variant={activeCategory === cat ? 'default' : 'outline'}
+                      className="cursor-pointer px-4 py-1.5"
+                      onClick={() => setActiveCategory(cat)}
+                    >
+                      {cat}
+                    </Badge>
+                  ))}
+                </div>
+                <ScrollBar orientation="horizontal" className="invisible" />
+              </ScrollArea>
+
               <div className="grid grid-cols-2 gap-4">
-                {mockProducts.map((prod) => (
+                {filteredProducts.map((prod) => (
                   <Card
                     key={prod.id}
                     className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-lg transition-all group bg-card"
@@ -130,7 +156,14 @@ const Marketplace = () => {
 
             <TabsContent value="services" className="mt-0 space-y-3">
               {mockProfiles
-                .filter((p) => p.type === 'photographer' || p.type === 'coach')
+                .filter((p) =>
+                  [
+                    'coach',
+                    'photographer',
+                    'nutritionist',
+                    'physiotherapist',
+                  ].includes(p.type),
+                )
                 .map((pro) => (
                   <Card
                     key={pro.id}
@@ -145,8 +178,14 @@ const Marketplace = () => {
                     </div>
                     <div className="flex-1">
                       <h3 className="font-bold text-sm">{pro.name}</h3>
-                      <p className="text-xs text-muted-foreground">
-                        {pro.type === 'coach' ? 'Treinador' : 'Fotógrafo'}
+                      <p className="text-xs text-muted-foreground capitalize">
+                        {pro.type === 'coach'
+                          ? 'Treinador'
+                          : pro.type === 'photographer'
+                            ? 'Fotógrafo'
+                            : pro.type === 'nutritionist'
+                              ? 'Nutricionista'
+                              : 'Fisioterapeuta'}
                       </p>
                     </div>
                     <Button size="sm" variant="outline">

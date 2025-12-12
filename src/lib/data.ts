@@ -1,12 +1,4 @@
-import {
-  ChartSpline,
-  Store,
-  Briefcase,
-  Video,
-  Home,
-  Car,
-  Camera,
-} from 'lucide-react'
+import { ChartSpline, Store, Briefcase, Video, Home } from 'lucide-react'
 
 export const navigationItems = [
   { label: 'Home', icon: Home, path: '/home' },
@@ -109,6 +101,19 @@ export const mockVideos = [
     likes: '1.2k',
     shares: '340',
     aiAction: 'Saque Ace detectado',
+    aiStats: [
+      { label: 'Velocidade', value: 85, max: 100, unit: 'km/h' },
+      { label: 'Altura do Salto', value: 65, max: 100, unit: 'cm' },
+      { label: 'Precisão', value: 92, max: 100, unit: '%' },
+    ],
+    trainingPlan: {
+      title: 'Melhorar Potência de Saque',
+      exercises: [
+        'Saltos na caixa 3x10',
+        'Agachamento explosivo 4x8',
+        'Arremesso medicine ball 3x12',
+      ],
+    },
   },
   {
     id: 2,
@@ -118,6 +123,19 @@ export const mockVideos = [
     likes: '5.6k',
     shares: '1.1k',
     aiAction: 'Cesta de 3 pontos',
+    aiStats: [
+      { label: 'Distância', value: 7.2, max: 10, unit: 'm' },
+      { label: 'Arco', value: 45, max: 60, unit: 'graus' },
+      { label: 'Release Time', value: 0.4, max: 1, unit: 's' },
+    ],
+    trainingPlan: {
+      title: 'Precisão de Longa Distância',
+      exercises: [
+        'Arremessos estáticos 5x10',
+        'Drible + Arremesso 4x10',
+        'Treino de core 3x15',
+      ],
+    },
   },
 ]
 
@@ -157,6 +175,24 @@ export const mockProducts = [
     img: 'soccer%20cleats',
     description: 'Chuteira profissional para campo.',
     category: 'Equipamentos',
+    reviews: [
+      {
+        id: 1,
+        user: 'João Silva',
+        avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
+        rating: 5,
+        date: '2 dias atrás',
+        comment: 'Excelente qualidade, muito confortável!',
+      },
+      {
+        id: 2,
+        user: 'Maria Souza',
+        avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=2',
+        rating: 4,
+        date: '1 semana atrás',
+        comment: 'Boa, mas a forma é um pouco apertada.',
+      },
+    ],
   },
   {
     id: 2,
@@ -166,6 +202,45 @@ export const mockProducts = [
     img: 'soccer%20ball',
     description: 'Bola oficial de competição.',
     category: 'Equipamentos',
+    reviews: [
+      {
+        id: 3,
+        user: 'Carlos Pedro',
+        avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=3',
+        rating: 5,
+        date: '3 dias atrás',
+        comment: 'Bola perfeita para jogo.',
+      },
+    ],
+  },
+  {
+    id: 3,
+    name: 'Whey Protein Isolado',
+    price: 'R$ 180,00',
+    rating: 4.9,
+    img: 'whey%20protein',
+    description: 'Suplemento de alta qualidade para recuperação muscular.',
+    category: 'Nutrição',
+    reviews: [
+      {
+        id: 4,
+        user: 'Ana Fit',
+        avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=4',
+        rating: 5,
+        date: 'Ontem',
+        comment: 'Sabor incrível e dissolve bem.',
+      },
+    ],
+  },
+  {
+    id: 4,
+    name: 'Smartwatch Sport X',
+    price: 'R$ 890,00',
+    rating: 4.7,
+    img: 'smartwatch',
+    description: 'Monitore seus treinos com precisão GPS e cardíaca.',
+    category: 'Wearables',
+    reviews: [],
   },
 ]
 
@@ -199,7 +274,14 @@ export interface BadgeData {
 
 export interface ProfileData {
   id: string
-  type: 'athlete' | 'club' | 'coach' | 'photographer' | 'driver'
+  type:
+    | 'athlete'
+    | 'club'
+    | 'coach'
+    | 'photographer'
+    | 'driver'
+    | 'nutritionist'
+    | 'physiotherapist'
   name: string
   username: string
   avatar: string
@@ -238,6 +320,11 @@ export interface ProfileData {
   // Driver specific
   car?: { model: string; plate: string; color: string; photo: string }
   rides?: number
+
+  // Nutritionist/Physio specific
+  clinic?: string
+  crn?: string
+  crefito?: string
 }
 
 export const mockBadges: BadgeData[] = [
@@ -358,6 +445,40 @@ export const mockProfiles: ProfileData[] = [
       color: 'Prata',
       photo: 'https://img.usecurling.com/p/300/200?q=silver%20honda%20civic',
     },
+  },
+  {
+    id: '6',
+    type: 'nutritionist',
+    name: 'Dra. Julia Fit',
+    username: '@julia.nutri',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=12',
+    cover: 'https://img.usecurling.com/p/800/300?q=healthy%20food',
+    bio: 'Nutricionista Esportiva. Performance através da alimentação.',
+    location: 'São Paulo, SP',
+    followers: '3.2k',
+    following: '400',
+    rating: 5.0,
+    clinic: 'Clínica Health Sports',
+    crn: 'CRN-3 12345',
+    specialties: ['Hipertrofia', 'Emagrecimento', 'Performance'],
+    pricing: 'R$ 250,00 / consulta',
+  },
+  {
+    id: '7',
+    type: 'physiotherapist',
+    name: 'Dr. Marcos Physio',
+    username: '@marcos.fisio',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=67',
+    cover: 'https://img.usecurling.com/p/800/300?q=physiotherapy',
+    bio: 'Especialista em recuperação de atletas de alto rendimento.',
+    location: 'Rio de Janeiro, RJ',
+    followers: '1.8k',
+    following: '250',
+    rating: 4.9,
+    clinic: 'Rehab Center',
+    crefito: '123456-F',
+    specialties: ['Lesões de Joelho', 'Recovery', 'Osteopatia'],
+    pricing: 'R$ 200,00 / sessão',
   },
 ]
 
