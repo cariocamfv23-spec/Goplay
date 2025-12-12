@@ -35,6 +35,14 @@ const WithdrawPix = lazy(() => import('./pages/wallet/WithdrawPix'))
 const PaymentMethods = lazy(() => import('./pages/wallet/PaymentMethods'))
 const RideRequest = lazy(() => import('./pages/services/RideRequest'))
 
+// New Detail Pages
+const VenueDetails = lazy(() => import('./pages/venues/VenueDetails'))
+const GymDetails = lazy(() => import('./pages/gyms/GymDetails'))
+const NutritionPartnerDetails = lazy(
+  () => import('./pages/nutrition/NutritionPartnerDetails'),
+)
+const ClinicDetails = lazy(() => import('./pages/clinics/ClinicDetails'))
+
 // Driver Pages
 const DriverDashboard = lazy(() => import('./pages/driver/DriverDashboard'))
 const DriverRequests = lazy(() => import('./pages/driver/DriverRequests'))
@@ -63,6 +71,16 @@ const App = () => (
               <Route path="/move" element={<Move />} />
               <Route path="/explore" element={<Explore />} />
               <Route path="/events/:id" element={<EventDetails />} />
+
+              {/* New Detail Routes */}
+              <Route path="/venues/:id" element={<VenueDetails />} />
+              <Route path="/gyms/:id" element={<GymDetails />} />
+              <Route
+                path="/nutrition/:id"
+                element={<NutritionPartnerDetails />}
+              />
+              <Route path="/clinics/:id" element={<ClinicDetails />} />
+
               <Route path="/marketplace" element={<Marketplace />} />
               <Route
                 path="/marketplace/product/:id"

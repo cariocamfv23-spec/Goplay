@@ -1,4 +1,13 @@
-import { ChartSpline, Store, Briefcase, Video, Home } from 'lucide-react'
+import {
+  ChartSpline,
+  Store,
+  Briefcase,
+  Video,
+  Home,
+  Target,
+  Trophy,
+  Flag,
+} from 'lucide-react'
 
 export const navigationItems = [
   { label: 'Home', icon: Home, path: '/home' },
@@ -224,26 +233,145 @@ export const mockProducts = [
     category: 'Wearables',
     reviews: [],
   },
+  {
+    id: 5,
+    name: 'Kit Pré-Treino Energia',
+    price: 'R$ 89,90',
+    rating: 4.8,
+    img: 'pre%20workout%20powder',
+    description:
+      'Combo especial com cafeína e beta-alanina para máxima performance.',
+    category: 'Nutrição',
+    reviews: [],
+  },
 ]
 
-export const mockCourts = [
+// Updated to represent Venues more broadly
+export const mockVenues = [
   {
-    id: 1,
+    id: 'v1',
     name: 'Arena Futsal Centro',
     price: 'R$ 150/h',
     rating: 4.9,
     img: 'indoor%20futsal%20court',
     lat: -23.5505,
     lng: -46.6333,
+    address: 'Rua Central, 123, São Paulo',
+    amenities: ['Vestiário', 'Bar', 'Estacionamento'],
+    rules: ['Proibido chuteira de trava', 'Chegar 10min antes'],
+    images: [
+      'https://img.usecurling.com/p/600/400?q=indoor%20futsal%20court&dpr=2',
+      'https://img.usecurling.com/p/600/400?q=locker%20room&dpr=2',
+    ],
   },
   {
-    id: 2,
+    id: 'v2',
     name: 'Quadra Society 10',
     price: 'R$ 200/h',
     rating: 4.6,
     img: 'artificial%20grass%20soccer%20field',
     lat: -23.5605,
     lng: -46.6433,
+    address: 'Av. Paulista, 1000, São Paulo',
+    amenities: ['Churrasqueira', 'Wi-Fi'],
+    rules: ['Uso obrigatório de colete'],
+    images: [
+      'https://img.usecurling.com/p/600/400?q=artificial%20grass%20soccer%20field&dpr=2',
+    ],
+  },
+]
+
+// Re-export mockVenues as mockCourts for compatibility
+export const mockCourts = mockVenues.map((v) => ({
+  ...v,
+  id: Number(v.id.replace('v', '')),
+}))
+
+export const mockGyms = [
+  {
+    id: 'g1',
+    name: 'Ironberg Academy',
+    location: 'Moema, SP',
+    rating: 4.9,
+    img: 'modern%20gym%20equipment',
+    plans: ['Mensal - R$ 120', 'Anual - R$ 99/mês'],
+    amenities: ['Ar condicionado', 'Personal Trainer', 'Aulas Coletivas'],
+    benefits: ['10% de desconto no plano anual', 'Avaliação física gratuita'],
+  },
+  {
+    id: 'g2',
+    name: 'CrossFit High Pulse',
+    location: 'Pinheiros, SP',
+    rating: 4.8,
+    img: 'crossfit%20box',
+    plans: ['Mensal - R$ 250', 'Trimestral - R$ 220/mês'],
+    amenities: ['Box Oficial', 'Coach Level 2'],
+    benefits: ['Drop-in gratuito na primeira aula'],
+  },
+]
+
+export const mockNutritionPartners = [
+  {
+    id: 'n1',
+    name: 'Mundo Verde & Fit',
+    location: 'Jardins, SP',
+    rating: 4.7,
+    img: 'healthy%20food%20store',
+    specialties: ['Suplementos', 'Marmitas Fit'],
+    discount: '15% OFF para usuários Goplay',
+  },
+  {
+    id: 'n2',
+    name: 'Hortifruti Fresco',
+    location: 'Vila Mariana, SP',
+    rating: 4.9,
+    img: 'fresh%20fruits%20vegetables',
+    specialties: ['Orgânicos', 'Sucos Detox'],
+    discount: 'Entrega grátis na primeira compra',
+  },
+]
+
+export const mockClinics = [
+  {
+    id: 'c1',
+    name: 'PhysioSport Center',
+    location: 'Itaim Bibi, SP',
+    rating: 5.0,
+    img: 'physiotherapy%20clinic%20modern',
+    services: ['Fisioterapia', 'Osteopatia', 'Recovery'],
+    insurance: ['Amil', 'Bradesco', 'Unimed'],
+    recoveryPlan: true,
+  },
+  {
+    id: 'c2',
+    name: 'Clínica Ortopédica Avançada',
+    location: 'Perdizes, SP',
+    rating: 4.8,
+    img: 'orthopedic%20clinic',
+    services: ['Consulta Ortopédica', 'Raio-X', 'Infiltração'],
+    insurance: ['SulAmérica', 'Porto Seguro'],
+    recoveryPlan: false,
+  },
+]
+
+export const mockHighlights = [
+  {
+    id: 'h1',
+    title: 'Golaço de falta',
+    date: '10 Ago 2024',
+    venue: 'Arena Futsal Centro',
+    sport: 'Futsal',
+    thumbnail: 'https://img.usecurling.com/p/400/225?q=futsal%20goal&dpr=2',
+    duration: '0:15',
+  },
+  {
+    id: 'h2',
+    title: 'Defesa difícil',
+    date: '05 Ago 2024',
+    venue: 'Quadra Society 10',
+    sport: 'Futebol Society',
+    thumbnail: 'https://img.usecurling.com/p/400/225?q=goalkeeper%20save&dpr=2',
+    duration: '0:22',
   },
 ]
 

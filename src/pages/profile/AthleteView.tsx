@@ -1,4 +1,4 @@
-import { ProfileData } from '@/lib/data'
+import { ProfileData, mockHighlights } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -15,6 +15,8 @@ import {
   ThumbsUp,
   Target,
   Award,
+  Video,
+  Sparkles,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { mockVideos, mockPosts } from '@/lib/data'
@@ -25,12 +27,20 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import * as LucideIcons from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function AthleteView({ profile }: { profile: ProfileData }) {
-  // Helper to dynamically render icons
   const renderIcon = (iconName: string, className?: string) => {
     const Icon = (LucideIcons as any)[iconName]
     return Icon ? <Icon className={className} /> : null
+  }
+
+  const handleGenerateReel = () => {
+    toast.info('IA Gerando Highlight Reel', {
+      description:
+        'Isso pode levar alguns segundos. Te avisaremos quando estiver pronto!',
+      icon: <Sparkles className="h-5 w-5 text-gold" />,
+    })
   }
 
   return (
@@ -78,7 +88,6 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
             </Badge>
           </div>
 
-          {/* Gamification Stats */}
           {profile.points && (
             <div className="flex items-center gap-4 mt-3 mb-2">
               <div className="flex items-center gap-1.5 text-sm font-semibold text-primary">
@@ -94,7 +103,6 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
 
           <p className="text-sm mt-2 text-foreground/80">{profile.bio}</p>
 
-          {/* Badges */}
           {profile.badges && profile.badges.length > 0 && (
             <div className="flex gap-2 mt-4 mb-2">
               {profile.badges.map((badge) => (
@@ -121,7 +129,6 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
             </span>
           </div>
 
-          {/* Stats Row */}
           <div className="flex gap-4 overflow-x-auto py-4 no-scrollbar">
             {profile.stats?.map((stat, i) => (
               <Card
@@ -140,7 +147,6 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
             ))}
           </div>
 
-          {/* Specific Athlete Action */}
           <Button
             className="w-full rounded-full bg-gradient-to-r from-primary to-purple-600 mb-6 shadow-lg hover:shadow-xl transition-all"
             size="lg"
@@ -148,7 +154,6 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
             <Target className="h-5 w-5 mr-2" /> Convocar para Peneira/Treino
           </Button>
 
-          {/* Interaction Row */}
           <div className="flex justify-around border-y border-border py-3 mb-4">
             <div className="text-center">
               <span className="block font-bold text-lg">
@@ -174,13 +179,13 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
           </div>
         </div>
 
-        <Tabs defaultValue="videos" className="w-full">
+        <Tabs defaultValue="posts" className="w-full">
           <TabsList className="w-full grid grid-cols-4 mb-4">
-            <TabsTrigger value="videos">
-              <Play className="h-4 w-4" />
-            </TabsTrigger>
             <TabsTrigger value="posts">
               <Grid className="h-4 w-4" />
+            </TabsTrigger>
+            <TabsTrigger value="highlights">
+              <Video className="h-4 w-4" />
             </TabsTrigger>
             <TabsTrigger value="history">
               <History className="h-4 w-4" />
@@ -190,31 +195,69 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="videos" className="space-y-4">
-            <h3 className="font-bold text-lg mb-2">Portfolio de Vídeos</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {mockVideos.map((video) => (
-                <div
-                  key={video.id}
-                  className="relative aspect-[9/16] rounded-xl overflow-hidden bg-black"
-                >
-                  <img
-                    src={video.thumbnail}
-                    className="w-full h-full object-cover opacity-80"
-                    alt=""
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Play className="h-8 w-8 text-white fill-white opacity-80" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </TabsContent>
-
           <TabsContent value="posts">
             {mockPosts.map((post) => (
               <PostCard key={post.id} post={post} />
             ))}
+          </TabsContent>
+
+          {/* Lances Salvos / Highlights Tab */}
+          <TabsContent value="highlights" className="space-y-4">
+            <div className="bg-gradient-to-r from-purple-900 to-primary p-4 rounded-xl text-white mb-4 relative overflow-hidden">
+              <div className="relative z-10">
+                <h3 className="font-bold text-lg mb-1 flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-gold animate-pulse" /> AI
+                  Highlight Reel
+                </h3>
+                <p className="text-sm text-white/80 mb-3">
+                  Gere automaticamente um vídeo com seus melhores momentos.
+                </p>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="text-primary font-bold"
+                  onClick={handleGenerateReel}
+                >
+                  Gerar Reel Agora
+                </Button>
+              </div>
+              <div className="absolute right-0 bottom-0 opacity-20 transform translate-x-4 translate-y-4">
+                <Video className="h-24 w-24" />
+              </div>
+            </div>
+
+            <h3 className="font-bold text-lg mb-2">Lances Salvos</h3>
+            <div className="grid grid-cols-2 gap-3">
+              {mockHighlights.map((highlight) => (
+                <div
+                  key={highlight.id}
+                  className="relative rounded-xl overflow-hidden bg-black group cursor-pointer"
+                >
+                  <div className="aspect-video relative">
+                    <img
+                      src={highlight.thumbnail}
+                      className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500"
+                      alt={highlight.title}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Play className="h-8 w-8 text-white fill-white opacity-80" />
+                    </div>
+                    <div className="absolute bottom-1 right-1 bg-black/70 text-white text-[10px] px-1 rounded">
+                      {highlight.duration}
+                    </div>
+                  </div>
+                  <div className="p-2 bg-card">
+                    <h4 className="font-bold text-xs truncate">
+                      {highlight.title}
+                    </h4>
+                    <p className="text-[10px] text-muted-foreground truncate">
+                      {highlight.venue}
+                    </p>
+                    <p className="text-[10px] text-primary">{highlight.date}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </TabsContent>
 
           <TabsContent value="history">
