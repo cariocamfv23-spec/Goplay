@@ -3,11 +3,13 @@ import { Input } from '@/components/ui/input'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { Mail, Lock, Smartphone } from 'lucide-react'
+import useBrandingStore from '@/stores/useBrandingStore'
 
 const Login = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [method, setMethod] = useState<'email' | 'phone'>('email')
+  const { logoUrl } = useBrandingStore()
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
@@ -27,7 +29,7 @@ const Login = () => {
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8 relative z-10">
         <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-primary/20 shadow-lg shadow-primary/5">
           <img
-            src="https://img.usecurling.com/i?q=play&shape=fill&color=violet"
+            src={logoUrl}
             alt="Goplay App"
             className="h-10 w-10 object-contain"
           />

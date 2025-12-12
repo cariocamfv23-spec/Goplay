@@ -5,6 +5,7 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import Layout from './components/Layout'
 import { Suspense, lazy } from 'react'
 import { PageLoader } from './components/PageLoader'
+import { BrandingProvider } from '@/stores/useBrandingStore'
 
 // Lazy load pages for performance optimization
 const Index = lazy(() => import('./pages/Index'))
@@ -48,50 +49,52 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/onboarding" element={<Onboarding />} />
-          <Route path="/profile-selection" element={<ProfileSelection />} />
+      <BrandingProvider>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/profile-selection" element={<ProfileSelection />} />
 
-          <Route element={<Layout />}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/move" element={<Move />} />
-            <Route path="/explore" element={<Explore />} />
-            <Route path="/events/:id" element={<EventDetails />} />
-            <Route path="/marketplace" element={<Marketplace />} />
-            <Route
-              path="/marketplace/product/:id"
-              element={<ProductDetails />}
-            />
-            <Route path="/marketplace/cart" element={<Cart />} />
-            <Route path="/jobs" element={<JobsList />} />
-            <Route path="/jobs/:id" element={<JobDetails />} />
-            <Route path="/jobs/dashboard" element={<RecruiterDashboard />} />
-            <Route path="/ranking" element={<Ranking />} />
-            <Route path="/profile/:id" element={<Profile />} />
-            <Route path="/messages" element={<MessagesList />} />
-            <Route path="/messages/:id" element={<ChatRoom />} />
-            <Route path="/messages/new" element={<NewChat />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/wallet" element={<Wallet />} />
-            <Route path="/wallet/withdraw" element={<WithdrawPix />} />
-            <Route path="/wallet/cards" element={<PaymentMethods />} />
-            <Route path="/ride/request/:driverId" element={<RideRequest />} />
+            <Route element={<Layout />}>
+              <Route path="/home" element={<Home />} />
+              <Route path="/move" element={<Move />} />
+              <Route path="/explore" element={<Explore />} />
+              <Route path="/events/:id" element={<EventDetails />} />
+              <Route path="/marketplace" element={<Marketplace />} />
+              <Route
+                path="/marketplace/product/:id"
+                element={<ProductDetails />}
+              />
+              <Route path="/marketplace/cart" element={<Cart />} />
+              <Route path="/jobs" element={<JobsList />} />
+              <Route path="/jobs/:id" element={<JobDetails />} />
+              <Route path="/jobs/dashboard" element={<RecruiterDashboard />} />
+              <Route path="/ranking" element={<Ranking />} />
+              <Route path="/profile/:id" element={<Profile />} />
+              <Route path="/messages" element={<MessagesList />} />
+              <Route path="/messages/:id" element={<ChatRoom />} />
+              <Route path="/messages/new" element={<NewChat />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/wallet" element={<Wallet />} />
+              <Route path="/wallet/withdraw" element={<WithdrawPix />} />
+              <Route path="/wallet/cards" element={<PaymentMethods />} />
+              <Route path="/ride/request/:driverId" element={<RideRequest />} />
 
-            {/* Driver Routes */}
-            <Route path="/driver/dashboard" element={<DriverDashboard />} />
-            <Route path="/driver/requests" element={<DriverRequests />} />
-            <Route path="/driver/history" element={<DriverHistory />} />
-            <Route path="/driver/settings" element={<DriverSettings />} />
-            <Route path="/driver/active/:id" element={<ActiveRide />} />
-          </Route>
+              {/* Driver Routes */}
+              <Route path="/driver/dashboard" element={<DriverDashboard />} />
+              <Route path="/driver/requests" element={<DriverRequests />} />
+              <Route path="/driver/history" element={<DriverHistory />} />
+              <Route path="/driver/settings" element={<DriverSettings />} />
+              <Route path="/driver/active/:id" element={<ActiveRide />} />
+            </Route>
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </BrandingProvider>
     </TooltipProvider>
   </BrowserRouter>
 )

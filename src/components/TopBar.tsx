@@ -2,10 +2,12 @@ import { ArrowLeft, Bell, ShoppingCart, Settings } from 'lucide-react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import useBrandingStore from '@/stores/useBrandingStore'
 
 export function TopBar() {
   const navigate = useNavigate()
   const location = useLocation()
+  const { logoUrl } = useBrandingStore()
 
   const isHome = location.pathname === '/home'
   const isProfile = location.pathname.includes('/profile')
@@ -34,9 +36,9 @@ export function TopBar() {
         {isHome ? (
           <div className="flex items-center gap-2">
             <img
-              src="https://img.usecurling.com/i?q=play&shape=fill&color=violet"
+              src={logoUrl}
               alt="Goplay"
-              className="h-7 w-7"
+              className="h-7 w-7 object-contain"
             />
             <span className="font-bold text-xl tracking-tight text-gradient-primary">
               Goplay App

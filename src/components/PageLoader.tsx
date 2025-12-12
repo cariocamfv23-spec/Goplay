@@ -1,12 +1,16 @@
+import useBrandingStore from '@/stores/useBrandingStore'
+
 export const PageLoader = () => {
+  const { logoUrl } = useBrandingStore()
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background animate-fade-in">
       <div className="relative">
         <div className="w-20 h-20 rounded-3xl bg-primary/10 flex items-center justify-center animate-pulse border border-primary/20">
           <img
-            src="https://img.usecurling.com/i?q=play&shape=fill&color=violet"
+            src={logoUrl}
             alt="Loading..."
-            className="w-10 h-10"
+            className="w-10 h-10 object-contain"
           />
         </div>
         <div className="absolute -inset-4 bg-primary/5 rounded-full blur-xl animate-pulse delay-75" />
