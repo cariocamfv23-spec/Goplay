@@ -1,15 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import useBrandingStore, {
-  defaultIcon,
-  defaultLogo,
-} from '@/stores/useBrandingStore'
 import { ChevronRight } from 'lucide-react'
+import { Logo } from '@/components/Logo'
+import { AppIcon } from '@/components/AppIcon'
 
 const Onboarding = () => {
   const navigate = useNavigate()
-  const { logoUrl, iconUrl } = useBrandingStore()
   const [step, setStep] = useState(0)
 
   const steps = [
@@ -49,17 +46,7 @@ const Onboarding = () => {
 
       {/* Header */}
       <div className="w-full p-6 flex justify-center pt-8 z-10">
-        <img
-          src={logoUrl}
-          alt="Goplay"
-          className="h-8 w-auto object-contain"
-          onError={(e) => {
-            const target = e.currentTarget
-            if (target.src !== defaultLogo) {
-              target.src = defaultLogo
-            }
-          }}
-        />
+        <Logo className="h-8 w-auto" />
       </div>
 
       {/* Content */}
@@ -73,17 +60,7 @@ const Onboarding = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute bottom-6 left-6 right-6">
             <div className="w-12 h-12 bg-background/20 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/20 mb-4">
-              <img
-                src={iconUrl}
-                alt="Icon"
-                className="w-8 h-8 object-contain"
-                onError={(e) => {
-                  const target = e.currentTarget
-                  if (target.src !== defaultIcon) {
-                    target.src = defaultIcon
-                  }
-                }}
-              />
+              <AppIcon className="w-8 h-8" />
             </div>
           </div>
         </div>
