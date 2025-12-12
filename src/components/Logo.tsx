@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import useBrandingStore, { defaultIcon } from '@/stores/useBrandingStore'
+import useBrandingStore, { defaultLogo } from '@/stores/useBrandingStore'
 import { useEffect, useState } from 'react'
 
 interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -15,17 +15,18 @@ export const Logo = ({
   textClassName,
   ...props
 }: LogoProps) => {
-  const { iconUrl } = useBrandingStore()
-  const [src, setSrc] = useState(iconUrl)
+  // Use logoUrl specifically for the Logo component
+  const { logoUrl } = useBrandingStore()
+  const [src, setSrc] = useState(logoUrl)
 
   // Sync with store changes
   useEffect(() => {
-    setSrc(iconUrl)
-  }, [iconUrl])
+    setSrc(logoUrl)
+  }, [logoUrl])
 
   const handleError = () => {
-    if (src !== defaultIcon) {
-      setSrc(defaultIcon)
+    if (src !== defaultLogo) {
+      setSrc(defaultLogo)
     }
   }
 
@@ -51,7 +52,8 @@ export const Logo = ({
       {showText && (
         <span
           className={cn(
-            'font-bold tracking-tighter text-foreground leading-none',
+            // Updated text color to text-primary (Violet) to match the app icon and theme
+            'font-bold tracking-tighter text-primary leading-none',
             textClassName,
           )}
         >
