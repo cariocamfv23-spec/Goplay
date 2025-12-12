@@ -7,7 +7,6 @@ import {
   Star,
   UserPlus,
   MessageCircle,
-  Camera,
   Image as ImageIcon,
   DollarSign,
   CalendarCheck,
@@ -53,6 +52,7 @@ export default function PhotographerView({
               size="sm"
               variant="secondary"
               className="rounded-full shadow-md"
+              onClick={() => navigate(`/messages/user-${profile.id}`)}
             >
               <MessageCircle className="h-4 w-4" />
             </Button>

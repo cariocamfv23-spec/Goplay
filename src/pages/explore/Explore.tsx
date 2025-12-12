@@ -1,414 +1,317 @@
 import { Input } from '@/components/ui/input'
-import {
-  Search,
-  MapPin,
-  SlidersHorizontal,
-  List,
-  Map as MapIcon,
-  Calendar,
-  User,
-  Camera,
-  Car,
-  Star,
-  Dumbbell,
-  Leaf,
-  Stethoscope,
-  ChevronRight,
-} from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
+import { Search, MapPin, Filter, Car } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   mockEvents,
   mockVenues,
-  mockProfiles,
   mockGyms,
   mockNutritionPartners,
   mockClinics,
 } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 const Explore = () => {
   const navigate = useNavigate()
-  const [viewMode, setViewMode] = useState<'list' | 'map'>('list')
-  const [activeCategory, setActiveCategory] = useState('Todos')
 
-  const categories = [
-    { label: 'Todos', icon: null },
-    { label: 'Quadras', icon: MapPin },
-    { label: 'Academias', icon: Dumbbell },
-    { label: 'Nutrição', icon: Leaf },
-    { label: 'Clínicas', icon: Stethoscope },
-    { label: 'Atletas', icon: User },
-    { label: 'Eventos', icon: Calendar },
-    { label: 'Fotógrafos', icon: Camera },
-    { label: 'Motoristas', icon: Car },
-  ]
+  return (
+    <div className="pb-24 animate-fade-in">
+      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-xl border-b border-border/40 px-4 py-4">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar eventos, locais..."
+              className="pl-9 bg-secondary border-none rounded-xl"
+            />
+          </div>
+          <Button variant="outline" size="icon" className="shrink-0 rounded-xl">
+            <Filter className="h-4 w-4" />
+          </Button>
+        </div>
 
-  const renderSectionHeader = (title: string, icon: any) => (
-    <div className="flex justify-between items-center mb-3 mt-4">
-      <h2 className="text-lg font-bold flex items-center gap-2">
-        {icon && <icon.type {...icon.props} />} {title}
-      </h2>
-      <Button variant="ghost" size="sm" className="text-xs text-primary h-8">
-        Ver todos <ChevronRight className="h-3 w-3 ml-1" />
-      </Button>
-    </div>
-  )
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+          <Button
+            variant="default"
+            size="sm"
+            className="rounded-full px-6 bg-primary text-primary-foreground shadow-md"
+          >
+            Tudo
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="rounded-full px-6 hover:bg-secondary/80"
+          >
+            Eventos
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="rounded-full px-6 hover:bg-secondary/80"
+          >
+            Quadras
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="rounded-full px-6 hover:bg-secondary/80"
+          >
+            Academias
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="rounded-full px-6 hover:bg-secondary/80"
+          >
+            Nutrição
+          </Button>
+        </div>
+      </div>
 
-  const renderProfileList = (type: string, title: string, icon: any) => {
-    const profiles = mockProfiles.filter((p) => p.type === type)
-    if (profiles.length === 0) return null
+      <div className="px-4 mt-6">
+        {/* New Feature Entry Point */}
+        <div
+          className="mb-8 p-4 bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl text-white shadow-lg cursor-pointer transform transition-all hover:scale-[1.01]"
+          onClick={() => navigate('/driver/performance')}
+        >
+          <div className="flex items-center gap-4">
+            <div className="h-12 w-12 rounded-full bg-white/10 flex items-center justify-center">
+              <Car className="h-6 w-6 text-white" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-bold text-lg">Performance de Motoristas</h3>
+              <p className="text-sm text-slate-300">
+                Análise de métricas e relatórios
+              </p>
+            </div>
+          </div>
+        </div>
 
-    return (
-      <div>
-        {renderSectionHeader(title, icon)}
-        <div className="space-y-3">
-          {profiles.map((profile) => (
-            <Card
-              key={profile.id}
-              className="border-none shadow-sm cursor-pointer hover:bg-secondary/10 transition-colors"
-              onClick={() => navigate(`/profile/${profile.id}`)}
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-bold">Eventos em Destaque</h2>
+          <Button variant="link" className="text-primary text-sm h-auto p-0">
+            Ver todos
+          </Button>
+        </div>
+
+        <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
+          {mockEvents.map((event) => (
+            <div
+              key={event.id}
+              className="min-w-[280px] rounded-2xl overflow-hidden relative group cursor-pointer"
+              onClick={() => navigate(`/events/${event.id}`)}
             >
-              <CardContent className="p-3 flex gap-3 items-center">
-                <Avatar className="h-16 w-16 border-2 border-background shadow-sm">
-                  <AvatarImage src={profile.avatar} />
-                  <AvatarFallback>{profile.name[0]}</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <div className="flex justify-between items-start">
-                    <h3 className="font-bold truncate">{profile.name}</h3>
-                    <div className="flex items-center gap-1 text-xs text-gold font-bold shrink-0">
-                      <Star className="h-3 w-3 fill-current" /> {profile.rating}
-                    </div>
-                  </div>
-                  <p className="text-xs text-muted-foreground truncate">
-                    {profile.location}
-                  </p>
-                  <p className="text-xs font-medium text-primary mt-1 truncate">
-                    {profile.bio}
-                  </p>
+              <img
+                src={event.image}
+                className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500"
+                alt={event.title}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 flex flex-col justify-end">
+                <Badge className="w-fit mb-2 bg-primary/90 hover:bg-primary border-none">
+                  {event.date}
+                </Badge>
+                <h3 className="font-bold text-white text-lg leading-tight mb-1">
+                  {event.title}
+                </h3>
+                <div className="flex items-center text-white/80 text-xs">
+                  <MapPin className="h-3 w-3 mr-1" />
+                  {event.location}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="px-4 mt-2">
+        <h2 className="text-lg font-bold mb-4">Quadras e Espaços</h2>
+        <div className="space-y-4">
+          {mockVenues.map((venue) => (
+            <Card
+              key={venue.id}
+              className="overflow-hidden border-none shadow-sm cursor-pointer active:scale-[0.99] transition-transform"
+              onClick={() => navigate(`/venues/${venue.id}`)}
+            >
+              <div className="relative h-32">
+                <img
+                  src={`https://img.usecurling.com/p/600/400?q=${venue.img}&dpr=2`}
+                  className="w-full h-full object-cover"
+                  alt={venue.name}
+                />
+                <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded-md text-xs font-bold shadow-sm">
+                  ★ {venue.rating}
+                </div>
+              </div>
+              <CardContent className="p-3">
+                <div className="flex justify-between items-start mb-1">
+                  <h3 className="font-bold">{venue.name}</h3>
+                  <span className="text-primary font-bold text-sm">
+                    {venue.price}
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground truncate">
+                  {venue.address}
+                </p>
+                <div className="flex gap-2 mt-2">
+                  {venue.amenities.slice(0, 2).map((item, i) => (
+                    <Badge
+                      key={i}
+                      variant="secondary"
+                      className="text-[10px] h-5"
+                    >
+                      {item}
+                    </Badge>
+                  ))}
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
       </div>
-    )
-  }
 
-  return (
-    <div className="pb-24 bg-background min-h-screen">
-      <div className="p-4 sticky top-14 z-20 bg-background/95 backdrop-blur border-b border-border/50">
-        <div className="flex gap-2 mb-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar parceiros, eventos, locais..."
-              className="pl-9 rounded-full bg-secondary border-none shadow-sm"
-            />
-          </div>
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-full shrink-0 border-border bg-secondary/20"
-          >
-            <SlidersHorizontal className="h-4 w-4" />
-          </Button>
-        </div>
-
-        <div className="flex justify-between items-center">
-          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1 mask-linear-fade pr-4">
-            {categories.map((cat) => (
-              <Badge
-                key={cat.label}
-                variant={activeCategory === cat.label ? 'default' : 'outline'}
-                className="px-4 py-1.5 text-sm font-medium rounded-full cursor-pointer whitespace-nowrap flex items-center gap-2"
-                onClick={() => setActiveCategory(cat.label)}
-              >
-                {cat.icon && <cat.icon className="h-3 w-3" />}
-                {cat.label}
-              </Badge>
-            ))}
-          </div>
-          <div className="flex bg-secondary rounded-full p-1 ml-2 shrink-0">
-            <button
-              className={`p-1.5 rounded-full transition-all ${viewMode === 'list' ? 'bg-background shadow text-primary' : 'text-muted-foreground'}`}
-              onClick={() => setViewMode('list')}
+      {/* Gyms Section */}
+      <div className="px-4 mt-6">
+        <h2 className="text-lg font-bold mb-4">Academias Parceiras</h2>
+        <div className="space-y-4">
+          {mockGyms.map((gym) => (
+            <Card
+              key={gym.id}
+              className="overflow-hidden border-none shadow-sm cursor-pointer active:scale-[0.99] transition-transform"
+              onClick={() => navigate(`/gyms/${gym.id}`)}
             >
-              <List className="h-4 w-4" />
-            </button>
-            <button
-              className={`p-1.5 rounded-full transition-all ${viewMode === 'map' ? 'bg-background shadow text-primary' : 'text-muted-foreground'}`}
-              onClick={() => setViewMode('map')}
-            >
-              <MapIcon className="h-4 w-4" />
-            </button>
-          </div>
+              <div className="flex h-28">
+                <div className="w-28 shrink-0">
+                  <img
+                    src={`https://img.usecurling.com/p/300/300?q=${gym.img}&dpr=2`}
+                    className="w-full h-full object-cover"
+                    alt={gym.name}
+                  />
+                </div>
+                <CardContent className="p-3 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="font-bold text-sm line-clamp-1">
+                      {gym.name}
+                    </h3>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      {gym.location}
+                    </p>
+                    <div className="flex flex-wrap gap-1">
+                      {gym.amenities.slice(0, 2).map((item, i) => (
+                        <span
+                          key={i}
+                          className="text-[9px] bg-secondary px-1.5 py-0.5 rounded text-muted-foreground"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-end mt-2">
+                    <span className="text-primary font-bold text-xs">
+                      {gym.plans[0].split(' - ')[1]}
+                    </span>
+                    <div className="flex items-center text-[10px] font-bold">
+                      <span className="text-gold mr-1">★</span> {gym.rating}
+                    </div>
+                  </div>
+                </CardContent>
+              </div>
+            </Card>
+          ))}
         </div>
       </div>
 
-      {viewMode === 'list' ? (
-        <div className="px-4 space-y-2 animate-fade-in pb-4">
-          {/* Venues */}
-          {(activeCategory === 'Todos' || activeCategory === 'Quadras') && (
-            <div>
-              {renderSectionHeader(
-                'Quadras e Campos',
-                <MapPin className="h-5 w-5 text-primary" />,
-              )}
-              <div className="space-y-4">
-                {mockVenues.map((venue) => (
-                  <Card
-                    key={venue.id}
-                    className="overflow-hidden border-none shadow-sm cursor-pointer group hover:shadow-md transition-shadow"
-                    onClick={() => navigate(`/venues/${venue.id}`)}
-                  >
-                    <div className="h-32 bg-muted relative">
-                      <img
-                        src={venue.images[0]}
-                        className="w-full h-full object-cover"
-                        alt={venue.name}
-                      />
-                      <Badge className="absolute top-2 left-2 bg-white text-black hover:bg-white">
-                        {venue.price}
-                      </Badge>
-                    </div>
-                    <CardContent className="p-3">
-                      <h3 className="font-bold">{venue.name}</h3>
-                      <p className="text-xs text-muted-foreground mb-1">
-                        {venue.address}
-                      </p>
-                      <div className="flex items-center gap-1 text-xs text-gold font-bold">
-                        <Star className="h-3 w-3 fill-current" /> {venue.rating}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Gyms */}
-          {(activeCategory === 'Todos' || activeCategory === 'Academias') && (
-            <div>
-              {renderSectionHeader(
-                'Academias Parceiras',
-                <Dumbbell className="h-5 w-5 text-primary" />,
-              )}
-              <div className="space-y-3">
-                {mockGyms.map((gym) => (
-                  <Card
-                    key={gym.id}
-                    className="border-none shadow-sm cursor-pointer"
-                    onClick={() => navigate(`/gyms/${gym.id}`)}
-                  >
-                    <CardContent className="p-3 flex gap-3">
-                      <div className="h-20 w-20 rounded-lg overflow-hidden bg-muted shrink-0">
-                        <img
-                          src={`https://img.usecurling.com/p/300/300?q=${gym.img}`}
-                          className="w-full h-full object-cover"
-                          alt={gym.name}
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-bold">{gym.name}</h3>
-                        <p className="text-xs text-muted-foreground">
-                          {gym.location}
-                        </p>
-                        <p className="text-xs font-medium text-primary mt-1">
-                          {gym.benefits[0]}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Nutrition */}
-          {(activeCategory === 'Todos' || activeCategory === 'Nutrição') && (
-            <div>
-              {renderSectionHeader(
-                'Nutrição & Suplementos',
-                <Leaf className="h-5 w-5 text-green-600" />,
-              )}
-              <div className="space-y-3">
-                {mockNutritionPartners.map((partner) => (
-                  <Card
-                    key={partner.id}
-                    className="border-none shadow-sm cursor-pointer"
-                    onClick={() => navigate(`/nutrition/${partner.id}`)}
-                  >
-                    <CardContent className="p-3 flex gap-3 items-center">
-                      <div className="h-16 w-16 rounded-full overflow-hidden bg-muted shrink-0 border-2 border-green-100">
-                        <img
-                          src={`https://img.usecurling.com/p/300/300?q=${partner.img}`}
-                          className="w-full h-full object-cover"
-                          alt={partner.name}
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-bold">{partner.name}</h3>
-                        <Badge
-                          variant="secondary"
-                          className="text-[10px] mt-1 text-green-700 bg-green-50"
+      {/* Clinics Section */}
+      <div className="px-4 mt-6">
+        <h2 className="text-lg font-bold mb-4">Clínicas e Fisioterapia</h2>
+        <div className="space-y-4">
+          {mockClinics.map((clinic) => (
+            <Card
+              key={clinic.id}
+              className="overflow-hidden border-none shadow-sm cursor-pointer active:scale-[0.99] transition-transform"
+              onClick={() => navigate(`/clinics/${clinic.id}`)}
+            >
+              <div className="flex h-28">
+                <div className="w-28 shrink-0">
+                  <img
+                    src={`https://img.usecurling.com/p/300/300?q=${clinic.img}&dpr=2`}
+                    className="w-full h-full object-cover"
+                    alt={clinic.name}
+                  />
+                </div>
+                <CardContent className="p-3 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="font-bold text-sm line-clamp-1">
+                      {clinic.name}
+                    </h3>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      {clinic.location}
+                    </p>
+                    <div className="flex flex-wrap gap-1">
+                      {clinic.services.slice(0, 2).map((item, i) => (
+                        <span
+                          key={i}
+                          className="text-[9px] bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300 px-1.5 py-0.5 rounded"
                         >
-                          {partner.discount}
-                        </Badge>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Clinics */}
-          {(activeCategory === 'Todos' || activeCategory === 'Clínicas') && (
-            <div>
-              {renderSectionHeader(
-                'Saúde & Recovery',
-                <Stethoscope className="h-5 w-5 text-blue-600" />,
-              )}
-              <div className="space-y-3">
-                {mockClinics.map((clinic) => (
-                  <Card
-                    key={clinic.id}
-                    className="border-none shadow-sm cursor-pointer"
-                    onClick={() => navigate(`/clinics/${clinic.id}`)}
-                  >
-                    <CardContent className="p-3">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-bold">{clinic.name}</h3>
-                          <p className="text-xs text-muted-foreground">
-                            {clinic.location}
-                          </p>
-                        </div>
-                        <Badge className="bg-blue-600 hover:bg-blue-700">
-                          {clinic.rating}
-                        </Badge>
-                      </div>
-                      <div className="flex gap-2 mt-2">
-                        {clinic.services.slice(0, 2).map((s) => (
-                          <span
-                            key={s}
-                            className="text-[10px] bg-secondary px-2 py-0.5 rounded"
-                          >
-                            {s}
-                          </span>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Events */}
-          {(activeCategory === 'Todos' || activeCategory === 'Eventos') && (
-            <div>
-              {renderSectionHeader(
-                'Eventos em Destaque',
-                <Calendar className="h-5 w-5 text-primary" />,
-              )}
-              <div className="grid grid-cols-1 gap-5">
-                {mockEvents.map((event) => (
-                  <Card
-                    key={event.id}
-                    className="overflow-hidden border-none shadow-md cursor-pointer hover:shadow-xl transition-all group"
-                    onClick={() => navigate(`/events/${event.id}`)}
-                  >
-                    <div className="relative h-40 overflow-hidden">
-                      <img
-                        src={event.image}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        alt={event.title}
-                      />
-                      <div className="absolute top-2 right-2 bg-white/95 px-3 py-1.5 rounded-lg text-xs font-bold text-primary shadow-sm flex flex-col items-center leading-tight">
-                        <span className="text-[10px] uppercase">AGO</span>
-                        <span className="text-lg">15</span>
-                      </div>
-                    </div>
-                    <CardContent className="p-4">
-                      <h3 className="font-bold text-lg mb-1 leading-tight">
-                        {event.title}
-                      </h3>
-                      <div className="flex justify-between items-center pt-2">
-                        <div className="text-xs text-muted-foreground">
-                          <MapPin className="h-3 w-3 inline mr-1" />{' '}
-                          {event.location}
-                        </div>
-                        <span className="text-sm font-bold text-primary">
-                          {event.price}
+                          {item}
                         </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-end mt-2">
+                    <span className="text-[10px] text-muted-foreground">
+                      Aceita: {clinic.insurance.slice(0, 2).join(', ')}
+                    </span>
+                    <div className="flex items-center text-[10px] font-bold">
+                      <span className="text-gold mr-1">★</span> {clinic.rating}
+                    </div>
+                  </div>
+                </CardContent>
               </div>
-            </div>
-          )}
-
-          {/* Athletes */}
-          {(activeCategory === 'Todos' || activeCategory === 'Atletas') &&
-            renderProfileList(
-              'athlete',
-              'Atletas em Destaque',
-              <User className="h-5 w-5 text-primary" />,
-            )}
-
-          {/* Drivers */}
-          {(activeCategory === 'Todos' || activeCategory === 'Motoristas') &&
-            renderProfileList(
-              'driver',
-              'Motoristas Parceiros',
-              <Car className="h-5 w-5 text-primary" />,
-            )}
-
-          {/* Photographers */}
-          {(activeCategory === 'Todos' || activeCategory === 'Fotógrafos') &&
-            renderProfileList(
-              'photographer',
-              'Fotógrafos Esportivos',
-              <Camera className="h-5 w-5 text-primary" />,
-            )}
+            </Card>
+          ))}
         </div>
-      ) : (
-        <div className="h-[calc(100vh-180px)] w-full relative bg-secondary/50 animate-fade-in">
-          <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/1000/1000?q=map&color=gray')] bg-cover bg-center opacity-40 grayscale" />
+      </div>
 
-          {/* Mock Map Markers */}
-          <div
-            className="absolute top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 animate-bounce cursor-pointer group"
-            onClick={() => navigate('/venues/v1')}
-          >
-            <div className="bg-primary text-white p-2 rounded-full shadow-xl border-2 border-white group-hover:scale-110 transition-transform">
-              <MapPin className="h-6 w-6" />
-            </div>
-            <div className="bg-white px-2 py-1 rounded text-xs font-bold shadow-md absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap hidden group-hover:block z-10">
-              Arena Futsal
-            </div>
-          </div>
-
-          <div
-            className="absolute top-1/3 right-1/4 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
-            onClick={() => navigate('/gyms/g1')}
-          >
-            <div className="bg-purple-600 text-white p-2 rounded-full shadow-xl border-2 border-white group-hover:scale-110 transition-transform">
-              <Dumbbell className="h-5 w-5" />
-            </div>
-            <div className="bg-white px-2 py-1 rounded text-xs font-bold shadow-md absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap hidden group-hover:block z-10">
-              Ironberg Academy
-            </div>
-          </div>
+      {/* Nutrition Section */}
+      <div className="px-4 mt-6 mb-8">
+        <h2 className="text-lg font-bold mb-4">Parceiros de Nutrição</h2>
+        <div className="grid grid-cols-2 gap-4">
+          {mockNutritionPartners.map((partner) => (
+            <Card
+              key={partner.id}
+              className="overflow-hidden border-none shadow-sm cursor-pointer active:scale-[0.99] transition-transform"
+              onClick={() => navigate(`/nutrition/${partner.id}`)}
+            >
+              <div className="h-24">
+                <img
+                  src={`https://img.usecurling.com/p/300/200?q=${partner.img}&dpr=2`}
+                  className="w-full h-full object-cover"
+                  alt={partner.name}
+                />
+              </div>
+              <CardContent className="p-3">
+                <h3 className="font-bold text-sm line-clamp-1">
+                  {partner.name}
+                </h3>
+                <p className="text-xs text-muted-foreground mb-2 line-clamp-1">
+                  {partner.specialties.join(', ')}
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-green-600 bg-green-50 dark:bg-green-900/30 px-1.5 py-0.5 rounded">
+                    {partner.discount.split(' ')[0]} OFF
+                  </span>
+                  <div className="flex items-center text-[10px] font-bold">
+                    <span className="text-gold mr-1">★</span> {partner.rating}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-      )}
+      </div>
     </div>
   )
 }

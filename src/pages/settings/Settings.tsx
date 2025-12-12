@@ -22,6 +22,9 @@ import {
   Upload,
   User,
   Eye,
+  Camera,
+  Car,
+  MessageSquare,
 } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -39,6 +42,13 @@ export default function Settings() {
     feedbackPublic: true,
     showStats: true,
   })
+  const [notifications, setNotifications] = useState({
+    push: true,
+    feedback: true,
+    driverUpdates: true,
+    photographerUpdates: true,
+    messages: true,
+  })
 
   const handleSaveBranding = () => {
     setLogoUrl(tempLogo)
@@ -51,6 +61,16 @@ export default function Settings() {
     setTempLogo('https://img.usecurling.com/i?q=play&shape=fill&color=violet')
     setTempIcon('https://img.usecurling.com/i?q=play&shape=fill&color=violet')
     toast.success('Marca restaurada para o padrão.')
+  }
+
+  const handleNotificationChange = (
+    key: keyof typeof notifications,
+    value: boolean,
+  ) => {
+    setNotifications((prev) => ({ ...prev, [key]: value }))
+    toast.success('Preferência salva', {
+      description: 'Suas configurações de notificação foram atualizadas.',
+    })
   }
 
   const simulateUpload = (type: 'logo' | 'icon') => {
@@ -75,7 +95,7 @@ export default function Settings() {
         </p>
       </div>
 
-      <Tabs defaultValue="account" className="space-y-4">
+      <Tabs defaultValue="notifications" className="space-y-4">
         <TabsList className="w-full justify-start overflow-x-auto h-auto p-1 bg-background border rounded-xl">
           <TabsTrigger value="account" className="gap-2">
             <User className="h-4 w-4" /> Conta
@@ -180,30 +200,74 @@ export default function Settings() {
         <TabsContent value="notifications">
           <Card>
             <CardHeader>
-              <CardTitle>Notificações</CardTitle>
+              <CardTitle>Notificações Personalizadas</CardTitle>
               <CardDescription>
-                Escolha como você quer ser notificado.
+                Escolha exatamente o que você quer receber.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between p-2">
                 <div className="space-y-0.5">
-                  <Label>Notificações Push</Label>
+                  <Label className="flex items-center gap-2">
+                    <Bell className="h-4 w-4" /> Notificações Push
+                  </Label>
                   <p className="text-xs text-muted-foreground">
-                    Receba alertas sobre novos jogos e mensagens.
+                    Alertas gerais do aplicativo.
                   </p>
                 </div>
-                <Switch defaultChecked />
+                <Switch
+                  checked={notifications.push}
+                  onCheckedChange={(c) => handleNotificationChange('push', c)}
+                />
               </div>
               <Separator />
               <div className="flex items-center justify-between p-2">
                 <div className="space-y-0.5">
-                  <Label>Feedback de Treinadores</Label>
+                  <Label className="flex items-center gap-2">
+                    <Car className="h-4 w-4" /> Atualizações de Motoristas
+                  </Label>
                   <p className="text-xs text-muted-foreground">
-                    Ser notificado quando receber um feedback.
+                    Status de corridas e mudanças de perfil.
                   </p>
                 </div>
-                <Switch defaultChecked />
+                <Switch
+                  checked={notifications.driverUpdates}
+                  onCheckedChange={(c) =>
+                    handleNotificationChange('driverUpdates', c)
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-between p-2">
+                <div className="space-y-0.5">
+                  <Label className="flex items-center gap-2">
+                    <Camera className="h-4 w-4" /> Atualizações de Fotógrafos
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Novos álbuns e status de serviços.
+                  </p>
+                </div>
+                <Switch
+                  checked={notifications.photographerUpdates}
+                  onCheckedChange={(c) =>
+                    handleNotificationChange('photographerUpdates', c)
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-between p-2">
+                <div className="space-y-0.5">
+                  <Label className="flex items-center gap-2">
+                    <MessageSquare className="h-4 w-4" /> Chat e Mensagens
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Receber alertas de novas mensagens.
+                  </p>
+                </div>
+                <Switch
+                  checked={notifications.messages}
+                  onCheckedChange={(c) =>
+                    handleNotificationChange('messages', c)
+                  }
+                />
               </div>
             </CardContent>
           </Card>

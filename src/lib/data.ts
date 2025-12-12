@@ -457,6 +457,7 @@ export interface ProfileData {
   // Driver specific
   car?: { model: string; plate: string; color: string; photo: string }
   rides?: number
+  responseTime?: string // New field for driver performance
 
   // Nutritionist/Physio specific
   clinic?: string
@@ -665,6 +666,7 @@ export const mockProfiles: ProfileData[] = [
     following: '20',
     rating: 4.8,
     rides: 1240,
+    responseTime: '2 min',
     car: {
       model: 'Honda Civic',
       plate: 'ABC-1234',
@@ -685,6 +687,7 @@ export const mockProfiles: ProfileData[] = [
     following: '45',
     rating: 4.9,
     rides: 850,
+    responseTime: '5 min',
     car: {
       model: 'Mercedes Sprinter',
       plate: 'VAN-9999',
@@ -1191,5 +1194,32 @@ export const mockPhotographerTransactions: PhotographerTransaction[] = [
     amount: 200.0,
     status: 'completed',
     type: 'service',
+  },
+]
+
+export const mockDriverStats = [
+  {
+    id: '5',
+    name: 'Carlos Driver',
+    rides: 1240,
+    rating: 4.8,
+    responseTime: '2 min',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=55',
+  },
+  {
+    id: '9',
+    name: 'Fernanda Van',
+    rides: 850,
+    rating: 4.9,
+    responseTime: '5 min',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=77',
+  },
+  {
+    id: '10',
+    name: 'Roberto Transporter',
+    rides: 560,
+    rating: 4.7,
+    responseTime: '4 min',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=30',
   },
 ]

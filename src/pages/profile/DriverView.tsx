@@ -5,12 +5,13 @@ import {
   MapPin,
   Star,
   MessageCircle,
-  Car,
   Navigation,
   ShieldCheck,
+  Clock,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { useNavigate } from 'react-router-dom'
+import { Badge } from '@/components/ui/badge'
 
 export default function DriverView({ profile }: { profile: ProfileData }) {
   const navigate = useNavigate()
@@ -37,6 +38,7 @@ export default function DriverView({ profile }: { profile: ProfileData }) {
               size="sm"
               variant="secondary"
               className="rounded-full shadow-md"
+              onClick={() => navigate(`/messages/user-${profile.id}`)}
             >
               <MessageCircle className="h-4 w-4" />
             </Button>
@@ -63,13 +65,18 @@ export default function DriverView({ profile }: { profile: ProfileData }) {
 
           <p className="text-sm mt-4 font-medium">{profile.bio}</p>
 
-          <div className="flex items-center gap-4 text-xs text-muted-foreground mt-3 mb-6">
+          <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground mt-3 mb-6">
             <span className="flex items-center gap-1">
               <MapPin className="h-3 w-3" /> {profile.location}
             </span>
             <span className="flex items-center gap-1 text-green-600 font-medium">
               <ShieldCheck className="h-3 w-3" /> Motorista Verificado
             </span>
+            {profile.responseTime && (
+              <Badge variant="outline" className="text-xs font-normal gap-1">
+                <Clock className="h-3 w-3" /> Resp. {profile.responseTime}
+              </Badge>
+            )}
           </div>
 
           <Card className="bg-secondary/20 border-none shadow-sm mb-6">

@@ -49,6 +49,7 @@ const DriverRequests = lazy(() => import('./pages/driver/DriverRequests'))
 const DriverHistory = lazy(() => import('./pages/driver/DriverHistory'))
 const DriverSettings = lazy(() => import('./pages/driver/DriverSettings'))
 const ActiveRide = lazy(() => import('./pages/driver/ActiveRide'))
+const DriverPerformance = lazy(() => import('./pages/driver/DriverPerformance'))
 
 // New Invitations and Matches Pages
 const ReceivedInvitations = lazy(
@@ -124,6 +125,10 @@ const App = () => (
               <Route path="/driver/history" element={<DriverHistory />} />
               <Route path="/driver/settings" element={<DriverSettings />} />
               <Route path="/driver/active/:id" element={<ActiveRide />} />
+              <Route
+                path="/driver/performance"
+                element={<DriverPerformance />}
+              />
 
               {/* New Invitations and Matches Routes */}
               <Route path="/invitations" element={<ReceivedInvitations />} />
