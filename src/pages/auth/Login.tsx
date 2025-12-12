@@ -9,7 +9,7 @@ const Login = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [method, setMethod] = useState<'email' | 'phone'>('email')
-  const { logoUrl } = useBrandingStore()
+  const { logoUrl, iconUrl } = useBrandingStore()
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,15 +28,20 @@ const Login = () => {
       <div className="absolute top-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] -translate-x-1/3 -translate-y-1/3 pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-gold/5 rounded-full blur-[120px] translate-x-1/3 translate-y-1/3 pointer-events-none" />
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-10 relative z-10">
-        <div className="flex justify-center mb-8">
-          <div className="p-4 rounded-2xl bg-background/50 backdrop-blur-sm border border-border/50 shadow-sm transition-transform hover:scale-105 duration-300">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8 relative z-10">
+        <div className="flex flex-col items-center justify-center mb-6 gap-4">
+          <div className="p-4 rounded-3xl bg-background/50 backdrop-blur-sm border border-border/50 shadow-lg transition-transform hover:scale-105 duration-300">
             <img
-              src={logoUrl}
-              alt="Goplay App"
-              className="h-20 w-auto object-contain drop-shadow-md"
+              src={iconUrl}
+              alt="Goplay Icon"
+              className="w-16 h-16 object-contain"
             />
           </div>
+          <img
+            src={logoUrl}
+            alt="Goplay App"
+            className="h-12 w-auto object-contain drop-shadow-md"
+          />
         </div>
         <h2 className="text-3xl font-bold tracking-tight mb-2">
           Bem-vindo de volta

@@ -9,7 +9,6 @@ export function TopBar() {
   const location = useLocation()
   const { logoUrl } = useBrandingStore()
 
-  const isHome = location.pathname === '/home'
   const isProfile = location.pathname.includes('/profile')
   const isMarket = location.pathname.includes('/marketplace')
 
@@ -21,7 +20,7 @@ export function TopBar() {
 
   return (
     <div className="sticky top-0 z-40 w-full h-16 bg-background/80 backdrop-blur-xl border-b border-border/40 flex items-center justify-between px-4 transition-all">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         {showBack && (
           <Button
             variant="ghost"
@@ -33,19 +32,16 @@ export function TopBar() {
           </Button>
         )}
 
-        {isHome ? (
-          <div className="flex items-center gap-2 py-2">
-            <img
-              src={logoUrl}
-              alt="Goplay App"
-              className="h-8 w-auto object-contain drop-shadow-sm"
-            />
-          </div>
-        ) : (
-          <h1 className="font-bold text-lg capitalize truncate max-w-[200px] text-foreground/90">
-            {location.pathname.split('/')[1]?.replace('-', ' ') || 'Goplay'}
-          </h1>
-        )}
+        <Link
+          to="/home"
+          className="flex items-center py-2 transition-opacity hover:opacity-80"
+        >
+          <img
+            src={logoUrl}
+            alt="Goplay App"
+            className="h-8 w-auto object-contain drop-shadow-sm"
+          />
+        </Link>
       </div>
 
       <div className="flex items-center gap-1">
