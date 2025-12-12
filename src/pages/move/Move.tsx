@@ -8,13 +8,13 @@ import {
   Play,
   Volume2,
   Sparkles,
-  Scissors,
   BarChart2,
 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { AiAnalysisDrawer } from '@/components/AiAnalysisDrawer'
+import { Link } from 'react-router-dom'
 
 const Move = () => {
   const [selectedVideo, setSelectedVideo] = useState<any>(null)
@@ -28,14 +28,14 @@ const Move = () => {
   return (
     <>
       <div className="h-screen w-full bg-black text-white snap-y snap-mandatory overflow-y-scroll scroll-smooth no-scrollbar relative">
-        {/* Upload/Edit Button Overlay */}
+        {/* Profile Button / Avatar Top Right */}
         <div className="fixed top-4 right-4 z-50">
-          <Button
-            size="icon"
-            className="rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 border border-white/20"
-          >
-            <Scissors className="h-5 w-5 text-white" />
-          </Button>
+          <Link to="/profile/me">
+            <Avatar className="h-10 w-10 border border-white/20 shadow-lg cursor-pointer hover:scale-105 transition-transform">
+              <AvatarImage src="https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99" />
+              <AvatarFallback>EU</AvatarFallback>
+            </Avatar>
+          </Link>
         </div>
 
         {mockVideos.map((video) => (
@@ -88,9 +88,7 @@ const Move = () => {
             <div className="absolute bottom-24 right-4 flex flex-col items-center gap-6 z-10">
               <div className="relative group cursor-pointer">
                 <Avatar className="h-12 w-12 border-2 border-white shadow-lg transition-transform group-hover:scale-110">
-                  <AvatarImage
-                    src={`https://img.usecurling.com/i?q=${video.user}`}
-                  />
+                  <AvatarImage src={video.userAvatar} />
                   <AvatarFallback>{video.user[0]}</AvatarFallback>
                 </Avatar>
                 <div className="absolute -bottom-2 inset-x-0 flex justify-center">

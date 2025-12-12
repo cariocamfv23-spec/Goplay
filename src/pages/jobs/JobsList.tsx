@@ -1,13 +1,7 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import {
-  MapPin,
-  Building2,
-  Briefcase,
-  ChevronRight,
-  Bookmark,
-} from 'lucide-react'
+import { MapPin, Building2, ChevronRight, Bookmark } from 'lucide-react'
 import { mockJobs } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
 
@@ -63,9 +57,19 @@ const JobsList = () => {
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex gap-3">
-                      <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground">
-                        <Building2 className="h-5 w-5" />
-                      </div>
+                      {job.companyLogo ? (
+                        <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center overflow-hidden shrink-0">
+                          <img
+                            src={job.companyLogo}
+                            alt={job.company}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground shrink-0">
+                          <Building2 className="h-5 w-5" />
+                        </div>
+                      )}
                       <div>
                         <h3 className="font-bold text-base leading-tight">
                           {job.title}
