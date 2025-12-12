@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { Mail, Lock, Smartphone } from 'lucide-react'
 import { Logo } from '@/components/Logo'
-import { AppIcon } from '@/components/AppIcon'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -30,9 +29,9 @@ const Login = () => {
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8 relative z-10">
         <div className="flex flex-col items-center justify-center mb-6 gap-4">
           <div className="p-4 rounded-3xl bg-background/50 backdrop-blur-sm border border-border/50 shadow-lg transition-transform hover:scale-105 duration-300">
-            <AppIcon className="w-16 h-16" />
+            {/* Displaying full Logo (Icon + Text) */}
+            <Logo className="h-16 text-3xl" />
           </div>
-          <Logo className="h-12 w-auto drop-shadow-md" />
         </div>
         <h2 className="text-3xl font-bold tracking-tight mb-2">
           Bem-vindo de volta
@@ -168,5 +167,4 @@ const Login = () => {
     </div>
   )
 }
-
 export default Login

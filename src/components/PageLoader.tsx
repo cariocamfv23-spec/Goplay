@@ -17,7 +17,8 @@ export const PageLoader = () => {
         </div>
 
         <div className="animate-in slide-in-from-bottom-4 fade-in duration-700 delay-300">
-          <Logo className="h-10 w-auto" />
+          {/* Using text variant to avoid duplicating the icon in the animation sequence */}
+          <Logo variant="text" className="text-4xl" />
         </div>
 
         <div className="mt-2 flex gap-1">

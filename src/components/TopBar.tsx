@@ -36,10 +36,10 @@ export function TopBar() {
 
         <Link
           to="/home"
-          className="flex items-center py-2 transition-opacity hover:opacity-80 gap-2"
+          className="flex items-center py-2 transition-opacity hover:opacity-80"
         >
-          <Logo className="h-8 w-auto drop-shadow-sm" />
-          <span className="font-bold text-lg hidden xs:block">Goplay</span>
+          {/* Logo component now handles Icon + Text internally */}
+          <Logo className="h-8 text-xl" />
         </Link>
       </div>
 

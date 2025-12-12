@@ -16,9 +16,10 @@ type BrandingState = {
 
 // Official Goplay App Assets
 // Using 'play' icon in violet (Roxo Serenity) to match brand identity consistently
-export const defaultLogo =
-  'https://img.usecurling.com/i?q=play&color=violet&shape=fill'
 export const defaultIcon =
+  'https://img.usecurling.com/i?q=play&color=violet&shape=fill'
+// The logo URL acts as the brand mark source for the logo component
+export const defaultLogo =
   'https://img.usecurling.com/i?q=play&color=violet&shape=fill'
 
 const BrandingContext = createContext<BrandingState | undefined>(undefined)

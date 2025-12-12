@@ -46,7 +46,7 @@ const Onboarding = () => {
 
       {/* Header */}
       <div className="w-full p-6 flex justify-center pt-8 z-10">
-        <Logo className="h-10 w-auto" />
+        <Logo className="h-10 text-2xl" />
       </div>
 
       {/* Content */}

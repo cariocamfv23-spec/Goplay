@@ -97,7 +97,9 @@ export const mockVideos = [
     id: 1,
     user: 'mariagomes_voley',
     description: 'Aquele saque perfeito! 🏐 #volei #ace',
-    thumbnail: 'https://img.usecurling.com/p/300/600?q=volleyball%20serve',
+    // Using high quality vertical video placeholder
+    thumbnail:
+      'https://img.usecurling.com/p/720/1280?q=volleyball%20serve&dpr=2',
     likes: '1.2k',
     shares: '340',
     aiAction: 'Saque Ace detectado',
@@ -119,7 +121,9 @@ export const mockVideos = [
     id: 2,
     user: 'joaobasket_10',
     description: 'Buzzer beater de ontem! 🏀🏀🏀',
-    thumbnail: 'https://img.usecurling.com/p/300/600?q=basketball%20dunk',
+    // Using high quality vertical video placeholder
+    thumbnail:
+      'https://img.usecurling.com/p/720/1280?q=basketball%20dunk&dpr=2',
     likes: '5.6k',
     shares: '1.1k',
     aiAction: 'Cesta de 3 pontos',
