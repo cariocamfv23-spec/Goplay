@@ -19,6 +19,10 @@ const Explore = lazy(() => import('./pages/explore/Explore'))
 const PhotographersList = lazy(
   () => import('./pages/explore/PhotographersList'),
 )
+const EventsList = lazy(() => import('./pages/explore/EventsList'))
+const VenuesList = lazy(() => import('./pages/explore/VenuesList'))
+const GymsList = lazy(() => import('./pages/explore/GymsList'))
+
 const Profile = lazy(() => import('./pages/profile/Profile'))
 const MessagesList = lazy(() => import('./pages/messages/MessagesList'))
 const ChatRoom = lazy(() => import('./pages/messages/ChatRoom'))
@@ -96,6 +100,10 @@ const App = () => (
                 path="/explore/photographers"
                 element={<PhotographersList />}
               />
+              <Route path="/explore/events" element={<EventsList />} />
+              <Route path="/explore/venues" element={<VenuesList />} />
+              <Route path="/explore/gyms" element={<GymsList />} />
+
               <Route path="/events/:id" element={<EventDetails />} />
 
               {/* New Detail Routes */}

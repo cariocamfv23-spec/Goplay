@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input'
-import { Search, MapPin, Filter, Car, Camera } from 'lucide-react'
+import { Search, Filter, Car, Camera } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   mockEvents,
@@ -51,6 +51,7 @@ const Explore = () => {
             variant="secondary"
             size="sm"
             className="rounded-full px-6 hover:bg-secondary/80"
+            onClick={() => navigate('/explore/events')}
           >
             Eventos
           </Button>
@@ -58,6 +59,7 @@ const Explore = () => {
             variant="secondary"
             size="sm"
             className="rounded-full px-6 hover:bg-secondary/80"
+            onClick={() => navigate('/explore/venues')}
           >
             Quadras
           </Button>
@@ -65,6 +67,7 @@ const Explore = () => {
             variant="secondary"
             size="sm"
             className="rounded-full px-6 hover:bg-secondary/80"
+            onClick={() => navigate('/explore/gyms')}
           >
             Academias
           </Button>
@@ -109,7 +112,11 @@ const Explore = () => {
       <div className="px-4 mt-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold">Eventos em Destaque</h2>
-          <Button variant="link" className="text-primary text-sm h-auto p-0">
+          <Button
+            variant="link"
+            className="text-primary text-sm h-auto p-0"
+            onClick={() => navigate('/explore/events')}
+          >
             Ver todos
           </Button>
         </div>
@@ -144,7 +151,16 @@ const Explore = () => {
       </div>
 
       <div className="px-4 mt-2">
-        <h2 className="text-lg font-bold mb-4">Quadras e Espaços</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-bold">Quadras e Espaços</h2>
+          <Button
+            variant="link"
+            className="text-primary text-sm h-auto p-0"
+            onClick={() => navigate('/explore/venues')}
+          >
+            Ver todos
+          </Button>
+        </div>
         <div className="space-y-4">
           {mockVenues.map((venue) => (
             <Card
@@ -191,7 +207,16 @@ const Explore = () => {
 
       {/* Gyms Section */}
       <div className="px-4 mt-6">
-        <h2 className="text-lg font-bold mb-4">Academias Parceiras</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-bold">Academias Parceiras</h2>
+          <Button
+            variant="link"
+            className="text-primary text-sm h-auto p-0"
+            onClick={() => navigate('/explore/gyms')}
+          >
+            Ver todos
+          </Button>
+        </div>
         <div className="space-y-4">
           {mockGyms.map((gym) => (
             <Card
