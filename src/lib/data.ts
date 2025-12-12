@@ -65,8 +65,9 @@ export const mockPosts = [
     id: 1,
     type: 'image',
     user: {
-      name: 'Carlos Silva',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=10',
+      id: '1',
+      name: 'Lucas Oliveira',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
       type: 'Atleta',
     },
     content: 'Treino intenso hoje! Preparando para o campeonato regional. ⚽🔥',
@@ -82,7 +83,8 @@ export const mockPosts = [
     id: 2,
     type: 'video',
     user: {
-      name: 'Clube Atlético',
+      id: '2',
+      name: 'Clube Atlético Central',
       avatar: 'https://img.usecurling.com/i?q=shield&shape=fill&color=violet',
       type: 'Clube',
     },
@@ -102,9 +104,10 @@ export const mockPosts = [
     id: 3,
     type: 'carousel',
     user: {
-      name: 'Ana Souza',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=22',
-      type: 'Treinadora',
+      id: '3',
+      name: 'Roberto Mendes',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=45',
+      type: 'Treinador',
     },
     content: 'Dicas de alongamento para evitar lesões. Arraste para o lado! 🧘‍♀️',
     media: [
@@ -123,6 +126,7 @@ export const mockPosts = [
     id: 4,
     type: 'article',
     user: {
+      id: '2',
       name: 'NutriSports',
       avatar: 'https://img.usecurling.com/i?q=apple&shape=outline&color=green',
       type: 'Empresa',
@@ -185,5 +189,127 @@ export const mockEvents = [
     image: 'https://img.usecurling.com/p/400/200?q=marathon%20runners',
     organizer: 'Run Brasil',
     price: 'R$ 120,00',
+  },
+]
+
+export interface ProfileData {
+  id: string
+  type: 'athlete' | 'club' | 'coach'
+  name: string
+  username: string
+  avatar: string
+  cover: string
+  bio: string
+  location: string
+  followers: string
+  following: string
+  rating: number
+
+  // Athlete specific
+  position?: string
+  sport?: string
+  stats?: { label: string; value: string }[]
+  history?: { year: string; team: string; description: string }[]
+
+  // Club specific
+  about?: string
+  address?: string
+  jobs?: { id: number; title: string; type: string }[]
+  events?: { id: number; title: string; date: string }[]
+
+  // Coach specific
+  specialties?: string[]
+  certifications?: string[]
+  pricing?: string
+  availability?: string[]
+}
+
+export const mockProfiles: ProfileData[] = [
+  {
+    id: '1',
+    type: 'athlete',
+    name: 'Lucas Oliveira',
+    username: '@lucas.gol',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
+    cover: 'https://img.usecurling.com/p/800/300?q=soccer%20field',
+    bio: 'Atleta de Futebol | Meia-atacante focado em alta performance. Buscando novas oportunidades.',
+    location: 'São Paulo, SP',
+    followers: '1.2k',
+    following: '450',
+    rating: 4.8,
+    sport: 'Futebol',
+    position: 'Meia-Atacante',
+    stats: [
+      { label: 'Jogos', value: '89' },
+      { label: 'Gols', value: '34' },
+      { label: 'Assist', value: '21' },
+      { label: 'Altura', value: '1.78m' },
+    ],
+    history: [
+      {
+        year: '2023',
+        team: 'São Paulo FC Base',
+        description: 'Campeão Sub-17',
+      },
+      {
+        year: '2021',
+        team: 'Osasco FC',
+        description: 'Início na categoria de base',
+      },
+    ],
+  },
+  {
+    id: '2',
+    type: 'club',
+    name: 'Clube Atlético Central',
+    username: '@atleticocentral',
+    avatar: 'https://img.usecurling.com/i?q=shield&shape=fill&color=violet',
+    cover: 'https://img.usecurling.com/p/800/300?q=stadium',
+    bio: 'Formando campeões desde 1990. Estrutura completa para atletas de alto rendimento.',
+    location: 'Rio de Janeiro, RJ',
+    followers: '5.6k',
+    following: '120',
+    rating: 4.9,
+    about:
+      'O Clube Atlético Central é referência na formação de atletas de alto rendimento, contando com 5 campos oficiais, academia de ponta e departamento médico integrado.',
+    address: 'Av. das Américas, 5000 - Barra da Tijuca, Rio de Janeiro - RJ',
+    jobs: [
+      { id: 1, title: 'Treinador Sub-15', type: 'Presencial' },
+      { id: 2, title: 'Fisioterapeuta', type: 'Integral' },
+    ],
+    events: [
+      { id: 1, title: 'Peneira Sub-17', date: '15 Ago' },
+      { id: 2, title: 'Final do Regional', date: '22 Set' },
+    ],
+  },
+  {
+    id: '3',
+    type: 'coach',
+    name: 'Roberto Mendes',
+    username: '@beto.coach',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=45',
+    cover: 'https://img.usecurling.com/p/800/300?q=tactics%20board',
+    bio: 'Treinador Licença B CBF. Especialista em tática e desenvolvimento técnico individual.',
+    location: 'Belo Horizonte, MG',
+    followers: '3.1k',
+    following: '890',
+    rating: 4.7,
+    specialties: [
+      'Futebol de Campo',
+      'Futsal',
+      'Análise Tática',
+      'Preparação Física',
+    ],
+    certifications: [
+      'Licença B CBF',
+      'Pós-graduação em Treinamento Desportivo',
+      'Curso de Análise de Desempenho',
+    ],
+    pricing: 'R$ 150,00 / hora',
+    availability: [
+      'Segunda - 14h às 18h',
+      'Quarta - 09h às 12h',
+      'Sexta - 14h às 18h',
+    ],
   },
 ]

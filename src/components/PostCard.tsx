@@ -21,12 +21,13 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { CommentsSheet } from './CommentsSheet'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 interface PostProps {
   post: {
     id: number
     type: string
-    user: { name: string; avatar: string; type: string }
+    user: { id?: string; name: string; avatar: string; type: string }
     content: string
     media?: string[]
     title?: string
@@ -149,14 +150,18 @@ export function PostCard({ post }: PostProps) {
     <>
       <Card className="border-none shadow-sm rounded-2xl overflow-hidden bg-card mb-4">
         <CardHeader className="flex flex-row items-center p-4 pb-2 space-y-0 gap-3">
-          <Avatar className="h-10 w-10 border border-border cursor-pointer">
-            <AvatarImage src={post.user.avatar} />
-            <AvatarFallback>{post.user.name.substring(0, 2)}</AvatarFallback>
-          </Avatar>
+          <Link to={`/profile/${post.user.id || 'me'}`}>
+            <Avatar className="h-10 w-10 border border-border cursor-pointer">
+              <AvatarImage src={post.user.avatar} />
+              <AvatarFallback>{post.user.name.substring(0, 2)}</AvatarFallback>
+            </Avatar>
+          </Link>
           <div className="flex-1 cursor-pointer">
-            <h3 className="text-sm font-semibold hover:underline">
-              {post.user.name}
-            </h3>
+            <Link to={`/profile/${post.user.id || 'me'}`}>
+              <h3 className="text-sm font-semibold hover:underline">
+                {post.user.name}
+              </h3>
+            </Link>
             <div className="flex items-center gap-1">
               <Badge
                 variant="secondary"
