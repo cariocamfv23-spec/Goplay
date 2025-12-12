@@ -18,6 +18,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   mockEvents,
   mockVenues,
@@ -56,6 +57,47 @@ const Explore = () => {
       </Button>
     </div>
   )
+
+  const renderProfileList = (type: string, title: string, icon: any) => {
+    const profiles = mockProfiles.filter((p) => p.type === type)
+    if (profiles.length === 0) return null
+
+    return (
+      <div>
+        {renderSectionHeader(title, icon)}
+        <div className="space-y-3">
+          {profiles.map((profile) => (
+            <Card
+              key={profile.id}
+              className="border-none shadow-sm cursor-pointer hover:bg-secondary/10 transition-colors"
+              onClick={() => navigate(`/profile/${profile.id}`)}
+            >
+              <CardContent className="p-3 flex gap-3 items-center">
+                <Avatar className="h-16 w-16 border-2 border-background shadow-sm">
+                  <AvatarImage src={profile.avatar} />
+                  <AvatarFallback>{profile.name[0]}</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <div className="flex justify-between items-start">
+                    <h3 className="font-bold truncate">{profile.name}</h3>
+                    <div className="flex items-center gap-1 text-xs text-gold font-bold shrink-0">
+                      <Star className="h-3 w-3 fill-current" /> {profile.rating}
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {profile.location}
+                  </p>
+                  <p className="text-xs font-medium text-primary mt-1 truncate">
+                    {profile.bio}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="pb-24 bg-background min-h-screen">
@@ -312,6 +354,30 @@ const Explore = () => {
               </div>
             </div>
           )}
+
+          {/* Athletes */}
+          {(activeCategory === 'Todos' || activeCategory === 'Atletas') &&
+            renderProfileList(
+              'athlete',
+              'Atletas em Destaque',
+              <User className="h-5 w-5 text-primary" />,
+            )}
+
+          {/* Drivers */}
+          {(activeCategory === 'Todos' || activeCategory === 'Motoristas') &&
+            renderProfileList(
+              'driver',
+              'Motoristas Parceiros',
+              <Car className="h-5 w-5 text-primary" />,
+            )}
+
+          {/* Photographers */}
+          {(activeCategory === 'Todos' || activeCategory === 'Fotógrafos') &&
+            renderProfileList(
+              'photographer',
+              'Fotógrafos Esportivos',
+              <Camera className="h-5 w-5 text-primary" />,
+            )}
         </div>
       ) : (
         <div className="h-[calc(100vh-180px)] w-full relative bg-secondary/50 animate-fade-in">
