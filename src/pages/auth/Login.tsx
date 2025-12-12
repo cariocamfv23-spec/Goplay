@@ -2,10 +2,12 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { Mail, Lock, Smartphone } from 'lucide-react'
 
 const Login = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+  const [method, setMethod] = useState<'email' | 'phone'>('email')
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
@@ -13,40 +15,72 @@ const Login = () => {
     // Simulate login
     setTimeout(() => {
       setLoading(false)
-      navigate('/home') // Or /onboarding for new users, but sticking to standard flow
-    }, 1000)
+      navigate('/home')
+    }, 1500)
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-center px-6 py-12 bg-background">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-10">
-        <h2 className="text-3xl font-bold text-primary mb-2">Bem-vindo</h2>
-        <p className="text-muted-foreground">Entre para continuar</p>
+    <div className="min-h-screen flex flex-col justify-center px-6 py-12 bg-background animate-fade-in">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8">
+        <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-800 mb-2">
+          Bem-vindo de volta
+        </h2>
+        <p className="text-muted-foreground">Entre para continuar jogando</p>
       </div>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <form className="space-y-6" onSubmit={handleLogin}>
-          <div>
-            <Input
-              type="email"
-              placeholder="Email"
-              required
-              className="rounded-xl h-12"
-            />
-          </div>
-          <div>
+        <div className="flex bg-secondary p-1 rounded-xl mb-6">
+          <button
+            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${method === 'email' ? 'bg-background shadow-sm text-primary' : 'text-muted-foreground'}`}
+            onClick={() => setMethod('email')}
+          >
+            Email
+          </button>
+          <button
+            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${method === 'phone' ? 'bg-background shadow-sm text-primary' : 'text-muted-foreground'}`}
+            onClick={() => setMethod('phone')}
+          >
+            Telefone
+          </button>
+        </div>
+
+        <form className="space-y-4" onSubmit={handleLogin}>
+          {method === 'email' ? (
+            <div className="relative">
+              <Mail className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
+              <Input
+                type="email"
+                placeholder="seu@email.com"
+                required
+                className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50"
+              />
+            </div>
+          ) : (
+            <div className="relative">
+              <Smartphone className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
+              <Input
+                type="tel"
+                placeholder="(00) 00000-0000"
+                required
+                className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50"
+              />
+            </div>
+          )}
+
+          <div className="relative">
+            <Lock className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
             <Input
               type="password"
-              placeholder="Senha"
+              placeholder="Sua senha"
               required
-              className="rounded-xl h-12"
+              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50"
             />
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-end">
             <Link
               to="#"
-              className="text-sm font-medium text-primary hover:underline"
+              className="text-xs font-medium text-primary hover:underline"
             >
               Esqueceu a senha?
             </Link>
@@ -54,7 +88,7 @@ const Login = () => {
 
           <Button
             type="submit"
-            className="w-full h-12 rounded-full text-base"
+            className="w-full h-12 rounded-full text-base font-bold shadow-lg shadow-primary/20"
             disabled={loading}
           >
             {loading ? 'Entrando...' : 'Entrar'}
@@ -66,7 +100,7 @@ const Login = () => {
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-muted"></div>
             </div>
-            <div className="relative flex justify-center text-sm">
+            <div className="relative flex justify-center text-xs uppercase">
               <span className="px-2 bg-background text-muted-foreground">
                 Ou continue com
               </span>
@@ -74,14 +108,35 @@ const Login = () => {
           </div>
 
           <div className="mt-6 grid grid-cols-3 gap-3">
-            <Button variant="outline" className="rounded-full">
-              Google
+            <Button
+              variant="outline"
+              className="rounded-xl h-12 hover:bg-secondary/80"
+            >
+              <img
+                src="https://img.usecurling.com/i?q=google&shape=outline"
+                alt="Google"
+                className="h-5 w-5"
+              />
             </Button>
-            <Button variant="outline" className="rounded-full">
-              Apple
+            <Button
+              variant="outline"
+              className="rounded-xl h-12 hover:bg-secondary/80"
+            >
+              <img
+                src="https://img.usecurling.com/i?q=apple&shape=outline"
+                alt="Apple"
+                className="h-5 w-5"
+              />
             </Button>
-            <Button variant="outline" className="rounded-full">
-              LinkedIn
+            <Button
+              variant="outline"
+              className="rounded-xl h-12 hover:bg-secondary/80"
+            >
+              <img
+                src="https://img.usecurling.com/i?q=linkedin&shape=outline"
+                alt="LinkedIn"
+                className="h-5 w-5"
+              />
             </Button>
           </div>
         </div>
@@ -90,9 +145,9 @@ const Login = () => {
           Não tem uma conta?{' '}
           <Link
             to="/register"
-            className="font-semibold text-primary hover:underline"
+            className="font-bold text-primary hover:underline"
           >
-            Criar conta
+            Criar agora
           </Link>
         </p>
       </div>

@@ -1,11 +1,10 @@
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { mockProfiles } from '@/lib/data'
 import AthleteView from './AthleteView'
 import ClubView from './ClubView'
 import CoachView from './CoachView'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
 
 const Profile = () => {
   const { id } = useParams()
@@ -15,9 +14,11 @@ const Profile = () => {
   // In a real app, "me" would fetch from current user context
   const profileId = id === 'me' ? '1' : id
 
-  const profile = mockProfiles.find((p) => p.id === profileId)
+  // Logic to allow accessing profiles by ID 'me' or numeric
+  const profile =
+    mockProfiles.find((p) => p.id === profileId) || mockProfiles[0]
 
-  if (!profile) {
+  if (!profile && id !== 'me') {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
         <h2 className="text-2xl font-bold mb-2">Perfil não encontrado</h2>

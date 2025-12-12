@@ -14,10 +14,12 @@ export default function Layout() {
     '/onboarding',
     '/profile-selection',
   ].some((p) => path.startsWith(p))
-  const isMove = path === '/move' // Move usually has its own fullscreen layout, but spec says Global Layout Structure. We can adapt.
+
+  // Move usually has its own fullscreen layout, but spec says Global Layout Structure.
+  // We keep bottom nav for easy navigation but might hide top bar or make it transparent.
+  const isMove = path === '/move'
 
   // Spec says: "Top App Bar... visible when navigating deeper".
-  // Let's hide TopBar on Splash and Auth.
   const showTopBar = !isSplash && !isAuth && !isMove
 
   // Bottom Nav visible on main tabs
@@ -27,7 +29,8 @@ export default function Layout() {
     <main className="flex flex-col min-h-screen bg-background relative">
       {showTopBar && <TopBar />}
 
-      <div className={`flex-1 ${showBottomNav ? 'pb-16' : ''}`}>
+      {/* For MOVE page, we want it to be full screen, potentially behind bottom nav */}
+      <div className={`flex-1 ${showBottomNav && !isMove ? 'pb-0' : ''}`}>
         <Outlet />
       </div>
 

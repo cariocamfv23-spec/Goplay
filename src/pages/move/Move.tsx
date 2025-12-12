@@ -5,69 +5,102 @@ import {
   Share2,
   MoreVertical,
   Music2,
+  Play,
+  Volume2,
 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 const Move = () => {
   return (
-    <div className="h-screen w-full bg-black text-white snap-y snap-mandatory overflow-y-scroll">
+    <div className="h-screen w-full bg-black text-white snap-y snap-mandatory overflow-y-scroll scroll-smooth no-scrollbar">
       {mockVideos.map((video) => (
         <div
           key={video.id}
-          className="h-full w-full relative snap-start flex items-center justify-center bg-zinc-900"
+          className="h-full w-full relative snap-start flex items-center justify-center bg-zinc-900 overflow-hidden"
         >
           {/* Simulated Video Player */}
-          <img
-            src={video.thumbnail}
-            alt="Video"
-            className="absolute inset-0 w-full h-full object-cover opacity-60"
-          />
+          <div className="absolute inset-0 bg-zinc-800">
+            <img
+              src={video.thumbnail}
+              alt="Video"
+              className="w-full h-full object-cover opacity-80"
+            />
+            {/* Play Button Overlay (simulated paused/playing state) */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer bg-black/10">
+              <Play className="h-16 w-16 fill-white/50 text-white/50" />
+            </div>
+          </div>
 
-          {/* Overlay Info */}
-          <div className="absolute bottom-20 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent pt-20">
-            <div className="flex items-end justify-between">
-              <div className="flex-1 pr-10">
-                <div className="flex items-center gap-2 mb-2">
-                  <Avatar className="h-8 w-8 border border-white/50">
-                    <AvatarImage
-                      src={`https://img.usecurling.com/i?q=${video.user}`}
-                    />
-                    <AvatarFallback>{video.user[0]}</AvatarFallback>
-                  </Avatar>
-                  <span className="font-semibold text-sm">@{video.user}</span>
-                  <button className="text-xs bg-transparent border border-white/50 rounded-full px-2 py-0.5 ml-2">
-                    Seguir
-                  </button>
-                </div>
-                <p className="text-sm mb-2">{video.description}</p>
-                <div className="flex items-center gap-2 text-xs opacity-80">
-                  <Music2 className="h-3 w-3" />
-                  <span>Som original - {video.user}</span>
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80 pointer-events-none" />
+
+          {/* Right Side Actions */}
+          <div className="absolute bottom-24 right-4 flex flex-col items-center gap-6 z-10">
+            <div className="relative group cursor-pointer">
+              <Avatar className="h-12 w-12 border-2 border-white shadow-lg transition-transform group-hover:scale-110">
+                <AvatarImage
+                  src={`https://img.usecurling.com/i?q=${video.user}`}
+                />
+                <AvatarFallback>{video.user[0]}</AvatarFallback>
+              </Avatar>
+              <div className="absolute -bottom-2 inset-x-0 flex justify-center">
+                <div className="bg-primary rounded-full p-0.5 shadow-sm">
+                  <div className="h-3 w-3 bg-white rounded-full flex items-center justify-center">
+                    <span className="text-[10px] text-primary font-bold">
+                      +
+                    </span>
+                  </div>
                 </div>
               </div>
+            </div>
 
-              {/* Actions */}
-              <div className="flex flex-col items-center gap-6">
-                <div className="flex flex-col items-center gap-1">
-                  <div className="p-2 bg-white/10 rounded-full backdrop-blur-sm">
-                    <Heart className="h-6 w-6" />
-                  </div>
-                  <span className="text-xs font-medium">{video.likes}</span>
-                </div>
-                <div className="flex flex-col items-center gap-1">
-                  <div className="p-2 bg-white/10 rounded-full backdrop-blur-sm">
-                    <MessageCircle className="h-6 w-6" />
-                  </div>
-                  <span className="text-xs font-medium">120</span>
-                </div>
-                <div className="flex flex-col items-center gap-1">
-                  <div className="p-2 bg-white/10 rounded-full backdrop-blur-sm">
-                    <Share2 className="h-6 w-6" />
-                  </div>
-                  <span className="text-xs font-medium">{video.shares}</span>
-                </div>
-                <MoreVertical className="h-6 w-6" />
+            <div className="flex flex-col items-center gap-1 cursor-pointer">
+              <div className="p-2 bg-white/10 rounded-full backdrop-blur-sm hover:bg-white/20 transition-colors">
+                <Heart className="h-7 w-7 text-white" />
               </div>
+              <span className="text-xs font-bold drop-shadow-md">
+                {video.likes}
+              </span>
+            </div>
+
+            <div className="flex flex-col items-center gap-1 cursor-pointer">
+              <div className="p-2 bg-white/10 rounded-full backdrop-blur-sm hover:bg-white/20 transition-colors">
+                <MessageCircle className="h-7 w-7 text-white" />
+              </div>
+              <span className="text-xs font-bold drop-shadow-md">120</span>
+            </div>
+
+            <div className="flex flex-col items-center gap-1 cursor-pointer">
+              <div className="p-2 bg-white/10 rounded-full backdrop-blur-sm hover:bg-white/20 transition-colors">
+                <Share2 className="h-7 w-7 text-white" />
+              </div>
+              <span className="text-xs font-bold drop-shadow-md">
+                {video.shares}
+              </span>
+            </div>
+
+            <div className="p-2 bg-white/10 rounded-full backdrop-blur-sm hover:bg-white/20 transition-colors cursor-pointer">
+              <MoreVertical className="h-6 w-6 text-white" />
+            </div>
+          </div>
+
+          {/* Bottom Info */}
+          <div className="absolute bottom-20 left-4 right-16 z-10">
+            <div className="mb-2">
+              <h3 className="font-bold text-base text-shadow-sm mb-1">
+                @{video.user}
+              </h3>
+              <p className="text-sm text-white/90 leading-snug line-clamp-2">
+                {video.description}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 mt-2 bg-white/10 backdrop-blur-md rounded-full px-3 py-1.5 w-max">
+              <Music2 className="h-3 w-3 animate-spin-slow" />
+              <div className="text-xs font-medium w-32 truncate">
+                Som original - {video.user}
+              </div>
+              <Volume2 className="h-3 w-3 ml-1" />
             </div>
           </div>
         </div>
