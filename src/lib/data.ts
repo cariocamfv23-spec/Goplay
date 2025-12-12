@@ -1073,3 +1073,78 @@ export const mockDriverStats = {
   },
   hoursOnline: 145,
 }
+
+export const mockDriverGoals = [
+  {
+    id: 1,
+    title: 'Corridas da Semana',
+    current: 28,
+    target: 40,
+    reward: 'R$ 100 Bônus',
+    deadline: 'Dom, 23:59',
+    isRating: false,
+  },
+  {
+    id: 2,
+    title: 'Avaliação Estelar',
+    current: 4.95,
+    target: 4.9,
+    reward: 'Selo Premium',
+    deadline: '30 dias',
+    isRating: true,
+  },
+]
+
+export const mockDriverRewards = [
+  {
+    id: 1,
+    title: 'Voucher Combustível',
+    description: 'R$ 50,00 de desconto no abastecimento',
+    points: 500,
+    cost: 500,
+    image: 'https://img.usecurling.com/i?q=gas%20pump&color=red',
+  },
+  {
+    id: 2,
+    title: 'Lava-Rápido Premium',
+    description: 'Lavagem completa com cera',
+    points: 300,
+    cost: 300,
+    image: 'https://img.usecurling.com/i?q=car%20wash&color=blue',
+  },
+  {
+    id: 3,
+    title: 'Troca de Óleo',
+    description: 'Mão de obra grátis',
+    points: 800,
+    cost: 800,
+    image: 'https://img.usecurling.com/i?q=oil%20can&color=black',
+  },
+]
+
+export const mockPhotographerTransactions = [
+  {
+    id: 't1',
+    date: 'Hoje, 10:45',
+    description: 'Venda de Foto - Final Sub-17',
+    amount: 15.9,
+    type: 'credit',
+    status: 'completed',
+  },
+  {
+    id: 't2',
+    date: 'Ontem, 16:20',
+    description: 'Pacote Cobertura de Jogo',
+    amount: 150.0,
+    type: 'credit',
+    status: 'completed',
+  },
+  {
+    id: 't3',
+    date: '10 Ago, 09:00',
+    description: 'Saque para Conta',
+    amount: -200.0,
+    type: 'debit',
+    status: 'completed',
+  },
+]
