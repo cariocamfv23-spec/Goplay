@@ -1,137 +1,114 @@
-import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
+import useBrandingStore from '@/stores/useBrandingStore'
 import {
   User,
   Shield,
-  Briefcase,
-  Trophy,
-  Flag,
-  Users,
   Camera,
+  Trophy,
   Car,
+  Stethoscope,
+  Apple,
 } from 'lucide-react'
-import { toast } from 'sonner'
+
+const profileTypes = [
+  {
+    id: 'athlete',
+    label: 'Atleta',
+    icon: Trophy,
+    description: 'Para jogadores e esportistas',
+  },
+  {
+    id: 'club',
+    label: 'Clube',
+    icon: Shield,
+    description: 'Para times e organizações',
+  },
+  {
+    id: 'coach',
+    label: 'Treinador',
+    icon: User,
+    description: 'Para técnicos e instrutores',
+  },
+  {
+    id: 'photographer',
+    label: 'Fotógrafo',
+    icon: Camera,
+    description: 'Para registrar momentos',
+  },
+  {
+    id: 'driver',
+    label: 'Motorista',
+    icon: Car,
+    description: 'Para transporte de equipamentos',
+  },
+  {
+    id: 'health',
+    label: 'Saúde',
+    icon: Stethoscope,
+    description: 'Fisio, médicos e saúde',
+  },
+  {
+    id: 'nutrition',
+    label: 'Nutrição',
+    icon: Apple,
+    description: 'Nutricionistas esportivos',
+  },
+]
 
 const ProfileSelection = () => {
   const navigate = useNavigate()
+  const { logoUrl } = useBrandingStore()
 
-  const profiles = [
-    {
-      id: 'atleta',
-      label: 'Atleta',
-      icon: User,
-      desc: 'Para jogadores e praticantes',
-      color: 'text-blue-500',
-      bg: 'bg-blue-500/10',
-    },
-    {
-      id: 'clube',
-      label: 'Clube',
-      icon: Shield,
-      desc: 'Para times e centros esportivos',
-      color: 'text-purple-500',
-      bg: 'bg-purple-500/10',
-    },
-    {
-      id: 'treinador',
-      label: 'Treinador',
-      icon: Trophy,
-      desc: 'Para profissionais do esporte',
-      color: 'text-orange-500',
-      bg: 'bg-orange-500/10',
-    },
-    {
-      id: 'empresa',
-      label: 'Empresa',
-      icon: Briefcase,
-      desc: 'Para marcas e serviços',
-      color: 'text-green-500',
-      bg: 'bg-green-500/10',
-    },
-    {
-      id: 'fotografo',
-      label: 'Fotógrafo',
-      icon: Camera,
-      desc: 'Para criadores de conteúdo',
-      color: 'text-pink-500',
-      bg: 'bg-pink-500/10',
-    },
-    {
-      id: 'motorista',
-      label: 'Motorista',
-      icon: Car,
-      desc: 'Transporte especializado',
-      color: 'text-zinc-500',
-      bg: 'bg-zinc-500/10',
-    },
-    {
-      id: 'organizador',
-      label: 'Organizador',
-      icon: Users,
-      desc: 'Para gestão de eventos',
-      color: 'text-red-500',
-      bg: 'bg-red-500/10',
-    },
-    {
-      id: 'torcedor',
-      label: 'Torcedor',
-      icon: Flag,
-      desc: 'Para acompanhar o esporte',
-      color: 'text-yellow-500',
-      bg: 'bg-yellow-500/10',
-    },
-  ]
-
-  const handleSelect = (id: string) => {
-    // Save selected profile type to localStorage for demo purposes
-    localStorage.setItem('userType', id)
-
-    if (id === 'motorista') {
-      toast.success('Perfil de Motorista selecionado!', {
-        description:
-          'Você agora tem acesso ao menu exclusivo de Motorista Esportivo.',
-      })
-      navigate('/driver/dashboard')
-    } else {
-      toast.success('Perfil selecionado com sucesso!')
-      navigate('/home')
-    }
+  const handleSelect = (type: string) => {
+    localStorage.setItem('userType', type)
+    navigate('/home')
   }
 
   return (
-    <div className="min-h-screen bg-background p-6 animate-fade-in flex flex-col">
-      <div className="mt-4 mb-6 text-center">
-        <h2 className="text-3xl font-bold mb-2">Quem é você?</h2>
-        <p className="text-muted-foreground">
-          Escolha o perfil que melhor te representa no ecossistema Goplay.
-        </p>
+    <div className="min-h-screen bg-background flex flex-col py-10 px-6 animate-fade-in relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
+
+      <div className="flex justify-center mb-8 relative z-10">
+        <img
+          src={logoUrl}
+          alt="Goplay App"
+          className="h-10 w-auto object-contain"
+        />
       </div>
 
-      <div className="grid grid-cols-2 gap-3 pb-8 overflow-y-auto">
-        {profiles.map((profile) => (
-          <Card
-            key={profile.id}
-            className="p-4 flex flex-col items-center justify-center text-center gap-2 cursor-pointer border-2 border-transparent hover:border-primary/50 hover:shadow-lg transition-all hover:-translate-y-1 bg-card h-full"
-            onClick={() => handleSelect(profile.id)}
-          >
-            <div
-              className={`w-12 h-12 rounded-full ${profile.bg} flex items-center justify-center ${profile.color} mb-1`}
+      <div className="max-w-md mx-auto w-full relative z-10">
+        <div className="text-center mb-10">
+          <h1 className="text-2xl font-bold mb-2">Quem é você no jogo?</h1>
+          <p className="text-muted-foreground">
+            Escolha o perfil que melhor descreve sua atividade.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4">
+          {profileTypes.map((profile) => (
+            <button
+              key={profile.id}
+              onClick={() => handleSelect(profile.id)}
+              className="flex items-center p-4 bg-secondary/30 hover:bg-secondary border border-border/50 rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98] group text-left"
             >
-              <profile.icon className="h-6 w-6" />
-            </div>
-            <div>
-              <h3 className="font-bold text-sm">{profile.label}</h3>
-              <p className="text-[10px] text-muted-foreground leading-tight mt-1">
-                {profile.desc}
-              </p>
-            </div>
-          </Card>
-        ))}
+              <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center shadow-sm group-hover:bg-primary/10 transition-colors mr-4">
+                <profile.icon className="h-6 w-6 text-primary" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-foreground">
+                  {profile.label}
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  {profile.description}
+                </p>
+              </div>
+              <div className="w-6 h-6 rounded-full border-2 border-muted group-hover:border-primary group-hover:bg-primary/20 transition-all" />
+            </button>
+          ))}
+        </div>
       </div>
-
-      <p className="text-center text-xs text-muted-foreground mt-auto pb-4">
-        Você poderá adicionar outros perfis depois.
-      </p>
     </div>
   )
 }

@@ -1,208 +1,107 @@
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { useNavigate } from 'react-router-dom'
-import { Badge } from '@/components/ui/badge'
 import { useState } from 'react'
-import {
-  ArrowLeft,
-  ArrowRight,
-  Check,
-  MapPin,
-  Trophy,
-  Activity,
-  Dumbbell,
-} from 'lucide-react'
-import { Input } from '@/components/ui/input'
-import { Slider } from '@/components/ui/slider'
+import { useNavigate } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
+import { ChevronRight } from 'lucide-react'
+import useBrandingStore from '@/stores/useBrandingStore'
+
+const slides = [
+  {
+    id: 1,
+    title: 'Conecte-se ao Esporte',
+    description: 'Encontre parceiros, times e eventos próximos a você.',
+    image: 'https://img.usecurling.com/p/600/600?q=soccer%20players%20hugging',
+  },
+  {
+    id: 2,
+    title: 'Mostre seu Talento',
+    description: 'Publique seus melhores lances e seja visto por olheiros.',
+    image: 'https://img.usecurling.com/p/600/600?q=athlete%20celebrating',
+  },
+  {
+    id: 3,
+    title: 'Evolua sua Performance',
+    description: 'Acompanhe suas estatísticas e receba dicas de treino.',
+    image: 'https://img.usecurling.com/p/600/600?q=fitness%20tracker',
+  },
+]
 
 const Onboarding = () => {
   const navigate = useNavigate()
-  const [step, setStep] = useState(1)
+  const { logoUrl } = useBrandingStore()
+  const [currentSlide, setCurrentSlide] = useState(0)
 
-  const handleNext = () => {
-    if (step < 4) {
-      setStep(step + 1)
+  const nextSlide = () => {
+    if (currentSlide < slides.length - 1) {
+      setCurrentSlide(currentSlide + 1)
     } else {
-      navigate('/profile-selection')
+      completeOnboarding()
     }
   }
 
-  const handleBack = () => {
-    if (step > 1) {
-      setStep(step - 1)
-    }
+  const completeOnboarding = () => {
+    localStorage.setItem('has_visited_onboarding', 'true')
+    navigate('/login')
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background p-6 animate-fade-in relative overflow-hidden">
-      {/* Progress Bar */}
-      <div className="absolute top-0 left-0 right-0 h-1.5 bg-secondary">
-        <div
-          className="h-full bg-primary transition-all duration-500 ease-out"
-          style={{ width: `${(step / 4) * 100}%` }}
-        />
+    <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
+      {/* Background blobs */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[120px] translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+
+      {/* Header */}
+      <div className="p-6 flex justify-center z-10">
+        <img src={logoUrl} alt="Goplay" className="h-8 w-auto object-contain" />
       </div>
 
-      <div className="flex-1 flex flex-col max-w-md mx-auto w-full pt-8">
-        {step > 1 && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleBack}
-            className="self-start -ml-2 mb-4"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        )}
+      {/* Content */}
+      <div className="flex-1 flex flex-col justify-center px-6 relative z-10">
+        <div className="w-full aspect-square max-w-sm mx-auto mb-10 relative">
+          <div className="absolute inset-4 bg-gradient-to-tr from-primary/20 to-gold/20 rounded-full blur-3xl" />
+          <img
+            src={slides[currentSlide].image}
+            alt={slides[currentSlide].title}
+            className="w-full h-full object-cover rounded-3xl shadow-2xl transform transition-all duration-500 hover:scale-105 mask-image-gradient"
+          />
+        </div>
 
-        <div className="flex-1 flex flex-col justify-center">
-          {step === 1 && (
-            <div className="space-y-6 animate-slide-up">
-              <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 text-primary">
-                  <Trophy className="h-8 w-8" />
-                </div>
-                <h2 className="text-2xl font-bold">Qual seu esporte?</h2>
-                <p className="text-muted-foreground">
-                  Selecione sua modalidade principal
-                </p>
-              </div>
+        <div className="text-center space-y-4 max-w-sm mx-auto animate-fade-in">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground">
+            {slides[currentSlide].title}
+          </h2>
+          <p className="text-muted-foreground text-lg leading-relaxed">
+            {slides[currentSlide].description}
+          </p>
+        </div>
+      </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  'Futebol',
-                  'Vôlei',
-                  'Basquete',
-                  'Tênis',
-                  'Corrida',
-                  'Crossfit',
-                ].map((sport) => (
-                  <div
-                    key={sport}
-                    className="p-4 rounded-xl border-2 border-transparent bg-secondary/50 hover:border-primary hover:bg-primary/5 cursor-pointer transition-all flex flex-col items-center gap-2 group"
-                  >
-                    <img
-                      src={`https://img.usecurling.com/i?q=${sport}&color=gradient`}
-                      className="h-8 w-8"
-                      alt={sport}
-                    />
-                    <span className="font-medium group-hover:text-primary">
-                      {sport}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {step === 2 && (
-            <div className="space-y-8 animate-slide-up">
-              <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-orange-500/10 flex items-center justify-center mx-auto mb-4 text-orange-500">
-                  <Activity className="h-8 w-8" />
-                </div>
-                <h2 className="text-2xl font-bold">Seu Nível</h2>
-                <p className="text-muted-foreground">
-                  Como você se classifica?
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                {[
-                  'Iniciante',
-                  'Amador',
-                  'Intermediário',
-                  'Avançado',
-                  'Profissional',
-                ].map((level) => (
-                  <div
-                    key={level}
-                    className="p-4 rounded-xl border border-border hover:border-primary hover:bg-primary/5 cursor-pointer flex justify-between items-center group transition-all"
-                  >
-                    <span className="font-semibold">{level}</span>
-                    <div className="h-4 w-4 rounded-full border border-muted-foreground group-hover:border-primary group-hover:bg-primary" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div className="space-y-8 animate-slide-up">
-              <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center mx-auto mb-4 text-blue-500">
-                  <MapPin className="h-8 w-8" />
-                </div>
-                <h2 className="text-2xl font-bold">Onde você joga?</h2>
-                <p className="text-muted-foreground">
-                  Encontre partidas e locais perto de você
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <Button
-                  variant="outline"
-                  className="w-full h-14 rounded-xl gap-2 border-primary/30 text-primary bg-primary/5"
-                >
-                  <MapPin className="h-5 w-5" /> Usar Localização Atual
-                </Button>
-                <div className="relative">
-                  <span className="absolute inset-0 flex items-center justify-center text-xs text-muted-foreground bg-background w-8 mx-auto z-10">
-                    OU
-                  </span>
-                  <div className="border-t border-border absolute w-full top-1/2"></div>
-                </div>
-                <Input
-                  placeholder="Digite sua cidade..."
-                  className="h-14 rounded-xl bg-secondary/30"
-                />
-              </div>
-            </div>
-          )}
-
-          {step === 4 && (
-            <div className="space-y-6 animate-slide-up">
-              <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4 text-green-500">
-                  <Dumbbell className="h-8 w-8" />
-                </div>
-                <h2 className="text-2xl font-bold">Interesses</h2>
-                <p className="text-muted-foreground">
-                  O que você busca no Goplay?
-                </p>
-              </div>
-
-              <div className="flex flex-wrap justify-center gap-3">
-                {[
-                  'Jogar Partidas',
-                  'Encontrar Times',
-                  'Participar de Torneios',
-                  'Alugar Quadras',
-                  'Contratar Treinador',
-                  'Comprar Equipamentos',
-                  'Vagas de Emprego',
-                  'Assistir Conteúdo',
-                ].map((interest) => (
-                  <Badge
-                    key={interest}
-                    variant="secondary"
-                    className="px-4 py-2.5 text-sm rounded-full cursor-pointer hover:bg-primary hover:text-white transition-all select-none"
-                  >
-                    {interest}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
+      {/* Footer / Controls */}
+      <div className="p-8 flex items-center justify-between">
+        {/* Indicators */}
+        <div className="flex gap-2">
+          {slides.map((_, idx) => (
+            <div
+              key={idx}
+              className={`h-2 rounded-full transition-all duration-300 ${idx === currentSlide ? 'w-8 bg-primary' : 'w-2 bg-muted'}`}
+            />
+          ))}
         </div>
 
         <Button
-          className="w-full h-14 rounded-full text-base font-bold shadow-lg mt-8"
-          onClick={handleNext}
+          onClick={nextSlide}
+          size="lg"
+          className="rounded-full w-14 h-14 p-0 shadow-lg shadow-primary/25 bg-gradient-primary hover:scale-105 transition-transform"
         >
-          {step === 4 ? 'Finalizar' : 'Continuar'}{' '}
-          <ArrowRight className="ml-2 h-5 w-5" />
+          <ChevronRight className="h-6 w-6" />
         </Button>
+      </div>
+
+      <div className="absolute bottom-10 left-0 w-full flex justify-center">
+        <button
+          onClick={completeOnboarding}
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-2"
+        >
+          Pular
+        </button>
       </div>
     </div>
   )

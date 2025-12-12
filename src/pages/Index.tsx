@@ -1,49 +1,48 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Play } from 'lucide-react'
+import useBrandingStore from '@/stores/useBrandingStore'
 
 const Index = () => {
   const navigate = useNavigate()
+  const { logoUrl } = useBrandingStore()
 
   useEffect(() => {
-    // Transition to login after 3 seconds for a better splash experience
+    // Splash screen timeout
     const timer = setTimeout(() => {
-      navigate('/login')
-    }, 3000)
+      // Check if user has visited before or is logged in (mock check)
+      const hasVisited = localStorage.getItem('has_visited_onboarding')
+      if (hasVisited) {
+        navigate('/login')
+      } else {
+        navigate('/onboarding')
+      }
+    }, 2500)
+
     return () => clearTimeout(timer)
   }, [navigate])
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-primary to-purple-900 text-white animate-fade-in relative overflow-hidden">
-      {/* Background patterns */}
-      <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-        <div className="absolute top-10 left-10 w-64 h-64 bg-white rounded-full blur-[100px]" />
-        <div className="absolute bottom-10 right-10 w-64 h-64 bg-gold rounded-full blur-[100px]" />
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/10 via-background to-background pointer-events-none" />
+      <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 pointer-events-none" />
+
+      {/* Animated Logo */}
+      <div className="relative z-10 animate-fade-in-up duration-1000 flex flex-col items-center">
+        <div className="p-6 rounded-3xl bg-background/50 backdrop-blur-xl border border-white/10 shadow-2xl mb-6">
+          <img
+            src={logoUrl}
+            alt="Goplay"
+            className="w-32 h-auto object-contain drop-shadow-lg"
+          />
+        </div>
+        <div className="h-1 w-24 bg-secondary rounded-full overflow-hidden">
+          <div className="h-full bg-primary w-1/2 animate-[shimmer_1s_infinite_linear]" />
+        </div>
       </div>
 
-      <div className="flex flex-col items-center z-10 animate-slide-up">
-        {/* Animated Logo */}
-        <div className="w-28 h-28 rounded-3xl bg-white/10 backdrop-blur-xl flex items-center justify-center mb-8 shadow-2xl border border-white/20 relative group">
-          <div className="absolute inset-0 bg-white/20 rounded-3xl blur-lg group-hover:blur-xl transition-all duration-500" />
-          <div className="relative z-10 bg-gradient-to-br from-white to-white/80 p-4 rounded-2xl shadow-inner">
-            <Play className="w-12 h-12 text-primary fill-primary ml-1" />
-          </div>
-        </div>
-
-        <h1 className="text-5xl font-bold tracking-tighter mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-white/80 drop-shadow-sm">
-          Goplay
-        </h1>
-        <p className="text-white/70 text-sm font-medium tracking-[0.2em] uppercase">
-          Sports Connected
-        </p>
-      </div>
-
-      <div className="absolute bottom-10 z-10">
-        <div className="flex gap-2">
-          <div className="w-2 h-2 rounded-full bg-white animate-bounce [animation-delay:-0.3s]" />
-          <div className="w-2 h-2 rounded-full bg-white animate-bounce [animation-delay:-0.15s]" />
-          <div className="w-2 h-2 rounded-full bg-white animate-bounce" />
-        </div>
+      <div className="absolute bottom-10 text-xs text-muted-foreground/60">
+        Version 1.0.0
       </div>
     </div>
   )

@@ -31,7 +31,7 @@ const Login = () => {
           <img
             src={logoUrl}
             alt="Goplay App"
-            className="h-16 w-auto object-contain"
+            className="h-16 w-auto object-contain drop-shadow-sm"
           />
         </div>
         <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-primary mb-2">

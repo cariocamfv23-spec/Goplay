@@ -19,22 +19,16 @@ const defaultLogo =
 const defaultIcon =
   'https://res.cloudinary.com/subframe/image/upload/v1741178657/11628/11312/uploads/049e9c80-bc90-4828-9842-8854ef205d52.png'
 
-const oldDefault = 'https://img.usecurling.com/i?q=play&shape=fill&color=violet'
-
 const BrandingContext = createContext<BrandingState | undefined>(undefined)
 
 export const BrandingProvider = ({ children }: { children: ReactNode }) => {
   const [logoUrl, setLogoUrl] = useState(() => {
     const stored = localStorage.getItem('goplay_logo')
-    // Migrate from old default to new brand
-    if (stored === oldDefault) return defaultLogo
     return stored || defaultLogo
   })
 
   const [iconUrl, setIconUrl] = useState(() => {
     const stored = localStorage.getItem('goplay_icon')
-    // Migrate from old default to new brand
-    if (stored === oldDefault) return defaultIcon
     return stored || defaultIcon
   })
 
@@ -45,8 +39,9 @@ export const BrandingProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     localStorage.setItem('goplay_icon', iconUrl)
 
-    // Update favicon
-    const updateFavicon = (url: string) => {
+    // Update favicon and app icons
+    const updateIcons = (url: string) => {
+      // Standard favicon
       let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement
       if (!link) {
         link = document.createElement('link')
@@ -54,9 +49,20 @@ export const BrandingProvider = ({ children }: { children: ReactNode }) => {
         document.head.appendChild(link)
       }
       link.href = url
+
+      // Apple Touch Icon
+      let appleLink = document.querySelector(
+        "link[rel='apple-touch-icon']",
+      ) as HTMLLinkElement
+      if (!appleLink) {
+        appleLink = document.createElement('link')
+        appleLink.rel = 'apple-touch-icon'
+        document.head.appendChild(appleLink)
+      }
+      appleLink.href = url
     }
 
-    updateFavicon(iconUrl)
+    updateIcons(iconUrl)
   }, [iconUrl])
 
   const resetBranding = () => {
