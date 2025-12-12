@@ -10,6 +10,7 @@ import {
   User,
   Camera,
   Car,
+  Star,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -158,6 +159,7 @@ const Explore = () => {
                           <img
                             src={profile.avatar}
                             className="w-full h-full object-cover"
+                            alt={profile.name}
                           />
                         </div>
                         <div className="flex-1">
@@ -195,6 +197,7 @@ const Explore = () => {
                       <img
                         src={`https://img.usecurling.com/p/400/200?q=${court.img}`}
                         className="w-full h-full object-cover"
+                        alt={court.name}
                       />
                       <Badge className="absolute top-2 left-2 bg-white text-black hover:bg-white">
                         {court.price}
