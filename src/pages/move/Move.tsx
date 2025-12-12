@@ -1,8 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Heart, MessageCircle, Share2, Music2, Plus } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
 import { mockVideos } from '@/lib/data'
 
 export default function Move() {
@@ -100,12 +98,15 @@ export default function Move() {
 
             {/* Music Disc Animation */}
             <div className="mt-4 animate-spin-slow">
-              <div className="h-12 w-12 rounded-full bg-zinc-800 border-4 border-zinc-700 flex items-center justify-center overflow-hidden">
+              <Avatar className="h-12 w-12 rounded-full bg-zinc-800 border-4 border-zinc-700 flex items-center justify-center overflow-hidden">
                 <AvatarImage
                   src={video.userAvatar}
                   className="h-full w-full object-cover opacity-70"
                 />
-              </div>
+                <AvatarFallback className="bg-zinc-800 flex items-center justify-center w-full h-full">
+                  <Music2 className="h-4 w-4 text-white/50" />
+                </AvatarFallback>
+              </Avatar>
             </div>
           </div>
 
