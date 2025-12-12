@@ -1,10 +1,4 @@
-import {
-  ArrowLeft,
-  Bell,
-  ShoppingCart,
-  Settings,
-  MoreVertical,
-} from 'lucide-react'
+import { ArrowLeft, Bell, ShoppingCart, Settings } from 'lucide-react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -14,7 +8,6 @@ export function TopBar() {
   const location = useLocation()
 
   const isHome = location.pathname === '/home'
-  const isMove = location.pathname === '/move'
   const isProfile = location.pathname.includes('/profile')
   const isMarket = location.pathname.includes('/marketplace')
 
@@ -39,9 +32,16 @@ export function TopBar() {
         )}
 
         {isHome ? (
-          <span className="font-bold text-xl tracking-tight text-gradient-primary">
-            Goplay App
-          </span>
+          <div className="flex items-center gap-2">
+            <img
+              src="https://img.usecurling.com/i?q=play&shape=fill&color=violet"
+              alt="Goplay"
+              className="h-7 w-7"
+            />
+            <span className="font-bold text-xl tracking-tight text-gradient-primary">
+              Goplay App
+            </span>
+          </div>
         ) : (
           <h1 className="font-semibold text-lg capitalize truncate max-w-[200px]">
             {location.pathname.split('/')[1] || 'Goplay'}

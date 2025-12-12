@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { Mail, Lock, Smartphone, Play } from 'lucide-react'
+import { Mail, Lock, Smartphone } from 'lucide-react'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -25,8 +25,12 @@ const Login = () => {
       <div className="absolute bottom-0 right-0 w-64 h-64 bg-gold/10 rounded-full blur-[100px] translate-x-1/2 translate-y-1/2 pointer-events-none" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8 relative z-10">
-        <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20">
-          <Play className="h-8 w-8 text-primary fill-primary ml-1" />
+        <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-primary/20 shadow-lg shadow-primary/5">
+          <img
+            src="https://img.usecurling.com/i?q=play&shape=fill&color=violet"
+            alt="Goplay App"
+            className="h-10 w-10 object-contain"
+          />
         </div>
         <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-primary mb-2">
           Bem-vindo de volta
