@@ -166,8 +166,12 @@ const useSoundStore = create<SoundStore>()(
               utterance.rate = 0.9
               break
             case 'influencer':
-              utterance.pitch = 1.0
-              utterance.rate = 1.1
+              utterance.pitch = 1.3
+              utterance.rate = 1.4
+              break
+            case 'tactical':
+              utterance.pitch = 0.8
+              utterance.rate = 0.9
               break
           }
 

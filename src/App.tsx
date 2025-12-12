@@ -91,6 +91,7 @@ const InternationalMatch = lazy(
 const SportsPassport = lazy(() => import('./pages/profile/SportsPassport'))
 const Oracle = lazy(() => import('./pages/ai/Oracle'))
 const VarzeaEditor = lazy(() => import('./pages/ai/VarzeaEditor'))
+const DeviceManager = lazy(() => import('./pages/devices/DeviceManager'))
 
 const App = () => (
   <BrowserRouter
@@ -147,6 +148,7 @@ const App = () => (
               <Route path="/messages/:id" element={<ChatRoom />} />
               <Route path="/messages/new" element={<NewChat />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/devices" element={<DeviceManager />} />
               <Route path="/wallet" element={<Wallet />} />
               <Route path="/wallet/withdraw" element={<WithdrawPix />} />
               <Route path="/wallet/cards" element={<PaymentMethods />} />

@@ -7,11 +7,25 @@ import {
   PlayCircle,
   TrendingUp,
   Brain,
+  Watch,
+  Heart,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { AppIcon } from '@/components/AppIcon'
+import useDeviceStore from '@/stores/useDeviceStore'
+import { useEffect } from 'react'
 
 export default function AiCoach() {
   const navigate = useNavigate()
+  const { connectedDevice, biometrics, updateBiometrics } = useDeviceStore()
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (connectedDevice) {
+      interval = setInterval(updateBiometrics, 2000)
+    }
+    return () => clearInterval(interval)
+  }, [connectedDevice, updateBiometrics])
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white pb-20 animate-fade-in">
@@ -25,11 +39,66 @@ export default function AiCoach() {
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <h1 className="text-lg font-bold flex items-center gap-2">
-          <Brain className="h-5 w-5 text-primary" /> Coach IA
+          <AppIcon className="h-6 w-6" /> Coach IA
         </h1>
       </div>
 
       <div className="p-4 space-y-6">
+        {/* Biometrics Integration Alert */}
+        {!connectedDevice ? (
+          <div className="bg-primary/10 border border-primary/20 p-4 rounded-xl flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="bg-primary/20 p-2 rounded-full">
+                <Watch className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-bold text-sm text-primary">
+                  Conecte seu Smartwatch
+                </h3>
+                <p className="text-xs text-zinc-400">
+                  Obtenha dados biométricos em tempo real.
+                </p>
+              </div>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-primary/30 text-primary hover:bg-primary/10 text-xs"
+              onClick={() => navigate('/devices')}
+            >
+              Conectar
+            </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-3">
+            <Card className="bg-zinc-900 border-zinc-800">
+              <CardContent className="p-3 flex flex-col justify-between h-24">
+                <div className="flex items-center gap-2 text-zinc-400 text-xs font-bold uppercase">
+                  <Heart className="h-3 w-3 text-red-500 animate-pulse" />{' '}
+                  Batimentos
+                </div>
+                <div className="text-3xl font-bold text-white">
+                  {biometrics.heartRate}{' '}
+                  <span className="text-sm font-normal text-zinc-500">BPM</span>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-zinc-900 border-zinc-800">
+              <CardContent className="p-3 flex flex-col justify-between h-24">
+                <div className="flex items-center gap-2 text-zinc-400 text-xs font-bold uppercase">
+                  <Activity className="h-3 w-3 text-gold" /> Calorias
+                </div>
+                <div className="text-3xl font-bold text-white">
+                  {biometrics.calories}{' '}
+                  <span className="text-sm font-normal text-zinc-500">
+                    kcal
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Real-time Feedback Card */}
         <Card className="bg-zinc-900 border-zinc-800 overflow-hidden">
           <div className="aspect-video relative bg-black">
@@ -40,13 +109,15 @@ export default function AiCoach() {
             />
             <div className="absolute bottom-4 left-4 right-4 bg-black/70 backdrop-blur-md p-3 rounded-lg border border-primary/30">
               <div className="flex items-center gap-2 mb-1">
-                <Activity className="h-4 w-4 text-primary animate-pulse" />
+                <Brain className="h-4 w-4 text-primary animate-pulse" />
                 <span className="text-xs font-bold text-primary uppercase">
                   Feedback em Tempo Real
                 </span>
               </div>
               <p className="font-semibold">
-                "Aumente a passada e corrija a postura do tronco."
+                {connectedDevice && biometrics.heartRate > 140
+                  ? 'Frequência cardíaca elevada. Respire e foque na técnica.'
+                  : 'Aumente a passada e corrija a postura do tronco.'}
               </p>
             </div>
           </div>

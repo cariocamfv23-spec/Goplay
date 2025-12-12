@@ -32,6 +32,8 @@ import {
   Music,
   Mic,
   Speaker,
+  Watch,
+  Smartphone,
 } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -45,6 +47,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import useDeviceStore from '@/stores/useDeviceStore'
 
 export default function Settings() {
   const navigate = useNavigate()
@@ -61,6 +64,7 @@ export default function Settings() {
     setActivePack,
     playSound,
   } = useSoundStore()
+  const { connectedDevice } = useDeviceStore()
 
   const [tempLogo, setTempLogo] = useState(logoUrl)
   const [tempIcon, setTempIcon] = useState(iconUrl)
@@ -121,13 +125,16 @@ export default function Settings() {
         </p>
       </div>
 
-      <Tabs defaultValue="sounds" className="space-y-4">
+      <Tabs defaultValue="account" className="space-y-4">
         <TabsList className="w-full justify-start overflow-x-auto h-auto p-1 bg-background border rounded-xl">
           <TabsTrigger value="account" className="gap-2">
             <User className="h-4 w-4" /> Conta
           </TabsTrigger>
           <TabsTrigger value="sounds" className="gap-2">
             <Volume2 className="h-4 w-4" /> Sons
+          </TabsTrigger>
+          <TabsTrigger value="devices" className="gap-2">
+            <Watch className="h-4 w-4" /> Dispositivos
           </TabsTrigger>
           <TabsTrigger value="notifications" className="gap-2">
             <Bell className="h-4 w-4" /> Notificações
@@ -308,6 +315,44 @@ export default function Settings() {
                   </Button>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="devices">
+          <Card>
+            <CardHeader>
+              <CardTitle>Wearables e Sensores</CardTitle>
+              <CardDescription>
+                Conecte seus dispositivos para coletar dados.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center gap-4 p-4 border border-border rounded-lg bg-secondary/10">
+                <div className="h-10 w-10 bg-background rounded-full flex items-center justify-center">
+                  <Watch className="h-5 w-5 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-bold text-sm">Status da Conexão</h4>
+                  <p className="text-xs text-muted-foreground">
+                    {connectedDevice
+                      ? `Conectado a ${connectedDevice.name}`
+                      : 'Nenhum dispositivo conectado'}
+                  </p>
+                </div>
+                {connectedDevice && (
+                  <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                )}
+              </div>
+
+              <Button
+                className="w-full gap-2"
+                onClick={() => navigate('/devices')}
+              >
+                {connectedDevice
+                  ? 'Gerenciar Dispositivo'
+                  : 'Conectar Dispositivo'}
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>
@@ -556,7 +601,7 @@ export default function Settings() {
           <HelpCircle className="h-4 w-4" /> Precisa de ajuda?
         </Button>
         <p className="text-[10px] text-muted-foreground mt-2">
-          Versão 1.1.0 (Sound Update)
+          Versão 1.2.0 (AI Update)
         </p>
       </div>
     </div>

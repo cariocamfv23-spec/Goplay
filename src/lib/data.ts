@@ -16,6 +16,9 @@ import {
   Laugh,
   Mic,
   Bot,
+  Smartphone,
+  Brain,
+  Zap,
 } from 'lucide-react'
 
 export const navigationItems = [
@@ -70,7 +73,13 @@ export const mockComments: Comment[] = [
 
 export interface NarrationConfig {
   hasNarration: boolean
-  style: 'varzea' | 'professional' | 'comedy' | 'futuristic' | 'influencer'
+  style:
+    | 'varzea'
+    | 'professional'
+    | 'comedy'
+    | 'futuristic'
+    | 'influencer'
+    | 'tactical'
   text: string
   volume: number
 }
@@ -923,6 +932,20 @@ export const narrationStyles = [
     description: 'Efeitos tecnológicos e robóticos.',
     previewText: 'Análise concluída. Precisão cirúrgica detectada.',
     icon: 'Bot',
+  },
+  {
+    id: 'influencer',
+    name: 'Voz Influencer Esportivo',
+    description: 'Hype e energia das redes sociais.',
+    previewText: 'Fala galera! Se liga nesse lance absurdo!',
+    icon: 'Smartphone',
+  },
+  {
+    id: 'tactical',
+    name: 'Mestre Tático',
+    description: 'Análise técnica e estratégica.',
+    previewText: 'Observamos uma falha na cobertura defensiva.',
+    icon: 'Brain',
   },
 ] as const
 
