@@ -19,6 +19,11 @@ import {
   Sparkles,
   Mail,
   Zap,
+  Activity,
+  Ruler,
+  Weight,
+  CalendarDays,
+  Footprints,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { mockPosts } from '@/lib/data'
@@ -31,6 +36,8 @@ import {
 import * as LucideIcons from 'lucide-react'
 import { toast } from 'sonner'
 import { Link } from 'react-router-dom'
+import { StatsHistoryChart } from '@/components/StatsHistoryChart'
+import { TrainingSuggestions } from '@/components/TrainingSuggestions'
 
 export default function AthleteView({ profile }: { profile: ProfileData }) {
   const renderIcon = (iconName: string, className?: string) => {
@@ -126,6 +133,36 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
 
           <p className="text-sm mt-2 text-foreground/80">{profile.bio}</p>
 
+          {/* Physical Stats Display - Consistent Profile Info */}
+          {profile.physicalStats && (
+            <div className="grid grid-cols-4 gap-2 mt-4 bg-secondary/30 rounded-xl p-3 border border-border/50">
+              <div className="flex flex-col items-center text-center">
+                <Ruler className="h-4 w-4 text-muted-foreground mb-1" />
+                <span className="text-xs font-bold">
+                  {profile.physicalStats.height}
+                </span>
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <Weight className="h-4 w-4 text-muted-foreground mb-1" />
+                <span className="text-xs font-bold">
+                  {profile.physicalStats.weight}
+                </span>
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <CalendarDays className="h-4 w-4 text-muted-foreground mb-1" />
+                <span className="text-xs font-bold">
+                  {profile.physicalStats.age} anos
+                </span>
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <Footprints className="h-4 w-4 text-muted-foreground mb-1" />
+                <span className="text-xs font-bold">
+                  {profile.physicalStats.dominantFoot?.[0]}
+                </span>
+              </div>
+            </div>
+          )}
+
           {profile.badges && profile.badges.length > 0 && (
             <div className="flex gap-2 mt-4 mb-2 overflow-x-auto pb-2">
               {profile.badges.map((badge) => (
@@ -203,9 +240,12 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
         </div>
 
         <Tabs defaultValue="posts" className="w-full">
-          <TabsList className="w-full grid grid-cols-4 mb-4">
+          <TabsList className="w-full grid grid-cols-5 mb-4 px-1">
             <TabsTrigger value="posts">
               <Grid className="h-4 w-4" />
+            </TabsTrigger>
+            <TabsTrigger value="stats">
+              <Activity className="h-4 w-4" />
             </TabsTrigger>
             <TabsTrigger value="highlights">
               <Video className="h-4 w-4" />
@@ -222,6 +262,24 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
             {mockPosts.map((post) => (
               <PostCard key={post.id} post={post} />
             ))}
+          </TabsContent>
+
+          <TabsContent value="stats" className="space-y-6">
+            <div className="space-y-6">
+              {profile.statsHistory ? (
+                <StatsHistoryChart data={profile.statsHistory} />
+              ) : (
+                <div className="text-center p-8 bg-secondary/20 rounded-xl">
+                  <p className="text-muted-foreground">
+                    Histórico de estatísticas não disponível.
+                  </p>
+                </div>
+              )}
+
+              {profile.suggestedTraining && (
+                <TrainingSuggestions suggestions={profile.suggestedTraining} />
+              )}
+            </div>
           </TabsContent>
 
           {/* Lances Salvos / Highlights Tab */}

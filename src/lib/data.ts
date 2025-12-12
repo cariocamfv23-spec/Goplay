@@ -7,6 +7,8 @@ import {
   Target,
   Trophy,
   Flag,
+  UserCheck,
+  MapPin,
 } from 'lucide-react'
 
 export const navigationItems = [
@@ -382,6 +384,23 @@ export interface BadgeData {
   color: string
 }
 
+export interface StatsHistoryPoint {
+  date: string
+  points: number
+  rating: number
+  matches: number
+}
+
+export interface TrainingSuggestion {
+  id: string
+  title: string
+  description: string
+  reason: string
+  exercises: { name: string; sets: string; reps: string }[]
+  difficulty: 'Iniciante' | 'Intermediário' | 'Avançado'
+  category: 'Tática' | 'Técnica' | 'Físico' | 'Mental'
+}
+
 export interface ProfileData {
   id: string
   type:
@@ -410,6 +429,14 @@ export interface ProfileData {
   badges?: BadgeData[]
   points?: number
   rank?: number
+  physicalStats?: {
+    height: string
+    weight: string
+    age: number
+    dominantFoot?: string
+  }
+  statsHistory?: StatsHistoryPoint[]
+  suggestedTraining?: TrainingSuggestion[]
 
   // Club specific
   about?: string
@@ -474,15 +501,61 @@ export const mockProfiles: ProfileData[] = [
     points: 1250,
     rank: 12,
     badges: [mockBadges[0], mockBadges[1], mockBadges[3]],
+    physicalStats: {
+      height: '1.78m',
+      weight: '72kg',
+      age: 22,
+      dominantFoot: 'Direito',
+    },
     stats: [
       { label: 'Jogos', value: '89' },
       { label: 'Gols', value: '34' },
+      { label: 'Assist.', value: '18' },
     ],
     history: [
       {
         year: '2023',
         team: 'São Paulo FC Base',
         description: 'Campeão Sub-17',
+      },
+      {
+        year: '2022',
+        team: 'Escola de Futebol Zico',
+        description: 'Artilheiro da Copa',
+      },
+    ],
+    statsHistory: [
+      { date: 'Jan', points: 850, rating: 4.2, matches: 4 },
+      { date: 'Fev', points: 920, rating: 4.3, matches: 5 },
+      { date: 'Mar', points: 980, rating: 4.5, matches: 6 },
+      { date: 'Abr', points: 1050, rating: 4.4, matches: 6 },
+      { date: 'Mai', points: 1150, rating: 4.7, matches: 8 },
+      { date: 'Jun', points: 1250, rating: 4.8, matches: 9 },
+    ],
+    suggestedTraining: [
+      {
+        id: 't1',
+        title: 'Melhorar Resistência',
+        description: 'Foco em manter o ritmo nos minutos finais.',
+        reason: 'Queda de rendimento observada após 40min de jogo.',
+        category: 'Físico',
+        difficulty: 'Intermediário',
+        exercises: [
+          { name: 'HIIT (Tiros de 50m)', sets: '4', reps: '10' },
+          { name: 'Corrida contínua', sets: '1', reps: '30 min' },
+        ],
+      },
+      {
+        id: 't2',
+        title: 'Precisão de Passe Longo',
+        description: 'Aprimore a virada de jogo e lançamentos.',
+        reason: 'Taxa de acerto em passes longos abaixo de 60%.',
+        category: 'Técnica',
+        difficulty: 'Avançado',
+        exercises: [
+          { name: 'Lançamento em alvo fixo', sets: '5', reps: '10' },
+          { name: 'Cruzamento em movimento', sets: '3', reps: '15' },
+        ],
       },
     ],
   },
