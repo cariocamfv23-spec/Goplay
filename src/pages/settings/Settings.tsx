@@ -21,10 +21,12 @@ import {
   Shield,
   Upload,
   User,
+  Eye,
 } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
+import { Switch } from '@/components/ui/switch'
 
 export default function Settings() {
   const navigate = useNavigate()
@@ -33,6 +35,10 @@ export default function Settings() {
   const [tempLogo, setTempLogo] = useState(logoUrl)
   const [tempIcon, setTempIcon] = useState(iconUrl)
   const [uploading, setUploading] = useState(false)
+  const [privacy, setPrivacy] = useState({
+    feedbackPublic: true,
+    showStats: true,
+  })
 
   const handleSaveBranding = () => {
     setLogoUrl(tempLogo)
@@ -69,18 +75,139 @@ export default function Settings() {
         </p>
       </div>
 
-      <Tabs defaultValue="branding" className="space-y-4">
+      <Tabs defaultValue="account" className="space-y-4">
         <TabsList className="w-full justify-start overflow-x-auto h-auto p-1 bg-background border rounded-xl">
-          <TabsTrigger value="branding" className="gap-2">
-            <Palette className="h-4 w-4" /> Aparência
-          </TabsTrigger>
           <TabsTrigger value="account" className="gap-2">
             <User className="h-4 w-4" /> Conta
+          </TabsTrigger>
+          <TabsTrigger value="privacy" className="gap-2">
+            <Lock className="h-4 w-4" /> Privacidade
           </TabsTrigger>
           <TabsTrigger value="notifications" className="gap-2">
             <Bell className="h-4 w-4" /> Notificações
           </TabsTrigger>
+          <TabsTrigger value="branding" className="gap-2">
+            <Palette className="h-4 w-4" /> Aparência
+          </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="account">
+          <Card>
+            <CardHeader>
+              <CardTitle>Sua Conta</CardTitle>
+              <CardDescription>
+                Informações pessoais e segurança.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-2">
+                <Button
+                  variant="outline"
+                  className="justify-start gap-2 h-12"
+                  onClick={() => navigate('/profile/me')}
+                >
+                  <User className="h-4 w-4" /> Editar Perfil
+                </Button>
+                <Button
+                  variant="outline"
+                  className="justify-start gap-2 h-12"
+                  onClick={() => navigate('/wallet/cards')}
+                >
+                  <CreditCard className="h-4 w-4" /> Métodos de Pagamento
+                </Button>
+                <Button variant="outline" className="justify-start gap-2 h-12">
+                  <Shield className="h-4 w-4" /> Verificações
+                </Button>
+              </div>
+              <Separator className="my-2" />
+              <Button
+                variant="destructive"
+                className="w-full gap-2"
+                onClick={() => navigate('/login')}
+              >
+                <LogOut className="h-4 w-4" /> Sair da Conta
+              </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="privacy">
+          <Card>
+            <CardHeader>
+              <CardTitle>Privacidade e Visibilidade</CardTitle>
+              <CardDescription>
+                Controle quem pode ver suas informações e interagir.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between p-2">
+                <div className="space-y-0.5">
+                  <Label className="flex items-center gap-2">
+                    <Eye className="h-4 w-4" /> Estatísticas Públicas
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Permitir que outros vejam seus gráficos de performance.
+                  </p>
+                </div>
+                <Switch
+                  checked={privacy.showStats}
+                  onCheckedChange={(c) =>
+                    setPrivacy({ ...privacy, showStats: c })
+                  }
+                />
+              </div>
+              <Separator />
+              <div className="flex items-center justify-between p-2">
+                <div className="space-y-0.5">
+                  <Label className="flex items-center gap-2">
+                    <User className="h-4 w-4" /> Feedback Aberto
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Aceitar feedback de qualquer treinador/usuário.
+                  </p>
+                </div>
+                <Switch
+                  checked={privacy.feedbackPublic}
+                  onCheckedChange={(c) =>
+                    setPrivacy({ ...privacy, feedbackPublic: c })
+                  }
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="notifications">
+          <Card>
+            <CardHeader>
+              <CardTitle>Notificações</CardTitle>
+              <CardDescription>
+                Escolha como você quer ser notificado.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between p-2">
+                <div className="space-y-0.5">
+                  <Label>Notificações Push</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Receba alertas sobre novos jogos e mensagens.
+                  </p>
+                </div>
+                <Switch defaultChecked />
+              </div>
+              <Separator />
+              <div className="flex items-center justify-between p-2">
+                <div className="space-y-0.5">
+                  <Label>Feedback de Treinadores</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Ser notificado quando receber um feedback.
+                  </p>
+                </div>
+                <Switch defaultChecked />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         <TabsContent value="branding">
           <Card>
@@ -180,86 +307,6 @@ export default function Settings() {
             </CardContent>
           </Card>
         </TabsContent>
-
-        <TabsContent value="account">
-          <Card>
-            <CardHeader>
-              <CardTitle>Sua Conta</CardTitle>
-              <CardDescription>
-                Informações pessoais e segurança.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-2">
-                <Button
-                  variant="outline"
-                  className="justify-start gap-2 h-12"
-                  onClick={() => navigate('/profile/me')}
-                >
-                  <User className="h-4 w-4" /> Editar Perfil
-                </Button>
-                <Button
-                  variant="outline"
-                  className="justify-start gap-2 h-12"
-                  onClick={() => navigate('/wallet/cards')}
-                >
-                  <CreditCard className="h-4 w-4" /> Métodos de Pagamento
-                </Button>
-                <Button variant="outline" className="justify-start gap-2 h-12">
-                  <Lock className="h-4 w-4" /> Senha e Segurança
-                </Button>
-                <Button variant="outline" className="justify-start gap-2 h-12">
-                  <Shield className="h-4 w-4" /> Privacidade
-                </Button>
-              </div>
-              <Separator className="my-2" />
-              <Button
-                variant="destructive"
-                className="w-full gap-2"
-                onClick={() => navigate('/login')}
-              >
-                <LogOut className="h-4 w-4" /> Sair da Conta
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="notifications">
-          <Card>
-            <CardHeader>
-              <CardTitle>Notificações</CardTitle>
-              <CardDescription>
-                Escolha como você quer ser notificado.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-2">
-                <div className="space-y-0.5">
-                  <Label>Notificações Push</Label>
-                  <p className="text-xs text-muted-foreground">
-                    Receba alertas sobre novos jogos e mensagens.
-                  </p>
-                </div>
-                {/* Mock Switch */}
-                <div className="h-6 w-11 bg-primary rounded-full relative cursor-pointer">
-                  <div className="absolute right-1 top-1 h-4 w-4 bg-white rounded-full" />
-                </div>
-              </div>
-              <Separator />
-              <div className="flex items-center justify-between p-2">
-                <div className="space-y-0.5">
-                  <Label>Emails de Marketing</Label>
-                  <p className="text-xs text-muted-foreground">
-                    Novidades e promoções dos parceiros.
-                  </p>
-                </div>
-                <div className="h-6 w-11 bg-input rounded-full relative cursor-pointer">
-                  <div className="absolute left-1 top-1 h-4 w-4 bg-white rounded-full shadow-sm" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
       </Tabs>
 
       <div className="mt-8 text-center">
@@ -267,7 +314,7 @@ export default function Settings() {
           <HelpCircle className="h-4 w-4" /> Precisa de ajuda?
         </Button>
         <p className="text-[10px] text-muted-foreground mt-2">
-          Versão 1.0.2 (Build 2304)
+          Versão 1.0.3 (Build 2305)
         </p>
       </div>
     </div>

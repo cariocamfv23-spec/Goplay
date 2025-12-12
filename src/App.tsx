@@ -57,6 +57,9 @@ const ReceivedInvitations = lazy(
 const MatchDetails = lazy(() => import('./pages/matches/MatchDetails'))
 const MyPoints = lazy(() => import('./pages/gamification/MyPoints'))
 
+// New Stats Detail Page
+const StatsDetail = lazy(() => import('./pages/profile/StatsDetail'))
+
 const App = () => (
   <BrowserRouter
     future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
@@ -99,6 +102,7 @@ const App = () => (
               <Route path="/jobs/dashboard" element={<RecruiterDashboard />} />
               <Route path="/ranking" element={<Ranking />} />
               <Route path="/profile/:id" element={<Profile />} />
+              <Route path="/profile/stats" element={<StatsDetail />} />
               <Route path="/messages" element={<MessagesList />} />
               <Route path="/messages/:id" element={<ChatRoom />} />
               <Route path="/messages/new" element={<NewChat />} />

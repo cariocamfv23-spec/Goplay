@@ -8,13 +8,21 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { TrainingSuggestion } from '@/lib/data'
-import { AlertCircle, ChevronRight, Dumbbell, Zap } from 'lucide-react'
+import { AlertCircle, Dumbbell, Zap, CalendarPlus } from 'lucide-react'
+import { toast } from 'sonner'
 
 interface TrainingSuggestionsProps {
   suggestions: TrainingSuggestion[]
 }
 
 export function TrainingSuggestions({ suggestions }: TrainingSuggestionsProps) {
+  const handleAddToCalendar = (title: string) => {
+    toast.success('Treino Agendado!', {
+      description: `${title} foi adicionado ao seu calendário para amanhã.`,
+      icon: <CalendarPlus className="h-4 w-4 text-primary" />,
+    })
+  }
+
   if (!suggestions || suggestions.length === 0) {
     return (
       <Card className="border-dashed border-2 bg-muted/30">
@@ -100,9 +108,17 @@ export function TrainingSuggestions({ suggestions }: TrainingSuggestionsProps) {
                     ))}
                   </div>
 
-                  <Button className="w-full mt-3 h-8 text-xs rounded-full bg-primary/10 text-primary hover:bg-primary/20 shadow-none border border-primary/20">
-                    Adicionar ao Plano de Treino
-                  </Button>
+                  <div className="grid grid-cols-2 gap-2 mt-3">
+                    <Button className="h-8 text-xs rounded-full bg-primary/10 text-primary hover:bg-primary/20 shadow-none border border-primary/20">
+                      Ver Detalhes
+                    </Button>
+                    <Button
+                      onClick={() => handleAddToCalendar(suggestion.title)}
+                      className="h-8 text-xs rounded-full"
+                    >
+                      <CalendarPlus className="h-3 w-3 mr-1" /> Agendar
+                    </Button>
+                  </div>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>

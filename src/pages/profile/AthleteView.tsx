@@ -24,6 +24,8 @@ import {
   Weight,
   CalendarDays,
   Footprints,
+  Calendar,
+  MessageSquare,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { mockPosts } from '@/lib/data'
@@ -38,6 +40,8 @@ import { toast } from 'sonner'
 import { Link } from 'react-router-dom'
 import { StatsHistoryChart } from '@/components/StatsHistoryChart'
 import { TrainingSuggestions } from '@/components/TrainingSuggestions'
+import TrainingSchedule from './TrainingSchedule'
+import { FeedbackList } from '@/components/FeedbackList'
 
 export default function AthleteView({ profile }: { profile: ProfileData }) {
   const renderIcon = (iconName: string, className?: string) => {
@@ -240,20 +244,27 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
         </div>
 
         <Tabs defaultValue="posts" className="w-full">
-          <TabsList className="w-full grid grid-cols-5 mb-4 px-1">
-            <TabsTrigger value="posts">
+          {/* Enhanced Tabs List with 7 items, needs scrolling on small screens */}
+          <TabsList className="w-full flex justify-start overflow-x-auto mb-4 px-1 gap-2 no-scrollbar">
+            <TabsTrigger value="posts" className="min-w-[40px]">
               <Grid className="h-4 w-4" />
             </TabsTrigger>
-            <TabsTrigger value="stats">
+            <TabsTrigger value="stats" className="min-w-[40px]">
               <Activity className="h-4 w-4" />
             </TabsTrigger>
-            <TabsTrigger value="highlights">
+            <TabsTrigger value="calendar" className="min-w-[40px]">
+              <Calendar className="h-4 w-4" />
+            </TabsTrigger>
+            <TabsTrigger value="feedback" className="min-w-[40px]">
+              <MessageSquare className="h-4 w-4" />
+            </TabsTrigger>
+            <TabsTrigger value="highlights" className="min-w-[40px]">
               <Video className="h-4 w-4" />
             </TabsTrigger>
-            <TabsTrigger value="history">
+            <TabsTrigger value="history" className="min-w-[40px]">
               <History className="h-4 w-4" />
             </TabsTrigger>
-            <TabsTrigger value="gallery">
+            <TabsTrigger value="gallery" className="min-w-[40px]">
               <Trophy className="h-4 w-4" />
             </TabsTrigger>
           </TabsList>
@@ -266,6 +277,14 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
 
           <TabsContent value="stats" className="space-y-6">
             <div className="space-y-6">
+              <div className="flex justify-end">
+                <Link to="/profile/stats">
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Activity className="h-4 w-4" /> Expandir Estatísticas
+                  </Button>
+                </Link>
+              </div>
+
               {profile.statsHistory ? (
                 <StatsHistoryChart data={profile.statsHistory} />
               ) : (
@@ -282,7 +301,14 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
             </div>
           </TabsContent>
 
-          {/* Lances Salvos / Highlights Tab */}
+          <TabsContent value="calendar">
+            <TrainingSchedule />
+          </TabsContent>
+
+          <TabsContent value="feedback">
+            <FeedbackList />
+          </TabsContent>
+
           <TabsContent value="highlights" className="space-y-4">
             <div className="bg-gradient-to-r from-purple-900 to-primary p-4 rounded-xl text-white mb-4 relative overflow-hidden">
               <div className="relative z-10">

@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { X, Activity, Dumbbell, Zap, Target, TrendingUp } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
+import { Link } from 'react-router-dom'
 
 interface AiAnalysisDrawerProps {
   open: boolean
@@ -109,6 +110,15 @@ export function AiAnalysisDrawer({
                   </p>
                 </CardContent>
               </Card>
+
+              <Link to="/profile/stats">
+                <Button
+                  variant="outline"
+                  className="w-full mt-4 border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                >
+                  Ver Estatísticas Detalhadas
+                </Button>
+              </Link>
             </TabsContent>
 
             <TabsContent value="training" className="space-y-4 animate-fade-in">

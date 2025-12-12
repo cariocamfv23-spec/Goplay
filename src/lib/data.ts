@@ -1000,3 +1000,76 @@ export const mockPointsHistory = [
     type: 'spent',
   },
 ]
+
+// New Mock Data for Expanded Statistics
+export const mockComparisonStats = [
+  { subject: 'Velocidade', user: 120, avg: 110, max: 150 },
+  { subject: 'Força', user: 98, avg: 100, max: 150 },
+  { subject: 'Resistência', user: 86, avg: 85, max: 150 },
+  { subject: 'Tática', user: 99, avg: 90, max: 150 },
+  { subject: 'Técnica', user: 85, avg: 80, max: 150 },
+  { subject: 'Mental', user: 65, avg: 75, max: 150 },
+]
+
+// New Mock Data for Calendar
+export const mockTrainingEvents = [
+  {
+    id: 'evt-1',
+    title: 'Treino de Resistência',
+    date: new Date(new Date().setDate(new Date().getDate() + 1)), // Tomorrow
+    type: 'training',
+    completed: false,
+  },
+  {
+    id: 'evt-2',
+    title: 'Jogo vs Real Matismo',
+    date: new Date(new Date().setDate(new Date().getDate() + 3)), // 3 days from now
+    type: 'match',
+    completed: false,
+  },
+  {
+    id: 'evt-3',
+    title: 'Recuperação Muscular',
+    date: new Date(new Date().setDate(new Date().getDate() - 1)), // Yesterday
+    type: 'recovery',
+    completed: true,
+  },
+]
+
+// New Mock Data for Feedback
+export interface Feedback {
+  id: string
+  author: { name: string; avatar: string; role: string }
+  content: string
+  date: string
+  rating: number
+  context?: string // e.g., "Jogo vs Furia FC"
+}
+
+export const mockFeedbacks: Feedback[] = [
+  {
+    id: 'fb-1',
+    author: {
+      name: 'Roberto Mendes',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=45',
+      role: 'Coach',
+    },
+    content:
+      'Excelente movimentação sem a bola hoje, Lucas. Precisamos trabalhar um pouco mais a finalização com a perna esquerda.',
+    date: '2 dias atrás',
+    rating: 4.5,
+    context: 'Treino Tático',
+  },
+  {
+    id: 'fb-2',
+    author: {
+      name: 'Ana Silva',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=2',
+      role: 'Parceiro de Treino',
+    },
+    content: 'Aquele passe no segundo tempo foi genial! 👏',
+    date: '3 dias atrás',
+    rating: 5.0,
+    context: 'Jogo Amistoso',
+  },
+]
