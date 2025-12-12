@@ -588,3 +588,62 @@ export const getMockMessages = (chatId: string): ChatMessage[] => {
     },
   ]
 }
+
+export const mockRideRequests = [
+  {
+    id: 'req-1',
+    passenger: {
+      name: 'Ana Silva',
+      rating: 4.9,
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=2',
+    },
+    pickup: 'Rua das Flores, 123',
+    dropoff: 'Arena Central',
+    distance: '2.5 km',
+    price: 'R$ 15,90',
+    time: '5 min',
+  },
+  {
+    id: 'req-2',
+    passenger: {
+      name: 'Pedro Santos',
+      rating: 4.7,
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=33',
+    },
+    pickup: 'Av. Paulista, 1000',
+    dropoff: 'Aeroporto Congonhas',
+    distance: '8.0 km',
+    price: 'R$ 35,50',
+    time: '12 min',
+  },
+]
+
+export const mockRideHistory = [
+  {
+    id: 'hist-1',
+    date: 'Hoje, 10:30',
+    passenger: 'Lucas Oliveira',
+    price: 'R$ 22,90',
+    rating: 5,
+    pickup: 'Shopping Center',
+    dropoff: 'Rua Augusta, 500',
+  },
+  {
+    id: 'hist-2',
+    date: 'Ontem, 18:45',
+    passenger: 'Maria Souza',
+    price: 'R$ 18,50',
+    rating: 5,
+    pickup: 'Estação Metrô',
+    dropoff: 'Condomínio Parque',
+  },
+  {
+    id: 'hist-3',
+    date: 'Ontem, 14:20',
+    passenger: 'João Pedro',
+    price: 'R$ 45,00',
+    rating: 4,
+    pickup: 'Aeroporto',
+    dropoff: 'Hotel Central',
+  },
+]

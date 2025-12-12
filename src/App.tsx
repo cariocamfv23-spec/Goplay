@@ -34,6 +34,13 @@ const WithdrawPix = lazy(() => import('./pages/wallet/WithdrawPix'))
 const PaymentMethods = lazy(() => import('./pages/wallet/PaymentMethods'))
 const RideRequest = lazy(() => import('./pages/services/RideRequest'))
 
+// Driver Pages
+const DriverDashboard = lazy(() => import('./pages/driver/DriverDashboard'))
+const DriverRequests = lazy(() => import('./pages/driver/DriverRequests'))
+const DriverHistory = lazy(() => import('./pages/driver/DriverHistory'))
+const DriverSettings = lazy(() => import('./pages/driver/DriverSettings'))
+const ActiveRide = lazy(() => import('./pages/driver/ActiveRide'))
+
 const App = () => (
   <BrowserRouter
     future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
@@ -73,6 +80,13 @@ const App = () => (
             <Route path="/wallet/withdraw" element={<WithdrawPix />} />
             <Route path="/wallet/cards" element={<PaymentMethods />} />
             <Route path="/ride/request/:driverId" element={<RideRequest />} />
+
+            {/* Driver Routes */}
+            <Route path="/driver/dashboard" element={<DriverDashboard />} />
+            <Route path="/driver/requests" element={<DriverRequests />} />
+            <Route path="/driver/history" element={<DriverHistory />} />
+            <Route path="/driver/settings" element={<DriverSettings />} />
+            <Route path="/driver/active/:id" element={<ActiveRide />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

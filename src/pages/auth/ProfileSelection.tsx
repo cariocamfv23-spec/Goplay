@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -11,6 +10,7 @@ import {
   Camera,
   Car,
 } from 'lucide-react'
+import { toast } from 'sonner'
 
 const ProfileSelection = () => {
   const navigate = useNavigate()
@@ -83,7 +83,19 @@ const ProfileSelection = () => {
   ]
 
   const handleSelect = (id: string) => {
-    navigate('/home')
+    // Save selected profile type to localStorage for demo purposes
+    localStorage.setItem('userType', id)
+
+    if (id === 'motorista') {
+      toast.success('Perfil de Motorista selecionado!', {
+        description:
+          'Você agora tem acesso ao menu exclusivo de Motorista Esportivo.',
+      })
+      navigate('/driver/dashboard')
+    } else {
+      toast.success('Perfil selecionado com sucesso!')
+      navigate('/home')
+    }
   }
 
   return (

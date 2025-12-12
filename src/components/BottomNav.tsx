@@ -1,29 +1,31 @@
 import { Link, useLocation } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { navigationItems } from '@/lib/data'
-import { MessageCircle, User } from 'lucide-react'
+import { MessageCircle, User, Car } from 'lucide-react'
 
 export function BottomNav() {
   const location = useLocation()
+  const userType = localStorage.getItem('userType')
+  const isDriver = userType === 'motorista'
 
-  // Custom items including Messages and Profile
-  const items = [
-    ...navigationItems,
-    { label: 'Mensagens', icon: MessageCircle, path: '/messages' },
-    { label: 'Perfil', icon: User, path: '/profile/me' },
-  ]
+  // If driver, we replace the "Vagas" or "Loja" with "Painel"
+  // Let's create a custom list for drivers
 
-  // We only show 5 items in bottom nav usually to fit mobile
-  // The spec lists: Home, MOVE, Explorar, Mensagens, Perfil.
-  // Marketplace and Jobs are likely inside "Explorar" or separate but for spec we adhere to the bottom bar list.
-
-  const bottomNavItems = [
-    navigationItems[0], // Home
-    navigationItems[1], // MOVE
-    navigationItems[2], // Explorar
-    { label: 'Mensagens', icon: MessageCircle, path: '/messages' },
-    { label: 'Perfil', icon: User, path: '/profile/me' },
-  ]
+  const bottomNavItems = isDriver
+    ? [
+        navigationItems[0], // Home
+        navigationItems[1], // MOVE
+        navigationItems[2], // Explorar
+        { label: 'Painel', icon: Car, path: '/driver/dashboard' }, // Driver dedicated dashboard
+        { label: 'Perfil', icon: User, path: '/profile/me' },
+      ]
+    : [
+        navigationItems[0], // Home
+        navigationItems[1], // MOVE
+        navigationItems[2], // Explorar
+        { label: 'Mensagens', icon: MessageCircle, path: '/messages' },
+        { label: 'Perfil', icon: User, path: '/profile/me' },
+      ]
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-md border-t border-border/50 z-50 pb-safe">
