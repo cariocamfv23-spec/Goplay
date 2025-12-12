@@ -11,6 +11,7 @@ import {
   Star,
   ChevronRight,
   User,
+  Gift,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -77,6 +78,17 @@ export default function DriverDashboard() {
               3 Novas
             </Badge>
           )}
+        </Button>
+
+        <Button
+          className="w-full h-14 justify-start bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:from-purple-700 hover:to-indigo-700"
+          onClick={() => navigate('/driver/rewards')}
+        >
+          <Gift className="h-5 w-5 mr-3" />
+          Programa de Recompensas
+          <Badge className="ml-auto bg-white/20 hover:bg-white/30 text-white border-none">
+            1.250 pts
+          </Badge>
         </Button>
 
         <div className="grid grid-cols-2 gap-3">

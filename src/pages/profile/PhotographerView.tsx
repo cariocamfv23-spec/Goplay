@@ -24,8 +24,7 @@ export default function PhotographerView({
   const navigate = useNavigate()
 
   // Simulate if this is the logged-in user's profile for demo purposes
-  // In a real app, check auth context
-  const isOwnProfile = true // Hardcoded for demo to show the button
+  const isOwnProfile = true
 
   return (
     <div className="pb-8 animate-fade-in">
@@ -63,6 +62,18 @@ export default function PhotographerView({
           <h1 className="text-2xl font-bold">{profile.name}</h1>
           <p className="text-muted-foreground text-sm">{profile.username}</p>
           <p className="text-sm mt-2 font-medium">{profile.bio}</p>
+
+          <div className="flex flex-wrap gap-2 mt-3">
+            {profile.categories?.map((cat) => (
+              <Badge
+                key={cat}
+                variant="outline"
+                className="text-xs border-primary/20 text-primary bg-primary/5"
+              >
+                {cat}
+              </Badge>
+            ))}
+          </div>
 
           <div className="flex items-center gap-4 text-xs text-muted-foreground mt-3 mb-4">
             <span className="flex items-center gap-1">

@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input'
-import { Search, MapPin, Filter, Car } from 'lucide-react'
+import { Search, MapPin, Filter, Car, Camera } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   mockEvents,
@@ -43,6 +43,14 @@ const Explore = () => {
             variant="secondary"
             size="sm"
             className="rounded-full px-6 hover:bg-secondary/80"
+            onClick={() => navigate('/explore/photographers')}
+          >
+            Fotógrafos
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="rounded-full px-6 hover:bg-secondary/80"
           >
             Eventos
           </Button>
@@ -60,35 +68,45 @@ const Explore = () => {
           >
             Academias
           </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="rounded-full px-6 hover:bg-secondary/80"
-          >
-            Nutrição
-          </Button>
         </div>
       </div>
 
-      <div className="px-4 mt-6">
+      <div className="px-4 mt-6 grid grid-cols-2 gap-3">
         {/* New Feature Entry Point */}
         <div
-          className="mb-8 p-4 bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl text-white shadow-lg cursor-pointer transform transition-all hover:scale-[1.01]"
+          className="p-4 bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl text-white shadow-lg cursor-pointer transform transition-all hover:scale-[1.01]"
           onClick={() => navigate('/driver/performance')}
         >
-          <div className="flex items-center gap-4">
-            <div className="h-12 w-12 rounded-full bg-white/10 flex items-center justify-center">
-              <Car className="h-6 w-6 text-white" />
+          <div className="flex flex-col gap-2">
+            <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center">
+              <Car className="h-5 w-5 text-white" />
             </div>
-            <div className="flex-1">
-              <h3 className="font-bold text-lg">Performance de Motoristas</h3>
-              <p className="text-sm text-slate-300">
-                Análise de métricas e relatórios
-              </p>
+            <div>
+              <h3 className="font-bold text-sm">Motoristas</h3>
+              <p className="text-[10px] text-slate-300">Performance e Ganhos</p>
             </div>
           </div>
         </div>
 
+        <div
+          className="p-4 bg-gradient-to-br from-primary to-purple-800 rounded-2xl text-white shadow-lg cursor-pointer transform transition-all hover:scale-[1.01]"
+          onClick={() => navigate('/explore/photographers')}
+        >
+          <div className="flex flex-col gap-2">
+            <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center">
+              <Camera className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm">Fotógrafos</h3>
+              <p className="text-[10px] text-white/80">
+                Encontre especialistas
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-4 mt-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold">Eventos em Destaque</h2>
           <Button variant="link" className="text-primary text-sm h-auto p-0">

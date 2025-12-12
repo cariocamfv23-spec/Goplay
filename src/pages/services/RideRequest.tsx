@@ -1,7 +1,15 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
-import { ArrowLeft, MapPin, Navigation, Car, Lock } from 'lucide-react'
+import {
+  ArrowLeft,
+  MapPin,
+  Navigation,
+  Car,
+  Lock,
+  Calendar as CalendarIcon,
+  Clock,
+} from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
@@ -9,6 +17,23 @@ import { mockProfiles } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Calendar } from '@/components/ui/calendar'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
+import { cn } from '@/lib/utils'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export default function RideRequest() {
   const navigate = useNavigate()
@@ -22,13 +47,14 @@ export default function RideRequest() {
   const [canRequest, setCanRequest] = useState(true)
   const [permissionReason, setPermissionReason] = useState('')
   const [isSimulatedFollower, setIsSimulatedFollower] = useState(false)
+  const [requestType, setRequestType] = useState<'now' | 'schedule'>('now')
+  const [date, setDate] = useState<Date>()
+  const [time, setTime] = useState<string>()
 
   // Determine permissions
   useEffect(() => {
     if (!driverId) return
 
-    // Retrieve permission setting for this driver (mocked using the same key as Settings page for demo)
-    // In a real app, this would be fetched from the backend or context for the specific driver profile
     const permission =
       localStorage.getItem(`driver_permission_${driverId}`) || 'everyone'
 
@@ -36,7 +62,6 @@ export default function RideRequest() {
       setCanRequest(true)
       setPermissionReason('')
     } else if (permission === 'verified') {
-      // Mock check: Assume current user is verified for now
       setCanRequest(true)
       setPermissionReason('')
     } else if (permission === 'followers') {
@@ -55,11 +80,22 @@ export default function RideRequest() {
   if (!driver) return <div>Motorista não encontrado</div>
 
   const handleRequest = () => {
-    setStep('searching')
-    setTimeout(() => {
-      toast.success('Motorista a caminho!')
-      navigate('/home')
-    }, 2000)
+    if (requestType === 'schedule') {
+      if (!date || !time) {
+        toast.error('Selecione data e hora para agendar.')
+        return
+      }
+      toast.success('Corrida Agendada!', {
+        description: `Agendado para ${format(date, 'dd/MM', { locale: ptBR })} às ${time}. O motorista será notificado.`,
+      })
+      navigate('/services/scheduled-rides')
+    } else {
+      setStep('searching')
+      setTimeout(() => {
+        toast.success('Motorista a caminho!')
+        navigate('/home')
+      }, 2000)
+    }
   }
 
   return (
@@ -109,6 +145,66 @@ export default function RideRequest() {
       <div className="p-4 bg-background rounded-t-3xl shadow-[0_-5px_20px_rgba(0,0,0,0.1)] z-10">
         {step === 'location' && (
           <>
+            <Tabs
+              defaultValue="now"
+              value={requestType}
+              onValueChange={(v) => setRequestType(v as 'now' | 'schedule')}
+              className="w-full mb-4"
+            >
+              <TabsList className="w-full grid grid-cols-2">
+                <TabsTrigger value="now">Agora</TabsTrigger>
+                <TabsTrigger value="schedule">Agendar</TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            {requestType === 'schedule' && (
+              <div className="grid grid-cols-2 gap-4 mb-4 animate-in slide-in-from-top-2">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        'w-full justify-start text-left font-normal',
+                        !date && 'text-muted-foreground',
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date ? (
+                        format(date, 'PPP', { locale: ptBR })
+                      ) : (
+                        <span>Data</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      initialFocus
+                      disabled={(date) => date < new Date()}
+                    />
+                  </PopoverContent>
+                </Popover>
+
+                <Select onValueChange={setTime}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Horário" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Array.from({ length: 24 }).map((_, i) => (
+                      <SelectItem
+                        key={i}
+                        value={`${i.toString().padStart(2, '0')}:00`}
+                      >
+                        {i.toString().padStart(2, '0')}:00
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
             <div className="flex items-center gap-4 mb-6">
               <Avatar className="h-14 w-14">
                 <AvatarImage src={driver.avatar} />
@@ -131,7 +227,9 @@ export default function RideRequest() {
                 className="w-full h-14 rounded-full font-bold text-lg"
                 onClick={handleRequest}
               >
-                Confirmar Goplay Driver
+                {requestType === 'schedule'
+                  ? 'Agendar Corrida'
+                  : 'Confirmar Goplay Driver'}
               </Button>
             ) : (
               <div className="space-y-3">
@@ -147,6 +245,16 @@ export default function RideRequest() {
                 </Button>
               </div>
             )}
+
+            <div className="mt-4 text-center">
+              <Button
+                variant="link"
+                className="text-muted-foreground text-xs"
+                onClick={() => navigate('/services/scheduled-rides')}
+              >
+                Ver meus agendamentos
+              </Button>
+            </div>
           </>
         )}
 

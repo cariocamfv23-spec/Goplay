@@ -16,6 +16,9 @@ const ProfileSelection = lazy(() => import('./pages/auth/ProfileSelection'))
 const Home = lazy(() => import('./pages/home/Home'))
 const Move = lazy(() => import('./pages/move/Move'))
 const Explore = lazy(() => import('./pages/explore/Explore'))
+const PhotographersList = lazy(
+  () => import('./pages/explore/PhotographersList'),
+)
 const Profile = lazy(() => import('./pages/profile/Profile'))
 const MessagesList = lazy(() => import('./pages/messages/MessagesList'))
 const ChatRoom = lazy(() => import('./pages/messages/ChatRoom'))
@@ -34,6 +37,7 @@ const Wallet = lazy(() => import('./pages/wallet/Wallet'))
 const WithdrawPix = lazy(() => import('./pages/wallet/WithdrawPix'))
 const PaymentMethods = lazy(() => import('./pages/wallet/PaymentMethods'))
 const RideRequest = lazy(() => import('./pages/services/RideRequest'))
+const ScheduledRides = lazy(() => import('./pages/services/ScheduledRides'))
 
 // New Detail Pages
 const VenueDetails = lazy(() => import('./pages/venues/VenueDetails'))
@@ -50,6 +54,7 @@ const DriverHistory = lazy(() => import('./pages/driver/DriverHistory'))
 const DriverSettings = lazy(() => import('./pages/driver/DriverSettings'))
 const ActiveRide = lazy(() => import('./pages/driver/ActiveRide'))
 const DriverPerformance = lazy(() => import('./pages/driver/DriverPerformance'))
+const DriverRewards = lazy(() => import('./pages/driver/DriverRewards'))
 
 // New Invitations and Matches Pages
 const ReceivedInvitations = lazy(
@@ -87,6 +92,10 @@ const App = () => (
               <Route path="/home" element={<Home />} />
               <Route path="/move" element={<Move />} />
               <Route path="/explore" element={<Explore />} />
+              <Route
+                path="/explore/photographers"
+                element={<PhotographersList />}
+              />
               <Route path="/events/:id" element={<EventDetails />} />
 
               {/* New Detail Routes */}
@@ -118,6 +127,10 @@ const App = () => (
               <Route path="/wallet/withdraw" element={<WithdrawPix />} />
               <Route path="/wallet/cards" element={<PaymentMethods />} />
               <Route path="/ride/request/:driverId" element={<RideRequest />} />
+              <Route
+                path="/services/scheduled-rides"
+                element={<ScheduledRides />}
+              />
 
               {/* Driver Routes */}
               <Route path="/driver/dashboard" element={<DriverDashboard />} />
@@ -129,6 +142,7 @@ const App = () => (
                 path="/driver/performance"
                 element={<DriverPerformance />}
               />
+              <Route path="/driver/rewards" element={<DriverRewards />} />
 
               {/* New Invitations and Matches Routes */}
               <Route path="/invitations" element={<ReceivedInvitations />} />

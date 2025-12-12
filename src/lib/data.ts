@@ -9,6 +9,10 @@ import {
   Flag,
   UserCheck,
   MapPin,
+  Car,
+  Star,
+  Camera,
+  Calendar,
 } from 'lucide-react'
 
 export const navigationItems = [
@@ -248,7 +252,6 @@ export const mockProducts = [
   },
 ]
 
-// Updated to represent Venues more broadly
 export const mockVenues = [
   {
     id: 'v1',
@@ -283,7 +286,6 @@ export const mockVenues = [
   },
 ]
 
-// Re-export mockVenues as mockCourts for compatibility
 export const mockCourts = mockVenues.map((v) => ({
   ...v,
   id: Number(v.id.replace('v', '')),
@@ -453,6 +455,7 @@ export interface ProfileData {
   // Photographer specific
   portfolio?: string[]
   packages?: { title: string; price: string; description: string }[]
+  categories?: string[]
 
   // Driver specific
   car?: { model: string; plate: string; color: string; photo: string }
@@ -607,6 +610,7 @@ export const mockProfiles: ProfileData[] = [
     followers: '2.5k',
     following: '300',
     rating: 4.9,
+    categories: ['Eventos', 'Retratos', 'Esportes'],
     portfolio: [
       'https://img.usecurling.com/p/300/300?q=sports%20photo%20action',
       'https://img.usecurling.com/p/300/300?q=sports%20portrait',
@@ -636,6 +640,7 @@ export const mockProfiles: ProfileData[] = [
     followers: '1.8k',
     following: '150',
     rating: 4.8,
+    categories: ['Natureza', 'Esportes', 'Produtos'],
     portfolio: [
       'https://img.usecurling.com/p/300/300?q=surfing%20photo',
       'https://img.usecurling.com/p/300/300?q=swimming%20photo',
@@ -1053,7 +1058,6 @@ export const mockPointsHistory = [
   },
 ]
 
-// New Mock Data for Expanded Statistics
 export const mockComparisonStats = [
   { subject: 'Velocidade', user: 120, avg: 110, max: 150 },
   { subject: 'Força', user: 98, avg: 100, max: 150 },
@@ -1063,7 +1067,6 @@ export const mockComparisonStats = [
   { subject: 'Mental', user: 65, avg: 75, max: 150 },
 ]
 
-// New Mock Data for Calendar
 export const mockTrainingEvents = [
   {
     id: 'evt-1',
@@ -1088,7 +1091,6 @@ export const mockTrainingEvents = [
   },
 ]
 
-// New Mock Data for Feedback
 export interface Feedback {
   id: string
   author: { name: string; avatar: string; role: string }
@@ -1221,5 +1223,98 @@ export const mockDriverStats = [
     rating: 4.7,
     responseTime: '4 min',
     avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=30',
+  },
+]
+
+export const photographerCategories = [
+  'Eventos',
+  'Retratos',
+  'Esportes',
+  'Produtos',
+  'Casamentos',
+  'Natureza',
+]
+
+export interface DriverGoal {
+  id: string
+  title: string
+  current: number
+  target: number
+  rewardPoints: number
+  icon: any
+}
+
+export const mockDriverGoals: DriverGoal[] = [
+  {
+    id: '1',
+    title: 'Corridas na Semana',
+    current: 34,
+    target: 50,
+    rewardPoints: 500,
+    icon: Car,
+  },
+  {
+    id: '2',
+    title: 'Avaliações 5 Estrelas',
+    current: 18,
+    target: 20,
+    rewardPoints: 300,
+    icon: Star,
+  },
+]
+
+export interface DriverReward {
+  id: string
+  title: string
+  cost: number
+  image: string
+}
+
+export const mockDriverRewards: DriverReward[] = [
+  {
+    id: '1',
+    title: 'Vale Combustível R$ 50',
+    cost: 1000,
+    image: 'https://img.usecurling.com/p/200/200?q=gas%20station',
+  },
+  {
+    id: '2',
+    title: 'Troca de Óleo',
+    cost: 2500,
+    image: 'https://img.usecurling.com/p/200/200?q=oil%20change',
+  },
+  {
+    id: '3',
+    title: 'Lavagem Completa',
+    cost: 800,
+    image: 'https://img.usecurling.com/p/200/200?q=car%20wash',
+  },
+]
+
+export interface ScheduledRide {
+  id: string
+  date: Date
+  pickup: string
+  dropoff: string
+  price: string
+  status: 'confirmed' | 'pending'
+}
+
+export const mockScheduledRides: ScheduledRide[] = [
+  {
+    id: 's1',
+    date: new Date(new Date().setDate(new Date().getDate() + 2)),
+    pickup: 'Av. Paulista, 1000',
+    dropoff: 'Aeroporto Congonhas',
+    price: 'R$ 45,90',
+    status: 'confirmed',
+  },
+  {
+    id: 's2',
+    date: new Date(new Date().setDate(new Date().getDate() + 5)),
+    pickup: 'Rua Augusta, 500',
+    dropoff: 'Arena Allianz',
+    price: 'R$ 32,50',
+    status: 'pending',
   },
 ]
