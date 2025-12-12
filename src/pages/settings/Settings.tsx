@@ -1,14 +1,45 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
-import { User, Bell, Lock, Globe, LogOut, Moon } from 'lucide-react'
+import {
+  User,
+  Bell,
+  Lock,
+  Globe,
+  LogOut,
+  Moon,
+  Wallet,
+  Trophy,
+} from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Settings = () => {
+  const navigate = useNavigate()
+
   return (
     <div className="p-4 space-y-6">
       <div className="space-y-1">
         <h2 className="text-lg font-semibold">Conta</h2>
         <Card className="p-0 overflow-hidden border border-border shadow-sm">
+          <div
+            className="flex items-center justify-between p-4 hover:bg-secondary/50 cursor-pointer border-b border-border/50"
+            onClick={() => navigate('/wallet')}
+          >
+            <div className="flex items-center gap-3">
+              <Wallet className="h-5 w-5 text-primary" />
+              <span className="font-medium">Carteira Digital</span>
+            </div>
+            <span className="text-sm text-muted-foreground">R$ 1.250,00</span>
+          </div>
+          <div
+            className="flex items-center justify-between p-4 hover:bg-secondary/50 cursor-pointer border-b border-border/50"
+            onClick={() => navigate('/ranking')}
+          >
+            <div className="flex items-center gap-3">
+              <Trophy className="h-5 w-5 text-gold" />
+              <span>Ranking & Conquistas</span>
+            </div>
+          </div>
           <div className="flex items-center justify-between p-4 hover:bg-secondary/50 cursor-pointer border-b border-border/50">
             <div className="flex items-center gap-3">
               <User className="h-5 w-5 text-muted-foreground" />

@@ -1,59 +1,27 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Star } from 'lucide-react'
+import { Star, ShoppingCart } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { mockProducts, mockCourts } from '@/lib/data'
 
 const Marketplace = () => {
-  const products = [
-    {
-      id: 1,
-      name: 'Chuteira Pro Nike',
-      price: 'R$ 450,00',
-      rating: 4.8,
-      img: 'soccer%20cleats',
-    },
-    {
-      id: 2,
-      name: 'Bola Oficial',
-      price: 'R$ 120,00',
-      rating: 4.5,
-      img: 'soccer%20ball',
-    },
-    {
-      id: 3,
-      name: 'Camisa Treino',
-      price: 'R$ 89,90',
-      rating: 4.2,
-      img: 'jersey',
-    },
-    {
-      id: 4,
-      name: 'Luvas Goleiro',
-      price: 'R$ 150,00',
-      rating: 4.7,
-      img: 'goalkeeper%20gloves',
-    },
-  ]
-
-  const courts = [
-    {
-      id: 1,
-      name: 'Arena Futsal Centro',
-      price: 'R$ 150/h',
-      rating: 4.9,
-      img: 'futsal%20court',
-    },
-    {
-      id: 2,
-      name: 'Quadra Society 10',
-      price: 'R$ 200/h',
-      rating: 4.6,
-      img: 'soccer%20field',
-    },
-  ]
+  const navigate = useNavigate()
 
   return (
-    <div className="p-4">
+    <div className="p-4 pb-20">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Marketplace</h1>
+        <Button
+          size="icon"
+          variant="outline"
+          className="rounded-full"
+          onClick={() => navigate('/marketplace/cart')}
+        >
+          <ShoppingCart className="h-5 w-5" />
+        </Button>
+      </div>
+
       <Tabs defaultValue="products">
         <TabsList className="grid w-full grid-cols-2 mb-6">
           <TabsTrigger value="products">Loja</TabsTrigger>
@@ -62,10 +30,11 @@ const Marketplace = () => {
 
         <TabsContent value="products">
           <div className="grid grid-cols-2 gap-4">
-            {products.map((prod) => (
+            {mockProducts.map((prod) => (
               <Card
                 key={prod.id}
-                className="overflow-hidden border-none shadow-sm"
+                className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+                onClick={() => navigate(`/marketplace/product/${prod.id}`)}
               >
                 <div className="aspect-square bg-secondary relative">
                   <img
@@ -90,7 +59,7 @@ const Marketplace = () => {
 
         <TabsContent value="courts">
           <div className="space-y-4">
-            {courts.map((court) => (
+            {mockCourts.map((court) => (
               <Card
                 key={court.id}
                 className="overflow-hidden border-none shadow-md flex flex-col md:flex-row"

@@ -243,6 +243,73 @@ export const mockJobs = [
   },
 ]
 
+export const mockProducts = [
+  {
+    id: 1,
+    name: 'Chuteira Pro Nike',
+    price: 'R$ 450,00',
+    rating: 4.8,
+    img: 'soccer%20cleats',
+    description:
+      'Chuteira profissional para campo, desenvolvida para máxima tração e controle de bola. Ideal para atletas de alto rendimento.',
+    category: 'Equipamentos',
+  },
+  {
+    id: 2,
+    name: 'Bola Oficial',
+    price: 'R$ 120,00',
+    rating: 4.5,
+    img: 'soccer%20ball',
+    description:
+      'Bola oficial de competição, aprovada pelas principais federações. Durabilidade e precisão no chute.',
+    category: 'Equipamentos',
+  },
+  {
+    id: 3,
+    name: 'Camisa Treino',
+    price: 'R$ 89,90',
+    rating: 4.2,
+    img: 'jersey',
+    description:
+      'Camisa de treino leve e respirável, com tecnologia de secagem rápida. Conforto total durante os exercícios.',
+    category: 'Vestuário',
+  },
+  {
+    id: 4,
+    name: 'Luvas Goleiro',
+    price: 'R$ 150,00',
+    rating: 4.7,
+    img: 'goalkeeper%20gloves',
+    description:
+      'Luvas de goleiro com grip profissional e proteção para os dedos. Segurança e performance no gol.',
+    category: 'Equipamentos',
+  },
+]
+
+export const mockCourts = [
+  {
+    id: 1,
+    name: 'Arena Futsal Centro',
+    price: 'R$ 150/h',
+    rating: 4.9,
+    img: 'futsal%20court',
+  },
+  {
+    id: 2,
+    name: 'Quadra Society 10',
+    price: 'R$ 200/h',
+    rating: 4.6,
+    img: 'soccer%20field',
+  },
+]
+
+export interface BadgeData {
+  id: string
+  name: string
+  icon: string
+  color: string
+}
+
 export interface ProfileData {
   id: string
   type: 'athlete' | 'club' | 'coach'
@@ -261,6 +328,9 @@ export interface ProfileData {
   sport?: string
   stats?: { label: string; value: string }[]
   history?: { year: string; team: string; description: string }[]
+  badges?: BadgeData[]
+  points?: number
+  rank?: number
 
   // Club specific
   about?: string
@@ -274,6 +344,12 @@ export interface ProfileData {
   pricing?: string
   availability?: string[]
 }
+
+export const mockBadges: BadgeData[] = [
+  { id: '1', name: 'Artilheiro', icon: 'Target', color: 'text-red-500' },
+  { id: '2', name: 'MVP', icon: 'Trophy', color: 'text-yellow-500' },
+  { id: '3', name: 'Líder', icon: 'Flag', color: 'text-blue-500' },
+]
 
 export const mockProfiles: ProfileData[] = [
   {
@@ -290,6 +366,9 @@ export const mockProfiles: ProfileData[] = [
     rating: 4.8,
     sport: 'Futebol',
     position: 'Meia-Atacante',
+    points: 1250,
+    rank: 12,
+    badges: [mockBadges[0], mockBadges[1]],
     stats: [
       { label: 'Jogos', value: '89' },
       { label: 'Gols', value: '34' },
@@ -362,6 +441,61 @@ export const mockProfiles: ProfileData[] = [
       'Quarta - 09h às 12h',
       'Sexta - 14h às 18h',
     ],
+  },
+]
+
+export const mockRankings = [
+  {
+    id: '1',
+    name: 'Lucas Oliveira',
+    points: 1250,
+    rank: 1,
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
+  },
+  {
+    id: '4',
+    name: 'Ana Silva',
+    points: 1100,
+    rank: 2,
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=2',
+  },
+  {
+    id: '5',
+    name: 'Pedro Santos',
+    points: 950,
+    rank: 3,
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=33',
+  },
+  {
+    id: '6',
+    name: 'Carla Dias',
+    points: 880,
+    rank: 4,
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=12',
+  },
+]
+
+export const mockTransactions = [
+  {
+    id: 1,
+    type: 'received',
+    title: 'Pagamento recebido',
+    amount: 'R$ 150,00',
+    date: 'Hoje, 10:30',
+  },
+  {
+    id: 2,
+    type: 'sent',
+    title: 'Pagamento enviado',
+    amount: 'R$ 50,00',
+    date: 'Ontem, 14:20',
+  },
+  {
+    id: 3,
+    type: 'withdraw',
+    title: 'Saque Pix',
+    amount: 'R$ 200,00',
+    date: '12 Ago, 09:00',
   },
 ]
 

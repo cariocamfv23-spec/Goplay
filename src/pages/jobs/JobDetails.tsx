@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Badge } from '@/components/ui/badge'
+import { toast } from 'sonner'
 
 const JobDetails = () => {
   const { id } = useParams()
@@ -20,6 +21,11 @@ const JobDetails = () => {
 
   if (!job) {
     return <div>Vaga não encontrada</div>
+  }
+
+  const handleApply = () => {
+    toast.success('Candidatura enviada com sucesso!')
+    navigate('/jobs')
   }
 
   return (
@@ -92,7 +98,10 @@ const JobDetails = () => {
             </div>
 
             <div className="mt-8 grid gap-3">
-              <Button className="w-full h-12 rounded-full text-base font-semibold">
+              <Button
+                className="w-full h-12 rounded-full text-base font-semibold"
+                onClick={handleApply}
+              >
                 Candidatar-se
               </Button>
               <Button

@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { MapPin, Building2 } from 'lucide-react'
+import { MapPin, Building2, Briefcase } from 'lucide-react'
 import { mockJobs } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
 
@@ -14,6 +14,26 @@ const JobsList = () => {
         <h2 className="text-xl font-bold">Vagas Recentes</h2>
         <Button variant="link">Ver todas</Button>
       </div>
+
+      {/* Recruiter Access CTA */}
+      <Card className="bg-gradient-to-r from-primary to-purple-800 text-white border-none mb-6">
+        <CardContent className="p-4 flex items-center justify-between">
+          <div>
+            <h3 className="font-bold text-lg mb-1">Área da Empresa</h3>
+            <p className="text-xs text-white/80">
+              Gerencie suas vagas e candidatos
+            </p>
+          </div>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => navigate('/jobs/dashboard')}
+            className="text-primary font-bold"
+          >
+            Acessar
+          </Button>
+        </CardContent>
+      </Card>
 
       {mockJobs.map((job) => (
         <Card

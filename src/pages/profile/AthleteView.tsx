@@ -14,12 +14,25 @@ import {
   MessageCircle,
   ThumbsUp,
   Target,
+  Award,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { mockVideos, mockPosts } from '@/lib/data'
 import { PostCard } from '@/components/PostCard'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import * as LucideIcons from 'lucide-react'
 
 export default function AthleteView({ profile }: { profile: ProfileData }) {
+  // Helper to dynamically render icons
+  const renderIcon = (iconName: string, className?: string) => {
+    const Icon = (LucideIcons as any)[iconName]
+    return Icon ? <Icon className={className} /> : null
+  }
+
   return (
     <div className="pb-8 animate-fade-in">
       {/* Header with Cover */}
@@ -65,7 +78,39 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
             </Badge>
           </div>
 
+          {/* Gamification Stats */}
+          {profile.points && (
+            <div className="flex items-center gap-4 mt-3 mb-2">
+              <div className="flex items-center gap-1.5 text-sm font-semibold text-primary">
+                <Trophy className="h-4 w-4" />
+                <span>{profile.points} pts</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-sm font-semibold text-muted-foreground">
+                <Award className="h-4 w-4" />
+                <span>Ranking #{profile.rank}</span>
+              </div>
+            </div>
+          )}
+
           <p className="text-sm mt-2 text-foreground/80">{profile.bio}</p>
+
+          {/* Badges */}
+          {profile.badges && profile.badges.length > 0 && (
+            <div className="flex gap-2 mt-4 mb-2">
+              {profile.badges.map((badge) => (
+                <Tooltip key={badge.id}>
+                  <TooltipTrigger>
+                    <div className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center border border-border shadow-sm">
+                      {renderIcon(badge.icon, `h-4 w-4 ${badge.color}`)}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{badge.name}</p>
+                  </TooltipContent>
+                </Tooltip>
+              ))}
+            </div>
+          )}
 
           <div className="flex items-center gap-4 text-xs text-muted-foreground mt-3">
             <span className="flex items-center gap-1">
