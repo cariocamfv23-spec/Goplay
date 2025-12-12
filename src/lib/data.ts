@@ -1122,3 +1122,74 @@ export const mockFeedbacks: Feedback[] = [
     context: 'Jogo Amistoso',
   },
 ]
+
+export interface Notification {
+  id: string
+  title: string
+  message: string
+  date: string
+  read: boolean
+  type: 'system' | 'profile_update' | 'ride_request' | 'transaction'
+  relatedId?: string
+}
+
+export const mockNotificationsList: Notification[] = [
+  {
+    id: '1',
+    title: 'Perfil Atualizado',
+    message: 'O motorista Carlos Driver atualizou suas informações de veículo.',
+    date: 'Hoje, 10:00',
+    read: false,
+    type: 'profile_update',
+    relatedId: '5',
+  },
+  {
+    id: '2',
+    title: 'Novo Serviço',
+    message:
+      'Você recebeu um pagamento de R$ 200,00 pelo serviço de fotografia.',
+    date: 'Ontem, 15:30',
+    read: true,
+    type: 'transaction',
+  },
+]
+
+export interface PhotographerTransaction {
+  id: string
+  date: string // ISO string or display string
+  description: string
+  clientName: string
+  amount: number
+  status: 'completed' | 'pending' | 'cancelled'
+  type: 'service' | 'package'
+}
+
+export const mockPhotographerTransactions: PhotographerTransaction[] = [
+  {
+    id: 'tx-1',
+    date: '2024-08-15',
+    description: 'Cobertura de Jogo - Final Regional',
+    clientName: 'Clube Atlético',
+    amount: 500.0,
+    status: 'completed',
+    type: 'service',
+  },
+  {
+    id: 'tx-2',
+    date: '2024-08-18',
+    description: 'Ensaio Individual',
+    clientName: 'Lucas Oliveira',
+    amount: 350.0,
+    status: 'pending',
+    type: 'package',
+  },
+  {
+    id: 'tx-3',
+    date: '2024-08-10',
+    description: 'Sessão de Fotos - Treino',
+    clientName: 'Escolinha Zico',
+    amount: 200.0,
+    status: 'completed',
+    type: 'service',
+  },
+]

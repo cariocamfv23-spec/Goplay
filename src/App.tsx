@@ -60,6 +60,12 @@ const MyPoints = lazy(() => import('./pages/gamification/MyPoints'))
 // New Stats Detail Page
 const StatsDetail = lazy(() => import('./pages/profile/StatsDetail'))
 
+// New Notification and Financial Pages
+const Notifications = lazy(() => import('./pages/notifications/Notifications'))
+const TransactionHistory = lazy(
+  () => import('./pages/financials/TransactionHistory'),
+)
+
 const App = () => (
   <BrowserRouter
     future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
@@ -123,6 +129,13 @@ const App = () => (
               <Route path="/invitations" element={<ReceivedInvitations />} />
               <Route path="/matches/:id" element={<MatchDetails />} />
               <Route path="/my-points" element={<MyPoints />} />
+
+              {/* Notifications and Financials */}
+              <Route path="/notifications" element={<Notifications />} />
+              <Route
+                path="/financials/transactions"
+                element={<TransactionHistory />}
+              />
             </Route>
 
             <Route path="*" element={<NotFound />} />

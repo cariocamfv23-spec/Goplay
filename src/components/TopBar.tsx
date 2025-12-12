@@ -3,10 +3,12 @@ import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Logo } from '@/components/Logo'
+import useNotificationStore from '@/stores/useNotificationStore'
 
 export function TopBar() {
   const navigate = useNavigate()
   const location = useLocation()
+  const { unreadCount } = useNotificationStore()
 
   const isProfile = location.pathname.includes('/profile')
   const isMarket = location.pathname.includes('/marketplace')
@@ -54,13 +56,18 @@ export function TopBar() {
           </Button>
         )}
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="rounded-full hover:bg-secondary/50"
-        >
-          <Bell className="h-5 w-5" />
-        </Button>
+        <Link to="/notifications" className="relative">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full hover:bg-secondary/50"
+          >
+            <Bell className="h-5 w-5" />
+          </Button>
+          {unreadCount > 0 && (
+            <span className="absolute top-2 right-2 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-background animate-pulse" />
+          )}
+        </Link>
 
         {isProfile ? (
           <Link to="/settings">

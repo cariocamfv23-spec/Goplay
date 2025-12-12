@@ -11,15 +11,23 @@ import {
   Image as ImageIcon,
   DollarSign,
   CalendarCheck,
+  FileText,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { useNavigate } from 'react-router-dom'
 
 export default function PhotographerView({
   profile,
 }: {
   profile: ProfileData
 }) {
+  const navigate = useNavigate()
+
+  // Simulate if this is the logged-in user's profile for demo purposes
+  // In a real app, check auth context
+  const isOwnProfile = true // Hardcoded for demo to show the button
+
   return (
     <div className="pb-8 animate-fade-in">
       <div className="relative h-48 w-full bg-muted">
@@ -64,6 +72,17 @@ export default function PhotographerView({
               <Star className="h-3 w-3 fill-current" /> {profile.rating}
             </span>
           </div>
+
+          {isOwnProfile && (
+            <Button
+              variant="outline"
+              className="w-full mb-6 border-primary/20 bg-primary/5 text-primary hover:bg-primary/10"
+              onClick={() => navigate('/financials/transactions')}
+            >
+              <FileText className="h-4 w-4 mr-2" />
+              Ver Extrato Financeiro
+            </Button>
+          )}
         </div>
 
         <Tabs defaultValue="portfolio" className="w-full">

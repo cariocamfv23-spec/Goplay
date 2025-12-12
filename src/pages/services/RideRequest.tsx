@@ -1,12 +1,14 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
-import { ArrowLeft, MapPin, Navigation, Car } from 'lucide-react'
+import { ArrowLeft, MapPin, Navigation, Car, Lock } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 import { mockProfiles } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
 
 export default function RideRequest() {
   const navigate = useNavigate()
@@ -17,6 +19,38 @@ export default function RideRequest() {
   const [step, setStep] = useState<'location' | 'confirm' | 'searching'>(
     'location',
   )
+  const [canRequest, setCanRequest] = useState(true)
+  const [permissionReason, setPermissionReason] = useState('')
+  const [isSimulatedFollower, setIsSimulatedFollower] = useState(false)
+
+  // Determine permissions
+  useEffect(() => {
+    if (!driverId) return
+
+    // Retrieve permission setting for this driver (mocked using the same key as Settings page for demo)
+    // In a real app, this would be fetched from the backend or context for the specific driver profile
+    const permission =
+      localStorage.getItem(`driver_permission_${driverId}`) || 'everyone'
+
+    if (permission === 'everyone') {
+      setCanRequest(true)
+      setPermissionReason('')
+    } else if (permission === 'verified') {
+      // Mock check: Assume current user is verified for now
+      setCanRequest(true)
+      setPermissionReason('')
+    } else if (permission === 'followers') {
+      if (isSimulatedFollower) {
+        setCanRequest(true)
+        setPermissionReason('')
+      } else {
+        setCanRequest(false)
+        setPermissionReason(
+          'Este motorista aceita corridas apenas de seguidores.',
+        )
+      }
+    }
+  }, [driverId, isSimulatedFollower])
 
   if (!driver) return <div>Motorista não encontrado</div>
 
@@ -58,6 +92,18 @@ export default function RideRequest() {
             />
           </div>
         </div>
+
+        {/* Demo Control for Testing Permissions */}
+        <div className="absolute top-32 right-4 bg-background/90 p-2 rounded-lg shadow text-xs">
+          <div className="flex items-center gap-2">
+            <Label htmlFor="sim-follower">Simular Seguidor</Label>
+            <Switch
+              id="sim-follower"
+              checked={isSimulatedFollower}
+              onCheckedChange={setIsSimulatedFollower}
+            />
+          </div>
+        </div>
       </div>
 
       <div className="p-4 bg-background rounded-t-3xl shadow-[0_-5px_20px_rgba(0,0,0,0.1)] z-10">
@@ -79,12 +125,28 @@ export default function RideRequest() {
                 <p className="text-xs text-muted-foreground">Est. 15 min</p>
               </div>
             </div>
-            <Button
-              className="w-full h-14 rounded-full font-bold text-lg"
-              onClick={handleRequest}
-            >
-              Confirmar Goplay Driver
-            </Button>
+
+            {canRequest ? (
+              <Button
+                className="w-full h-14 rounded-full font-bold text-lg"
+                onClick={handleRequest}
+              >
+                Confirmar Goplay Driver
+              </Button>
+            ) : (
+              <div className="space-y-3">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm flex items-center gap-2">
+                  <Lock className="h-4 w-4" />
+                  {permissionReason}
+                </div>
+                <Button
+                  className="w-full h-14 rounded-full font-bold text-lg"
+                  disabled
+                >
+                  Solicitação Indisponível
+                </Button>
+              </div>
+            )}
           </>
         )}
 
