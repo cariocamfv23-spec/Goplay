@@ -14,6 +14,7 @@ type BrandingState = {
   resetBranding: () => void
 }
 
+// Official Goplay App Assets
 const defaultLogo =
   'https://res.cloudinary.com/subframe/image/upload/v1741178657/11628/11312/uploads/533f81e7-380d-400d-953e-028f8f0418c3.png'
 const defaultIcon =
@@ -32,6 +33,16 @@ export const BrandingProvider = ({ children }: { children: ReactNode }) => {
     return stored || defaultIcon
   })
 
+  // Preload images to prevent visual artifacts or delays
+  useEffect(() => {
+    const preloadImage = (url: string) => {
+      const img = new Image()
+      img.src = url
+    }
+    preloadImage(logoUrl)
+    preloadImage(iconUrl)
+  }, [logoUrl, iconUrl])
+
   useEffect(() => {
     localStorage.setItem('goplay_logo', logoUrl)
   }, [logoUrl])
@@ -39,7 +50,7 @@ export const BrandingProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     localStorage.setItem('goplay_icon', iconUrl)
 
-    // Update favicon and app icons
+    // Update favicon and app icons dynamically
     const updateIcons = (url: string) => {
       // Standard favicon
       let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement
