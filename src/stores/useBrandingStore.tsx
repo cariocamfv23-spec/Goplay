@@ -14,22 +14,37 @@ type BrandingState = {
   resetBranding: () => void
 }
 
-// Official Goplay App Assets
+// Official Goplay App Assets - Reverted to reliable placeholders to ensure consistency
+// Using 'play' icon in violet (Roxo Serenity) to match brand identity
 export const defaultLogo =
-  'https://res.cloudinary.com/subframe/image/upload/v1741178657/11628/11312/uploads/533f81e7-380d-400d-953e-028f8f0418c3.png'
+  'https://img.usecurling.com/i?q=play&color=violet&shape=fill'
 export const defaultIcon =
-  'https://res.cloudinary.com/subframe/image/upload/v1741178657/11628/11312/uploads/049e9c80-bc90-4828-9842-8854ef205d52.png'
+  'https://img.usecurling.com/i?q=play&color=violet&shape=fill'
 
 const BrandingContext = createContext<BrandingState | undefined>(undefined)
 
 export const BrandingProvider = ({ children }: { children: ReactNode }) => {
   const [logoUrl, setLogoUrl] = useState(() => {
     const stored = localStorage.getItem('goplay_logo')
+    // Auto-revert if stored logo is from the problematic source (Cloudinary/Subframe)
+    if (
+      stored &&
+      (stored.includes('cloudinary') || stored.includes('subframe'))
+    ) {
+      return defaultLogo
+    }
     return stored || defaultLogo
   })
 
   const [iconUrl, setIconUrl] = useState(() => {
     const stored = localStorage.getItem('goplay_icon')
+    // Auto-revert if stored icon is from the problematic source (Cloudinary/Subframe)
+    if (
+      stored &&
+      (stored.includes('cloudinary') || stored.includes('subframe'))
+    ) {
+      return defaultIcon
+    }
     return stored || defaultIcon
   })
 
