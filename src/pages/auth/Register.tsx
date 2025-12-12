@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { Mail, Lock, User, Smartphone } from 'lucide-react'
+import { Mail, Lock, User, Check } from 'lucide-react'
 import useBrandingStore from '@/stores/useBrandingStore'
 
 const Register = () => {
@@ -21,21 +21,21 @@ const Register = () => {
 
   return (
     <div className="min-h-screen flex flex-col justify-center px-6 py-12 bg-background animate-fade-in relative overflow-hidden">
-      {/* Background blobs */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-gold/10 rounded-full blur-[100px] -translate-x-1/2 translate-y-1/2 pointer-events-none" />
+      {/* Premium Background Effects */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/3 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gold/5 rounded-full blur-[120px] -translate-x-1/3 translate-y-1/3 pointer-events-none" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8 relative z-10">
         <div className="flex justify-center mb-6">
-          <img
-            src={logoUrl}
-            alt="Goplay App"
-            className="h-14 w-auto object-contain drop-shadow-sm"
-          />
+          <div className="p-4 rounded-2xl bg-background/50 backdrop-blur-sm border border-border/50 shadow-sm transition-transform hover:scale-105 duration-300">
+            <img
+              src={logoUrl}
+              alt="Goplay App"
+              className="h-16 w-auto object-contain drop-shadow-md"
+            />
+          </div>
         </div>
-        <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-primary mb-2">
-          Crie sua conta
-        </h2>
+        <h2 className="text-3xl font-bold tracking-tight mb-2">Criar conta</h2>
         <p className="text-muted-foreground">
           Junte-se à maior comunidade esportiva
         </p>
@@ -43,116 +43,80 @@ const Register = () => {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
         <form className="space-y-4" onSubmit={handleRegister}>
-          <div className="relative">
-            <User className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
+          <div className="relative group">
+            <User className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <Input
               type="text"
               placeholder="Nome completo"
               required
-              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary"
+              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary transition-all"
             />
           </div>
 
-          <div className="relative">
-            <Mail className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
+          <div className="relative group">
+            <Mail className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <Input
               type="email"
               placeholder="seu@email.com"
               required
-              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary"
+              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary transition-all"
             />
           </div>
 
-          <div className="relative">
-            <Smartphone className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
-            <Input
-              type="tel"
-              placeholder="(00) 00000-0000"
-              required
-              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary"
-            />
-          </div>
-
-          <div className="relative">
-            <Lock className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
+          <div className="relative group">
+            <Lock className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <Input
               type="password"
               placeholder="Senha"
               required
-              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary"
+              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary transition-all"
             />
           </div>
 
-          <div className="relative">
-            <Lock className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
+          <div className="relative group">
+            <Lock className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <Input
               type="password"
-              placeholder="Confirmar Senha"
+              placeholder="Confirmar senha"
               required
-              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary"
+              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary transition-all"
             />
           </div>
 
-          <div className="pt-2">
-            <Button
-              type="submit"
-              className="w-full h-12 rounded-full text-base font-bold shadow-lg shadow-primary/20 bg-gradient-primary hover:opacity-90 transition-opacity"
-              disabled={loading}
-            >
-              {loading ? 'Criando conta...' : 'Continuar'}
-            </Button>
+          <div className="flex items-start gap-2 pt-2">
+            <div className="flex items-center h-5">
+              <div className="relative flex items-center justify-center w-5 h-5 border border-primary rounded bg-background">
+                <Check className="h-3 w-3 text-primary" />
+              </div>
+            </div>
+            <div className="text-xs text-muted-foreground">
+              Ao criar uma conta, você concorda com nossos{' '}
+              <Link to="#" className="text-primary hover:underline">
+                Termos de Serviço
+              </Link>{' '}
+              e{' '}
+              <Link to="#" className="text-primary hover:underline">
+                Política de Privacidade
+              </Link>
+              .
+            </div>
           </div>
+
+          <Button
+            type="submit"
+            className="w-full h-12 rounded-full text-base font-bold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90 transition-all hover:scale-[1.02] mt-4"
+            disabled={loading}
+          >
+            {loading ? 'Criando conta...' : 'Continuar'}
+          </Button>
         </form>
-
-        <div className="mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-muted"></div>
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="px-2 bg-background text-muted-foreground">
-                Ou cadastre com
-              </span>
-            </div>
-          </div>
-
-          <div className="mt-6 grid grid-cols-3 gap-3">
-            <Button
-              variant="outline"
-              className="rounded-xl h-12 hover:bg-secondary/80 border-border/50"
-            >
-              <img
-                src="https://img.usecurling.com/i?q=google&shape=outline"
-                alt="Google"
-                className="h-5 w-5"
-              />
-            </Button>
-            <Button
-              variant="outline"
-              className="rounded-xl h-12 hover:bg-secondary/80 border-border/50"
-            >
-              <img
-                src="https://img.usecurling.com/i?q=apple&shape=outline"
-                alt="Apple"
-                className="h-5 w-5"
-              />
-            </Button>
-            <Button
-              variant="outline"
-              className="rounded-xl h-12 hover:bg-secondary/80 border-border/50"
-            >
-              <img
-                src="https://img.usecurling.com/i?q=linkedin&shape=outline"
-                alt="LinkedIn"
-                className="h-5 w-5"
-              />
-            </Button>
-          </div>
-        </div>
 
         <p className="mt-8 text-center text-sm text-muted-foreground">
           Já tem uma conta?{' '}
-          <Link to="/login" className="font-bold text-primary hover:underline">
+          <Link
+            to="/login"
+            className="font-bold text-primary hover:text-primary/80 transition-colors"
+          >
             Entrar
           </Link>
         </p>

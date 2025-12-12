@@ -30,7 +30,7 @@ const Login = () => {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-10 relative z-10">
         <div className="flex justify-center mb-8">
-          <div className="p-4 rounded-2xl bg-background/50 backdrop-blur-sm border border-border/50 shadow-sm">
+          <div className="p-4 rounded-2xl bg-background/50 backdrop-blur-sm border border-border/50 shadow-sm transition-transform hover:scale-105 duration-300">
             <img
               src={logoUrl}
               alt="Goplay App"

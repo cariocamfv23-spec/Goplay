@@ -38,7 +38,7 @@ export function TopBar() {
             <img
               src={logoUrl}
               alt="Goplay App"
-              className="h-8 w-auto object-contain"
+              className="h-8 w-auto object-contain drop-shadow-sm"
             />
           </div>
         ) : (
