@@ -16,12 +16,15 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
 import { useState } from 'react'
+import useSoundStore from '@/stores/useSoundStore'
 
 export default function ReceivedInvitations() {
   const navigate = useNavigate()
   const [invitations, setInvitations] = useState<Invitation[]>(mockInvitations)
+  const { playSound } = useSoundStore()
 
   const handleAccept = (id: string) => {
+    playSound('notification_invite')
     toast.success('Convite Aceito!', {
       description: 'Você foi adicionado à partida e ganhou +20 pontos!',
       icon: <Trophy className="h-5 w-5 text-gold" />,

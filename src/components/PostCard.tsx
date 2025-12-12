@@ -23,6 +23,7 @@ import { CommentsSheet } from './CommentsSheet'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
+import useSoundStore from '@/stores/useSoundStore'
 
 interface PostProps {
   post: {
@@ -53,14 +54,83 @@ export function PostCard({ post }: PostProps) {
   const [isCool, setIsCool] = useState(false)
   const [coolCount, setCoolCount] = useState(post.cools || 0)
 
+  const { playSound } = useSoundStore()
+
   const handleLike = () => {
-    setIsLiked(!isLiked)
-    setLikeCount(isLiked ? likeCount - 1 : likeCount + 1)
+    const newIsLiked = !isLiked
+    setIsLiked(newIsLiked)
+    setLikeCount(newIsLiked ? likeCount + 1 : likeCount - 1)
+
+    if (newIsLiked) {
+      // Determine sound based on content or user type
+      let soundCategory = 'like_generic'
+      const content = (post.content || '').toLowerCase()
+      const hashtags = (post.hashtags || []).map((h) => h.toLowerCase())
+      const fullText = content + ' ' + hashtags.join(' ')
+
+      if (
+        fullText.includes('futebol') ||
+        fullText.includes('soccer') ||
+        fullText.includes('gol') ||
+        fullText.includes('chute')
+      ) {
+        soundCategory = 'like_football'
+      } else if (
+        fullText.includes('futsal') ||
+        fullText.includes('quadra') ||
+        fullText.includes('salao')
+      ) {
+        soundCategory = 'like_futsal'
+      } else if (
+        fullText.includes('basquete') ||
+        fullText.includes('basketball') ||
+        fullText.includes('basket') ||
+        fullText.includes('dunk') ||
+        fullText.includes('cesta')
+      ) {
+        soundCategory = 'like_basketball'
+      } else if (
+        fullText.includes('volei') ||
+        fullText.includes('volleyball') ||
+        fullText.includes('manchete') ||
+        fullText.includes('saque')
+      ) {
+        soundCategory = 'like_volleyball'
+      } else if (
+        fullText.includes('tennis') ||
+        fullText.includes('tenis') ||
+        fullText.includes('raquete')
+      ) {
+        soundCategory = 'like_tennis'
+      } else if (
+        fullText.includes('treino') ||
+        fullText.includes('gym') ||
+        fullText.includes('academia') ||
+        fullText.includes('workout') ||
+        fullText.includes('crossfit')
+      ) {
+        soundCategory = 'like_workout'
+      } else if (
+        fullText.includes('parceiro') ||
+        fullText.includes('partner') ||
+        fullText.includes('nutri') ||
+        fullText.includes('fisioterapeuta')
+      ) {
+        soundCategory = 'like_partner'
+      }
+
+      // @ts-expect-error
+      playSound(soundCategory)
+    }
   }
 
   const handleCool = () => {
     setIsCool(!isCool)
     setCoolCount(isCool ? coolCount - 1 : coolCount + 1)
+    if (!isCool) {
+      // @ts-expect-error
+      playSound('like_generic')
+    }
   }
 
   const renderContent = () => {

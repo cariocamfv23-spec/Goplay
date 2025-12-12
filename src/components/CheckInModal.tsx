@@ -10,6 +10,7 @@ import { Camera, MapPin, CheckCircle2, ScanFace, Loader2 } from 'lucide-react'
 import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
+import useSoundStore from '@/stores/useSoundStore'
 
 interface CheckInModalProps {
   open: boolean
@@ -27,6 +28,7 @@ export function CheckInModal({
   >('camera')
   const [progress, setProgress] = useState(0)
   const [analysisStep, setAnalysisStep] = useState(0)
+  const { playSound } = useSoundStore()
 
   // Reset state when modal opens
   useEffect(() => {
@@ -64,6 +66,7 @@ export function CheckInModal({
     // Success
     setTimeout(() => {
       setStep('success')
+      playSound('notification_checkin')
       toast.success('Check-in realizado com sucesso!', {
         description: 'Você ganhou +50 pontos Goplay!',
       })

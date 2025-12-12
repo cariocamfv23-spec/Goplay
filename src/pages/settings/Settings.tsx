@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import useBrandingStore from '@/stores/useBrandingStore'
+import useSoundStore from '@/stores/useSoundStore'
 import {
   Bell,
   CreditCard,
@@ -26,16 +27,41 @@ import {
   Car,
   MessageSquare,
   Calendar,
+  Volume2,
+  VolumeX,
+  Music,
+  Mic,
+  Speaker,
 } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Switch } from '@/components/ui/switch'
+import { Slider } from '@/components/ui/slider'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export default function Settings() {
   const navigate = useNavigate()
   const { logoUrl, iconUrl, setLogoUrl, setIconUrl, resetBranding } =
     useBrandingStore()
+  const {
+    masterEnabled,
+    volume,
+    silentInMatches,
+    activePack,
+    setMasterEnabled,
+    setVolume,
+    setSilentInMatches,
+    setActivePack,
+    playSound,
+  } = useSoundStore()
+
   const [tempLogo, setTempLogo] = useState(logoUrl)
   const [tempIcon, setTempIcon] = useState(iconUrl)
   const [uploading, setUploading] = useState(false)
@@ -49,7 +75,7 @@ export default function Settings() {
     driverUpdates: true,
     photographerUpdates: true,
     messages: true,
-    scheduledRides: true, // New preference
+    scheduledRides: true,
   })
 
   const handleSaveBranding = () => {
@@ -78,8 +104,6 @@ export default function Settings() {
   const simulateUpload = (type: 'logo' | 'icon') => {
     setUploading(true)
     setTimeout(() => {
-      // Simulating an upload that returns a new URL
-      // We use a different query to simulate a change
       const newUrl = `https://img.usecurling.com/i?q=goplay&shape=fill&color=violet&ts=${Date.now()}`
       if (type === 'logo') setTempLogo(newUrl)
       else setTempIcon(newUrl)
@@ -97,16 +121,19 @@ export default function Settings() {
         </p>
       </div>
 
-      <Tabs defaultValue="notifications" className="space-y-4">
+      <Tabs defaultValue="sounds" className="space-y-4">
         <TabsList className="w-full justify-start overflow-x-auto h-auto p-1 bg-background border rounded-xl">
           <TabsTrigger value="account" className="gap-2">
             <User className="h-4 w-4" /> Conta
           </TabsTrigger>
-          <TabsTrigger value="privacy" className="gap-2">
-            <Lock className="h-4 w-4" /> Privacidade
+          <TabsTrigger value="sounds" className="gap-2">
+            <Volume2 className="h-4 w-4" /> Sons
           </TabsTrigger>
           <TabsTrigger value="notifications" className="gap-2">
             <Bell className="h-4 w-4" /> Notificações
+          </TabsTrigger>
+          <TabsTrigger value="privacy" className="gap-2">
+            <Lock className="h-4 w-4" /> Privacidade
           </TabsTrigger>
           <TabsTrigger value="branding" className="gap-2">
             <Palette className="h-4 w-4" /> Aparência
@@ -149,6 +176,138 @@ export default function Settings() {
               >
                 <LogOut className="h-4 w-4" /> Sair da Conta
               </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="sounds">
+          <Card>
+            <CardHeader>
+              <CardTitle>Sons do Goplay</CardTitle>
+              <CardDescription>
+                Personalize sua experiência auditiva no aplicativo.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between p-2 bg-secondary/20 rounded-lg">
+                <div className="space-y-0.5">
+                  <Label className="flex items-center gap-2 text-base">
+                    {masterEnabled ? (
+                      <Volume2 className="h-5 w-5 text-primary" />
+                    ) : (
+                      <VolumeX className="h-5 w-5 text-muted-foreground" />
+                    )}
+                    Ativar Sons
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Habilitar efeitos sonoros em todo o app.
+                  </p>
+                </div>
+                <Switch
+                  checked={masterEnabled}
+                  onCheckedChange={setMasterEnabled}
+                />
+              </div>
+
+              <div className="space-y-4 p-2">
+                <div className="flex justify-between">
+                  <Label className="flex items-center gap-2">
+                    <Speaker className="h-4 w-4" /> Volume Interno
+                  </Label>
+                  <span className="text-xs text-muted-foreground font-mono">
+                    {Math.round(volume * 100)}%
+                  </span>
+                </div>
+                <Slider
+                  value={[volume]}
+                  max={1}
+                  step={0.1}
+                  onValueChange={(vals) => setVolume(vals[0])}
+                  disabled={!masterEnabled}
+                  className="py-2"
+                />
+              </div>
+
+              <Separator />
+
+              <div className="space-y-3 p-2">
+                <Label className="flex items-center gap-2">
+                  <Mic className="h-4 w-4" /> Pacote de Gírias (Voice Pack)
+                </Label>
+                <Select
+                  value={activePack}
+                  onValueChange={(val: any) => setActivePack(val)}
+                  disabled={!masterEnabled}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione um pacote" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="varzea">Pack Várzea (Padrão)</SelectItem>
+                    <SelectItem value="arena">Pack Arena Pro</SelectItem>
+                    <SelectItem value="street">Pack Street Sports</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  Define o estilo das reações de voz nos likes e notificações.
+                </p>
+              </div>
+
+              <Separator />
+
+              <div className="flex items-center justify-between p-2">
+                <div className="space-y-0.5">
+                  <Label className="flex items-center gap-2">
+                    <Music className="h-4 w-4" /> Modo Silencioso em Partidas
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Silencia notificações durante seus jogos.
+                  </p>
+                </div>
+                <Switch
+                  checked={silentInMatches}
+                  onCheckedChange={setSilentInMatches}
+                  disabled={!masterEnabled}
+                />
+              </div>
+
+              <div className="bg-secondary/10 p-4 rounded-xl border border-border/50">
+                <h4 className="text-sm font-semibold mb-3">Teste de Som</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => playSound('like_football')}
+                    disabled={!masterEnabled}
+                  >
+                    Like Futebol
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => playSound('like_basketball')}
+                    disabled={!masterEnabled}
+                  >
+                    Like Basquete
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => playSound('notification_uber')}
+                    disabled={!masterEnabled}
+                  >
+                    Notif. Uber
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => playSound('notification_checkin')}
+                    disabled={!masterEnabled}
+                  >
+                    Check-in
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -397,7 +556,7 @@ export default function Settings() {
           <HelpCircle className="h-4 w-4" /> Precisa de ajuda?
         </Button>
         <p className="text-[10px] text-muted-foreground mt-2">
-          Versão 1.0.3 (Build 2305)
+          Versão 1.1.0 (Sound Update)
         </p>
       </div>
     </div>

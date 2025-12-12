@@ -11,11 +11,13 @@ import {
 import { toast } from 'sonner'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Progress } from '@/components/ui/progress'
+import useSoundStore from '@/stores/useSoundStore'
 
 export default function ProductDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
   const product = mockProducts.find((p) => p.id === Number(id))
+  const { playSound } = useSoundStore()
 
   if (!product) {
     return (
@@ -26,6 +28,7 @@ export default function ProductDetails() {
   }
 
   const handleAddToCart = () => {
+    playSound('notification_store')
     toast.success('Produto adicionado ao carrinho!')
     navigate('/marketplace/cart')
   }
