@@ -13,6 +13,9 @@ import {
   Star,
   Camera,
   Calendar,
+  Laugh,
+  Mic,
+  Bot,
 } from 'lucide-react'
 
 export const navigationItems = [
@@ -260,37 +263,6 @@ export const mockProducts = [
     category: 'Equipamentos',
     reviews: [],
   },
-  {
-    id: 3,
-    name: 'Whey Protein Isolado',
-    price: 'R$ 180,00',
-    rating: 4.9,
-    img: 'whey%20protein%20container',
-    description: 'Suplemento de alta qualidade para recuperação muscular.',
-    category: 'Nutrição',
-    reviews: [],
-  },
-  {
-    id: 4,
-    name: 'Smartwatch Sport X',
-    price: 'R$ 890,00',
-    rating: 4.7,
-    img: 'fitness%20smartwatch',
-    description: 'Monitore seus treinos com precisão GPS e cardíaca.',
-    category: 'Wearables',
-    reviews: [],
-  },
-  {
-    id: 5,
-    name: 'Kit Pré-Treino Energia',
-    price: 'R$ 89,90',
-    rating: 4.8,
-    img: 'pre%20workout%20powder',
-    description:
-      'Combo especial com cafeína e beta-alanina para máxima performance.',
-    category: 'Nutrição',
-    reviews: [],
-  },
 ]
 
 export const mockVenues = [
@@ -308,21 +280,6 @@ export const mockVenues = [
     images: [
       'https://img.usecurling.com/p/600/400?q=indoor%20futsal%20court&dpr=2',
       'https://img.usecurling.com/p/600/400?q=locker%20room&dpr=2',
-    ],
-  },
-  {
-    id: 'v2',
-    name: 'Quadra Society 10',
-    price: 'R$ 200/h',
-    rating: 4.6,
-    img: 'artificial%20grass%20soccer%20field',
-    lat: -23.5605,
-    lng: -46.6433,
-    address: 'Av. Paulista, 1000, São Paulo',
-    amenities: ['Churrasqueira', 'Wi-Fi'],
-    rules: ['Uso obrigatório de colete'],
-    images: [
-      'https://img.usecurling.com/p/600/400?q=artificial%20grass%20soccer%20field&dpr=2',
     ],
   },
 ]
@@ -343,16 +300,6 @@ export const mockGyms = [
     amenities: ['Ar condicionado', 'Personal Trainer', 'Aulas Coletivas'],
     benefits: ['10% de desconto no plano anual', 'Avaliação física gratuita'],
   },
-  {
-    id: 'g2',
-    name: 'CrossFit High Pulse',
-    location: 'Pinheiros, SP',
-    rating: 4.8,
-    img: 'crossfit%20box',
-    plans: ['Mensal - R$ 250', 'Trimestral - R$ 220/mês'],
-    amenities: ['Box Oficial', 'Coach Level 2'],
-    benefits: ['Drop-in gratuito na primeira aula'],
-  },
 ]
 
 export const mockNutritionPartners = [
@@ -364,15 +311,6 @@ export const mockNutritionPartners = [
     img: 'healthy%20food%20store',
     specialties: ['Suplementos', 'Marmitas Fit'],
     discount: '15% OFF para usuários Goplay',
-  },
-  {
-    id: 'n2',
-    name: 'Hortifruti Fresco',
-    location: 'Vila Mariana, SP',
-    rating: 4.9,
-    img: 'fresh%20fruits%20vegetables',
-    specialties: ['Orgânicos', 'Sucos Detox'],
-    discount: 'Entrega grátis na primeira compra',
   },
 ]
 
@@ -386,16 +324,6 @@ export const mockClinics = [
     services: ['Fisioterapia', 'Osteopatia', 'Recovery'],
     insurance: ['Amil', 'Bradesco', 'Unimed'],
     recoveryPlan: true,
-  },
-  {
-    id: 'c2',
-    name: 'Clínica Ortopédica Avançada',
-    location: 'Perdizes, SP',
-    rating: 4.8,
-    img: 'orthopedic%20clinic',
-    services: ['Consulta Ortopédica', 'Raio-X', 'Infiltração'],
-    insurance: ['SulAmérica', 'Porto Seguro'],
-    recoveryPlan: false,
   },
 ]
 
@@ -687,19 +615,6 @@ export const mockProfiles: ProfileData[] = [
           'https://img.usecurling.com/p/400/300?q=soccer%20trophy&dpr=2',
         ],
       },
-      {
-        id: 'p2',
-        title: 'Ensaio em Estúdio - Lucas Oliveira',
-        description:
-          'Sessão de fotos exclusiva com o atleta Lucas Oliveira para marketing pessoal.',
-        date: '05 Ago 2024',
-        cover:
-          'https://img.usecurling.com/p/400/300?q=athlete%20studio%20photo&dpr=2',
-        images: [
-          'https://img.usecurling.com/p/400/300?q=athlete%20portrait&dpr=2',
-          'https://img.usecurling.com/p/400/300?q=soccer%20ball%20studio&dpr=2',
-        ],
-      },
     ],
     packages: [
       {
@@ -711,50 +626,6 @@ export const mockProfiles: ProfileData[] = [
         title: 'Ensaio Individual',
         price: 'R$ 350,00',
         description: 'Sessão de 2h em estúdio ou campo.',
-      },
-    ],
-  },
-  {
-    id: '8',
-    type: 'photographer',
-    name: 'Marcos Lens',
-    username: '@marcos.lens',
-    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=89',
-    cover: 'https://img.usecurling.com/p/800/300?q=camera%20photographer&dpr=2',
-    bio: 'Especialista em esportes aquáticos e radicais.',
-    location: 'Rio de Janeiro, RJ',
-    followers: '1.8k',
-    following: '150',
-    rating: 4.8,
-    categories: ['Natureza', 'Esportes', 'Produtos'],
-    portfolio: [
-      'https://img.usecurling.com/p/300/300?q=surfing%20photo',
-      'https://img.usecurling.com/p/300/300?q=swimming%20photo',
-    ],
-    portfolioProjects: [
-      {
-        id: 'p3',
-        title: 'Campeonato de Surf RJ',
-        description:
-          'As melhores ondas e manobras do campeonato estadual de surf.',
-        date: '20 Jul 2024',
-        cover: 'https://img.usecurling.com/p/400/300?q=surfing%20wave&dpr=2',
-        images: [
-          'https://img.usecurling.com/p/400/300?q=surfer%20action&dpr=2',
-          'https://img.usecurling.com/p/400/300?q=beach%20crowd&dpr=2',
-        ],
-      },
-    ],
-    packages: [
-      {
-        title: 'Sessão Surf',
-        price: 'R$ 300,00',
-        description: '2 horas de fotos na praia.',
-      },
-      {
-        title: 'Campeonato',
-        price: 'R$ 500,00',
-        description: 'Cobertura completa do evento.',
       },
     ],
   },
@@ -780,27 +651,6 @@ export const mockProfiles: ProfileData[] = [
     },
   },
   {
-    id: '9',
-    type: 'driver',
-    name: 'Fernanda Van',
-    username: '@nanda.van',
-    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=77',
-    cover: 'https://img.usecurling.com/p/800/300?q=van%20driving&dpr=2',
-    bio: 'Transporte de times e grupos. Van executiva.',
-    location: 'São Paulo, SP',
-    followers: '210',
-    following: '45',
-    rating: 4.9,
-    rides: 850,
-    responseTime: '5 min',
-    car: {
-      model: 'Mercedes Sprinter',
-      plate: 'VAN-9999',
-      color: 'Preta',
-      photo: 'https://img.usecurling.com/p/300/200?q=black%20van',
-    },
-  },
-  {
     id: '6',
     type: 'nutritionist',
     name: 'Dra. Julia Fit',
@@ -817,24 +667,6 @@ export const mockProfiles: ProfileData[] = [
     crn: 'CRN-3 12345',
     specialties: ['Hipertrofia', 'Emagrecimento', 'Performance'],
     pricing: 'R$ 250,00 / consulta',
-  },
-  {
-    id: '7',
-    type: 'physiotherapist',
-    name: 'Dr. Marcos Physio',
-    username: '@marcos.fisio',
-    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=67',
-    cover:
-      'https://img.usecurling.com/p/800/300?q=physiotherapy%20clinic&dpr=2',
-    bio: 'Especialista em recuperação de atletas de alto rendimento.',
-    location: 'Rio de Janeiro, RJ',
-    followers: '1.8k',
-    following: '250',
-    rating: 4.9,
-    clinic: 'Rehab Center',
-    crefito: '123456-F',
-    specialties: ['Lesões de Joelho', 'Recovery', 'Osteopatia'],
-    pricing: 'R$ 200,00 / sessão',
   },
 ]
 
@@ -859,13 +691,6 @@ export const mockRankings = [
     points: 950,
     rank: 3,
     avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=33',
-  },
-  {
-    id: '6',
-    name: 'Carla Dias',
-    points: 880,
-    rank: 4,
-    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=12',
   },
 ]
 
@@ -912,16 +737,6 @@ export const mockChats: Chat[] = [
     unreadCount: 2,
     online: true,
   },
-  {
-    id: 'group-1',
-    name: 'Pelada de Quinta',
-    avatar:
-      'https://img.usecurling.com/i?q=soccer%20ball&shape=fill&color=green',
-    type: 'group',
-    lastMessage: 'João: Quem vai?',
-    lastMessageTime: '09:15',
-    unreadCount: 5,
-  },
 ]
 
 export const getMockMessages = (chatId: string): ChatMessage[] => {
@@ -959,64 +774,9 @@ export const mockRideRequests = [
     price: 'R$ 15,90',
     time: '5 min',
   },
-  {
-    id: 'req-2',
-    passenger: {
-      name: 'Pedro Santos',
-      rating: 4.7,
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=33',
-    },
-    pickup: 'Av. Paulista, 1000',
-    dropoff: 'Aeroporto Congonhas',
-    distance: '8.0 km',
-    price: 'R$ 35,50',
-    time: '12 min',
-  },
 ]
 
-export const mockRideHistory = [
-  {
-    id: 'hist-1',
-    date: 'Hoje, 10:30',
-    passenger: 'Lucas Oliveira',
-    price: 'R$ 22,90',
-    rating: 5,
-    pickup: 'Shopping Center',
-    dropoff: 'Rua Augusta, 500',
-  },
-  {
-    id: 'hist-2',
-    date: 'Ontem, 18:45',
-    passenger: 'Maria Souza',
-    price: 'R$ 18,50',
-    rating: 5,
-    pickup: 'Estação Metrô',
-    dropoff: 'Condomínio Parque',
-  },
-  {
-    id: 'hist-3',
-    date: 'Ontem, 14:20',
-    passenger: 'João Pedro',
-    price: 'R$ 45,00',
-    rating: 4,
-    pickup: 'Aeroporto',
-    dropoff: 'Hotel Central',
-  },
-]
-
-// New Data for Invitations and Matches
-export interface Invitation {
-  id: string
-  teamName: string
-  teamLogo: string
-  modality: string
-  location: string
-  time: string
-  level: string
-  confirmedPlayersCount: number
-}
-
-export const mockInvitations: Invitation[] = [
+export const mockInvitations = [
   {
     id: 'inv-1',
     teamName: 'Furia FC',
@@ -1026,16 +786,6 @@ export const mockInvitations: Invitation[] = [
     time: 'Hoje, 20:00',
     level: 'Intermediário',
     confirmedPlayersCount: 8,
-  },
-  {
-    id: 'inv-2',
-    teamName: 'Real Matismo',
-    teamLogo: 'https://img.usecurling.com/i?q=crown%20logo&color=gold',
-    modality: 'Society',
-    location: 'Quadra 10',
-    time: 'Amanhã, 19:30',
-    level: 'Amador',
-    confirmedPlayersCount: 12,
   },
 ]
 
@@ -1075,62 +825,7 @@ export const mockMatches: Match[] = [
         avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
         status: 'pending',
       },
-      {
-        id: '2',
-        name: 'Ana Silva',
-        avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=2',
-        status: 'confirmed',
-        pointsEarned: 50,
-        checkInTime: '19:45',
-      },
-      {
-        id: '5',
-        name: 'Pedro Santos',
-        avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=33',
-        status: 'confirmed',
-        pointsEarned: 50,
-        checkInTime: '19:50',
-      },
     ],
-  },
-]
-
-export interface RewardProduct {
-  id: string
-  name: string
-  points: number
-  image: string
-  category: string
-}
-
-export const mockRewards: RewardProduct[] = [
-  {
-    id: 'rew-1',
-    name: 'Camisa Oficial Goplay',
-    points: 2500,
-    image: 'https://img.usecurling.com/p/300/300?q=purple%20sports%20shirt',
-    category: 'Vestuário',
-  },
-  {
-    id: 'rew-2',
-    name: 'Boné Goplay Premium',
-    points: 1200,
-    image: 'https://img.usecurling.com/p/300/300?q=black%20cap',
-    category: 'Acessórios',
-  },
-  {
-    id: 'rew-3',
-    name: 'Desconto R$ 50 em Quadras',
-    points: 800,
-    image: 'https://img.usecurling.com/p/300/300?q=voucher',
-    category: 'Créditos',
-  },
-  {
-    id: 'rew-4',
-    name: 'Garrafa Térmica',
-    points: 1500,
-    image: 'https://img.usecurling.com/p/300/300?q=water%20bottle',
-    category: 'Acessórios',
   },
 ]
 
@@ -1141,20 +836,6 @@ export const mockPointsHistory = [
     date: 'Hoje, 20:10',
     points: 50,
     type: 'earned',
-  },
-  {
-    id: 2,
-    title: 'Convite Aceito',
-    date: 'Ontem, 14:00',
-    points: 20,
-    type: 'earned',
-  },
-  {
-    id: 3,
-    title: 'Compra na Loja',
-    date: '10 Ago',
-    points: -1200,
-    type: 'spent',
   },
 ]
 
@@ -1175,20 +856,6 @@ export const mockTrainingEvents = [
     type: 'training',
     completed: false,
   },
-  {
-    id: 'evt-2',
-    title: 'Jogo vs Real Matismo',
-    date: new Date(new Date().setDate(new Date().getDate() + 3)), // 3 days from now
-    type: 'match',
-    completed: false,
-  },
-  {
-    id: 'evt-3',
-    title: 'Recuperação Muscular',
-    date: new Date(new Date().setDate(new Date().getDate() - 1)), // Yesterday
-    type: 'recovery',
-    completed: true,
-  },
 ]
 
 export interface Feedback {
@@ -1197,7 +864,7 @@ export interface Feedback {
   content: string
   date: string
   rating: number
-  context?: string // e.g., "Jogo vs Furia FC"
+  context?: string
 }
 
 export const mockFeedbacks: Feedback[] = [
@@ -1214,36 +881,9 @@ export const mockFeedbacks: Feedback[] = [
     rating: 4.5,
     context: 'Treino Tático',
   },
-  {
-    id: 'fb-2',
-    author: {
-      name: 'Ana Silva',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=2',
-      role: 'Parceiro de Treino',
-    },
-    content: 'Aquele passe no segundo tempo foi genial! 👏',
-    date: '3 dias atrás',
-    rating: 5.0,
-    context: 'Jogo Amistoso',
-  },
 ]
 
-export interface Notification {
-  id: string
-  title: string
-  message: string
-  date: string
-  read: boolean
-  type:
-    | 'system'
-    | 'profile_update'
-    | 'ride_request'
-    | 'transaction'
-    | 'scheduled_ride'
-  relatedId?: string
-}
-
-export const mockNotificationsList: Notification[] = [
+export const mockNotificationsList = [
   {
     id: '1',
     title: 'Perfil Atualizado',
@@ -1252,184 +892,6 @@ export const mockNotificationsList: Notification[] = [
     read: false,
     type: 'profile_update',
     relatedId: '5',
-  },
-  {
-    id: '2',
-    title: 'Novo Serviço',
-    message:
-      'Você recebeu um pagamento de R$ 200,00 pelo serviço de fotografia.',
-    date: 'Ontem, 15:30',
-    read: true,
-    type: 'transaction',
-  },
-  {
-    id: '3',
-    title: 'Corrida Agendada: Motorista Confirmado',
-    message:
-      'Sua corrida agendada para 15 de Agosto foi confirmada com Carlos Driver.',
-    date: 'Hoje, 09:00',
-    read: false,
-    type: 'scheduled_ride',
-  },
-]
-
-export interface PhotographerTransaction {
-  id: string
-  date: string // ISO string or display string
-  description: string
-  clientName: string
-  amount: number
-  status: 'completed' | 'pending' | 'cancelled'
-  type: 'service' | 'package'
-}
-
-export const mockPhotographerTransactions: PhotographerTransaction[] = [
-  {
-    id: 'tx-1',
-    date: '2024-08-15',
-    description: 'Cobertura de Jogo - Final Regional',
-    clientName: 'Clube Atlético',
-    amount: 500.0,
-    status: 'completed',
-    type: 'service',
-  },
-  {
-    id: 'tx-2',
-    date: '2024-08-18',
-    description: 'Ensaio Individual',
-    clientName: 'Lucas Oliveira',
-    amount: 350.0,
-    status: 'pending',
-    type: 'package',
-  },
-  {
-    id: 'tx-3',
-    date: '2024-08-10',
-    description: 'Sessão de Fotos - Treino',
-    clientName: 'Escolinha Zico',
-    amount: 200.0,
-    status: 'completed',
-    type: 'service',
-  },
-]
-
-export const mockDriverStats = [
-  {
-    id: '5',
-    name: 'Carlos Driver',
-    rides: 1240,
-    rating: 4.8,
-    responseTime: '2 min',
-    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=55',
-  },
-  {
-    id: '9',
-    name: 'Fernanda Van',
-    rides: 850,
-    rating: 4.9,
-    responseTime: '5 min',
-    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=77',
-  },
-  {
-    id: '10',
-    name: 'Roberto Transporter',
-    rides: 560,
-    rating: 4.7,
-    responseTime: '4 min',
-    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=30',
-  },
-]
-
-export const photographerCategories = [
-  'Eventos',
-  'Retratos',
-  'Esportes',
-  'Produtos',
-  'Casamentos',
-  'Natureza',
-]
-
-export interface DriverGoal {
-  id: string
-  title: string
-  current: number
-  target: number
-  rewardPoints: number
-  icon: any
-}
-
-export const mockDriverGoals: DriverGoal[] = [
-  {
-    id: '1',
-    title: 'Corridas na Semana',
-    current: 34,
-    target: 50,
-    rewardPoints: 500,
-    icon: Car,
-  },
-  {
-    id: '2',
-    title: 'Avaliações 5 Estrelas',
-    current: 18,
-    target: 20,
-    rewardPoints: 300,
-    icon: Star,
-  },
-]
-
-export interface DriverReward {
-  id: string
-  title: string
-  cost: number
-  image: string
-}
-
-export const mockDriverRewards: DriverReward[] = [
-  {
-    id: '1',
-    title: 'Vale Combustível R$ 50',
-    cost: 1000,
-    image: 'https://img.usecurling.com/p/200/200?q=gas%20station',
-  },
-  {
-    id: '2',
-    title: 'Troca de Óleo',
-    cost: 2500,
-    image: 'https://img.usecurling.com/p/200/200?q=oil%20change',
-  },
-  {
-    id: '3',
-    title: 'Lavagem Completa',
-    cost: 800,
-    image: 'https://img.usecurling.com/p/200/200?q=car%20wash',
-  },
-]
-
-export interface ScheduledRide {
-  id: string
-  date: Date
-  pickup: string
-  dropoff: string
-  price: string
-  status: 'confirmed' | 'pending'
-}
-
-export const mockScheduledRides: ScheduledRide[] = [
-  {
-    id: 's1',
-    date: new Date(new Date().setDate(new Date().getDate() + 2)),
-    pickup: 'Av. Paulista, 1000',
-    dropoff: 'Aeroporto Congonhas',
-    price: 'R$ 45,90',
-    status: 'confirmed',
-  },
-  {
-    id: 's2',
-    date: new Date(new Date().setDate(new Date().getDate() + 5)),
-    pickup: 'Rua Augusta, 500',
-    dropoff: 'Arena Allianz',
-    price: 'R$ 32,50',
-    status: 'pending',
   },
 ]
 
@@ -1463,3 +925,71 @@ export const narrationStyles = [
     icon: 'Bot',
   },
 ] as const
+
+// --- NEW DATA FOR AI FEATURES ---
+
+export const mockPassport = {
+  idNumber: 'GP-9821.2024.BR',
+  nationality: 'Brasileiro',
+  since: '2022',
+  category: 'Atleta Amador Elite',
+  verified: true,
+  expiry: '12/2026',
+}
+
+export const mockEvolution = [
+  {
+    year: 2024,
+    title: 'Auge Físico',
+    description: 'Atingiu recorde pessoal de velocidade e resistência.',
+    stats: { speed: 88, power: 75, technique: 82 },
+  },
+  {
+    year: 2023,
+    title: 'Consolidação Tática',
+    description: 'Melhoria significativa na leitura de jogo.',
+    stats: { speed: 82, power: 70, technique: 78 },
+  },
+  {
+    year: 2022,
+    title: 'Início no Goplay',
+    description: 'Primeiros registros e formação de base.',
+    stats: { speed: 75, power: 65, technique: 70 },
+  },
+]
+
+export const mockOracle = {
+  potentialIndex: 88,
+  predictedPosition: 'Meia Ofensivo',
+  futureSkills: [
+    { name: 'Visão de Jogo', current: 78, projected: 92 },
+    { name: 'Finalização', current: 75, projected: 88 },
+    { name: 'Drible', current: 82, projected: 90 },
+  ],
+  comparisonData: [
+    { subject: '2024', A: 75, fullMark: 150 },
+    { subject: '2025 (Prev)', A: 85, fullMark: 150 },
+    { subject: '2026 (Prev)', A: 95, fullMark: 150 },
+  ],
+}
+
+export const mockInternationalMatches = [
+  {
+    id: 1,
+    country: 'Argentina',
+    flag: 'https://img.usecurling.com/i?q=argentina%20flag&shape=fill',
+    opponentName: 'Diego Fernandes',
+    sport: 'Futebol',
+    status: 'pending',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=88',
+  },
+  {
+    id: 2,
+    country: 'Portugal',
+    flag: 'https://img.usecurling.com/i?q=portugal%20flag&shape=fill',
+    opponentName: 'João Félix Jr',
+    sport: 'Futsal',
+    status: 'ready',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=77',
+  },
+]

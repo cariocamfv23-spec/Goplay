@@ -1,6 +1,17 @@
 import { Input } from '@/components/ui/input'
-import { Search, Filter, Car, Camera } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import {
+  Search,
+  Camera,
+  MapPin,
+  Calendar,
+  Trophy,
+  Filter,
+  Zap,
+  Globe2,
+  Ghost,
+  ScanLine,
+} from 'lucide-react'
 import {
   mockEvents,
   mockVenues,
@@ -8,355 +19,214 @@ import {
   mockNutritionPartners,
   mockClinics,
 } from '@/lib/data'
-import { useNavigate } from 'react-router-dom'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import { Link, useNavigate } from 'react-router-dom'
 
-const Explore = () => {
+export default function Explore() {
   const navigate = useNavigate()
 
+  const categories = [
+    { id: 'all', label: 'Tudo' },
+    { id: 'photographers', label: 'Fotógrafos' },
+    { id: 'events', label: 'Eventos' },
+    { id: 'venues', label: 'Quadras' },
+    { id: 'gyms', label: 'Academias' },
+    { id: 'nutrition', label: 'Nutrição' },
+    { id: 'clinics', label: 'Clínicas' },
+  ]
+
+  const aiFeatures = [
+    {
+      title: 'Lance Fantasma',
+      icon: Ghost,
+      color: 'text-purple-400',
+      bg: 'bg-purple-900/20',
+      path: '/ai/ghost-play',
+    },
+    {
+      title: 'Modo Arena AR',
+      icon: Zap,
+      color: 'text-yellow-400',
+      bg: 'bg-yellow-900/20',
+      path: '/ai/arena',
+    },
+    {
+      title: 'Match Internacional',
+      icon: Globe2,
+      color: 'text-blue-400',
+      bg: 'bg-blue-900/20',
+      path: '/play/international',
+    },
+    {
+      title: 'Scanner de Lesão',
+      icon: ScanLine,
+      color: 'text-red-400',
+      bg: 'bg-red-900/20',
+      path: '/ai/scanner',
+    },
+  ]
+
   return (
-    <div className="pb-24 animate-fade-in">
-      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-xl border-b border-border/40 px-4 py-4">
-        <div className="flex items-center gap-3 mb-4">
+    <div className="min-h-screen bg-background pb-20 animate-fade-in">
+      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border/40 p-4 space-y-4">
+        <div className="flex gap-2">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Buscar eventos, locais..."
-              className="pl-9 bg-secondary border-none rounded-xl"
+              placeholder="Buscar quadras, eventos, pessoas..."
+              className="pl-9 bg-secondary/50 border-transparent focus:bg-background focus:border-primary/50"
             />
           </div>
-          <Button variant="outline" size="icon" className="shrink-0 rounded-xl">
+          <Button variant="outline" size="icon" className="shrink-0">
             <Filter className="h-4 w-4" />
           </Button>
         </div>
 
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-          <Button
-            variant="default"
-            size="sm"
-            className="rounded-full px-6 bg-primary text-primary-foreground shadow-md"
-          >
-            Tudo
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="rounded-full px-6 hover:bg-secondary/80"
-            onClick={() => navigate('/explore/photographers')}
-          >
-            Fotógrafos
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="rounded-full px-6 hover:bg-secondary/80"
-            onClick={() => navigate('/explore/events')}
-          >
-            Eventos
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="rounded-full px-6 hover:bg-secondary/80"
-            onClick={() => navigate('/explore/venues')}
-          >
-            Quadras
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="rounded-full px-6 hover:bg-secondary/80"
-            onClick={() => navigate('/explore/gyms')}
-          >
-            Academias
-          </Button>
-        </div>
-      </div>
-
-      <div className="px-4 mt-6 grid grid-cols-2 gap-3">
-        {/* New Feature Entry Point */}
-        <div
-          className="p-4 bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl text-white shadow-lg cursor-pointer transform transition-all hover:scale-[1.01]"
-          onClick={() => navigate('/driver/performance')}
-        >
-          <div className="flex flex-col gap-2">
-            <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center">
-              <Car className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <h3 className="font-bold text-sm">Motoristas</h3>
-              <p className="text-[10px] text-slate-300">Performance e Ganhos</p>
-            </div>
+        <ScrollArea className="w-full whitespace-nowrap">
+          <div className="flex w-max space-x-2 pb-2">
+            {categories.map((cat) => (
+              <Button
+                key={cat.id}
+                variant={cat.id === 'all' ? 'default' : 'secondary'}
+                size="sm"
+                className="rounded-full px-4 h-8 text-xs"
+                onClick={() =>
+                  cat.id !== 'all' && navigate(`/explore/${cat.id}`)
+                }
+              >
+                {cat.label}
+              </Button>
+            ))}
           </div>
-        </div>
+          <ScrollBar orientation="horizontal" className="invisible" />
+        </ScrollArea>
+      </div>
 
-        <div
-          className="p-4 bg-gradient-to-br from-primary to-purple-800 rounded-2xl text-white shadow-lg cursor-pointer transform transition-all hover:scale-[1.01]"
-          onClick={() => navigate('/explore/photographers')}
-        >
-          <div className="flex flex-col gap-2">
-            <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center">
-              <Camera className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <h3 className="font-bold text-sm">Fotógrafos</h3>
-              <p className="text-[10px] text-white/80">
-                Encontre especialistas
-              </p>
-            </div>
+      <div className="p-4 space-y-8">
+        {/* AI Features Grid */}
+        <section>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-bold text-lg flex items-center gap-2">
+              <Zap className="h-5 w-5 text-gold fill-gold animate-pulse" />
+              Goplay AI Suite
+            </h2>
           </div>
-        </div>
-      </div>
+          <div className="grid grid-cols-2 gap-3">
+            {aiFeatures.map((feat) => (
+              <Link to={feat.path} key={feat.title}>
+                <Card
+                  className={`border-none shadow-sm hover:shadow-md transition-shadow ${feat.bg}`}
+                >
+                  <CardContent className="p-3 flex items-center gap-3">
+                    <feat.icon className={`h-8 w-8 ${feat.color}`} />
+                    <span className="font-bold text-xs leading-tight">
+                      {feat.title}
+                    </span>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
 
-      <div className="px-4 mt-8">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold">Eventos em Destaque</h2>
-          <Button
-            variant="link"
-            className="text-primary text-sm h-auto p-0"
-            onClick={() => navigate('/explore/events')}
-          >
-            Ver todos
-          </Button>
-        </div>
-
-        <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
-          {mockEvents.map((event) => (
-            <div
-              key={event.id}
-              className="min-w-[280px] rounded-2xl overflow-hidden relative group cursor-pointer"
-              onClick={() => navigate(`/events/${event.id}`)}
+        {/* Featured Events */}
+        <section>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-bold text-lg">Eventos em Destaque</h2>
+            <Link
+              to="/explore/events"
+              className="text-xs text-primary font-bold"
             >
-              <img
-                src={event.image}
-                className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500"
-                alt={event.title}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 flex flex-col justify-end">
-                <Badge className="w-fit mb-2 bg-primary/90 hover:bg-primary border-none">
-                  {event.date}
-                </Badge>
-                <h3 className="font-bold text-white text-lg leading-tight mb-1">
-                  {event.title}
-                </h3>
-                <div className="flex items-center text-white/80 text-xs">
-                  <MapPin className="h-3 w-3 mr-1" />
-                  {event.location}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="px-4 mt-2">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold">Quadras e Espaços</h2>
-          <Button
-            variant="link"
-            className="text-primary text-sm h-auto p-0"
-            onClick={() => navigate('/explore/venues')}
-          >
-            Ver todos
-          </Button>
-        </div>
-        <div className="space-y-4">
-          {mockVenues.map((venue) => (
-            <Card
-              key={venue.id}
-              className="overflow-hidden border-none shadow-sm cursor-pointer active:scale-[0.99] transition-transform"
-              onClick={() => navigate(`/venues/${venue.id}`)}
-            >
-              <div className="relative h-32">
-                <img
-                  src={`https://img.usecurling.com/p/600/400?q=${venue.img}&dpr=2`}
-                  className="w-full h-full object-cover"
-                  alt={venue.name}
-                />
-                <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded-md text-xs font-bold shadow-sm">
-                  ★ {venue.rating}
-                </div>
-              </div>
-              <CardContent className="p-3">
-                <div className="flex justify-between items-start mb-1">
-                  <h3 className="font-bold">{venue.name}</h3>
-                  <span className="text-primary font-bold text-sm">
-                    {venue.price}
-                  </span>
-                </div>
-                <p className="text-xs text-muted-foreground truncate">
-                  {venue.address}
-                </p>
-                <div className="flex gap-2 mt-2">
-                  {venue.amenities.slice(0, 2).map((item, i) => (
-                    <Badge
-                      key={i}
-                      variant="secondary"
-                      className="text-[10px] h-5"
-                    >
-                      {item}
+              Ver todos
+            </Link>
+          </div>
+          <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
+            {mockEvents.map((event) => (
+              <Link
+                key={event.id}
+                to={`/events/${event.id}`}
+                className="shrink-0 w-64"
+              >
+                <Card className="overflow-hidden border-none shadow-md h-full hover:shadow-xl transition-shadow">
+                  <div className="aspect-[16/9] relative">
+                    <img
+                      src={event.image}
+                      alt={event.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <Badge className="absolute top-2 right-2 bg-background/80 text-foreground backdrop-blur-sm">
+                      {event.date}
                     </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* Gyms Section */}
-      <div className="px-4 mt-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold">Academias Parceiras</h2>
-          <Button
-            variant="link"
-            className="text-primary text-sm h-auto p-0"
-            onClick={() => navigate('/explore/gyms')}
-          >
-            Ver todos
-          </Button>
-        </div>
-        <div className="space-y-4">
-          {mockGyms.map((gym) => (
-            <Card
-              key={gym.id}
-              className="overflow-hidden border-none shadow-sm cursor-pointer active:scale-[0.99] transition-transform"
-              onClick={() => navigate(`/gyms/${gym.id}`)}
-            >
-              <div className="flex h-28">
-                <div className="w-28 shrink-0">
-                  <img
-                    src={`https://img.usecurling.com/p/300/300?q=${gym.img}&dpr=2`}
-                    className="w-full h-full object-cover"
-                    alt={gym.name}
-                  />
-                </div>
-                <CardContent className="p-3 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="font-bold text-sm line-clamp-1">
-                      {gym.name}
+                  </div>
+                  <CardContent className="p-3">
+                    <h3 className="font-bold text-sm truncate mb-1">
+                      {event.title}
                     </h3>
-                    <p className="text-xs text-muted-foreground mb-2">
-                      {gym.location}
-                    </p>
-                    <div className="flex flex-wrap gap-1">
-                      {gym.amenities.slice(0, 2).map((item, i) => (
-                        <span
-                          key={i}
-                          className="text-[9px] bg-secondary px-1.5 py-0.5 rounded text-muted-foreground"
-                        >
-                          {item}
-                        </span>
-                      ))}
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <MapPin className="h-3 w-3" />
+                      <span className="truncate">{event.location}</span>
                     </div>
-                  </div>
-                  <div className="flex justify-between items-end mt-2">
-                    <span className="text-primary font-bold text-xs">
-                      {gym.plans[0].split(' - ')[1]}
-                    </span>
-                    <div className="flex items-center text-[10px] font-bold">
-                      <span className="text-gold mr-1">★</span> {gym.rating}
-                    </div>
-                  </div>
-                </CardContent>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
 
-      {/* Clinics Section */}
-      <div className="px-4 mt-6">
-        <h2 className="text-lg font-bold mb-4">Clínicas e Fisioterapia</h2>
-        <div className="space-y-4">
-          {mockClinics.map((clinic) => (
-            <Card
-              key={clinic.id}
-              className="overflow-hidden border-none shadow-sm cursor-pointer active:scale-[0.99] transition-transform"
-              onClick={() => navigate(`/clinics/${clinic.id}`)}
+        {/* Top Venues */}
+        <section>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-bold text-lg">Quadras Populares</h2>
+            <Link
+              to="/explore/venues"
+              className="text-xs text-primary font-bold"
             >
-              <div className="flex h-28">
-                <div className="w-28 shrink-0">
-                  <img
-                    src={`https://img.usecurling.com/p/300/300?q=${clinic.img}&dpr=2`}
-                    className="w-full h-full object-cover"
-                    alt={clinic.name}
-                  />
-                </div>
-                <CardContent className="p-3 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="font-bold text-sm line-clamp-1">
-                      {clinic.name}
-                    </h3>
-                    <p className="text-xs text-muted-foreground mb-2">
-                      {clinic.location}
-                    </p>
-                    <div className="flex flex-wrap gap-1">
-                      {clinic.services.slice(0, 2).map((item, i) => (
-                        <span
-                          key={i}
-                          className="text-[9px] bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300 px-1.5 py-0.5 rounded"
-                        >
-                          {item}
+              Ver todas
+            </Link>
+          </div>
+          <div className="space-y-3">
+            {mockVenues.map((venue) => (
+              <Link key={venue.id} to={`/venues/${venue.id}`}>
+                <Card className="overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex">
+                    <div className="w-1/3 relative">
+                      <img
+                        src={`https://img.usecurling.com/p/300/300?q=${venue.img}`}
+                        alt={venue.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <CardContent className="w-2/3 p-3 flex flex-col justify-center">
+                      <div className="flex justify-between items-start mb-1">
+                        <h3 className="font-bold text-sm line-clamp-1">
+                          {venue.name}
+                        </h3>
+                        <div className="flex items-center gap-1 bg-secondary px-1.5 py-0.5 rounded text-[10px] font-bold">
+                          <span className="text-gold">★</span> {venue.rating}
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground mb-2 line-clamp-1">
+                        {venue.address}
+                      </p>
+                      <div className="flex items-center justify-between mt-auto">
+                        <span className="text-sm font-bold text-primary">
+                          {venue.price}
                         </span>
-                      ))}
-                    </div>
+                        <Button size="sm" className="h-7 text-xs px-3">
+                          Reservar
+                        </Button>
+                      </div>
+                    </CardContent>
                   </div>
-                  <div className="flex justify-between items-end mt-2">
-                    <span className="text-[10px] text-muted-foreground">
-                      Aceita: {clinic.insurance.slice(0, 2).join(', ')}
-                    </span>
-                    <div className="flex items-center text-[10px] font-bold">
-                      <span className="text-gold mr-1">★</span> {clinic.rating}
-                    </div>
-                  </div>
-                </CardContent>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* Nutrition Section */}
-      <div className="px-4 mt-6 mb-8">
-        <h2 className="text-lg font-bold mb-4">Parceiros de Nutrição</h2>
-        <div className="grid grid-cols-2 gap-4">
-          {mockNutritionPartners.map((partner) => (
-            <Card
-              key={partner.id}
-              className="overflow-hidden border-none shadow-sm cursor-pointer active:scale-[0.99] transition-transform"
-              onClick={() => navigate(`/nutrition/${partner.id}`)}
-            >
-              <div className="h-24">
-                <img
-                  src={`https://img.usecurling.com/p/300/200?q=${partner.img}&dpr=2`}
-                  className="w-full h-full object-cover"
-                  alt={partner.name}
-                />
-              </div>
-              <CardContent className="p-3">
-                <h3 className="font-bold text-sm line-clamp-1">
-                  {partner.name}
-                </h3>
-                <p className="text-xs text-muted-foreground mb-2 line-clamp-1">
-                  {partner.specialties.join(', ')}
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-green-600 bg-green-50 dark:bg-green-900/30 px-1.5 py-0.5 rounded">
-                    {partner.discount.split(' ')[0]} OFF
-                  </span>
-                  <div className="flex items-center text-[10px] font-bold">
-                    <span className="text-gold mr-1">★</span> {partner.rating}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   )
 }
-
-export default Explore

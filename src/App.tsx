@@ -76,6 +76,22 @@ const TransactionHistory = lazy(
   () => import('./pages/financials/TransactionHistory'),
 )
 
+// NEW AI FEATURES
+const GhostPlay = lazy(() => import('./pages/ai/GhostPlay'))
+const ArenaMode = lazy(() => import('./pages/ai/ArenaMode'))
+const AiCoach = lazy(() => import('./pages/ai/AiCoach'))
+const EvolutionMode = lazy(() => import('./pages/profile/EvolutionMode'))
+const ShadowChallenge = lazy(
+  () => import('./pages/gamification/ShadowChallenge'),
+)
+const InjuryScanner = lazy(() => import('./pages/ai/InjuryScanner'))
+const InternationalMatch = lazy(
+  () => import('./pages/explore/InternationalMatch'),
+)
+const SportsPassport = lazy(() => import('./pages/profile/SportsPassport'))
+const Oracle = lazy(() => import('./pages/ai/Oracle'))
+const VarzeaEditor = lazy(() => import('./pages/ai/VarzeaEditor'))
+
 const App = () => (
   <BrowserRouter
     future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
@@ -162,6 +178,21 @@ const App = () => (
               <Route
                 path="/financials/transactions"
                 element={<TransactionHistory />}
+              />
+
+              {/* AI Features Routes */}
+              <Route path="/ai/ghost-play" element={<GhostPlay />} />
+              <Route path="/ai/arena" element={<ArenaMode />} />
+              <Route path="/ai/coach" element={<AiCoach />} />
+              <Route path="/ai/scanner" element={<InjuryScanner />} />
+              <Route path="/ai/oracle" element={<Oracle />} />
+              <Route path="/ai/editor" element={<VarzeaEditor />} />
+              <Route path="/profile/passport" element={<SportsPassport />} />
+              <Route path="/profile/evolution" element={<EvolutionMode />} />
+              <Route path="/play/shadow" element={<ShadowChallenge />} />
+              <Route
+                path="/play/international"
+                element={<InternationalMatch />}
               />
             </Route>
 

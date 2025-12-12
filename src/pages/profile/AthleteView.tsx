@@ -27,6 +27,8 @@ import {
   Calendar,
   MessageSquare,
   Mic,
+  ShieldCheck,
+  TrendingUp,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { mockPosts } from '@/lib/data'
@@ -45,6 +47,7 @@ import TrainingSchedule from './TrainingSchedule'
 import { FeedbackList } from '@/components/FeedbackList'
 import { NarrationEditor } from '@/components/NarrationEditor'
 import { useState } from 'react'
+import { DigitalCard } from '@/components/DigitalCard'
 
 export default function AthleteView({ profile }: { profile: ProfileData }) {
   const [showNarrationEditor, setShowNarrationEditor] = useState(false)
@@ -103,7 +106,12 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
         <div className="mt-3">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-2xl font-bold">{profile.name}</h1>
+              <h1 className="text-2xl font-bold flex items-center gap-2">
+                {profile.name}
+                <Link to="/profile/passport">
+                  <ShieldCheck className="h-5 w-5 text-blue-500 cursor-pointer" />
+                </Link>
+              </h1>
               <p className="text-muted-foreground text-sm">
                 {profile.username}
               </p>
@@ -113,22 +121,30 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
             </Badge>
           </div>
 
-          {/* New Profile Quick Actions for Invites and Points */}
-          <div className="flex gap-3 mt-4">
-            <Link to="/invitations" className="flex-1">
+          {/* Quick Actions for Invites, Points, and AI Features */}
+          <div className="grid grid-cols-3 gap-2 mt-4">
+            <Link to="/profile/passport" className="flex-1">
               <Button
                 variant="outline"
-                className="w-full text-xs h-9 border-primary/20 bg-primary/5 text-primary hover:bg-primary/10"
+                className="w-full text-[10px] px-0 h-9 border-blue-500/20 bg-blue-500/5 text-blue-600 hover:bg-blue-500/10"
               >
-                <Mail className="h-3 w-3 mr-2" /> Convites
+                <ShieldCheck className="h-3 w-3 mr-1" /> Passaporte
               </Button>
             </Link>
-            <Link to="/my-points" className="flex-1">
+            <Link to="/profile/evolution" className="flex-1">
               <Button
                 variant="outline"
-                className="w-full text-xs h-9 border-gold/30 bg-gold/5 text-yellow-700 hover:bg-gold/10"
+                className="w-full text-[10px] px-0 h-9 border-purple-500/20 bg-purple-500/5 text-purple-600 hover:bg-purple-500/10"
               >
-                <Zap className="h-3 w-3 mr-2 text-gold" /> Pontos
+                <TrendingUp className="h-3 w-3 mr-1" /> Evolução
+              </Button>
+            </Link>
+            <Link to="/ai/oracle" className="flex-1">
+              <Button
+                variant="outline"
+                className="w-full text-[10px] px-0 h-9 border-gold/30 bg-gold/5 text-yellow-700 hover:bg-gold/10"
+              >
+                <Sparkles className="h-3 w-3 mr-1 text-gold" /> Oráculo
               </Button>
             </Link>
           </div>
@@ -148,7 +164,7 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
 
           <p className="text-sm mt-2 text-foreground/80">{profile.bio}</p>
 
-          {/* Physical Stats Display - Consistent Profile Info */}
+          {/* Physical Stats Display */}
           {profile.physicalStats && (
             <div className="grid grid-cols-4 gap-2 mt-4 bg-secondary/30 rounded-xl p-3 border border-border/50">
               <div className="flex flex-col items-center text-center">
@@ -255,7 +271,6 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
         </div>
 
         <Tabs defaultValue="posts" className="w-full">
-          {/* Enhanced Tabs List with 7 items, needs scrolling on small screens */}
           <TabsList className="w-full flex justify-start overflow-x-auto mb-4 px-1 gap-2 no-scrollbar">
             <TabsTrigger value="posts" className="min-w-[40px]">
               <Grid className="h-4 w-4" />
@@ -288,10 +303,15 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
 
           <TabsContent value="stats" className="space-y-6">
             <div className="space-y-6">
-              <div className="flex justify-end">
+              <div className="flex justify-end gap-2">
+                <Link to="/ai/coach">
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Zap className="h-4 w-4 text-gold" /> Coach IA
+                  </Button>
+                </Link>
                 <Link to="/profile/stats">
                   <Button variant="outline" size="sm" className="gap-2">
-                    <Activity className="h-4 w-4" /> Expandir Estatísticas
+                    <Activity className="h-4 w-4" /> Ver Detalhes
                   </Button>
                 </Link>
               </div>
