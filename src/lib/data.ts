@@ -82,6 +82,7 @@ export const mockPosts = [
     shares: 5,
     applauds: 45,
     supports: 12,
+    cools: 28,
     time: '2h',
   },
   {
@@ -104,6 +105,7 @@ export const mockPosts = [
     shares: 120,
     applauds: 300,
     supports: 50,
+    cools: 150,
     time: '4h',
   },
 ]
@@ -403,6 +405,15 @@ export interface TrainingSuggestion {
   category: 'Tática' | 'Técnica' | 'Físico' | 'Mental'
 }
 
+export interface PortfolioProject {
+  id: string
+  title: string
+  description: string
+  date: string
+  cover: string
+  images: string[]
+}
+
 export interface ProfileData {
   id: string
   type:
@@ -454,6 +465,7 @@ export interface ProfileData {
 
   // Photographer specific
   portfolio?: string[]
+  portfolioProjects?: PortfolioProject[]
   packages?: { title: string; price: string; description: string }[]
   categories?: string[]
 
@@ -615,6 +627,35 @@ export const mockProfiles: ProfileData[] = [
       'https://img.usecurling.com/p/300/300?q=sports%20photo%20action',
       'https://img.usecurling.com/p/300/300?q=sports%20portrait',
     ],
+    portfolioProjects: [
+      {
+        id: 'p1',
+        title: 'Final do Regional Sub-17',
+        description:
+          'Cobertura completa da grande final entre Atlético e São Paulo. Emoção do início ao fim.',
+        date: '10 Ago 2024',
+        cover:
+          'https://img.usecurling.com/p/400/300?q=soccer%20match%20final&dpr=2',
+        images: [
+          'https://img.usecurling.com/p/400/300?q=soccer%20goal&dpr=2',
+          'https://img.usecurling.com/p/400/300?q=soccer%20celebration&dpr=2',
+          'https://img.usecurling.com/p/400/300?q=soccer%20trophy&dpr=2',
+        ],
+      },
+      {
+        id: 'p2',
+        title: 'Ensaio em Estúdio - Lucas Oliveira',
+        description:
+          'Sessão de fotos exclusiva com o atleta Lucas Oliveira para marketing pessoal.',
+        date: '05 Ago 2024',
+        cover:
+          'https://img.usecurling.com/p/400/300?q=athlete%20studio%20photo&dpr=2',
+        images: [
+          'https://img.usecurling.com/p/400/300?q=athlete%20portrait&dpr=2',
+          'https://img.usecurling.com/p/400/300?q=soccer%20ball%20studio&dpr=2',
+        ],
+      },
+    ],
     packages: [
       {
         title: 'Cobertura de Jogo',
@@ -644,6 +685,20 @@ export const mockProfiles: ProfileData[] = [
     portfolio: [
       'https://img.usecurling.com/p/300/300?q=surfing%20photo',
       'https://img.usecurling.com/p/300/300?q=swimming%20photo',
+    ],
+    portfolioProjects: [
+      {
+        id: 'p3',
+        title: 'Campeonato de Surf RJ',
+        description:
+          'As melhores ondas e manobras do campeonato estadual de surf.',
+        date: '20 Jul 2024',
+        cover: 'https://img.usecurling.com/p/400/300?q=surfing%20wave&dpr=2',
+        images: [
+          'https://img.usecurling.com/p/400/300?q=surfer%20action&dpr=2',
+          'https://img.usecurling.com/p/400/300?q=beach%20crowd&dpr=2',
+        ],
+      },
     ],
     packages: [
       {
@@ -1134,7 +1189,12 @@ export interface Notification {
   message: string
   date: string
   read: boolean
-  type: 'system' | 'profile_update' | 'ride_request' | 'transaction'
+  type:
+    | 'system'
+    | 'profile_update'
+    | 'ride_request'
+    | 'transaction'
+    | 'scheduled_ride'
   relatedId?: string
 }
 
@@ -1156,6 +1216,15 @@ export const mockNotificationsList: Notification[] = [
     date: 'Ontem, 15:30',
     read: true,
     type: 'transaction',
+  },
+  {
+    id: '3',
+    title: 'Corrida Agendada: Motorista Confirmado',
+    message:
+      'Sua corrida agendada para 15 de Agosto foi confirmada com Carlos Driver.',
+    date: 'Hoje, 09:00',
+    read: false,
+    type: 'scheduled_ride',
   },
 ]
 

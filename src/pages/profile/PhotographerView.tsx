@@ -11,6 +11,8 @@ import {
   DollarSign,
   CalendarCheck,
   FileText,
+  Camera,
+  Layers,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -106,32 +108,89 @@ export default function PhotographerView({
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="portfolio">
-            <div className="grid grid-cols-2 gap-2">
-              {profile.portfolio?.map((img, i) => (
-                <div
-                  key={i}
-                  className="aspect-square bg-muted rounded-lg overflow-hidden group"
-                >
-                  <img
-                    src={img}
-                    className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                    alt=""
-                  />
+          <TabsContent value="portfolio" className="space-y-6">
+            {/* Featured Projects Section (New Detailed Portfolio) */}
+            {profile.portfolioProjects &&
+              profile.portfolioProjects.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                    <Layers className="h-4 w-4" /> Projetos em Destaque
+                  </h3>
+                  {profile.portfolioProjects.map((project) => (
+                    <Card
+                      key={project.id}
+                      className="overflow-hidden border-none shadow-md group cursor-pointer"
+                    >
+                      <div className="aspect-video relative overflow-hidden">
+                        <img
+                          src={project.cover}
+                          alt={project.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                          <h4 className="text-white font-bold text-lg">
+                            {project.title}
+                          </h4>
+                          <span className="text-white/80 text-xs">
+                            {project.date}
+                          </span>
+                        </div>
+                      </div>
+                      <CardContent className="p-4">
+                        <p className="text-sm text-muted-foreground mb-3">
+                          {project.description}
+                        </p>
+                        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                          {project.images.map((img, idx) => (
+                            <img
+                              key={idx}
+                              src={img}
+                              className="h-16 w-16 object-cover rounded-md flex-shrink-0"
+                              alt=""
+                            />
+                          ))}
+                          <div className="h-16 w-16 bg-muted rounded-md flex items-center justify-center text-xs text-muted-foreground flex-shrink-0">
+                            + Fotos
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
-              ))}
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div
-                  key={i + 10}
-                  className="aspect-square bg-muted rounded-lg overflow-hidden group"
-                >
-                  <img
-                    src={`https://img.usecurling.com/p/300/300?q=sports%20action&seed=${i}`}
-                    className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                    alt=""
-                  />
-                </div>
-              ))}
+              )}
+
+            {/* Legacy Grid Portfolio */}
+            <div>
+              <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2 mb-3">
+                <Camera className="h-4 w-4" /> Galeria Rápida
+              </h3>
+              <div className="grid grid-cols-2 gap-2">
+                {profile.portfolio?.map((img, i) => (
+                  <div
+                    key={i}
+                    className="aspect-square bg-muted rounded-lg overflow-hidden group"
+                  >
+                    <img
+                      src={img}
+                      className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                      alt=""
+                    />
+                  </div>
+                ))}
+                {(!profile.portfolio || profile.portfolio.length === 0) &&
+                  Array.from({ length: 4 }).map((_, i) => (
+                    <div
+                      key={i + 10}
+                      className="aspect-square bg-muted rounded-lg overflow-hidden group"
+                    >
+                      <img
+                        src={`https://img.usecurling.com/p/300/300?q=sports%20action&seed=${i}`}
+                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                        alt=""
+                      />
+                    </div>
+                  ))}
+              </div>
             </div>
           </TabsContent>
 

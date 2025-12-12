@@ -41,6 +41,7 @@ interface PostProps {
     shares: number
     applauds: number
     supports: number
+    cools?: number
     time: string
   }
 }
@@ -49,10 +50,17 @@ export function PostCard({ post }: PostProps) {
   const [showComments, setShowComments] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(post.likes)
+  const [isCool, setIsCool] = useState(false)
+  const [coolCount, setCoolCount] = useState(post.cools || 0)
 
   const handleLike = () => {
     setIsLiked(!isLiked)
     setLikeCount(isLiked ? likeCount - 1 : likeCount + 1)
+  }
+
+  const handleCool = () => {
+    setIsCool(!isCool)
+    setCoolCount(isCool ? coolCount - 1 : coolCount + 1)
   }
 
   const renderContent = () => {
@@ -228,6 +236,22 @@ export function PostCard({ post }: PostProps) {
               >
                 <Hand className="h-5 w-5" />
                 <span className="text-[10px] font-medium">{post.applauds}</span>
+              </Button>
+
+              {/* Cool (🤙) - New Reaction */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  'flex flex-col items-center gap-0 h-auto py-1 px-2 transition-colors active:scale-90',
+                  isCool
+                    ? 'text-orange-500'
+                    : 'text-muted-foreground hover:text-orange-400',
+                )}
+                onClick={handleCool}
+              >
+                <span className="text-lg leading-none mb-0.5">🤙</span>
+                <span className="text-[10px] font-medium">{coolCount}</span>
               </Button>
 
               {/* Support (Apoiar) */}

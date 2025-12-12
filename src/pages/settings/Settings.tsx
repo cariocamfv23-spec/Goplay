@@ -25,6 +25,7 @@ import {
   Camera,
   Car,
   MessageSquare,
+  Calendar,
 } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -48,6 +49,7 @@ export default function Settings() {
     driverUpdates: true,
     photographerUpdates: true,
     messages: true,
+    scheduledRides: true, // New preference
   })
 
   const handleSaveBranding = () => {
@@ -234,6 +236,23 @@ export default function Settings() {
                   checked={notifications.driverUpdates}
                   onCheckedChange={(c) =>
                     handleNotificationChange('driverUpdates', c)
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-between p-2">
+                <div className="space-y-0.5">
+                  <Label className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4" /> Alertas de Corridas
+                    Agendadas
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Lembretes e confirmações de suas viagens.
+                  </p>
+                </div>
+                <Switch
+                  checked={notifications.scheduledRides}
+                  onCheckedChange={(c) =>
+                    handleNotificationChange('scheduledRides', c)
                   }
                 />
               </div>

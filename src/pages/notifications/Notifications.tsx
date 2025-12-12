@@ -8,6 +8,7 @@ import {
   CreditCard,
   User,
   Car,
+  CalendarClock,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -25,6 +26,8 @@ export default function Notifications() {
         return <CreditCard className="h-5 w-5 text-green-500" />
       case 'ride_request':
         return <Car className="h-5 w-5 text-orange-500" />
+      case 'scheduled_ride':
+        return <CalendarClock className="h-5 w-5 text-purple-500" />
       default:
         return <Bell className="h-5 w-5 text-purple-500" />
     }
@@ -60,7 +63,7 @@ export default function Notifications() {
             <Card
               key={notification.id}
               className={cn(
-                'transition-all duration-300 border-l-4',
+                'transition-all duration-300 border-l-4 cursor-pointer hover:bg-secondary/10',
                 notification.read ? 'border-l-border' : 'border-l-primary',
               )}
               onClick={() => markAsRead(notification.id)}
