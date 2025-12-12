@@ -7,12 +7,25 @@ import {
   Music2,
   Play,
   Volume2,
+  Sparkles,
+  Scissors,
 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 
 const Move = () => {
   return (
-    <div className="h-screen w-full bg-black text-white snap-y snap-mandatory overflow-y-scroll scroll-smooth no-scrollbar">
+    <div className="h-screen w-full bg-black text-white snap-y snap-mandatory overflow-y-scroll scroll-smooth no-scrollbar relative">
+      {/* Upload/Edit Button Overlay */}
+      <div className="fixed top-4 right-4 z-50">
+        <Button
+          size="icon"
+          className="rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 border border-white/20"
+        >
+          <Scissors className="h-5 w-5 text-white" />
+        </Button>
+      </div>
+
       {mockVideos.map((video) => (
         <div
           key={video.id}
@@ -25,13 +38,21 @@ const Move = () => {
               alt="Video"
               className="w-full h-full object-cover opacity-80"
             />
-            {/* Play Button Overlay (simulated paused/playing state) */}
             <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer bg-black/10">
               <Play className="h-16 w-16 fill-white/50 text-white/50" />
             </div>
+
+            {/* AI Action Highlight Overlay */}
+            {video.aiAction && (
+              <div className="absolute top-20 left-4 bg-primary/80 backdrop-blur-md px-3 py-1.5 rounded-lg flex items-center gap-2 animate-pulse border border-white/20">
+                <Sparkles className="h-4 w-4 text-yellow-300" />
+                <span className="text-xs font-bold text-white">
+                  {video.aiAction}
+                </span>
+              </div>
+            )}
           </div>
 
-          {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80 pointer-events-none" />
 
           {/* Right Side Actions */}

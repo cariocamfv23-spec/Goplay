@@ -1,7 +1,16 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useNavigate } from 'react-router-dom'
-import { User, Shield, Briefcase, Trophy, Flag, Users } from 'lucide-react'
+import {
+  User,
+  Shield,
+  Briefcase,
+  Trophy,
+  Flag,
+  Users,
+  Camera,
+  Car,
+} from 'lucide-react'
 
 const ProfileSelection = () => {
   const navigate = useNavigate()
@@ -40,6 +49,22 @@ const ProfileSelection = () => {
       bg: 'bg-green-500/10',
     },
     {
+      id: 'fotografo',
+      label: 'Fotógrafo',
+      icon: Camera,
+      desc: 'Para criadores de conteúdo',
+      color: 'text-pink-500',
+      bg: 'bg-pink-500/10',
+    },
+    {
+      id: 'motorista',
+      label: 'Motorista',
+      icon: Car,
+      desc: 'Transporte especializado',
+      color: 'text-zinc-500',
+      bg: 'bg-zinc-500/10',
+    },
+    {
       id: 'organizador',
       label: 'Organizador',
       icon: Users,
@@ -58,34 +83,33 @@ const ProfileSelection = () => {
   ]
 
   const handleSelect = (id: string) => {
-    // Logic to save profile type would go here
     navigate('/home')
   }
 
   return (
     <div className="min-h-screen bg-background p-6 animate-fade-in flex flex-col">
-      <div className="mt-4 mb-8 text-center">
+      <div className="mt-4 mb-6 text-center">
         <h2 className="text-3xl font-bold mb-2">Quem é você?</h2>
         <p className="text-muted-foreground">
-          Escolha o perfil que melhor te representa no ecossistema.
+          Escolha o perfil que melhor te representa no ecossistema Goplay.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 pb-8">
+      <div className="grid grid-cols-2 gap-3 pb-8 overflow-y-auto">
         {profiles.map((profile) => (
           <Card
             key={profile.id}
-            className="p-5 flex flex-col items-center justify-center text-center gap-3 cursor-pointer border-2 border-transparent hover:border-primary/50 hover:shadow-lg transition-all hover:-translate-y-1 bg-card"
+            className="p-4 flex flex-col items-center justify-center text-center gap-2 cursor-pointer border-2 border-transparent hover:border-primary/50 hover:shadow-lg transition-all hover:-translate-y-1 bg-card h-full"
             onClick={() => handleSelect(profile.id)}
           >
             <div
-              className={`w-14 h-14 rounded-full ${profile.bg} flex items-center justify-center ${profile.color} mb-1`}
+              className={`w-12 h-12 rounded-full ${profile.bg} flex items-center justify-center ${profile.color} mb-1`}
             >
-              <profile.icon className="h-7 w-7" />
+              <profile.icon className="h-6 w-6" />
             </div>
             <div>
-              <h3 className="font-bold text-base">{profile.label}</h3>
-              <p className="text-xs text-muted-foreground leading-tight mt-1">
+              <h3 className="font-bold text-sm">{profile.label}</h3>
+              <p className="text-[10px] text-muted-foreground leading-tight mt-1">
                 {profile.desc}
               </p>
             </div>

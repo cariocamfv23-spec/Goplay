@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { Mail, Lock, Smartphone } from 'lucide-react'
+import { Mail, Lock, Smartphone, Play } from 'lucide-react'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -12,7 +12,6 @@ const Login = () => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    // Simulate login
     setTimeout(() => {
       setLoading(false)
       navigate('/home')
@@ -20,15 +19,22 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-center px-6 py-12 bg-background animate-fade-in">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8">
-        <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-800 mb-2">
+    <div className="min-h-screen flex flex-col justify-center px-6 py-12 bg-background animate-fade-in relative overflow-hidden">
+      {/* Background blobs */}
+      <div className="absolute top-0 left-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-64 h-64 bg-gold/10 rounded-full blur-[100px] translate-x-1/2 translate-y-1/2 pointer-events-none" />
+
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8 relative z-10">
+        <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20">
+          <Play className="h-8 w-8 text-primary fill-primary ml-1" />
+        </div>
+        <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-primary mb-2">
           Bem-vindo de volta
         </h2>
         <p className="text-muted-foreground">Entre para continuar jogando</p>
       </div>
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
         <div className="flex bg-secondary p-1 rounded-xl mb-6">
           <button
             className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${method === 'email' ? 'bg-background shadow-sm text-primary' : 'text-muted-foreground'}`}
@@ -52,7 +58,7 @@ const Login = () => {
                 type="email"
                 placeholder="seu@email.com"
                 required
-                className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50"
+                className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary"
               />
             </div>
           ) : (
@@ -62,7 +68,7 @@ const Login = () => {
                 type="tel"
                 placeholder="(00) 00000-0000"
                 required
-                className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50"
+                className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary"
               />
             </div>
           )}
@@ -73,7 +79,7 @@ const Login = () => {
               type="password"
               placeholder="Sua senha"
               required
-              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50"
+              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary"
             />
           </div>
 
@@ -88,7 +94,7 @@ const Login = () => {
 
           <Button
             type="submit"
-            className="w-full h-12 rounded-full text-base font-bold shadow-lg shadow-primary/20"
+            className="w-full h-12 rounded-full text-base font-bold shadow-lg shadow-primary/20 bg-gradient-primary hover:opacity-90 transition-opacity"
             disabled={loading}
           >
             {loading ? 'Entrando...' : 'Entrar'}
@@ -110,7 +116,7 @@ const Login = () => {
           <div className="mt-6 grid grid-cols-3 gap-3">
             <Button
               variant="outline"
-              className="rounded-xl h-12 hover:bg-secondary/80"
+              className="rounded-xl h-12 hover:bg-secondary/80 border-border/50"
             >
               <img
                 src="https://img.usecurling.com/i?q=google&shape=outline"
@@ -120,7 +126,7 @@ const Login = () => {
             </Button>
             <Button
               variant="outline"
-              className="rounded-xl h-12 hover:bg-secondary/80"
+              className="rounded-xl h-12 hover:bg-secondary/80 border-border/50"
             >
               <img
                 src="https://img.usecurling.com/i?q=apple&shape=outline"
@@ -130,7 +136,7 @@ const Login = () => {
             </Button>
             <Button
               variant="outline"
-              className="rounded-xl h-12 hover:bg-secondary/80"
+              className="rounded-xl h-12 hover:bg-secondary/80 border-border/50"
             >
               <img
                 src="https://img.usecurling.com/i?q=linkedin&shape=outline"

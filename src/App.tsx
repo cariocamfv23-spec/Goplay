@@ -29,6 +29,7 @@ import Ranking from './pages/gamification/Ranking'
 import Wallet from './pages/wallet/Wallet'
 import WithdrawPix from './pages/wallet/WithdrawPix'
 import PaymentMethods from './pages/wallet/PaymentMethods'
+import RideRequest from './pages/services/RideRequest'
 
 const App = () => (
   <BrowserRouter
@@ -64,6 +65,7 @@ const App = () => (
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/wallet/withdraw" element={<WithdrawPix />} />
           <Route path="/wallet/cards" element={<PaymentMethods />} />
+          <Route path="/ride/request/:driverId" element={<RideRequest />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

@@ -3,17 +3,17 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Star, ShoppingCart, Filter } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { mockProducts, mockCourts } from '@/lib/data'
+import { mockProducts, mockCourts, mockProfiles } from '@/lib/data'
 import { Badge } from '@/components/ui/badge'
 
 const Marketplace = () => {
   const navigate = useNavigate()
 
   return (
-    <div className="pb-24 bg-secondary/10 min-h-screen">
+    <div className="pb-24 bg-background min-h-screen">
       <div className="bg-background sticky top-14 z-20 shadow-sm">
         <div className="p-4 pb-0 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Marketplace</h1>
+          <h1 className="text-2xl font-bold">Loja & Serviços</h1>
           <div className="flex gap-2">
             <Button size="icon" variant="ghost" className="rounded-full">
               <Filter className="h-5 w-5" />
@@ -30,18 +30,24 @@ const Marketplace = () => {
         </div>
 
         <Tabs defaultValue="products" className="w-full">
-          <TabsList className="w-full justify-start rounded-none border-b bg-transparent px-4 h-12">
+          <TabsList className="w-full justify-start rounded-none border-b bg-transparent px-4 h-12 overflow-x-auto">
             <TabsTrigger
               value="products"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none px-4 pb-3 pt-2"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none"
             >
-              Loja
+              Produtos
             </TabsTrigger>
             <TabsTrigger
               value="courts"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none px-4 pb-3 pt-2"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none"
             >
               Quadras
+            </TabsTrigger>
+            <TabsTrigger
+              value="services"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none"
+            >
+              Serviços
             </TabsTrigger>
           </TabsList>
 
@@ -60,7 +66,6 @@ const Marketplace = () => {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         alt={prod.name}
                       />
-                      {/* Floating Add Button */}
                       <button className="absolute bottom-2 right-2 h-8 w-8 bg-white/90 rounded-full shadow flex items-center justify-center text-primary opacity-0 group-hover:opacity-100 transition-opacity">
                         <ShoppingCart className="h-4 w-4" />
                       </button>
@@ -82,55 +87,73 @@ const Marketplace = () => {
               </div>
             </TabsContent>
 
-            <TabsContent value="courts" className="mt-0">
-              <div className="space-y-4">
-                {mockCourts.map((court) => (
+            <TabsContent value="courts" className="mt-0 space-y-4">
+              {mockCourts.map((court) => (
+                <Card
+                  key={court.id}
+                  className="overflow-hidden border-none shadow-md flex flex-col md:flex-row group cursor-pointer"
+                >
+                  <div className="h-40 md:w-48 bg-secondary relative">
+                    <img
+                      src={`https://img.usecurling.com/p/400/300?q=${court.img}`}
+                      className="w-full h-full object-cover"
+                      alt={court.name}
+                    />
+                    <Badge className="absolute top-2 left-2 bg-white/90 text-foreground hover:bg-white">
+                      Disponível Hoje
+                    </Badge>
+                  </div>
+                  <div className="p-4 flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-between items-start">
+                        <h3 className="font-bold text-lg leading-tight">
+                          {court.name}
+                        </h3>
+                        <div className="flex items-center gap-1 text-gold text-xs font-bold bg-gold/10 px-2 py-1 rounded-full">
+                          <Star className="h-3 w-3 fill-current" />{' '}
+                          {court.rating}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-end mt-3">
+                      <span className="font-bold text-primary text-lg">
+                        {court.price}
+                      </span>
+                      <Button size="sm" className="rounded-full px-6">
+                        Reservar
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </TabsContent>
+
+            <TabsContent value="services" className="mt-0 space-y-3">
+              {mockProfiles
+                .filter((p) => p.type === 'photographer' || p.type === 'coach')
+                .map((pro) => (
                   <Card
-                    key={court.id}
-                    className="overflow-hidden border-none shadow-md flex flex-col md:flex-row group cursor-pointer"
+                    key={pro.id}
+                    className="border-none shadow-sm flex items-center p-3 gap-3"
+                    onClick={() => navigate(`/profile/${pro.id}`)}
                   >
-                    <div className="h-40 md:w-48 bg-secondary relative">
+                    <div className="h-14 w-14 rounded-lg overflow-hidden bg-muted">
                       <img
-                        src={`https://img.usecurling.com/p/400/300?q=${court.img}`}
+                        src={pro.avatar}
                         className="w-full h-full object-cover"
-                        alt={court.name}
                       />
-                      <Badge className="absolute top-2 left-2 bg-white/90 text-foreground hover:bg-white">
-                        Disponível Hoje
-                      </Badge>
                     </div>
-                    <div className="p-4 flex-1 flex flex-col justify-between">
-                      <div>
-                        <div className="flex justify-between items-start">
-                          <h3 className="font-bold text-lg leading-tight">
-                            {court.name}
-                          </h3>
-                          <div className="flex items-center gap-1 text-gold text-xs font-bold bg-gold/10 px-2 py-1 rounded-full">
-                            <Star className="h-3 w-3 fill-current" />{' '}
-                            {court.rating}
-                          </div>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                          Com grama sintética premium e iluminação LED.
-                        </p>
-                      </div>
-                      <div className="flex justify-between items-end mt-3">
-                        <div>
-                          <p className="text-xs text-muted-foreground">
-                            A partir de
-                          </p>
-                          <span className="font-bold text-primary text-lg">
-                            {court.price}
-                          </span>
-                        </div>
-                        <Button size="sm" className="rounded-full px-6">
-                          Reservar
-                        </Button>
-                      </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-sm">{pro.name}</h3>
+                      <p className="text-xs text-muted-foreground">
+                        {pro.type === 'coach' ? 'Treinador' : 'Fotógrafo'}
+                      </p>
                     </div>
+                    <Button size="sm" variant="outline">
+                      Ver
+                    </Button>
                   </Card>
                 ))}
-              </div>
             </TabsContent>
           </div>
         </Tabs>

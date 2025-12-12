@@ -1,10 +1,18 @@
-import { ChartSpline, Store, Briefcase, Video, Home } from 'lucide-react'
+import {
+  ChartSpline,
+  Store,
+  Briefcase,
+  Video,
+  Home,
+  Car,
+  Camera,
+} from 'lucide-react'
 
 export const navigationItems = [
   { label: 'Home', icon: Home, path: '/home' },
   { label: 'MOVE', icon: Video, path: '/move' },
   { label: 'Explorar', icon: ChartSpline, path: '/explore' },
-  { label: 'Market', icon: Store, path: '/marketplace' },
+  { label: 'Loja', icon: Store, path: '/marketplace' },
   { label: 'Vagas', icon: Briefcase, path: '/jobs' },
 ]
 
@@ -48,16 +56,6 @@ export const mockComments: Comment[] = [
       },
     ],
   },
-  {
-    id: 2,
-    user: {
-      name: 'Mariana Costa',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=44',
-    },
-    text: 'Quero ver esse desempenho no próximo jogo!',
-    time: '25 min',
-    likes: 12,
-  },
 ]
 
 export const mockPosts = [
@@ -84,14 +82,14 @@ export const mockPosts = [
     type: 'video',
     user: {
       id: '2',
-      name: 'Clube Atlético Central',
+      name: 'Clube Atlético',
       avatar: 'https://img.usecurling.com/i?q=shield&shape=fill&color=violet',
       type: 'Clube',
     },
     title: 'Golaço do Sub-17',
     hashtags: ['#futebol', '#base', '#golaço'],
     content: 'Olha o que rolou no treino de hoje! A base vem forte.',
-    media: ['https://img.usecurling.com/p/600/400?q=soccer%20goal'], // Thumbnail
+    media: ['https://img.usecurling.com/p/600/400?q=soccer%20goal'],
     videoDuration: '0:20',
     likes: 450,
     comments: 89,
@@ -99,48 +97,6 @@ export const mockPosts = [
     applauds: 300,
     supports: 50,
     time: '4h',
-  },
-  {
-    id: 3,
-    type: 'carousel',
-    user: {
-      id: '3',
-      name: 'Roberto Mendes',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=45',
-      type: 'Treinador',
-    },
-    content: 'Dicas de alongamento para evitar lesões. Arraste para o lado! 🧘‍♀️',
-    media: [
-      'https://img.usecurling.com/p/600/600?q=stretching',
-      'https://img.usecurling.com/p/600/600?q=yoga',
-      'https://img.usecurling.com/p/600/600?q=warmup',
-    ],
-    likes: 89,
-    comments: 5,
-    shares: 20,
-    applauds: 15,
-    supports: 8,
-    time: '6h',
-  },
-  {
-    id: 4,
-    type: 'article',
-    user: {
-      id: '2',
-      name: 'NutriSports',
-      avatar: 'https://img.usecurling.com/i?q=apple&shape=outline&color=green',
-      type: 'Empresa',
-    },
-    content: 'A importância da hidratação antes, durante e depois dos treinos.',
-    articleTitle: 'Guia Completo de Hidratação',
-    articleDomain: 'nutrisports.com.br',
-    media: ['https://img.usecurling.com/p/600/300?q=water%20bottle'],
-    likes: 230,
-    comments: 12,
-    shares: 45,
-    applauds: 20,
-    supports: 5,
-    time: '1d',
   },
 ]
 
@@ -152,6 +108,7 @@ export const mockVideos = [
     thumbnail: 'https://img.usecurling.com/p/300/600?q=volleyball%20serve',
     likes: '1.2k',
     shares: '340',
+    aiAction: 'Saque Ace detectado',
   },
   {
     id: 2,
@@ -160,14 +117,7 @@ export const mockVideos = [
     thumbnail: 'https://img.usecurling.com/p/300/600?q=basketball%20dunk',
     likes: '5.6k',
     shares: '1.1k',
-  },
-  {
-    id: 3,
-    user: 'tenis_pro_br',
-    description: 'Treino de backhand em câmera lenta.',
-    thumbnail: 'https://img.usecurling.com/p/300/600?q=tennis%20player',
-    likes: '890',
-    shares: '120',
+    aiAction: 'Cesta de 3 pontos',
   },
 ]
 
@@ -181,18 +131,7 @@ export const mockEvents = [
     organizer: 'Liga SP',
     price: 'R$ 50,00',
     description:
-      'Participe da maior copa regional de futsal amador de São Paulo. Equipes de toda a região disputando o troféu.',
-  },
-  {
-    id: '2',
-    title: 'Maratona da Cidade',
-    date: '22 Set',
-    location: 'Rio de Janeiro, RJ',
-    image: 'https://img.usecurling.com/p/400/200?q=marathon%20runners',
-    organizer: 'Run Brasil',
-    price: 'R$ 120,00',
-    description:
-      'Desafie seus limites na Maratona da Cidade. Percurso plano e visual incrível da orla carioca.',
+      'Participe da maior copa regional de futsal amador de São Paulo.',
   },
 ]
 
@@ -203,43 +142,9 @@ export const mockJobs = [
     company: 'Clube Atlético',
     location: 'São Paulo, SP',
     type: 'Presencial',
-    description:
-      'Procuramos treinador com experiência em categorias de base para assumir a equipe Sub-15. Necessário licença C da CBF.',
-    requirements: [
-      'Licença C CBF',
-      'Experiência prévia',
-      'Disponibilidade à tarde',
-    ],
+    description: 'Procuramos treinador com experiência em categorias de base.',
+    requirements: ['Licença C CBF', 'Experiência prévia'],
     salary: 'A combinar',
-  },
-  {
-    id: '2',
-    title: 'Fisioterapeuta Esportivo',
-    company: 'Clinica Move',
-    location: 'Rio de Janeiro, RJ',
-    type: 'Presencial',
-    description:
-      'Vaga para fisioterapeuta especializado em reabilitação de atletas de alto rendimento.',
-    requirements: [
-      'Pós-graduação em Fisioterapia Esportiva',
-      'Registro no CREFITO',
-    ],
-    salary: 'R$ 4.500,00',
-  },
-  {
-    id: '3',
-    title: 'Analista de Desempenho',
-    company: 'TechSports',
-    location: 'Remoto',
-    type: 'Remoto',
-    description:
-      'Trabalhe com análise de dados de partidas de futebol. Vaga 100% remota.',
-    requirements: [
-      'Conhecimento em Python',
-      'Paixão por futebol',
-      'Inglês intermediário',
-    ],
-    salary: 'R$ 5.000,00',
   },
 ]
 
@@ -250,8 +155,7 @@ export const mockProducts = [
     price: 'R$ 450,00',
     rating: 4.8,
     img: 'soccer%20cleats',
-    description:
-      'Chuteira profissional para campo, desenvolvida para máxima tração e controle de bola. Ideal para atletas de alto rendimento.',
+    description: 'Chuteira profissional para campo.',
     category: 'Equipamentos',
   },
   {
@@ -260,28 +164,7 @@ export const mockProducts = [
     price: 'R$ 120,00',
     rating: 4.5,
     img: 'soccer%20ball',
-    description:
-      'Bola oficial de competição, aprovada pelas principais federações. Durabilidade e precisão no chute.',
-    category: 'Equipamentos',
-  },
-  {
-    id: 3,
-    name: 'Camisa Treino',
-    price: 'R$ 89,90',
-    rating: 4.2,
-    img: 'jersey',
-    description:
-      'Camisa de treino leve e respirável, com tecnologia de secagem rápida. Conforto total durante os exercícios.',
-    category: 'Vestuário',
-  },
-  {
-    id: 4,
-    name: 'Luvas Goleiro',
-    price: 'R$ 150,00',
-    rating: 4.7,
-    img: 'goalkeeper%20gloves',
-    description:
-      'Luvas de goleiro com grip profissional e proteção para os dedos. Segurança e performance no gol.',
+    description: 'Bola oficial de competição.',
     category: 'Equipamentos',
   },
 ]
@@ -293,6 +176,8 @@ export const mockCourts = [
     price: 'R$ 150/h',
     rating: 4.9,
     img: 'futsal%20court',
+    lat: -23.5505,
+    lng: -46.6333,
   },
   {
     id: 2,
@@ -300,6 +185,8 @@ export const mockCourts = [
     price: 'R$ 200/h',
     rating: 4.6,
     img: 'soccer%20field',
+    lat: -23.5605,
+    lng: -46.6433,
   },
 ]
 
@@ -312,7 +199,7 @@ export interface BadgeData {
 
 export interface ProfileData {
   id: string
-  type: 'athlete' | 'club' | 'coach'
+  type: 'athlete' | 'club' | 'coach' | 'photographer' | 'driver'
   name: string
   username: string
   avatar: string
@@ -343,6 +230,14 @@ export interface ProfileData {
   certifications?: string[]
   pricing?: string
   availability?: string[]
+
+  // Photographer specific
+  portfolio?: string[]
+  packages?: { title: string; price: string; description: string }[]
+
+  // Driver specific
+  car?: { model: string; plate: string; color: string; photo: string }
+  rides?: number
 }
 
 export const mockBadges: BadgeData[] = [
@@ -359,7 +254,7 @@ export const mockProfiles: ProfileData[] = [
     username: '@lucas.gol',
     avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
     cover: 'https://img.usecurling.com/p/800/300?q=soccer%20field',
-    bio: 'Atleta de Futebol | Meia-atacante focado em alta performance. Buscando novas oportunidades.',
+    bio: 'Atleta de Futebol | Meia-atacante focado em alta performance.',
     location: 'São Paulo, SP',
     followers: '1.2k',
     following: '450',
@@ -372,8 +267,6 @@ export const mockProfiles: ProfileData[] = [
     stats: [
       { label: 'Jogos', value: '89' },
       { label: 'Gols', value: '34' },
-      { label: 'Assist', value: '21' },
-      { label: 'Altura', value: '1.78m' },
     ],
     history: [
       {
@@ -381,36 +274,24 @@ export const mockProfiles: ProfileData[] = [
         team: 'São Paulo FC Base',
         description: 'Campeão Sub-17',
       },
-      {
-        year: '2021',
-        team: 'Osasco FC',
-        description: 'Início na categoria de base',
-      },
     ],
   },
   {
     id: '2',
     type: 'club',
-    name: 'Clube Atlético Central',
+    name: 'Clube Atlético',
     username: '@atleticocentral',
     avatar: 'https://img.usecurling.com/i?q=shield&shape=fill&color=violet',
     cover: 'https://img.usecurling.com/p/800/300?q=stadium',
-    bio: 'Formando campeões desde 1990. Estrutura completa para atletas de alto rendimento.',
+    bio: 'Formando campeões desde 1990.',
     location: 'Rio de Janeiro, RJ',
     followers: '5.6k',
     following: '120',
     rating: 4.9,
-    about:
-      'O Clube Atlético Central é referência na formação de atletas de alto rendimento, contando com 5 campos oficiais, academia de ponta e departamento médico integrado.',
-    address: 'Av. das Américas, 5000 - Barra da Tijuca, Rio de Janeiro - RJ',
-    jobs: [
-      { id: 1, title: 'Treinador Sub-15', type: 'Presencial' },
-      { id: 2, title: 'Fisioterapeuta', type: 'Integral' },
-    ],
-    events: [
-      { id: 1, title: 'Peneira Sub-17', date: '15 Ago' },
-      { id: 2, title: 'Final do Regional', date: '22 Set' },
-    ],
+    about: 'O Clube Atlético Central é referência na formação.',
+    address: 'Av. das Américas, 5000',
+    jobs: [{ id: 1, title: 'Treinador Sub-15', type: 'Presencial' }],
+    events: [{ id: 1, title: 'Peneira Sub-17', date: '15 Ago' }],
   },
   {
     id: '3',
@@ -419,28 +300,64 @@ export const mockProfiles: ProfileData[] = [
     username: '@beto.coach',
     avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=45',
     cover: 'https://img.usecurling.com/p/800/300?q=tactics%20board',
-    bio: 'Treinador Licença B CBF. Especialista em tática e desenvolvimento técnico individual.',
+    bio: 'Treinador Licença B CBF.',
     location: 'Belo Horizonte, MG',
     followers: '3.1k',
     following: '890',
     rating: 4.7,
-    specialties: [
-      'Futebol de Campo',
-      'Futsal',
-      'Análise Tática',
-      'Preparação Física',
-    ],
-    certifications: [
-      'Licença B CBF',
-      'Pós-graduação em Treinamento Desportivo',
-      'Curso de Análise de Desempenho',
-    ],
+    specialties: ['Futebol', 'Tática'],
+    certifications: ['Licença B CBF'],
     pricing: 'R$ 150,00 / hora',
-    availability: [
-      'Segunda - 14h às 18h',
-      'Quarta - 09h às 12h',
-      'Sexta - 14h às 18h',
+    availability: ['Segunda - 14h'],
+  },
+  {
+    id: '4',
+    type: 'photographer',
+    name: 'Ana Foto',
+    username: '@ana.clicks',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=22',
+    cover: 'https://img.usecurling.com/p/800/300?q=camera%20lens',
+    bio: 'Fotógrafa esportiva profissional. Eternizando momentos.',
+    location: 'Curitiba, PR',
+    followers: '2.5k',
+    following: '300',
+    rating: 4.9,
+    portfolio: [
+      'https://img.usecurling.com/p/300/300?q=sports%20photo%201',
+      'https://img.usecurling.com/p/300/300?q=sports%20photo%202',
     ],
+    packages: [
+      {
+        title: 'Cobertura de Jogo',
+        price: 'R$ 200,00',
+        description: '50 fotos editadas do seu jogo.',
+      },
+      {
+        title: 'Ensaio Individual',
+        price: 'R$ 350,00',
+        description: 'Sessão de 2h em estúdio ou campo.',
+      },
+    ],
+  },
+  {
+    id: '5',
+    type: 'driver',
+    name: 'Carlos Driver',
+    username: '@carlos.uber',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=55',
+    cover: 'https://img.usecurling.com/p/800/300?q=car%20dashboard',
+    bio: 'Motorista parceiro Goplay. Transporte seguro para seu equipamento.',
+    location: 'São Paulo, SP',
+    followers: '150',
+    following: '20',
+    rating: 4.8,
+    rides: 1240,
+    car: {
+      model: 'Honda Civic',
+      plate: 'ABC-1234',
+      color: 'Prata',
+      photo: 'https://img.usecurling.com/p/300/200?q=silver%20honda%20civic',
+    },
   },
 ]
 
@@ -483,23 +400,8 @@ export const mockTransactions = [
     amount: 'R$ 150,00',
     date: 'Hoje, 10:30',
   },
-  {
-    id: 2,
-    type: 'sent',
-    title: 'Pagamento enviado',
-    amount: 'R$ 50,00',
-    date: 'Ontem, 14:20',
-  },
-  {
-    id: 3,
-    type: 'withdraw',
-    title: 'Saque Pix',
-    amount: 'R$ 200,00',
-    date: '12 Ago, 09:00',
-  },
 ]
 
-// Chat Data
 export interface ChatMessage {
   id: string
   senderId: string
@@ -525,23 +427,13 @@ export interface Chat {
 export const mockChats: Chat[] = [
   {
     id: 'user-2',
-    name: 'Clube Atlético Central',
+    name: 'Clube Atlético',
     avatar: 'https://img.usecurling.com/i?q=shield&shape=fill&color=violet',
     type: 'direct',
-    lastMessage: 'Quando podemos agendar a visita?',
+    lastMessage: 'Quando podemos agendar?',
     lastMessageTime: '10:30',
     unreadCount: 2,
     online: true,
-  },
-  {
-    id: 'user-3',
-    name: 'Roberto Mendes',
-    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=45',
-    type: 'direct',
-    lastMessage: 'Obrigado pelas dicas!',
-    lastMessageTime: 'Ontem',
-    unreadCount: 0,
-    online: false,
   },
   {
     id: 'group-1',
@@ -549,27 +441,9 @@ export const mockChats: Chat[] = [
     avatar:
       'https://img.usecurling.com/i?q=soccer%20ball&shape=fill&color=green',
     type: 'group',
-    lastMessage: 'João: Quem vai levar o colete?',
+    lastMessage: 'João: Quem vai?',
     lastMessageTime: '09:15',
     unreadCount: 5,
-  },
-  {
-    id: 'event-1',
-    name: 'Chat: Copa Regional',
-    avatar: 'https://img.usecurling.com/i?q=trophy&shape=fill&color=gold',
-    type: 'event',
-    lastMessage: 'Admin: Tabelas liberadas!',
-    lastMessageTime: '11:00',
-    unreadCount: 1,
-  },
-  {
-    id: 'job-1',
-    name: 'Vaga: Treinador Sub-15',
-    avatar: 'https://img.usecurling.com/i?q=briefcase&shape=fill&color=blue',
-    type: 'job',
-    lastMessage: 'Recrutador: Recebemos seu currículo.',
-    lastMessageTime: 'Seg',
-    unreadCount: 0,
   },
 ]
 
@@ -578,7 +452,7 @@ export const getMockMessages = (chatId: string): ChatMessage[] => {
     {
       id: '1',
       senderId: 'them',
-      text: 'Olá! Tudo bem por aí?',
+      text: 'Olá! Tudo bem?',
       type: 'text',
       timestamp: '10:00',
       isMe: false,
@@ -586,48 +460,9 @@ export const getMockMessages = (chatId: string): ChatMessage[] => {
     {
       id: '2',
       senderId: 'me',
-      text: 'Tudo ótimo! E com você?',
+      text: 'Tudo ótimo!',
       type: 'text',
       timestamp: '10:02',
-      isMe: true,
-    },
-    {
-      id: '3',
-      senderId: 'them',
-      text: 'Aqui está o vídeo do treino de ontem.',
-      type: 'text',
-      timestamp: '10:05',
-      isMe: false,
-    },
-    {
-      id: '4',
-      senderId: 'them',
-      type: 'video',
-      mediaUrl: 'https://img.usecurling.com/p/300/200?q=soccer%20video',
-      timestamp: '10:05',
-      isMe: false,
-    },
-    {
-      id: '5',
-      senderId: 'me',
-      type: 'audio',
-      timestamp: '10:06',
-      isMe: true,
-    },
-    {
-      id: '6',
-      senderId: 'them',
-      text: 'Pode me enviar o regulamento?',
-      type: 'text',
-      timestamp: '10:10',
-      isMe: false,
-    },
-    {
-      id: '7',
-      senderId: 'me',
-      type: 'document',
-      fileName: 'Regulamento_2024.pdf',
-      timestamp: '10:12',
       isMe: true,
     },
   ]
