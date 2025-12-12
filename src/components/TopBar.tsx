@@ -2,7 +2,7 @@ import { ArrowLeft, Bell, ShoppingCart, Settings } from 'lucide-react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import useBrandingStore from '@/stores/useBrandingStore'
+import useBrandingStore, { defaultLogo } from '@/stores/useBrandingStore'
 
 export function TopBar() {
   const navigate = useNavigate()
@@ -40,6 +40,12 @@ export function TopBar() {
             src={logoUrl}
             alt="Goplay App Logo"
             className="h-8 w-auto object-contain drop-shadow-sm"
+            onError={(e) => {
+              const target = e.currentTarget
+              if (target.src !== defaultLogo) {
+                target.src = defaultLogo
+              }
+            }}
           />
         </Link>
       </div>

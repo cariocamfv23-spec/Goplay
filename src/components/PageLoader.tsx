@@ -1,4 +1,7 @@
-import useBrandingStore from '@/stores/useBrandingStore'
+import useBrandingStore, {
+  defaultIcon,
+  defaultLogo,
+} from '@/stores/useBrandingStore'
 
 export const PageLoader = () => {
   const { logoUrl, iconUrl } = useBrandingStore()
@@ -16,6 +19,12 @@ export const PageLoader = () => {
               src={iconUrl}
               alt="Goplay Icon"
               className="w-16 h-16 object-contain"
+              onError={(e) => {
+                const target = e.currentTarget
+                if (target.src !== defaultIcon) {
+                  target.src = defaultIcon
+                }
+              }}
             />
           </div>
           <div className="absolute -inset-4 bg-primary/20 rounded-full blur-xl animate-pulse delay-75 pointer-events-none z-10" />
@@ -26,6 +35,12 @@ export const PageLoader = () => {
             src={logoUrl}
             alt="Goplay Loading"
             className="h-10 w-auto object-contain"
+            onError={(e) => {
+              const target = e.currentTarget
+              if (target.src !== defaultLogo) {
+                target.src = defaultLogo
+              }
+            }}
           />
         </div>
 

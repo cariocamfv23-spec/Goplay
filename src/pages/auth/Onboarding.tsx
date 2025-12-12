@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import useBrandingStore from '@/stores/useBrandingStore'
+import useBrandingStore, {
+  defaultIcon,
+  defaultLogo,
+} from '@/stores/useBrandingStore'
 import { ChevronRight } from 'lucide-react'
 
 const Onboarding = () => {
@@ -46,7 +49,17 @@ const Onboarding = () => {
 
       {/* Header */}
       <div className="w-full p-6 flex justify-center pt-8 z-10">
-        <img src={logoUrl} alt="Goplay" className="h-8 w-auto object-contain" />
+        <img
+          src={logoUrl}
+          alt="Goplay"
+          className="h-8 w-auto object-contain"
+          onError={(e) => {
+            const target = e.currentTarget
+            if (target.src !== defaultLogo) {
+              target.src = defaultLogo
+            }
+          }}
+        />
       </div>
 
       {/* Content */}
@@ -64,6 +77,12 @@ const Onboarding = () => {
                 src={iconUrl}
                 alt="Icon"
                 className="w-8 h-8 object-contain"
+                onError={(e) => {
+                  const target = e.currentTarget
+                  if (target.src !== defaultIcon) {
+                    target.src = defaultIcon
+                  }
+                }}
               />
             </div>
           </div>

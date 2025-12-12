@@ -15,9 +15,9 @@ type BrandingState = {
 }
 
 // Official Goplay App Assets
-const defaultLogo =
+export const defaultLogo =
   'https://res.cloudinary.com/subframe/image/upload/v1741178657/11628/11312/uploads/533f81e7-380d-400d-953e-028f8f0418c3.png'
-const defaultIcon =
+export const defaultIcon =
   'https://res.cloudinary.com/subframe/image/upload/v1741178657/11628/11312/uploads/049e9c80-bc90-4828-9842-8854ef205d52.png'
 
 const BrandingContext = createContext<BrandingState | undefined>(undefined)

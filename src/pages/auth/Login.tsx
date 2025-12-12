@@ -3,7 +3,10 @@ import { Input } from '@/components/ui/input'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { Mail, Lock, Smartphone } from 'lucide-react'
-import useBrandingStore from '@/stores/useBrandingStore'
+import useBrandingStore, {
+  defaultIcon,
+  defaultLogo,
+} from '@/stores/useBrandingStore'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -35,12 +38,24 @@ const Login = () => {
               src={iconUrl}
               alt="Goplay Icon"
               className="w-16 h-16 object-contain"
+              onError={(e) => {
+                const target = e.currentTarget
+                if (target.src !== defaultIcon) {
+                  target.src = defaultIcon
+                }
+              }}
             />
           </div>
           <img
             src={logoUrl}
             alt="Goplay App"
             className="h-12 w-auto object-contain drop-shadow-md"
+            onError={(e) => {
+              const target = e.currentTarget
+              if (target.src !== defaultLogo) {
+                target.src = defaultLogo
+              }
+            }}
           />
         </div>
         <h2 className="text-3xl font-bold tracking-tight mb-2">
