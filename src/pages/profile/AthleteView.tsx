@@ -1,4 +1,4 @@
-import { ProfileData, mockHighlights } from '@/lib/data'
+import { ProfileData, mockHighlights, NarrationConfig } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -26,6 +26,7 @@ import {
   Footprints,
   Calendar,
   MessageSquare,
+  Mic,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { mockPosts } from '@/lib/data'
@@ -42,8 +43,13 @@ import { StatsHistoryChart } from '@/components/StatsHistoryChart'
 import { TrainingSuggestions } from '@/components/TrainingSuggestions'
 import TrainingSchedule from './TrainingSchedule'
 import { FeedbackList } from '@/components/FeedbackList'
+import { NarrationEditor } from '@/components/NarrationEditor'
+import { useState } from 'react'
 
 export default function AthleteView({ profile }: { profile: ProfileData }) {
+  const [showNarrationEditor, setShowNarrationEditor] = useState(false)
+  const [selectedHighlight, setSelectedHighlight] = useState<any>(null)
+
   const renderIcon = (iconName: string, className?: string) => {
     const Icon = (LucideIcons as any)[iconName]
     return Icon ? <Icon className={className} /> : null
@@ -55,6 +61,11 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
         'Isso pode levar alguns segundos. Te avisaremos quando estiver pronto!',
       icon: <Sparkles className="h-5 w-5 text-gold" />,
     })
+  }
+
+  const handleEditNarration = (highlight: any) => {
+    setSelectedHighlight(highlight)
+    setShowNarrationEditor(true)
   }
 
   return (
@@ -339,6 +350,7 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
                 <div
                   key={highlight.id}
                   className="relative rounded-xl overflow-hidden bg-black group cursor-pointer"
+                  onClick={() => handleEditNarration(highlight)}
                 >
                   <div className="aspect-video relative">
                     <img
@@ -346,6 +358,14 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
                       className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500"
                       alt={highlight.title}
                     />
+
+                    {/* Narration Indicator */}
+                    {(highlight as any).narration && (
+                      <div className="absolute top-2 left-2 bg-gold/90 text-black px-1.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1">
+                        <Mic className="h-3 w-3" /> AI
+                      </div>
+                    )}
+
                     <div className="absolute inset-0 flex items-center justify-center">
                       <Play className="h-8 w-8 text-white fill-white opacity-80" />
                     </div>
@@ -400,6 +420,19 @@ export default function AthleteView({ profile }: { profile: ProfileData }) {
           </TabsContent>
         </Tabs>
       </div>
+
+      {selectedHighlight && (
+        <NarrationEditor
+          open={showNarrationEditor}
+          onOpenChange={setShowNarrationEditor}
+          videoThumbnail={selectedHighlight.thumbnail}
+          initialConfig={selectedHighlight.narration}
+          onSave={(config) => {
+            toast.success('Highlight atualizado!')
+            // In a real app, update state here
+          }}
+        />
+      )}
     </div>
   )
 }

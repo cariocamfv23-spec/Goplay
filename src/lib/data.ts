@@ -65,7 +65,40 @@ export const mockComments: Comment[] = [
   },
 ]
 
-export const mockPosts = [
+export interface NarrationConfig {
+  hasNarration: boolean
+  style: 'varzea' | 'professional' | 'comedy' | 'futuristic' | 'influencer'
+  text: string
+  volume: number
+}
+
+export interface Post {
+  id: number
+  type: string
+  user: {
+    id: string
+    name: string
+    avatar: string
+    type: string
+  }
+  content: string
+  media?: string[]
+  title?: string
+  hashtags?: string[]
+  videoDuration?: string
+  articleTitle?: string
+  articleDomain?: string
+  likes: number
+  comments: number
+  shares: number
+  applauds: number
+  supports: number
+  cools?: number
+  time: string
+  narration?: NarrationConfig
+}
+
+export const mockPosts: Post[] = [
   {
     id: 1,
     type: 'image',
@@ -107,6 +140,12 @@ export const mockPosts = [
     supports: 50,
     cools: 150,
     time: '4h',
+    narration: {
+      hasNarration: true,
+      style: 'professional',
+      text: 'GOOOOOOL do Clube Atlético! Que categoria meus amigos!',
+      volume: 0.8,
+    },
   },
 ]
 
@@ -369,6 +408,12 @@ export const mockHighlights = [
     sport: 'Futsal',
     thumbnail: 'https://img.usecurling.com/p/400/225?q=futsal%20goal&dpr=2',
     duration: '0:15',
+    narration: {
+      hasNarration: true,
+      style: 'varzea',
+      text: 'Respeita o brabo! O goleirão nem viu a cor da bola!',
+      volume: 0.9,
+    },
   },
   {
     id: 'h2',
@@ -1387,3 +1432,34 @@ export const mockScheduledRides: ScheduledRide[] = [
     status: 'pending',
   },
 ]
+
+export const narrationStyles = [
+  {
+    id: 'varzea',
+    name: 'Voz Várzea',
+    description: 'Gírias originais e irreverência.',
+    previewText: 'Que isso hein?! Pega essa maçã!',
+    icon: 'Trophy',
+  },
+  {
+    id: 'professional',
+    name: 'Narrador Profissional',
+    description: 'Estilo clássico e épico de TV.',
+    previewText: 'GOOOOOOL do Goplay! Que categoria!',
+    icon: 'Mic',
+  },
+  {
+    id: 'comedy',
+    name: 'Voz Comédia',
+    description: 'Humor esportivo para rachar o bico.',
+    previewText: 'Se errar, perde o emprego, hein!',
+    icon: 'Laugh',
+  },
+  {
+    id: 'futuristic',
+    name: 'Voz Futurista',
+    description: 'Efeitos tecnológicos e robóticos.',
+    previewText: 'Análise concluída. Precisão cirúrgica detectada.',
+    icon: 'Bot',
+  },
+] as const

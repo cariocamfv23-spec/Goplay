@@ -10,6 +10,8 @@ import {
   Play,
   HeartHandshake,
   ExternalLink,
+  Volume2,
+  Mic,
 } from 'lucide-react'
 import {
   Carousel,
@@ -24,6 +26,8 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import useSoundStore from '@/stores/useSoundStore'
+import { SoundWaveVisualizer } from './SoundWaveVisualizer'
+import { NarrationConfig } from '@/lib/data'
 
 interface PostProps {
   post: {
@@ -44,6 +48,7 @@ interface PostProps {
     supports: number
     cools?: number
     time: string
+    narration?: NarrationConfig
   }
 }
 
@@ -53,8 +58,9 @@ export function PostCard({ post }: PostProps) {
   const [likeCount, setLikeCount] = useState(post.likes)
   const [isCool, setIsCool] = useState(false)
   const [coolCount, setCoolCount] = useState(post.cools || 0)
+  const [isPlayingNarration, setIsPlayingNarration] = useState(false)
 
-  const { playSound } = useSoundStore()
+  const { playSound, playNarration } = useSoundStore()
 
   const handleLike = () => {
     const newIsLiked = !isLiked
@@ -133,6 +139,19 @@ export function PostCard({ post }: PostProps) {
     }
   }
 
+  const toggleNarration = () => {
+    if (post.narration) {
+      if (!isPlayingNarration) {
+        playNarration(post.narration)
+        setIsPlayingNarration(true)
+        // Mock stopping after 3 seconds for visual effect
+        setTimeout(() => setIsPlayingNarration(false), 3000)
+      } else {
+        setIsPlayingNarration(false)
+      }
+    }
+  }
+
   const renderContent = () => {
     switch (post.type) {
       case 'video':
@@ -144,11 +163,32 @@ export function PostCard({ post }: PostProps) {
               loading="lazy"
               className="w-full aspect-video object-cover transition-transform duration-500 group-hover:scale-105"
             />
+
+            {post.narration && (
+              <div className="absolute top-2 left-2 z-20">
+                <Badge className="bg-gold/90 text-black border-none hover:bg-gold gap-1 pl-1">
+                  <Mic className="h-3 w-3" /> Narração{' '}
+                  {post.narration.style === 'varzea' ? 'Várzea' : 'AI'}
+                </Badge>
+              </div>
+            )}
+
             <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/40 transition-colors">
               <div className="h-12 w-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/50 group-hover:scale-110 transition-transform">
                 <Play className="h-5 w-5 text-white fill-white ml-1" />
               </div>
             </div>
+
+            {post.narration && isPlayingNarration && (
+              <div className="absolute bottom-16 left-0 right-0 flex justify-center z-20">
+                <div className="bg-black/60 backdrop-blur-sm px-4 py-1 rounded-full border border-gold/30">
+                  <span className="text-white text-sm font-bold italic">
+                    "{post.narration.text}"
+                  </span>
+                </div>
+              </div>
+            )}
+
             <div className="absolute top-2 right-2 px-2 py-0.5 bg-black/60 rounded text-xs text-white font-medium">
               {post.videoDuration}
             </div>
@@ -156,12 +196,29 @@ export function PostCard({ post }: PostProps) {
               <h4 className="text-white font-bold text-lg leading-tight mb-1">
                 {post.title}
               </h4>
-              <div className="flex gap-2">
-                {post.hashtags?.map((tag) => (
-                  <span key={tag} className="text-white/80 text-xs">
-                    {tag}
-                  </span>
-                ))}
+              <div className="flex justify-between items-end">
+                <div className="flex gap-2">
+                  {post.hashtags?.map((tag) => (
+                    <span key={tag} className="text-white/80 text-xs">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                {post.narration && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      toggleNarration()
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <SoundWaveVisualizer
+                      isPlaying={isPlayingNarration}
+                      className="h-6"
+                      barCount={5}
+                    />
+                  </div>
+                )}
               </div>
             </div>
             <Button className="absolute bottom-4 right-4 h-8 rounded-full px-4 text-xs bg-primary text-white border border-white/20 hover:bg-primary/90 shadow-lg">

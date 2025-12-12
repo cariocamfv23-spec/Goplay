@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { toast } from 'sonner'
+import { NarrationConfig } from '@/lib/data'
 
 type SoundPack = 'varzea' | 'arena' | 'street'
 
@@ -17,6 +18,8 @@ interface SoundStore extends SoundSettings {
   setSilentInMatches: (enabled: boolean) => void
   setActivePack: (pack: SoundPack) => void
   playSound: (category: SoundCategory, context?: string) => void
+  playNarration: (config: NarrationConfig) => void
+  isPlayingNarration: boolean
 }
 
 type SoundCategory =
@@ -41,6 +44,7 @@ const useSoundStore = create<SoundStore>()(
       volume: 0.8,
       silentInMatches: false,
       activePack: 'varzea',
+      isPlayingNarration: false,
 
       setMasterEnabled: (enabled) => set({ masterEnabled: enabled }),
       setVolume: (volume) => set({ volume }),
@@ -48,15 +52,10 @@ const useSoundStore = create<SoundStore>()(
       setActivePack: (pack) => set({ activePack: pack }),
 
       playSound: (category, context) => {
-        const { masterEnabled, volume, activePack } = get()
+        const { masterEnabled, volume } = get()
 
         if (!masterEnabled) return
 
-        // Check for Silent Mode in Matches (Mock check, assuming we are not in a match for this demo logic unless specified)
-        // In a real app, we would check the current route or game state.
-
-        // TTS Fallback for "Sounds" since we don't have real audio files
-        // This simulates the auditory experience requested in the User Story
         if ('speechSynthesis' in window) {
           const synth = window.speechSynthesis
           let textToSpeak = ''
@@ -65,7 +64,6 @@ const useSoundStore = create<SoundStore>()(
 
           switch (category) {
             case 'like_football': {
-              // Randomize football slang
               const footballSounds = [
                 'Que isso hein?!',
                 'Pega essa maçã!',
@@ -97,7 +95,6 @@ const useSoundStore = create<SoundStore>()(
               pitch = 0.5
               break
             case 'like_partner':
-              // Elegant chime simulation via text? Or just a gentle "Parceiro Goplay"
               textToSpeak = 'Parceiro!'
               pitch = 1.2
               break
@@ -114,7 +111,6 @@ const useSoundStore = create<SoundStore>()(
               break
             }
             case 'notification_points':
-              // Coin sound simulation
               textToSpeak = 'Goplay!'
               pitch = 1.5
               rate = 2
@@ -123,30 +119,69 @@ const useSoundStore = create<SoundStore>()(
               textToSpeak = 'Conquista desbloqueada!'
               break
             default:
-              // Generic
               break
           }
 
           if (textToSpeak) {
-            // Cancel previous utterances
             synth.cancel()
-
             const utterance = new SpeechSynthesisUtterance(textToSpeak)
             utterance.volume = volume
             utterance.rate = rate
             utterance.pitch = pitch
-
-            // Try to find a Portuguese voice
             const voices = synth.getVoices()
             const ptVoice = voices.find((v) => v.lang.includes('pt'))
             if (ptVoice) utterance.voice = ptVoice
-
             synth.speak(utterance)
           }
         }
+      },
 
-        // Visual feedback for debugging/demo purposes if sound is muted on system level
-        // toast.info(`🔊 ${category}`, { duration: 1000, position: 'bottom-center' })
+      playNarration: (config) => {
+        const { masterEnabled } = get()
+        if (!masterEnabled) return
+
+        if ('speechSynthesis' in window) {
+          const synth = window.speechSynthesis
+          synth.cancel()
+
+          const utterance = new SpeechSynthesisUtterance(config.text)
+          utterance.volume = config.volume
+
+          // Simulate styles with pitch/rate/voice
+          switch (config.style) {
+            case 'varzea':
+              utterance.pitch = 0.9
+              utterance.rate = 1.3
+              break
+            case 'professional':
+              utterance.pitch = 1.1
+              utterance.rate = 1.0
+              break
+            case 'comedy':
+              utterance.pitch = 1.4
+              utterance.rate = 1.5
+              break
+            case 'futuristic':
+              utterance.pitch = 0.5
+              utterance.rate = 0.9
+              break
+            case 'influencer':
+              utterance.pitch = 1.0
+              utterance.rate = 1.1
+              break
+          }
+
+          const voices = synth.getVoices()
+          const ptVoice = voices.find((v) => v.lang.includes('pt'))
+          if (ptVoice) utterance.voice = ptVoice
+
+          utterance.onstart = () => set({ isPlayingNarration: true })
+          utterance.onend = () => set({ isPlayingNarration: false })
+
+          synth.speak(utterance)
+        } else {
+          toast.error('Navegador sem suporte a áudio.')
+        }
       },
     }),
     {
