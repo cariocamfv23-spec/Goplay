@@ -27,11 +27,11 @@ const Login = () => {
       <div className="absolute bottom-0 right-0 w-64 h-64 bg-gold/10 rounded-full blur-[100px] translate-x-1/2 translate-y-1/2 pointer-events-none" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8 relative z-10">
-        <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-primary/20 shadow-lg shadow-primary/5">
+        <div className="flex justify-center mb-8">
           <img
             src={logoUrl}
             alt="Goplay App"
-            className="h-10 w-10 object-contain"
+            className="h-16 w-auto object-contain"
           />
         </div>
         <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-primary mb-2">

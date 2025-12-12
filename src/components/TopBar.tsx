@@ -38,11 +38,8 @@ export function TopBar() {
             <img
               src={logoUrl}
               alt="Goplay"
-              className="h-7 w-7 object-contain"
+              className="h-8 w-auto object-contain"
             />
-            <span className="font-bold text-xl tracking-tight text-gradient-primary">
-              Goplay App
-            </span>
           </div>
         ) : (
           <h1 className="font-semibold text-lg capitalize truncate max-w-[200px]">
