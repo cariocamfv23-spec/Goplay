@@ -1,63 +1,102 @@
-import { Button } from '@/components/ui/button'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
 import useBrandingStore from '@/stores/useBrandingStore'
+import { ChevronRight } from 'lucide-react'
 
 const Onboarding = () => {
   const navigate = useNavigate()
-  const { logoUrl } = useBrandingStore()
+  const { logoUrl, iconUrl } = useBrandingStore()
+  const [step, setStep] = useState(0)
+
+  const steps = [
+    {
+      title: 'Conecte-se ao Esporte',
+      description:
+        'Encontre atletas, clubes e profissionais do esporte em um só lugar. A maior rede esportiva do Brasil.',
+      image: 'https://img.usecurling.com/p/600/600?q=athletes%20connecting',
+    },
+    {
+      title: 'Mostre seu Talento',
+      description:
+        'Compartilhe seus melhores momentos com o MOVE. Vídeos curtos que destacam suas habilidades.',
+      image: 'https://img.usecurling.com/p/600/600?q=soccer%20skills',
+    },
+    {
+      title: 'Evolua sua Carreira',
+      description:
+        'Acesse vagas, peneiras e oportunidades exclusivas. O Goplay impulsiona sua jornada.',
+      image: 'https://img.usecurling.com/p/600/600?q=trophy%20winner',
+    },
+  ]
+
+  const handleNext = () => {
+    if (step < steps.length - 1) {
+      setStep(step + 1)
+    } else {
+      localStorage.setItem('goplay_has_seen_onboarding', 'true')
+      navigate('/login')
+    }
+  }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-between p-6 bg-background animate-fade-in relative overflow-hidden">
-      {/* Background Ambience */}
-      <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-gold/10 rounded-full blur-[100px] translate-x-1/2 translate-y-1/2 pointer-events-none" />
+    <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
+      {/* Background Blob */}
+      <div className="absolute -top-20 -right-20 w-80 h-80 bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="w-full flex justify-end relative z-10 pt-4">
-        <Button
-          variant="ghost"
-          className="text-muted-foreground hover:text-foreground"
-          onClick={() => navigate('/login')}
-        >
-          Pular
-        </Button>
+      {/* Header */}
+      <div className="w-full p-6 flex justify-center pt-8 z-10">
+        <img src={logoUrl} alt="Goplay" className="h-8 w-auto object-contain" />
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center text-center max-w-md w-full relative z-10 space-y-8">
-        <div className="p-8 rounded-full bg-background/30 backdrop-blur-xl border border-white/10 shadow-2xl animate-float">
+      {/* Content */}
+      <div className="flex-1 flex flex-col items-center justify-center p-6 gap-8 z-10">
+        <div className="relative w-full aspect-square max-w-sm rounded-3xl overflow-hidden shadow-2xl animate-fade-in-up">
           <img
-            src={logoUrl}
-            alt="Goplay App"
-            className="h-28 w-auto object-contain drop-shadow-xl"
+            src={steps[step].image}
+            alt={steps[step].title}
+            className="w-full h-full object-cover"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute bottom-6 left-6 right-6">
+            <div className="w-12 h-12 bg-background/20 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/20 mb-4">
+              <img
+                src={iconUrl}
+                alt="Icon"
+                className="w-8 h-8 object-contain"
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="space-y-4">
-          <h1 className="text-4xl font-extrabold tracking-tight">
-            Seu esporte, <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
-              sua paixão.
-            </span>
+        <div className="text-center space-y-4 max-w-sm animate-fade-in">
+          <h1 className="text-3xl font-bold leading-tight">
+            {steps[step].title}
           </h1>
-          <p className="text-lg text-muted-foreground leading-relaxed px-4">
-            Conecte-se com atletas, clubes e profissionais. Encontre eventos,
-            vagas e eleve seu jogo para o próximo nível.
+          <p className="text-muted-foreground leading-relaxed">
+            {steps[step].description}
           </p>
         </div>
       </div>
 
-      <div className="w-full max-w-md space-y-4 pb-8 relative z-10">
+      {/* Footer / Controls */}
+      <div className="p-6 pb-10 flex items-center justify-between z-10">
+        <div className="flex gap-2">
+          {steps.map((_, i) => (
+            <div
+              key={i}
+              className={`h-2 rounded-full transition-all duration-300 ${i === step ? 'w-8 bg-primary' : 'w-2 bg-secondary'}`}
+            />
+          ))}
+        </div>
+
         <Button
-          className="w-full h-14 rounded-full text-lg font-bold shadow-xl shadow-primary/25 bg-primary hover:bg-primary/90 transition-all hover:scale-[1.02]"
-          onClick={() => navigate('/register')}
+          onClick={handleNext}
+          size="lg"
+          className="rounded-full px-8 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20"
         >
-          Começar agora
-        </Button>
-        <Button
-          variant="outline"
-          className="w-full h-14 rounded-full text-lg font-semibold border-border/60 hover:bg-secondary/50 transition-all"
-          onClick={() => navigate('/login')}
-        >
-          Já tenho uma conta
+          {step === steps.length - 1 ? 'Começar' : 'Próximo'}
+          <ChevronRight className="ml-2 h-4 w-4" />
         </Button>
       </div>
     </div>

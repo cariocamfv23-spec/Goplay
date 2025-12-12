@@ -19,7 +19,7 @@ export function TopBar() {
     location.pathname !== '/messages'
 
   return (
-    <div className="sticky top-0 z-40 w-full h-16 bg-background/80 backdrop-blur-xl border-b border-border/40 flex items-center justify-between px-4 transition-all">
+    <div className="sticky top-0 z-40 w-full h-16 bg-background/80 backdrop-blur-xl border-b border-border/40 flex items-center justify-between px-4 transition-all shadow-sm">
       <div className="flex items-center gap-3">
         {showBack && (
           <Button
@@ -38,7 +38,7 @@ export function TopBar() {
         >
           <img
             src={logoUrl}
-            alt="Goplay App"
+            alt="Goplay App Logo"
             className="h-8 w-auto object-contain drop-shadow-sm"
           />
         </Link>

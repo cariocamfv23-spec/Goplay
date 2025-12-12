@@ -6,13 +6,23 @@ export default function Index() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // Simulate splash screen delay and auth check
+    // Simulate initial app loading / splash screen time
     const timer = setTimeout(() => {
-      const userType = localStorage.getItem('userType')
-      if (userType) {
-        navigate('/home')
+      // Check if user has seen onboarding (mock logic)
+      const hasSeenOnboarding = localStorage.getItem(
+        'goplay_has_seen_onboarding',
+      )
+
+      if (hasSeenOnboarding) {
+        // If logged in (mock), go to home, else login
+        const userType = localStorage.getItem('userType')
+        if (userType) {
+          navigate('/home')
+        } else {
+          navigate('/login')
+        }
       } else {
-        navigate('/login')
+        navigate('/onboarding')
       }
     }, 2500)
 

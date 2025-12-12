@@ -1,112 +1,130 @@
-import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
 import useBrandingStore from '@/stores/useBrandingStore'
-import {
-  User,
-  Shield,
-  Camera,
-  Trophy,
-  Car,
-  Stethoscope,
-  Apple,
-} from 'lucide-react'
-
-const profileTypes = [
-  {
-    id: 'athlete',
-    label: 'Atleta',
-    icon: Trophy,
-    description: 'Para jogadores e esportistas',
-  },
-  {
-    id: 'club',
-    label: 'Clube',
-    icon: Shield,
-    description: 'Para times e organizações',
-  },
-  {
-    id: 'coach',
-    label: 'Treinador',
-    icon: User,
-    description: 'Para técnicos e instrutores',
-  },
-  {
-    id: 'photographer',
-    label: 'Fotógrafo',
-    icon: Camera,
-    description: 'Para registrar momentos',
-  },
-  {
-    id: 'driver',
-    label: 'Motorista',
-    icon: Car,
-    description: 'Para transporte de equipamentos',
-  },
-  {
-    id: 'health',
-    label: 'Saúde',
-    icon: Stethoscope,
-    description: 'Fisio, médicos e saúde',
-  },
-  {
-    id: 'nutrition',
-    label: 'Nutrição',
-    icon: Apple,
-    description: 'Nutricionistas esportivos',
-  },
-]
+import { Trophy, Users, Camera, Briefcase, Car, HeartPulse } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { useState } from 'react'
 
 const ProfileSelection = () => {
   const navigate = useNavigate()
   const { logoUrl } = useBrandingStore()
+  const [selected, setSelected] = useState<string | null>(null)
 
-  const handleSelect = (type: string) => {
-    localStorage.setItem('userType', type)
-    navigate('/home')
+  const profiles = [
+    {
+      id: 'athlete',
+      label: 'Atleta',
+      icon: Trophy,
+      desc: 'Quero mostrar meu talento',
+      color: 'text-yellow-500',
+      bg: 'bg-yellow-500/10',
+      border: 'border-yellow-500/20',
+    },
+    {
+      id: 'club',
+      label: 'Clube/Escola',
+      icon: Users,
+      desc: 'Busco novos talentos',
+      color: 'text-blue-500',
+      bg: 'bg-blue-500/10',
+      border: 'border-blue-500/20',
+    },
+    {
+      id: 'professional',
+      label: 'Profissional',
+      icon: Briefcase,
+      desc: 'Treinador, Olheiro, Staff',
+      color: 'text-green-500',
+      bg: 'bg-green-500/10',
+      border: 'border-green-500/20',
+    },
+    {
+      id: 'photographer',
+      label: 'Fotógrafo',
+      icon: Camera,
+      desc: 'Vendo minhas fotos',
+      color: 'text-purple-500',
+      bg: 'bg-purple-500/10',
+      border: 'border-purple-500/20',
+    },
+    {
+      id: 'driver',
+      label: 'Motorista',
+      icon: Car,
+      desc: 'Transporte de atletas',
+      color: 'text-orange-500',
+      bg: 'bg-orange-500/10',
+      border: 'border-orange-500/20',
+    },
+    {
+      id: 'health',
+      label: 'Saúde',
+      icon: HeartPulse,
+      desc: 'Nutri, Fisio, Psicólogo',
+      color: 'text-red-500',
+      bg: 'bg-red-500/10',
+      border: 'border-red-500/20',
+    },
+  ]
+
+  const handleContinue = () => {
+    if (selected) {
+      localStorage.setItem('userType', selected)
+      navigate('/home')
+    }
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col py-10 px-6 animate-fade-in relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
-
-      <div className="flex justify-center mb-8 relative z-10">
-        <img
-          src={logoUrl}
-          alt="Goplay App"
-          className="h-10 w-auto object-contain"
-        />
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Header */}
+      <div className="p-6 flex justify-center border-b border-border/40">
+        <img src={logoUrl} alt="Goplay" className="h-6 w-auto object-contain" />
       </div>
 
-      <div className="max-w-md mx-auto w-full relative z-10">
-        <div className="text-center mb-10">
-          <h1 className="text-2xl font-bold mb-2">Quem é você no jogo?</h1>
+      <div className="flex-1 p-6 flex flex-col max-w-md mx-auto w-full">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold mb-2">Quem é você?</h1>
           <p className="text-muted-foreground">
-            Escolha o perfil que melhor descreve sua atividade.
+            Escolha o perfil que melhor se adapta aos seus objetivos no Goplay.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-4">
-          {profileTypes.map((profile) => (
+        <div className="grid grid-cols-2 gap-3 mb-8">
+          {profiles.map((profile) => (
             <button
               key={profile.id}
-              onClick={() => handleSelect(profile.id)}
-              className="flex items-center p-4 bg-secondary/30 hover:bg-secondary border border-border/50 rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98] group text-left"
+              onClick={() => setSelected(profile.id)}
+              className={cn(
+                'relative flex flex-col items-start p-4 rounded-xl border-2 transition-all duration-200 text-left hover:shadow-md',
+                selected === profile.id
+                  ? `border-primary bg-primary/5 ring-2 ring-primary/20`
+                  : 'border-border bg-card hover:bg-secondary/50',
+              )}
             >
-              <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center shadow-sm group-hover:bg-primary/10 transition-colors mr-4">
-                <profile.icon className="h-6 w-6 text-primary" />
+              <div
+                className={cn('p-2 rounded-lg mb-3', profile.bg, profile.color)}
+              >
+                <profile.icon className="h-6 w-6" />
               </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-foreground">
-                  {profile.label}
-                </h3>
-                <p className="text-xs text-muted-foreground">
-                  {profile.description}
-                </p>
-              </div>
-              <div className="w-6 h-6 rounded-full border-2 border-muted group-hover:border-primary group-hover:bg-primary/20 transition-all" />
+              <span className="font-bold text-sm block mb-1">
+                {profile.label}
+              </span>
+              <span className="text-xs text-muted-foreground leading-tight">
+                {profile.desc}
+              </span>
             </button>
           ))}
+        </div>
+
+        <div className="mt-auto">
+          <Button
+            className="w-full h-12 rounded-full text-base font-bold shadow-lg"
+            disabled={!selected}
+            onClick={handleContinue}
+          >
+            Continuar como{' '}
+            {profiles.find((p) => p.id === selected)?.label || ''}
+          </Button>
         </div>
       </div>
     </div>
