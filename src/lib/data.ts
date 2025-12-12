@@ -173,22 +173,73 @@ export const mockVideos = [
 
 export const mockEvents = [
   {
-    id: 1,
+    id: '1',
     title: 'Copa Regional de Futsal',
     date: '15 Ago',
     location: 'São Paulo, SP',
     image: 'https://img.usecurling.com/p/400/200?q=futsal%20court',
     organizer: 'Liga SP',
     price: 'R$ 50,00',
+    description:
+      'Participe da maior copa regional de futsal amador de São Paulo. Equipes de toda a região disputando o troféu.',
   },
   {
-    id: 2,
+    id: '2',
     title: 'Maratona da Cidade',
     date: '22 Set',
     location: 'Rio de Janeiro, RJ',
     image: 'https://img.usecurling.com/p/400/200?q=marathon%20runners',
     organizer: 'Run Brasil',
     price: 'R$ 120,00',
+    description:
+      'Desafie seus limites na Maratona da Cidade. Percurso plano e visual incrível da orla carioca.',
+  },
+]
+
+export const mockJobs = [
+  {
+    id: '1',
+    title: 'Treinador Sub-15',
+    company: 'Clube Atlético',
+    location: 'São Paulo, SP',
+    type: 'Presencial',
+    description:
+      'Procuramos treinador com experiência em categorias de base para assumir a equipe Sub-15. Necessário licença C da CBF.',
+    requirements: [
+      'Licença C CBF',
+      'Experiência prévia',
+      'Disponibilidade à tarde',
+    ],
+    salary: 'A combinar',
+  },
+  {
+    id: '2',
+    title: 'Fisioterapeuta Esportivo',
+    company: 'Clinica Move',
+    location: 'Rio de Janeiro, RJ',
+    type: 'Presencial',
+    description:
+      'Vaga para fisioterapeuta especializado em reabilitação de atletas de alto rendimento.',
+    requirements: [
+      'Pós-graduação em Fisioterapia Esportiva',
+      'Registro no CREFITO',
+    ],
+    salary: 'R$ 4.500,00',
+  },
+  {
+    id: '3',
+    title: 'Analista de Desempenho',
+    company: 'TechSports',
+    location: 'Remoto',
+    type: 'Remoto',
+    description:
+      'Trabalhe com análise de dados de partidas de futebol. Vaga 100% remota.',
+    requirements: [
+      'Conhecimento em Python',
+      'Paixão por futebol',
+      'Inglês intermediário',
+    ],
+    salary: 'R$ 5.000,00',
   },
 ]
 
@@ -313,3 +364,137 @@ export const mockProfiles: ProfileData[] = [
     ],
   },
 ]
+
+// Chat Data
+export interface ChatMessage {
+  id: string
+  senderId: string
+  text?: string
+  type: 'text' | 'image' | 'video' | 'audio' | 'document'
+  mediaUrl?: string
+  fileName?: string
+  timestamp: string
+  isMe: boolean
+}
+
+export interface Chat {
+  id: string
+  name: string
+  avatar: string
+  type: 'direct' | 'group' | 'event' | 'job'
+  lastMessage: string
+  lastMessageTime: string
+  unreadCount: number
+  online?: boolean
+}
+
+export const mockChats: Chat[] = [
+  {
+    id: 'user-2',
+    name: 'Clube Atlético Central',
+    avatar: 'https://img.usecurling.com/i?q=shield&shape=fill&color=violet',
+    type: 'direct',
+    lastMessage: 'Quando podemos agendar a visita?',
+    lastMessageTime: '10:30',
+    unreadCount: 2,
+    online: true,
+  },
+  {
+    id: 'user-3',
+    name: 'Roberto Mendes',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=45',
+    type: 'direct',
+    lastMessage: 'Obrigado pelas dicas!',
+    lastMessageTime: 'Ontem',
+    unreadCount: 0,
+    online: false,
+  },
+  {
+    id: 'group-1',
+    name: 'Pelada de Quinta',
+    avatar:
+      'https://img.usecurling.com/i?q=soccer%20ball&shape=fill&color=green',
+    type: 'group',
+    lastMessage: 'João: Quem vai levar o colete?',
+    lastMessageTime: '09:15',
+    unreadCount: 5,
+  },
+  {
+    id: 'event-1',
+    name: 'Chat: Copa Regional',
+    avatar: 'https://img.usecurling.com/i?q=trophy&shape=fill&color=gold',
+    type: 'event',
+    lastMessage: 'Admin: Tabelas liberadas!',
+    lastMessageTime: '11:00',
+    unreadCount: 1,
+  },
+  {
+    id: 'job-1',
+    name: 'Vaga: Treinador Sub-15',
+    avatar: 'https://img.usecurling.com/i?q=briefcase&shape=fill&color=blue',
+    type: 'job',
+    lastMessage: 'Recrutador: Recebemos seu currículo.',
+    lastMessageTime: 'Seg',
+    unreadCount: 0,
+  },
+]
+
+export const getMockMessages = (chatId: string): ChatMessage[] => {
+  return [
+    {
+      id: '1',
+      senderId: 'them',
+      text: 'Olá! Tudo bem por aí?',
+      type: 'text',
+      timestamp: '10:00',
+      isMe: false,
+    },
+    {
+      id: '2',
+      senderId: 'me',
+      text: 'Tudo ótimo! E com você?',
+      type: 'text',
+      timestamp: '10:02',
+      isMe: true,
+    },
+    {
+      id: '3',
+      senderId: 'them',
+      text: 'Aqui está o vídeo do treino de ontem.',
+      type: 'text',
+      timestamp: '10:05',
+      isMe: false,
+    },
+    {
+      id: '4',
+      senderId: 'them',
+      type: 'video',
+      mediaUrl: 'https://img.usecurling.com/p/300/200?q=soccer%20video',
+      timestamp: '10:05',
+      isMe: false,
+    },
+    {
+      id: '5',
+      senderId: 'me',
+      type: 'audio',
+      timestamp: '10:06',
+      isMe: true,
+    },
+    {
+      id: '6',
+      senderId: 'them',
+      text: 'Pode me enviar o regulamento?',
+      type: 'text',
+      timestamp: '10:10',
+      isMe: false,
+    },
+    {
+      id: '7',
+      senderId: 'me',
+      type: 'document',
+      fileName: 'Regulamento_2024.pdf',
+      timestamp: '10:12',
+      isMe: true,
+    },
+  ]
+}

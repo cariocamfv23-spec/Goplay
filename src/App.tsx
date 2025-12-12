@@ -19,6 +19,9 @@ import Marketplace from './pages/marketplace/Marketplace'
 import JobsList from './pages/jobs/JobsList'
 import Settings from './pages/settings/Settings'
 import NotFound from './pages/NotFound'
+import EventDetails from './pages/explore/EventDetails'
+import JobDetails from './pages/jobs/JobDetails'
+import NewChat from './pages/messages/NewChat'
 
 const App = () => (
   <BrowserRouter
@@ -38,11 +41,14 @@ const App = () => (
           <Route path="/home" element={<Home />} />
           <Route path="/move" element={<Move />} />
           <Route path="/explore" element={<Explore />} />
+          <Route path="/events/:id" element={<EventDetails />} />
           <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/jobs" element={<JobsList />} />
+          <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/profile/:id" element={<Profile />} />
           <Route path="/messages" element={<MessagesList />} />
           <Route path="/messages/:id" element={<ChatRoom />} />
+          <Route path="/messages/new" element={<NewChat />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
 

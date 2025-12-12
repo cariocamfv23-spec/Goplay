@@ -2,41 +2,25 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { MapPin, Building2 } from 'lucide-react'
+import { mockJobs } from '@/lib/data'
+import { useNavigate } from 'react-router-dom'
 
 const JobsList = () => {
-  const jobs = [
-    {
-      id: 1,
-      title: 'Treinador Sub-15',
-      company: 'Clube Atlético',
-      location: 'São Paulo, SP',
-      type: 'Presencial',
-    },
-    {
-      id: 2,
-      title: 'Fisioterapeuta Esportivo',
-      company: 'Clinica Move',
-      location: 'Rio de Janeiro, RJ',
-      type: 'Presencial',
-    },
-    {
-      id: 3,
-      title: 'Analista de Desempenho',
-      company: 'TechSports',
-      location: 'Remoto',
-      type: 'Remoto',
-    },
-  ]
+  const navigate = useNavigate()
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-4 space-y-4 pb-20">
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-xl font-bold">Vagas Recentes</h2>
         <Button variant="link">Ver todas</Button>
       </div>
 
-      {jobs.map((job) => (
-        <Card key={job.id} className="border-none shadow-sm">
+      {mockJobs.map((job) => (
+        <Card
+          key={job.id}
+          className="border-none shadow-sm cursor-pointer hover:bg-secondary/10 transition-colors"
+          onClick={() => navigate(`/jobs/${job.id}`)}
+        >
           <CardContent className="p-4">
             <div className="flex justify-between items-start mb-2">
               <h3 className="font-bold text-lg">{job.title}</h3>

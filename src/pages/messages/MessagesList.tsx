@@ -1,59 +1,145 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
-import { Search } from 'lucide-react'
+import {
+  Search,
+  PenSquare,
+  Users,
+  MessageCircle,
+  Briefcase,
+  Trophy,
+} from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { mockChats, Chat } from '@/lib/data'
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Badge } from '@/components/ui/badge'
 
 const MessagesList = () => {
   const navigate = useNavigate()
-  const chats = Array.from({ length: 10 }).map((_, i) => ({
-    id: i,
-    name: `User ${i + 1}`,
-    lastMessage: i % 2 === 0 ? 'Beleza, combinado!' : 'Qual o horário do jogo?',
-    time: '10:30',
-    unread: i < 2,
-  }))
+  const [search, setSearch] = useState('')
+  const [filter, setFilter] = useState<'all' | 'groups' | 'contexts'>('all')
+
+  const filteredChats = mockChats.filter((chat) => {
+    const matchesSearch = chat.name.toLowerCase().includes(search.toLowerCase())
+    if (!matchesSearch) return false
+
+    if (filter === 'groups') return chat.type === 'group'
+    if (filter === 'contexts')
+      return chat.type === 'event' || chat.type === 'job'
+    return true
+  })
+
+  const getChatIcon = (type: Chat['type']) => {
+    switch (type) {
+      case 'group':
+        return <Users className="h-3 w-3" />
+      case 'event':
+        return <Trophy className="h-3 w-3" />
+      case 'job':
+        return <Briefcase className="h-3 w-3" />
+      default:
+        return null
+    }
+  }
 
   return (
-    <div className="p-4">
-      <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Pesquisar conversas"
-          className="pl-9 bg-secondary border-none rounded-xl"
-        />
+    <div className="pb-20 min-h-screen bg-background">
+      <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-md pt-4 px-4 pb-2 border-b border-border/50">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold tracking-tight">Mensagens</h1>
+          <Button
+            size="icon"
+            className="rounded-full shadow-md"
+            onClick={() => navigate('/messages/new')}
+          >
+            <PenSquare className="h-5 w-5" />
+          </Button>
+        </div>
+
+        <div className="relative mb-4">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Pesquisar conversas..."
+            className="pl-9 bg-secondary border-none rounded-xl"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
+        <Tabs
+          defaultValue="all"
+          className="w-full"
+          onValueChange={(v) => setFilter(v as any)}
+        >
+          <TabsList className="w-full grid grid-cols-3 rounded-xl bg-secondary/50">
+            <TabsTrigger value="all" className="rounded-lg">
+              Todas
+            </TabsTrigger>
+            <TabsTrigger value="groups" className="rounded-lg">
+              Grupos
+            </TabsTrigger>
+            <TabsTrigger value="contexts" className="rounded-lg">
+              Eventos/Vagas
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
 
-      <div className="space-y-2">
-        {chats.map((chat) => (
+      <div className="px-2 mt-2">
+        {filteredChats.map((chat) => (
           <div
             key={chat.id}
-            className="flex items-center gap-3 p-3 hover:bg-secondary/50 rounded-xl cursor-pointer transition-colors"
+            className="flex items-center gap-3 p-3 hover:bg-secondary/30 rounded-xl cursor-pointer transition-all active:scale-[0.99]"
             onClick={() => navigate(`/messages/${chat.id}`)}
           >
-            <Avatar className="h-12 w-12 border border-border">
-              <AvatarImage
-                src={`https://img.usecurling.com/ppl/thumbnail?gender=male&seed=${chat.id}`}
-              />
-              <AvatarFallback>U{chat.id}</AvatarFallback>
-            </Avatar>
+            <div className="relative">
+              <Avatar className="h-14 w-14 border-2 border-border">
+                <AvatarImage src={chat.avatar} />
+                <AvatarFallback>{chat.name[0]}</AvatarFallback>
+              </Avatar>
+              {chat.type !== 'direct' && (
+                <div className="absolute -bottom-1 -right-1 bg-background p-0.5 rounded-full border border-border">
+                  <div className="h-5 w-5 bg-secondary rounded-full flex items-center justify-center text-foreground">
+                    {getChatIcon(chat.type)}
+                  </div>
+                </div>
+              )}
+              {chat.online && chat.type === 'direct' && (
+                <div className="absolute bottom-1 right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-background" />
+              )}
+            </div>
+
             <div className="flex-1 min-w-0">
               <div className="flex justify-between items-baseline mb-1">
-                <h3 className="font-semibold truncate">{chat.name}</h3>
-                <span className="text-xs text-muted-foreground">
-                  {chat.time}
+                <h3 className="font-semibold truncate text-base">
+                  {chat.name}
+                </h3>
+                <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
+                  {chat.lastMessageTime}
                 </span>
               </div>
               <p
-                className={`text-sm truncate ${chat.unread ? 'font-bold text-foreground' : 'text-muted-foreground'}`}
+                className={`text-sm truncate ${chat.unreadCount > 0 ? 'font-semibold text-foreground' : 'text-muted-foreground'}`}
               >
                 {chat.lastMessage}
               </p>
             </div>
-            {chat.unread && (
-              <div className="h-2.5 w-2.5 bg-primary rounded-full shrink-0"></div>
+            {chat.unreadCount > 0 && (
+              <div className="min-w-[20px] h-5 px-1.5 bg-primary rounded-full flex items-center justify-center">
+                <span className="text-[10px] font-bold text-white">
+                  {chat.unreadCount}
+                </span>
+              </div>
             )}
           </div>
         ))}
+        {filteredChats.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-12 text-center opacity-50">
+            <MessageCircle className="h-12 w-12 mb-2" />
+            <p>Nenhuma conversa encontrada</p>
+          </div>
+        )}
       </div>
     </div>
   )

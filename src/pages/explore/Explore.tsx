@@ -4,8 +4,10 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { mockEvents } from '@/lib/data'
+import { useNavigate } from 'react-router-dom'
 
 const Explore = () => {
+  const navigate = useNavigate()
   const categories = [
     'Atletas',
     'Clubes',
@@ -16,7 +18,7 @@ const Explore = () => {
   ]
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="p-4 space-y-6 pb-20">
       {/* Search Header */}
       <div className="flex gap-2">
         <div className="relative flex-1">
@@ -56,7 +58,8 @@ const Explore = () => {
           {mockEvents.map((event) => (
             <Card
               key={event.id}
-              className="overflow-hidden border-none shadow-md"
+              className="overflow-hidden border-none shadow-md cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => navigate(`/events/${event.id}`)}
             >
               <div className="relative h-32 bg-gray-200">
                 <img
@@ -78,7 +81,7 @@ const Explore = () => {
                     {event.price}
                   </span>
                   <Button size="sm" className="rounded-full h-8">
-                    Inscrever-se
+                    Detalhes
                   </Button>
                 </div>
               </CardContent>
