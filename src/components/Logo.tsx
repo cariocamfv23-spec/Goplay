@@ -8,7 +8,7 @@ interface LogoProps extends React.ImgHTMLAttributes<HTMLImageElement> {
 
 export const Logo = ({
   className,
-  alt = 'Goplay Logo',
+  alt = 'Goplay App Logo',
   ...props
 }: LogoProps) => {
   const { logoUrl } = useBrandingStore()
@@ -19,17 +19,18 @@ export const Logo = ({
     setSrc(logoUrl)
   }, [logoUrl])
 
+  const handleError = () => {
+    if (src !== defaultLogo) {
+      setSrc(defaultLogo)
+    }
+  }
+
   return (
     <img
       src={src}
       alt={alt}
       className={cn('object-contain', className)}
-      onError={() => {
-        // Fallback to defaultLogo if current src fails
-        if (src !== defaultLogo) {
-          setSrc(defaultLogo)
-        }
-      }}
+      onError={handleError}
       {...props}
     />
   )

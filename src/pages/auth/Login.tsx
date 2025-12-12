@@ -16,8 +16,7 @@ const Login = () => {
     setLoading(true)
     setTimeout(() => {
       setLoading(false)
-      // Simulate login success
-      localStorage.setItem('userType', 'athlete') // Default mock user type
+      localStorage.setItem('userType', 'athlete')
       navigate('/home')
     }, 1500)
   }

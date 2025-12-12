@@ -8,13 +8,12 @@ interface AppIconProps extends React.ImgHTMLAttributes<HTMLImageElement> {
 
 export const AppIcon = ({
   className,
-  alt = 'Goplay Icon',
+  alt = 'Goplay App Icon',
   ...props
 }: AppIconProps) => {
   const { iconUrl } = useBrandingStore()
   const [src, setSrc] = useState(iconUrl)
 
-  // Sync with store changes
   useEffect(() => {
     setSrc(iconUrl)
   }, [iconUrl])
@@ -25,7 +24,6 @@ export const AppIcon = ({
       alt={alt}
       className={cn('object-contain', className)}
       onError={() => {
-        // Fallback to defaultIcon if current src fails
         if (src !== defaultIcon) {
           setSrc(defaultIcon)
         }

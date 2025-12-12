@@ -1,40 +1,28 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { BottomNav } from './BottomNav'
 import { TopBar } from './TopBar'
+import { BottomNav } from './BottomNav'
 
 export default function Layout() {
   const location = useLocation()
-  const path = location.pathname
 
-  // Routes where we typically hide the global layout elements
-  const isSplash = path === '/'
-  const isAuth = [
-    '/login',
-    '/register',
-    '/onboarding',
-    '/profile-selection',
-  ].some((p) => path.startsWith(p))
+  // Define paths where BottomNav should be hidden
+  const hideBottomNavPaths = [
+    '/messages/', // Hide on chat rooms (except list)
+    '/driver/active',
+  ]
 
-  // Move usually has its own fullscreen layout, but spec says Global Layout Structure.
-  // We keep bottom nav for easy navigation but might hide top bar or make it transparent.
-  const isMove = path === '/move'
-
-  // Spec says: "Top App Bar... visible when navigating deeper".
-  const showTopBar = !isSplash && !isAuth && !isMove
-
-  // Bottom Nav visible on main tabs
-  const showBottomNav = !isSplash && !isAuth
+  const shouldHideBottomNav =
+    hideBottomNavPaths.some(
+      (path) => location.pathname.includes(path) && location.pathname !== path,
+    ) || location.pathname.includes('/messages/') // Specific check for messages sub-routes
 
   return (
-    <main className="flex flex-col min-h-screen bg-background relative">
-      {showTopBar && <TopBar />}
-
-      {/* For MOVE page, we want it to be full screen, potentially behind bottom nav */}
-      <div className={`flex-1 ${showBottomNav && !isMove ? 'pb-0' : ''}`}>
+    <div className="min-h-screen bg-background flex flex-col relative">
+      <TopBar />
+      <main className="flex-1 w-full pb-16">
         <Outlet />
-      </div>
-
-      {showBottomNav && <BottomNav />}
-    </main>
+      </main>
+      {!shouldHideBottomNav && <BottomNav />}
+    </div>
   )
 }

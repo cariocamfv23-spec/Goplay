@@ -11,11 +11,14 @@ export function TopBar() {
   const isProfile = location.pathname.includes('/profile')
   const isMarket = location.pathname.includes('/marketplace')
 
+  // Pages where we don't show the back button (Main tabs)
   const showBack =
     location.pathname !== '/home' &&
     location.pathname !== '/move' &&
     location.pathname !== '/explore' &&
-    location.pathname !== '/messages'
+    location.pathname !== '/messages' &&
+    location.pathname !== '/jobs' &&
+    location.pathname !== '/marketplace'
 
   return (
     <div className="sticky top-0 z-40 w-full h-16 bg-background/80 backdrop-blur-xl border-b border-border/40 flex items-center justify-between px-4 transition-all shadow-sm">
@@ -33,9 +36,10 @@ export function TopBar() {
 
         <Link
           to="/home"
-          className="flex items-center py-2 transition-opacity hover:opacity-80"
+          className="flex items-center py-2 transition-opacity hover:opacity-80 gap-2"
         >
           <Logo className="h-8 w-auto drop-shadow-sm" />
+          <span className="font-bold text-lg hidden xs:block">Goplay</span>
         </Link>
       </div>
 

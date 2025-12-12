@@ -1,6 +1,6 @@
 import { mockPosts, mockStories } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Plus, Video, Zap } from 'lucide-react'
+import { Plus, Video } from 'lucide-react'
 import { PostCard } from '@/components/PostCard'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { CreatePostFab } from '@/components/CreatePostFab'
@@ -12,8 +12,8 @@ const Home = () => {
 
   return (
     <div className="pb-20 relative bg-background min-h-screen">
-      {/* Stories Section */}
-      <div className="pt-2 pb-2 bg-background border-b border-border/40 sticky top-14 z-30 shadow-sm backdrop-blur-md bg-background/90">
+      {/* Stories Section - Adjusted top to 16 to match TopBar height */}
+      <div className="pt-2 pb-2 bg-background border-b border-border/40 sticky top-16 z-30 shadow-sm backdrop-blur-md bg-background/90">
         <ScrollArea className="w-full whitespace-nowrap">
           <div className="flex w-max space-x-4 p-2 px-4">
             {/* My Story */}
