@@ -809,3 +809,108 @@ export const mockComments: Comment[] = [
     ],
   },
 ]
+
+export const mockNutritionPartners = mockNutrition
+
+export const getMockMessages = (chatId: string) => [
+  {
+    id: 'm1',
+    text: 'Olá! Tudo bem?',
+    senderId: 'other',
+    timestamp: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
+    isMe: false,
+  },
+  {
+    id: 'm2',
+    text: 'Tudo ótimo, e com você?',
+    senderId: 'me',
+    timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
+    isMe: true,
+  },
+  {
+    id: 'm3',
+    text: 'Como vai o treino?',
+    senderId: 'other',
+    timestamp: new Date(Date.now() - 1000 * 60 * 10).toISOString(),
+    isMe: false,
+  },
+]
+
+export const mockCourts = mockVenues
+
+export const mockRewards = [
+  {
+    id: 'r1',
+    name: 'Desconto 10% - Nike Store',
+    price: 500,
+    image: 'https://img.usecurling.com/i?q=discount&shape=fill&color=red',
+    category: 'Voucher',
+  },
+  {
+    id: 'r2',
+    name: 'Camiseta Oficial Goplay',
+    price: 2500,
+    image: 'https://img.usecurling.com/p/300/300?q=tshirt&color=black',
+    category: 'Produto',
+  },
+  {
+    id: 'r3',
+    name: '1 Mês Grátis - GymPass',
+    price: 1500,
+    image: 'https://img.usecurling.com/i?q=gym&shape=fill&color=blue',
+    category: 'Serviço',
+  },
+]
+
+export const mockRankings = [
+  {
+    id: 1,
+    position: 1,
+    user: {
+      name: 'Michael Jordan',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99',
+    },
+    points: 15420,
+    league: 'Lenda',
+  },
+  {
+    id: 2,
+    position: 2,
+    user: {
+      name: 'Serena Williams',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=98',
+    },
+    points: 14200,
+    league: 'Lenda',
+  },
+  {
+    id: 3,
+    position: 3,
+    user: {
+      name: 'Usain Bolt',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=97',
+    },
+    points: 13500,
+    league: 'Diamante',
+  },
+  {
+    id: 4,
+    position: 4,
+    user: {
+      name: 'Marta Silva',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=96',
+    },
+    points: 12100,
+    league: 'Diamante',
+  },
+  {
+    id: 5,
+    position: 5,
+    user: {
+      name: 'LeBron James',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=95',
+    },
+    points: 11800,
+    league: 'Platina',
+  },
+]
