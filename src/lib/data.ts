@@ -369,3 +369,269 @@ export const mockProfiles = [
     },
   },
 ]
+
+// Categories for photographers
+export const photographerCategories = [
+  'Esportes',
+  'Eventos',
+  'Ensaios',
+  'Produtos',
+  'Aéreos',
+  'Retratos',
+]
+
+// Events
+export const mockEvents = [
+  {
+    id: 1,
+    title: 'Campeonato de Futsal Amador',
+    date: '15 Dez, 14:00',
+    location: 'Arena Central',
+    image: 'https://img.usecurling.com/p/400/200?q=futsal%20match',
+    price: 50.0,
+    organizer: 'Liga SP',
+    category: 'Futebol',
+  },
+  {
+    id: 2,
+    title: 'Maratona da Cidade',
+    date: '20 Dez, 07:00',
+    location: 'Parque Ibirapuera',
+    image: 'https://img.usecurling.com/p/400/200?q=marathon%20running',
+    price: 80.0,
+    organizer: 'Runners Club',
+    category: 'Corrida',
+  },
+  {
+    id: 3,
+    title: 'Torneio de Tênis Open',
+    date: '18 Dez, 09:00',
+    location: 'Clube Pinheiros',
+    image: 'https://img.usecurling.com/p/400/200?q=tennis%20match',
+    price: 120.0,
+    organizer: 'Tennis Pro',
+    category: 'Tênis',
+  },
+]
+
+// Venues
+export const mockVenues = [
+  {
+    id: 1,
+    name: 'Arena Central',
+    location: 'Centro, São Paulo',
+    rating: 4.8,
+    reviews: 124,
+    image: 'https://img.usecurling.com/p/400/300?q=soccer%20field',
+    sports: ['Futebol', 'Vôlei'],
+    price: 120.0,
+    features: ['Estacionamento', 'Vestiário', 'Bar'],
+  },
+  {
+    id: 2,
+    name: 'Quadras do Parque',
+    location: 'Vila Mariana, SP',
+    rating: 4.5,
+    reviews: 89,
+    image: 'https://img.usecurling.com/p/400/300?q=tennis%20court',
+    sports: ['Tênis', 'Beach Tennis'],
+    price: 80.0,
+    features: ['Iluminação', 'Aluguel de Material'],
+  },
+  {
+    id: 3,
+    name: 'Ginásio Poliesportivo',
+    location: 'Tatuapé, SP',
+    rating: 4.6,
+    reviews: 56,
+    image: 'https://img.usecurling.com/p/400/300?q=basketball%20court',
+    sports: ['Basquete', 'Futsal', 'Vôlei'],
+    price: 150.0,
+    features: ['Arquibancada', 'Placar Eletrônico'],
+  },
+]
+
+// Gyms
+export const mockGyms = [
+  {
+    id: 1,
+    name: 'Academia Power',
+    location: 'Vila Madalena, SP',
+    rating: 4.9,
+    reviews: 210,
+    image: 'https://img.usecurling.com/p/400/300?q=gym%20interior',
+    features: ['Musculação', 'Crossfit', 'Lutas', 'Aulas Coletivas'],
+    monthlyPrice: 99.9,
+  },
+  {
+    id: 2,
+    name: 'Smart Fit',
+    location: 'Paulista, SP',
+    rating: 4.5,
+    reviews: 500,
+    image: 'https://img.usecurling.com/p/400/300?q=fitness%20center',
+    features: ['Musculação', 'Cardio', 'Smart Box'],
+    monthlyPrice: 119.9,
+  },
+  {
+    id: 3,
+    name: 'CrossLife Box',
+    location: 'Moema, SP',
+    rating: 4.8,
+    reviews: 85,
+    image: 'https://img.usecurling.com/p/400/300?q=crossfit%20box',
+    features: ['Crossfit', 'LPO', 'Ginástica'],
+    monthlyPrice: 250.0,
+  },
+]
+
+// Nutrition Partners
+export const mockNutritionPartners = [
+  {
+    id: 1,
+    name: 'NutriSports',
+    type: 'Loja de Suplementos',
+    location: 'Pinheiros, SP',
+    rating: 4.7,
+    reviews: 45,
+    image: 'https://img.usecurling.com/p/400/300?q=supplements%20store',
+    delivery: true,
+    discount: '10% OFF',
+  },
+  {
+    id: 2,
+    name: 'Green Healthy Food',
+    type: 'Restaurante Saudável',
+    location: 'Itaim Bibi, SP',
+    rating: 4.9,
+    reviews: 120,
+    image: 'https://img.usecurling.com/p/400/300?q=healthy%20food',
+    delivery: true,
+    discount: 'Entrega Grátis',
+  },
+  {
+    id: 3,
+    name: 'Dr. Nutri',
+    type: 'Consultório',
+    location: 'Jardins, SP',
+    rating: 5.0,
+    reviews: 30,
+    image: 'https://img.usecurling.com/p/400/300?q=nutritionist%20office',
+    delivery: false,
+    discount: 'Primeira Consulta 50%',
+  },
+]
+
+// Clinics
+export const mockClinics = [
+  {
+    id: 1,
+    name: 'Clínica do Atleta',
+    specialty: 'Fisioterapia Esportiva',
+    location: 'Jardins, SP',
+    rating: 5.0,
+    reviews: 80,
+    image: 'https://img.usecurling.com/p/400/300?q=physiotherapy%20clinic',
+    services: ['Fisioterapia', 'Osteopatia', 'Massagem Esportiva'],
+  },
+  {
+    id: 2,
+    name: 'OrtoSports',
+    specialty: 'Ortopedia',
+    location: 'Moema, SP',
+    rating: 4.8,
+    reviews: 55,
+    image: 'https://img.usecurling.com/p/400/300?q=orthopedic%20clinic',
+    services: ['Consultas', 'Exames de Imagem', 'Infiltrações'],
+  },
+  {
+    id: 3,
+    name: 'CardioFit',
+    specialty: 'Cardiologia Esportiva',
+    location: 'Brooklin, SP',
+    rating: 4.9,
+    reviews: 40,
+    image: 'https://img.usecurling.com/p/400/300?q=medical%20office',
+    services: ['Teste Ergométrico', 'Ecocardiograma', 'Check-up'],
+  },
+]
+
+// Jobs
+export const mockJobs = [
+  {
+    id: 1,
+    title: 'Atacante para Time Amador',
+    team: 'Real Madruga',
+    location: 'São Paulo, SP',
+    salary: 'Ajuda de custo',
+    type: 'Part-time',
+    image: 'https://img.usecurling.com/i?q=soccer%20jersey&shape=fill',
+    postedAt: '2 dias atrás',
+  },
+  {
+    id: 2,
+    title: 'Professor de Tênis',
+    team: 'Clube Pinheiros',
+    location: 'São Paulo, SP',
+    salary: 'R$ 3.000 - R$ 5.000',
+    type: 'Full-time',
+    image: 'https://img.usecurling.com/i?q=tennis%20racket&shape=fill',
+    postedAt: '5 dias atrás',
+  },
+  {
+    id: 3,
+    title: 'Goleiro para Campeonato',
+    team: 'Várzea FC',
+    location: 'Osasco, SP',
+    salary: 'R$ 100 por jogo',
+    type: 'Freelance',
+    image: 'https://img.usecurling.com/i?q=goalkeeper%20gloves&shape=fill',
+    postedAt: '1 semana atrás',
+  },
+]
+
+// Drivers
+export const mockDrivers = [
+  {
+    id: 1,
+    name: 'Roberto Dias',
+    rating: 4.9,
+    car: 'Sedan Preto',
+    plate: 'ABC-1234',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=30',
+    distance: '2 min',
+    rides: 1540,
+  },
+  {
+    id: 2,
+    name: 'Fernanda Lima',
+    rating: 5.0,
+    car: 'SUV Branco',
+    plate: 'XYZ-9876',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=31',
+    distance: '5 min',
+    rides: 890,
+  },
+]
+
+// Ride History
+export const mockRides = [
+  {
+    id: 1,
+    date: '10 Dez, 18:30',
+    from: 'Casa',
+    to: 'Arena Central',
+    price: 15.9,
+    driver: 'Roberto Dias',
+    status: 'Completed',
+  },
+  {
+    id: 2,
+    date: '08 Dez, 20:15',
+    from: 'Academia Power',
+    to: 'Casa',
+    price: 12.5,
+    driver: 'Fernanda Lima',
+    status: 'Completed',
+  },
+]
