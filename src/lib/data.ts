@@ -68,6 +68,101 @@ export const mockProfiles = [
 
 export const currentUser = mockProfiles[0]
 
+export const mockStories = [
+  {
+    id: 'story-1',
+    user: mockProfiles[0],
+    image: 'https://img.usecurling.com/p/400/800?q=soccer%20training',
+    viewed: false,
+  },
+  {
+    id: 'story-2',
+    user: mockProfiles[1],
+    image: 'https://img.usecurling.com/p/400/800?q=gym%20workout',
+    viewed: true,
+  },
+  {
+    id: 'story-3',
+    user: mockProfiles[2],
+    image: 'https://img.usecurling.com/p/400/800?q=running',
+    viewed: false,
+  },
+  {
+    id: 'story-4',
+    user: mockProfiles[3],
+    image: 'https://img.usecurling.com/p/400/800?q=tennis%20serve',
+    viewed: false,
+  },
+]
+
+export const mockPosts = [
+  {
+    id: 'post-1',
+    user: mockProfiles[0],
+    content: 'Ótimo treino hoje! Preparando para o campeonato. ⚽️🚀',
+    image: 'https://img.usecurling.com/p/600/600?q=soccer%20field%20player',
+    likes: 124,
+    comments: 12,
+    time: '2h atrás',
+    liked: true,
+  },
+  {
+    id: 'post-2',
+    user: mockProfiles[1],
+    content: 'Nova dieta disponível para meus alunos. Foco total! 🥗💪',
+    image: 'https://img.usecurling.com/p/600/600?q=healthy%20food',
+    likes: 89,
+    comments: 5,
+    time: '4h atrás',
+    liked: false,
+  },
+  {
+    id: 'post-3',
+    user: mockProfiles[4],
+    content: 'Corrida matinal de 10km. Recorde pessoal batido! 🏃‍♀️🔥',
+    image: 'https://img.usecurling.com/p/600/600?q=runner%20morning',
+    likes: 256,
+    comments: 34,
+    time: '6h atrás',
+    liked: true,
+  },
+]
+
+export const mockVideos = [
+  {
+    id: 'vid-1',
+    title: 'Treino de Dribles Avançados',
+    thumbnail: 'https://img.usecurling.com/p/400/225?q=soccer%20dribble',
+    duration: '10:30',
+    views: '1.2k',
+    author: 'Canal do Futebol',
+  },
+  {
+    id: 'vid-2',
+    title: 'Yoga para Atletas - Recuperação',
+    thumbnail: 'https://img.usecurling.com/p/400/225?q=yoga%20pose',
+    duration: '25:00',
+    views: '850',
+    author: 'Yoga Life',
+  },
+  {
+    id: 'vid-3',
+    title: 'Melhores Momentos da Final',
+    thumbnail: 'https://img.usecurling.com/p/400/225?q=soccer%20goal',
+    duration: '05:45',
+    views: '5.6k',
+    author: 'Liga Esportiva',
+  },
+  {
+    id: 'vid-4',
+    title: 'Dicas de Nutrição Pré-Treino',
+    thumbnail: 'https://img.usecurling.com/p/400/225?q=nutrition%20tips',
+    duration: '15:20',
+    views: '3.1k',
+    author: 'NutriFit',
+  },
+]
+
 export const mockChats = [
   {
     id: 'chat-1',
@@ -304,6 +399,15 @@ export const mockPhotographers = [
   },
 ]
 
+export const photographerCategories = [
+  { id: 'all', label: 'Todos' },
+  { id: 'soccer', label: 'Futebol' },
+  { id: 'basketball', label: 'Basquete' },
+  { id: 'running', label: 'Corrida' },
+  { id: 'tennis', label: 'Tênis' },
+  { id: 'others', label: 'Outros' },
+]
+
 export const mockProducts = [
   {
     id: 'prod-1',
@@ -525,3 +629,71 @@ export const mockDriverMetrics = {
   hours: 32,
   rating: 4.9,
 }
+
+export const mockScheduledRides = [
+  {
+    id: 'ride-sched-1',
+    date: '2024-06-20',
+    time: '19:00',
+    from: 'Casa',
+    to: 'Arena Society Pro',
+    driver: {
+      name: 'João Motorista',
+      rating: 4.9,
+      car: 'Sedan Prata',
+      plate: 'ABC-1234',
+    },
+    price: 25.5,
+    status: 'confirmed',
+  },
+  {
+    id: 'ride-sched-2',
+    date: '2024-06-22',
+    time: '08:30',
+    from: 'Casa',
+    to: 'Parque Central',
+    driver: null,
+    price: 32.0,
+    status: 'pending',
+  },
+]
+
+export const mockPaymentMethods = [
+  {
+    id: 'card-1',
+    type: 'credit',
+    last4: '4242',
+    brand: 'mastercard',
+    expiry: '12/28',
+    isDefault: true,
+  },
+  {
+    id: 'card-2',
+    type: 'debit',
+    last4: '8888',
+    brand: 'visa',
+    expiry: '05/26',
+    isDefault: false,
+  },
+]
+
+export const mockInvitations = [
+  {
+    id: 'inv-1',
+    type: 'match',
+    title: 'Futebol de Quinta',
+    from: mockProfiles[1],
+    date: '2024-06-25',
+    time: '20:00',
+    location: 'Arena Society',
+    status: 'pending',
+  },
+  {
+    id: 'inv-2',
+    type: 'team',
+    title: 'Junte-se ao time',
+    from: mockProfiles[2],
+    teamName: 'Os Imbatíveis',
+    status: 'pending',
+  },
+]
