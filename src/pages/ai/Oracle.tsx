@@ -1,186 +1,163 @@
 import { Button } from '@/components/ui/button'
-import {
-  ArrowLeft,
-  Sparkles,
-  TrendingUp,
-  Target,
-  BarChart2,
-  Watch,
-  Info,
-} from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { ArrowLeft, Sparkles, TrendingUp, Brain, Star } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockOracle } from '@/lib/data'
 import {
-  BarChart,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart'
+import {
   Bar,
+  BarChart,
   XAxis,
-  CartesianGrid,
+  YAxis,
   ResponsiveContainer,
-  Tooltip,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  Radar,
 } from 'recharts'
-import { Card, CardContent } from '@/components/ui/card'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import useDeviceStore from '@/stores/useDeviceStore'
 
 export default function Oracle() {
   const navigate = useNavigate()
-  const { connectedDevice } = useDeviceStore()
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white pb-20 animate-fade-in">
-      <div className="p-4 border-b border-zinc-800 flex items-center gap-4 bg-zinc-950 sticky top-0 z-10">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate(-1)}
-          className="text-white hover:bg-zinc-800"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <h1 className="text-lg font-bold flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-purple-500" /> Oráculo Goplay
-        </h1>
+    <div className="min-h-screen bg-background pb-20">
+      {/* Header */}
+      <div className="relative h-48 bg-gradient-to-br from-primary via-purple-900 to-black p-4 flex flex-col justify-between overflow-hidden">
+        <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        <div className="relative z-10 flex items-start justify-between">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate(-1)}
+            className="text-white hover:bg-white/10 rounded-full"
+          >
+            <ArrowLeft className="h-6 w-6" />
+          </Button>
+          <div className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 text-xs text-gold font-bold flex items-center gap-1">
+            <Sparkles className="h-3 w-3" /> PREVISÃO 2026
+          </div>
+        </div>
+        <div className="relative z-10">
+          <h1 className="text-3xl font-black text-white mb-1">
+            Oráculo Goplay
+          </h1>
+          <p className="text-white/70 text-sm">IA Preditiva de Carreira</p>
+        </div>
       </div>
 
-      <div className="p-4 space-y-6">
-        {connectedDevice ? (
-          <div className="flex items-center justify-center gap-2 bg-purple-900/20 text-purple-300 py-2 rounded-full border border-purple-500/30 text-xs">
-            <Watch className="h-3 w-3" />
-            Dados em tempo real de {connectedDevice.name}
-          </div>
-        ) : (
-          <div
-            className="flex items-center justify-center gap-2 bg-zinc-900 text-zinc-400 py-2 rounded-full border border-zinc-800 text-xs cursor-pointer hover:bg-zinc-800"
-            onClick={() => navigate('/devices')}
-          >
-            <Info className="h-3 w-3" />
-            Conecte seu dispositivo para maior precisão
-          </div>
-        )}
-
-        <div className="text-center py-6">
-          <div className="inline-block relative">
-            <div className="h-32 w-32 rounded-full border-4 border-purple-500/30 flex items-center justify-center bg-purple-900/10 mb-4 animate-[pulse_3s_infinite]">
-              <span className="text-5xl font-black text-purple-400">
-                {connectedDevice
-                  ? mockOracle.potentialIndex + 2
-                  : mockOracle.potentialIndex}
-              </span>
-            </div>
-            {connectedDevice && (
-              <div className="absolute top-0 right-0 bg-green-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                +2%
+      <div className="p-4 space-y-6 -mt-6 relative z-20">
+        {/* Potential Card */}
+        <Card className="border-none shadow-lg bg-card/95 backdrop-blur-sm">
+          <CardContent className="p-6 flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground font-medium">
+                Índice de Potencial
+              </p>
+              <div className="text-4xl font-black text-primary mt-1">
+                {mockOracle.potentialIndex}
               </div>
-            )}
-          </div>
-          <h2 className="text-2xl font-bold mb-1">Potencial Goplay</h2>
-          <p className="text-zinc-400 text-sm">
-            Baseado na análise de 128 vídeos{' '}
-            {connectedDevice ? 'e dados biométricos' : ''}.
-          </p>
-        </div>
+            </div>
+            <div className="h-16 w-16 rounded-full border-4 border-primary/20 flex items-center justify-center relative">
+              <Brain className="h-8 w-8 text-primary" />
+              <div className="absolute inset-0 border-4 border-primary border-t-transparent rounded-full animate-spin-slow" />
+            </div>
+          </CardContent>
+        </Card>
 
-        <Tabs defaultValue="projection">
-          <TabsList className="w-full bg-zinc-900 border-zinc-800">
-            <TabsTrigger
-              value="projection"
-              className="data-[state=active]:bg-purple-900/30 data-[state=active]:text-purple-300"
-            >
-              Projeção
-            </TabsTrigger>
-            <TabsTrigger
-              value="skills"
-              className="data-[state=active]:bg-purple-900/30 data-[state=active]:text-purple-300"
-            >
-              Habilidades
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="projection">
-            <Card className="bg-zinc-900 border-zinc-800 mt-4">
-              <CardContent className="p-6">
-                <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-green-500" /> Evolução de
-                  Carreira
-                </h3>
-                <div className="h-64 w-full">
+        {/* Prediction Chart */}
+        <div className="space-y-2">
+          <h3 className="font-bold flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-gold" /> Projeção de Evolução
+          </h3>
+          <Card>
+            <CardContent className="p-4 pt-6">
+              <div className="h-[200px] w-full">
+                <ChartContainer
+                  config={{
+                    score: { label: 'Pontuação', color: 'hsl(var(--primary))' },
+                  }}
+                >
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={mockOracle.comparisonData}>
-                      <CartesianGrid
-                        strokeDasharray="3 3"
-                        stroke="#333"
-                        vertical={false}
-                      />
                       <XAxis
                         dataKey="subject"
-                        stroke="#666"
-                        fontSize={12}
                         tickLine={false}
                         axisLine={false}
+                        fontSize={12}
                       />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: '#111',
-                          border: 'none',
-                        }}
-                        cursor={{ fill: '#333' }}
+                      <YAxis hide />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Bar
+                        dataKey="A"
+                        fill="var(--color-score)"
+                        radius={[4, 4, 0, 0]}
                       />
-                      <Bar dataKey="A" fill="#a855f7" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
+                </ChartContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
-            <Card className="bg-zinc-900 border-zinc-800 mt-4">
-              <CardContent className="p-6">
-                <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <Target className="h-5 w-5 text-blue-500" /> Posição Ideal
-                </h3>
-                <p className="text-xl font-bold text-white mb-2">
-                  {mockOracle.predictedPosition}
-                </p>
-                <p className="text-sm text-zinc-400">
-                  A IA identificou que suas características de velocidade e
-                  visão de jogo se encaixam perfeitamente nesta posição.
-                </p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="skills">
-            <Card className="bg-zinc-900 border-zinc-800 mt-4">
-              <CardContent className="p-6 space-y-4">
-                <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <BarChart2 className="h-5 w-5 text-orange-500" /> Previsão de
-                  Skills
-                </h3>
-                {mockOracle.futureSkills.map((skill, i) => (
-                  <div key={i} className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-zinc-300">{skill.name}</span>
-                      <span className="font-bold text-purple-400">
-                        {skill.current} ➔ {skill.projected}
+        {/* Future Skills */}
+        <div className="space-y-2">
+          <h3 className="font-bold flex items-center gap-2">
+            <Star className="h-5 w-5 text-purple-500" /> Habilidades Futuras
+          </h3>
+          <div className="grid gap-3">
+            {mockOracle.futureSkills.map((skill) => (
+              <Card key={skill.name} className="overflow-hidden">
+                <div className="p-4 flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-sm">{skill.name}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-xs text-muted-foreground">
+                        Atual: {skill.current}
+                      </span>
+                      <span className="text-xs text-primary font-bold">
+                        → Projeção: {skill.projected}
                       </span>
                     </div>
-                    <div className="h-2 w-full bg-zinc-800 rounded-full overflow-hidden flex">
-                      <div
-                        style={{ width: `${(skill.current / 100) * 100}%` }}
-                        className="h-full bg-zinc-500"
-                      />
-                      <div
-                        style={{
-                          width: `${((skill.projected - skill.current) / 100) * 100}%`,
-                        }}
-                        className="h-full bg-purple-600 animate-pulse"
-                      />
-                    </div>
                   </div>
-                ))}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                  <div className="h-10 w-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-500 font-bold text-xs">
+                    +{skill.projected - skill.current}
+                  </div>
+                </div>
+                <div className="h-1 bg-secondary w-full">
+                  <div
+                    className="h-full bg-primary transition-all"
+                    style={{ width: `${(skill.projected / 100) * 100}%` }}
+                  />
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        <Card className="bg-gradient-to-r from-zinc-900 to-zinc-800 border-none text-white">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4">
+              <div className="p-3 bg-white/10 rounded-xl">
+                <Sparkles className="h-6 w-6 text-gold" />
+              </div>
+              <div>
+                <h4 className="font-bold text-lg text-gold">
+                  Sugestão do Oráculo
+                </h4>
+                <p className="text-sm text-zinc-300 mt-1 leading-relaxed">
+                  Para atingir seu potencial máximo como{' '}
+                  {mockOracle.predictedPosition}, foque em melhorar sua visão de
+                  jogo nos próximos 3 meses.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

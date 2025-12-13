@@ -1,271 +1,142 @@
 import { Button } from '@/components/ui/button'
-import {
-  ArrowLeft,
-  Play,
-  Box,
-  Camera,
-  Video,
-  Download,
-  Wand2,
-  Zap,
-  Flame,
-  Grid,
-} from 'lucide-react'
+import { Card } from '@/components/ui/card'
+import { Slider } from '@/components/ui/slider'
+import { ArrowLeft, Play, RotateCcw, Box, Layers, Video } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { Slider } from '@/components/ui/slider'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
-} from '@/components/ui/dialog'
-import { toast } from 'sonner'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { AppIcon } from '@/components/AppIcon'
+import { Badge } from '@/components/ui/badge'
 
 export default function GhostPlay() {
   const navigate = useNavigate()
-  const [view, setView] = useState<'normal' | 'drone' | 'tactical'>('normal')
   const [isPlaying, setIsPlaying] = useState(false)
-  const [showExport, setShowExport] = useState(false)
-  const [exportFormat, setExportFormat] = useState('glb')
-  const [effect, setEffect] = useState<
-    'none' | 'fire' | 'matrix' | 'lightning'
-  >('none')
-  const [showEffects, setShowEffects] = useState(false)
-
-  const handleExport = () => {
-    toast.success('Modelo 3D exportado com sucesso!', {
-      description: `Arquivo salvo como lance_fantasma.${exportFormat}`,
-    })
-    setShowExport(false)
-  }
-
-  const getEffectOverlay = () => {
-    switch (effect) {
-      case 'fire':
-        return (
-          <div className="absolute inset-0 bg-gradient-to-t from-orange-500/20 to-transparent pointer-events-none mix-blend-screen" />
-        )
-      case 'matrix':
-        return (
-          <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/100/100?q=matrix%20code&color=green')] opacity-20 pointer-events-none" />
-        )
-      case 'lightning':
-        return (
-          <div className="absolute inset-0 border-4 border-blue-400/50 animate-pulse pointer-events-none" />
-        )
-      default:
-        return null
-    }
-  }
+  const [progress, setProgress] = useState(30)
 
   return (
-    <div className="h-screen w-full bg-black text-white flex flex-col">
-      <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between z-20 bg-gradient-to-b from-black/80 to-transparent">
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate(-1)}
-            className="text-white hover:bg-white/10"
-          >
-            <ArrowLeft className="h-6 w-6" />
-          </Button>
+    <div className="min-h-screen bg-black text-white flex flex-col animate-fade-in">
+      {/* Header */}
+      <div className="p-4 flex items-center justify-between bg-zinc-900/50 backdrop-blur-md border-b border-white/10 sticky top-0 z-10">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate(-1)}
+          className="text-white hover:bg-white/10 rounded-full"
+        >
+          <ArrowLeft className="h-6 w-6" />
+        </Button>
+        <div className="flex flex-col items-center">
           <h1 className="text-lg font-bold flex items-center gap-2">
-            <AppIcon className="h-6 w-6" /> Lance Fantasma 3D
+            <Box className="h-5 w-5 text-primary" /> Ghost Play 3D
           </h1>
+          <span className="text-[10px] text-zinc-400">
+            Reconstrução Espacial
+          </span>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-white hover:bg-white/10 rounded-full"
+        >
+          <Layers className="h-6 w-6" />
+        </Button>
+      </div>
+
+      {/* 3D Viewer Area */}
+      <div className="flex-1 relative bg-gradient-to-b from-zinc-900 to-black overflow-hidden flex items-center justify-center">
+        {/* Mock 3D Grid */}
+        <div className="absolute inset-0 opacity-20 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:40px_40px] [transform:perspective(500px)_rotateX(60deg)] origin-bottom" />
+
+        {/* Mock Players (3D effect) */}
+        <div className="relative w-full max-w-md aspect-square">
+          <img
+            src="https://img.usecurling.com/p/800/800?q=3d%20soccer%20simulation%20wireframe&color=black"
+            alt="3D Simulation"
+            className="w-full h-full object-contain opacity-80 mix-blend-screen animate-pulse"
+          />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-primary/20 rounded-full blur-3xl animate-pulse" />
         </div>
 
-        <div className="flex gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className={`text-white hover:text-gold ${showEffects ? 'bg-white/10' : ''}`}
-            onClick={() => setShowEffects(!showEffects)}
+        {/* Overlay Info */}
+        <div className="absolute top-4 left-4 right-4 flex justify-between pointer-events-none">
+          <Badge
+            variant="outline"
+            className="text-primary border-primary bg-primary/10 backdrop-blur-sm"
           >
-            <Wand2 className="h-6 w-6" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white hover:text-primary"
-            onClick={() => setShowExport(true)}
+            Câmera Tática
+          </Badge>
+          <Badge
+            variant="outline"
+            className="text-white border-white/20 bg-black/40 backdrop-blur-sm"
           >
-            <Download className="h-6 w-6" />
-          </Button>
+            Velocidade: 1.0x
+          </Badge>
         </div>
       </div>
 
-      {showEffects && (
-        <div className="absolute top-20 right-4 z-30 bg-black/80 backdrop-blur-md border border-white/10 rounded-xl p-3 flex flex-col gap-2 animate-in slide-in-from-right-10">
-          <p className="text-xs font-bold text-muted-foreground mb-1 uppercase text-center">
-            Efeitos Visuais
-          </p>
-          <Button
-            variant={effect === 'none' ? 'default' : 'ghost'}
-            size="sm"
-            className="justify-start gap-2"
-            onClick={() => setEffect('none')}
-          >
-            <Box className="h-4 w-4" /> Padrão
-          </Button>
-          <Button
-            variant={effect === 'fire' ? 'default' : 'ghost'}
-            size="sm"
-            className="justify-start gap-2 text-orange-400 hover:text-orange-300"
-            onClick={() => setEffect('fire')}
-          >
-            <Flame className="h-4 w-4" /> Fogo
-          </Button>
-          <Button
-            variant={effect === 'lightning' ? 'default' : 'ghost'}
-            size="sm"
-            className="justify-start gap-2 text-blue-400 hover:text-blue-300"
-            onClick={() => setEffect('lightning')}
-          >
-            <Zap className="h-4 w-4" /> Energia
-          </Button>
-          <Button
-            variant={effect === 'matrix' ? 'default' : 'ghost'}
-            size="sm"
-            className="justify-start gap-2 text-green-400 hover:text-green-300"
-            onClick={() => setEffect('matrix')}
-          >
-            <Grid className="h-4 w-4" /> Matrix
-          </Button>
-        </div>
-      )}
-
-      <div className="flex-1 relative bg-zinc-900 overflow-hidden">
-        <img
-          src={
-            view === 'drone'
-              ? 'https://img.usecurling.com/p/800/600?q=soccer%20field%20top%20view&dpr=2'
-              : view === 'tactical'
-                ? 'https://img.usecurling.com/p/800/600?q=soccer%20tactics%20board&dpr=2'
-                : 'https://img.usecurling.com/p/800/600?q=soccer%20action%203d%20render&dpr=2'
-          }
-          className={`w-full h-full object-cover transition-all duration-500 ${isPlaying ? 'scale-105' : ''}`}
-          alt="3D Replay"
-        />
-
-        {getEffectOverlay()}
-
-        <div className="absolute inset-0 pointer-events-none">
-          <div
-            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-2 rounded-full animate-pulse opacity-50 ${effect === 'fire' ? 'border-orange-500' : 'border-primary/30'}`}
+      {/* Controls */}
+      <div className="bg-zinc-900 border-t border-white/10 p-6 pb-8 space-y-6">
+        <div className="flex items-center gap-4">
+          <span className="text-xs font-mono text-zinc-500">00:04:12</span>
+          <Slider
+            value={[progress]}
+            max={100}
+            step={1}
+            className="flex-1"
+            onValueChange={(vals) => setProgress(vals[0])}
           />
-          <div className="absolute bottom-32 left-8 bg-black/60 backdrop-blur-md p-2 rounded-lg border border-white/10">
-            <p className="text-xs text-primary font-bold">VELOCIDADE DA BOLA</p>
-            <p className="text-xl font-bold">108 km/h</p>
-          </div>
-          <div className="absolute top-24 right-8 bg-black/60 backdrop-blur-md p-2 rounded-lg border border-white/10">
-            <p className="text-xs text-gold font-bold">TRAJETÓRIA</p>
-            <p className="text-xl font-bold">Curva 35°</p>
-          </div>
+          <span className="text-xs font-mono text-zinc-500">00:10:00</span>
         </div>
 
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 bg-black/40 backdrop-blur-md p-2 rounded-full border border-white/10 pointer-events-auto">
+        <div className="flex items-center justify-center gap-6">
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-12 w-12 rounded-full border-white/20 text-white hover:bg-white/10 hover:text-white"
+          >
+            <RotateCcw className="h-5 w-5" />
+          </Button>
+
           <Button
             size="icon"
-            variant={view === 'normal' ? 'default' : 'ghost'}
-            className="rounded-full h-10 w-10"
-            onClick={() => setView('normal')}
+            className="h-16 w-16 rounded-full bg-primary hover:bg-primary/90 shadow-[0_0_20px_hsl(var(--primary)/0.5)]"
+            onClick={() => setIsPlaying(!isPlaying)}
+          >
+            {isPlaying ? (
+              <Box className="h-8 w-8 fill-current" />
+            ) : (
+              <Play className="h-8 w-8 ml-1 fill-current" />
+            )}
+          </Button>
+
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-12 w-12 rounded-full border-white/20 text-white hover:bg-white/10 hover:text-white"
           >
             <Video className="h-5 w-5" />
           </Button>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2">
           <Button
-            size="icon"
-            variant={view === 'drone' ? 'default' : 'ghost'}
-            className="rounded-full h-10 w-10"
-            onClick={() => setView('drone')}
+            variant="ghost"
+            className="text-xs text-zinc-400 hover:text-white hover:bg-white/5"
           >
-            <Camera className="h-5 w-5" />
+            Ponto de Vista
           </Button>
           <Button
-            size="icon"
-            variant={view === 'tactical' ? 'default' : 'ghost'}
-            className="rounded-full h-10 w-10"
-            onClick={() => setView('tactical')}
+            variant="ghost"
+            className="text-xs text-zinc-400 hover:text-white hover:bg-white/5"
           >
-            <Box className="h-5 w-5" />
+            Mapa de Calor
+          </Button>
+          <Button
+            variant="ghost"
+            className="text-xs text-zinc-400 hover:text-white hover:bg-white/5"
+          >
+            Estatísticas
           </Button>
         </div>
       </div>
-
-      <div className="h-32 bg-zinc-950 border-t border-zinc-800 p-4 pb-8 z-20">
-        <div className="flex items-center gap-4 mb-4">
-          <Button
-            size="icon"
-            className="rounded-full bg-white text-black hover:bg-zinc-200"
-            onClick={() => setIsPlaying(!isPlaying)}
-          >
-            <Play className={`h-5 w-5 ml-1 ${isPlaying ? 'hidden' : ''}`} />
-            <div
-              className={`h-4 w-4 bg-black rounded-sm ${!isPlaying ? 'hidden' : ''}`}
-            />
-          </Button>
-          <Slider defaultValue={[33]} max={100} step={1} className="flex-1" />
-          <span className="text-xs font-mono text-zinc-400">00:04 / 00:12</span>
-        </div>
-      </div>
-
-      <Dialog open={showExport} onOpenChange={setShowExport}>
-        <DialogContent className="bg-zinc-900 border-zinc-800 text-white">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Box className="h-5 w-5 text-gold" /> Exportar Modelo 3D
-            </DialogTitle>
-            <DialogDescription>
-              Baixe o arquivo 3D para usar em outros softwares de edição ou
-              visualizadores.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
-            <label className="text-sm font-medium mb-2 block text-zinc-300">
-              Formato do Arquivo
-            </label>
-            <Select value={exportFormat} onValueChange={setExportFormat}>
-              <SelectTrigger className="bg-zinc-800 border-zinc-700 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-zinc-800 border-zinc-700 text-white">
-                <SelectItem value="glb">GLB (Recomendado)</SelectItem>
-                <SelectItem value="fbx">FBX</SelectItem>
-                <SelectItem value="obj">OBJ</SelectItem>
-                <SelectItem value="usdz">USDZ (Apple)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button
-                variant="ghost"
-                className="text-zinc-400 hover:text-white"
-              >
-                Cancelar
-              </Button>
-            </DialogClose>
-            <Button
-              onClick={handleExport}
-              className="bg-primary text-white hover:bg-primary/90"
-            >
-              <Download className="mr-2 h-4 w-4" /> Exportar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

@@ -1,80 +1,124 @@
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Target, Scan, Zap } from 'lucide-react'
+import { ArrowLeft, Scan, Target, Zap, Shield, Info } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { Badge } from '@/components/ui/badge'
+import { useState, useEffect } from 'react'
 
 export default function ArenaMode() {
   const navigate = useNavigate()
+  const [scanning, setScanning] = useState(true)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setScanning(false), 2000)
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
-    <div className="h-screen w-full bg-black relative overflow-hidden">
-      {/* AR Background Feed Simulation */}
-      <img
-        src="https://img.usecurling.com/p/800/1200?q=futsal%20court%20perspective"
-        className="absolute inset-0 w-full h-full object-cover opacity-80"
-        alt="AR View"
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
+    <div className="min-h-screen bg-black relative overflow-hidden flex flex-col">
+      {/* Camera Feed Mock */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="https://img.usecurling.com/p/600/1000?q=soccer%20field%20pov&dpr=2"
+          alt="AR View"
+          className="w-full h-full object-cover opacity-60"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
+      </div>
 
-      {/* AR HUD Overlay */}
-      <div className="absolute inset-0 pointer-events-none">
-        {/* Header HUD */}
-        <div className="absolute top-0 left-0 right-0 p-4 pt-12 flex justify-between items-start">
+      {/* AR Overlays */}
+      {!scanning && (
+        <>
+          <div className="absolute top-1/4 left-1/4 z-10 animate-fade-in">
+            <div className="relative">
+              <div className="absolute -inset-4 border-2 border-primary/50 rounded-full animate-ping" />
+              <div className="bg-black/60 backdrop-blur-md border border-primary/50 p-2 rounded-lg text-white text-xs">
+                <div className="flex items-center gap-1 font-bold text-primary mb-1">
+                  <Target className="h-3 w-3" /> 92% Precisão
+                </div>
+                <p>Lucas Oliveira</p>
+              </div>
+              <div className="w-0.5 h-8 bg-primary/50 mx-auto" />
+            </div>
+          </div>
+
+          <div className="absolute top-1/3 right-1/4 z-10 animate-fade-in delay-150">
+            <div className="relative">
+              <div className="bg-black/60 backdrop-blur-md border border-red-500/50 p-2 rounded-lg text-white text-xs">
+                <div className="flex items-center gap-1 font-bold text-red-500 mb-1">
+                  <Zap className="h-3 w-3" /> Cansaço
+                </div>
+                <p>Marcos Silva</p>
+              </div>
+              <div className="w-0.5 h-8 bg-red-500/50 mx-auto" />
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* HUD UI */}
+      <div className="relative z-20 flex-1 flex flex-col p-4">
+        <div className="flex justify-between items-start">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate(-1)}
-            className="text-white hover:bg-white/10 pointer-events-auto"
+            className="text-white hover:bg-white/10 rounded-full"
           >
             <ArrowLeft className="h-6 w-6" />
           </Button>
-          <Badge
-            variant="outline"
-            className="bg-primary/20 text-primary border-primary animate-pulse"
+          <div className="bg-black/40 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 text-xs text-white flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />{' '}
+            AO VIVO
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:bg-white/10 rounded-full"
           >
-            <Zap className="h-3 w-3 mr-1" /> AR ATIVADO
-          </Badge>
-          <div className="bg-black/40 backdrop-blur-md px-3 py-1 rounded text-right border-r-2 border-gold">
-            <div className="text-[10px] text-zinc-300">PRECISÃO</div>
-            <div className="text-lg font-bold text-white font-mono">92%</div>
+            <Info className="h-6 w-6" />
+          </Button>
+        </div>
+
+        {/* Center Scanner Reticle */}
+        <div className="flex-1 flex items-center justify-center pointer-events-none">
+          <div
+            className={`relative w-64 h-64 border border-white/20 rounded-lg transition-all duration-500 ${scanning ? 'scale-100 opacity-100' : 'scale-110 opacity-50'}`}
+          >
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary" />
+            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-primary" />
+            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-primary" />
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary" />
+
+            {scanning && (
+              <div className="absolute inset-0 bg-primary/5 animate-pulse flex items-center justify-center">
+                <Scan className="h-12 w-12 text-primary animate-spin-slow" />
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Center Reticle */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <Scan className="h-64 w-64 text-white/30 stroke-1" />
-          <Target className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 w-8 text-primary animate-ping" />
-        </div>
-
-        {/* AR Court Lines */}
-        <svg className="absolute inset-0 w-full h-full opacity-50">
-          <path
-            d="M0,500 L400,300 L800,500"
-            stroke="cyan"
-            strokeWidth="2"
-            fill="none"
-            className="animate-pulse"
-          />
-        </svg>
-
-        {/* Floating Stats */}
-        <div className="absolute top-1/3 right-10 flex flex-col items-end gap-2">
-          <div className="bg-black/60 backdrop-blur text-white px-3 py-1 rounded-l-lg border-l-2 border-primary transform translate-x-4 animate-in slide-in-from-right duration-700">
-            <span className="text-xs text-primary font-bold">DISTÂNCIA</span>
-            <span className="block font-mono">12.4m</span>
+        {/* Bottom Stats */}
+        <div className="grid grid-cols-2 gap-4 mt-auto">
+          <div className="bg-black/60 backdrop-blur-xl border border-white/10 p-4 rounded-2xl">
+            <div className="flex items-center gap-2 text-primary mb-1">
+              <Target className="h-4 w-4" />
+              <span className="text-xs font-bold uppercase">Posse de Bola</span>
+            </div>
+            <div className="text-2xl font-bold text-white">58%</div>
+            <div className="w-full bg-white/10 h-1 mt-2 rounded-full overflow-hidden">
+              <div className="bg-primary h-full w-[58%]" />
+            </div>
           </div>
-          <div className="bg-black/60 backdrop-blur text-white px-3 py-1 rounded-l-lg border-l-2 border-gold transform translate-x-4 animate-in slide-in-from-right duration-1000 delay-200">
-            <span className="text-xs text-gold font-bold">ÂNGULO</span>
-            <span className="block font-mono">45°</span>
+          <div className="bg-black/60 backdrop-blur-xl border border-white/10 p-4 rounded-2xl">
+            <div className="flex items-center gap-2 text-blue-400 mb-1">
+              <Shield className="h-4 w-4" />
+              <span className="text-xs font-bold uppercase">Defesa</span>
+            </div>
+            <div className="text-2xl font-bold text-white">Ótima</div>
+            <div className="w-full bg-white/10 h-1 mt-2 rounded-full overflow-hidden">
+              <div className="bg-blue-400 h-full w-[85%]" />
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* Bottom Controls */}
-      <div className="absolute bottom-0 left-0 right-0 p-8 pb-12 flex justify-center gap-6 pointer-events-auto">
-        <Button className="h-16 w-16 rounded-full bg-white/20 backdrop-blur-md border-2 border-white hover:bg-white/30 transition-all">
-          <div className="h-12 w-12 rounded-full bg-red-600 animate-pulse" />
-        </Button>
       </div>
     </div>
   )

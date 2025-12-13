@@ -1,162 +1,91 @@
-import { useState, useRef, useEffect } from 'react'
-import { Heart, MessageCircle, Share2, Music2, Plus } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { mockVideos } from '@/lib/data'
-import { AiAnalysisDrawer } from '@/components/AiAnalysisDrawer'
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Heart, MessageCircle, Share2, Music2, Plus } from 'lucide-react'
+import { useState } from 'react'
 
 export default function Move() {
   const [activeVideo, setActiveVideo] = useState(0)
-  const [drawerOpen, setDrawerOpen] = useState(false)
-  const [selectedVideo, setSelectedVideo] = useState<
-    (typeof mockVideos)[0] | null
-  >(null)
-  const containerRef = useRef<HTMLDivElement>(null)
 
-  // Intersection Observer for snap scrolling detection
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = Number(entry.target.getAttribute('data-index'))
-            setActiveVideo(index)
-          }
-        })
-      },
-      { threshold: 0.6 },
-    )
-
-    const elements = document.querySelectorAll('.move-video-container')
-    elements.forEach((el) => observer.observe(el))
-
-    return () => observer.disconnect()
-  }, [])
-
-  const handleOpenAiAnalysis = (video: (typeof mockVideos)[0]) => {
-    setSelectedVideo(video)
-    setDrawerOpen(true)
-  }
+  // Usually this would be implemented with a swiper/carousel for vertical scrolling
+  // For simplicity, we show one immersive video mock
+  const video = mockVideos[0]
 
   return (
-    <div
-      className="h-screen w-full bg-black overflow-y-scroll snap-y snap-mandatory no-scrollbar"
-      ref={containerRef}
-    >
-      {/* Top Overlay */}
-      <div className="fixed top-0 left-0 w-full z-20 flex justify-center pt-8 bg-gradient-to-b from-black/60 to-transparent pb-10 pointer-events-none">
-        <div className="flex gap-4 text-white font-bold text-base pointer-events-auto">
-          <span className="opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
-            Seguindo
-          </span>
-          <span className="opacity-100 cursor-pointer border-b-2 border-white pb-1">
-            Para Você
-          </span>
-        </div>
+    <div className="h-screen w-full bg-black relative overflow-hidden animate-fade-in">
+      {/* Video Background Mock */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src={video.thumbnail}
+          className="h-full w-full object-cover opacity-80"
+          alt="Video Content"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80" />
       </div>
 
-      {mockVideos.map((video, index) => (
-        <div
-          key={video.id}
-          data-index={index}
-          className="move-video-container h-screen w-full relative snap-start flex items-center justify-center bg-zinc-900"
-        >
-          {/* Video Placeholder (Image for now) */}
-          <img
-            src={video.thumbnail}
-            className="h-full w-full object-cover opacity-90"
-            alt="Video content"
-          />
-
-          {/* Right Action Bar */}
-          <div className="absolute right-2 bottom-24 flex flex-col items-center gap-6 z-20">
-            <div className="relative">
-              <Avatar className="h-12 w-12 border-2 border-white cursor-pointer">
-                <AvatarImage src={video.userAvatar} />
-                <AvatarFallback>U</AvatarFallback>
-              </Avatar>
-              <div className="absolute -bottom-2 inset-x-0 mx-auto bg-primary text-white h-5 w-5 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
-                <Plus className="h-3 w-3" />
-              </div>
-            </div>
-
-            <div className="flex flex-col items-center gap-1 cursor-pointer group">
-              <div className="p-3 bg-white/10 rounded-full backdrop-blur-sm group-active:scale-90 transition-transform">
-                <Heart className="h-7 w-7 text-white fill-white/20 group-hover:fill-red-500 group-hover:text-red-500 transition-colors" />
-              </div>
-              <span className="text-white text-xs font-medium shadow-black drop-shadow-md">
-                {video.likes}
-              </span>
-            </div>
-
-            <div className="flex flex-col items-center gap-1 cursor-pointer group">
-              <div className="p-3 bg-white/10 rounded-full backdrop-blur-sm group-active:scale-90 transition-transform">
-                <MessageCircle className="h-7 w-7 text-white fill-white/20" />
-              </div>
-              <span className="text-white text-xs font-medium shadow-black drop-shadow-md">
-                120
-              </span>
-            </div>
-
-            <div className="flex flex-col items-center gap-1 cursor-pointer group">
-              <div className="p-3 bg-white/10 rounded-full backdrop-blur-sm group-active:scale-90 transition-transform">
-                <Share2 className="h-7 w-7 text-white" />
-              </div>
-              <span className="text-white text-xs font-medium shadow-black drop-shadow-md">
-                {video.shares}
-              </span>
-            </div>
-
-            {/* Music Disc Animation */}
-            <div className="mt-4 animate-spin-slow">
-              <Avatar className="h-12 w-12 rounded-full bg-zinc-800 border-4 border-zinc-700 flex items-center justify-center overflow-hidden">
-                <AvatarImage
-                  src={video.userAvatar}
-                  className="h-full w-full object-cover opacity-70"
-                />
-                <AvatarFallback className="bg-zinc-800 flex items-center justify-center w-full h-full">
-                  <Music2 className="h-4 w-4 text-white/50" />
-                </AvatarFallback>
-              </Avatar>
-            </div>
-          </div>
-
-          {/* Bottom Info */}
-          <div className="absolute bottom-0 left-0 w-full p-4 pb-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10">
-            <div className="max-w-[80%]">
-              <h3 className="text-white font-bold text-lg mb-2 drop-shadow-md">
-                @{video.user}
-              </h3>
-              <p className="text-white/90 text-sm mb-3 drop-shadow-sm leading-relaxed">
-                {video.description}
-              </p>
-
-              <div className="flex items-center gap-2 text-white/80 text-xs font-medium bg-white/10 px-3 py-1.5 rounded-full w-fit backdrop-blur-md">
-                <Music2 className="h-3 w-3 animate-pulse" />
-                <span className="truncate max-w-[150px]">
-                  Som Original - {video.user}
-                </span>
-              </div>
-
-              {video.aiAction && (
-                <div className="mt-3 flex items-center gap-2">
-                  <button
-                    onClick={() => handleOpenAiAnalysis(video)}
-                    className="bg-primary/20 border border-primary/50 text-white px-3 py-1 rounded-md text-xs font-bold flex items-center gap-1 backdrop-blur-md hover:bg-primary/30 transition-colors"
-                  >
-                    ✨ AI: {video.aiAction}
-                  </button>
-                </div>
-              )}
-            </div>
+      {/* Side Actions */}
+      <div className="absolute right-4 bottom-24 flex flex-col items-center gap-6 z-20">
+        <div className="relative">
+          <Avatar className="h-12 w-12 border-2 border-white">
+            <AvatarImage src={video.author.avatar} />
+            <AvatarFallback>AU</AvatarFallback>
+          </Avatar>
+          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-primary rounded-full p-0.5">
+            <Plus className="h-3 w-3 text-white" />
           </div>
         </div>
-      ))}
 
-      <AiAnalysisDrawer
-        open={drawerOpen}
-        onOpenChange={setDrawerOpen}
-        data={selectedVideo}
-      />
+        <div className="flex flex-col items-center gap-1">
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-12 w-12 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md"
+          >
+            <Heart className="h-6 w-6" />
+          </Button>
+          <span className="text-xs font-bold text-white">12k</span>
+        </div>
+
+        <div className="flex flex-col items-center gap-1">
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-12 w-12 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md"
+          >
+            <MessageCircle className="h-6 w-6" />
+          </Button>
+          <span className="text-xs font-bold text-white">450</span>
+        </div>
+
+        <Button
+          size="icon"
+          variant="ghost"
+          className="h-12 w-12 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md"
+        >
+          <Share2 className="h-6 w-6" />
+        </Button>
+      </div>
+
+      {/* Bottom Info */}
+      <div className="absolute bottom-4 left-4 right-16 z-20 text-white pb-20">
+        <div className="flex items-center gap-2 mb-2">
+          <h3 className="font-bold text-shadow">@{video.author.name}</h3>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-6 text-[10px] border-white/50 bg-transparent text-white hover:bg-white/20 hover:text-white"
+          >
+            Seguir
+          </Button>
+        </div>
+        <p className="text-sm mb-3 line-clamp-2 text-shadow">
+          {video.title} - Olha esse lance incrível! #futebol #golaço #skills
+        </p>
+        <div className="flex items-center gap-2 text-xs opacity-90 animate-pulse">
+          <Music2 className="h-3 w-3" />
+          <span>Som original - {video.author.name}</span>
+        </div>
+      </div>
     </div>
   )
 }
