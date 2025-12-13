@@ -1,17 +1,21 @@
 import { mockPosts, mockStories } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Plus, Video } from 'lucide-react'
+import { Plus, Video, MapPin, CheckCircle } from 'lucide-react'
 import { PostCard } from '@/components/PostCard'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { CreatePostFab } from '@/components/CreatePostFab'
 import { useNavigate } from 'react-router-dom'
+import { CheckInModal } from '@/components/CheckInModal'
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
 
 const Home = () => {
   const navigate = useNavigate()
+  const [showCheckIn, setShowCheckIn] = useState(false)
 
   return (
     <div className="pb-20 relative bg-background min-h-screen animate-fade-in">
-      {/* Stories Section - Adjusted top to 16 to match TopBar height */}
+      {/* Stories Section */}
       <div className="pt-2 pb-2 bg-background border-b border-border/40 sticky top-16 z-30 shadow-sm backdrop-blur-md bg-background/90 transition-all duration-300">
         <ScrollArea className="w-full whitespace-nowrap">
           <div className="flex w-max space-x-4 p-2 px-4">
@@ -64,10 +68,10 @@ const Home = () => {
       </div>
 
       {/* Quick Actions / Highlights */}
-      <div className="p-4 pb-0 grid grid-cols-1 gap-3 animate-slide-up">
+      <div className="p-4 pb-0 grid grid-cols-2 gap-3 animate-slide-up">
         {/* MOVE Highlight */}
         <div
-          className="rounded-2xl bg-gradient-to-r from-zinc-900 to-zinc-800 p-4 text-white relative overflow-hidden shadow-lg cursor-pointer group hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
+          className="col-span-1 rounded-2xl bg-gradient-to-r from-zinc-900 to-zinc-800 p-4 text-white relative overflow-hidden shadow-lg cursor-pointer group hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
           onClick={() => navigate('/move')}
         >
           <div className="relative z-10">
@@ -75,10 +79,27 @@ const Home = () => {
               <Video className="h-5 w-5 text-primary animate-pulse" /> MOVE
             </h2>
             <p className="text-xs text-zinc-400 group-hover:text-zinc-300 transition-colors mt-1">
-              Melhores lances em alta
+              Destaques
             </p>
           </div>
           <div className="absolute -right-6 -bottom-6 h-20 w-20 bg-primary/20 rounded-full blur-2xl group-hover:bg-primary/30 transition-colors duration-500" />
+        </div>
+
+        {/* Check-in Highlight */}
+        <div
+          className="col-span-1 rounded-2xl bg-gradient-to-r from-green-900 to-green-800 p-4 text-white relative overflow-hidden shadow-lg cursor-pointer group hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
+          onClick={() => setShowCheckIn(true)}
+        >
+          <div className="relative z-10">
+            <h2 className="font-bold text-lg flex items-center gap-2">
+              <MapPin className="h-5 w-5 text-green-400 animate-bounce" />{' '}
+              Check-in
+            </h2>
+            <p className="text-xs text-green-300 group-hover:text-green-200 transition-colors mt-1">
+              Marcar presença
+            </p>
+          </div>
+          <div className="absolute -right-6 -bottom-6 h-20 w-20 bg-green-500/20 rounded-full blur-2xl group-hover:bg-green-500/30 transition-colors duration-500" />
         </div>
       </div>
 
@@ -103,6 +124,14 @@ const Home = () => {
 
       {/* Create Post FAB */}
       <CreatePostFab />
+
+      {/* Check-in Modal */}
+      <CheckInModal
+        open={showCheckIn}
+        onOpenChange={setShowCheckIn}
+        venueName="Arena Central"
+        points={50}
+      />
     </div>
   )
 }

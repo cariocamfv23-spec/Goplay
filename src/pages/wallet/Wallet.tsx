@@ -1,91 +1,72 @@
+import { mockTransactionHistory, mockCurrentUser } from '@/lib/data'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { mockTransactions } from '@/lib/data'
+import { Card, CardContent } from '@/components/ui/card'
 import {
-  ArrowLeft,
   ArrowUpRight,
-  CreditCard,
-  DollarSign,
+  ArrowDownLeft,
   Wallet as WalletIcon,
+  CreditCard,
 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
 
 export default function Wallet() {
-  const navigate = useNavigate()
-
   return (
-    <div className="min-h-screen bg-background">
-      <div className="p-4 border-b flex items-center gap-4 bg-background sticky top-0 z-10">
-        <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <h1 className="text-lg font-bold">Carteira Digital</h1>
+    <div className="min-h-screen bg-background pb-20 animate-fade-in">
+      <div className="p-6 bg-gradient-to-br from-zinc-900 to-black text-white rounded-b-3xl shadow-xl">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-xl font-bold flex items-center gap-2">
+            <WalletIcon className="h-5 w-5" /> Minha Carteira
+          </h1>
+        </div>
+
+        <div className="mb-8">
+          <p className="text-zinc-400 text-sm mb-1">Saldo disponível</p>
+          <h2 className="text-4xl font-bold">
+            R$ {mockCurrentUser.walletBalance.toFixed(2)}
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <Button className="bg-green-600 hover:bg-green-700 border-none h-12 rounded-xl text-white font-bold">
+            <ArrowDownLeft className="mr-2 h-4 w-4" /> Adicionar
+          </Button>
+          <Button
+            variant="outline"
+            className="bg-white/10 hover:bg-white/20 border-white/20 h-12 rounded-xl text-white font-bold"
+          >
+            <ArrowUpRight className="mr-2 h-4 w-4" /> Sacar
+          </Button>
+        </div>
       </div>
 
-      <div className="p-4 space-y-6">
-        {/* Balance Card */}
-        <Card className="bg-gradient-to-br from-primary to-purple-800 text-white border-none shadow-xl">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-2 mb-4 opacity-80">
-              <WalletIcon className="h-5 w-5" />
-              <span className="text-sm font-medium">Saldo Disponível</span>
-            </div>
-            <h2 className="text-4xl font-bold mb-6">R$ 1.250,00</h2>
-            <div className="grid grid-cols-2 gap-3">
-              <Button
-                variant="secondary"
-                className="w-full text-primary font-bold"
-                onClick={() => navigate('/wallet/withdraw')}
-              >
-                <ArrowUpRight className="h-4 w-4 mr-2" /> Sacar Pix
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full bg-white/10 text-white border-white/20 hover:bg-white/20"
-                onClick={() => navigate('/wallet/cards')}
-              >
-                <CreditCard className="h-4 w-4 mr-2" /> Cartões
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Transactions */}
-        <div>
-          <h3 className="font-bold text-lg mb-4">Histórico</h3>
-          <div className="space-y-4">
-            {mockTransactions.map((tx) => (
-              <div
-                key={tx.id}
-                className="flex items-center justify-between p-3 rounded-xl bg-card border border-border/50 shadow-sm"
-              >
+      <div className="p-4">
+        <h3 className="font-bold text-lg mb-4 px-1">Histórico</h3>
+        <div className="space-y-3">
+          {mockTransactionHistory.map((t) => (
+            <Card key={t.id} className="border-none shadow-sm">
+              <CardContent className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div
-                    className={`h-10 w-10 rounded-full flex items-center justify-center ${
-                      tx.type === 'received'
-                        ? 'bg-green-100 text-green-600'
-                        : 'bg-red-100 text-red-600'
-                    }`}
+                    className={`h-10 w-10 rounded-full flex items-center justify-center ${t.type === 'credit' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}
                   >
-                    <DollarSign className="h-5 w-5" />
+                    {t.type === 'credit' ? (
+                      <ArrowDownLeft className="h-5 w-5" />
+                    ) : (
+                      <ArrowUpRight className="h-5 w-5" />
+                    )}
                   </div>
                   <div>
-                    <h4 className="font-semibold text-sm">{tx.title}</h4>
-                    <p className="text-xs text-muted-foreground">{tx.date}</p>
+                    <p className="font-bold text-sm">{t.description}</p>
+                    <p className="text-xs text-muted-foreground">{t.date}</p>
                   </div>
                 </div>
                 <span
-                  className={`font-bold text-sm ${
-                    tx.type === 'received'
-                      ? 'text-green-600'
-                      : 'text-foreground'
-                  }`}
+                  className={`font-bold ${t.type === 'credit' ? 'text-green-600' : 'text-red-600'}`}
                 >
-                  {tx.type === 'received' ? '+' : '-'} {tx.amount}
+                  {t.type === 'credit' ? '+' : '-'} R$ {t.amount.toFixed(2)}
                 </span>
-              </div>
-            ))}
-          </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </div>

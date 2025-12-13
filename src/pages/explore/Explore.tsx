@@ -1,22 +1,58 @@
 import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import {
   Search,
-  Camera,
-  Calendar,
   MapPin,
   Dumbbell,
-  Leaf,
+  Apple,
   Stethoscope,
-  Globe,
+  Camera,
+  Calendar,
+  Car,
+  ShoppingBag,
+  Briefcase,
+  ChevronRight,
+  Trophy,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { Card, CardContent } from '@/components/ui/card'
 
 const categories = [
   {
+    id: 'venues',
+    label: 'Espaços',
+    icon: MapPin,
+    color: 'text-emerald-500',
+    bg: 'bg-emerald-500/10',
+    path: '/explore/venues',
+  },
+  {
+    id: 'gyms',
+    label: 'Academias',
+    icon: Dumbbell,
+    color: 'text-blue-500',
+    bg: 'bg-blue-500/10',
+    path: '/explore/gyms',
+  },
+  {
+    id: 'nutrition',
+    label: 'Nutrição',
+    icon: Apple,
+    color: 'text-green-500',
+    bg: 'bg-green-500/10',
+    path: '/explore/nutrition',
+  },
+  {
+    id: 'clinics',
+    label: 'Saúde',
+    icon: Stethoscope,
+    color: 'text-red-500',
+    bg: 'bg-red-500/10',
+    path: '/explore/clinics',
+  },
+  {
     id: 'photographers',
-    name: 'Fotógrafos',
+    label: 'Fotógrafos',
     icon: Camera,
     color: 'text-purple-500',
     bg: 'bg-purple-500/10',
@@ -24,43 +60,27 @@ const categories = [
   },
   {
     id: 'events',
-    name: 'Eventos',
+    label: 'Eventos',
     icon: Calendar,
     color: 'text-orange-500',
     bg: 'bg-orange-500/10',
     path: '/explore/events',
   },
   {
-    id: 'venues',
-    name: 'Quadras',
-    icon: MapPin,
-    color: 'text-blue-500',
-    bg: 'bg-blue-500/10',
-    path: '/explore/venues',
+    id: 'ride',
+    label: 'Transporte',
+    icon: Car,
+    color: 'text-zinc-500',
+    bg: 'bg-zinc-500/10',
+    path: '/ride/request/driver-select', // Points to ride select or request
   },
   {
-    id: 'gyms',
-    name: 'Academias',
-    icon: Dumbbell,
-    color: 'text-red-500',
-    bg: 'bg-red-500/10',
-    path: '/explore/gyms',
-  },
-  {
-    id: 'nutrition',
-    name: 'Nutrição',
-    icon: Leaf,
-    color: 'text-green-500',
-    bg: 'bg-green-500/10',
-    path: '/explore/nutrition',
-  },
-  {
-    id: 'clinics',
-    name: 'Clínicas',
-    icon: Stethoscope,
-    color: 'text-cyan-500',
-    bg: 'bg-cyan-500/10',
-    path: '/explore/clinics',
+    id: 'marketplace',
+    label: 'Loja',
+    icon: ShoppingBag,
+    color: 'text-pink-500',
+    bg: 'bg-pink-500/10',
+    path: '/marketplace',
   },
 ]
 
@@ -69,61 +89,82 @@ export default function Explore() {
 
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
-      <div className="p-4 sticky top-16 bg-background z-10 border-b">
+      <div className="sticky top-16 z-30 bg-background/80 backdrop-blur-md p-4 border-b border-border/50">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar no Goplay..."
-            className="pl-9 rounded-full bg-secondary border-none"
+            placeholder="Buscar esportes, locais, eventos..."
+            className="pl-9 rounded-full bg-secondary/50 border-transparent focus:bg-background transition-all"
           />
         </div>
       </div>
 
       <div className="p-4 space-y-6">
-        <div>
-          <h2 className="font-bold text-lg mb-4">Categorias</h2>
-          <div className="grid grid-cols-2 gap-3">
-            {categories.map((category) => (
-              <Card
-                key={category.id}
-                className="cursor-pointer hover:shadow-md transition-all border-none shadow-sm bg-secondary/20"
-                onClick={() => navigate(category.path)}
+        {/* Categories Grid */}
+        <section>
+          <h2 className="font-bold text-lg mb-4 px-1">Categorias</h2>
+          <div className="grid grid-cols-4 gap-3">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => navigate(cat.path)}
+                className="flex flex-col items-center gap-2 group"
               >
-                <CardContent className="p-4 flex flex-col items-center justify-center gap-3 text-center h-32">
-                  <div
-                    className={`h-12 w-12 rounded-full ${category.bg} flex items-center justify-center`}
-                  >
-                    <category.icon className={`h-6 w-6 ${category.color}`} />
-                  </div>
-                  <span className="font-medium text-sm">{category.name}</span>
-                </CardContent>
-              </Card>
+                <div
+                  className={`h-14 w-14 rounded-2xl flex items-center justify-center ${cat.bg} transition-transform group-hover:scale-110 group-active:scale-95`}
+                >
+                  <cat.icon className={`h-6 w-6 ${cat.color}`} />
+                </div>
+                <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+                  {cat.label}
+                </span>
+              </button>
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* International Match Teaser */}
-        <div
-          className="relative overflow-hidden rounded-2xl cursor-pointer group"
-          onClick={() => navigate('/play/international')}
+        {/* Featured Card - Uber / Ride */}
+        <Card
+          className="bg-gradient-to-r from-zinc-900 to-zinc-800 text-white border-none shadow-lg cursor-pointer hover:scale-[1.01] transition-transform"
+          onClick={() => navigate('/ride/request/driver-1')}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-indigo-900" />
-          <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/800/400?q=world%20map%20dots&color=blue')] bg-cover opacity-20" />
-          <div className="relative p-6 flex flex-col items-center text-center text-white">
-            <div className="bg-white/10 p-3 rounded-full mb-3 backdrop-blur-md">
-              <Globe className="h-8 w-8 text-blue-200" />
+          <CardContent className="p-4 flex items-center justify-between relative overflow-hidden">
+            <div className="relative z-10">
+              <h3 className="font-bold text-lg flex items-center gap-2">
+                <Car className="h-5 w-5 text-white" /> Vá de Goplay
+              </h3>
+              <p className="text-xs text-zinc-400 mt-1">
+                Solicite um motorista parceiro agora
+              </p>
             </div>
-            <h3 className="text-xl font-bold mb-1">Partidas Internacionais</h3>
-            <p className="text-sm text-blue-100 mb-4">
-              Desafie jogadores de outros países
-            </p>
-            <Button
-              variant="secondary"
-              className="rounded-full font-bold text-blue-900"
-            >
-              Jogar Agora
-            </Button>
-          </div>
+            <ChevronRight className="h-5 w-5 text-zinc-500 relative z-10" />
+            <div className="absolute right-0 bottom-0 h-24 w-24 bg-white/5 rounded-full blur-2xl transform translate-x-1/3 translate-y-1/3" />
+          </CardContent>
+        </Card>
+
+        {/* Jobs & Marketplace Banners */}
+        <div className="grid grid-cols-2 gap-4">
+          <Card
+            className="bg-blue-600 text-white border-none shadow-md cursor-pointer hover:bg-blue-700 transition-colors"
+            onClick={() => navigate('/jobs')}
+          >
+            <CardContent className="p-4">
+              <Briefcase className="h-6 w-6 mb-2 text-white/80" />
+              <h3 className="font-bold">Vagas</h3>
+              <p className="text-xs text-blue-100">Encontre oportunidades</p>
+            </CardContent>
+          </Card>
+
+          <Card
+            className="bg-gold text-black border-none shadow-md cursor-pointer hover:bg-yellow-500 transition-colors"
+            onClick={() => navigate('/ranking')}
+          >
+            <CardContent className="p-4">
+              <Trophy className="h-6 w-6 mb-2 text-black/80" />
+              <h3 className="font-bold">Ranking</h3>
+              <p className="text-xs text-black/70">Veja sua posição</p>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

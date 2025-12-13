@@ -8,15 +8,17 @@ import { PageLoader } from './components/PageLoader'
 import { BrandingProvider } from '@/stores/useBrandingStore'
 import Index from './pages/Index'
 
-// Lazy load pages for performance optimization
-// Index page is now eager loaded to improve First Contentful Paint (FCP) on landing
+// Lazy load pages
 const Login = lazy(() => import('./pages/auth/Login'))
 const Register = lazy(() => import('./pages/auth/Register'))
 const Onboarding = lazy(() => import('./pages/auth/Onboarding'))
 const ProfileSelection = lazy(() => import('./pages/auth/ProfileSelection'))
+
 const Home = lazy(() => import('./pages/home/Home'))
 const Move = lazy(() => import('./pages/move/Move'))
 const Explore = lazy(() => import('./pages/explore/Explore'))
+
+// Explore Lists
 const PhotographersList = lazy(
   () => import('./pages/explore/PhotographersList'),
 )
@@ -26,22 +28,8 @@ const GymsList = lazy(() => import('./pages/explore/GymsList'))
 const NutritionList = lazy(() => import('./pages/explore/NutritionList'))
 const ClinicsList = lazy(() => import('./pages/explore/ClinicsList'))
 
-const Profile = lazy(() => import('./pages/profile/Profile'))
-const MessagesList = lazy(() => import('./pages/messages/MessagesList'))
-const ChatRoom = lazy(() => import('./pages/messages/ChatRoom'))
-const Marketplace = lazy(() => import('./pages/marketplace/Marketplace'))
-const ProductDetails = lazy(() => import('./pages/marketplace/ProductDetails'))
-const Cart = lazy(() => import('./pages/marketplace/Cart'))
-const JobsList = lazy(() => import('./pages/jobs/JobsList'))
-const JobDetails = lazy(() => import('./pages/jobs/JobDetails'))
-const RecruiterDashboard = lazy(() => import('./pages/jobs/RecruiterDashboard'))
-const Settings = lazy(() => import('./pages/settings/Settings'))
-const NotFound = lazy(() => import('./pages/NotFound'))
+// Details
 const EventDetails = lazy(() => import('./pages/explore/EventDetails'))
-const NewChat = lazy(() => import('./pages/messages/NewChat'))
-const Ranking = lazy(() => import('./pages/gamification/Ranking'))
-
-// Detail Pages
 const VenueDetails = lazy(() => import('./pages/venues/VenueDetails'))
 const GymDetails = lazy(() => import('./pages/gyms/GymDetails'))
 const NutritionPartnerDetails = lazy(
@@ -49,7 +37,37 @@ const NutritionPartnerDetails = lazy(
 )
 const ClinicDetails = lazy(() => import('./pages/clinics/ClinicDetails'))
 
-// Notifications
+// Profile & Stats
+const Profile = lazy(() => import('./pages/profile/Profile'))
+const StatsDetail = lazy(() => import('./pages/profile/StatsDetail'))
+const Wallet = lazy(() => import('./pages/wallet/Wallet'))
+
+// Messages
+const MessagesList = lazy(() => import('./pages/messages/MessagesList'))
+const ChatRoom = lazy(() => import('./pages/messages/ChatRoom'))
+const NewChat = lazy(() => import('./pages/messages/NewChat'))
+
+// Marketplace
+const Marketplace = lazy(() => import('./pages/marketplace/Marketplace'))
+const ProductDetails = lazy(() => import('./pages/marketplace/ProductDetails'))
+const Cart = lazy(() => import('./pages/marketplace/Cart'))
+
+// Jobs
+const JobsList = lazy(() => import('./pages/jobs/JobsList'))
+const JobDetails = lazy(() => import('./pages/jobs/JobDetails'))
+const RecruiterDashboard = lazy(() => import('./pages/jobs/RecruiterDashboard'))
+
+// Services & Driver
+const RideRequest = lazy(() => import('./pages/services/RideRequest'))
+const DriverDashboard = lazy(() => import('./pages/driver/DriverDashboard'))
+const DriverRequests = lazy(() => import('./pages/driver/DriverRequests'))
+const DriverRewards = lazy(() => import('./pages/driver/DriverRewards'))
+const DriverHistory = lazy(() => import('./pages/driver/DriverHistory'))
+const DriverSettings = lazy(() => import('./pages/driver/DriverSettings'))
+
+const Settings = lazy(() => import('./pages/settings/Settings'))
+const NotFound = lazy(() => import('./pages/NotFound'))
+const Ranking = lazy(() => import('./pages/gamification/Ranking'))
 const Notifications = lazy(() => import('./pages/notifications/Notifications'))
 
 const App = () => (
@@ -70,6 +88,8 @@ const App = () => (
               <Route path="/home" element={<Home />} />
               <Route path="/move" element={<Move />} />
               <Route path="/explore" element={<Explore />} />
+
+              {/* Explore Lists Routes */}
               <Route
                 path="/explore/photographers"
                 element={<PhotographersList />}
@@ -80,9 +100,8 @@ const App = () => (
               <Route path="/explore/nutrition" element={<NutritionList />} />
               <Route path="/explore/clinics" element={<ClinicsList />} />
 
-              <Route path="/events/:id" element={<EventDetails />} />
-
               {/* Detail Routes */}
+              <Route path="/events/:id" element={<EventDetails />} />
               <Route path="/venues/:id" element={<VenueDetails />} />
               <Route path="/gyms/:id" element={<GymDetails />} />
               <Route
@@ -91,25 +110,46 @@ const App = () => (
               />
               <Route path="/clinics/:id" element={<ClinicDetails />} />
 
+              {/* Profile & Stats */}
+              <Route path="/profile/:id" element={<Profile />} />
+              <Route path="/profile/stats" element={<StatsDetail />} />
+              <Route path="/wallet" element={<Wallet />} />
+
+              {/* Messages */}
+              <Route path="/messages" element={<MessagesList />} />
+              <Route path="/messages/:id" element={<ChatRoom />} />
+              <Route path="/messages/new" element={<NewChat />} />
+
+              {/* Marketplace */}
               <Route path="/marketplace" element={<Marketplace />} />
               <Route
                 path="/marketplace/product/:id"
                 element={<ProductDetails />}
               />
               <Route path="/marketplace/cart" element={<Cart />} />
+
+              {/* Jobs */}
               <Route path="/jobs" element={<JobsList />} />
               <Route path="/jobs/:id" element={<JobDetails />} />
               <Route path="/jobs/dashboard" element={<RecruiterDashboard />} />
+
+              {/* Gamification */}
               <Route path="/ranking" element={<Ranking />} />
-              <Route path="/profile/:id" element={<Profile />} />
-              <Route path="/messages" element={<MessagesList />} />
-              <Route path="/messages/:id" element={<ChatRoom />} />
-              <Route path="/messages/new" element={<NewChat />} />
-              <Route path="/settings" element={<Settings />} />
 
               {/* Notifications */}
               <Route path="/notifications" element={<Notifications />} />
+
+              {/* Settings */}
+              <Route path="/settings" element={<Settings />} />
             </Route>
+
+            {/* Services & Driver Routes (outside or inside layout depending on view) */}
+            <Route path="/ride/request/:driverId" element={<RideRequest />} />
+            <Route path="/driver/dashboard" element={<DriverDashboard />} />
+            <Route path="/driver/requests" element={<DriverRequests />} />
+            <Route path="/driver/rewards" element={<DriverRewards />} />
+            <Route path="/driver/history" element={<DriverHistory />} />
+            <Route path="/driver/settings" element={<DriverSettings />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>
