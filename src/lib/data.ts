@@ -414,6 +414,8 @@ export const mockNotificationsList = [
   },
 ]
 
+export const mockNotifications = mockNotificationsList
+
 export interface Notification {
   id: string
   title: string
@@ -925,5 +927,117 @@ export const exploreCategories = [
     icon: Stethoscope,
     color: 'text-red-500',
     bg: 'bg-red-500/10',
+  },
+]
+
+// Driver Requests
+export const mockRideRequests = [
+  {
+    id: '1',
+    passenger: {
+      name: 'Laura Lima',
+      rating: 4.9,
+      image: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=40',
+      trips: 45,
+    },
+    from: 'Rua das Flores, 123',
+    to: 'Shopping Center',
+    distance: '3.2 km',
+    duration: '12 min',
+    earnings: 18.5,
+    type: 'Standard',
+  },
+  {
+    id: '2',
+    passenger: {
+      name: 'Marcos Silva',
+      rating: 4.7,
+      image: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=41',
+      trips: 12,
+    },
+    from: 'Av. Brasil, 500',
+    to: 'Aeroporto',
+    distance: '15.5 km',
+    duration: '35 min',
+    earnings: 65.0,
+    type: 'Premium',
+  },
+]
+
+// Driver Rewards
+export const mockRewards = [
+  {
+    id: 1,
+    title: 'Meta Semanal',
+    description: 'Faça 50 corridas na semana',
+    progress: 35,
+    target: 50,
+    reward: 150.0,
+    expiresIn: '2 dias',
+  },
+  {
+    id: 2,
+    title: 'Hora de Pico',
+    description: 'Complete 10 corridas entre 18h e 20h',
+    progress: 4,
+    target: 10,
+    reward: 50.0,
+    expiresIn: '5 horas',
+  },
+]
+
+// Driver Ride History
+export const mockRideHistory = [
+  {
+    id: 1,
+    date: 'Hoje, 14:30',
+    from: 'Centro',
+    to: 'Bairro Alto',
+    price: 22.5,
+    status: 'Concluída',
+    rating: 5,
+  },
+  {
+    id: 2,
+    date: 'Ontem, 09:15',
+    from: 'Aeroporto',
+    to: 'Hotel Plaza',
+    price: 45.0,
+    status: 'Concluída',
+    rating: 4,
+  },
+  {
+    id: 3,
+    date: '10 Dez, 18:40',
+    from: 'Shopping',
+    to: 'Casa',
+    price: 15.2,
+    status: 'Cancelada',
+    rating: 0,
+  },
+]
+
+// Chat Messages Helper
+export const getMockMessages = (chatId: string) => [
+  {
+    id: 1,
+    text: 'E aí, tudo certo para o jogo de hoje?',
+    senderId: 'other',
+    time: '10:30',
+    isMe: false,
+  },
+  {
+    id: 2,
+    text: 'Tudo confirmado! Levo a bola.',
+    senderId: 'me',
+    time: '10:32',
+    isMe: true,
+  },
+  {
+    id: 3,
+    text: 'Show! Nos vemos lá às 19h.',
+    senderId: 'other',
+    time: '10:35',
+    isMe: false,
   },
 ]
