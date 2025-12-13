@@ -38,6 +38,184 @@ export const mockUser = {
   },
 }
 
+export const mockStories = [
+  {
+    id: 's1',
+    user: {
+      name: 'Neymar Jr',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=20',
+    },
+    image:
+      'https://img.usecurling.com/p/400/800?q=soccer%20training&color=blue',
+    viewed: false,
+  },
+  {
+    id: 's2',
+    user: {
+      name: 'Anitta',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=21',
+    },
+    image: 'https://img.usecurling.com/p/400/800?q=gym%20workout&color=pink',
+    viewed: true,
+  },
+  {
+    id: 's3',
+    user: {
+      name: 'Flamengo',
+      avatar: 'https://img.usecurling.com/i?q=flamengo&shape=circle',
+    },
+    image: 'https://img.usecurling.com/p/400/800?q=stadium%20crowd&color=red',
+    viewed: false,
+  },
+  {
+    id: 's4',
+    user: {
+      name: 'LeBron',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=22',
+    },
+    image:
+      'https://img.usecurling.com/p/400/800?q=basketball%20dunk&color=yellow',
+    viewed: false,
+  },
+]
+
+export const mockPosts = [
+  {
+    id: 'p1',
+    user: {
+      name: 'Flamengo Oficial',
+      username: '@flamengo',
+      avatar: 'https://img.usecurling.com/i?q=flamengo&shape=circle',
+      verified: true,
+    },
+    time: '2h',
+    content:
+      'Grande vitória hoje no Maracanã! Agradecemos o apoio da nação rubro-negra. #VamosFlamengo',
+    image:
+      'https://img.usecurling.com/p/600/400?q=soccer%20stadium%20celebration&color=red',
+    likes: 15420,
+    comments: 342,
+    shares: 120,
+    liked: true,
+  },
+  {
+    id: 'p2',
+    user: {
+      name: 'Gabriel Medina',
+      username: '@gabrielmedina',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=5',
+      verified: true,
+    },
+    time: '4h',
+    content: 'Dia perfeito para o treino. Ondas gigantes em Nazaré! 🌊🏄‍♂️',
+    image:
+      'https://img.usecurling.com/p/600/400?q=surfing%20big%20waves&color=blue',
+    likes: 8540,
+    comments: 120,
+    shares: 45,
+    liked: false,
+  },
+  {
+    id: 'p3',
+    user: {
+      name: 'NBA Brasil',
+      username: '@nbabrasil',
+      avatar: 'https://img.usecurling.com/i?q=nba&shape=circle&color=blue',
+      verified: true,
+    },
+    time: '6h',
+    content:
+      'Lakers vence em jogo emocionante na prorrogação! Confira os melhores momentos.',
+    image:
+      'https://img.usecurling.com/p/600/400?q=basketball%20game&color=orange',
+    likes: 22100,
+    comments: 890,
+    shares: 2300,
+    liked: false,
+  },
+]
+
+export const mockVideos = [
+  {
+    id: 'v1',
+    title: 'Como chutar com precisão',
+    thumbnail:
+      'https://img.usecurling.com/p/400/225?q=soccer%20kick&color=green',
+    duration: '10:24',
+    views: '120K',
+    author: {
+      name: 'Escola de Futebol',
+      avatar: 'https://img.usecurling.com/i?q=soccer&color=black',
+    },
+  },
+  {
+    id: 'v2',
+    title: 'Treino Funcional Completo',
+    thumbnail:
+      'https://img.usecurling.com/p/400/225?q=crossfit%20training&color=orange',
+    duration: '45:00',
+    views: '54K',
+    author: {
+      name: 'Coach Pro',
+      avatar: 'https://img.usecurling.com/i?q=dumbbell&color=red',
+    },
+  },
+  {
+    id: 'v3',
+    title: 'Dicas de Nutrição para Atletas',
+    thumbnail:
+      'https://img.usecurling.com/p/400/225?q=healthy%20food&color=green',
+    duration: '15:30',
+    views: '89K',
+    author: {
+      name: 'Nutri Sport',
+      avatar: 'https://img.usecurling.com/i?q=apple&color=green',
+    },
+  },
+]
+
+export const mockAiAnalysis = {
+  score: 85,
+  summary: 'Seu desempenho técnico melhorou 15% em relação à última sessão.',
+  metrics: [
+    { label: 'Velocidade', value: 90, color: 'bg-blue-500' },
+    { label: 'Técnica', value: 82, color: 'bg-green-500' },
+    { label: 'Resistência', value: 88, color: 'bg-orange-500' },
+    { label: 'Força', value: 75, color: 'bg-red-500' },
+  ],
+  feedback:
+    'Ótimo desempenho! Tente manter a postura mais ereta durante os sprints finais para otimizar a respiração e reduzir o cansaço.',
+}
+
+export const mockTrainingSuggestions = [
+  {
+    id: 't1',
+    title: 'Treino de Explosão',
+    description:
+      'Melhore sua arrancada e velocidade com exercícios de pliometria.',
+    duration: '45 min',
+    intensity: 'Alta',
+    image:
+      'https://img.usecurling.com/p/300/200?q=sprinter%20running&color=red',
+  },
+  {
+    id: 't2',
+    title: 'Recuperação Ativa',
+    description: 'Sessão leve para soltar a musculatura e prevenir lesões.',
+    duration: '30 min',
+    intensity: 'Baixa',
+    image: 'https://img.usecurling.com/p/300/200?q=stretching&color=blue',
+  },
+  {
+    id: 't3',
+    title: 'Fortalecimento de Core',
+    description: 'Essencial para estabilidade e prevenção de dores nas costas.',
+    duration: '20 min',
+    intensity: 'Média',
+    image: 'https://img.usecurling.com/p/300/200?q=abs%20workout&color=yellow',
+  },
+]
+
 export const mockRideRequests = [
   {
     id: '1',
