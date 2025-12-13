@@ -1,170 +1,148 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import {
-  Search,
-  MapPin,
-  Dumbbell,
-  Apple,
-  Stethoscope,
-  Camera,
-  Calendar,
-  Car,
-  ShoppingBag,
-  Briefcase,
-  ChevronRight,
-  Trophy,
-} from 'lucide-react'
+import { Search, MapPin, Filter } from 'lucide-react'
+import { exploreCategories, mockEvents, mockVenues } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
-
-const categories = [
-  {
-    id: 'venues',
-    label: 'Espaços',
-    icon: MapPin,
-    color: 'text-emerald-500',
-    bg: 'bg-emerald-500/10',
-    path: '/explore/venues',
-  },
-  {
-    id: 'gyms',
-    label: 'Academias',
-    icon: Dumbbell,
-    color: 'text-blue-500',
-    bg: 'bg-blue-500/10',
-    path: '/explore/gyms',
-  },
-  {
-    id: 'nutrition',
-    label: 'Nutrição',
-    icon: Apple,
-    color: 'text-green-500',
-    bg: 'bg-green-500/10',
-    path: '/explore/nutrition',
-  },
-  {
-    id: 'clinics',
-    label: 'Saúde',
-    icon: Stethoscope,
-    color: 'text-red-500',
-    bg: 'bg-red-500/10',
-    path: '/explore/clinics',
-  },
-  {
-    id: 'photographers',
-    label: 'Fotógrafos',
-    icon: Camera,
-    color: 'text-purple-500',
-    bg: 'bg-purple-500/10',
-    path: '/explore/photographers',
-  },
-  {
-    id: 'events',
-    label: 'Eventos',
-    icon: Calendar,
-    color: 'text-orange-500',
-    bg: 'bg-orange-500/10',
-    path: '/explore/events',
-  },
-  {
-    id: 'ride',
-    label: 'Transporte',
-    icon: Car,
-    color: 'text-zinc-500',
-    bg: 'bg-zinc-500/10',
-    path: '/ride/request/driver-select', // Points to ride select or request
-  },
-  {
-    id: 'marketplace',
-    label: 'Loja',
-    icon: ShoppingBag,
-    color: 'text-pink-500',
-    bg: 'bg-pink-500/10',
-    path: '/marketplace',
-  },
-]
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 export default function Explore() {
   const navigate = useNavigate()
 
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
-      <div className="sticky top-16 z-30 bg-background/80 backdrop-blur-md p-4 border-b border-border/50">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Buscar esportes, locais, eventos..."
-            className="pl-9 rounded-full bg-secondary/50 border-transparent focus:bg-background transition-all"
-          />
+      {/* Header & Search */}
+      <div className="sticky top-0 bg-background/95 backdrop-blur z-20 p-4 border-b border-border/50">
+        <h1 className="text-2xl font-bold mb-4">Explorar</h1>
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar arenas, eventos, pessoas..."
+              className="pl-9 bg-secondary border-none rounded-xl"
+            />
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="bg-secondary rounded-xl"
+          >
+            <Filter className="h-4 w-4 text-foreground" />
+          </Button>
         </div>
       </div>
 
       <div className="p-4 space-y-6">
         {/* Categories Grid */}
-        <section>
-          <h2 className="font-bold text-lg mb-4 px-1">Categorias</h2>
-          <div className="grid grid-cols-4 gap-3">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => navigate(cat.path)}
-                className="flex flex-col items-center gap-2 group"
+        <div className="grid grid-cols-3 gap-3">
+          {exploreCategories.map((cat) => (
+            <div
+              key={cat.id}
+              className="flex flex-col items-center gap-2 p-3 bg-card rounded-xl border border-border/50 shadow-sm hover:shadow-md transition-all cursor-pointer active:scale-95"
+              onClick={() => navigate(`/explore/${cat.id}`)}
+            >
+              <div className={`p-3 rounded-full ${cat.bg}`}>
+                <cat.icon className={`h-6 w-6 ${cat.color}`} />
+              </div>
+              <span className="text-xs font-medium">{cat.label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Featured Events */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-bold">Eventos em Destaque</h2>
+            <Button
+              variant="link"
+              className="text-xs text-primary h-auto p-0"
+              onClick={() => navigate('/explore/events')}
+            >
+              Ver tudo
+            </Button>
+          </div>
+          <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 scrollbar-hide">
+            {mockEvents.map((event) => (
+              <Card
+                key={event.id}
+                className="min-w-[280px] border-none shadow-sm bg-secondary/20 overflow-hidden cursor-pointer hover:shadow-md transition-all"
               >
-                <div
-                  className={`h-14 w-14 rounded-2xl flex items-center justify-center ${cat.bg} transition-transform group-hover:scale-110 group-active:scale-95`}
-                >
-                  <cat.icon className={`h-6 w-6 ${cat.color}`} />
+                <div className="h-32 bg-muted relative">
+                  <img
+                    src={event.image}
+                    alt={event.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <Badge className="absolute top-2 right-2 bg-background/80 text-foreground backdrop-blur-md">
+                    {event.category}
+                  </Badge>
                 </div>
-                <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">
-                  {cat.label}
-                </span>
-              </button>
+                <CardContent className="p-3">
+                  <h3 className="font-bold text-sm mb-1 truncate">
+                    {event.title}
+                  </h3>
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2">
+                    <MapPin className="h-3 w-3" /> {event.location}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-primary">
+                      {event.date}
+                    </span>
+                    <span className="text-sm font-bold">
+                      R$ {event.price.toFixed(2)}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
-        </section>
+        </div>
 
-        {/* Featured Card - Uber / Ride */}
-        <Card
-          className="bg-gradient-to-r from-zinc-900 to-zinc-800 text-white border-none shadow-lg cursor-pointer hover:scale-[1.01] transition-transform"
-          onClick={() => navigate('/ride/request/driver-1')}
-        >
-          <CardContent className="p-4 flex items-center justify-between relative overflow-hidden">
-            <div className="relative z-10">
-              <h3 className="font-bold text-lg flex items-center gap-2">
-                <Car className="h-5 w-5 text-white" /> Vá de Goplay
-              </h3>
-              <p className="text-xs text-zinc-400 mt-1">
-                Solicite um motorista parceiro agora
-              </p>
-            </div>
-            <ChevronRight className="h-5 w-5 text-zinc-500 relative z-10" />
-            <div className="absolute right-0 bottom-0 h-24 w-24 bg-white/5 rounded-full blur-2xl transform translate-x-1/3 translate-y-1/3" />
-          </CardContent>
-        </Card>
-
-        {/* Jobs & Marketplace Banners */}
-        <div className="grid grid-cols-2 gap-4">
-          <Card
-            className="bg-blue-600 text-white border-none shadow-md cursor-pointer hover:bg-blue-700 transition-colors"
-            onClick={() => navigate('/jobs')}
-          >
-            <CardContent className="p-4">
-              <Briefcase className="h-6 w-6 mb-2 text-white/80" />
-              <h3 className="font-bold">Vagas</h3>
-              <p className="text-xs text-blue-100">Encontre oportunidades</p>
-            </CardContent>
-          </Card>
-
-          <Card
-            className="bg-gold text-black border-none shadow-md cursor-pointer hover:bg-yellow-500 transition-colors"
-            onClick={() => navigate('/ranking')}
-          >
-            <CardContent className="p-4">
-              <Trophy className="h-6 w-6 mb-2 text-black/80" />
-              <h3 className="font-bold">Ranking</h3>
-              <p className="text-xs text-black/70">Veja sua posição</p>
-            </CardContent>
-          </Card>
+        {/* Top Venues */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-bold">Arenas Populares</h2>
+            <Button
+              variant="link"
+              className="text-xs text-primary h-auto p-0"
+              onClick={() => navigate('/explore/venues')}
+            >
+              Ver tudo
+            </Button>
+          </div>
+          <div className="space-y-3">
+            {mockVenues.map((venue) => (
+              <Card
+                key={venue.id}
+                className="flex border-none shadow-sm bg-card overflow-hidden cursor-pointer hover:bg-secondary/20 transition-colors"
+              >
+                <div className="w-24 h-24 bg-muted relative shrink-0">
+                  <img
+                    src={venue.image}
+                    alt={venue.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <CardContent className="p-3 flex-1 flex flex-col justify-center">
+                  <h3 className="font-bold text-sm mb-1">{venue.name}</h3>
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
+                    <MapPin className="h-3 w-3" /> {venue.location}
+                  </div>
+                  <div className="flex items-center gap-2 mt-auto">
+                    <Badge
+                      variant="secondary"
+                      className="text-[10px] h-5 px-1 bg-green-500/10 text-green-600"
+                    >
+                      {venue.rating} ★
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">
+                      {venue.reviews} avaliações
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     </div>

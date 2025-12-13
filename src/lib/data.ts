@@ -8,17 +8,73 @@ import {
   Video,
   CheckCircle,
   Plus,
+  Home,
+  Compass,
+  ShoppingBag,
+  MessageCircle,
+  Briefcase,
+  Camera,
+  Calendar,
+  Dumbbell,
+  Utensils,
+  Stethoscope,
 } from 'lucide-react'
+
+// Navigation Items
+export const navigationItems = [
+  { icon: Home, label: 'Início', path: '/home' },
+  { icon: Video, label: 'Move', path: '/move' },
+  { icon: Compass, label: 'Explorar', path: '/explore' },
+  { icon: ShoppingBag, label: 'Loja', path: '/marketplace' },
+  { icon: MessageCircle, label: 'Msgs', path: '/messages' },
+]
+
+// Types
+export interface Comment {
+  id: number
+  user: {
+    name: string
+    avatar: string
+  }
+  text: string
+  time: string
+  likes: number
+  replies?: Comment[]
+}
+
+export interface NarrationConfig {
+  text: string
+  style:
+    | 'varzea'
+    | 'professional'
+    | 'comedy'
+    | 'futuristic'
+    | 'influencer'
+    | 'tactical'
+    | 'emotion'
+    | 'gringo'
+  volume: number
+}
+
+export interface StatsHistoryPoint {
+  date: string
+  rating: number
+}
 
 // User Data
 export const mockCurrentUser = {
   id: 'me',
   name: 'João Silva',
+  username: '@joaosilva',
   avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=12',
+  cover: 'https://img.usecurling.com/p/800/300?q=stadium%20lights&color=black',
   level: 12,
   location: 'São Paulo, SP',
   walletBalance: 1250.5,
   role: 'Atleta Amador',
+  bio: 'Apaixonado por futebol e focado em evoluir a cada jogo. ⚽️🚀',
+  followers: 1240,
+  following: 350,
   stats: {
     matches: 42,
     goals: 15,
@@ -65,31 +121,111 @@ export const mockStories = [
 export const mockPosts = [
   {
     id: 1,
+    type: 'image',
     user: {
+      id: 'user1',
       name: 'Carlos Oliveira',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=4',
+      type: 'Atleta',
       location: 'Arena Central',
     },
     image: 'https://img.usecurling.com/p/600/600?q=soccer%20match',
+    media: ['https://img.usecurling.com/p/600/600?q=soccer%20match'],
     content: 'Grande jogo hoje! Vitória de 5x3 com a galera. ⚽🔥',
     likes: 124,
     comments: 18,
+    shares: 5,
+    applauds: 10,
+    supports: 2,
+    cools: 15,
     time: '2h',
     liked: true,
+    hashtags: ['#futebol', '#amador', '#vitoria'],
+  },
+  {
+    id: 2,
+    type: 'image',
+    user: {
+      id: 'user2',
+      name: 'Marina Santos',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=5',
+      type: 'Atleta',
+      location: 'Academia Power',
+    },
+    image: 'https://img.usecurling.com/p/600/600?q=gym%20workout',
+    media: ['https://img.usecurling.com/p/600/600?q=gym%20workout'],
+    content: 'Foco no treino de pernas hoje. #nopainnogain 💪',
+    likes: 89,
+    comments: 5,
+    shares: 1,
+    applauds: 20,
+    supports: 5,
+    cools: 8,
+    time: '4h',
+    liked: false,
+    hashtags: ['#gym', '#fitness', '#legday'],
+  },
+  {
+    id: 3,
+    type: 'video',
+    user: {
+      id: 'user3',
+      name: 'Lucas Pereira',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=8',
+      type: 'Criador',
+    },
+    media: ['https://img.usecurling.com/p/600/600?q=soccer%20skill'],
+    title: 'Aquele drible que você respeita!',
+    videoDuration: '0:15',
+    likes: 342,
+    comments: 45,
+    shares: 12,
+    applauds: 50,
+    supports: 8,
+    cools: 120,
+    time: '6h',
+    hashtags: ['#skill', '#drible', '#futebolarte'],
+    narration: {
+      text: 'Olha o que ele fez! Que ousadia, que alegria! Isso é futebol arte, meu amigo!',
+      style: 'varzea',
+      volume: 1,
+    } as NarrationConfig,
+  },
+]
+
+// Comments
+export const mockComments: Comment[] = [
+  {
+    id: 1,
+    user: {
+      name: 'Pedro Costa',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=20',
+    },
+    text: 'Jogou muito hoje, craque! 👏',
+    time: '1h',
+    likes: 5,
+    replies: [
+      {
+        id: 11,
+        user: {
+          name: 'Carlos Oliveira',
+          avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=4',
+        },
+        text: 'Valeu mano! Tamo junto 👊',
+        time: '50min',
+        likes: 2,
+      },
+    ],
   },
   {
     id: 2,
     user: {
-      name: 'Marina Santos',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=5',
-      location: 'Academia Power',
+      name: 'Julia Silva',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=21',
     },
-    image: 'https://img.usecurling.com/p/600/600?q=gym%20workout',
-    content: 'Foco no treino de pernas hoje. #nopainnogain 💪',
-    likes: 89,
-    comments: 5,
-    time: '4h',
-    liked: false,
+    text: 'Aulas! 🔥',
+    time: '30min',
+    likes: 3,
   },
 ]
 
@@ -99,31 +235,53 @@ export const mockVideos = [
     id: 1,
     thumbnail: 'https://img.usecurling.com/p/400/800?q=soccer%20skills',
     title: 'Drible desconcertante! 😱',
+    description: 'Aprenda esse movimento para passar por qualquer defesa.',
     user: {
       name: 'Futebol Art',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=6',
     },
     likes: '12k',
+    comments: 342,
+    shares: '1.2k',
   },
   {
     id: 2,
     thumbnail: 'https://img.usecurling.com/p/400/800?q=crossfit',
     title: 'Recorde pessoal no snatch',
+    description: 'Finalmente bati os 100kg! Processo longo mas valeu a pena.',
     user: {
       name: 'CrossLife',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=7',
     },
     likes: '5.4k',
+    comments: 120,
+    shares: 450,
   },
   {
     id: 3,
     thumbnail: 'https://img.usecurling.com/p/400/800?q=basketball%20dunk',
     title: 'Enterrada insana!',
+    description: 'Ninguém esperava por essa impulsão.',
     user: {
       name: 'Basket Zone',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=8',
     },
     likes: '8.1k',
+    comments: 560,
+    shares: '2k',
+  },
+  {
+    id: 4,
+    thumbnail: 'https://img.usecurling.com/p/400/800?q=tennis%20serve',
+    title: 'Saque perfeito',
+    description: 'Ace no momento decisivo do jogo.',
+    user: {
+      name: 'Tennis Pro',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=9',
+    },
+    likes: '3.2k',
+    comments: 89,
+    shares: 120,
   },
 ]
 
@@ -132,6 +290,7 @@ export const mockChats = [
   {
     id: 1,
     user: {
+      id: 'u1',
       name: 'Treinador Miguel',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=9',
       online: true,
@@ -143,6 +302,7 @@ export const mockChats = [
   {
     id: 2,
     user: {
+      id: 'u2',
       name: 'Julia Costa',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=10',
       online: false,
@@ -154,6 +314,7 @@ export const mockChats = [
   {
     id: 3,
     user: {
+      id: 'g1',
       name: 'Grupo Futebol Sábado',
       avatar: 'https://img.usecurling.com/i?q=soccer%20ball&shape=fill',
       online: false,
@@ -202,34 +363,68 @@ export const mockProducts = [
     reviews: 50,
     image: 'https://img.usecurling.com/p/300/300?q=soccer%20ball',
   },
+  {
+    id: 5,
+    name: 'Raquete Power Spin',
+    category: 'Equipamentos',
+    price: 450.0,
+    rating: 4.9,
+    reviews: 42,
+    image: 'https://img.usecurling.com/p/300/300?q=tennis%20racket',
+  },
+  {
+    id: 6,
+    name: 'Mochila Esportiva',
+    category: 'Acessórios',
+    price: 110.0,
+    rating: 4.6,
+    reviews: 15,
+    image: 'https://img.usecurling.com/p/300/300?q=sport%20backpack',
+  },
 ]
 
 // Notifications
-export const mockNotifications = [
+export const mockNotificationsList = [
   {
-    id: 1,
+    id: '1',
     title: 'Novo seguidor',
     message: 'Lucas Mendes começou a seguir você.',
     time: '2 min atrás',
+    date: 'Hoje',
     read: false,
+    type: 'follow',
   },
   {
-    id: 2,
+    id: '2',
     title: 'Jogo confirmado',
     message: 'Seu jogo na Arena Central foi confirmado para 19:00.',
     time: '1h atrás',
+    date: 'Hoje',
     read: true,
+    type: 'game',
   },
   {
-    id: 3,
+    id: '3',
     title: 'Promoção',
     message: '20% de desconto em suplementos hoje!',
     time: '3h atrás',
+    date: 'Hoje',
     read: true,
+    type: 'promo',
   },
 ]
 
-// Ranking
+export interface Notification {
+  id: string
+  title: string
+  message: string
+  time?: string
+  date: string
+  read: boolean
+  type?: string
+}
+
+// Rankings
 export const mockRankings = [
   {
     id: 1,
@@ -614,6 +809,33 @@ export const mockDrivers = [
   },
 ]
 
+export const mockDriverStats = [
+  {
+    id: 1,
+    name: 'Roberto Dias',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=30',
+    rating: 4.9,
+    rides: 145,
+    responseTime: '2m',
+  },
+  {
+    id: 2,
+    name: 'Fernanda Lima',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=31',
+    rating: 5.0,
+    rides: 132,
+    responseTime: '3m',
+  },
+  {
+    id: 3,
+    name: 'Carlos Santos',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=32',
+    rating: 4.7,
+    rides: 98,
+    responseTime: '5m',
+  },
+]
+
 // Ride History
 export const mockRides = [
   {
@@ -633,5 +855,75 @@ export const mockRides = [
     price: 12.5,
     driver: 'Fernanda Lima',
     status: 'Completed',
+  },
+]
+
+// Evolution Data
+export const mockEvolution = [
+  {
+    year: 2024,
+    title: 'Ascensão Profissional',
+    description:
+      'Atingiu o nível avançado em competições regionais e melhorou significativamente os atributos físicos.',
+    stats: { speed: 85, power: 80, technique: 88 },
+  },
+  {
+    year: 2023,
+    title: 'Primeiros Campeonatos',
+    description:
+      'Início da participação em ligas amadoras organizadas. Foco no desenvolvimento tático.',
+    stats: { speed: 75, power: 70, technique: 80 },
+  },
+  {
+    year: 2022,
+    title: 'Início da Jornada',
+    description: 'Primeiros passos no esporte, focando em fundamentos básicos.',
+    stats: { speed: 60, power: 55, technique: 65 },
+  },
+]
+
+// Categories for Explore Grid
+export const exploreCategories = [
+  {
+    id: 'photographers',
+    label: 'Fotógrafos',
+    icon: Camera,
+    color: 'text-pink-500',
+    bg: 'bg-pink-500/10',
+  },
+  {
+    id: 'events',
+    label: 'Eventos',
+    icon: Calendar,
+    color: 'text-purple-500',
+    bg: 'bg-purple-500/10',
+  },
+  {
+    id: 'venues',
+    label: 'Arenas',
+    icon: MapPin,
+    color: 'text-green-500',
+    bg: 'bg-green-500/10',
+  },
+  {
+    id: 'gyms',
+    label: 'Academias',
+    icon: Dumbbell,
+    color: 'text-blue-500',
+    bg: 'bg-blue-500/10',
+  },
+  {
+    id: 'nutrition',
+    label: 'Nutrição',
+    icon: Utensils,
+    color: 'text-orange-500',
+    bg: 'bg-orange-500/10',
+  },
+  {
+    id: 'clinics',
+    label: 'Saúde',
+    icon: Stethoscope,
+    color: 'text-red-500',
+    bg: 'bg-red-500/10',
   },
 ]

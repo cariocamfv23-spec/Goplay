@@ -1,143 +1,170 @@
+import { mockCurrentUser, mockPosts } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import {
-  MapPin,
-  Settings,
-  Wallet,
-  BarChart2,
-  Trophy,
-  Grid,
-  Heart,
-  Edit,
-  Share2,
-} from 'lucide-react'
-import { Link, useParams } from 'react-router-dom'
-import { mockCurrentUser, mockPosts } from '@/lib/data'
+import { Settings, MapPin, Grid, Video, Trophy, BarChart2 } from 'lucide-react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export default function Profile() {
+  const navigate = useNavigate()
   const { id } = useParams()
   const isMe = !id || id === 'me'
-  const user = mockCurrentUser
+  const user = mockCurrentUser // In a real app, fetch user by id
+
+  const [activeTab, setActiveTab] = useState('posts')
 
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
-      {/* Header Image */}
-      <div className="h-32 bg-gradient-to-r from-primary to-purple-600 relative">
-        <div className="absolute inset-0 bg-black/10" />
+      {/* Cover Image */}
+      <div className="h-32 bg-muted relative">
+        <img
+          src={user.cover}
+          alt="Cover"
+          className="w-full h-full object-cover opacity-80"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
       </div>
 
-      <div className="px-4 relative">
-        {/* Profile Info */}
-        <div className="-mt-12 flex justify-between items-end mb-4">
+      {/* Profile Header */}
+      <div className="px-4 relative -mt-12 mb-4">
+        <div className="flex justify-between items-end mb-4">
           <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
             <AvatarImage src={user.avatar} />
             <AvatarFallback>{user.name[0]}</AvatarFallback>
           </Avatar>
-
-          {isMe && (
-            <div className="flex gap-2 mb-2">
-              <Link to="/settings">
-                <Button variant="outline" size="sm" className="rounded-full">
-                  <Settings className="h-4 w-4 mr-1" /> Editar
+          <div className="flex gap-2 mb-2">
+            {isMe ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate('/settings')}
+              >
+                Editar Perfil
+              </Button>
+            ) : (
+              <>
+                <Button size="sm" className="bg-primary text-white">
+                  Seguir
                 </Button>
-              </Link>
-              <Button size="icon" variant="ghost" className="rounded-full">
-                <Share2 className="h-4 w-4" />
-              </Button>
-            </div>
-          )}
-        </div>
-
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            {user.name}
-            <Badge
-              variant="secondary"
-              className="text-xs bg-gold/20 text-yellow-700 hover:bg-gold/30"
-            >
-              Lvl {user.level}
-            </Badge>
-          </h1>
-          <p className="text-muted-foreground text-sm flex items-center gap-1 mt-1">
-            <MapPin className="h-3 w-3" /> {user.location}
-          </p>
-          <p className="text-sm mt-3 leading-relaxed">
-            Atleta apaixonado por futebol e corrida. Sempre em busca de superar
-            limites. ⚽🏃‍♂️
-          </p>
-        </div>
-
-        {/* Action Buttons - Including Statistics and Wallet */}
-        {isMe && (
-          <div className="grid grid-cols-3 gap-3 mb-6">
-            <Link to="/profile/stats">
-              <Button
-                variant="outline"
-                className="w-full flex-col h-auto py-3 gap-1 hover:bg-primary/5 hover:text-primary hover:border-primary/30"
-              >
-                <BarChart2 className="h-5 w-5" />
-                <span className="text-xs font-medium">Estatísticas</span>
-              </Button>
-            </Link>
-
-            <Link to="/wallet">
-              <Button
-                variant="outline"
-                className="w-full flex-col h-auto py-3 gap-1 hover:bg-green-500/5 hover:text-green-600 hover:border-green-500/30"
-              >
-                <Wallet className="h-5 w-5" />
-                <span className="text-xs font-medium">Carteira</span>
-              </Button>
-            </Link>
-
-            <Link to="/ranking">
-              <Button
-                variant="outline"
-                className="w-full flex-col h-auto py-3 gap-1 hover:bg-yellow-500/5 hover:text-yellow-600 hover:border-yellow-500/30"
-              >
-                <Trophy className="h-5 w-5" />
-                <span className="text-xs font-medium">Ranking</span>
-              </Button>
-            </Link>
+                <Button size="sm" variant="outline">
+                  Mensagem
+                </Button>
+              </>
+            )}
           </div>
-        )}
+        </div>
+
+        <div>
+          <h1 className="text-xl font-bold flex items-center gap-2">
+            {user.name}
+            {/* Level Badge */}
+            <span className="text-[10px] bg-gold text-black px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
+              LVL {user.level}
+            </span>
+          </h1>
+          <p className="text-sm text-muted-foreground mb-2">{user.role}</p>
+          <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
+            <MapPin className="h-3 w-3" /> {user.location}
+          </div>
+          <p className="text-sm leading-relaxed mb-4">{user.bio}</p>
+
+          <div className="flex gap-6 text-sm mb-6 border-b border-border/50 pb-4">
+            <div className="flex flex-col">
+              <span className="font-bold text-lg">{user.followers}</span>
+              <span className="text-muted-foreground text-xs">Seguidores</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-bold text-lg">{user.following}</span>
+              <span className="text-muted-foreground text-xs">Seguindo</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-bold text-lg">{user.stats.matches}</span>
+              <span className="text-muted-foreground text-xs">Jogos</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-bold text-lg">{user.stats.mvp}</span>
+              <span className="text-muted-foreground text-xs text-gold">
+                MVPs
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <Button
+            className="bg-secondary text-foreground hover:bg-secondary/80 justify-start"
+            onClick={() => navigate('/profile/stats')}
+          >
+            <BarChart2 className="mr-2 h-4 w-4" /> Estatísticas
+          </Button>
+          <Button
+            className="bg-secondary text-foreground hover:bg-secondary/80 justify-start"
+            onClick={() => navigate('/ranking')}
+          >
+            <Trophy className="mr-2 h-4 w-4" /> Ranking
+          </Button>
+        </div>
 
         {/* Content Tabs */}
-        <Tabs defaultValue="posts" className="w-full">
-          <TabsList className="w-full grid grid-cols-2 mb-4">
-            <TabsTrigger value="posts">
-              <Grid className="h-4 w-4 mr-2" /> Posts
+        <Tabs
+          defaultValue="posts"
+          className="w-full"
+          onValueChange={setActiveTab}
+        >
+          <TabsList className="w-full grid grid-cols-3 bg-transparent border-b rounded-none h-12 p-0">
+            <TabsTrigger
+              value="posts"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+            >
+              <Grid className="h-5 w-5" />
             </TabsTrigger>
-            <TabsTrigger value="likes">
-              <Heart className="h-4 w-4 mr-2" /> Curtidos
+            <TabsTrigger
+              value="media"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+            >
+              <Video className="h-5 w-5" />
+            </TabsTrigger>
+            <TabsTrigger
+              value="tagged"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+            >
+              <Users className="h-5 w-5" />
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="posts" className="space-y-1">
+          <TabsContent value="posts" className="mt-4">
             <div className="grid grid-cols-3 gap-1">
-              {/* Mock Grid of posts */}
-              {[1, 2, 3, 4, 5, 6].map((i) => (
+              {mockPosts.map((post) => (
                 <div
-                  key={i}
-                  className="aspect-square bg-secondary rounded-sm overflow-hidden relative group cursor-pointer"
+                  key={post.id}
+                  className="aspect-square bg-muted relative overflow-hidden cursor-pointer hover:opacity-90"
                 >
                   <img
-                    src={`https://img.usecurling.com/p/300/300?q=sports&seed=${i}`}
-                    className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                    loading="lazy"
+                    src={post.image || post.media?.[0]}
+                    alt="Post"
+                    className="w-full h-full object-cover"
                   />
+                  {post.type === 'video' && (
+                    <div className="absolute top-1 right-1">
+                      <Video className="h-4 w-4 text-white drop-shadow-md" />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           </TabsContent>
-
-          <TabsContent value="likes">
-            <div className="text-center py-12 text-muted-foreground">
-              <Heart className="h-12 w-12 mx-auto mb-3 opacity-20" />
-              <p>Nenhuma publicação curtida ainda.</p>
+          <TabsContent value="media">
+            <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
+              <Video className="h-10 w-10 mb-2 opacity-20" />
+              <p>Nenhum vídeo ainda</p>
+            </div>
+          </TabsContent>
+          <TabsContent value="tagged">
+            <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
+              <Users className="h-10 w-10 mb-2 opacity-20" />
+              <p>Nenhuma marcação</p>
             </div>
           </TabsContent>
         </Tabs>
