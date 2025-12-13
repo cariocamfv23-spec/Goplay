@@ -56,6 +56,41 @@ export interface NarrationConfig {
   volume: number
 }
 
+export const narrationStyles = [
+  {
+    id: 'varzea',
+    label: 'Várzea',
+    description: 'Narrador clássico de futebol de várzea',
+  },
+  {
+    id: 'professional',
+    label: 'Profissional',
+    description: 'Estilo TV Globo / Premiere',
+  },
+  {
+    id: 'comedy',
+    label: 'Comédia',
+    description: 'Humor e piadas durante o lance',
+  },
+  {
+    id: 'futuristic',
+    label: 'Futurista',
+    description: 'Voz robótica e efeitos sci-fi',
+  },
+  {
+    id: 'influencer',
+    label: 'Influencer',
+    description: 'Gírias de internet e hype',
+  },
+  { id: 'tactical', label: 'Tático', description: 'Análise técnica e séria' },
+  { id: 'emotion', label: 'Emoção', description: 'Foco no drama e superação' },
+  {
+    id: 'gringo',
+    label: 'Gringo',
+    description: 'Sotaque estrangeiro tentando falar PT',
+  },
+]
+
 export interface StatsHistoryPoint {
   date: string
   rating: number
