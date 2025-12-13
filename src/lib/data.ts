@@ -565,3 +565,152 @@ export const mockTeams = [
     members: 15,
   },
 ]
+
+// Added missing exports
+
+export const mockStories = [
+  {
+    id: 's1',
+    user: {
+      name: 'User 1',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=10',
+    },
+    image: 'https://img.usecurling.com/p/300/500?q=story1',
+    viewed: false,
+  },
+  {
+    id: 's2',
+    user: {
+      name: 'User 2',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=11',
+    },
+    image: 'https://img.usecurling.com/p/300/500?q=story2',
+    viewed: false,
+  },
+  {
+    id: 's3',
+    user: {
+      name: 'User 3',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=12',
+    },
+    image: 'https://img.usecurling.com/p/300/500?q=story3',
+    viewed: true,
+  },
+]
+
+export const mockPosts = [
+  {
+    id: 'p1',
+    user: {
+      name: 'Alex Silva',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
+      role: 'Athlete',
+    },
+    time: '2h ago',
+    content: 'Great training session today! 💪',
+    image: 'https://img.usecurling.com/p/600/400?q=training',
+    likes: 45,
+    comments: 12,
+    shares: 2,
+    isLiked: false,
+  },
+  {
+    id: 'p2',
+    user: {
+      name: 'Fernanda Oliveira',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=2',
+      role: 'Coach',
+    },
+    time: '5h ago',
+    content: 'New tactics for the upcoming match.',
+    image: 'https://img.usecurling.com/p/600/400?q=tactics',
+    likes: 120,
+    comments: 34,
+    shares: 10,
+    isLiked: true,
+  },
+]
+
+export const mockVideos = [
+  {
+    id: 'v1',
+    title: 'Top 10 Goals',
+    user: {
+      name: 'Soccer Channel',
+      avatar: 'https://img.usecurling.com/i?q=soccer&shape=fill&color=green',
+    },
+    thumbnail: 'https://img.usecurling.com/p/400/225?q=soccer',
+    views: '1.2M',
+    likes: 45000,
+    url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+  },
+  {
+    id: 'v2',
+    title: 'Yoga for Runners',
+    user: {
+      name: 'Yoga Life',
+      avatar: 'https://img.usecurling.com/i?q=yoga&shape=fill&color=purple',
+    },
+    thumbnail: 'https://img.usecurling.com/p/400/225?q=yoga',
+    views: '500k',
+    likes: 12000,
+    url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+  },
+]
+
+export const mockProfiles = [
+  {
+    id: 'ph1',
+    name: 'FotoSport Pro',
+    rating: 4.9,
+    location: 'São Paulo, SP',
+    image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=6',
+    price: 'R$ 150/hr',
+    specialty: 'Futebol e Eventos',
+    verified: true,
+    portfolio: [
+      'https://img.usecurling.com/p/300/300?q=soccer%20action',
+      'https://img.usecurling.com/p/300/300?q=trophy%20celebration',
+      'https://img.usecurling.com/p/300/300?q=stadium',
+    ],
+  },
+  {
+    id: 'ph2',
+    name: 'Ana Silva Fotografia',
+    rating: 4.8,
+    location: 'Rio de Janeiro, RJ',
+    image: 'https://img.usecurling.com/ppl/medium?gender=female&seed=7',
+    price: 'R$ 200/hr',
+    specialty: 'Surf e Esportes Aquáticos',
+    verified: true,
+    portfolio: [
+      'https://img.usecurling.com/p/300/300?q=surfing',
+      'https://img.usecurling.com/p/300/300?q=beach',
+    ],
+  },
+  {
+    id: 'ph3',
+    name: 'Marcos Lentes',
+    rating: 4.6,
+    location: 'Curitiba, PR',
+    image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=8',
+    price: 'R$ 120/hr',
+    specialty: 'Skate e Street',
+    verified: false,
+    portfolio: [
+      'https://img.usecurling.com/p/300/300?q=skate',
+      'https://img.usecurling.com/p/300/300?q=street',
+    ],
+  },
+]
+
+export const photographerCategories = [
+  'Todos',
+  'Futebol',
+  'Basquete',
+  'Vôlei',
+  'Surf',
+  'Skate',
+  'Eventos',
+  'Ensaios',
+]
