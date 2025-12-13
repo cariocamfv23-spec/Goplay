@@ -7,6 +7,15 @@ import {
   Star,
   Calendar,
   MapPin,
+  Video,
+  Camera,
+  Dumbbell,
+  HeartPulse,
+  Stethoscope,
+  Briefcase,
+  MessageSquare,
+  Car,
+  Ticket,
 } from 'lucide-react'
 
 export interface User {
@@ -55,6 +64,24 @@ export const mockProfiles: User[] = [
     level: 8,
     location: 'Curitiba, PR',
     stats: { matches: 200, wins: 0, mvp: 0, rating: 4.9 },
+  },
+  {
+    id: '4',
+    name: 'Dr. João',
+    username: '@drjoao',
+    role: 'fan',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=4',
+    level: 5,
+    location: 'São Paulo, SP',
+  },
+  {
+    id: '5',
+    name: 'Carlos Driver',
+    username: '@carlosdriver',
+    role: 'driver',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=5',
+    level: 15,
+    location: 'São Paulo, SP',
   },
 ]
 
@@ -367,5 +394,171 @@ export const mockProducts = [
     image: 'https://img.usecurling.com/p/300/300?q=soccer%20ball',
     rating: 4.7,
     category: 'Acessórios',
+  },
+]
+
+export const mockVideos = [
+  {
+    id: '1',
+    title: 'Melhores Momentos - Final Regional',
+    thumbnail: 'https://img.usecurling.com/p/400/225?q=soccer%20highlight',
+    duration: '10:32',
+    author: 'Canal do Esporte',
+    views: '1.2k',
+    date: '2 dias atrás',
+  },
+  {
+    id: '2',
+    title: 'Dicas de Treino para Goleiros',
+    thumbnail: 'https://img.usecurling.com/p/400/225?q=goalkeeper%20training',
+    duration: '15:45',
+    author: 'Coach Mike',
+    views: '856',
+    date: '5 dias atrás',
+  },
+]
+
+export const photographerCategories = [
+  'Todos',
+  'Eventos',
+  'Ensaios',
+  'Partidas',
+  'Portfólio',
+  'Drone',
+]
+
+export const mockGyms = [
+  {
+    id: '1',
+    name: 'Iron Pump Gym',
+    rating: 4.8,
+    image: 'https://img.usecurling.com/p/400/300?q=gym%20interior',
+    location: 'Centro, SP',
+    price: 89.9,
+    features: ['Musculação', 'Crossfit', 'Aulas Coletivas'],
+  },
+  {
+    id: '2',
+    name: 'Smart Fit',
+    rating: 4.5,
+    image: 'https://img.usecurling.com/p/400/300?q=modern%20gym',
+    location: 'Jardins, SP',
+    price: 119.9,
+    features: ['Musculação', 'Cardio', 'Smart Box'],
+  },
+]
+
+export const mockNutritionPartners = [
+  {
+    id: '1',
+    name: 'Dr. João Nutri',
+    specialty: 'Nutrição Esportiva',
+    rating: 4.9,
+    image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=10',
+    location: 'Vila Mariana, SP',
+    price: 250.0,
+  },
+  {
+    id: '2',
+    name: 'NutriFit Store',
+    specialty: 'Suplementos',
+    rating: 4.7,
+    image: 'https://img.usecurling.com/p/300/300?q=supplements%20store',
+    location: 'Online',
+    price: null,
+  },
+]
+
+export const mockClinics = [
+  {
+    id: '1',
+    name: 'PhysioSport',
+    services: ['Fisioterapia', 'Recovery', 'Massagem'],
+    rating: 4.9,
+    image: 'https://img.usecurling.com/p/400/300?q=physiotherapy%20clinic',
+    location: 'Moema, SP',
+    price: 150.0,
+  },
+  {
+    id: '2',
+    name: 'Clínica do Atleta',
+    services: ['Ortopedia', 'Exames'],
+    rating: 4.8,
+    image: 'https://img.usecurling.com/p/400/300?q=medical%20clinic',
+    location: 'Pinheiros, SP',
+    price: 200.0,
+  },
+]
+
+export const mockJobs = [
+  {
+    id: '1',
+    title: 'Técnico de Futebol Sub-15',
+    company: 'Escolinha Craques do Futuro',
+    location: 'São Paulo, SP',
+    salary: 'R$ 2.500 - R$ 3.500',
+    type: 'Full-time',
+    postedAt: '2 dias atrás',
+    description: 'Procuramos técnico com experiência em categorias de base...',
+    requirements: ['Licença B CBF', 'Experiência de 2 anos'],
+    logo: 'https://img.usecurling.com/i?q=soccer&color=green',
+  },
+  {
+    id: '2',
+    title: 'Scout de Talentos',
+    company: 'Agência Gol de Placa',
+    location: 'Remoto',
+    salary: 'Comissão',
+    type: 'Freelance',
+    postedAt: '5 dias atrás',
+    description: 'Busca de novos talentos em torneios regionais...',
+    requirements: ['Olhar clínico', 'Disponibilidade para viagens'],
+    logo: 'https://img.usecurling.com/i?q=eye&color=blue',
+  },
+]
+
+export const mockChats = [
+  {
+    id: '1',
+    user: mockProfiles[0],
+    lastMessage: 'E aí, vamos fechar o jogo?',
+    time: '10:30',
+    unread: 2,
+  },
+  {
+    id: '2',
+    user: mockProfiles[1],
+    lastMessage: 'Treino confirmado amanhã.',
+    time: 'Ontem',
+    unread: 0,
+  },
+]
+
+export const mockRides = [
+  {
+    id: '1',
+    driver: {
+      name: 'Carlos Driver',
+      rating: 4.9,
+      car: 'Toyota Corolla',
+      plate: 'ABC-1234',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=5',
+    },
+    origin: 'Av. Paulista, 1000',
+    destination: 'Arena Neo Química',
+    date: '2024-03-20T18:00:00',
+    price: 45.9,
+    status: 'scheduled',
+  },
+]
+
+export const mockInvitations = [
+  {
+    id: '1',
+    from: mockProfiles[1],
+    team: 'Red Dragons',
+    role: 'Atleta',
+    date: 'Hoje, 14:00',
+    status: 'pending',
   },
 ]
