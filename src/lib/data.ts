@@ -1,6 +1,51 @@
-// Mock Data for the application
-// This file contains all the mock data used across different pages
+import { Home, Video, Compass, MessageCircle, User } from 'lucide-react'
 
+// Navigation Items
+export const navigationItems = [
+  { icon: Home, label: 'Início', path: '/home' },
+  { icon: Video, label: 'Move', path: '/move' },
+  { icon: Compass, label: 'Explorar', path: '/explore' },
+  { icon: MessageCircle, label: 'Mensagens', path: '/messages' },
+  { icon: User, label: 'Perfil', path: '/profile/me' },
+]
+
+// Types
+export type Notification = {
+  id: string
+  title: string
+  message: string
+  time: string
+  read: boolean
+  type: 'challenge' | 'financial' | 'invite' | 'store' | 'system'
+}
+
+export interface NarrationConfig {
+  text: string
+  style:
+    | 'varzea'
+    | 'professional'
+    | 'comedy'
+    | 'futuristic'
+    | 'influencer'
+    | 'tactical'
+    | 'emotion'
+    | 'gringo'
+  volume: number
+}
+
+export interface Comment {
+  id: string
+  user: {
+    name: string
+    avatar: string
+  }
+  text: string
+  time: string
+  likes: number
+  replies?: Comment[]
+}
+
+// Mock Data
 export const mockCurrentUser = {
   id: 'u1',
   name: 'Alex Silva',
@@ -436,7 +481,7 @@ export const mockChats = [
   },
 ]
 
-export const mockNotifications = [
+export const mockNotifications: Notification[] = [
   {
     id: 'not1',
     title: 'Novo desafio disponível',
@@ -462,6 +507,9 @@ export const mockNotifications = [
     type: 'invite',
   },
 ]
+
+// Alias for compatibility
+export const mockNotificationsList = mockNotifications
 
 export const mockReceivedInvitations = [
   {
@@ -566,8 +614,6 @@ export const mockTeams = [
   },
 ]
 
-// Added missing exports
-
 export const mockStories = [
   {
     id: 's1',
@@ -577,6 +623,7 @@ export const mockStories = [
     },
     image: 'https://img.usecurling.com/p/300/500?q=story1',
     viewed: false,
+    hasStory: true,
   },
   {
     id: 's2',
@@ -586,6 +633,7 @@ export const mockStories = [
     },
     image: 'https://img.usecurling.com/p/300/500?q=story2',
     viewed: false,
+    hasStory: true,
   },
   {
     id: 's3',
@@ -595,39 +643,50 @@ export const mockStories = [
     },
     image: 'https://img.usecurling.com/p/300/500?q=story3',
     viewed: true,
+    hasStory: true,
   },
 ]
 
 export const mockPosts = [
   {
-    id: 'p1',
+    id: 1,
+    type: 'image',
     user: {
       name: 'Alex Silva',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
-      role: 'Athlete',
+      type: 'Atleta',
     },
-    time: '2h ago',
-    content: 'Great training session today! 💪',
-    image: 'https://img.usecurling.com/p/600/400?q=training',
+    time: '2h atrás',
+    content:
+      'Ótimo treino hoje! Foco total na preparação para o campeonato. 💪',
+    media: ['https://img.usecurling.com/p/600/400?q=training'],
     likes: 45,
     comments: 12,
     shares: 2,
-    isLiked: false,
+    applauds: 10,
+    supports: 5,
+    cools: 8,
   },
   {
-    id: 'p2',
+    id: 2,
+    type: 'video',
     user: {
       name: 'Fernanda Oliveira',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=2',
-      role: 'Coach',
+      type: 'Treinadora',
     },
-    time: '5h ago',
-    content: 'New tactics for the upcoming match.',
-    image: 'https://img.usecurling.com/p/600/400?q=tactics',
+    time: '5h atrás',
+    content: 'Novas táticas para o próximo jogo. Vejam essa jogada!',
+    title: 'Análise Tática',
+    media: ['https://img.usecurling.com/p/600/400?q=tactics'],
+    videoDuration: '2:15',
     likes: 120,
     comments: 34,
     shares: 10,
-    isLiked: true,
+    applauds: 25,
+    supports: 15,
+    cools: 30,
+    hashtags: ['#tatica', '#futebol', '#coach'],
   },
 ]
 
@@ -713,4 +772,40 @@ export const photographerCategories = [
   'Skate',
   'Eventos',
   'Ensaios',
+]
+
+export const mockComments: Comment[] = [
+  {
+    id: 'c1',
+    user: {
+      name: 'João Silva',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=20',
+    },
+    text: 'Muito bom! 🔥',
+    time: '10 min atrás',
+    likes: 5,
+    replies: [],
+  },
+  {
+    id: 'c2',
+    user: {
+      name: 'Maria Costa',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=21',
+    },
+    text: 'Acompanhando sempre!',
+    time: '30 min atrás',
+    likes: 8,
+    replies: [
+      {
+        id: 'c2-r1',
+        user: {
+          name: 'Alex Silva',
+          avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
+        },
+        text: 'Obrigado pelo apoio! 🙏',
+        time: '5 min atrás',
+        likes: 2,
+      },
+    ],
+  },
 ]

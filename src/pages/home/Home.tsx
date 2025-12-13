@@ -1,11 +1,10 @@
 import { mockPosts, mockStories } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Plus, Video, Zap } from 'lucide-react'
+import { Plus, Video } from 'lucide-react'
 import { PostCard } from '@/components/PostCard'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { CreatePostFab } from '@/components/CreatePostFab'
 import { useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
 
 const Home = () => {
   const navigate = useNavigate()
@@ -45,15 +44,17 @@ const Home = () => {
                 >
                   <Avatar className="h-16 w-16 border-2 border-background">
                     <AvatarImage
-                      src={story.avatar}
+                      src={story.avatar || story.user?.avatar}
                       loading="lazy"
-                      alt={story.name}
+                      alt={story.name || story.user?.name}
                     />
-                    <AvatarFallback>{story.name[0]}</AvatarFallback>
+                    <AvatarFallback>
+                      {(story.name || story.user?.name)?.[0]}
+                    </AvatarFallback>
                   </Avatar>
                 </div>
                 <span className="text-xs text-muted-foreground max-w-[64px] truncate group-hover:text-foreground transition-colors">
-                  {story.name}
+                  {story.name || story.user?.name}
                 </span>
               </div>
             ))}
@@ -63,7 +64,7 @@ const Home = () => {
       </div>
 
       {/* Quick Actions / Highlights */}
-      <div className="p-4 pb-0 grid grid-cols-2 gap-3 animate-slide-up">
+      <div className="p-4 pb-0 grid grid-cols-1 gap-3 animate-slide-up">
         {/* MOVE Highlight */}
         <div
           className="rounded-2xl bg-gradient-to-r from-zinc-900 to-zinc-800 p-4 text-white relative overflow-hidden shadow-lg cursor-pointer group hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
@@ -78,21 +79,6 @@ const Home = () => {
             </p>
           </div>
           <div className="absolute -right-6 -bottom-6 h-20 w-20 bg-primary/20 rounded-full blur-2xl group-hover:bg-primary/30 transition-colors duration-500" />
-        </div>
-
-        {/* Live Match Demo */}
-        <div
-          className="rounded-2xl bg-gradient-to-br from-gold/20 to-yellow-900/40 border border-gold/30 p-4 relative overflow-hidden shadow-lg cursor-pointer group hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
-          onClick={() => navigate('/matches/match-1')}
-        >
-          <div className="relative z-10">
-            <h2 className="font-bold text-lg flex items-center gap-2 text-yellow-700 dark:text-gold">
-              <Zap className="h-5 w-5 fill-current animate-bounce" /> Ao Vivo
-            </h2>
-            <p className="text-xs text-muted-foreground mt-1">
-              Partida em andamento
-            </p>
-          </div>
         </div>
       </div>
 

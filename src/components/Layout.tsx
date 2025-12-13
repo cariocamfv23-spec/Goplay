@@ -8,7 +8,6 @@ export default function Layout() {
   // Define paths where BottomNav should be hidden
   const hideBottomNavPaths = [
     '/messages/', // Hide on chat rooms (except list)
-    '/driver/active',
   ]
 
   const shouldHideBottomNav =

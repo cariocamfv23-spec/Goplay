@@ -40,13 +40,8 @@ const NotFound = lazy(() => import('./pages/NotFound'))
 const EventDetails = lazy(() => import('./pages/explore/EventDetails'))
 const NewChat = lazy(() => import('./pages/messages/NewChat'))
 const Ranking = lazy(() => import('./pages/gamification/Ranking'))
-const Wallet = lazy(() => import('./pages/wallet/Wallet'))
-const WithdrawPix = lazy(() => import('./pages/wallet/WithdrawPix'))
-const PaymentMethods = lazy(() => import('./pages/wallet/PaymentMethods'))
-const RideRequest = lazy(() => import('./pages/services/RideRequest'))
-const ScheduledRides = lazy(() => import('./pages/services/ScheduledRides'))
 
-// New Detail Pages
+// Detail Pages
 const VenueDetails = lazy(() => import('./pages/venues/VenueDetails'))
 const GymDetails = lazy(() => import('./pages/gyms/GymDetails'))
 const NutritionPartnerDetails = lazy(
@@ -54,47 +49,8 @@ const NutritionPartnerDetails = lazy(
 )
 const ClinicDetails = lazy(() => import('./pages/clinics/ClinicDetails'))
 
-// Driver Pages
-const DriverDashboard = lazy(() => import('./pages/driver/DriverDashboard'))
-const DriverRequests = lazy(() => import('./pages/driver/DriverRequests'))
-const DriverHistory = lazy(() => import('./pages/driver/DriverHistory'))
-const DriverSettings = lazy(() => import('./pages/driver/DriverSettings'))
-const ActiveRide = lazy(() => import('./pages/driver/ActiveRide'))
-const DriverPerformance = lazy(() => import('./pages/driver/DriverPerformance'))
-const DriverRewards = lazy(() => import('./pages/driver/DriverRewards'))
-
-// New Invitations and Matches Pages
-const ReceivedInvitations = lazy(
-  () => import('./pages/invitations/ReceivedInvitations'),
-)
-const MatchDetails = lazy(() => import('./pages/matches/MatchDetails'))
-const MyPoints = lazy(() => import('./pages/gamification/MyPoints'))
-
-// New Stats Detail Page
-const StatsDetail = lazy(() => import('./pages/profile/StatsDetail'))
-
-// New Notification and Financial Pages
+// Notifications
 const Notifications = lazy(() => import('./pages/notifications/Notifications'))
-const TransactionHistory = lazy(
-  () => import('./pages/financials/TransactionHistory'),
-)
-
-// NEW AI FEATURES
-const GhostPlay = lazy(() => import('./pages/ai/GhostPlay'))
-const ArenaMode = lazy(() => import('./pages/ai/ArenaMode'))
-const AiCoach = lazy(() => import('./pages/ai/AiCoach'))
-const EvolutionMode = lazy(() => import('./pages/profile/EvolutionMode'))
-const ShadowChallenge = lazy(
-  () => import('./pages/gamification/ShadowChallenge'),
-)
-const InjuryScanner = lazy(() => import('./pages/ai/InjuryScanner'))
-const InternationalMatch = lazy(
-  () => import('./pages/explore/InternationalMatch'),
-)
-const SportsPassport = lazy(() => import('./pages/profile/SportsPassport'))
-const Oracle = lazy(() => import('./pages/ai/Oracle'))
-const VarzeaEditor = lazy(() => import('./pages/ai/VarzeaEditor'))
-const DeviceManager = lazy(() => import('./pages/devices/DeviceManager'))
 
 const App = () => (
   <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -126,7 +82,7 @@ const App = () => (
 
               <Route path="/events/:id" element={<EventDetails />} />
 
-              {/* New Detail Routes */}
+              {/* Detail Routes */}
               <Route path="/venues/:id" element={<VenueDetails />} />
               <Route path="/gyms/:id" element={<GymDetails />} />
               <Route
@@ -146,59 +102,13 @@ const App = () => (
               <Route path="/jobs/dashboard" element={<RecruiterDashboard />} />
               <Route path="/ranking" element={<Ranking />} />
               <Route path="/profile/:id" element={<Profile />} />
-              <Route path="/profile/stats" element={<StatsDetail />} />
               <Route path="/messages" element={<MessagesList />} />
               <Route path="/messages/:id" element={<ChatRoom />} />
               <Route path="/messages/new" element={<NewChat />} />
               <Route path="/settings" element={<Settings />} />
-              <Route path="/devices" element={<DeviceManager />} />
-              <Route path="/wallet" element={<Wallet />} />
-              <Route path="/wallet/withdraw" element={<WithdrawPix />} />
-              <Route path="/wallet/cards" element={<PaymentMethods />} />
-              <Route path="/ride/request/:driverId" element={<RideRequest />} />
-              <Route
-                path="/services/scheduled-rides"
-                element={<ScheduledRides />}
-              />
 
-              {/* Driver Routes */}
-              <Route path="/driver/dashboard" element={<DriverDashboard />} />
-              <Route path="/driver/requests" element={<DriverRequests />} />
-              <Route path="/driver/history" element={<DriverHistory />} />
-              <Route path="/driver/settings" element={<DriverSettings />} />
-              <Route path="/driver/active/:id" element={<ActiveRide />} />
-              <Route
-                path="/driver/performance"
-                element={<DriverPerformance />}
-              />
-              <Route path="/driver/rewards" element={<DriverRewards />} />
-
-              {/* New Invitations and Matches Routes */}
-              <Route path="/invitations" element={<ReceivedInvitations />} />
-              <Route path="/matches/:id" element={<MatchDetails />} />
-              <Route path="/my-points" element={<MyPoints />} />
-
-              {/* Notifications and Financials */}
+              {/* Notifications */}
               <Route path="/notifications" element={<Notifications />} />
-              <Route
-                path="/financials/transactions"
-                element={<TransactionHistory />}
-              />
-
-              {/* AI Features Routes */}
-              <Route path="/ai/ghost-play" element={<GhostPlay />} />
-              <Route path="/ai/arena" element={<ArenaMode />} />
-              <Route path="/ai/coach" element={<AiCoach />} />
-              <Route path="/ai/scanner" element={<InjuryScanner />} />
-              <Route path="/ai/oracle" element={<Oracle />} />
-              <Route path="/ai/editor" element={<VarzeaEditor />} />
-              <Route path="/profile/passport" element={<SportsPassport />} />
-              <Route path="/profile/evolution" element={<EvolutionMode />} />
-              <Route path="/play/shadow" element={<ShadowChallenge />} />
-              <Route
-                path="/play/international"
-                element={<InternationalMatch />}
-              />
             </Route>
 
             <Route path="*" element={<NotFound />} />
