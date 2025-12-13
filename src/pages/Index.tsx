@@ -2,44 +2,100 @@ import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import { Logo } from '@/components/Logo'
 import { AppIcon } from '@/components/AppIcon'
+import { ArrowRight, Trophy, Users, Activity } from 'lucide-react'
 
 export default function Index() {
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background relative overflow-hidden p-4">
-      {/* Background effects */}
-      <div className="absolute top-0 left-0 w-full h-full bg-[url('https://img.usecurling.com/p/1920/1080?q=sports%20stadium&color=black&dpr=2')] bg-cover bg-center opacity-5 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background pointer-events-none" />
+    <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
+      {/* Dynamic Background with improved performance using CSS gradients and low-res overlay */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-background z-10" />
+        <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/1000/1000?q=stadium%20lights&color=black')] bg-cover bg-center opacity-5 grayscale mix-blend-overlay" />
 
-      <div className="relative z-10 flex flex-col items-center gap-8 max-w-md w-full text-center animate-in fade-in zoom-in duration-700">
-        <div className="bg-background/50 backdrop-blur-xl p-6 rounded-3xl border border-white/10 shadow-2xl">
-          <AppIcon className="w-24 h-24" />
+        {/* Animated ambient blobs */}
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-gold/10 rounded-full blur-[100px] pointer-events-none animate-pulse duration-[4000ms]" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[100px] pointer-events-none animate-pulse duration-[5000ms]" />
+      </div>
+
+      <div className="relative z-10 flex flex-col h-full px-6 py-8 max-w-md mx-auto w-full">
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+          {/* Logo & Icon Section */}
+          <div className="relative group cursor-default">
+            <div className="absolute -inset-4 bg-gradient-to-tr from-primary/30 to-gold/30 rounded-full blur-xl opacity-70 animate-pulse group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="bg-background/80 backdrop-blur-xl p-6 rounded-3xl border border-white/10 shadow-2xl relative transform transition-transform group-hover:scale-105 duration-500">
+              <AppIcon className="w-20 h-20 drop-shadow-md" />
+            </div>
+          </div>
+
+          <div className="space-y-4 max-w-[280px]">
+            <Logo variant="text" className="text-4xl justify-center" />
+            <h1 className="text-3xl font-bold tracking-tight text-foreground leading-tight">
+              O seu esporte, <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
+                levado a sério.
+              </span>
+            </h1>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              A plataforma completa para atletas, times e organizadores.
+            </p>
+          </div>
+
+          {/* Value Props / Features Preview */}
+          <div className="grid grid-cols-3 gap-3 w-full pt-4">
+            {[
+              { icon: Trophy, label: 'Compita' },
+              { icon: Users, label: 'Conecte' },
+              { icon: Activity, label: 'Evolua' },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-secondary/30 border border-border/50 backdrop-blur-sm hover:bg-secondary/50 transition-colors duration-300"
+              >
+                <item.icon className="w-5 h-5 text-gold" />
+                <span className="text-xs font-medium text-muted-foreground">
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="space-y-2">
-          <Logo variant="full" className="h-12 justify-center text-3xl" />
-          <p className="text-muted-foreground text-lg">
-            O seu app definitivo de esportes
-          </p>
-        </div>
-
-        <div className="grid gap-4 w-full mt-4">
+        {/* Footer Actions */}
+        <div className="mt-8 space-y-3 animate-in fade-in slide-in-from-bottom-12 duration-700 delay-200">
           <Button
             size="lg"
-            className="w-full h-14 text-lg font-bold rounded-2xl bg-primary hover:bg-primary/90 shadow-lg shadow-primary/25 transition-all hover:scale-[1.02]"
+            className="w-full h-14 text-base font-bold rounded-2xl bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95 group"
             onClick={() => navigate('/login')}
           >
-            Entrar
+            Entrar no Goplay
+            <ArrowRight className="w-5 h-5 ml-2 opacity-80 group-hover:translate-x-1 transition-transform" />
           </Button>
+
           <Button
             variant="outline"
             size="lg"
-            className="w-full h-14 text-lg font-bold rounded-2xl border-2 hover:bg-accent transition-all hover:scale-[1.02]"
+            className="w-full h-14 text-base font-bold rounded-2xl border-2 hover:bg-accent hover:text-accent-foreground transition-all hover:scale-[1.02] active:scale-95"
             onClick={() => navigate('/register')}
           >
             Criar conta
           </Button>
+
+          <div className="flex justify-center gap-4 pt-6 text-[10px] text-muted-foreground">
+            <span className="cursor-pointer hover:text-primary transition-colors">
+              Termos de Uso
+            </span>
+            <span>•</span>
+            <span className="cursor-pointer hover:text-primary transition-colors">
+              Privacidade
+            </span>
+            <span>•</span>
+            <span className="cursor-pointer hover:text-primary transition-colors">
+              Ajuda
+            </span>
+          </div>
         </div>
       </div>
     </div>

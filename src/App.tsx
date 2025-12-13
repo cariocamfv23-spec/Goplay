@@ -6,9 +6,10 @@ import Layout from './components/Layout'
 import { Suspense, lazy } from 'react'
 import { PageLoader } from './components/PageLoader'
 import { BrandingProvider } from '@/stores/useBrandingStore'
+import Index from './pages/Index'
 
 // Lazy load pages for performance optimization
-const Index = lazy(() => import('./pages/Index'))
+// Index page is now eager loaded to improve First Contentful Paint (FCP) on landing
 const Login = lazy(() => import('./pages/auth/Login'))
 const Register = lazy(() => import('./pages/auth/Register'))
 const Onboarding = lazy(() => import('./pages/auth/Onboarding'))
