@@ -14,7 +14,6 @@ const Slider = React.forwardRef<
       className,
     )}
     {...props}
-  />
   >
     <SliderPrimitive.Track className="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary">
       <SliderPrimitive.Range className="absolute h-full bg-primary" />
@@ -25,4 +24,3 @@ const Slider = React.forwardRef<
 Slider.displayName = SliderPrimitive.Root.displayName
 
 export { Slider }
-
