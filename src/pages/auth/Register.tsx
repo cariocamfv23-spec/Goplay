@@ -4,11 +4,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { Mail, Lock, User, Smartphone } from 'lucide-react'
 import useBrandingStore from '@/stores/useBrandingStore'
+import { AppIcon } from '@/components/AppIcon'
 
-const Register = () => {
+export default function Register() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
-  const { logoUrl, iconUrl } = useBrandingStore()
+  const { logoUrl } = useBrandingStore()
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault()
@@ -21,7 +22,7 @@ const Register = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-center px-6 py-12 bg-background animate-fade-in relative overflow-hidden">
+    <div className="min-h-screen flex flex-col justify-center px-6 py-12 bg-background animate-in fade-in duration-500 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/3 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-gold/5 rounded-full blur-[120px] -translate-x-1/3 translate-y-1/3 pointer-events-none" />
@@ -29,11 +30,7 @@ const Register = () => {
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8 relative z-10">
         <div className="flex flex-col items-center justify-center mb-6 gap-4">
           <div className="p-3 rounded-2xl bg-background/50 backdrop-blur-sm border border-border/50 shadow-lg">
-            <img
-              src={iconUrl}
-              alt="Goplay Icon"
-              className="w-12 h-12 object-contain"
-            />
+            <AppIcon className="w-12 h-12" />
           </div>
           <img
             src={logoUrl}
@@ -135,5 +132,3 @@ const Register = () => {
     </div>
   )
 }
-
-export default Register
