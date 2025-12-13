@@ -9,15 +9,32 @@ import {
   Brain,
   Watch,
   Heart,
+  MessageSquare,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { AppIcon } from '@/components/AppIcon'
 import useDeviceStore from '@/stores/useDeviceStore'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 export default function AiCoach() {
   const navigate = useNavigate()
   const { connectedDevice, biometrics, updateBiometrics } = useDeviceStore()
+  const [messages, setMessages] = useState([
+    {
+      role: 'ai',
+      text: 'Olá, atleta! Como posso ajudar na sua evolução hoje?',
+    },
+  ])
+  const [inputText, setInputText] = useState('')
 
   useEffect(() => {
     let interval: NodeJS.Timeout
@@ -27,8 +44,25 @@ export default function AiCoach() {
     return () => clearInterval(interval)
   }, [connectedDevice, updateBiometrics])
 
+  const handleSendMessage = () => {
+    if (!inputText.trim()) return
+    const userMsg = { role: 'user', text: inputText }
+    setMessages((prev) => [...prev, userMsg])
+    setInputText('')
+
+    setTimeout(() => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'ai',
+          text: 'Entendi! Baseado nos seus últimos dados, recomendo focar em exercícios pliométricos para explosão muscular.',
+        },
+      ])
+    }, 1500)
+  }
+
   return (
-    <div className="min-h-screen bg-zinc-950 text-white pb-20 animate-fade-in">
+    <div className="min-h-screen bg-zinc-950 text-white pb-20 animate-fade-in relative">
       <div className="p-4 border-b border-zinc-800 flex items-center gap-4 sticky top-0 bg-zinc-950 z-10">
         <Button
           variant="ghost"
@@ -176,6 +210,52 @@ export default function AiCoach() {
           </div>
         </div>
       </div>
+
+      {/* Interactive Chat Fab */}
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-gradient-to-r from-primary to-purple-800 shadow-xl z-50">
+            <MessageSquare className="h-6 w-6" />
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="bg-zinc-950 border-zinc-800 text-white sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AppIcon className="h-6 w-6" /> Conversar com Coach
+            </DialogTitle>
+          </DialogHeader>
+          <div className="h-[300px] flex flex-col">
+            <ScrollArea className="flex-1 pr-4">
+              <div className="space-y-4">
+                {messages.map((msg, idx) => (
+                  <div
+                    key={idx}
+                    className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div
+                      className={`max-w-[80%] p-3 rounded-xl text-sm ${msg.role === 'user' ? 'bg-primary text-white rounded-br-none' : 'bg-zinc-800 text-zinc-200 rounded-bl-none'}`}
+                    >
+                      {msg.text}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+            <div className="mt-4 flex gap-2">
+              <Input
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                placeholder="Pergunte sobre seu treino..."
+                className="bg-zinc-900 border-zinc-700 text-white"
+                onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+              />
+              <Button onClick={handleSendMessage} size="icon">
+                <PlayCircle className="h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -1,14 +1,13 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent } from '@/components/ui/card'
 import {
   ArrowLeft,
   MapPin,
-  Navigation,
   Car,
   Lock,
   Calendar as CalendarIcon,
-  Clock,
+  UserPlus,
+  Search,
 } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
@@ -34,6 +33,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 export default function RideRequest() {
   const navigate = useNavigate()
@@ -48,6 +53,9 @@ export default function RideRequest() {
   const [permissionReason, setPermissionReason] = useState('')
   const [isSimulatedFollower, setIsSimulatedFollower] = useState(false)
   const [requestType, setRequestType] = useState<'now' | 'schedule'>('now')
+  const [rideFor, setRideFor] = useState<'me' | 'guest'>('me')
+  const [guestName, setGuestName] = useState('')
+  const [isGuestDialogOpen, setIsGuestDialogOpen] = useState(false)
   const [date, setDate] = useState<Date>()
   const [time, setTime] = useState<string>()
 
@@ -90,12 +98,28 @@ export default function RideRequest() {
       })
       navigate('/services/scheduled-rides')
     } else {
+      if (rideFor === 'guest' && !guestName) {
+        toast.error('Selecione um convidado.')
+        return
+      }
+
       setStep('searching')
       setTimeout(() => {
-        toast.success('Motorista a caminho!')
+        if (rideFor === 'guest') {
+          toast.success('Convite enviado!', {
+            description: `A solicitação de Uber foi enviada para ${guestName}.`,
+          })
+        } else {
+          toast.success('Motorista a caminho!')
+        }
         navigate('/home')
       }, 2000)
     }
+  }
+
+  const handleSelectGuest = (name: string) => {
+    setGuestName(name)
+    setIsGuestDialogOpen(false)
   }
 
   return (
@@ -156,6 +180,41 @@ export default function RideRequest() {
                 <TabsTrigger value="schedule">Agendar</TabsTrigger>
               </TabsList>
             </Tabs>
+
+            {/* Ride For Selection */}
+            <div className="flex items-center gap-2 mb-4 bg-secondary/30 p-2 rounded-lg">
+              <Button
+                variant={rideFor === 'me' ? 'default' : 'ghost'}
+                size="sm"
+                className="flex-1 rounded-md"
+                onClick={() => setRideFor('me')}
+              >
+                Para Mim
+              </Button>
+              <Button
+                variant={rideFor === 'guest' ? 'default' : 'ghost'}
+                size="sm"
+                className="flex-1 rounded-md"
+                onClick={() => setRideFor('guest')}
+              >
+                <UserPlus className="h-4 w-4 mr-2" />
+                Para Atleta
+              </Button>
+            </div>
+
+            {rideFor === 'guest' && (
+              <div
+                className="flex items-center justify-between p-3 border rounded-xl mb-4 cursor-pointer hover:bg-secondary/50"
+                onClick={() => setIsGuestDialogOpen(true)}
+              >
+                <span
+                  className={guestName ? 'font-bold' : 'text-muted-foreground'}
+                >
+                  {guestName || 'Selecionar Atleta Convidado'}
+                </span>
+                <Search className="h-4 w-4 text-muted-foreground" />
+              </div>
+            )}
 
             {requestType === 'schedule' && (
               <div className="grid grid-cols-2 gap-4 mb-4 animate-in slide-in-from-top-2">
@@ -229,7 +288,9 @@ export default function RideRequest() {
               >
                 {requestType === 'schedule'
                   ? 'Agendar Corrida'
-                  : 'Confirmar Goplay Driver'}
+                  : rideFor === 'guest'
+                    ? 'Solicitar e Enviar Convite'
+                    : 'Confirmar Goplay Driver'}
               </Button>
             ) : (
               <div className="space-y-3">
@@ -261,10 +322,44 @@ export default function RideRequest() {
         {step === 'searching' && (
           <div className="flex flex-col items-center py-6 gap-4">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
-            <p className="font-medium text-lg">Conectando com o motorista...</p>
+            <p className="font-medium text-lg">
+              {rideFor === 'guest'
+                ? 'Enviando convite com motorista...'
+                : 'Conectando com o motorista...'}
+            </p>
           </div>
         )}
       </div>
+
+      <Dialog open={isGuestDialogOpen} onOpenChange={setIsGuestDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Selecionar Atleta</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2 mt-4">
+            {mockProfiles
+              .filter((p) => p.type === 'athlete')
+              .map((athlete) => (
+                <div
+                  key={athlete.id}
+                  className="flex items-center gap-3 p-3 hover:bg-secondary rounded-lg cursor-pointer"
+                  onClick={() => handleSelectGuest(athlete.name)}
+                >
+                  <Avatar>
+                    <AvatarImage src={athlete.avatar} />
+                    <AvatarFallback>{athlete.name[0]}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-bold">{athlete.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {athlete.sport}
+                    </p>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

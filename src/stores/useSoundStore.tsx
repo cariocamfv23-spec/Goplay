@@ -173,11 +173,26 @@ const useSoundStore = create<SoundStore>()(
               utterance.pitch = 0.8
               utterance.rate = 0.9
               break
+            case 'emotion':
+              utterance.pitch = 1.2
+              utterance.rate = 1.1
+              break
+            case 'gringo':
+              utterance.pitch = 1.0
+              utterance.rate = 1.0
+              utterance.lang = 'en-US' // Try to switch to English voice if available
+              break
           }
 
           const voices = synth.getVoices()
-          const ptVoice = voices.find((v) => v.lang.includes('pt'))
-          if (ptVoice) utterance.voice = ptVoice
+          let targetVoice = voices.find((v) => v.lang.includes('pt'))
+
+          if (config.style === 'gringo') {
+            const enVoice = voices.find((v) => v.lang.includes('en'))
+            if (enVoice) targetVoice = enVoice
+          }
+
+          if (targetVoice) utterance.voice = targetVoice
 
           utterance.onstart = () => set({ isPlayingNarration: true })
           utterance.onend = () => set({ isPlayingNarration: false })

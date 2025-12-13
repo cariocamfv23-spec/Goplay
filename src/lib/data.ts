@@ -19,6 +19,8 @@ import {
   Smartphone,
   Brain,
   Zap,
+  Heart,
+  Globe,
 } from 'lucide-react'
 
 export const navigationItems = [
@@ -80,6 +82,8 @@ export interface NarrationConfig {
     | 'futuristic'
     | 'influencer'
     | 'tactical'
+    | 'emotion'
+    | 'gringo'
   text: string
   volume: number
 }
@@ -321,6 +325,15 @@ export const mockNutritionPartners = [
     specialties: ['Suplementos', 'Marmitas Fit'],
     discount: '15% OFF para usuários Goplay',
   },
+  {
+    id: 'n2',
+    name: 'NutriSports',
+    location: 'Pinheiros, SP',
+    rating: 4.8,
+    img: 'sports%20nutrition%20store',
+    specialties: ['Whey Protein', 'Barrinhas', 'Energéticos'],
+    discount: '10% OFF na primeira compra',
+  },
 ]
 
 export const mockClinics = [
@@ -333,6 +346,16 @@ export const mockClinics = [
     services: ['Fisioterapia', 'Osteopatia', 'Recovery'],
     insurance: ['Amil', 'Bradesco', 'Unimed'],
     recoveryPlan: true,
+  },
+  {
+    id: 'c2',
+    name: 'Clínica do Atleta',
+    location: 'Vila Olímpia, SP',
+    rating: 4.9,
+    img: 'sports%20medicine%20clinic',
+    services: ['Medicina Esportiva', 'Nutrição', 'Cardiologia'],
+    insurance: ['SulAmérica', 'Porto Seguro'],
+    recoveryPlan: false,
   },
 ]
 
@@ -947,6 +970,20 @@ export const narrationStyles = [
     previewText: 'Observamos uma falha na cobertura defensiva.',
     icon: 'Brain',
   },
+  {
+    id: 'emotion',
+    name: 'Emocionante',
+    description: 'Drama e emoção no máximo.',
+    previewText: 'Haja coração amigos! Que momento histórico!',
+    icon: 'Heart',
+  },
+  {
+    id: 'gringo',
+    name: 'Comentarista Internacional',
+    description: 'Estilo europeu e sofisticado.',
+    previewText: 'What a beautiful game! Simply magnificent!',
+    icon: 'Globe',
+  },
 ] as const
 
 // --- NEW DATA FOR AI FEATURES ---
@@ -1016,8 +1053,6 @@ export const mockInternationalMatches = [
     avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=77',
   },
 ]
-
-// --- MISSING EXPORTS FIXED ---
 
 export const photographerCategories = [
   'Eventos Esportivos',
