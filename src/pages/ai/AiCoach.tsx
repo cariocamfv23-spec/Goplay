@@ -14,7 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { AppIcon } from '@/components/AppIcon'
 import useDeviceStore from '@/stores/useDeviceStore'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { cn } from '@/lib/utils'
 
 export default function AiCoach() {
   const navigate = useNavigate()
@@ -31,14 +32,16 @@ export default function AiCoach() {
   const [messages, setMessages] = useState([
     {
       role: 'ai',
-      text: 'Olá, atleta! Como posso ajudar na sua evolução hoje?',
+      text: 'Olá, atleta! Sou o Coach IA. Estou analisando seus dados para personalizar seu treino hoje.',
     },
   ])
   const [inputText, setInputText] = useState('')
+  const scrollAreaRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     let interval: NodeJS.Timeout
     if (connectedDevice) {
+      // Simulate real-time biometric updates
       interval = setInterval(updateBiometrics, 2000)
     }
     return () => clearInterval(interval)
@@ -50,16 +53,37 @@ export default function AiCoach() {
     setMessages((prev) => [...prev, userMsg])
     setInputText('')
 
+    // Interactive AI response based on context and biometrics
     setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'ai',
-          text: 'Entendi! Baseado nos seus últimos dados, recomendo focar em exercícios pliométricos para explosão muscular.',
-        },
-      ])
+      let aiResponse = ''
+      const lowerInput = inputText.toLowerCase()
+
+      if (lowerInput.includes('treino') || lowerInput.includes('exercício')) {
+        aiResponse =
+          'Baseado nos seus últimos dados, recomendo focar em exercícios pliométricos para explosão muscular hoje.'
+      } else if (
+        lowerInput.includes('cansa') ||
+        lowerInput.includes('fôlego')
+      ) {
+        aiResponse = `Seu batimento está em ${biometrics.heartRate} BPM. Sugiro um intervalo de recuperação ativa de 2 minutos agora.`
+      } else if (lowerInput.includes('dor') || lowerInput.includes('lesão')) {
+        aiResponse =
+          'Cuidado. Recomendo usar o Scanner de Lesões (Injury Scanner) no menu AI para uma análise visual.'
+      } else {
+        aiResponse =
+          'Entendi. Vou ajustar o plano. Lembre-se de manter a hidratação constante.'
+      }
+
+      setMessages((prev) => [...prev, { role: 'ai', text: aiResponse }])
     }, 1500)
   }
+
+  // Auto-scroll to bottom of chat
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
+    }
+  }, [messages])
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white pb-20 animate-fade-in relative">
@@ -80,17 +104,17 @@ export default function AiCoach() {
       <div className="p-4 space-y-6">
         {/* Biometrics Integration Alert */}
         {!connectedDevice ? (
-          <div className="bg-primary/10 border border-primary/20 p-4 rounded-xl flex items-center justify-between">
+          <div className="bg-primary/10 border border-primary/20 p-4 rounded-xl flex items-center justify-between animate-pulse">
             <div className="flex items-center gap-3">
               <div className="bg-primary/20 p-2 rounded-full">
                 <Watch className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <h3 className="font-bold text-sm text-primary">
-                  Conecte seu Smartwatch
+                  Dispositivo Desconectado
                 </h3>
                 <p className="text-xs text-zinc-400">
-                  Obtenha dados biométricos em tempo real.
+                  Conecte para análise em tempo real.
                 </p>
               </div>
             </div>
@@ -145,19 +169,19 @@ export default function AiCoach() {
               <div className="flex items-center gap-2 mb-1">
                 <Brain className="h-4 w-4 text-primary animate-pulse" />
                 <span className="text-xs font-bold text-primary uppercase">
-                  Feedback em Tempo Real
+                  Feedback Dinâmico
                 </span>
               </div>
-              <p className="font-semibold">
+              <p className="font-semibold text-sm">
                 {connectedDevice && biometrics.heartRate > 140
-                  ? 'Frequência cardíaca elevada. Respire e foque na técnica.'
-                  : 'Aumente a passada e corrija a postura do tronco.'}
+                  ? 'Frequência elevada! A IA ajustou o próximo exercício para recuperação ativa.'
+                  : 'Ritmo ideal. A IA sugere aumentar a intensidade em 10% no próximo tiro.'}
               </p>
             </div>
           </div>
           <CardContent className="p-4">
             <Button className="w-full bg-primary hover:bg-primary/90 text-white font-bold">
-              <PlayCircle className="mr-2 h-5 w-5" /> Iniciar Nova Análise
+              <PlayCircle className="mr-2 h-5 w-5" /> Iniciar Sessão Guiada
             </Button>
           </CardContent>
         </Card>
@@ -225,23 +249,28 @@ export default function AiCoach() {
             </DialogTitle>
           </DialogHeader>
           <div className="h-[300px] flex flex-col">
-            <ScrollArea className="flex-1 pr-4">
-              <div className="space-y-4">
+            <div className="flex-1 overflow-y-auto pr-4" ref={scrollAreaRef}>
+              <div className="space-y-4 pb-2">
                 {messages.map((msg, idx) => (
                   <div
                     key={idx}
                     className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
-                      className={`max-w-[80%] p-3 rounded-xl text-sm ${msg.role === 'user' ? 'bg-primary text-white rounded-br-none' : 'bg-zinc-800 text-zinc-200 rounded-bl-none'}`}
+                      className={cn(
+                        'max-w-[80%] p-3 rounded-xl text-sm',
+                        msg.role === 'user'
+                          ? 'bg-primary text-white rounded-br-none'
+                          : 'bg-zinc-800 text-zinc-200 rounded-bl-none',
+                      )}
                     >
                       {msg.text}
                     </div>
                   </div>
                 ))}
               </div>
-            </ScrollArea>
-            <div className="mt-4 flex gap-2">
+            </div>
+            <div className="mt-4 flex gap-2 pt-2 border-t border-zinc-800">
               <Input
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}

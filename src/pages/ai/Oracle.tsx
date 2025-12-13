@@ -5,6 +5,8 @@ import {
   TrendingUp,
   Target,
   BarChart2,
+  Watch,
+  Info,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockOracle } from '@/lib/data'
@@ -18,9 +20,11 @@ import {
 } from 'recharts'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import useDeviceStore from '@/stores/useDeviceStore'
 
 export default function Oracle() {
   const navigate = useNavigate()
+  const { connectedDevice } = useDeviceStore()
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white pb-20 animate-fade-in">
@@ -39,17 +43,41 @@ export default function Oracle() {
       </div>
 
       <div className="p-4 space-y-6">
+        {/* Device Integration Badge */}
+        {connectedDevice ? (
+          <div className="flex items-center justify-center gap-2 bg-purple-900/20 text-purple-300 py-2 rounded-full border border-purple-500/30 text-xs">
+            <Watch className="h-3 w-3" />
+            Dados em tempo real de {connectedDevice.name}
+          </div>
+        ) : (
+          <div
+            className="flex items-center justify-center gap-2 bg-zinc-900 text-zinc-400 py-2 rounded-full border border-zinc-800 text-xs cursor-pointer hover:bg-zinc-800"
+            onClick={() => navigate('/devices')}
+          >
+            <Info className="h-3 w-3" />
+            Conecte seu dispositivo para maior precisão
+          </div>
+        )}
+
         <div className="text-center py-6">
           <div className="inline-block relative">
             <div className="h-32 w-32 rounded-full border-4 border-purple-500/30 flex items-center justify-center bg-purple-900/10 mb-4 animate-[pulse_3s_infinite]">
               <span className="text-5xl font-black text-purple-400">
-                {mockOracle.potentialIndex}
+                {connectedDevice
+                  ? mockOracle.potentialIndex + 2
+                  : mockOracle.potentialIndex}
               </span>
             </div>
+            {connectedDevice && (
+              <div className="absolute top-0 right-0 bg-green-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                +2%
+              </div>
+            )}
           </div>
           <h2 className="text-2xl font-bold mb-1">Potencial Goplay</h2>
           <p className="text-zinc-400 text-sm">
-            Baseado na análise de 128 vídeos seus.
+            Baseado na análise de 128 vídeos{' '}
+            {connectedDevice ? 'e dados biométricos' : ''}.
           </p>
         </div>
 

@@ -147,40 +147,40 @@ const useSoundStore = create<SoundStore>()(
           const utterance = new SpeechSynthesisUtterance(config.text)
           utterance.volume = config.volume
 
-          // Simulate styles with pitch/rate/voice
+          // Enhanced style definitions for expanded packs
           switch (config.style) {
             case 'varzea':
-              utterance.pitch = 0.9
-              utterance.rate = 1.3
+              utterance.pitch = 0.8
+              utterance.rate = 1.4
               break
             case 'professional':
-              utterance.pitch = 1.1
-              utterance.rate = 1.0
+              utterance.pitch = 1.2
+              utterance.rate = 1.1
               break
             case 'comedy':
-              utterance.pitch = 1.4
-              utterance.rate = 1.5
+              utterance.pitch = 1.5
+              utterance.rate = 1.6
               break
             case 'futuristic':
-              utterance.pitch = 0.5
+              utterance.pitch = 0.6
               utterance.rate = 0.9
               break
             case 'influencer':
               utterance.pitch = 1.3
-              utterance.rate = 1.4
+              utterance.rate = 1.3
               break
             case 'tactical':
-              utterance.pitch = 0.8
+              utterance.pitch = 0.9
               utterance.rate = 0.9
               break
             case 'emotion':
-              utterance.pitch = 1.2
-              utterance.rate = 1.1
+              utterance.pitch = 1.1
+              utterance.rate = 1.0
               break
             case 'gringo':
               utterance.pitch = 1.0
               utterance.rate = 1.0
-              utterance.lang = 'en-US' // Try to switch to English voice if available
+              utterance.lang = 'en-US' // Attempt English accent/voice
               break
           }
 
@@ -196,6 +196,7 @@ const useSoundStore = create<SoundStore>()(
 
           utterance.onstart = () => set({ isPlayingNarration: true })
           utterance.onend = () => set({ isPlayingNarration: false })
+          utterance.onerror = () => set({ isPlayingNarration: false })
 
           synth.speak(utterance)
         } else {

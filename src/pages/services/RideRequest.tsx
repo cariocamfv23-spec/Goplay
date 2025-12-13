@@ -8,6 +8,7 @@ import {
   Calendar as CalendarIcon,
   UserPlus,
   Search,
+  CheckCircle2,
 } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
@@ -38,7 +39,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from '@/components/ui/dialog'
+import useSoundStore from '@/stores/useSoundStore'
 
 export default function RideRequest() {
   const navigate = useNavigate()
@@ -56,8 +59,10 @@ export default function RideRequest() {
   const [rideFor, setRideFor] = useState<'me' | 'guest'>('me')
   const [guestName, setGuestName] = useState('')
   const [isGuestDialogOpen, setIsGuestDialogOpen] = useState(false)
+  const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false)
   const [date, setDate] = useState<Date>()
   const [time, setTime] = useState<string>()
+  const { playSound } = useSoundStore()
 
   // Determine permissions
   useEffect(() => {
@@ -106,13 +111,13 @@ export default function RideRequest() {
       setStep('searching')
       setTimeout(() => {
         if (rideFor === 'guest') {
-          toast.success('Convite enviado!', {
-            description: `A solicitação de Uber foi enviada para ${guestName}.`,
-          })
+          playSound('notification_uber')
+          setIsSuccessDialogOpen(true)
         } else {
+          playSound('notification_uber')
           toast.success('Motorista a caminho!')
+          navigate('/home')
         }
-        navigate('/home')
       }, 2000)
     }
   }
@@ -204,7 +209,7 @@ export default function RideRequest() {
 
             {rideFor === 'guest' && (
               <div
-                className="flex items-center justify-between p-3 border rounded-xl mb-4 cursor-pointer hover:bg-secondary/50"
+                className="flex items-center justify-between p-3 border rounded-xl mb-4 cursor-pointer hover:bg-secondary/50 transition-colors border-primary/20"
                 onClick={() => setIsGuestDialogOpen(true)}
               >
                 <span
@@ -283,13 +288,13 @@ export default function RideRequest() {
 
             {canRequest ? (
               <Button
-                className="w-full h-14 rounded-full font-bold text-lg"
+                className="w-full h-14 rounded-full font-bold text-lg bg-gradient-to-r from-primary to-purple-800 shadow-lg"
                 onClick={handleRequest}
               >
                 {requestType === 'schedule'
                   ? 'Agendar Corrida'
                   : rideFor === 'guest'
-                    ? 'Solicitar e Enviar Convite'
+                    ? 'Enviar Uber com Convite'
                     : 'Confirmar Goplay Driver'}
               </Button>
             ) : (
@@ -324,13 +329,14 @@ export default function RideRequest() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
             <p className="font-medium text-lg">
               {rideFor === 'guest'
-                ? 'Enviando convite com motorista...'
+                ? 'Processando convite de corrida...'
                 : 'Conectando com o motorista...'}
             </p>
           </div>
         )}
       </div>
 
+      {/* Guest Selection Dialog */}
       <Dialog open={isGuestDialogOpen} onOpenChange={setIsGuestDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -342,7 +348,7 @@ export default function RideRequest() {
               .map((athlete) => (
                 <div
                   key={athlete.id}
-                  className="flex items-center gap-3 p-3 hover:bg-secondary rounded-lg cursor-pointer"
+                  className="flex items-center gap-3 p-3 hover:bg-secondary rounded-lg cursor-pointer transition-colors"
                   onClick={() => handleSelectGuest(athlete.name)}
                 >
                   <Avatar>
@@ -358,6 +364,29 @@ export default function RideRequest() {
                 </div>
               ))}
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Success Dialog for Guest Invite */}
+      <Dialog open={isSuccessDialogOpen} onOpenChange={setIsSuccessDialogOpen}>
+        <DialogContent className="text-center">
+          <div className="mx-auto h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+            <CheckCircle2 className="h-8 w-8 text-green-600" />
+          </div>
+          <DialogHeader>
+            <DialogTitle className="text-center text-xl">
+              Convite Enviado!
+            </DialogTitle>
+          </DialogHeader>
+          <p className="text-muted-foreground mb-4">
+            O motorista {driver.name} foi notificado e o convite da corrida foi
+            enviado para {guestName}.
+          </p>
+          <DialogFooter>
+            <Button className="w-full" onClick={() => navigate('/home')}>
+              Voltar ao Início
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

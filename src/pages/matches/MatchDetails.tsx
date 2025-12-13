@@ -125,7 +125,7 @@ export default function MatchDetails() {
 
         {/* Check-in Action */}
         <div className="bg-gradient-to-r from-zinc-900 to-zinc-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
-          {matchStatus === 'pending_checkin' ? (
+          {matchStatus === 'pending_checkin' || matchStatus === 'pending' ? (
             <>
               <h3 className="font-bold text-lg mb-2 flex items-center gap-2">
                 <QrCode className="h-5 w-5 text-gold" /> Check-in Obrigatório
