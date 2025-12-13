@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { mockVideos } from '@/lib/data'
+import { mockVideos, mockAiAnalysis, mockTrainingSuggestions } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,9 +8,9 @@ import {
   Share2,
   MoreVertical,
   Play,
-  Pause,
+  Zap,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { AiAnalysisDrawer } from '@/components/AiAnalysisDrawer'
 
 const VideoCard = ({
   video,
@@ -20,21 +20,30 @@ const VideoCard = ({
   isActive: boolean
 }) => {
   const [isPlaying, setIsPlaying] = useState(false)
+  const [showAnalysis, setShowAnalysis] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     if (isActive) {
       setIsPlaying(true)
-      // In a real app we would play the video here
-      // videoRef.current?.play()
     } else {
       setIsPlaying(false)
-      // videoRef.current?.pause()
     }
   }, [isActive])
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying)
+  }
+
+  // Enrich AI data with suggestions
+  const enrichedAiData = {
+    ...mockAiAnalysis,
+    trainingPlan: {
+      title: 'Plano de Melhoria',
+      exercises: mockTrainingSuggestions[0].exercises.map(
+        (e) => `${e.name} (${e.sets}x${e.reps})`,
+      ),
+    },
   }
 
   return (
@@ -56,7 +65,7 @@ const VideoCard = ({
       )}
 
       {/* Side Actions */}
-      <div className="absolute right-2 bottom-20 flex flex-col items-center gap-6 z-20">
+      <div className="absolute right-2 bottom-24 flex flex-col items-center gap-6 z-20">
         <div className="flex flex-col items-center gap-1">
           <Button
             size="icon"
@@ -87,6 +96,20 @@ const VideoCard = ({
           <Button
             size="icon"
             variant="ghost"
+            className="h-12 w-12 rounded-full bg-black/40 text-primary hover:bg-black/60 border border-primary/50 animate-pulse"
+            onClick={() => setShowAnalysis(true)}
+          >
+            <Zap className="h-6 w-6 fill-current" />
+          </Button>
+          <span className="text-white text-xs font-bold drop-shadow-md">
+            Análise AI
+          </span>
+        </div>
+
+        <div className="flex flex-col items-center gap-1">
+          <Button
+            size="icon"
+            variant="ghost"
             className="h-12 w-12 rounded-full bg-black/20 text-white hover:bg-black/40"
           >
             <Share2 className="h-7 w-7" />
@@ -106,8 +129,8 @@ const VideoCard = ({
       </div>
 
       {/* Bottom Info */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 pb-24 bg-gradient-to-t from-black/80 to-transparent z-10">
-        <div className="flex items-center gap-3 mb-3">
+      <div className="absolute bottom-0 left-0 right-0 p-4 pb-24 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none">
+        <div className="flex items-center gap-3 mb-3 pointer-events-auto">
           <Avatar className="h-10 w-10 border-2 border-white">
             <AvatarImage src={video.user.avatar} />
             <AvatarFallback>{video.user.name[0]}</AvatarFallback>
@@ -135,6 +158,12 @@ const VideoCard = ({
           </div>
         </div>
       </div>
+
+      <AiAnalysisDrawer
+        open={showAnalysis}
+        onOpenChange={setShowAnalysis}
+        data={enrichedAiData}
+      />
     </div>
   )
 }

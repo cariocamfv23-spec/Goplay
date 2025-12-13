@@ -22,6 +22,7 @@ const Explore = lazy(() => import('./pages/explore/Explore'))
 const PhotographersList = lazy(
   () => import('./pages/explore/PhotographersList'),
 )
+const DriversList = lazy(() => import('./pages/explore/DriversList'))
 const EventsList = lazy(() => import('./pages/explore/EventsList'))
 const VenuesList = lazy(() => import('./pages/explore/VenuesList'))
 const GymsList = lazy(() => import('./pages/explore/GymsList'))
@@ -94,6 +95,7 @@ const App = () => (
                 path="/explore/photographers"
                 element={<PhotographersList />}
               />
+              <Route path="/explore/drivers" element={<DriversList />} />
               <Route path="/explore/events" element={<EventsList />} />
               <Route path="/explore/venues" element={<VenuesList />} />
               <Route path="/explore/gyms" element={<GymsList />} />
@@ -143,7 +145,7 @@ const App = () => (
               <Route path="/settings" element={<Settings />} />
             </Route>
 
-            {/* Services & Driver Routes (outside or inside layout depending on view) */}
+            {/* Services & Driver Routes */}
             <Route path="/ride/request/:driverId" element={<RideRequest />} />
             <Route path="/driver/dashboard" element={<DriverDashboard />} />
             <Route path="/driver/requests" element={<DriverRequests />} />

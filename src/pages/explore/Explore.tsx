@@ -34,7 +34,7 @@ export default function Explore() {
 
       <div className="p-4 space-y-6">
         {/* Categories Grid */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-4 gap-3">
           {exploreCategories.map((cat) => (
             <div
               key={cat.id}
@@ -42,9 +42,11 @@ export default function Explore() {
               onClick={() => navigate(`/explore/${cat.id}`)}
             >
               <div className={`p-3 rounded-full ${cat.bg}`}>
-                <cat.icon className={`h-6 w-6 ${cat.color}`} />
+                <cat.icon className={`h-5 w-5 ${cat.color}`} />
               </div>
-              <span className="text-xs font-medium">{cat.label}</span>
+              <span className="text-[10px] font-medium text-center leading-tight">
+                {cat.label}
+              </span>
             </div>
           ))}
         </div>
@@ -115,6 +117,7 @@ export default function Explore() {
               <Card
                 key={venue.id}
                 className="flex border-none shadow-sm bg-card overflow-hidden cursor-pointer hover:bg-secondary/20 transition-colors"
+                onClick={() => navigate(`/venues/${venue.id}`)}
               >
                 <div className="w-24 h-24 bg-muted relative shrink-0">
                   <img
