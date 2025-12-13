@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
@@ -96,9 +96,7 @@ const VarzeaEditor = lazy(() => import('./pages/ai/VarzeaEditor'))
 const DeviceManager = lazy(() => import('./pages/devices/DeviceManager'))
 
 const App = () => (
-  <BrowserRouter
-    future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-  >
+  <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -207,7 +205,7 @@ const App = () => (
         </Suspense>
       </BrandingProvider>
     </TooltipProvider>
-  </BrowserRouter>
+  </HashRouter>
 )
 
 export default App
