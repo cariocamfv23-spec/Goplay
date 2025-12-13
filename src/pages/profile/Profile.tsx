@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom'
 import AthleteView from './AthleteView'
 import PhotographerView from './PhotographerView'
 import DriverView from './DriverView'
+import ClubView from './ClubView'
+import CoachView from './CoachView'
 
 export default function Profile() {
   const { id } = useParams()
@@ -13,8 +15,8 @@ export default function Profile() {
     : mockProfiles.find((p) => p.id.toString() === id)
 
   if (!user && !isMe) {
-    // Fallback if not found in mockProfiles, try to find in drivers or just use default
-    user = mockCurrentUser // Simplification for demo
+    // Fallback if not found
+    user = mockCurrentUser
   }
 
   // Type guard or casting
@@ -26,6 +28,10 @@ export default function Profile() {
         <PhotographerView profile={user as any} />
       ) : profileType === 'driver' ? (
         <DriverView profile={user as any} />
+      ) : profileType === 'club' ? (
+        <ClubView profile={user as any} />
+      ) : profileType === 'coach' ? (
+        <CoachView profile={user as any} />
       ) : (
         <AthleteView user={user} isMe={isMe} />
       )}

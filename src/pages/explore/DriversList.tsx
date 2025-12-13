@@ -2,14 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
-import {
-  Search,
-  MapPin,
-  Car,
-  Star,
-  Navigation,
-  ShieldCheck,
-} from 'lucide-react'
+import { Search, Car, Star, Navigation, ShieldCheck } from 'lucide-react'
 import { mockDrivers, mockCurrentUser } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -76,7 +69,7 @@ export default function DriversList() {
               <Card
                 key={driver.id}
                 className="overflow-hidden border-none shadow-md hover:shadow-lg transition-all cursor-pointer"
-                onClick={() => navigate(`/profile/driver${driver.id}`)}
+                onClick={() => navigate(`/profile/${driver.id}`)}
               >
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start mb-3">
@@ -88,7 +81,7 @@ export default function DriversList() {
                       <div>
                         <h3 className="font-bold">{driver.name}</h3>
                         <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                          <Car className="h-3 w-3" /> {driver.car}
+                          <Car className="h-3 w-3" /> {driver.car?.model}
                         </div>
                       </div>
                     </div>
@@ -98,7 +91,7 @@ export default function DriversList() {
                         {driver.rating}
                       </div>
                       <span className="text-xs text-primary font-medium mt-1">
-                        {driver.distance}
+                        {driver.distance || '0.5 km'}
                       </span>
                     </div>
                   </div>

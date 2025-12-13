@@ -1,58 +1,86 @@
+import { Button } from '@/components/ui/button'
+import {
+  ArrowLeft,
+  Trophy,
+  Crown,
+  TrendingUp,
+  Minus,
+  TrendingDown,
+} from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { mockRankings } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Trophy, Medal } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export default function Ranking() {
+  const navigate = useNavigate()
+
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
-      <div className="bg-gradient-to-b from-primary/20 to-background p-6 pt-10 text-center">
-        <Trophy className="h-16 w-16 mx-auto text-gold mb-4 animate-bounce" />
-        <h1 className="text-3xl font-bold mb-2">Ranking Global</h1>
-        <p className="text-muted-foreground text-sm">Temporada 2024</p>
+      <div className="bg-primary/5 p-6 pb-12 pt-16 text-center relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute top-4 left-4"
+          onClick={() => navigate(-1)}
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <Trophy className="h-16 w-16 text-gold mx-auto mb-4 animate-bounce" />
+        <h1 className="text-2xl font-bold">Ranking Global</h1>
+        <p className="text-muted-foreground">Temporada 2024</p>
       </div>
 
-      <div className="p-4 -mt-6">
-        <div className="bg-card rounded-2xl shadow-lg border border-border overflow-hidden">
-          {mockRankings.map((rank, index) => {
-            let medalColor = 'text-muted-foreground'
-            if (index === 0) medalColor = 'text-yellow-500'
-            if (index === 1) medalColor = 'text-gray-400'
-            if (index === 2) medalColor = 'text-amber-700'
-
-            return (
-              <div
-                key={rank.id}
-                className="flex items-center p-4 border-b border-border/50 last:border-0 hover:bg-secondary/20 transition-colors"
+      <div className="bg-background rounded-t-3xl -mt-8 px-4 pt-6 pb-4 shadow-xl">
+        <div className="space-y-4">
+          {mockRankings.map((rank) => (
+            <div
+              key={rank.id}
+              className={cn(
+                'flex items-center gap-4 p-4 rounded-xl border transition-all hover:scale-[1.02]',
+                rank.position === 1
+                  ? 'bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 border-gold/30'
+                  : 'bg-card border-border/50',
+              )}
+            >
+              <div className="font-bold text-lg text-muted-foreground w-6 text-center">
+                {rank.position === 1 ? (
+                  <Crown className="h-6 w-6 text-gold fill-gold" />
+                ) : (
+                  `#${rank.position}`
+                )}
+              </div>
+              <Avatar
+                className={cn(
+                  'h-12 w-12 border-2',
+                  rank.position === 1 ? 'border-gold' : 'border-transparent',
+                )}
               >
-                <div
-                  className={`w-8 font-bold text-lg text-center ${medalColor}`}
-                >
-                  {index < 3 ? (
-                    <Medal className="h-6 w-6 mx-auto" />
-                  ) : (
-                    rank.position
+                <AvatarImage src={rank.user.avatar} />
+                <AvatarFallback>{rank.user.name[0]}</AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <p className="font-bold">{rank.user.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  {rank.user.team || 'Atleta'}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="font-bold text-primary">{rank.points}</p>
+                <div className="flex items-center justify-end text-xs gap-1">
+                  {rank.trend === 'up' && (
+                    <TrendingUp className="h-3 w-3 text-green-500" />
+                  )}
+                  {rank.trend === 'down' && (
+                    <TrendingDown className="h-3 w-3 text-red-500" />
+                  )}
+                  {rank.trend === 'same' && (
+                    <Minus className="h-3 w-3 text-muted-foreground" />
                   )}
                 </div>
-                <Avatar className="h-10 w-10 mx-3 border border-border">
-                  <AvatarImage src={rank.user.avatar} />
-                  <AvatarFallback>{rank.user.name[0]}</AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <h3 className="font-bold text-sm">{rank.user.name}</h3>
-                  <Badge variant="secondary" className="text-[10px] h-4 px-1">
-                    {rank.league}
-                  </Badge>
-                </div>
-                <div className="text-right">
-                  <span className="font-bold block text-sm">
-                    {rank.points.toLocaleString()}
-                  </span>
-                  <span className="text-[10px] text-muted-foreground">pts</span>
-                </div>
               </div>
-            )
-          })}
+            </div>
+          ))}
         </div>
       </div>
     </div>

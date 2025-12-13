@@ -1,608 +1,67 @@
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import useBrandingStore from '@/stores/useBrandingStore'
-import useSoundStore from '@/stores/useSoundStore'
-import {
-  Bell,
-  CreditCard,
-  HelpCircle,
-  Lock,
-  LogOut,
-  Palette,
-  Shield,
-  Upload,
-  User,
-  Eye,
-  Camera,
-  Car,
-  MessageSquare,
-  Calendar,
-  Volume2,
-  VolumeX,
-  Music,
-  Mic,
-  Speaker,
-  Watch,
-  Smartphone,
-} from 'lucide-react'
-import { useState } from 'react'
+import { ArrowLeft, User, Bell, Lock, HelpCircle, LogOut } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
-import { Switch } from '@/components/ui/switch'
-import { Slider } from '@/components/ui/slider'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import useDeviceStore from '@/stores/useDeviceStore'
+import { Separator } from '@/components/ui/separator'
 
 export default function Settings() {
   const navigate = useNavigate()
-  const { logoUrl, iconUrl, setLogoUrl, setIconUrl, resetBranding } =
-    useBrandingStore()
-  const {
-    masterEnabled,
-    volume,
-    silentInMatches,
-    activePack,
-    setMasterEnabled,
-    setVolume,
-    setSilentInMatches,
-    setActivePack,
-    playSound,
-  } = useSoundStore()
-  const { connectedDevice } = useDeviceStore()
-
-  const [tempLogo, setTempLogo] = useState(logoUrl)
-  const [tempIcon, setTempIcon] = useState(iconUrl)
-  const [uploading, setUploading] = useState(false)
-  const [privacy, setPrivacy] = useState({
-    feedbackPublic: true,
-    showStats: true,
-  })
-  const [notifications, setNotifications] = useState({
-    push: true,
-    feedback: true,
-    driverUpdates: true,
-    photographerUpdates: true,
-    messages: true,
-    scheduledRides: true,
-  })
-
-  const handleSaveBranding = () => {
-    setLogoUrl(tempLogo)
-    setIconUrl(tempIcon)
-    toast.success('Marca atualizada com sucesso!')
-  }
-
-  const handleResetBranding = () => {
-    resetBranding()
-    setTempLogo('https://img.usecurling.com/i?q=play&shape=fill&color=violet')
-    setTempIcon('https://img.usecurling.com/i?q=play&shape=fill&color=violet')
-    toast.success('Marca restaurada para o padrão.')
-  }
-
-  const handleNotificationChange = (
-    key: keyof typeof notifications,
-    value: boolean,
-  ) => {
-    setNotifications((prev) => ({ ...prev, [key]: value }))
-    toast.success('Preferência salva', {
-      description: 'Suas configurações de notificação foram atualizadas.',
-    })
-  }
-
-  const simulateUpload = (type: 'logo' | 'icon') => {
-    setUploading(true)
-    setTimeout(() => {
-      const newUrl = `https://img.usecurling.com/i?q=goplay&shape=fill&color=violet&ts=${Date.now()}`
-      if (type === 'logo') setTempLogo(newUrl)
-      else setTempIcon(newUrl)
-      setUploading(false)
-      toast.success('Imagem enviada com sucesso!')
-    }, 1500)
-  }
 
   return (
-    <div className="container max-w-2xl mx-auto py-6 px-4 pb-24 animate-fade-in">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">Configurações</h1>
-        <p className="text-muted-foreground">
-          Gerencie suas preferências e conta.
-        </p>
+    <div className="min-h-screen bg-background pb-20 animate-fade-in">
+      <div className="sticky top-0 bg-background z-20 p-4 border-b border-border/50 flex items-center gap-4">
+        <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <h1 className="text-xl font-bold">Configurações</h1>
       </div>
 
-      <Tabs defaultValue="account" className="space-y-4">
-        <TabsList className="w-full justify-start overflow-x-auto h-auto p-1 bg-background border rounded-xl">
-          <TabsTrigger value="account" className="gap-2">
-            <User className="h-4 w-4" /> Conta
-          </TabsTrigger>
-          <TabsTrigger value="sounds" className="gap-2">
-            <Volume2 className="h-4 w-4" /> Sons
-          </TabsTrigger>
-          <TabsTrigger value="devices" className="gap-2">
-            <Watch className="h-4 w-4" /> Dispositivos
-          </TabsTrigger>
-          <TabsTrigger value="notifications" className="gap-2">
-            <Bell className="h-4 w-4" /> Notificações
-          </TabsTrigger>
-          <TabsTrigger value="privacy" className="gap-2">
-            <Lock className="h-4 w-4" /> Privacidade
-          </TabsTrigger>
-          <TabsTrigger value="branding" className="gap-2">
-            <Palette className="h-4 w-4" /> Aparência
-          </TabsTrigger>
-        </TabsList>
+      <div className="p-4 space-y-6">
+        <div className="space-y-1">
+          <h3 className="text-sm font-bold text-muted-foreground uppercase px-2">
+            Conta
+          </h3>
+          <Button
+            variant="ghost"
+            className="w-full justify-start h-12 gap-3 text-base font-normal"
+          >
+            <User className="h-5 w-5" /> Dados Pessoais
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start h-12 gap-3 text-base font-normal"
+          >
+            <Bell className="h-5 w-5" /> Notificações
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start h-12 gap-3 text-base font-normal"
+          >
+            <Lock className="h-5 w-5" /> Privacidade e Segurança
+          </Button>
+        </div>
 
-        <TabsContent value="account">
-          <Card>
-            <CardHeader>
-              <CardTitle>Sua Conta</CardTitle>
-              <CardDescription>
-                Informações pessoais e segurança.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-2">
-                <Button
-                  variant="outline"
-                  className="justify-start gap-2 h-12"
-                  onClick={() => navigate('/profile/me')}
-                >
-                  <User className="h-4 w-4" /> Editar Perfil
-                </Button>
-                <Button
-                  variant="outline"
-                  className="justify-start gap-2 h-12"
-                  onClick={() => navigate('/wallet/cards')}
-                >
-                  <CreditCard className="h-4 w-4" /> Métodos de Pagamento
-                </Button>
-                <Button variant="outline" className="justify-start gap-2 h-12">
-                  <Shield className="h-4 w-4" /> Verificações
-                </Button>
-              </div>
-              <Separator className="my-2" />
-              <Button
-                variant="destructive"
-                className="w-full gap-2"
-                onClick={() => navigate('/login')}
-              >
-                <LogOut className="h-4 w-4" /> Sair da Conta
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
+        <Separator />
 
-        <TabsContent value="sounds">
-          <Card>
-            <CardHeader>
-              <CardTitle>Sons do Goplay</CardTitle>
-              <CardDescription>
-                Personalize sua experiência auditiva no aplicativo.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between p-2 bg-secondary/20 rounded-lg">
-                <div className="space-y-0.5">
-                  <Label className="flex items-center gap-2 text-base">
-                    {masterEnabled ? (
-                      <Volume2 className="h-5 w-5 text-primary" />
-                    ) : (
-                      <VolumeX className="h-5 w-5 text-muted-foreground" />
-                    )}
-                    Ativar Sons
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    Habilitar efeitos sonoros em todo o app.
-                  </p>
-                </div>
-                <Switch
-                  checked={masterEnabled}
-                  onCheckedChange={setMasterEnabled}
-                />
-              </div>
+        <div className="space-y-1">
+          <h3 className="text-sm font-bold text-muted-foreground uppercase px-2">
+            Suporte
+          </h3>
+          <Button
+            variant="ghost"
+            className="w-full justify-start h-12 gap-3 text-base font-normal"
+          >
+            <HelpCircle className="h-5 w-5" /> Ajuda
+          </Button>
+        </div>
 
-              <div className="space-y-4 p-2">
-                <div className="flex justify-between">
-                  <Label className="flex items-center gap-2">
-                    <Speaker className="h-4 w-4" /> Volume Interno
-                  </Label>
-                  <span className="text-xs text-muted-foreground font-mono">
-                    {Math.round(volume * 100)}%
-                  </span>
-                </div>
-                <Slider
-                  value={[volume]}
-                  max={1}
-                  step={0.1}
-                  onValueChange={(vals) => setVolume(vals[0])}
-                  disabled={!masterEnabled}
-                  className="py-2"
-                />
-              </div>
+        <Separator />
 
-              <Separator />
-
-              <div className="space-y-3 p-2">
-                <Label className="flex items-center gap-2">
-                  <Mic className="h-4 w-4" /> Pacote de Gírias (Voice Pack)
-                </Label>
-                <Select
-                  value={activePack}
-                  onValueChange={(val: any) => setActivePack(val)}
-                  disabled={!masterEnabled}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione um pacote" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="varzea">Pack Várzea (Padrão)</SelectItem>
-                    <SelectItem value="arena">Pack Arena Pro</SelectItem>
-                    <SelectItem value="street">Pack Street Sports</SelectItem>
-                  </SelectContent>
-                </Select>
-                <p className="text-xs text-muted-foreground">
-                  Define o estilo das reações de voz nos likes e notificações.
-                </p>
-              </div>
-
-              <Separator />
-
-              <div className="flex items-center justify-between p-2">
-                <div className="space-y-0.5">
-                  <Label className="flex items-center gap-2">
-                    <Music className="h-4 w-4" /> Modo Silencioso em Partidas
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    Silencia notificações durante seus jogos.
-                  </p>
-                </div>
-                <Switch
-                  checked={silentInMatches}
-                  onCheckedChange={setSilentInMatches}
-                  disabled={!masterEnabled}
-                />
-              </div>
-
-              <div className="bg-secondary/10 p-4 rounded-xl border border-border/50">
-                <h4 className="text-sm font-semibold mb-3">Teste de Som</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => playSound('like_football')}
-                    disabled={!masterEnabled}
-                  >
-                    Like Futebol
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => playSound('like_basketball')}
-                    disabled={!masterEnabled}
-                  >
-                    Like Basquete
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => playSound('notification_uber')}
-                    disabled={!masterEnabled}
-                  >
-                    Notif. Uber
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => playSound('notification_checkin')}
-                    disabled={!masterEnabled}
-                  >
-                    Check-in
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="devices">
-          <Card>
-            <CardHeader>
-              <CardTitle>Wearables e Sensores</CardTitle>
-              <CardDescription>
-                Conecte seus dispositivos para coletar dados.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center gap-4 p-4 border border-border rounded-lg bg-secondary/10">
-                <div className="h-10 w-10 bg-background rounded-full flex items-center justify-center">
-                  <Watch className="h-5 w-5 text-primary" />
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-bold text-sm">Status da Conexão</h4>
-                  <p className="text-xs text-muted-foreground">
-                    {connectedDevice
-                      ? `Conectado a ${connectedDevice.name}`
-                      : 'Nenhum dispositivo conectado'}
-                  </p>
-                </div>
-                {connectedDevice && (
-                  <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                )}
-              </div>
-
-              <Button
-                className="w-full gap-2"
-                onClick={() => navigate('/devices')}
-              >
-                {connectedDevice
-                  ? 'Gerenciar Dispositivo'
-                  : 'Conectar Dispositivo'}
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="privacy">
-          <Card>
-            <CardHeader>
-              <CardTitle>Privacidade e Visibilidade</CardTitle>
-              <CardDescription>
-                Controle quem pode ver suas informações e interagir.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-2">
-                <div className="space-y-0.5">
-                  <Label className="flex items-center gap-2">
-                    <Eye className="h-4 w-4" /> Estatísticas Públicas
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    Permitir que outros vejam seus gráficos de performance.
-                  </p>
-                </div>
-                <Switch
-                  checked={privacy.showStats}
-                  onCheckedChange={(c) =>
-                    setPrivacy({ ...privacy, showStats: c })
-                  }
-                />
-              </div>
-              <Separator />
-              <div className="flex items-center justify-between p-2">
-                <div className="space-y-0.5">
-                  <Label className="flex items-center gap-2">
-                    <User className="h-4 w-4" /> Feedback Aberto
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    Aceitar feedback de qualquer treinador/usuário.
-                  </p>
-                </div>
-                <Switch
-                  checked={privacy.feedbackPublic}
-                  onCheckedChange={(c) =>
-                    setPrivacy({ ...privacy, feedbackPublic: c })
-                  }
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="notifications">
-          <Card>
-            <CardHeader>
-              <CardTitle>Notificações Personalizadas</CardTitle>
-              <CardDescription>
-                Escolha exatamente o que você quer receber.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-2">
-                <div className="space-y-0.5">
-                  <Label className="flex items-center gap-2">
-                    <Bell className="h-4 w-4" /> Notificações Push
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    Alertas gerais do aplicativo.
-                  </p>
-                </div>
-                <Switch
-                  checked={notifications.push}
-                  onCheckedChange={(c) => handleNotificationChange('push', c)}
-                />
-              </div>
-              <Separator />
-              <div className="flex items-center justify-between p-2">
-                <div className="space-y-0.5">
-                  <Label className="flex items-center gap-2">
-                    <Car className="h-4 w-4" /> Atualizações de Motoristas
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    Status de corridas e mudanças de perfil.
-                  </p>
-                </div>
-                <Switch
-                  checked={notifications.driverUpdates}
-                  onCheckedChange={(c) =>
-                    handleNotificationChange('driverUpdates', c)
-                  }
-                />
-              </div>
-              <div className="flex items-center justify-between p-2">
-                <div className="space-y-0.5">
-                  <Label className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" /> Alertas de Corridas
-                    Agendadas
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    Lembretes e confirmações de suas viagens.
-                  </p>
-                </div>
-                <Switch
-                  checked={notifications.scheduledRides}
-                  onCheckedChange={(c) =>
-                    handleNotificationChange('scheduledRides', c)
-                  }
-                />
-              </div>
-              <div className="flex items-center justify-between p-2">
-                <div className="space-y-0.5">
-                  <Label className="flex items-center gap-2">
-                    <Camera className="h-4 w-4" /> Atualizações de Fotógrafos
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    Novos álbuns e status de serviços.
-                  </p>
-                </div>
-                <Switch
-                  checked={notifications.photographerUpdates}
-                  onCheckedChange={(c) =>
-                    handleNotificationChange('photographerUpdates', c)
-                  }
-                />
-              </div>
-              <div className="flex items-center justify-between p-2">
-                <div className="space-y-0.5">
-                  <Label className="flex items-center gap-2">
-                    <MessageSquare className="h-4 w-4" /> Chat e Mensagens
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    Receber alertas de novas mensagens.
-                  </p>
-                </div>
-                <Switch
-                  checked={notifications.messages}
-                  onCheckedChange={(c) =>
-                    handleNotificationChange('messages', c)
-                  }
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="branding">
-          <Card>
-            <CardHeader>
-              <CardTitle>Personalização da Marca</CardTitle>
-              <CardDescription>
-                Defina o logo e ícone oficiais do aplicativo.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="h-20 w-20 rounded-xl border flex items-center justify-center bg-secondary/20 p-2">
-                    <img
-                      src={tempLogo}
-                      alt="Logo Preview"
-                      className="max-h-full max-w-full object-contain"
-                    />
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    <Label htmlFor="logo-url">Logo Oficial</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="logo-url"
-                        value={tempLogo}
-                        onChange={(e) => setTempLogo(e.target.value)}
-                        placeholder="https://..."
-                        className="flex-1"
-                      />
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => simulateUpload('logo')}
-                        disabled={uploading}
-                      >
-                        <Upload className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Use uma imagem quadrada ou retangular transparente
-                      (PNG/SVG).
-                    </p>
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-xl border flex items-center justify-center bg-secondary/20 p-2">
-                    <img
-                      src={tempIcon}
-                      alt="Icon Preview"
-                      className="max-h-full max-w-full object-contain"
-                    />
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    <Label htmlFor="icon-url">Ícone do App (Favicon)</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="icon-url"
-                        value={tempIcon}
-                        onChange={(e) => setTempIcon(e.target.value)}
-                        placeholder="https://..."
-                        className="flex-1"
-                      />
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => simulateUpload('icon')}
-                        disabled={uploading}
-                      >
-                        <Upload className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Será usado como ícone do navegador e atalho.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-between pt-4">
-                <Button
-                  variant="ghost"
-                  onClick={handleResetBranding}
-                  className="text-muted-foreground"
-                >
-                  Restaurar Padrão
-                </Button>
-                <Button
-                  onClick={handleSaveBranding}
-                  className="bg-gradient-primary"
-                >
-                  Salvar Alterações
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-
-      <div className="mt-8 text-center">
-        <Button variant="link" className="text-muted-foreground gap-2">
-          <HelpCircle className="h-4 w-4" /> Precisa de ajuda?
+        <Button
+          variant="ghost"
+          className="w-full justify-start h-12 gap-3 text-base font-medium text-destructive hover:text-destructive hover:bg-destructive/10"
+        >
+          <LogOut className="h-5 w-5" /> Sair da Conta
         </Button>
-        <p className="text-[10px] text-muted-foreground mt-2">
-          Versão 1.2.0 (AI Update)
-        </p>
       </div>
     </div>
   )

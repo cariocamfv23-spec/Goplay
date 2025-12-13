@@ -13,7 +13,93 @@ import {
   Car,
 } from 'lucide-react'
 
-export const navItems = [
+// Types
+export interface Comment {
+  id: string
+  user: {
+    name: string
+    avatar: string
+  }
+  text: string
+  time: string
+  likes: number
+  replies?: Comment[]
+}
+
+export interface StatsHistoryPoint {
+  date: string
+  rating: number
+  matches: number
+}
+
+export interface TrainingSuggestion {
+  id: string
+  title: string
+  description: string
+  difficulty: string
+  reason: string
+  exercises: { name: string; sets: number; reps: number }[]
+}
+
+export interface Notification {
+  id: string
+  title: string
+  message: string
+  time: string
+  read: boolean
+  type: 'challenge' | 'invite' | 'system' | 'like'
+  date?: string
+}
+
+export interface NarrationConfig {
+  hasNarration: boolean
+  style:
+    | 'varzea'
+    | 'professional'
+    | 'comedy'
+    | 'futuristic'
+    | 'influencer'
+    | 'tactical'
+    | 'emotion'
+    | 'gringo'
+  text: string
+  volume: number
+}
+
+export interface ProfileData {
+  id: string | number
+  name: string
+  username: string
+  avatar: string
+  cover: string
+  bio: string
+  location: string
+  rating?: number
+  followers?: string
+  following?: string
+  type: 'athlete' | 'photographer' | 'driver' | 'club' | 'coach'
+  categories?: string[]
+  portfolio?: string[]
+  packages?: { title: string; price: string; description: string }[]
+  portfolioProjects?: {
+    id: string
+    title: string
+    date: string
+    cover: string
+    description: string
+    images: string[]
+  }[]
+  car?: {
+    model: string
+    color: string
+    plate: string
+    photo: string
+  }
+  rides?: number
+  responseTime?: string
+}
+
+export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: Zap, label: 'Move', path: '/move' },
   { icon: Search, label: 'Explorar', path: '/explore' },
@@ -21,22 +107,165 @@ export const navItems = [
   { icon: User, label: 'Perfil', path: '/profile/me' },
 ]
 
+export const exploreCategories = [
+  {
+    id: 'events',
+    label: 'Eventos',
+    icon: Calendar,
+    bg: 'bg-orange-100',
+    color: 'text-orange-600',
+  },
+  {
+    id: 'venues',
+    label: 'Quadras',
+    icon: MapPin,
+    bg: 'bg-blue-100',
+    color: 'text-blue-600',
+  },
+  {
+    id: 'photographers',
+    label: 'Fotógrafos',
+    icon: Car,
+    bg: 'bg-purple-100',
+    color: 'text-purple-600',
+  },
+  {
+    id: 'drivers',
+    label: 'Uber',
+    icon: Car,
+    bg: 'bg-green-100',
+    color: 'text-green-600',
+  },
+  {
+    id: 'gyms',
+    label: 'Academias',
+    icon: Activity,
+    bg: 'bg-red-100',
+    color: 'text-red-600',
+  },
+  {
+    id: 'nutrition',
+    label: 'Nutrição',
+    icon: User,
+    bg: 'bg-yellow-100',
+    color: 'text-yellow-600',
+  },
+  {
+    id: 'clinics',
+    label: 'Clínicas',
+    icon: Activity,
+    bg: 'bg-cyan-100',
+    color: 'text-cyan-600',
+  },
+  {
+    id: 'jobs',
+    label: 'Vagas',
+    icon: Briefcase,
+    bg: 'bg-gray-100',
+    color: 'text-gray-600',
+  },
+]
+
+export const photographerCategories = [
+  'Esportes',
+  'Retrato',
+  'Eventos',
+  'Produtos',
+]
+
+export const narrationStyles = [
+  {
+    id: 'varzea',
+    name: 'Várzea Raiz',
+    description: 'Gírias, humor e corneta',
+    previewText: 'Olha esse chute, meu consagrado! Isolou na lua!',
+  },
+  {
+    id: 'professional',
+    name: 'TV Profissional',
+    description: 'Sério, técnico e vibrante',
+    previewText: 'Autoriza o árbitro, bola rolando no gramado!',
+  },
+  {
+    id: 'comedy',
+    name: 'Comediante',
+    description: 'Piadas e deboche',
+    previewText: 'Parece eu jogando depois do churrasco, que beleza!',
+  },
+  {
+    id: 'futuristic',
+    name: 'Cyberpunk',
+    description: 'Robótico e analítico',
+    previewText: 'Precisão calculada em 98%. Trajetória otimizada.',
+  },
+]
+
 export const mockUser = {
   id: 'u1',
   name: 'Alex Silva',
   username: '@alexsilva',
   avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=1',
-  role: 'Atleta',
+  cover: 'https://img.usecurling.com/p/800/400?q=stadium&color=blue',
+  role: 'Atleta Amador',
   points: 1250,
   level: 15,
   location: 'São Paulo, SP',
   bio: 'Apaixonado por esportes e superação.',
+  followers: '1.2k',
+  following: '450',
+  type: 'athlete',
   stats: {
     matches: 42,
     wins: 28,
     mvp: 5,
   },
 }
+
+export const mockCurrentUser = mockUser
+
+export const mockStatsHistory: StatsHistoryPoint[] = [
+  { date: 'Jan', rating: 3.5, matches: 10 },
+  { date: 'Fev', rating: 3.8, matches: 12 },
+  { date: 'Mar', rating: 4.0, matches: 8 },
+  { date: 'Abr', rating: 4.2, matches: 15 },
+  { date: 'Mai', rating: 4.1, matches: 11 },
+  { date: 'Jun', rating: 4.5, matches: 18 },
+]
+
+export const mockComments: Comment[] = [
+  {
+    id: 'c1',
+    user: {
+      name: 'Lucas Paquetá',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=12',
+    },
+    text: 'Jogou muito! 🔥',
+    time: '2h',
+    likes: 5,
+  },
+  {
+    id: 'c2',
+    user: {
+      name: 'Richarlison',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=13',
+    },
+    text: 'Pombo neles! 🐦',
+    time: '1h',
+    likes: 8,
+    replies: [
+      {
+        id: 'r1',
+        user: {
+          name: 'Alex Silva',
+          avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
+        },
+        text: 'Tmj irmão!',
+        time: '30m',
+        likes: 2,
+      },
+    ],
+  },
+]
 
 export const mockStories = [
   {
@@ -48,6 +277,7 @@ export const mockStories = [
     image:
       'https://img.usecurling.com/p/400/800?q=soccer%20training&color=blue',
     viewed: false,
+    hasStory: true,
   },
   {
     id: 's2',
@@ -57,6 +287,7 @@ export const mockStories = [
     },
     image: 'https://img.usecurling.com/p/400/800?q=gym%20workout&color=pink',
     viewed: true,
+    hasStory: true,
   },
   {
     id: 's3',
@@ -66,6 +297,7 @@ export const mockStories = [
     },
     image: 'https://img.usecurling.com/p/400/800?q=stadium%20crowd&color=red',
     viewed: false,
+    hasStory: true,
   },
   {
     id: 's4',
@@ -76,61 +308,78 @@ export const mockStories = [
     image:
       'https://img.usecurling.com/p/400/800?q=basketball%20dunk&color=yellow',
     viewed: false,
+    hasStory: true,
   },
 ]
 
 export const mockPosts = [
   {
-    id: 'p1',
+    id: 1,
+    type: 'video',
     user: {
+      id: 'u2',
       name: 'Flamengo Oficial',
-      username: '@flamengo',
+      type: 'Clube',
       avatar: 'https://img.usecurling.com/i?q=flamengo&shape=circle',
-      verified: true,
     },
     time: '2h',
+    title: 'Golaço do Mengão!',
     content:
       'Grande vitória hoje no Maracanã! Agradecemos o apoio da nação rubro-negra. #VamosFlamengo',
-    image:
+    media: [
       'https://img.usecurling.com/p/600/400?q=soccer%20stadium%20celebration&color=red',
+    ],
+    videoDuration: '0:45',
+    hashtags: ['#futebol', '#flamengo', '#gol'],
     likes: 15420,
     comments: 342,
     shares: 120,
+    applauds: 500,
+    supports: 200,
     liked: true,
   },
   {
-    id: 'p2',
+    id: 2,
+    type: 'image',
     user: {
+      id: 'u3',
       name: 'Gabriel Medina',
-      username: '@gabrielmedina',
+      type: 'Atleta Pro',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=5',
-      verified: true,
     },
     time: '4h',
     content: 'Dia perfeito para o treino. Ondas gigantes em Nazaré! 🌊🏄‍♂️',
-    image:
+    media: [
       'https://img.usecurling.com/p/600/400?q=surfing%20big%20waves&color=blue',
+    ],
     likes: 8540,
     comments: 120,
     shares: 45,
+    applauds: 300,
+    supports: 100,
     liked: false,
   },
   {
-    id: 'p3',
+    id: 3,
+    type: 'article',
     user: {
+      id: 'u4',
       name: 'NBA Brasil',
-      username: '@nbabrasil',
+      type: 'Liga',
       avatar: 'https://img.usecurling.com/i?q=nba&shape=circle&color=blue',
-      verified: true,
     },
     time: '6h',
-    content:
-      'Lakers vence em jogo emocionante na prorrogação! Confira os melhores momentos.',
-    image:
+    content: 'Lakers vence em jogo emocionante na prorrogação!',
+    media: [
       'https://img.usecurling.com/p/600/400?q=basketball%20game&color=orange',
+    ],
+    articleTitle: 'LeBron James quebra mais um recorde histórico',
+    articleDomain: 'nba.com',
     likes: 22100,
     comments: 890,
     shares: 2300,
+    applauds: 1500,
+    supports: 800,
     liked: false,
   },
 ]
@@ -139,11 +388,15 @@ export const mockVideos = [
   {
     id: 'v1',
     title: 'Como chutar com precisão',
+    description: 'Técnicas avançadas de finalização',
     thumbnail:
-      'https://img.usecurling.com/p/400/225?q=soccer%20kick&color=green',
+      'https://img.usecurling.com/p/400/800?q=soccer%20kick&color=green',
     duration: '10:24',
     views: '120K',
-    author: {
+    likes: '12K',
+    comments: 340,
+    shares: 500,
+    user: {
       name: 'Escola de Futebol',
       avatar: 'https://img.usecurling.com/i?q=soccer&color=black',
     },
@@ -151,25 +404,17 @@ export const mockVideos = [
   {
     id: 'v2',
     title: 'Treino Funcional Completo',
+    description: 'Circuitos para alta performance',
     thumbnail:
-      'https://img.usecurling.com/p/400/225?q=crossfit%20training&color=orange',
+      'https://img.usecurling.com/p/400/800?q=crossfit%20training&color=orange',
     duration: '45:00',
     views: '54K',
-    author: {
+    likes: '5K',
+    comments: 120,
+    shares: 200,
+    user: {
       name: 'Coach Pro',
       avatar: 'https://img.usecurling.com/i?q=dumbbell&color=red',
-    },
-  },
-  {
-    id: 'v3',
-    title: 'Dicas de Nutrição para Atletas',
-    thumbnail:
-      'https://img.usecurling.com/p/400/225?q=healthy%20food&color=green',
-    duration: '15:30',
-    views: '89K',
-    author: {
-      name: 'Nutri Sport',
-      avatar: 'https://img.usecurling.com/i?q=apple&color=green',
     },
   },
 ]
@@ -177,42 +422,37 @@ export const mockVideos = [
 export const mockAiAnalysis = {
   score: 85,
   summary: 'Seu desempenho técnico melhorou 15% em relação à última sessão.',
-  metrics: [
-    { label: 'Velocidade', value: 90, color: 'bg-blue-500' },
-    { label: 'Técnica', value: 82, color: 'bg-green-500' },
-    { label: 'Resistência', value: 88, color: 'bg-orange-500' },
-    { label: 'Força', value: 75, color: 'bg-red-500' },
+  aiStats: [
+    { label: 'Velocidade', value: 28, max: 35, unit: 'km/h' },
+    { label: 'Potência', value: 850, max: 1000, unit: 'W' },
+    { label: 'Precisão', value: 92, max: 100, unit: '%' },
   ],
   feedback:
     'Ótimo desempenho! Tente manter a postura mais ereta durante os sprints finais para otimizar a respiração e reduzir o cansaço.',
 }
 
-export const mockTrainingSuggestions = [
+export const mockTrainingSuggestions: TrainingSuggestion[] = [
   {
     id: 't1',
-    title: 'Treino de Explosão',
-    description:
-      'Melhore sua arrancada e velocidade com exercícios de pliometria.',
-    duration: '45 min',
-    intensity: 'Alta',
-    image:
-      'https://img.usecurling.com/p/300/200?q=sprinter%20running&color=red',
+    title: 'Melhoria de Explosão',
+    description: 'Série focada em arranque e velocidade curta.',
+    difficulty: 'Avançado',
+    reason: 'Baixa aceleração detectada',
+    exercises: [
+      { name: 'Box Jumps', sets: 4, reps: 10 },
+      { name: 'Sprints 20m', sets: 6, reps: 1 },
+    ],
   },
   {
     id: 't2',
-    title: 'Recuperação Ativa',
-    description: 'Sessão leve para soltar a musculatura e prevenir lesões.',
-    duration: '30 min',
-    intensity: 'Baixa',
-    image: 'https://img.usecurling.com/p/300/200?q=stretching&color=blue',
-  },
-  {
-    id: 't3',
-    title: 'Fortalecimento de Core',
-    description: 'Essencial para estabilidade e prevenção de dores nas costas.',
-    duration: '20 min',
-    intensity: 'Média',
-    image: 'https://img.usecurling.com/p/300/200?q=abs%20workout&color=yellow',
+    title: 'Estabilidade de Core',
+    description: 'Fortalecimento abdominal para melhor equilíbrio.',
+    difficulty: 'Intermediário',
+    reason: 'Desequilíbrio em mudanças de direção',
+    exercises: [
+      { name: 'Prancha Frontal', sets: 3, reps: 60 },
+      { name: 'Russian Twist', sets: 3, reps: 20 },
+    ],
   },
 ]
 
@@ -231,20 +471,6 @@ export const mockRideRequests = [
     time: '12 min',
     status: 'pending',
   },
-  {
-    id: '2',
-    passenger: {
-      name: 'Marcos Santos',
-      rating: 4.7,
-      image: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=4',
-      trips: 35,
-    },
-    pickup: { address: 'CT Barra Funda', distance: '1.2 km' },
-    dropoff: { address: 'Shopping Villa Lobos', distance: '8.5 km' },
-    fare: 38.9,
-    time: '25 min',
-    status: 'pending',
-  },
 ]
 
 export const mockRewards = [
@@ -255,22 +481,6 @@ export const mockRewards = [
     points: 1500,
     image: 'https://img.usecurling.com/i?q=fuel&color=orange',
     claimed: false,
-  },
-  {
-    id: '2',
-    title: 'Manutenção Preventiva',
-    description: 'Troca de óleo e filtro grátis',
-    points: 3000,
-    image: 'https://img.usecurling.com/i?q=car%20service&color=blue',
-    claimed: false,
-  },
-  {
-    id: '3',
-    title: 'Lavagem Premium',
-    description: 'Lavagem completa interna e externa',
-    points: 800,
-    image: 'https://img.usecurling.com/i?q=car%20wash&color=cyan',
-    claimed: true,
   },
 ]
 
@@ -284,26 +494,6 @@ export const mockRideHistory = [
     price: 45.0,
     status: 'completed',
     rating: 5,
-  },
-  {
-    id: 'h2',
-    date: 'Ontem, 18:45',
-    passenger: 'Roberto Alves',
-    pickup: 'Parque Ibirapuera',
-    dropoff: 'Vila Madalena',
-    price: 22.5,
-    status: 'completed',
-    rating: 5,
-  },
-  {
-    id: 'h3',
-    date: '10/10/2023',
-    passenger: 'Carla Dias',
-    pickup: 'Morumbi Shopping',
-    dropoff: 'Estádio do Morumbi',
-    price: 15.0,
-    status: 'cancelled',
-    rating: 0,
   },
 ]
 
@@ -330,56 +520,35 @@ export const mockRankings = [
     points: 14200,
     trend: 'same',
   },
-  {
-    id: '3',
-    position: 3,
-    user: {
-      name: 'Bruno Fratus',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=7',
-      team: 'Swimming',
-    },
-    points: 13800,
-    trend: 'down',
-  },
-  {
-    id: '4',
-    position: 4,
-    user: {
-      name: 'Beatriz Ferreira',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=8',
-      team: 'Boxing',
-    },
-    points: 12100,
-    trend: 'up',
-  },
-  {
-    id: '5',
-    position: 5,
-    user: mockUser,
-    points: 1250,
-    trend: 'up',
-  },
 ]
 
 export const mockEvents = [
   {
     id: 'e1',
     title: 'Campeonato Paulista de Futsal',
+    category: 'Competição',
     date: '24 Out',
     time: '14:00',
     location: 'Ginásio do Ibirapuera',
+    address: 'Rua Manoel da Nóbrega, 1361',
     image: 'https://img.usecurling.com/p/400/300?q=futsal%20match&color=blue',
-    price: 'R$ 50',
+    price: 50.0,
+    description: 'Grande final do campeonato estadual.',
+    organizer: 'Federação Paulista',
   },
   {
     id: 'e2',
     title: 'Maratona de São Paulo',
+    category: 'Corrida',
     date: '15 Nov',
     time: '06:00',
     location: 'Obelisco',
+    address: 'Av. Pedro Álvares Cabral',
     image:
       'https://img.usecurling.com/p/400/300?q=marathon%20runners&color=orange',
-    price: 'R$ 120',
+    price: 120.0,
+    description: '42km pelas ruas de SP.',
+    organizer: 'Yescom',
   },
 ]
 
@@ -389,16 +558,30 @@ export const mockVenues = [
     name: 'Arena Play',
     type: 'Quadra Poliesportiva',
     rating: 4.8,
+    reviews: 124,
     distance: '2.5 km',
+    location: 'Vila Olímpia',
+    address: 'Rua Beira Rio, 120',
     image: 'https://img.usecurling.com/p/400/300?q=indoor%20court&color=blue',
+    img: 'indoor%20court',
+    price: 'R$ 150/h',
+    amenities: ['Vestiário', 'Bar', 'Estacionamento', 'Wi-Fi'],
+    description: 'Quadra oficial com piso flutuante e iluminação LED.',
   },
   {
     id: 'v2',
     name: 'Campo do Sol',
     type: 'Campo Society',
     rating: 4.5,
+    reviews: 89,
     distance: '5.0 km',
+    location: 'Pinheiros',
+    address: 'Av. das Nações, 500',
     image: 'https://img.usecurling.com/p/400/300?q=soccer%20field&color=green',
+    img: 'soccer%20field',
+    price: 'R$ 200/h',
+    amenities: ['Churrasqueira', 'Bar'],
+    description: 'Campo society com grama sintética de última geração.',
   },
 ]
 
@@ -410,6 +593,8 @@ export const mockGyms = [
     rating: 4.9,
     distance: '1.0 km',
     image: 'https://img.usecurling.com/p/400/300?q=gym%20weights&color=black',
+    address: 'Rua dos Marombas, 100',
+    price: 'R$ 150/mês',
   },
 ]
 
@@ -420,6 +605,8 @@ export const mockNutrition = [
     specialty: 'Nutrologia Esportiva',
     rating: 5.0,
     image: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=9',
+    address: 'Av. Brasil, 2000',
+    price: 'R$ 800/consulta',
   },
 ]
 
@@ -430,26 +617,90 @@ export const mockClinics = [
     specialty: 'Fisioterapia',
     rating: 4.8,
     image: 'https://img.usecurling.com/p/400/300?q=physiotherapy&color=cyan',
+    address: 'Rua da Saúde, 50',
+    price: 'R$ 200/sessão',
   },
 ]
 
-export const mockDrivers = [
+export const mockDrivers: ProfileData[] = [
   {
     id: 'd1',
     name: 'João Motorista',
+    username: '@joaodriver',
+    type: 'driver',
     rating: 4.9,
-    car: 'Honda Civic',
+    car: {
+      model: 'Honda Civic',
+      color: 'Prata',
+      plate: 'ABC-1234',
+      photo:
+        'https://img.usecurling.com/p/300/200?q=honda%20civic&color=silver',
+    },
     image: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=10',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=10',
+    cover: 'https://img.usecurling.com/p/800/400?q=road&color=gray',
+    location: 'São Paulo, SP',
+    bio: 'Motorista 5 estrelas. Conforto e segurança.',
+    rides: 1250,
+    responseTime: '2 min',
   },
 ]
 
-export const mockPhotographers = [
+export const mockPhotographers: ProfileData[] = [
   {
     id: 'p1',
     name: 'Ana Click',
+    username: '@anaclick',
+    type: 'photographer',
     rating: 4.9,
-    specialty: 'Esportes Aquáticos',
+    categories: ['Esportes', 'Eventos'],
     image: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=11',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=11',
+    cover: 'https://img.usecurling.com/p/800/400?q=camera%20lens&color=black',
+    location: 'Rio de Janeiro, RJ',
+    bio: 'Especialista em capturar a emoção do esporte.',
+    portfolio: [
+      'https://img.usecurling.com/p/300/300?q=soccer%20action&seed=1',
+      'https://img.usecurling.com/p/300/300?q=basketball%20jump&seed=2',
+      'https://img.usecurling.com/p/300/300?q=swimming&seed=3',
+    ],
+    packages: [
+      {
+        title: 'Cobertura de Jogo',
+        price: 'R$ 300',
+        description: 'Fotos digitais em alta resolução.',
+      },
+    ],
+    portfolioProjects: [
+      {
+        id: 'proj1',
+        title: 'Final do Estadual',
+        date: '2023',
+        cover:
+          'https://img.usecurling.com/p/600/400?q=soccer%20final&color=green',
+        description: 'Cobertura completa da final.',
+        images: [
+          'https://img.usecurling.com/p/300/300?q=soccer&seed=4',
+          'https://img.usecurling.com/p/300/300?q=trophy&seed=5',
+        ],
+      },
+    ],
+  },
+]
+
+export const mockProfiles: ProfileData[] = [
+  ...mockPhotographers,
+  ...mockDrivers,
+  {
+    id: 'u1',
+    name: 'Alex Silva',
+    username: '@alexsilva',
+    type: 'athlete',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=1',
+    cover: 'https://img.usecurling.com/p/800/400?q=stadium&color=blue',
+    bio: 'Atleta amador.',
+    location: 'São Paulo, SP',
+    rating: 4.5,
   },
 ]
 
@@ -462,6 +713,8 @@ export const mockJobs = [
     salary: 'R$ 5.000 - R$ 7.000',
     type: 'Full-time',
     posted: '2 dias atrás',
+    image: 'https://img.usecurling.com/i?q=spfc&shape=circle&color=red',
+    description: 'Procuramos treinador experiente para base.',
   },
 ]
 
@@ -469,14 +722,34 @@ export const mockProducts = [
   {
     id: 'prod1',
     name: 'Chuteira Nike Mercurial',
+    category: 'Calçados',
     price: 499.9,
     image:
       'https://img.usecurling.com/p/300/300?q=soccer%20cleats&color=orange',
     seller: 'Loja Oficial',
+    rating: 4.8,
+    description: 'Chuteira de alta performance para velocidade.',
+    images: [
+      'https://img.usecurling.com/p/300/300?q=soccer%20cleats&color=orange',
+      'https://img.usecurling.com/p/300/300?q=soccer%20cleats%20side&color=orange',
+    ],
+  },
+  {
+    id: 'prod2',
+    name: 'Bola Oficial Champions',
+    category: 'Equipamentos',
+    price: 199.9,
+    image: 'https://img.usecurling.com/p/300/300?q=soccer%20ball&color=white',
+    seller: 'Adidas Store',
+    rating: 5.0,
+    description: 'Bola oficial da competição.',
+    images: [
+      'https://img.usecurling.com/p/300/300?q=soccer%20ball&color=white',
+    ],
   },
 ]
 
-export const mockNotifications = [
+export const mockNotifications: Notification[] = [
   {
     id: 'not1',
     title: 'Novo desafio disponível',
@@ -484,6 +757,7 @@ export const mockNotifications = [
     time: '2h atrás',
     read: false,
     type: 'challenge',
+    date: 'Hoje',
   },
   {
     id: 'not2',
@@ -492,8 +766,11 @@ export const mockNotifications = [
     time: '5h atrás',
     read: true,
     type: 'invite',
+    date: 'Hoje',
   },
 ]
+
+export const mockNotificationsList = mockNotifications
 
 export const mockChats = [
   {
@@ -506,5 +783,15 @@ export const mockChats = [
     lastMessage: 'Vamos fechar o time para domingo?',
     time: '10:30',
     unread: 2,
+    messages: [
+      { id: 'm1', text: 'E aí, tudo certo?', sender: 'them', time: '10:00' },
+      { id: 'm2', text: 'Tudo sim, e contigo?', sender: 'me', time: '10:05' },
+      {
+        id: 'm3',
+        text: 'Vamos fechar o time para domingo?',
+        sender: 'them',
+        time: '10:30',
+      },
+    ],
   },
 ]

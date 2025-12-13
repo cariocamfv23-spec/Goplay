@@ -42,6 +42,9 @@ const ClinicDetails = lazy(() => import('./pages/clinics/ClinicDetails'))
 const Profile = lazy(() => import('./pages/profile/Profile'))
 const StatsDetail = lazy(() => import('./pages/profile/StatsDetail'))
 const Wallet = lazy(() => import('./pages/wallet/Wallet'))
+const TransactionHistory = lazy(
+  () => import('./pages/financials/TransactionHistory'),
+)
 
 // Messages
 const MessagesList = lazy(() => import('./pages/messages/MessagesList'))
@@ -70,6 +73,9 @@ const Settings = lazy(() => import('./pages/settings/Settings'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const Ranking = lazy(() => import('./pages/gamification/Ranking'))
 const Notifications = lazy(() => import('./pages/notifications/Notifications'))
+
+const AiCoach = lazy(() => import('./pages/ai/AiCoach'))
+const VarzeaEditor = lazy(() => import('./pages/ai/VarzeaEditor'))
 
 const App = () => (
   <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -116,6 +122,10 @@ const App = () => (
               <Route path="/profile/:id" element={<Profile />} />
               <Route path="/profile/stats" element={<StatsDetail />} />
               <Route path="/wallet" element={<Wallet />} />
+              <Route
+                path="/financials/transactions"
+                element={<TransactionHistory />}
+              />
 
               {/* Messages */}
               <Route path="/messages" element={<MessagesList />} />
@@ -143,6 +153,10 @@ const App = () => (
 
               {/* Settings */}
               <Route path="/settings" element={<Settings />} />
+
+              {/* AI Tools */}
+              <Route path="/ai/coach" element={<AiCoach />} />
+              <Route path="/ai/editor" element={<VarzeaEditor />} />
             </Route>
 
             {/* Services & Driver Routes */}

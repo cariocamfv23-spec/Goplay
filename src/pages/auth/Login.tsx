@@ -1,97 +1,152 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Link, useNavigate } from 'react-router-dom'
+import { Logo } from '@/components/Logo'
+import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { Mail, Lock } from 'lucide-react'
-import useBrandingStore from '@/stores/useBrandingStore'
-import { AppIcon } from '@/components/AppIcon'
+import { Eye, EyeOff, Lock, Mail, ArrowRight } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function Login() {
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(false)
-  const { logoUrl } = useBrandingStore()
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
+    setIsLoading(true)
+
+    // Simulate API call
     setTimeout(() => {
-      setLoading(false)
+      setIsLoading(false)
+      toast.success('Bem-vindo de volta!', {
+        description: 'Login realizado com sucesso.',
+      })
       navigate('/home')
     }, 1500)
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-center px-6 py-12 bg-background animate-in fade-in duration-500 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/3 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gold/5 rounded-full blur-[120px] -translate-x-1/3 translate-y-1/3 pointer-events-none" />
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute top-[-20%] right-[-20%] w-[60%] h-[60%] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[-20%] left-[-20%] w-[60%] h-[60%] bg-[hsl(var(--gold)/0.1)] rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8 relative z-10">
-        <div className="flex flex-col items-center justify-center mb-6 gap-4">
-          <div className="p-3 rounded-2xl bg-background/50 backdrop-blur-sm border border-border/50 shadow-lg">
-            <AppIcon className="w-12 h-12" />
+      <div className="w-full max-w-sm space-y-8 relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <div className="text-center space-y-2">
+          <div className="flex justify-center mb-6">
+            <Logo variant="full" className="scale-125" />
           </div>
-          <img
-            src={logoUrl}
-            alt="Goplay"
-            className="h-10 w-auto object-contain drop-shadow-sm"
-          />
+          <h1 className="text-2xl font-bold tracking-tight">
+            Acesse sua conta
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Entre para continuar sua jornada esportiva
+          </p>
         </div>
-        <h2 className="text-3xl font-bold tracking-tight mb-2">
-          Bem-vindo de volta
-        </h2>
-        <p className="text-muted-foreground">
-          Entre na sua conta para continuar
-        </p>
-      </div>
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
-        <form className="space-y-4" onSubmit={handleLogin}>
-          <div className="relative group">
-            <Mail className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-            <Input
-              type="email"
-              placeholder="seu@email.com"
-              required
-              className="pl-10 h-12 rounded-xl bg-secondary/30 border-border/50 focus-visible:ring-primary transition-all"
-            />
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div className="space-y-2">
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input
+                placeholder="Email ou usuário"
+                className="pl-10 h-12 rounded-xl bg-secondary/50 border-border/50"
+              />
+            </div>
           </div>
-          <div className="relative group">
-            <Lock className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-            <Input
-              type="password"
-              placeholder="Sua senha"
-              required
-              className="pl-10 h-12 rounded-xl bg-secondary/30 border-border/50 focus-visible:ring-primary transition-all"
-            />
-          </div>
-
-          <div className="flex items-center justify-end">
-            <Link
-              to="#"
-              className="text-sm font-medium text-primary hover:underline"
-            >
-              Esqueceu a senha?
-            </Link>
+          <div className="space-y-2">
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Senha"
+                className="pl-10 pr-10 h-12 rounded-xl bg-secondary/50 border-border/50"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
+              </button>
+            </div>
+            <div className="flex justify-end">
+              <Button
+                variant="link"
+                className="px-0 h-auto text-xs text-muted-foreground hover:text-primary"
+              >
+                Esqueceu a senha?
+              </Button>
+            </div>
           </div>
 
           <Button
-            type="submit"
-            className="w-full h-12 rounded-full text-base font-bold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90 transition-all hover:scale-[1.02]"
-            disabled={loading}
+            className="w-full h-12 rounded-xl text-base font-bold shadow-lg"
+            disabled={isLoading}
           >
-            {loading ? 'Entrando...' : 'Entrar'}
+            {isLoading ? (
+              <span className="flex items-center gap-2">
+                <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Entrando...
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                Entrar <ArrowRight className="h-5 w-5" />
+              </span>
+            )}
           </Button>
         </form>
 
-        <p className="mt-8 text-center text-sm text-muted-foreground">
-          Não tem uma conta?{' '}
-          <Link
-            to="/register"
-            className="font-bold text-primary hover:text-primary/80 transition-colors"
+        <div className="text-center text-sm">
+          <span className="text-muted-foreground">Não tem uma conta? </span>
+          <Button
+            variant="link"
+            className="p-0 h-auto font-bold text-primary"
+            onClick={() => navigate('/register')}
           >
-            Criar conta
-          </Link>
-        </p>
+            Cadastre-se
+          </Button>
+        </div>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-border/50" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Ou entre com
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <Button
+            variant="outline"
+            className="h-12 rounded-xl border-border/50 hover:bg-secondary/50"
+          >
+            <img
+              src="https://img.usecurling.com/i?q=google&shape=circle"
+              className="h-5 w-5 mr-2"
+              alt="Google"
+            />
+            Google
+          </Button>
+          <Button
+            variant="outline"
+            className="h-12 rounded-xl border-border/50 hover:bg-secondary/50"
+          >
+            <img
+              src="https://img.usecurling.com/i?q=apple&shape=circle&color=black"
+              className="h-5 w-5 mr-2"
+              alt="Apple"
+            />
+            Apple
+          </Button>
+        </div>
       </div>
     </div>
   )

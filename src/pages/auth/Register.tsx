@@ -1,133 +1,111 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Link, useNavigate } from 'react-router-dom'
+import { Logo } from '@/components/Logo'
+import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { Mail, Lock, User, Smartphone } from 'lucide-react'
-import useBrandingStore from '@/stores/useBrandingStore'
-import { AppIcon } from '@/components/AppIcon'
+import { Lock, Mail, User, ArrowRight } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function Register() {
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(false)
-  const { logoUrl } = useBrandingStore()
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
+    setIsLoading(true)
+
+    // Simulate API call
     setTimeout(() => {
-      setLoading(false)
-      // Navigate to profile selection after registration
-      navigate('/profile-selection')
+      setIsLoading(false)
+      toast.success('Conta criada!', {
+        description: 'Bem-vindo ao Goplay.',
+      })
+      navigate('/onboarding')
     }, 1500)
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-center px-6 py-12 bg-background animate-in fade-in duration-500 relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/3 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gold/5 rounded-full blur-[120px] -translate-x-1/3 translate-y-1/3 pointer-events-none" />
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute top-[-20%] left-[-20%] w-[60%] h-[60%] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[-20%] right-[-20%] w-[60%] h-[60%] bg-[hsl(var(--gold)/0.1)] rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8 relative z-10">
-        <div className="flex flex-col items-center justify-center mb-6 gap-4">
-          <div className="p-3 rounded-2xl bg-background/50 backdrop-blur-sm border border-border/50 shadow-lg">
-            <AppIcon className="w-12 h-12" />
+      <div className="w-full max-w-sm space-y-8 relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <div className="text-center space-y-2">
+          <div className="flex justify-center mb-6">
+            <Logo variant="full" className="scale-125" />
           </div>
-          <img
-            src={logoUrl}
-            alt="Goplay App"
-            className="h-10 w-auto object-contain drop-shadow-md"
-          />
+          <h1 className="text-2xl font-bold tracking-tight">Crie sua conta</h1>
+          <p className="text-sm text-muted-foreground">
+            Junte-se à maior comunidade esportiva
+          </p>
         </div>
-        <h2 className="text-3xl font-bold tracking-tight mb-2">
-          Crie sua conta
-        </h2>
-        <p className="text-muted-foreground">
-          Entre para a comunidade esportiva que mais cresce
-        </p>
-      </div>
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
-        <form className="space-y-4" onSubmit={handleRegister}>
-          <div className="relative group">
-            <User className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-            <Input
-              type="text"
-              placeholder="Nome completo"
-              required
-              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary transition-all"
-            />
+        <form onSubmit={handleRegister} className="space-y-4">
+          <div className="space-y-2">
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input
+                placeholder="Nome completo"
+                className="pl-10 h-12 rounded-xl bg-secondary/50 border-border/50"
+              />
+            </div>
           </div>
-
-          <div className="relative group">
-            <Mail className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-            <Input
-              type="email"
-              placeholder="seu@email.com"
-              required
-              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary transition-all"
-            />
+          <div className="space-y-2">
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input
+                placeholder="Email"
+                type="email"
+                className="pl-10 h-12 rounded-xl bg-secondary/50 border-border/50"
+              />
+            </div>
           </div>
-
-          <div className="relative group">
-            <Smartphone className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-            <Input
-              type="tel"
-              placeholder="(00) 00000-0000"
-              required
-              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary transition-all"
-            />
+          <div className="space-y-2">
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input
+                placeholder="Senha"
+                type="password"
+                className="pl-10 h-12 rounded-xl bg-secondary/50 border-border/50"
+              />
+            </div>
           </div>
-
-          <div className="relative group">
-            <Lock className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-            <Input
-              type="password"
-              placeholder="Crie uma senha"
-              required
-              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary transition-all"
-            />
-          </div>
-
-          <div className="relative group">
-            <Lock className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-            <Input
-              type="password"
-              placeholder="Confirme a senha"
-              required
-              className="rounded-xl h-12 pl-10 bg-secondary/30 border-border/50 focus-visible:ring-primary transition-all"
-            />
-          </div>
-
-          <div className="text-xs text-muted-foreground text-center px-4">
-            Ao criar uma conta, você concorda com nossos{' '}
-            <Link to="#" className="text-primary hover:underline">
-              Termos de Serviço
-            </Link>{' '}
-            e{' '}
-            <Link to="#" className="text-primary hover:underline">
-              Política de Privacidade
-            </Link>
-            .
+          <div className="space-y-2">
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input
+                placeholder="Confirmar senha"
+                type="password"
+                className="pl-10 h-12 rounded-xl bg-secondary/50 border-border/50"
+              />
+            </div>
           </div>
 
           <Button
-            type="submit"
-            className="w-full h-12 rounded-full text-base font-bold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90 transition-all hover:scale-[1.02]"
-            disabled={loading}
+            className="w-full h-12 rounded-xl text-base font-bold shadow-lg"
+            disabled={isLoading}
           >
-            {loading ? 'Criando conta...' : 'Criar conta'}
+            {isLoading ? (
+              'Criando conta...'
+            ) : (
+              <span className="flex items-center gap-2">
+                Criar Conta <ArrowRight className="h-5 w-5" />
+              </span>
+            )}
           </Button>
         </form>
 
-        <p className="mt-8 text-center text-sm text-muted-foreground">
-          Já tem uma conta?{' '}
-          <Link
-            to="/login"
-            className="font-bold text-primary hover:text-primary/80 transition-colors"
+        <div className="text-center text-sm">
+          <span className="text-muted-foreground">Já tem uma conta? </span>
+          <Button
+            variant="link"
+            className="p-0 h-auto font-bold text-primary"
+            onClick={() => navigate('/login')}
           >
-            Entrar
-          </Link>
-        </p>
+            Faça Login
+          </Button>
+        </div>
       </div>
     </div>
   )

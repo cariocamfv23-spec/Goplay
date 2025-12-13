@@ -1,116 +1,87 @@
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { ArrowLeft, ArrowUpRight, Filter, Search } from 'lucide-react'
-import { useState } from 'react'
+import { ArrowLeft, ArrowUpRight, ArrowDownLeft, Filter } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { mockPhotographerTransactions } from '@/lib/data'
-import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 export default function TransactionHistory() {
   const navigate = useNavigate()
-  const [filter, setFilter] = useState('all')
-  const [search, setSearch] = useState('')
 
-  const filteredTransactions = mockPhotographerTransactions.filter((tx) => {
-    const matchesFilter = filter === 'all' || tx.status === filter
-    const matchesSearch =
-      tx.clientName.toLowerCase().includes(search.toLowerCase()) ||
-      tx.description.toLowerCase().includes(search.toLowerCase())
-    return matchesFilter && matchesSearch
-  })
+  const transactions = [
+    {
+      id: 1,
+      type: 'in',
+      title: 'Pagamento Recebido',
+      desc: 'Job: Final do Estadual',
+      value: 300.0,
+      date: 'Hoje, 10:00',
+    },
+    {
+      id: 2,
+      type: 'out',
+      title: 'Uber Trip',
+      desc: 'Viagem para Arena',
+      value: 24.9,
+      date: 'Ontem, 18:30',
+    },
+    {
+      id: 3,
+      type: 'out',
+      title: 'Compra Marketplace',
+      desc: 'Chuteira Nike',
+      value: 499.9,
+      date: '20 Out',
+    },
+    {
+      id: 4,
+      type: 'in',
+      title: 'Depósito Pix',
+      desc: 'Transferência recebida',
+      value: 150.0,
+      date: '18 Out',
+    },
+  ]
 
   return (
-    <div className="min-h-screen bg-background pb-20 p-4 animate-fade-in">
-      <div className="flex items-center gap-4 mb-6">
-        <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-          <ArrowLeft className="h-5 w-5" />
+    <div className="min-h-screen bg-background pb-20 animate-fade-in">
+      <div className="sticky top-0 bg-background z-20 p-4 border-b border-border/50 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-xl font-bold">Extrato</h1>
+        </div>
+        <Button variant="ghost" size="icon">
+          <Filter className="h-5 w-5" />
         </Button>
-        <h1 className="text-xl font-bold">Extrato Financeiro</h1>
       </div>
 
-      <div className="grid gap-4 mb-6">
-        <div className="relative">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Buscar por cliente ou serviço..."
-            className="pl-9"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-        <div className="flex gap-2 overflow-x-auto pb-2">
-          <Button
-            variant={filter === 'all' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilter('all')}
-            className="rounded-full"
-          >
-            Todos
-          </Button>
-          <Button
-            variant={filter === 'completed' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilter('completed')}
-            className="rounded-full"
-          >
-            Recebidos
-          </Button>
-          <Button
-            variant={filter === 'pending' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setFilter('pending')}
-            className="rounded-full"
-          >
-            Pendentes
-          </Button>
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        {filteredTransactions.map((tx) => (
-          <Card
-            key={tx.id}
-            className="border-none shadow-sm hover:shadow-md transition-shadow"
-          >
-            <CardContent className="p-4">
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <h3 className="font-bold">{tx.description}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {tx.clientName}
-                  </p>
+      <div className="p-4 space-y-4">
+        {transactions.map((t) => (
+          <Card key={t.id} className="border-none shadow-sm">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div
+                  className={`h-10 w-10 rounded-full flex items-center justify-center ${t.type === 'in' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}
+                >
+                  {t.type === 'in' ? (
+                    <ArrowUpRight className="h-5 w-5" />
+                  ) : (
+                    <ArrowDownLeft className="h-5 w-5" />
+                  )}
                 </div>
-                <div className="text-right">
-                  <p className="font-bold text-lg text-primary">
-                    R$ {tx.amount.toFixed(2)}
-                  </p>
-                  <p className="text-xs text-muted-foreground">{tx.date}</p>
+                <div>
+                  <h3 className="font-bold text-sm">{t.title}</h3>
+                  <p className="text-xs text-muted-foreground">{t.desc}</p>
                 </div>
               </div>
-              <div className="flex justify-between items-center mt-3">
-                <Badge
-                  variant={tx.type === 'service' ? 'secondary' : 'outline'}
+              <div className="text-right">
+                <p
+                  className={`font-bold ${t.type === 'in' ? 'text-green-600' : 'text-red-600'}`}
                 >
-                  {tx.type === 'service' ? 'Serviço' : 'Pacote'}
-                </Badge>
-                <Badge
-                  variant="outline"
-                  className={
-                    tx.status === 'completed'
-                      ? 'text-green-600 border-green-200 bg-green-50'
-                      : 'text-yellow-600 border-yellow-200 bg-yellow-50'
-                  }
-                >
-                  {tx.status === 'completed' ? 'Recebido' : 'Pendente'}
-                </Badge>
+                  {t.type === 'in' ? '+' : '-'} R$ {t.value.toFixed(2)}
+                </p>
+                <p className="text-xs text-muted-foreground">{t.date}</p>
               </div>
             </CardContent>
           </Card>

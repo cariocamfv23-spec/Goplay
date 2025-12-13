@@ -1,45 +1,32 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
 import { mockVenues } from '@/lib/data'
+import { Button } from '@/components/ui/button'
 import {
+  ArrowLeft,
   MapPin,
   Star,
   Share2,
-  ArrowLeft,
-  Camera,
   Calendar,
-  Trophy,
-  Wifi,
-  ShowerHead,
-  Coffee,
-  Car,
+  Video,
+  CheckCircle2,
 } from 'lucide-react'
-import { useState } from 'react'
+import { Badge } from '@/components/ui/badge'
 import { RecordHighlightDrawer } from '@/components/RecordHighlightDrawer'
+import { useState } from 'react'
+import { CheckInModal } from '@/components/CheckInModal'
 
 export default function VenueDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
   const venue = mockVenues.find((v) => v.id === id) || mockVenues[0]
-  const [showRecordDrawer, setShowRecordDrawer] = useState(false)
-
-  const getAmenityIcon = (amenity: string) => {
-    if (amenity.includes('Wi-Fi')) return <Wifi className="h-4 w-4" />
-    if (amenity.includes('Chuveir') || amenity.includes('Vestiário'))
-      return <ShowerHead className="h-4 w-4" />
-    if (amenity.includes('Lanchonete') || amenity.includes('Bar'))
-      return <Coffee className="h-4 w-4" />
-    if (amenity.includes('Estacionamento')) return <Car className="h-4 w-4" />
-    return <Trophy className="h-4 w-4" />
-  }
+  const [showRecord, setShowRecord] = useState(false)
+  const [showCheckIn, setShowCheckIn] = useState(false)
 
   if (!venue) return <div>Local não encontrado</div>
 
   return (
     <div className="min-h-screen bg-background pb-24 animate-fade-in relative">
-      {/* Header Image */}
+      {/* Hero Image */}
       <div className="relative h-64 w-full">
         <img
           src={venue.image}
@@ -50,42 +37,35 @@ export default function VenueDetails() {
         <Button
           variant="ghost"
           size="icon"
-          className="absolute top-4 left-4 bg-black/20 text-white hover:bg-black/40 rounded-full backdrop-blur-sm"
+          className="absolute top-4 left-4 bg-background/50 backdrop-blur-md hover:bg-background/80 rounded-full text-foreground"
           onClick={() => navigate(-1)}
         >
-          <ArrowLeft className="h-6 w-6" />
+          <ArrowLeft className="h-5 w-5" />
         </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute top-4 right-4 bg-black/20 text-white hover:bg-black/40 rounded-full backdrop-blur-sm"
-        >
-          <Share2 className="h-5 w-5" />
-        </Button>
+        <div className="absolute top-4 right-4 flex gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="bg-background/50 backdrop-blur-md hover:bg-background/80 rounded-full text-foreground"
+          >
+            <Share2 className="h-5 w-5" />
+          </Button>
+        </div>
       </div>
 
-      <div className="px-4 -mt-8 relative z-10">
+      <div className="px-5 -mt-8 relative z-10">
         <div className="flex justify-between items-end mb-4">
           <div>
-            <Badge className="mb-2 bg-primary/90 hover:bg-primary">
-              {venue.sports[0]}
+            <Badge className="mb-2 bg-primary/20 text-primary hover:bg-primary/30 border-none">
+              {venue.type}
             </Badge>
-            <h1 className="text-3xl font-bold leading-tight text-foreground drop-shadow-sm">
-              {venue.name}
-            </h1>
+            <h1 className="text-3xl font-bold leading-tight">{venue.name}</h1>
           </div>
-          <div className="flex flex-col items-center bg-card p-2 rounded-xl shadow-md border border-border/50">
-            <span className="text-2xl font-bold text-primary">
-              {venue.rating}
-            </span>
-            <div className="flex text-gold">
-              <Star className="h-3 w-3 fill-current" />
-              <Star className="h-3 w-3 fill-current" />
-              <Star className="h-3 w-3 fill-current" />
-              <Star className="h-3 w-3 fill-current" />
-              <Star className="h-3 w-3 fill-current" />
+          <div className="flex flex-col items-end">
+            <div className="bg-secondary/80 backdrop-blur px-2 py-1 rounded-lg flex items-center gap-1 font-bold text-sm shadow-sm">
+              <Star className="h-4 w-4 fill-gold text-gold" /> {venue.rating}
             </div>
-            <span className="text-[10px] text-muted-foreground">
+            <span className="text-xs text-muted-foreground mt-1">
               {venue.reviews} reviews
             </span>
           </div>
@@ -93,66 +73,76 @@ export default function VenueDetails() {
 
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
           <MapPin className="h-4 w-4 text-primary" />
-          {venue.address}
+          <span>{venue.address}</span>
+          <span className="text-xs bg-muted px-2 py-0.5 rounded-full">
+            {venue.distance}
+          </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-2 gap-3 mb-8">
           <Button
-            className="h-12 text-base font-bold shadow-lg"
-            onClick={() => {}}
+            className="w-full h-12 rounded-xl text-base font-bold shadow-md bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800"
+            onClick={() => setShowCheckIn(true)}
           >
-            <Calendar className="mr-2 h-5 w-5" /> Agendar
+            <CheckCircle2 className="mr-2 h-5 w-5" /> Check-in
           </Button>
           <Button
-            variant="outline"
-            className="h-12 text-base font-bold border-primary text-primary hover:bg-primary/5"
-            onClick={() => setShowRecordDrawer(true)}
+            className="w-full h-12 rounded-xl text-base font-bold shadow-md bg-gradient-to-r from-primary to-purple-700 hover:from-primary/90 hover:to-purple-800"
+            onClick={() => setShowRecord(true)}
           >
-            <Camera className="mr-2 h-5 w-5" /> Gravar Lance
+            <Video className="mr-2 h-5 w-5" /> Gravar Lance
           </Button>
         </div>
 
         <div className="space-y-6">
-          <section>
+          <div>
+            <h3 className="font-bold text-lg mb-2">Sobre</h3>
+            <p className="text-muted-foreground leading-relaxed">
+              {venue.description}
+            </p>
+          </div>
+
+          <div>
             <h3 className="font-bold text-lg mb-3">Comodidades</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {venue.amenities?.map((item, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-3 p-3 bg-secondary/30 rounded-xl border border-border/50"
+            <div className="flex flex-wrap gap-2">
+              {venue.amenities.map((item) => (
+                <Badge
+                  key={item}
+                  variant="secondary"
+                  className="px-3 py-1 text-sm font-normal"
                 >
-                  <div className="p-2 bg-background rounded-full text-primary">
-                    {getAmenityIcon(item)}
-                  </div>
-                  <span className="text-sm font-medium">{item}</span>
-                </div>
+                  {item}
+                </Badge>
               ))}
             </div>
-          </section>
+          </div>
+        </div>
+      </div>
 
-          <section>
-            <h3 className="font-bold text-lg mb-3">Preços</h3>
-            <Card className="border-none shadow-sm bg-primary/5">
-              <CardContent className="p-4 flex justify-between items-center">
-                <div>
-                  <p className="font-medium">Aluguel Quadra</p>
-                  <p className="text-xs text-muted-foreground">
-                    Por hora / avulso
-                  </p>
-                </div>
-                <span className="text-xl font-bold text-primary">
-                  {venue.price}
-                </span>
-              </CardContent>
-            </Card>
-          </section>
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/90 backdrop-blur-xl border-t border-border/50 z-20">
+        <div className="flex items-center justify-between gap-4 max-w-md mx-auto">
+          <div>
+            <span className="text-xs text-muted-foreground">
+              Preço por hora
+            </span>
+            <div className="text-xl font-bold text-primary">{venue.price}</div>
+          </div>
+          <Button size="lg" className="rounded-full px-8 font-bold">
+            <Calendar className="mr-2 h-5 w-5" /> Reservar
+          </Button>
         </div>
       </div>
 
       <RecordHighlightDrawer
-        open={showRecordDrawer}
-        onOpenChange={setShowRecordDrawer}
+        open={showRecord}
+        onOpenChange={setShowRecord}
         venueName={venue.name}
+      />
+      <CheckInModal
+        open={showCheckIn}
+        onOpenChange={setShowCheckIn}
+        venueName={venue.name}
+        points={100}
       />
     </div>
   )

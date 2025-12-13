@@ -1,69 +1,60 @@
-import { mockNotifications } from '@/lib/data'
-import useNotificationStore from '@/stores/useNotificationStore'
-import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Check, Bell } from 'lucide-react'
-import { useEffect } from 'react'
+import { ArrowLeft, Bell, Calendar, Heart, Trophy } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { mockNotifications } from '@/lib/data'
+import { cn } from '@/lib/utils'
 
 export default function Notifications() {
-  const { notifications, markAllAsRead } = useNotificationStore()
-  // Use mock notifications if store is empty for demo
-  const displayNotifications =
-    notifications.length > 0 ? notifications : mockNotifications
+  const navigate = useNavigate()
 
-  useEffect(() => {
-    // Optionally mark all as read on mount or leave for user action
-  }, [])
+  const getIcon = (type: string) => {
+    switch (type) {
+      case 'challenge':
+        return <Trophy className="h-5 w-5 text-gold" />
+      case 'invite':
+        return <Calendar className="h-5 w-5 text-blue-500" />
+      case 'like':
+        return <Heart className="h-5 w-5 text-red-500" />
+      default:
+        return <Bell className="h-5 w-5 text-primary" />
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
-      <div className="sticky top-16 z-30 bg-background/80 backdrop-blur-md p-4 border-b border-border/50 flex justify-between items-center">
-        <h1 className="text-xl font-bold">Notificações</h1>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={markAllAsRead}
-          className="text-xs"
-        >
-          <Check className="h-4 w-4 mr-1" /> Marcar lidas
+      <div className="sticky top-0 bg-background z-20 p-4 border-b border-border/50 flex items-center gap-4">
+        <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+          <ArrowLeft className="h-5 w-5" />
         </Button>
+        <h1 className="text-xl font-bold">Notificações</h1>
       </div>
 
-      <div className="p-4 space-y-3">
-        {displayNotifications.map((notif) => (
-          <Card
-            key={notif.id}
-            className={`border-none shadow-sm ${!notif.read ? 'bg-secondary/30 border-l-2 border-l-primary' : 'bg-card'}`}
+      <div className="p-4 space-y-2">
+        {mockNotifications.map((not) => (
+          <div
+            key={not.id}
+            className={cn(
+              'p-4 rounded-xl flex gap-4 transition-colors',
+              not.read ? 'bg-background' : 'bg-primary/5',
+            )}
           >
-            <CardContent className="p-4 flex gap-3">
-              <div
-                className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 ${!notif.read ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}
-              >
-                <Bell className="h-5 w-5" />
-              </div>
-              <div className="flex-1">
-                <div className="flex justify-between items-start mb-1">
-                  <h3
-                    className={`text-sm ${!notif.read ? 'font-bold' : 'font-medium'}`}
-                  >
-                    {notif.title}
-                  </h3>
-                  <span className="text-[10px] text-muted-foreground">
-                    {notif.time}
-                  </span>
-                </div>
-                <p className="text-sm text-muted-foreground leading-snug">
-                  {notif.message}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+            <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center shrink-0">
+              {getIcon(not.type)}
+            </div>
+            <div className="flex-1">
+              <h4 className="font-bold text-sm mb-1">{not.title}</h4>
+              <p className="text-sm text-muted-foreground">{not.message}</p>
+              <p className="text-xs text-muted-foreground mt-2">{not.time}</p>
+            </div>
+            {!not.read && (
+              <div className="h-2 w-2 rounded-full bg-primary mt-2"></div>
+            )}
+          </div>
         ))}
-
-        {displayNotifications.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground">
+        {mockNotifications.length === 0 && (
+          <div className="text-center py-10 text-muted-foreground">
             <Bell className="h-12 w-12 mx-auto mb-3 opacity-20" />
-            <p>Nenhuma notificação.</p>
+            <p>Nenhuma notificação nova.</p>
           </div>
         )}
       </div>

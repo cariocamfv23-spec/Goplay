@@ -1,167 +1,115 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { mockProducts } from '@/lib/data'
 import { Button } from '@/components/ui/button'
+import { ArrowLeft, ShoppingCart, Star, Share2 } from 'lucide-react'
 import {
-  ArrowLeft,
-  Star,
-  ShoppingCart,
-  Heart,
-  MessageSquare,
-} from 'lucide-react'
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel'
+import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Progress } from '@/components/ui/progress'
-import useSoundStore from '@/stores/useSoundStore'
 
 export default function ProductDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const product = mockProducts.find((p) => p.id === Number(id))
-  const { playSound } = useSoundStore()
-
-  if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Produto não encontrado
-      </div>
-    )
-  }
+  const product = mockProducts.find((p) => p.id === id) || mockProducts[0]
 
   const handleAddToCart = () => {
-    playSound('notification_store')
     toast.success('Produto adicionado ao carrinho!')
-    navigate('/marketplace/cart')
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      <div className="relative h-96 bg-secondary">
-        <img
-          src={`https://img.usecurling.com/p/600/600?q=${product.img}`}
-          alt={product.name}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute top-4 left-4 right-4 flex justify-between">
+    <div className="min-h-screen bg-background pb-24 animate-fade-in">
+      <div className="sticky top-0 z-20 flex justify-between p-4 bg-transparent pointer-events-none">
+        <Button
+          variant="secondary"
+          size="icon"
+          className="pointer-events-auto rounded-full shadow-md"
+          onClick={() => navigate(-1)}
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <div className="flex gap-2 pointer-events-auto">
           <Button
-            variant="ghost"
+            variant="secondary"
             size="icon"
-            className="bg-background/80 backdrop-blur-sm rounded-full"
-            onClick={() => navigate(-1)}
+            className="rounded-full shadow-md"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <Share2 className="h-5 w-5" />
           </Button>
           <Button
-            variant="ghost"
+            variant="secondary"
             size="icon"
-            className="bg-background/80 backdrop-blur-sm rounded-full"
+            className="rounded-full shadow-md"
+            onClick={() => navigate('/marketplace/cart')}
           >
-            <Heart className="h-5 w-5" />
+            <ShoppingCart className="h-5 w-5" />
           </Button>
         </div>
       </div>
 
-      <div className="p-6 -mt-6 bg-background rounded-t-3xl relative">
-        <div className="flex justify-between items-start mb-4">
+      <div className="-mt-20">
+        <Carousel className="w-full">
+          <CarouselContent>
+            {product.images?.map((img, i) => (
+              <CarouselItem key={i}>
+                <div className="h-[400px] bg-secondary/20 flex items-center justify-center p-8">
+                  <img
+                    src={img}
+                    alt={product.name}
+                    className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal"
+                  />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+      </div>
+
+      <div className="p-5 space-y-4">
+        <div className="flex justify-between items-start">
           <div>
-            <h1 className="text-2xl font-bold">{product.name}</h1>
-            <p className="text-sm text-muted-foreground">{product.category}</p>
+            <h1 className="text-2xl font-bold mb-1">{product.name}</h1>
+            <p className="text-muted-foreground">{product.seller}</p>
           </div>
-          <div className="text-2xl font-bold text-primary">{product.price}</div>
+          <div className="text-right">
+            <h2 className="text-2xl font-bold text-primary">
+              R$ {product.price.toFixed(2)}
+            </h2>
+            <div className="flex items-center gap-1 justify-end text-sm font-bold text-gold">
+              <Star className="h-4 w-4 fill-gold" /> {product.rating}
+            </div>
+          </div>
         </div>
 
-        <div className="flex items-center gap-1 mb-6">
-          <Star className="h-4 w-4 fill-gold text-gold" />
-          <span className="font-medium">{product.rating}</span>
-          <span className="text-muted-foreground text-sm ml-2">
-            ({product.reviews?.length || 120} avaliações)
-          </span>
+        <div className="flex gap-2">
+          <Badge variant="secondary" className="px-3 py-1">
+            Frete Grátis
+          </Badge>
+          <Badge
+            variant="outline"
+            className="px-3 py-1 text-green-600 border-green-200 bg-green-50"
+          >
+            Em Estoque
+          </Badge>
         </div>
 
-        <div className="space-y-4 mb-8">
-          <h3 className="font-bold text-lg">Descrição</h3>
-          <p className="text-muted-foreground leading-relaxed">
+        <div>
+          <h3 className="font-bold text-lg mb-2">Descrição</h3>
+          <p className="text-sm text-muted-foreground leading-relaxed">
             {product.description}
           </p>
         </div>
+      </div>
 
-        {/* Reviews Section */}
-        <div className="mb-8">
-          <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-            Avaliações dos Usuários
-          </h3>
-
-          <div className="bg-secondary/20 rounded-xl p-4 mb-6">
-            <div className="flex items-center gap-4 mb-2">
-              <div className="text-center">
-                <span className="text-3xl font-bold text-primary">
-                  {product.rating}
-                </span>
-                <div className="flex text-gold text-xs">
-                  <Star className="h-3 w-3 fill-current" />
-                  <Star className="h-3 w-3 fill-current" />
-                  <Star className="h-3 w-3 fill-current" />
-                  <Star className="h-3 w-3 fill-current" />
-                  <Star className="h-3 w-3 fill-current" />
-                </div>
-              </div>
-              <div className="flex-1 space-y-1">
-                <div className="flex items-center gap-2 text-xs">
-                  <span>5</span> <Progress value={80} className="h-1.5" />
-                </div>
-                <div className="flex items-center gap-2 text-xs">
-                  <span>4</span> <Progress value={15} className="h-1.5" />
-                </div>
-                <div className="flex items-center gap-2 text-xs">
-                  <span>3</span> <Progress value={5} className="h-1.5" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            {product.reviews && product.reviews.length > 0 ? (
-              product.reviews.map((review) => (
-                <div
-                  key={review.id}
-                  className="border-b border-border/50 pb-4 last:border-0"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={review.avatar} />
-                        <AvatarFallback>{review.user[0]}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="text-sm font-semibold">{review.user}</p>
-                        <div className="flex text-gold text-[10px]">
-                          {Array.from({ length: review.rating }).map((_, i) => (
-                            <Star key={i} className="h-3 w-3 fill-current" />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <span className="text-xs text-muted-foreground">
-                      {review.date}
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    {review.comment}
-                  </p>
-                </div>
-              ))
-            ) : (
-              <p className="text-sm text-muted-foreground text-center py-4">
-                Seja o primeiro a avaliar este produto!
-              </p>
-            )}
-          </div>
-        </div>
-
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border/50">
         <Button
-          className="w-full h-14 rounded-full text-lg shadow-lg shadow-primary/20"
+          size="lg"
+          className="w-full h-14 rounded-full text-lg font-bold"
           onClick={handleAddToCart}
         >
-          <ShoppingCart className="mr-2 h-5 w-5" /> Adicionar ao Carrinho
+          Adicionar ao Carrinho
         </Button>
       </div>
     </div>
