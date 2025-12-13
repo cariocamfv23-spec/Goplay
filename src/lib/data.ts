@@ -5,7 +5,14 @@ export interface User {
   id: string
   name: string
   email: string
-  role: 'athlete' | 'coach' | 'club' | 'scout' | 'recruiter'
+  role:
+    | 'athlete'
+    | 'coach'
+    | 'club'
+    | 'scout'
+    | 'recruiter'
+    | 'photographer'
+    | 'driver'
   avatar: string
   location?: string
   bio?: string
@@ -182,6 +189,8 @@ export const mockEvents = [
     date: '2024-12-15',
     location: 'Clube Atlético',
     image: 'https://img.usecurling.com/p/400/200?q=summer%20sports',
+    description: 'O maior torneio de verão da região.',
+    organizer: 'Liga Municipal',
   },
 ]
 
@@ -192,6 +201,7 @@ export const mockVenues = [
     location: 'São Paulo, SP',
     rating: 4.7,
     image: 'https://img.usecurling.com/p/400/200?q=stadium',
+    sports: ['Futebol', 'Vôlei'],
   },
 ]
 
@@ -202,6 +212,7 @@ export const mockGyms = [
     location: 'Centro, SP',
     rating: 4.5,
     image: 'https://img.usecurling.com/p/400/200?q=gym%20weights',
+    amenities: ['Ar condicionado', 'Estacionamento'],
   },
 ]
 
@@ -212,5 +223,215 @@ export const mockNotifications = [
     message: 'Você tem um novo jogo sugerido para hoje.',
     read: false,
     date: 'Hoje',
+  },
+]
+
+// Social Feed Mocks
+export const mockStories = [
+  {
+    id: 's1',
+    user: {
+      name: 'Neymar Jr',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=4',
+    },
+    image: 'https://img.usecurling.com/p/300/500?q=soccer%20training',
+    viewed: false,
+  },
+  {
+    id: 's2',
+    user: {
+      name: 'Anitta',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=5',
+    },
+    image: 'https://img.usecurling.com/p/300/500?q=gym%20workout',
+    viewed: true,
+  },
+  {
+    id: 's3',
+    user: {
+      name: 'Vini Jr',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=6',
+    },
+    image: 'https://img.usecurling.com/p/300/500?q=running',
+    viewed: false,
+  },
+]
+
+export const mockPosts = [
+  {
+    id: 'p1',
+    author: {
+      name: 'Flamengo Oficial',
+      avatar: 'https://img.usecurling.com/i?q=badge&color=red',
+      role: 'club',
+    },
+    image: 'https://img.usecurling.com/p/600/400?q=soccer%20match',
+    content:
+      'Grande vitória hoje no Maracanã! A torcida fez a diferença. #Mengão #Vitória',
+    likes: 12500,
+    comments: 450,
+    time: '2h atrás',
+    liked: true,
+  },
+  {
+    id: 'p2',
+    author: {
+      name: 'Personal Trainer',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=7',
+      role: 'coach',
+    },
+    image: 'https://img.usecurling.com/p/600/400?q=fitness%20tips',
+    content:
+      '5 dicas para melhorar seu rendimento no treino de força. Confira no link da bio! 💪',
+    likes: 890,
+    comments: 32,
+    time: '5h atrás',
+    liked: false,
+  },
+]
+
+// Move/Videos Mocks
+export const mockVideos = [
+  {
+    id: 'v1',
+    title: 'Melhores Momentos: Final do Campeonato',
+    thumbnail: 'https://img.usecurling.com/p/400/225?q=soccer%20highlights',
+    duration: '10:32',
+    views: '1.2M',
+    author: {
+      name: 'Goplay Sports',
+      avatar: 'https://img.usecurling.com/i?q=play&color=blue',
+    },
+  },
+  {
+    id: 'v2',
+    title: 'Treino de Pernas Completo',
+    thumbnail: 'https://img.usecurling.com/p/400/225?q=leg%20workout',
+    duration: '15:45',
+    views: '450K',
+    author: {
+      name: 'FitLife',
+      avatar: 'https://img.usecurling.com/i?q=dumbbell&color=green',
+    },
+  },
+  {
+    id: 'v3',
+    title: 'Como chutar com efeito',
+    thumbnail: 'https://img.usecurling.com/p/400/225?q=soccer%20kick',
+    duration: '08:20',
+    views: '890K',
+    author: {
+      name: 'Escola de Futebol',
+      avatar: 'https://img.usecurling.com/i?q=soccer&color=black',
+    },
+  },
+]
+
+// Photographers/Profiles Mocks
+export const photographerCategories = [
+  'Todos',
+  'Futebol',
+  'Basquete',
+  'Surf',
+  'Skate',
+  'Corrida',
+  'Crossfit',
+]
+
+export const mockProfiles = [
+  {
+    id: 'ph1',
+    name: 'João Silva',
+    role: 'photographer',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=8',
+    rating: 4.9,
+    location: 'São Paulo, SP',
+    category: 'Futebol',
+    specialties: ['Futebol', 'Eventos'],
+    portfolio: [
+      'https://img.usecurling.com/p/300/300?q=soccer%20photo%201',
+      'https://img.usecurling.com/p/300/300?q=soccer%20photo%202',
+      'https://img.usecurling.com/p/300/300?q=soccer%20photo%203',
+    ],
+    hourlyRate: 150,
+  },
+  {
+    id: 'ph2',
+    name: 'Maria Costa',
+    role: 'photographer',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=9',
+    rating: 4.8,
+    location: 'Rio de Janeiro, RJ',
+    category: 'Surf',
+    specialties: ['Surf', 'Praia', 'Lifestyle'],
+    portfolio: [
+      'https://img.usecurling.com/p/300/300?q=surf%20photo%201',
+      'https://img.usecurling.com/p/300/300?q=surf%20photo%202',
+      'https://img.usecurling.com/p/300/300?q=surf%20photo%203',
+    ],
+    hourlyRate: 200,
+  },
+]
+
+// Missing Explore mocks
+export const mockNutrition = [
+  {
+    id: 'n1',
+    name: 'NutriSport Center',
+    location: 'São Paulo, SP',
+    rating: 4.8,
+    image: 'https://img.usecurling.com/p/400/200?q=healthy%20food',
+    specialties: ['Esportiva', 'Emagrecimento'],
+    description: 'Nutrição especializada para atletas de alto rendimento.',
+  },
+]
+
+export const mockClinics = [
+  {
+    id: 'c1',
+    name: 'PhysioPro',
+    location: 'São Paulo, SP',
+    rating: 4.9,
+    image: 'https://img.usecurling.com/p/400/200?q=physiotherapy',
+    specialties: ['Fisioterapia', 'Ortopedia'],
+    description: 'Clínica de fisioterapia esportiva e reabilitação.',
+  },
+]
+
+export const mockJobs = [
+  {
+    id: 'j1',
+    title: 'Técnico de Futebol Sub-15',
+    organization: 'Clube Atlético',
+    location: 'São Paulo, SP',
+    type: 'Full-time',
+    salary: 'R$ 3.500',
+    postedAt: '2 dias atrás',
+    logo: 'https://img.usecurling.com/i?q=shield&color=red',
+  },
+]
+
+export const mockProducts = [
+  {
+    id: 'pr1',
+    name: 'Chuteira Pro Elite',
+    price: 299.9,
+    image: 'https://img.usecurling.com/p/300/300?q=soccer%20cleats',
+    category: 'Equipamentos',
+    rating: 4.7,
+  },
+]
+
+export const mockChats = [
+  {
+    id: 'ch1',
+    user: {
+      name: 'Coach Ricardo',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=10',
+      online: true,
+    },
+    lastMessage: 'Não esqueça do treino amanhã!',
+    time: '10:30',
+    unread: 2,
   },
 ]
