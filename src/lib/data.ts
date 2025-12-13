@@ -439,6 +439,121 @@ export const mockRanking = [
   },
 ]
 
+export const mockRankings = [
+  {
+    id: 1,
+    name: 'Lucas Oliveira',
+    points: 1540,
+    rank: 1,
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99',
+    trend: 'up',
+  },
+  {
+    id: 2,
+    name: 'Marcos Silva',
+    points: 1420,
+    rank: 2,
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=45',
+    trend: 'down',
+  },
+  {
+    id: 3,
+    name: 'Julia Santos',
+    points: 1350,
+    rank: 3,
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=22',
+    trend: 'same',
+  },
+]
+
+export const mockPosts = [
+  {
+    id: 1,
+    author: {
+      name: 'Lucas Oliveira',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99',
+      role: 'Atleta',
+      time: '2h atrás',
+    },
+    content: 'Grande vitória hoje! O time jogou muito. ⚽🔥 #futebol #vitoria',
+    image: 'https://img.usecurling.com/p/800/600?q=soccer%20team%20celebrating',
+    likes: 124,
+    comments: 18,
+    shares: 5,
+  },
+  {
+    id: 2,
+    author: {
+      name: 'Ana Silva',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=3',
+      role: 'Treinadora',
+      time: '4h atrás',
+    },
+    content: 'Treino tático focado na defesa. Evolução constante!',
+    image: 'https://img.usecurling.com/p/800/600?q=soccer%20training',
+    likes: 89,
+    comments: 12,
+    shares: 2,
+  },
+]
+
+export const mockStories = [
+  {
+    id: 1,
+    user: {
+      name: 'Neymar Jr',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=10',
+    },
+    image: 'https://img.usecurling.com/p/400/600?q=soccer%20player%20selfie',
+    isLive: false,
+  },
+  {
+    id: 2,
+    user: {
+      name: 'Marta',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=11',
+    },
+    image: 'https://img.usecurling.com/p/400/600?q=female%20soccer%20player',
+    isLive: true,
+  },
+  {
+    id: 3,
+    user: {
+      name: 'CR7',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=12',
+    },
+    image: 'https://img.usecurling.com/p/400/600?q=gym%20workout',
+    isLive: false,
+  },
+]
+
+export const photographerCategories = [
+  'Todos',
+  'Eventos',
+  'Partidas',
+  'Ensaios',
+  'Publicidade',
+]
+
+export const mockCourts = [
+  {
+    id: 1,
+    name: 'Arena Central',
+    location: 'Centro',
+    price: 150,
+    rating: 4.8,
+    image: 'https://img.usecurling.com/p/400/300?q=soccer%20field%20night',
+  },
+  {
+    id: 2,
+    name: 'Quadra do Parque',
+    location: 'Zona Sul',
+    price: 100,
+    rating: 4.5,
+    image: 'https://img.usecurling.com/p/400/300?q=futsal%20court',
+  },
+]
+
 export const mockNotifications = [
   {
     id: 1,
