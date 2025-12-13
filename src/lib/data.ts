@@ -381,6 +381,28 @@ export const mockNutrition = [
   },
 ]
 
+export const mockNutritionPartners = [
+  ...mockNutrition,
+  {
+    id: '2',
+    name: 'NutriFit Center',
+    specialty: 'Emagrecimento e Performance',
+    rating: 4.7,
+    image: 'https://img.usecurling.com/ppl/medium?gender=female&seed=8',
+    location: 'Moema, SP',
+    price: 'R$ 200',
+  },
+  {
+    id: '3',
+    name: 'João Health',
+    specialty: 'Hipertrofia',
+    rating: 4.9,
+    image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=9',
+    location: 'Consultório Online',
+    price: 'R$ 180',
+  },
+]
+
 export const mockClinics = [
   {
     id: '1',
@@ -406,6 +428,16 @@ export const mockPhotographers = [
     ],
     specialty: 'Futebol',
   },
+]
+
+export const photographerCategories = [
+  'Todos',
+  'Futebol',
+  'Basquete',
+  'Vôlei',
+  'Crossfit',
+  'Eventos',
+  'Ensaios',
 ]
 
 export const mockNotifications = [
@@ -510,5 +542,102 @@ export const mockDrivers = [
     image: 'https://img.usecurling.com/ppl/medium?gender=female&seed=6',
     rides: 80,
     joined: '2024',
+  },
+]
+
+export const mockStories = [
+  {
+    id: '1',
+    user: mockProfiles[0],
+    image: 'https://img.usecurling.com/p/300/500?q=soccer%20training&dpr=2',
+    viewed: false,
+  },
+  {
+    id: '2',
+    user: mockProfiles[1],
+    image: 'https://img.usecurling.com/p/300/500?q=gym%20workout&dpr=2',
+    viewed: false,
+  },
+  {
+    id: '3',
+    user: mockProfiles[4],
+    image: 'https://img.usecurling.com/p/300/500?q=running&dpr=2',
+    viewed: true,
+  },
+]
+
+export const mockPosts = [
+  {
+    id: '1',
+    user: mockProfiles[0],
+    content:
+      'Grande vitória hoje! O time jogou muito bem e conseguimos os 3 pontos.',
+    image:
+      'https://img.usecurling.com/p/600/400?q=soccer%20team%20celebration&dpr=2',
+    likes: 124,
+    comments: 18,
+    shares: 5,
+    time: '2 horas atrás',
+    isLiked: false,
+  },
+  {
+    id: '2',
+    user: mockProfiles[1],
+    content: 'Dica de treino: mantenha a consistência e os resultados virão.',
+    image: 'https://img.usecurling.com/p/600/400?q=fitness%20training&dpr=2',
+    likes: 89,
+    comments: 12,
+    shares: 2,
+    time: '4 horas atrás',
+    isLiked: true,
+  },
+  {
+    id: '3',
+    user: mockProfiles[3],
+    content:
+      'Alimentação saudável é a base para um bom desempenho esportivo. Consulte um nutricionista!',
+    image: null,
+    likes: 45,
+    comments: 3,
+    shares: 1,
+    time: '6 horas atrás',
+    isLiked: false,
+  },
+]
+
+export const mockVideos = [
+  {
+    id: '1',
+    user: mockProfiles[0],
+    thumbnail: 'https://img.usecurling.com/p/300/500?q=soccer%20trick&dpr=2',
+    videoUrl: 'https://img.usecurling.com/p/300/500?q=soccer%20trick&dpr=2',
+    description: 'Aquele drible que você respeita! ⚽🔥 #futebol #skills',
+    likes: 1540,
+    comments: 120,
+    shares: 450,
+  },
+  {
+    id: '2',
+    user: mockProfiles[1],
+    thumbnail:
+      'https://img.usecurling.com/p/300/500?q=crossfit%20workout&dpr=2',
+    videoUrl: 'https://img.usecurling.com/p/300/500?q=crossfit%20workout&dpr=2',
+    description:
+      'Treino intenso de hoje! Superando limites. 💪🏋️‍♀️ #crossfit #treino',
+    likes: 890,
+    comments: 56,
+    shares: 120,
+  },
+  {
+    id: '3',
+    user: mockProfiles[4],
+    thumbnail:
+      'https://img.usecurling.com/p/300/500?q=running%20marathon&dpr=2',
+    videoUrl: 'https://img.usecurling.com/p/300/500?q=running%20marathon&dpr=2',
+    description:
+      'Preparação para a maratona a todo vapor! 🏃‍♂️💨 #running #maratona',
+    likes: 2100,
+    comments: 340,
+    shares: 600,
   },
 ]
