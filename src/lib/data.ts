@@ -177,6 +177,16 @@ export const mockEvents = [
     description:
       'Participe da maior copa regional de futsal amador de São Paulo.',
   },
+  {
+    id: '2',
+    title: 'Peneira Nacional',
+    date: '20 Set',
+    location: 'Rio de Janeiro, RJ',
+    image: 'https://img.usecurling.com/p/600/300?q=soccer%20tryouts&dpr=2',
+    organizer: 'Olheiros BR',
+    price: 'Grátis',
+    description: 'Oportunidade única para jovens talentos serem observados.',
+  },
 ]
 
 export interface BadgeData {
@@ -937,5 +947,124 @@ export const mockLightningChallenges: LightningChallenge[] = [
     reward: 150,
     duration: 300,
     type: 'teamwork',
+  },
+]
+
+export const mockVideos = [
+  {
+    id: '1',
+    title: 'Top 10 Gols da Rodada',
+    thumbnail: 'https://img.usecurling.com/p/600/340?q=soccer%20goals',
+    duration: '10:05',
+    views: '12k',
+    author: {
+      name: 'Goplay Sports',
+      avatar: 'https://img.usecurling.com/i?q=trophy&color=gold',
+    },
+  },
+  {
+    id: '2',
+    title: 'Dicas de Drible',
+    thumbnail: 'https://img.usecurling.com/p/600/340?q=soccer%20skills',
+    duration: '5:30',
+    views: '8.5k',
+    author: {
+      name: 'Coach Beto',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=45',
+    },
+  },
+]
+
+export const photographerCategories = [
+  'Eventos',
+  'Retratos',
+  'Equipes',
+  'Editorial',
+  'Produtos',
+]
+
+export const mockVenues = [
+  {
+    id: '1',
+    name: 'Arena Central',
+    location: 'São Paulo, SP',
+    rating: 4.8,
+    image: 'https://img.usecurling.com/p/600/400?q=soccer%20stadium',
+    sports: ['Futebol', 'Futsal'],
+    price: '$$$',
+  },
+  {
+    id: '2',
+    name: 'Complexo Esportivo Sul',
+    location: 'Curitiba, PR',
+    rating: 4.5,
+    image: 'https://img.usecurling.com/p/600/400?q=sports%20complex',
+    sports: ['Tênis', 'Vôlei'],
+    price: '$$',
+  },
+]
+
+export const mockGyms = [
+  {
+    id: '1',
+    name: 'Ironberg CT',
+    location: 'São Paulo, SP',
+    rating: 4.9,
+    image: 'https://img.usecurling.com/p/600/400?q=gym%20interior',
+    features: ['Musculação', 'Lutas', 'Crossfit'],
+  },
+  {
+    id: '2',
+    name: 'Smart Fit',
+    location: 'Rio de Janeiro, RJ',
+    rating: 4.6,
+    image: 'https://img.usecurling.com/p/600/400?q=fitness%20center',
+    features: ['Cardio', 'Musculação'],
+  },
+]
+
+export const mockNutritionPartners = [
+  {
+    id: '1',
+    name: 'Green Healthy Food',
+    type: 'Restaurante',
+    rating: 4.8,
+    location: 'São Paulo, SP',
+    image: 'https://img.usecurling.com/p/400/300?q=healthy%20food',
+    discount: '10% OFF',
+  },
+  {
+    id: '2',
+    name: 'Suplementos Pro',
+    type: 'Loja',
+    rating: 4.9,
+    location: 'Online',
+    image: 'https://img.usecurling.com/p/400/300?q=supplements',
+    discount: '15% OFF',
+  },
+]
+
+export const mockClinics = [
+  {
+    id: '1',
+    name: 'Clínica do Esporte',
+    specialty: 'Fisioterapia',
+    rating: 4.9,
+    location: 'São Paulo, SP',
+    image: 'https://img.usecurling.com/p/400/300?q=physiotherapy',
+    verified: true,
+  },
+]
+
+export const mockJobs = [
+  {
+    id: '1',
+    title: 'Treinador Sub-15',
+    organization: 'Clube Atlético',
+    location: 'Rio de Janeiro, RJ',
+    type: 'Presencial',
+    salary: 'R$ 2.500',
+    postedAt: 'Há 2 dias',
+    logo: 'https://img.usecurling.com/i?q=shield&shape=fill&color=violet',
   },
 ]
