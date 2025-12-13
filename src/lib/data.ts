@@ -446,6 +446,18 @@ export const exploreCategories = [
   },
 ]
 
+export const photographerCategories = [
+  'Todos',
+  'Futebol',
+  'Basquete',
+  'Tênis',
+  'Corrida',
+  'Surfe',
+  'Skate',
+  'Eventos',
+  'Ensaios',
+]
+
 export const mockDriverStats = [
   {
     id: 1,
@@ -723,6 +735,105 @@ export const mockVenues = [
     price: 'R$ 150/h',
     features: ['Arquibancada', 'Placar Eletrônico'],
     amenities: ['Arquibancada', 'Placar Eletrônico', 'Vestiário Premium'],
+  },
+]
+
+export const mockGyms = [
+  {
+    id: '1',
+    name: 'Academia Ironberg',
+    location: 'Centro, São Paulo',
+    address: 'Rua da Força, 500',
+    rating: 4.9,
+    image: 'https://img.usecurling.com/p/400/300?q=gym%20interior',
+    features: ['Musculação', 'Crossfit', 'Lutas'],
+    amenities: ['Ar Condicionado', 'Estacionamento', 'Vestiário'],
+    price: 'R$ 120/mês',
+    distance: '2.5 km',
+    reviews: 240,
+    openUntil: '23:00',
+  },
+  {
+    id: '2',
+    name: 'Smart Fit',
+    location: 'Pinheiros, São Paulo',
+    address: 'Av. Faria Lima, 1000',
+    rating: 4.5,
+    image: 'https://img.usecurling.com/p/400/300?q=fitness%20center',
+    features: ['Musculação', 'Cardio', 'Aulas Coletivas'],
+    amenities: ['Ar Condicionado', 'Chuveiros', 'Wi-Fi'],
+    price: 'R$ 99/mês',
+    distance: '1.2 km',
+    reviews: 1500,
+    openUntil: '24h',
+  },
+  {
+    id: '3',
+    name: 'CrossFit Box',
+    location: 'Vila Madalena, São Paulo',
+    address: 'Rua Harmonia, 200',
+    rating: 4.8,
+    image: 'https://img.usecurling.com/p/400/300?q=crossfit%20gym',
+    features: ['Crossfit', 'LPO', 'Gymnastics'],
+    amenities: ['Vestiário', 'Loja', 'Nutricionista'],
+    price: 'R$ 250/mês',
+    distance: '3.0 km',
+    reviews: 85,
+    openUntil: '22:00',
+  },
+]
+
+export const mockNutritionPartners = [
+  {
+    id: '1',
+    name: 'Dra. Ana Paula',
+    role: 'Nutricionista Esportiva',
+    specialty: 'Nutrição Esportiva',
+    rating: 5.0,
+    image: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=50',
+    location: 'Online / Presencial',
+    price: 'R$ 250',
+    reviews: 45,
+    bio: 'Especialista em performance atlética e emagrecimento.',
+  },
+  {
+    id: '2',
+    name: 'Dr. Carlos Nutri',
+    role: 'Nutrólogo',
+    specialty: 'Hipertrofia e Emagrecimento',
+    rating: 4.8,
+    image: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=51',
+    location: 'Moema, SP',
+    price: 'R$ 300',
+    reviews: 32,
+    bio: 'Foco em ganho de massa muscular e longevidade.',
+  },
+]
+
+export const mockClinics = [
+  {
+    id: '1',
+    name: 'Clínica do Esporte',
+    specialty: 'Fisioterapia Esportiva',
+    rating: 4.9,
+    image: 'https://img.usecurling.com/p/400/300?q=physiotherapy%20clinic',
+    location: 'Jardins, SP',
+    services: ['Fisioterapia', 'Osteopatia', 'Recovery', 'Massagem'],
+    distance: '4.0 km',
+    reviews: 120,
+    address: 'Rua Augusta, 2500',
+  },
+  {
+    id: '2',
+    name: 'OrtoCenter',
+    specialty: 'Ortopedia e Traumatologia',
+    rating: 4.7,
+    image: 'https://img.usecurling.com/p/400/300?q=medical%20clinic',
+    location: 'Tatuapé, SP',
+    services: ['Consultas', 'Exames de Imagem', 'Cirurgia', 'Infiltração'],
+    distance: '6.5 km',
+    reviews: 89,
+    address: 'Rua Tuiuti, 1500',
   },
 ]
 
