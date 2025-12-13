@@ -7,6 +7,7 @@ import {
   Globe,
   Share2,
   Trophy,
+  Star,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockProfiles, mockPassport } from '@/lib/data'
@@ -34,7 +35,6 @@ export default function SportsPassport() {
       <div className="p-4 flex flex-col items-center gap-8">
         <div className="perspective-1000 w-full max-w-sm group">
           <div className="relative w-full aspect-[1.586/1] transition-transform duration-700 transform-style-3d group-hover:rotate-y-180">
-            {/* Front of Card */}
             <Card className="absolute inset-0 w-full h-full rounded-2xl border-none shadow-2xl bg-gradient-to-br from-zinc-900 via-black to-zinc-900 border border-white/10 overflow-hidden backface-hidden">
               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" />
               <div className="absolute top-0 right-0 w-32 h-32 bg-gold/10 rounded-full blur-3xl" />
@@ -104,8 +104,6 @@ export default function SportsPassport() {
                 </div>
               </CardContent>
             </Card>
-
-            {/* Back of Card (Simulated for this demo as separate view if not 3D flipping fully) */}
           </div>
         </div>
 

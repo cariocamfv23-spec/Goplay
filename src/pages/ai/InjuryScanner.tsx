@@ -1,11 +1,5 @@
 import { Button } from '@/components/ui/button'
-import {
-  ArrowLeft,
-  ScanLine,
-  AlertTriangle,
-  CheckCircle,
-  Watch,
-} from 'lucide-react'
+import { ArrowLeft, AlertTriangle, CheckCircle, Watch } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Progress } from '@/components/ui/progress'
 import { Card, CardContent } from '@/components/ui/card'
@@ -16,7 +10,6 @@ export default function InjuryScanner() {
   const navigate = useNavigate()
   const { connectedDevice, biometrics } = useDeviceStore()
 
-  // Calculate simulated stress based on biometrics if connected
   const stressLevel = connectedDevice
     ? Math.min(100, Math.max(30, (biometrics.heartRate - 60) * 0.8))
     : 65
@@ -65,7 +58,6 @@ export default function InjuryScanner() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
 
-          {/* Heatmap overlay simulation */}
           <div className="absolute top-[40%] left-[60%] w-24 h-24 bg-red-500/30 rounded-full blur-xl animate-pulse" />
 
           <div className="absolute bottom-6 left-6 right-6">

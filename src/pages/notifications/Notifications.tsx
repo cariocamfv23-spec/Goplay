@@ -9,6 +9,7 @@ import {
   User,
   Car,
   CalendarClock,
+  Briefcase,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -26,6 +27,8 @@ export default function Notifications() {
         return <CreditCard className="h-5 w-5 text-green-500" />
       case 'ride_request':
         return <Car className="h-5 w-5 text-orange-500" />
+      case 'team_uber':
+        return <Briefcase className="h-5 w-5 text-gold" />
       case 'scheduled_ride':
         return <CalendarClock className="h-5 w-5 text-purple-500" />
       default:

@@ -49,7 +49,6 @@ const useDeviceStore = create<DeviceState>((set, get) => ({
     set({ connectedDevice: null })
   },
 
-  // Mock function to simulate varying biometric data
   updateBiometrics: () => {
     const { connectedDevice, biometrics } = get()
     if (!connectedDevice) return
@@ -57,7 +56,7 @@ const useDeviceStore = create<DeviceState>((set, get) => ({
     set({
       biometrics: {
         ...biometrics,
-        heartRate: 70 + Math.floor(Math.random() * 80), // Simulate HR 70-150
+        heartRate: 70 + Math.floor(Math.random() * 80),
         calories: biometrics.calories + 1,
         steps: biometrics.steps + Math.floor(Math.random() * 5),
       },

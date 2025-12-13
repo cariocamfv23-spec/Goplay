@@ -147,7 +147,6 @@ const useSoundStore = create<SoundStore>()(
           const utterance = new SpeechSynthesisUtterance(config.text)
           utterance.volume = config.volume
 
-          // Enhanced style definitions for expanded packs
           switch (config.style) {
             case 'varzea':
               utterance.pitch = 0.8
@@ -180,7 +179,7 @@ const useSoundStore = create<SoundStore>()(
             case 'gringo':
               utterance.pitch = 1.0
               utterance.rate = 1.0
-              utterance.lang = 'en-US' // Attempt English accent/voice
+              utterance.lang = 'en-US'
               break
           }
 

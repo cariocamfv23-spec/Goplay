@@ -23,7 +23,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 
 export default function AiCoach() {
@@ -41,7 +40,6 @@ export default function AiCoach() {
   useEffect(() => {
     let interval: NodeJS.Timeout
     if (connectedDevice) {
-      // Simulate real-time biometric updates
       interval = setInterval(updateBiometrics, 2000)
     }
     return () => clearInterval(interval)
@@ -53,7 +51,6 @@ export default function AiCoach() {
     setMessages((prev) => [...prev, userMsg])
     setInputText('')
 
-    // Interactive AI response based on context and biometrics
     setTimeout(() => {
       let aiResponse = ''
       const lowerInput = inputText.toLowerCase()
@@ -78,7 +75,6 @@ export default function AiCoach() {
     }, 1500)
   }
 
-  // Auto-scroll to bottom of chat
   useEffect(() => {
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
@@ -102,7 +98,6 @@ export default function AiCoach() {
       </div>
 
       <div className="p-4 space-y-6">
-        {/* Biometrics Integration Alert */}
         {!connectedDevice ? (
           <div className="bg-primary/10 border border-primary/20 p-4 rounded-xl flex items-center justify-between animate-pulse">
             <div className="flex items-center gap-3">
@@ -157,7 +152,6 @@ export default function AiCoach() {
           </div>
         )}
 
-        {/* Real-time Feedback Card */}
         <Card className="bg-zinc-900 border-zinc-800 overflow-hidden">
           <div className="aspect-video relative bg-black">
             <img
@@ -186,7 +180,6 @@ export default function AiCoach() {
           </CardContent>
         </Card>
 
-        {/* Weekly Evolution */}
         <div>
           <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-gold" /> Evolução Semanal
@@ -209,7 +202,6 @@ export default function AiCoach() {
           </div>
         </div>
 
-        {/* Suggested Drills */}
         <div>
           <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
             <Dumbbell className="h-5 w-5 text-white" /> Treinos Recomendados
@@ -235,7 +227,6 @@ export default function AiCoach() {
         </div>
       </div>
 
-      {/* Interactive Chat Fab */}
       <Dialog>
         <DialogTrigger asChild>
           <Button className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-gradient-to-r from-primary to-purple-800 shadow-xl z-50">

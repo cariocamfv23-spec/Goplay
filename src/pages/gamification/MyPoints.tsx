@@ -11,13 +11,13 @@ import {
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Progress } from '@/components/ui/progress'
+import { cn } from '@/lib/utils'
 
 export default function MyPoints() {
   const navigate = useNavigate()
 
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
-      {/* Hero Section */}
       <div className="bg-primary text-white pb-10 rounded-b-[2.5rem] relative overflow-hidden shadow-2xl">
         <div className="absolute top-0 left-0 w-full h-full bg-[url('https://img.usecurling.com/p/800/800?q=abstract%20purple%20waves')] bg-cover opacity-20 mix-blend-overlay" />
         <div className="absolute top-0 left-0 right-0 p-4 flex items-center gap-4 z-10">
@@ -51,7 +51,6 @@ export default function MyPoints() {
       </div>
 
       <div className="px-4 -mt-8 relative z-20 space-y-6">
-        {/* Actions Card */}
         <Card className="border-none shadow-lg bg-card">
           <CardContent className="p-4 grid grid-cols-2 gap-4">
             <Button
@@ -68,6 +67,7 @@ export default function MyPoints() {
             <Button
               className="h-auto flex-col py-4 bg-secondary/50 hover:bg-secondary text-foreground border border-border/50"
               variant="ghost"
+              onClick={() => navigate('/ranking')}
             >
               <TrendingUp className="h-6 w-6 text-green-500 mb-2" />
               <span className="font-bold text-sm">Ranking</span>
@@ -78,7 +78,6 @@ export default function MyPoints() {
           </CardContent>
         </Card>
 
-        {/* Progress to Next Level */}
         <div>
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-bold">Próximo Nível</span>
@@ -92,7 +91,6 @@ export default function MyPoints() {
           </p>
         </div>
 
-        {/* History */}
         <div>
           <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
             <History className="h-5 w-5" /> Histórico

@@ -30,7 +30,6 @@ export function CheckInModal({
   const [analysisStep, setAnalysisStep] = useState(0)
   const { playSound } = useSoundStore()
 
-  // Reset state when modal opens
   useEffect(() => {
     if (open) {
       setStep('camera')
@@ -45,25 +44,21 @@ export function CheckInModal({
   }
 
   const simulateAnalysis = () => {
-    // Step 1: Location
     setTimeout(() => {
       setAnalysisStep(1)
       setProgress(33)
     }, 1500)
 
-    // Step 2: Environment
     setTimeout(() => {
       setAnalysisStep(2)
       setProgress(66)
     }, 3000)
 
-    // Step 3: Facial & Clarity
     setTimeout(() => {
       setAnalysisStep(3)
       setProgress(100)
     }, 4500)
 
-    // Success
     setTimeout(() => {
       setStep('success')
       playSound('notification_checkin')
@@ -95,7 +90,6 @@ export function CheckInModal({
         <div className="relative aspect-[3/4] bg-zinc-900 flex flex-col items-center justify-center overflow-hidden">
           {step === 'camera' && (
             <>
-              {/* Fake Camera Viewfinder */}
               <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/600/800?q=soccer%20field&dpr=2')] bg-cover bg-center opacity-50" />
               <div className="absolute inset-0 border-[2px] border-white/20 m-8 rounded-lg" />
               <div className="absolute bottom-8 left-0 right-0 flex justify-center z-20">

@@ -58,7 +58,6 @@ export function NarrationEditor({
   const [isPlaying, setIsPlaying] = useState(false)
   const { playNarration, isPlayingNarration } = useSoundStore()
 
-  // Sync internal playing state with store
   useEffect(() => {
     setIsPlaying(isPlayingNarration)
   }, [isPlayingNarration])
@@ -104,7 +103,6 @@ export function NarrationEditor({
         </DrawerHeader>
 
         <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
-          {/* Preview Area */}
           <div className="relative aspect-video rounded-xl overflow-hidden bg-black shadow-lg border border-border/50">
             {videoThumbnail ? (
               <img
@@ -140,13 +138,11 @@ export function NarrationEditor({
               </Button>
             </div>
 
-            {/* Visualizer Overlay */}
             <div className="absolute bottom-4 left-0 right-0 px-8">
               <SoundWaveVisualizer isPlaying={isPlaying} />
             </div>
           </div>
 
-          {/* Controls */}
           <div className="space-y-4">
             <div className="space-y-2">
               <Label>Estilo de Narração</Label>

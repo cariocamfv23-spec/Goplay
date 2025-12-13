@@ -1,4 +1,3 @@
-/* Tooltip Component primitives - A component that displays a tooltip (a component that displays a tooltip) - from shadcn/ui (exposes TooltipProvider, Tooltip, TooltipTrigger, TooltipContent) */
 import * as React from 'react'
 import * as TooltipPrimitive from '@radix-ui/react-tooltip'
 

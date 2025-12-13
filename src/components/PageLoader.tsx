@@ -4,7 +4,6 @@ import { AppIcon } from '@/components/AppIcon'
 export const PageLoader = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background animate-fade-in relative overflow-hidden">
-      {/* Background blobs for premium feel using brand colors */}
       <div className="absolute top-0 left-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-64 h-64 bg-gold/10 rounded-full blur-[100px] translate-x-1/2 translate-y-1/2 pointer-events-none" />
 
@@ -17,7 +16,6 @@ export const PageLoader = () => {
         </div>
 
         <div className="animate-in slide-in-from-bottom-4 fade-in duration-700 delay-300">
-          {/* Using text variant to avoid duplicating the icon in the animation sequence */}
           <Logo variant="text" className="text-4xl" />
         </div>
 

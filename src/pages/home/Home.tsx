@@ -1,6 +1,6 @@
 import { mockPosts, mockStories } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Plus, Video } from 'lucide-react'
+import { Plus, Video, Zap } from 'lucide-react'
 import { PostCard } from '@/components/PostCard'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { CreatePostFab } from '@/components/CreatePostFab'
@@ -62,32 +62,37 @@ const Home = () => {
         </ScrollArea>
       </div>
 
-      {/* MOVE Highlight Section */}
-      <div
-        className="p-4 pb-0 animate-slide-up"
-        style={{ animationDelay: '100ms' }}
-      >
+      {/* Quick Actions / Highlights */}
+      <div className="p-4 pb-0 grid grid-cols-2 gap-3 animate-slide-up">
+        {/* MOVE Highlight */}
         <div
           className="rounded-2xl bg-gradient-to-r from-zinc-900 to-zinc-800 p-4 text-white relative overflow-hidden shadow-lg cursor-pointer group hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
           onClick={() => navigate('/move')}
         >
-          <div className="relative z-10 flex justify-between items-center">
-            <div>
-              <h2 className="font-bold text-lg flex items-center gap-2">
-                <Video className="h-5 w-5 text-primary animate-pulse" /> MOVE
-              </h2>
-              <p className="text-xs text-zinc-400 group-hover:text-zinc-300 transition-colors">
-                Assista aos melhores lances em alta
-              </p>
-            </div>
-            <Button
-              size="sm"
-              className="rounded-full bg-primary hover:bg-primary/90 shadow-lg"
-            >
-              Assistir
-            </Button>
+          <div className="relative z-10">
+            <h2 className="font-bold text-lg flex items-center gap-2">
+              <Video className="h-5 w-5 text-primary animate-pulse" /> MOVE
+            </h2>
+            <p className="text-xs text-zinc-400 group-hover:text-zinc-300 transition-colors mt-1">
+              Melhores lances em alta
+            </p>
           </div>
-          <div className="absolute -right-6 -bottom-6 h-24 w-24 bg-primary/20 rounded-full blur-2xl group-hover:bg-primary/30 transition-colors duration-500" />
+          <div className="absolute -right-6 -bottom-6 h-20 w-20 bg-primary/20 rounded-full blur-2xl group-hover:bg-primary/30 transition-colors duration-500" />
+        </div>
+
+        {/* Live Match Demo */}
+        <div
+          className="rounded-2xl bg-gradient-to-br from-gold/20 to-yellow-900/40 border border-gold/30 p-4 relative overflow-hidden shadow-lg cursor-pointer group hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
+          onClick={() => navigate('/matches/match-1')}
+        >
+          <div className="relative z-10">
+            <h2 className="font-bold text-lg flex items-center gap-2 text-yellow-700 dark:text-gold">
+              <Zap className="h-5 w-5 fill-current animate-bounce" /> Ao Vivo
+            </h2>
+            <p className="text-xs text-muted-foreground mt-1">
+              Partida em andamento
+            </p>
+          </div>
         </div>
       </div>
 

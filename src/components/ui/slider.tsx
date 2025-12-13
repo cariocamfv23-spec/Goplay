@@ -1,4 +1,3 @@
-/* Slider Component - A component that displays a slider (a component that displays a range of values) - from shadcn/ui (exposes Slider) */
 import * as React from 'react'
 import * as SliderPrimitive from '@radix-ui/react-slider'
 
@@ -15,6 +14,7 @@ const Slider = React.forwardRef<
       className,
     )}
     {...props}
+  />
   >
     <SliderPrimitive.Track className="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary">
       <SliderPrimitive.Range className="absolute h-full bg-primary" />
@@ -25,3 +25,4 @@ const Slider = React.forwardRef<
 Slider.displayName = SliderPrimitive.Root.displayName
 
 export { Slider }
+

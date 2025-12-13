@@ -5,7 +5,6 @@ import {
   Box,
   Camera,
   Video,
-  Settings2,
   Download,
   Wand2,
   Zap,
@@ -108,7 +107,6 @@ export default function GhostPlay() {
         </div>
       </div>
 
-      {/* Effects Panel */}
       {showEffects && (
         <div className="absolute top-20 right-4 z-30 bg-black/80 backdrop-blur-md border border-white/10 rounded-xl p-3 flex flex-col gap-2 animate-in slide-in-from-right-10">
           <p className="text-xs font-bold text-muted-foreground mb-1 uppercase text-center">
@@ -149,7 +147,6 @@ export default function GhostPlay() {
         </div>
       )}
 
-      {/* 3D Viewport Simulation */}
       <div className="flex-1 relative bg-zinc-900 overflow-hidden">
         <img
           src={
@@ -165,7 +162,6 @@ export default function GhostPlay() {
 
         {getEffectOverlay()}
 
-        {/* 3D Overlay Elements */}
         <div className="absolute inset-0 pointer-events-none">
           <div
             className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-2 rounded-full animate-pulse opacity-50 ${effect === 'fire' ? 'border-orange-500' : 'border-primary/30'}`}
@@ -180,8 +176,7 @@ export default function GhostPlay() {
           </div>
         </div>
 
-        {/* Camera Controls */}
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 bg-black/40 backdrop-blur-md p-2 rounded-full border border-white/10">
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 bg-black/40 backdrop-blur-md p-2 rounded-full border border-white/10 pointer-events-auto">
           <Button
             size="icon"
             variant={view === 'normal' ? 'default' : 'ghost'}
@@ -209,7 +204,6 @@ export default function GhostPlay() {
         </div>
       </div>
 
-      {/* Timeline Controls */}
       <div className="h-32 bg-zinc-950 border-t border-zinc-800 p-4 pb-8 z-20">
         <div className="flex items-center gap-4 mb-4">
           <Button

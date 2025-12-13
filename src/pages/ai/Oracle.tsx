@@ -43,7 +43,6 @@ export default function Oracle() {
       </div>
 
       <div className="p-4 space-y-6">
-        {/* Device Integration Badge */}
         {connectedDevice ? (
           <div className="flex items-center justify-center gap-2 bg-purple-900/20 text-purple-300 py-2 rounded-full border border-purple-500/30 text-xs">
             <Watch className="h-3 w-3" />

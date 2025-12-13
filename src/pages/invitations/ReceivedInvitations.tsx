@@ -29,9 +29,8 @@ export default function ReceivedInvitations() {
       description: 'Você foi adicionado à partida e ganhou +20 pontos!',
       icon: <Trophy className="h-5 w-5 text-gold" />,
     })
-    // Remove from list simulation
     setInvitations(invitations.filter((inv) => inv.id !== id))
-    // Navigate to match details simulation
+    // In real app, this would navigate to the specific match
     navigate('/matches/match-1')
   }
 

@@ -1,4 +1,3 @@
-/* Drawer Component primitives - A component that displays a drawer (a modal that slides in from the bottom) - from shadcn/ui (exposes Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerFooter, DrawerTitle, DrawerDescription, DrawerClose, DrawerOverlay, DrawerPortal) */
 import * as React from 'react'
 import { Drawer as DrawerPrimitive } from 'vaul'
 

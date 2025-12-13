@@ -14,13 +14,9 @@ type BrandingState = {
   resetBranding: () => void
 }
 
-// Official Goplay App Assets
-// Using 'play' icon in violet (Roxo Serenity) to match brand identity consistently
-// The logo and icon share the same visual style to ensure the text color matches the icon color as requested
 export const defaultIcon =
   'https://img.usecurling.com/i?q=play&color=violet&shape=fill'
 
-// The logo URL acts as the brand mark source for the logo component
 export const defaultLogo =
   'https://img.usecurling.com/i?q=play&color=violet&shape=fill'
 
@@ -29,7 +25,6 @@ const BrandingContext = createContext<BrandingState | undefined>(undefined)
 export const BrandingProvider = ({ children }: { children: ReactNode }) => {
   const [logoUrl, setLogoUrl] = useState(() => {
     const stored = localStorage.getItem('goplay_logo')
-    // Auto-revert if stored logo is from potentially problematic sources or broken
     if (
       stored &&
       (stored.includes('cloudinary') || stored.includes('subframe'))
@@ -50,7 +45,6 @@ export const BrandingProvider = ({ children }: { children: ReactNode }) => {
     return stored || defaultIcon
   })
 
-  // Preload images to prevent visual artifacts
   useEffect(() => {
     const preloadImage = (url: string) => {
       const img = new Image()

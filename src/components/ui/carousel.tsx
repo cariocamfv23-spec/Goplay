@@ -1,4 +1,3 @@
-/* Carousel Component primitives - A component that displays a carousel - from shadcn/ui (exposes Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext) */
 import * as React from 'react'
 import useEmblaCarousel, {
   type UseEmblaCarouselType,

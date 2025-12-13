@@ -1,12 +1,5 @@
 import { Button } from '@/components/ui/button'
-import {
-  ArrowLeft,
-  Wand2,
-  Scissors,
-  Music,
-  Sticker,
-  Download,
-} from 'lucide-react'
+import { ArrowLeft, Wand2, Scissors, Music, Sticker } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
@@ -41,7 +34,6 @@ export default function VarzeaEditor() {
       </div>
 
       <div className="flex-1 bg-zinc-900 relative flex items-center justify-center overflow-hidden">
-        {/* Preview Area */}
         <div className="relative aspect-[9/16] h-[80%] bg-black rounded-lg overflow-hidden shadow-2xl">
           <img
             src="https://img.usecurling.com/p/400/700?q=funny%20soccer%20fail"
@@ -49,7 +41,6 @@ export default function VarzeaEditor() {
             alt="Edit Preview"
           />
 
-          {/* Simulated Effects Overlay */}
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 transform -rotate-12 bg-yellow-400 text-black font-black text-3xl px-4 py-2 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] animate-bounce">
             QUE ISSO!?
           </div>

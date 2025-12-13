@@ -1,4 +1,3 @@
-/* Calendar Component primitives - A component that displays a calendar - from shadcn/ui (exposes Calendar, CalendarProps) */
 import * as React from 'react'
 import {
   ChevronDownIcon,

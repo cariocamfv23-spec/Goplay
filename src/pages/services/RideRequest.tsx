@@ -2,13 +2,12 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
   ArrowLeft,
-  MapPin,
-  Car,
   Lock,
   Calendar as CalendarIcon,
   UserPlus,
   Search,
   CheckCircle2,
+  Users,
 } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
@@ -17,7 +16,7 @@ import { mockProfiles } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Calendar } from '@/components/ui/calendar'
 import {
   Popover,
@@ -42,6 +41,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import useSoundStore from '@/stores/useSoundStore'
+import useNotificationStore from '@/stores/useNotificationStore'
 
 export default function RideRequest() {
   const navigate = useNavigate()
@@ -63,18 +63,16 @@ export default function RideRequest() {
   const [date, setDate] = useState<Date>()
   const [time, setTime] = useState<string>()
   const { playSound } = useSoundStore()
+  const { addNotification } = useNotificationStore()
 
-  // Determine permissions
   useEffect(() => {
     if (!driverId) return
 
-    const permission =
-      localStorage.getItem(`driver_permission_${driverId}`) || 'everyone'
+    // Permission logic simulation
+    const permission = 'everyone'
+    // In real app, check backend permissions
 
     if (permission === 'everyone') {
-      setCanRequest(true)
-      setPermissionReason('')
-    } else if (permission === 'verified') {
       setCanRequest(true)
       setPermissionReason('')
     } else if (permission === 'followers') {
@@ -109,12 +107,23 @@ export default function RideRequest() {
       }
 
       setStep('searching')
+
+      // Simulate Uber Request Logic
       setTimeout(() => {
+        playSound('notification_uber')
+
+        // Persist simulation for Match Details
+        localStorage.setItem(`ride_status_match-1`, 'requested')
+
         if (rideFor === 'guest') {
-          playSound('notification_uber')
+          // Simulate sending "Uber pago pelo time" notification
+          addNotification({
+            title: 'Uber pago pelo time',
+            message: `Um Uber foi solicitado para você por ${driver.name}. "Uber pago pelo time – só chegar".`,
+            type: 'team_uber',
+          })
           setIsSuccessDialogOpen(true)
         } else {
-          playSound('notification_uber')
           toast.success('Motorista a caminho!')
           navigate('/home')
         }
@@ -137,7 +146,6 @@ export default function RideRequest() {
       </div>
 
       <div className="flex-1 relative">
-        {/* Mock Map Background */}
         <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/1000/1000?q=map&color=gray')] bg-cover bg-center opacity-50 grayscale" />
 
         <div className="absolute inset-x-4 top-4 space-y-2">
@@ -154,12 +162,13 @@ export default function RideRequest() {
             <Input
               placeholder="Para onde vamos?"
               className="border-none h-auto p-0 focus-visible:ring-0"
+              defaultValue={rideFor === 'guest' ? 'Arena Central (Jogo)' : ''}
             />
           </div>
         </div>
 
-        {/* Demo Control for Testing Permissions */}
-        <div className="absolute top-32 right-4 bg-background/90 p-2 rounded-lg shadow text-xs">
+        {/* Demo Control */}
+        <div className="absolute top-32 right-4 bg-background/90 p-2 rounded-lg shadow text-xs hidden">
           <div className="flex items-center gap-2">
             <Label htmlFor="sim-follower">Simular Seguidor</Label>
             <Switch
@@ -186,7 +195,6 @@ export default function RideRequest() {
               </TabsList>
             </Tabs>
 
-            {/* Ride For Selection */}
             <div className="flex items-center gap-2 mb-4 bg-secondary/30 p-2 rounded-lg">
               <Button
                 variant={rideFor === 'me' ? 'default' : 'ghost'}
@@ -202,7 +210,7 @@ export default function RideRequest() {
                 className="flex-1 rounded-md"
                 onClick={() => setRideFor('guest')}
               >
-                <UserPlus className="h-4 w-4 mr-2" />
+                <Users className="h-4 w-4 mr-2" />
                 Para Atleta
               </Button>
             </div>
@@ -294,7 +302,7 @@ export default function RideRequest() {
                 {requestType === 'schedule'
                   ? 'Agendar Corrida'
                   : rideFor === 'guest'
-                    ? 'Enviar Uber com Convite'
+                    ? 'Pagar Uber (Transporte Pago)'
                     : 'Confirmar Goplay Driver'}
               </Button>
             ) : (
@@ -311,16 +319,6 @@ export default function RideRequest() {
                 </Button>
               </div>
             )}
-
-            <div className="mt-4 text-center">
-              <Button
-                variant="link"
-                className="text-muted-foreground text-xs"
-                onClick={() => navigate('/services/scheduled-rides')}
-              >
-                Ver meus agendamentos
-              </Button>
-            </div>
           </>
         )}
 
@@ -329,14 +327,13 @@ export default function RideRequest() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
             <p className="font-medium text-lg">
               {rideFor === 'guest'
-                ? 'Processando convite de corrida...'
+                ? 'Processando Transporte Pago pelo Time...'
                 : 'Conectando com o motorista...'}
             </p>
           </div>
         )}
       </div>
 
-      {/* Guest Selection Dialog */}
       <Dialog open={isGuestDialogOpen} onOpenChange={setIsGuestDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -367,7 +364,6 @@ export default function RideRequest() {
         </DialogContent>
       </Dialog>
 
-      {/* Success Dialog for Guest Invite */}
       <Dialog open={isSuccessDialogOpen} onOpenChange={setIsSuccessDialogOpen}>
         <DialogContent className="text-center">
           <div className="mx-auto h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
@@ -375,12 +371,12 @@ export default function RideRequest() {
           </div>
           <DialogHeader>
             <DialogTitle className="text-center text-xl">
-              Convite Enviado!
+              Uber Pago Enviado!
             </DialogTitle>
           </DialogHeader>
           <p className="text-muted-foreground mb-4">
-            O motorista {driver.name} foi notificado e o convite da corrida foi
-            enviado para {guestName}.
+            O motorista {driver.name} foi contratado e a notificação "Uber pago
+            pelo time – só chegar" foi enviada para {guestName}.
           </p>
           <DialogFooter>
             <Button className="w-full" onClick={() => navigate('/home')}>

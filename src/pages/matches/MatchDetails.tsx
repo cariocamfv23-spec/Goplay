@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { mockMatches } from '@/lib/data'
+import { mockMatches, mockLightningChallenges } from '@/lib/data'
 import {
   ArrowLeft,
   Calendar,
@@ -10,27 +10,47 @@ import {
   Clock,
   Circle,
   Trophy,
+  Car,
+  Zap,
 } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { CheckInModal } from '@/components/CheckInModal'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
+import { LightningChallengeOverlay } from '@/components/LightningChallengeOverlay'
 
 export default function MatchDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
-  // Mock finding match, fallback to first for demo
   const match = mockMatches.find((m) => m.id === id) || mockMatches[0]
 
   const [isCheckInOpen, setIsCheckInOpen] = useState(false)
   const [matchStatus, setMatchStatus] = useState(match.status)
+  const [uberStatus, setUberStatus] = useState<string | null>(null)
+  const [activeChallenge, setActiveChallenge] = useState<any>(null)
+
+  useEffect(() => {
+    // Check if there is an Uber requested for this match (simulated)
+    const storedStatus = localStorage.getItem(`ride_status_${id}`)
+    if (storedStatus) {
+      setUberStatus(storedStatus)
+    }
+  }, [id])
 
   const handleCheckInSuccess = () => {
     setMatchStatus('approved')
+  }
+
+  const triggerRandomChallenge = () => {
+    const challenge =
+      mockLightningChallenges[
+        Math.floor(Math.random() * mockLightningChallenges.length)
+      ]
+    setActiveChallenge(challenge)
   }
 
   const getStatusColor = (status: string) => {
@@ -60,7 +80,14 @@ export default function MatchDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20 animate-fade-in">
+    <div className="min-h-screen bg-background pb-20 animate-fade-in relative">
+      {/* Lightning Challenge Overlay */}
+      <LightningChallengeOverlay
+        challenge={activeChallenge}
+        onClose={() => setActiveChallenge(null)}
+        onComplete={() => setActiveChallenge(null)}
+      />
+
       {/* Header */}
       <div className="relative h-48 bg-gradient-to-r from-primary/20 to-purple-900/20">
         <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/800/400?q=soccer%20stadium&color=purple')] bg-cover bg-center opacity-20" />
@@ -76,6 +103,15 @@ export default function MatchDetails() {
           <span className="text-white font-bold text-lg drop-shadow-md">
             Detalhes da Partida
           </span>
+          {/* Demo button to trigger challenge */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-auto rounded-full bg-background/50 backdrop-blur-md text-gold hover:text-yellow-400"
+            onClick={triggerRandomChallenge}
+          >
+            <Zap className="h-5 w-5" />
+          </Button>
         </div>
         <div className="absolute -bottom-10 left-0 right-0 px-6 flex justify-between items-end">
           <div className="flex items-end gap-3">
@@ -99,6 +135,32 @@ export default function MatchDetails() {
       </div>
 
       <div className="mt-14 px-4 space-y-6">
+        {/* Team Paid Uber Status */}
+        {uberStatus && (
+          <div className="bg-gradient-to-r from-black to-zinc-800 rounded-xl p-4 text-white shadow-lg border-l-4 border-gold animate-in slide-in-from-top-4">
+            <div className="flex justify-between items-center mb-1">
+              <h3 className="font-bold text-sm flex items-center gap-2">
+                <Car className="h-4 w-4 text-white" /> Transporte da Equipe
+              </h3>
+              <Badge
+                variant="secondary"
+                className="bg-gold text-black hover:bg-gold/90 text-[10px] font-bold"
+              >
+                UBER PAGO PELO TIME
+              </Badge>
+            </div>
+            <p className="text-xs text-zinc-300 mb-2">
+              Seu motorista está a caminho. Acompanhe no mapa.
+            </p>
+            <div className="flex items-center gap-2">
+              <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-xs font-bold text-green-400">
+                Chegando em 4 min
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* Main Info */}
         <Card className="border-none shadow-sm bg-secondary/10">
           <CardContent className="p-4 grid grid-cols-2 gap-4">
@@ -159,7 +221,7 @@ export default function MatchDetails() {
           )}
         </div>
 
-        {/* Transparency Panel - Player List */}
+        {/* Player List */}
         <div>
           <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
             <Users className="h-5 w-5" /> Lista de Jogadores

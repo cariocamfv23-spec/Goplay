@@ -1,4 +1,3 @@
-/* Popover Component primitives - A component that displays a popover (a component that appears when you click on an element) - from shadcn/ui (exposes Popover, PopoverTrigger, PopoverContent) */
 import * as React from 'react'
 import * as PopoverPrimitive from '@radix-ui/react-popover'
 

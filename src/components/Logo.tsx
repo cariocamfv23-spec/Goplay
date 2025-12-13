@@ -15,11 +15,9 @@ export const Logo = ({
   textClassName,
   ...props
 }: LogoProps) => {
-  // Use logoUrl specifically for the Logo component
   const { logoUrl } = useBrandingStore()
   const [src, setSrc] = useState(logoUrl)
 
-  // Sync with store changes
   useEffect(() => {
     setSrc(logoUrl)
   }, [logoUrl])
@@ -52,7 +50,6 @@ export const Logo = ({
       {showText && (
         <span
           className={cn(
-            // Updated text color to text-primary (Violet) to match the app icon and theme
             'font-bold tracking-tighter text-primary leading-none',
             textClassName,
           )}
