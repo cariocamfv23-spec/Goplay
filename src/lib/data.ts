@@ -938,3 +938,113 @@ export interface Notification {
   read: boolean
   type?: string
 }
+
+export const mockComparisonStats = [
+  { label: 'Velocidade', user: 75, avg: 60, pro: 90 },
+  { label: 'Força', user: 80, avg: 65, pro: 85 },
+  { label: 'Técnica', user: 70, avg: 55, pro: 95 },
+  { label: 'Resistência', user: 85, avg: 60, pro: 92 },
+  { label: 'Mental', user: 65, avg: 50, pro: 88 },
+  { label: 'Tática', user: 60, avg: 55, pro: 90 },
+]
+
+export const mockTransactionHistory = [
+  {
+    id: '1',
+    type: 'deposit',
+    description: 'Depósito via PIX',
+    amount: 150.0,
+    date: 'Hoje, 10:30',
+    status: 'completed',
+  },
+  {
+    id: '2',
+    type: 'payment',
+    description: 'Reserva Arena Central',
+    amount: -80.0,
+    date: 'Ontem, 18:45',
+    status: 'completed',
+  },
+  {
+    id: '3',
+    type: 'earning',
+    description: 'Prêmio MVP da Partida',
+    amount: 50.0,
+    date: '12 Dez, 21:00',
+    status: 'completed',
+  },
+]
+
+export const mockJobs = [
+  {
+    id: '1',
+    title: 'Atacante Semi-Profissional',
+    company: 'Dragões da Várzea',
+    team: 'Dragões da Várzea',
+    location: 'São Paulo, SP',
+    salary: 'R$ 800 - R$ 1.200 / jogo',
+    type: 'Temporada',
+    description:
+      'Procuramos atacante rápido e com boa finalização para disputa da Copa Regional.',
+    requirements: [
+      'Experiência em campeonatos amadores',
+      'Disponibilidade aos finais de semana',
+    ],
+    postedAt: '2 dias atrás',
+    logo: 'https://img.usecurling.com/i?q=dragon&shape=fill&color=red',
+  },
+  {
+    id: '2',
+    title: 'Goleiro para Torneio',
+    company: 'Real Madruga',
+    team: 'Real Madruga',
+    location: 'Osasco, SP',
+    salary: 'R$ 150 / jogo',
+    type: 'Freelance',
+    description:
+      'Precisamos de goleiro para fechar o time no torneio de domingo.',
+    requirements: ['Luvas próprias', 'Chegar 30min antes'],
+    postedAt: 'Hoje',
+    logo: 'https://img.usecurling.com/i?q=shield&shape=fill&color=blue',
+  },
+  {
+    id: '3',
+    title: 'Treinador Sub-15',
+    company: 'Escolinha do Futuro',
+    team: 'Escolinha do Futuro',
+    location: 'Campinas, SP',
+    salary: 'R$ 2.500 / mês',
+    type: 'CLT',
+    description:
+      'Vaga para treinador de categorias de base. Foco em formação de atletas.',
+    requirements: ['Licença C da CBF', 'Experiência com crianças'],
+    postedAt: '1 semana atrás',
+    logo: 'https://img.usecurling.com/i?q=whistle&shape=fill&color=green',
+  },
+]
+
+export const getMockMessages = (chatId: string) => {
+  return [
+    {
+      id: '1',
+      text: 'E aí, tudo certo para o jogo de hoje?',
+      senderId: 'other',
+      timestamp: '10:30',
+      isMe: false,
+    },
+    {
+      id: '2',
+      text: 'Fala! Tudo pronto. Já separei o uniforme.',
+      senderId: 'me',
+      timestamp: '10:32',
+      isMe: true,
+    },
+    {
+      id: '3',
+      text: 'Show! Nos vemos lá às 19h então.',
+      senderId: 'other',
+      timestamp: '10:33',
+      isMe: false,
+    },
+  ]
+}
