@@ -15,8 +15,8 @@ export default function Index() {
         <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/1000/1000?q=stadium%20lights&color=black')] bg-cover bg-center opacity-5 grayscale mix-blend-overlay" />
 
         {/* Animated ambient blobs */}
-        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-gold/10 rounded-full blur-[100px] pointer-events-none animate-pulse duration-[4000ms]" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[100px] pointer-events-none animate-pulse duration-[5000ms]" />
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-gold/10 rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:4000ms]" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:5000ms]" />
       </div>
 
       <div className="relative z-10 flex flex-col h-full px-6 py-8 max-w-md mx-auto w-full">
