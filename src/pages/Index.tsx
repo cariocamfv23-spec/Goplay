@@ -12,10 +12,16 @@ export default function Index() {
       {/* Dynamic Background with improved performance using CSS gradients and low-res overlay */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-background z-10" />
-        <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/1000/1000?q=stadium%20lights&color=black')] bg-cover bg-center opacity-5 grayscale mix-blend-overlay" />
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-5 grayscale mix-blend-overlay"
+          style={{
+            backgroundImage:
+              "url('https://img.usecurling.com/p/1000/1000?q=stadium%20lights&color=black')",
+          }}
+        />
 
         {/* Animated ambient blobs */}
-        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-gold/10 rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:4000ms]" />
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-[hsl(var(--gold)/0.1)] rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:4000ms]" />
         <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:5000ms]" />
       </div>
 
@@ -24,7 +30,7 @@ export default function Index() {
         <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
           {/* Logo & Icon Section */}
           <div className="relative group cursor-default">
-            <div className="absolute -inset-4 bg-gradient-to-tr from-primary/30 to-gold/30 rounded-full blur-xl opacity-70 animate-pulse group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute -inset-4 bg-gradient-to-tr from-primary/30 to-[hsl(var(--gold)/0.3)] rounded-full blur-xl opacity-70 animate-pulse group-hover:opacity-100 transition-opacity duration-500" />
             <div className="bg-background/80 backdrop-blur-xl p-6 rounded-3xl border border-white/10 shadow-2xl relative transform transition-transform group-hover:scale-105 duration-500">
               <AppIcon className="w-20 h-20 drop-shadow-md" />
             </div>
