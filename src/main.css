@@ -126,4 +126,8 @@
   .mask-linear-fade {
     mask-image: linear-gradient(to right, black 85%, transparent 100%);
   }
+
+  .animate-fade-in {
+    @apply animate-in fade-in duration-500;
+  }
 }

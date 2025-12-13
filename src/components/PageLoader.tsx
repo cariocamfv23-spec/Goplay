@@ -3,9 +3,9 @@ import { AppIcon } from '@/components/AppIcon'
 
 export const PageLoader = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-background animate-fade-in relative overflow-hidden">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background animate-in fade-in duration-700 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-gold/10 rounded-full blur-[100px] translate-x-1/2 translate-y-1/2 pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-64 h-64 bg-[hsl(var(--gold)/0.1)] rounded-full blur-[100px] translate-x-1/2 translate-y-1/2 pointer-events-none" />
 
       <div className="relative z-10 flex flex-col items-center gap-6">
         <div className="relative">
