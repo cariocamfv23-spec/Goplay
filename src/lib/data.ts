@@ -914,3 +914,138 @@ export const mockRankings = [
     league: 'Platina',
   },
 ]
+
+export const narrationStyles = [
+  {
+    id: 'varzea',
+    name: 'Várzea Raiz',
+    description:
+      'Narrador clássico de beira de campo, cheio de gírias e emoção.',
+  },
+  {
+    id: 'professional',
+    name: 'TV Profissional',
+    description: 'Narrações sóbrias e técnicas, estilo transmissão oficial.',
+  },
+  {
+    id: 'comedy',
+    name: 'Comédia',
+    description: 'Focado no humor e nos momentos engraçados do jogo.',
+  },
+  {
+    id: 'futuristic',
+    name: 'IA Futurista',
+    description: 'Voz sintética e análise de dados em tempo real.',
+  },
+  {
+    id: 'influencer',
+    name: 'Influencer',
+    description: 'Estilo vlog, muito energético e interativo.',
+  },
+  {
+    id: 'tactical',
+    name: 'Analista Tático',
+    description: 'Foco nos movimentos, formações e estratégias.',
+  },
+  {
+    id: 'emotion',
+    name: 'Pura Emoção',
+    description: 'Gritos, choro e muita intensidade a cada lance.',
+  },
+  {
+    id: 'gringo',
+    name: 'International',
+    description: 'Narração com sotaque estrangeiro misturado.',
+  },
+]
+
+export const mockHighlights = [
+  {
+    id: 'h1',
+    title: 'Gol de Bicicleta',
+    thumbnail: 'https://img.usecurling.com/p/400/225?q=soccer%20bicycle%20kick',
+    views: '2.5k',
+    date: '2 dias atrás',
+  },
+  {
+    id: 'h2',
+    title: 'Defesa Incrível',
+    thumbnail: 'https://img.usecurling.com/p/400/225?q=goalkeeper%20save',
+    views: '1.8k',
+    date: '1 semana atrás',
+  },
+  {
+    id: 'h3',
+    title: 'Drible da Vaca',
+    thumbnail: 'https://img.usecurling.com/p/400/225?q=soccer%20dribble',
+    views: '3.1k',
+    date: '3 semanas atrás',
+  },
+]
+
+export const mockTrainingEvents = [
+  {
+    id: 'te1',
+    title: 'Treino Tático',
+    date: new Date(new Date().setDate(new Date().getDate() + 1)),
+    duration: '2h',
+    type: 'Tático',
+    coach: 'Carlos Silva',
+  },
+  {
+    id: 'te2',
+    title: 'Condicionamento Físico',
+    date: new Date(new Date().setDate(new Date().getDate() + 3)),
+    duration: '1h 30m',
+    type: 'Físico',
+    coach: 'Ana Souza',
+  },
+  {
+    id: 'te3',
+    title: 'Coletivo',
+    date: new Date(new Date().setDate(new Date().getDate() + 5)),
+    duration: '2h',
+    type: 'Jogo',
+    coach: 'Carlos Silva',
+  },
+]
+
+export const mockFeedbacks = [
+  {
+    id: 'f1',
+    author: {
+      name: 'Treinador Carlos',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=5',
+      role: 'Coach',
+    },
+    rating: 5,
+    content: 'Excelente evolução no posicionamento defensivo. Continue assim!',
+    date: 'Há 2 dias',
+    tags: ['Defesa', 'Tática'],
+  },
+  {
+    id: 'f2',
+    author: {
+      name: 'Ana Souza',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=8',
+      role: 'Preparadora Física',
+    },
+    rating: 4,
+    content:
+      'Melhorou a resistência, mas precisa focar mais na explosão muscular.',
+    date: 'Há 1 semana',
+    tags: ['Físico', 'Resistência'],
+  },
+  {
+    id: 'f3',
+    author: {
+      name: 'João Olheiro',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=15',
+      role: 'Scout',
+    },
+    rating: 5,
+    content: 'Visão de jogo impressionante para a categoria.',
+    date: 'Há 2 semanas',
+    tags: ['Técnica', 'Visão'],
+  },
+]
