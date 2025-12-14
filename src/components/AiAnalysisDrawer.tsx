@@ -9,10 +9,13 @@ import {
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { X, Activity, Dumbbell, Zap, Target, TrendingUp } from 'lucide-react'
+import { X, Activity, Zap, Target } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Link } from 'react-router-dom'
+import { StatsHistoryChart } from './StatsHistoryChart'
+import { TrainingSuggestions } from './TrainingSuggestions'
+import { StatsRadarChart } from './StatsRadarChart'
 
 interface AiAnalysisDrawerProps {
   open: boolean
@@ -29,14 +32,14 @@ export function AiAnalysisDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="h-[85vh] flex flex-col rounded-t-3xl bg-zinc-950 text-white border-zinc-800">
-        <DrawerHeader className="relative text-left px-6 pt-6 pb-2">
+      <DrawerContent className="h-[90vh] flex flex-col rounded-t-3xl bg-zinc-950 text-white border-zinc-800">
+        <DrawerHeader className="relative text-left px-6 pt-6 pb-2 shrink-0">
           <div className="flex items-center gap-2 mb-2">
             <Badge
               variant="outline"
               className="bg-primary/10 text-primary border-primary/20 gap-1"
             >
-              <Zap className="h-3 w-3" /> AI Analysis 2.0
+              <Zap className="h-3 w-3" /> AI Skip Analysis
             </Badge>
           </div>
           <DrawerTitle className="text-2xl font-bold">
@@ -74,17 +77,36 @@ export function AiAnalysisDrawer({
             </TabsList>
 
             <TabsContent value="stats" className="space-y-6 animate-fade-in">
-              <div className="grid gap-6">
+              {/* Score Card */}
+              <div className="flex items-center justify-between bg-gradient-to-r from-zinc-900 to-zinc-900/50 p-4 rounded-xl border border-zinc-800">
+                <div>
+                  <h4 className="text-zinc-400 text-xs font-medium uppercase tracking-wider mb-1">
+                    Score da Jogada
+                  </h4>
+                  <span className="text-4xl font-black text-white">
+                    {data.score}
+                  </span>
+                  <span className="text-zinc-500 text-sm font-medium">
+                    /100
+                  </span>
+                </div>
+                <div className="h-12 w-12 rounded-full border-4 border-primary flex items-center justify-center bg-primary/10">
+                  <Zap className="h-6 w-6 text-primary fill-current" />
+                </div>
+              </div>
+
+              {/* Technical Stats Bars */}
+              <div className="grid gap-4">
                 {data.aiStats?.map((stat: any, index: number) => (
                   <div key={index} className="space-y-2">
                     <div className="flex justify-between items-end">
-                      <span className="font-semibold flex items-center gap-2 text-zinc-200">
-                        <Activity className="h-4 w-4 text-primary" />
+                      <span className="font-semibold flex items-center gap-2 text-zinc-200 text-sm">
+                        <Activity className="h-3.5 w-3.5 text-primary" />
                         {stat.label}
                       </span>
-                      <span className="font-bold text-primary text-lg">
+                      <span className="font-bold text-primary text-base">
                         {stat.value}
-                        <span className="text-sm text-zinc-500 font-normal ml-1">
+                        <span className="text-xs text-zinc-500 font-normal ml-1">
                           {stat.unit}
                         </span>
                       </span>
@@ -97,24 +119,38 @@ export function AiAnalysisDrawer({
                 ))}
               </div>
 
-              <Card className="bg-zinc-900/50 border-zinc-800 mt-6">
+              {/* Radar Chart */}
+              {data.aiStats && (
+                <div className="mt-4">
+                  <StatsRadarChart stats={data.aiStats} />
+                </div>
+              )}
+
+              {/* Insight Card */}
+              <Card className="bg-zinc-900/50 border-zinc-800 mt-2">
                 <CardContent className="p-4">
-                  <h4 className="font-bold mb-2 flex items-center gap-2 text-white">
-                    <Target className="h-5 w-5 text-yellow-500" /> Insight do
+                  <h4 className="font-bold mb-2 flex items-center gap-2 text-white text-sm">
+                    <Target className="h-4 w-4 text-yellow-500" /> Insight do
                     Coach AI
                   </h4>
                   <p className="text-sm text-zinc-400 leading-relaxed">
-                    Sua técnica está excelente! A IA detectou uma melhoria de
-                    12% na potência comparada ao último vídeo. Foque em manter a
-                    estabilidade do core para maximizar a precisão.
+                    {data.feedback ||
+                      'Sua técnica está excelente! Continue treinando para melhorar seus resultados.'}
                   </p>
                 </CardContent>
               </Card>
 
-              <Link to="/profile/stats">
+              {/* Stats History Chart */}
+              {data.history && (
+                <div className="mt-6 pt-6 border-t border-zinc-800">
+                  <StatsHistoryChart data={data.history} />
+                </div>
+              )}
+
+              <Link to="/profile/stats" className="block mt-4">
                 <Button
                   variant="outline"
-                  className="w-full mt-4 border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                  className="w-full border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
                 >
                   Ver Estatísticas Detalhadas
                 </Button>
@@ -122,41 +158,7 @@ export function AiAnalysisDrawer({
             </TabsContent>
 
             <TabsContent value="training" className="space-y-4 animate-fade-in">
-              <div className="bg-gradient-to-br from-primary/20 to-purple-900/20 p-4 rounded-xl border border-primary/20 mb-4">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-bold text-lg mb-1 text-primary">
-                      {data.trainingPlan?.title}
-                    </h3>
-                    <p className="text-xs text-zinc-400">
-                      Recomendado com base na sua performance
-                    </p>
-                  </div>
-                  <TrendingUp className="h-5 w-5 text-primary" />
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                {data.trainingPlan?.exercises.map(
-                  (exercise: string, index: number) => (
-                    <div
-                      key={index}
-                      className="flex items-center p-3 bg-zinc-900 border border-zinc-800 rounded-xl shadow-sm gap-3"
-                    >
-                      <div className="h-10 w-10 rounded-lg bg-zinc-800 flex items-center justify-center shrink-0">
-                        <Dumbbell className="h-5 w-5 text-white" />
-                      </div>
-                      <span className="font-medium text-sm text-zinc-200">
-                        {exercise}
-                      </span>
-                    </div>
-                  ),
-                )}
-              </div>
-
-              <Button className="w-full rounded-full mt-4 font-bold bg-white text-black hover:bg-zinc-200">
-                Salvar Rotina de Treino
-              </Button>
+              <TrainingSuggestions suggestions={data.suggestions || []} />
             </TabsContent>
           </Tabs>
         </div>

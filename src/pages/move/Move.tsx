@@ -1,5 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
-import { mockVideos, mockAiAnalysis, mockTrainingSuggestions } from '@/lib/data'
+import {
+  mockVideos,
+  mockAiAnalysis,
+  mockTrainingSuggestions,
+  mockStatsHistory,
+} from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -35,15 +40,11 @@ const VideoCard = ({
     setIsPlaying(!isPlaying)
   }
 
-  // Enrich AI data with suggestions
+  // Enrich AI data with suggestions and history for the drawer
   const enrichedAiData = {
     ...mockAiAnalysis,
-    trainingPlan: {
-      title: 'Plano de Melhoria',
-      exercises: mockTrainingSuggestions[0].exercises.map(
-        (e) => `${e.name} (${e.sets}x${e.reps})`,
-      ),
-    },
+    history: mockStatsHistory,
+    suggestions: mockTrainingSuggestions,
   }
 
   return (
@@ -96,13 +97,13 @@ const VideoCard = ({
           <Button
             size="icon"
             variant="ghost"
-            className="h-12 w-12 rounded-full bg-black/40 text-primary hover:bg-black/60 border border-primary/50 animate-pulse"
+            className="h-12 w-12 rounded-full bg-black/40 text-primary hover:bg-black/60 border border-primary/50 animate-pulse shadow-[0_0_15px_rgba(var(--primary),0.5)]"
             onClick={() => setShowAnalysis(true)}
           >
             <Zap className="h-6 w-6 fill-current" />
           </Button>
           <span className="text-white text-xs font-bold drop-shadow-md">
-            Análise AI
+            AI Skip
           </span>
         </div>
 

@@ -1,11 +1,4 @@
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-} from 'recharts'
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 import {
   Card,
   CardContent,
@@ -49,15 +42,17 @@ export function StatsHistoryChart({ data }: StatsHistoryChartProps) {
       : 0
 
   return (
-    <Card className="border-none shadow-sm bg-gradient-to-br from-card to-secondary/10 overflow-hidden">
-      <CardHeader className="pb-2">
+    <Card className="border-none shadow-none bg-transparent">
+      <CardHeader className="px-0 pt-0 pb-4">
         <div className="flex justify-between items-start">
           <div>
-            <CardTitle className="text-lg flex items-center gap-2">
+            <CardTitle className="text-lg flex items-center gap-2 text-white">
               <Activity className="h-4 w-4 text-primary" />
               Evolução de Performance
             </CardTitle>
-            <CardDescription>Desempenho nos últimos 6 meses</CardDescription>
+            <CardDescription className="text-zinc-400">
+              Desempenho nos últimos 6 meses
+            </CardDescription>
           </div>
           <div
             className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${ratingTrend >= 0 ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}
@@ -69,7 +64,7 @@ export function StatsHistoryChart({ data }: StatsHistoryChartProps) {
         </div>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="h-[200px] w-full mt-2">
+        <div className="h-[200px] w-full">
           <ChartContainer config={chartConfig} className="w-full h-full">
             <AreaChart
               data={data}
@@ -89,13 +84,18 @@ export function StatsHistoryChart({ data }: StatsHistoryChartProps) {
                   />
                 </linearGradient>
               </defs>
-              <CartesianGrid vertical={false} strokeDasharray="3 3" />
+              <CartesianGrid
+                vertical={false}
+                strokeDasharray="3 3"
+                stroke="#333"
+              />
               <XAxis
                 dataKey="date"
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
                 fontSize={12}
+                stroke="#666"
               />
               <YAxis
                 tickLine={false}
@@ -103,10 +103,16 @@ export function StatsHistoryChart({ data }: StatsHistoryChartProps) {
                 tickMargin={8}
                 fontSize={12}
                 domain={[0, 5]}
+                stroke="#666"
               />
               <ChartTooltip
                 cursor={false}
-                content={<ChartTooltipContent indicator="line" />}
+                content={
+                  <ChartTooltipContent
+                    indicator="line"
+                    className="bg-zinc-900 border-zinc-800 text-white"
+                  />
+                }
               />
               <Area
                 dataKey="rating"
@@ -116,7 +122,12 @@ export function StatsHistoryChart({ data }: StatsHistoryChartProps) {
                 stroke="var(--color-rating)"
                 strokeWidth={2}
                 dot={{ r: 4, fill: 'var(--color-rating)', strokeWidth: 0 }}
-                activeDot={{ r: 6 }}
+                activeDot={{
+                  r: 6,
+                  fill: 'var(--color-rating)',
+                  strokeWidth: 2,
+                  stroke: '#fff',
+                }}
               />
             </AreaChart>
           </ChartContainer>
