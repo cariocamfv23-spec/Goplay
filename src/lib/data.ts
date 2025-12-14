@@ -60,8 +60,9 @@ export interface Notification {
   message: string
   time: string
   read: boolean
-  type: 'challenge' | 'invite' | 'system' | 'like'
+  type: 'challenge' | 'invite' | 'system' | 'like' | 'weather'
   date?: string
+  priority?: 'low' | 'medium' | 'high' | 'critical'
 }
 
 export interface NarrationConfig {
@@ -159,6 +160,15 @@ export interface Product {
   availability: 'in_stock' | 'low_stock' | 'out_of_stock'
 }
 
+export type WeatherCondition =
+  | 'sunny'
+  | 'cloudy'
+  | 'rainy'
+  | 'windy'
+  | 'storm'
+  | 'snow'
+  | 'fog'
+
 export interface Event {
   id: string
   title: string
@@ -177,7 +187,12 @@ export interface Event {
   description: string
   organizer: string
   coordinates?: { x: number; y: number }
-  weather?: { temp: number; condition: 'sunny' | 'cloudy' | 'rainy' | 'windy' }
+  weather?: {
+    temp: number
+    condition: WeatherCondition
+    humidity?: number
+    windSpeed?: number
+  }
 }
 
 export const navigationItems = [
@@ -906,7 +921,7 @@ export const mockEvents: Event[] = [
     description: 'Grande final do campeonato estadual.',
     organizer: 'Federação Paulista',
     coordinates: { x: 55, y: 40 },
-    weather: { temp: 24, condition: 'cloudy' },
+    weather: { temp: 24, condition: 'cloudy', humidity: 65, windSpeed: 12 },
   },
   {
     id: 'e2',
@@ -927,7 +942,7 @@ export const mockEvents: Event[] = [
     description: '42km pelas ruas de SP.',
     organizer: 'Yescom',
     coordinates: { x: 48, y: 65 },
-    weather: { temp: 18, condition: 'sunny' },
+    weather: { temp: 18, condition: 'sunny', humidity: 45, windSpeed: 8 },
   },
   {
     id: 'e3',
@@ -948,7 +963,7 @@ export const mockEvents: Event[] = [
     description: 'Pedalada leve pela cidade.',
     organizer: 'Bike SP',
     coordinates: { x: 52, y: 48 },
-    weather: { temp: 21, condition: 'windy' },
+    weather: { temp: 21, condition: 'windy', humidity: 60, windSpeed: 25 },
   },
   {
     id: 'e4',
@@ -969,7 +984,7 @@ export const mockEvents: Event[] = [
     description: 'Aprenda técnicas básicas de escalada indoor.',
     organizer: 'Climb BR',
     coordinates: { x: 30, y: 35 },
-    weather: { temp: 26, condition: 'sunny' },
+    weather: { temp: 26, condition: 'sunny', humidity: 40, windSpeed: 5 },
   },
   {
     id: 'e5',
@@ -989,7 +1004,7 @@ export const mockEvents: Event[] = [
     description: 'Subida até a Pedra Grande com guia.',
     organizer: 'EcoTrilhas',
     coordinates: { x: 45, y: 20 },
-    weather: { temp: 22, condition: 'rainy' },
+    weather: { temp: 22, condition: 'rainy', humidity: 85, windSpeed: 10 },
   },
   {
     id: 'e6',
@@ -1009,7 +1024,7 @@ export const mockEvents: Event[] = [
     description: 'Travessia completa da Serra Fina.',
     organizer: 'Montanha Club',
     coordinates: { x: 80, y: 15 },
-    weather: { temp: 15, condition: 'windy' },
+    weather: { temp: 15, condition: 'storm', humidity: 90, windSpeed: 45 },
   },
 ]
 
@@ -1302,6 +1317,17 @@ export const mockNotifications: Notification[] = [
     type: 'invite',
     date: 'Hoje',
   },
+  {
+    id: 'not3',
+    title: 'Alerta de Tempestade',
+    message:
+      'Tempestade severa prevista para o horário do seu jogo. Considere reagendar.',
+    time: 'Agora',
+    read: false,
+    type: 'weather',
+    date: 'Hoje',
+    priority: 'critical',
+  },
 ]
 
 export const mockNotificationsList = mockNotifications
@@ -1419,5 +1445,22 @@ export const mockFinancialHistory: FinancialTransaction[] = [
     value: -120.0,
     currency: 'BRL',
     status: 'confirmed',
+  },
+]
+
+export const mockTrainingEvents = [
+  {
+    id: 'te1',
+    title: 'Treino de Pernas',
+    date: new Date(),
+    type: 'training',
+    completed: true,
+  },
+  {
+    id: 'te2',
+    title: 'Jogo vs Time B',
+    date: new Date(new Date().setDate(new Date().getDate() + 2)),
+    type: 'match',
+    completed: false,
   },
 ]

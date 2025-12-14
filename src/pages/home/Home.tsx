@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { CheckInModal } from '@/components/CheckInModal'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
+import { WeatherAlertBanner } from '@/components/WeatherAlertBanner'
 
 const Home = () => {
   const navigate = useNavigate()
@@ -15,6 +16,9 @@ const Home = () => {
 
   return (
     <div className="pb-20 relative bg-background min-h-screen animate-fade-in transition-colors duration-300">
+      {/* Weather Alerts */}
+      <WeatherAlertBanner />
+
       {/* Stories Section */}
       <div className="pt-2 pb-2 bg-background border-b border-border/40 sticky top-16 z-30 shadow-sm backdrop-blur-md bg-background/90 transition-all duration-300">
         <ScrollArea className="w-full whitespace-nowrap">

@@ -1,5 +1,12 @@
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Bell, Calendar, Heart, Trophy } from 'lucide-react'
+import {
+  ArrowLeft,
+  Bell,
+  Calendar,
+  Heart,
+  Trophy,
+  CloudLightning,
+} from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockNotifications } from '@/lib/data'
 import { cn } from '@/lib/utils'
@@ -15,9 +22,19 @@ export default function Notifications() {
         return <Calendar className="h-5 w-5 text-blue-500" />
       case 'like':
         return <Heart className="h-5 w-5 text-red-500" />
+      case 'weather':
+        return <CloudLightning className="h-5 w-5 text-yellow-500" />
       default:
         return <Bell className="h-5 w-5 text-primary" />
     }
+  }
+
+  const getPriorityStyle = (priority?: string) => {
+    if (priority === 'critical')
+      return 'border-l-4 border-l-red-500 bg-red-500/5'
+    if (priority === 'high')
+      return 'border-l-4 border-l-orange-500 bg-orange-500/5'
+    return ''
   }
 
   return (
@@ -36,6 +53,7 @@ export default function Notifications() {
             className={cn(
               'p-4 rounded-xl flex gap-4 transition-colors',
               not.read ? 'bg-background' : 'bg-primary/5',
+              getPriorityStyle(not.priority),
             )}
           >
             <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center shrink-0">

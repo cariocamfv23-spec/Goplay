@@ -5,6 +5,7 @@ import { ArrowLeft, Calendar, MapPin, Ticket, CheckCircle2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { CheckInModal } from '@/components/CheckInModal'
 import { useState } from 'react'
+import { WeatherWidget } from '@/components/WeatherWidget'
 
 export default function EventDetails() {
   const { id } = useParams()
@@ -14,17 +15,17 @@ export default function EventDetails() {
 
   return (
     <div className="min-h-screen bg-background pb-28 animate-fade-in">
-      <div className="relative h-72 w-full">
+      <div className="relative h-72 w-full group">
         <img
           src={event.image}
           alt={event.title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/30" />
         <Button
           variant="ghost"
           size="icon"
-          className="absolute top-4 left-4 bg-background/50 backdrop-blur-md rounded-full hover:bg-background/80"
+          className="absolute top-4 left-4 bg-background/30 backdrop-blur-md rounded-full text-white hover:bg-background/50"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft className="h-5 w-5" />
@@ -32,28 +33,47 @@ export default function EventDetails() {
       </div>
 
       <div className="px-5 -mt-10 relative z-10">
-        <Badge className="mb-3">{event.category}</Badge>
-        <h1 className="text-2xl font-bold mb-2">{event.title}</h1>
+        <div className="flex justify-between items-start">
+          <Badge className="mb-3">{event.category}</Badge>
+          {event.price === 0 && (
+            <Badge
+              variant="secondary"
+              className="mb-3 bg-green-500/10 text-green-600"
+            >
+              Grátis
+            </Badge>
+          )}
+        </div>
 
-        <div className="bg-card border border-border/50 rounded-xl p-4 shadow-sm space-y-3 mb-6">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
-              <Calendar className="h-5 w-5" />
+        <h1 className="text-2xl font-bold mb-2 leading-tight">{event.title}</h1>
+        <p className="text-muted-foreground mb-4">{event.organizer}</p>
+
+        <div className="grid gap-4 mb-6">
+          <div className="bg-card border border-border/50 rounded-xl p-4 shadow-sm space-y-4">
+            <div className="flex items-start gap-3">
+              <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary shrink-0">
+                <Calendar className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="font-bold">{event.date}</p>
+                <p className="text-xs text-muted-foreground">{event.time}</p>
+              </div>
             </div>
-            <div>
-              <p className="font-bold">{event.date}</p>
-              <p className="text-xs text-muted-foreground">{event.time}</p>
+            <div className="flex items-start gap-3">
+              <div className="h-10 w-10 bg-orange-500/10 rounded-lg flex items-center justify-center text-orange-500 shrink-0">
+                <MapPin className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="font-bold">{event.location}</p>
+                <p className="text-xs text-muted-foreground">{event.address}</p>
+                <p className="text-xs text-muted-foreground">
+                  {event.city}, {event.state}
+                </p>
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-orange-500/10 rounded-lg flex items-center justify-center text-orange-500">
-              <MapPin className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="font-bold">{event.location}</p>
-              <p className="text-xs text-muted-foreground">{event.address}</p>
-            </div>
-          </div>
+
+          {event.weather && <WeatherWidget weather={event.weather} />}
         </div>
 
         <div className="space-y-4">
@@ -77,7 +97,7 @@ export default function EventDetails() {
         <div className="hidden sm:block min-w-[100px]">
           <p className="text-xs text-muted-foreground">Ingressos a partir de</p>
           <p className="text-xl font-bold text-primary">
-            R$ {event.price.toFixed(2)}
+            {event.price === 0 ? 'Grátis' : `R$ ${event.price.toFixed(2)}`}
           </p>
         </div>
 
@@ -95,7 +115,7 @@ export default function EventDetails() {
           size="lg"
           className="flex-1 rounded-full font-bold shadow-lg shadow-primary/20 h-14"
         >
-          <Ticket className="mr-2 h-5 w-5" /> Comprar
+          <Ticket className="mr-2 h-5 w-5" /> Inscrição
         </Button>
       </div>
     </div>
