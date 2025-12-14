@@ -56,7 +56,7 @@ export default function GhostPlay() {
       {/* 3D Viewer Area */}
       <div className="flex-1 relative bg-gradient-to-b from-zinc-900 to-black overflow-hidden flex items-center justify-center">
         {/* Mock 3D Grid */}
-        <div className="absolute inset-0 opacity-20 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:40px_40px] [transform:perspective(500px)_rotateX(60deg)] origin-bottom animate-pulse duration-[10s]" />
+        <div className="absolute inset-0 opacity-20 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:40px_40px] [transform:perspective(500px)_rotateX(60deg)] origin-bottom animate-pulse [animation-duration:10s]" />
 
         {/* Mock Players (3D effect) */}
         <div className="relative w-full max-w-md aspect-square flex items-center justify-center">
