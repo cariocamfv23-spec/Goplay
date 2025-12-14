@@ -9,6 +9,7 @@ import {
   Trophy,
   BarChart2,
   Users,
+  FileText,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -112,7 +113,7 @@ export default function AthleteView({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 mb-6">
+        <div className="grid grid-cols-2 gap-3 mb-3">
           <Button
             className="bg-secondary text-foreground hover:bg-secondary/80 justify-start"
             onClick={() => navigate('/profile/stats')}
@@ -126,6 +127,16 @@ export default function AthleteView({
             <Trophy className="mr-2 h-4 w-4" /> Ranking
           </Button>
         </div>
+
+        {isMe && (
+          <Button
+            className="w-full mb-6 bg-secondary/30 text-primary hover:bg-secondary/50 border border-primary/20 justify-start"
+            variant="outline"
+            onClick={() => navigate('/profile/financial-statement')}
+          >
+            <FileText className="mr-2 h-4 w-4" /> Extrato Financeiro
+          </Button>
+        )}
 
         <Tabs
           defaultValue="posts"

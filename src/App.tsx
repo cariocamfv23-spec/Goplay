@@ -46,6 +46,9 @@ const HortifrutiDetails = lazy(
 // Profile & Stats
 const Profile = lazy(() => import('./pages/profile/Profile'))
 const StatsDetail = lazy(() => import('./pages/profile/StatsDetail'))
+const FinancialStatement = lazy(
+  () => import('./pages/profile/FinancialStatement'),
+)
 const Wallet = lazy(() => import('./pages/wallet/Wallet'))
 const TransactionHistory = lazy(
   () => import('./pages/financials/TransactionHistory'),
@@ -157,6 +160,10 @@ const App = () => {
                   {/* Profile & Stats */}
                   <Route path="/profile/:id" element={<Profile />} />
                   <Route path="/profile/stats" element={<StatsDetail />} />
+                  <Route
+                    path="/profile/financial-statement"
+                    element={<FinancialStatement />}
+                  />
                   <Route path="/wallet" element={<Wallet />} />
                   <Route
                     path="/financials/transactions"

@@ -103,6 +103,23 @@ export interface ProfileData {
   responseTime?: string
 }
 
+export interface FinancialTransaction {
+  id: string
+  date: string
+  type:
+    | 'gain'
+    | 'spend'
+    | 'bonus'
+    | 'payment'
+    | 'invite'
+    | 'marketing'
+    | 'marketplace'
+  description: string
+  value: number
+  currency: 'BRL' | 'PTS'
+  status: 'confirmed' | 'pending' | 'expired'
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: Zap, label: 'Move', path: '/move' },
@@ -822,5 +839,97 @@ export const mockChats = [
         time: '10:30',
       },
     ],
+  },
+]
+
+export const mockPointsHistory = [
+  {
+    id: 'ph1',
+    title: 'Vitória na Partida',
+    date: 'Hoje, 10:00',
+    points: 100,
+    type: 'earned',
+  },
+  {
+    id: 'ph2',
+    title: 'Desconto em Equipamento',
+    date: 'Ontem',
+    points: -500,
+    type: 'spent',
+  },
+]
+
+export const mockFinancialSummary = {
+  balance: 1250.0,
+  totalSpent: 450.5,
+  pointsBalance: 1250,
+  pointsEarned: 3500,
+  conversionRate: '1000 pts = R$ 10,00',
+  marketplaceStatus: 'Liberado',
+}
+
+export const mockFinancialHistory: FinancialTransaction[] = [
+  {
+    id: 't1',
+    date: 'Hoje, 14:30',
+    type: 'payment',
+    description: 'Pagamento de Mensalidade',
+    value: -150.0,
+    currency: 'BRL',
+    status: 'confirmed',
+  },
+  {
+    id: 't2',
+    date: 'Ontem, 10:00',
+    type: 'bonus',
+    description: 'Bônus de Vitória MVP',
+    value: 500,
+    currency: 'PTS',
+    status: 'confirmed',
+  },
+  {
+    id: 't3',
+    date: '20 Out, 18:00',
+    type: 'marketplace',
+    description: 'Compra Chuteira Nike',
+    value: -450.0,
+    currency: 'BRL',
+    status: 'confirmed',
+  },
+  {
+    id: 't4',
+    date: '19 Out, 09:00',
+    type: 'invite',
+    description: 'Indicação de Amigo',
+    value: 200,
+    currency: 'PTS',
+    status: 'pending',
+  },
+  {
+    id: 't5',
+    date: '15 Out, 11:20',
+    type: 'marketing',
+    description: 'Campanha Adidas',
+    value: 1500,
+    currency: 'PTS',
+    status: 'expired',
+  },
+  {
+    id: 't6',
+    date: '10 Out, 10:00',
+    type: 'gain',
+    description: 'Depósito via PIX',
+    value: 1000.0,
+    currency: 'BRL',
+    status: 'confirmed',
+  },
+  {
+    id: 't7',
+    date: '05 Out, 14:00',
+    type: 'spend',
+    description: 'Aluguel de Quadra',
+    value: -120.0,
+    currency: 'BRL',
+    status: 'confirmed',
   },
 ]
