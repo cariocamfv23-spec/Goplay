@@ -129,7 +129,7 @@ export default function Login() {
             className="h-12 rounded-xl border-border/50 hover:bg-secondary/50"
           >
             <img
-              src="https://img.usecurling.com/i?q=google&shape=circle"
+              src="https://img.usecurling.com/i?q=google&color=multicolor"
               className="h-5 w-5 mr-2"
               alt="Google"
             />
@@ -140,7 +140,7 @@ export default function Login() {
             className="h-12 rounded-xl border-border/50 hover:bg-secondary/50"
           >
             <img
-              src="https://img.usecurling.com/i?q=apple&shape=circle&color=black"
+              src="https://img.usecurling.com/i?q=apple&color=black"
               className="h-5 w-5 mr-2"
               alt="Apple"
             />
