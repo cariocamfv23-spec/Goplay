@@ -79,6 +79,14 @@ export interface NarrationConfig {
   volume: number
 }
 
+export interface MusicTrack {
+  id: string
+  title: string
+  artist: string
+  cover: string
+  duration: string
+}
+
 export interface ProfileData {
   id: string | number
   name: string
@@ -115,6 +123,7 @@ export interface ProfileData {
   position?: string
   height?: string
   weight?: string
+  favoriteSong?: MusicTrack
 }
 
 export interface FinancialTransaction {
@@ -302,6 +311,51 @@ export const narrationStyles = [
   },
 ]
 
+export const mockMusicTracks: MusicTrack[] = [
+  {
+    id: 'm1',
+    title: 'We Are The Champions',
+    artist: 'Queen',
+    cover: 'https://img.usecurling.com/i?q=queen%20band&color=black',
+    duration: '2:59',
+  },
+  {
+    id: 'm2',
+    title: 'Eye of the Tiger',
+    artist: 'Survivor',
+    cover: 'https://img.usecurling.com/i?q=tiger&color=orange',
+    duration: '4:04',
+  },
+  {
+    id: 'm3',
+    title: 'Lose Yourself',
+    artist: 'Eminem',
+    cover: 'https://img.usecurling.com/i?q=microphone&color=black',
+    duration: '5:26',
+  },
+  {
+    id: 'm4',
+    title: 'Waka Waka',
+    artist: 'Shakira',
+    cover: 'https://img.usecurling.com/i?q=soccer%20world%20cup&color=yellow',
+    duration: '3:22',
+  },
+  {
+    id: 'm5',
+    title: 'Believer',
+    artist: 'Imagine Dragons',
+    cover: 'https://img.usecurling.com/i?q=dragon&color=red',
+    duration: '3:24',
+  },
+  {
+    id: 'm6',
+    title: 'Hall of Fame',
+    artist: 'The Script',
+    cover: 'https://img.usecurling.com/i?q=fame&color=gold',
+    duration: '3:22',
+  },
+]
+
 export const mockUser = {
   id: 'u1',
   name: 'Alex Silva',
@@ -326,6 +380,7 @@ export const mockUser = {
     wins: 28,
     mvp: 5,
   },
+  favoriteSong: mockMusicTracks[2],
 }
 
 export const mockCurrentUser = mockUser
@@ -348,6 +403,7 @@ export const mockTalents: ProfileData[] = [
     bio: 'Atacante rápido e finalizador. Busco oportunidade em clubes profissionais.',
     followers: '5.4k',
     stats: { matches: 50, wins: 35, mvp: 12 },
+    favoriteSong: mockMusicTracks[0],
   },
   {
     id: 't2',
@@ -385,6 +441,7 @@ export const mockTalents: ProfileData[] = [
     bio: 'Visão de jogo e arremesso de 3 pontos apurado.',
     followers: '3.2k',
     stats: { matches: 45, wins: 30, mvp: 6 },
+    favoriteSong: mockMusicTracks[1],
   },
   {
     id: 't4',
@@ -585,6 +642,7 @@ export const mockVideos = [
       name: 'Escola de Futebol',
       avatar: 'https://img.usecurling.com/i?q=soccer&color=black',
     },
+    music: mockMusicTracks[3],
   },
   {
     id: 'v2',
@@ -602,6 +660,7 @@ export const mockVideos = [
       name: 'Coach Pro',
       avatar: 'https://img.usecurling.com/i?q=dumbbell&color=red',
     },
+    music: mockMusicTracks[1],
   },
   {
     id: 'v3',
@@ -619,6 +678,7 @@ export const mockVideos = [
       name: 'Radical Sports',
       avatar: 'https://img.usecurling.com/i?q=bike&color=blue',
     },
+    music: mockMusicTracks[4],
   },
   {
     id: 'v4',
@@ -636,6 +696,7 @@ export const mockVideos = [
       name: 'Runners Club',
       avatar: 'https://img.usecurling.com/i?q=shoe&color=orange',
     },
+    music: mockMusicTracks[5],
   },
   {
     id: 'v5',
@@ -687,6 +748,7 @@ export const mockVideos = [
       name: 'Fight Center',
       avatar: 'https://img.usecurling.com/i?q=glove&color=red',
     },
+    music: mockMusicTracks[1],
   },
   {
     id: 'v8',

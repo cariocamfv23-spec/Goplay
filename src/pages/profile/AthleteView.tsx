@@ -1,8 +1,7 @@
-import { mockCurrentUser, mockPosts } from '@/lib/data'
+import { mockCurrentUser, mockPosts, MusicTrack } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
-  Settings,
   MapPin,
   Grid,
   Video,
@@ -11,13 +10,18 @@ import {
   Users,
   FileText,
   ShoppingBag,
+  Music,
+  PlayCircle,
+  Edit2,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { MusicSelector } from '@/components/MusicSelector'
+import { toast } from 'sonner'
 
 export default function AthleteView({
-  user = mockCurrentUser,
+  user: initialUser = mockCurrentUser,
   isMe = true,
 }: {
   user?: any
@@ -25,6 +29,16 @@ export default function AthleteView({
 }) {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('posts')
+  const [user, setUser] = useState(initialUser)
+  const [isMusicSelectorOpen, setIsMusicSelectorOpen] = useState(false)
+
+  const handleMusicSelect = (track: MusicTrack) => {
+    setUser({ ...user, favoriteSong: track })
+    toast.success('Música do perfil atualizada!', {
+      description: `${track.title} - ${track.artist}`,
+      icon: <Music className="h-4 w-4 text-primary" />,
+    })
+  }
 
   return (
     <div className="pb-8 animate-fade-in">
@@ -82,6 +96,59 @@ export default function AthleteView({
           <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
             <MapPin className="h-3 w-3" /> {user.location}
           </div>
+
+          {/* Athlete Music Section */}
+          <div className="mb-4">
+            {user.favoriteSong ? (
+              <div className="bg-secondary/30 rounded-lg p-2 flex items-center gap-3 border border-border/50">
+                <div className="h-10 w-10 bg-black rounded-md overflow-hidden relative shrink-0">
+                  <img
+                    src={user.favoriteSong.cover}
+                    alt="Album"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                    <Music className="h-4 w-4 text-white" />
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-0.5 flex items-center gap-1">
+                    Música do Atleta
+                  </p>
+                  <div className="flex items-center gap-1">
+                    <p className="text-sm font-semibold truncate">
+                      {user.favoriteSong.title}
+                    </p>
+                    <span className="text-xs text-muted-foreground truncate">
+                      • {user.favoriteSong.artist}
+                    </span>
+                  </div>
+                </div>
+                {isMe && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-muted-foreground hover:text-primary"
+                    onClick={() => setIsMusicSelectorOpen(true)}
+                  >
+                    <Edit2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            ) : (
+              isMe && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full border-dashed text-muted-foreground hover:text-primary mb-2"
+                  onClick={() => setIsMusicSelectorOpen(true)}
+                >
+                  <Music className="h-4 w-4 mr-2" /> Adicionar Música do Atleta
+                </Button>
+              )
+            )}
+          </div>
+
           <p className="text-sm leading-relaxed mb-4">{user.bio}</p>
 
           <div className="flex gap-6 text-sm mb-6 border-b border-border/50 pb-4">
@@ -209,6 +276,13 @@ export default function AthleteView({
           </TabsContent>
         </Tabs>
       </div>
+
+      <MusicSelector
+        open={isMusicSelectorOpen}
+        onOpenChange={setIsMusicSelectorOpen}
+        onSelect={handleMusicSelect}
+        selectedTrack={user.favoriteSong}
+      />
     </div>
   )
 }

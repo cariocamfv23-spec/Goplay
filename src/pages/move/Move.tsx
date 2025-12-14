@@ -15,6 +15,7 @@ import {
   MoreVertical,
   Play,
   Zap,
+  Music,
 } from 'lucide-react'
 import { AiAnalysisDrawer } from '@/components/AiAnalysisDrawer'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
@@ -157,8 +158,20 @@ const VideoCard = ({
           <span className="text-white/80 font-normal">{video.description}</span>
         </p>
         <div className="flex items-center gap-2">
-          <div className="px-2 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs text-white flex items-center gap-1">
-            🎵 Som original - {video.user.name}
+          <div className="px-2 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs text-white flex items-center gap-2 max-w-[80%]">
+            {video.music ? (
+              <>
+                <Music className="h-3 w-3 animate-[spin_3s_linear_infinite]" />
+                <span className="truncate">
+                  {video.music.title} - {video.music.artist}
+                </span>
+              </>
+            ) : (
+              <>
+                <Music className="h-3 w-3" />
+                <span>Som original - {video.user.name}</span>
+              </>
+            )}
           </div>
         </div>
       </div>
