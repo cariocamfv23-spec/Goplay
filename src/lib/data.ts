@@ -16,6 +16,14 @@ import {
   Stethoscope,
   Apple,
   Users,
+  LayoutGrid,
+  Bike,
+  Waves,
+  Footprints,
+  Mountain,
+  Swords,
+  CircleDashed,
+  Hand,
 } from 'lucide-react'
 
 // Types
@@ -169,6 +177,19 @@ export const navigationItems = [
   { icon: Search, label: 'Explorar', path: '/explore' },
   { icon: ShoppingBag, label: 'Loja', path: '/marketplace' },
   { icon: User, label: 'Perfil', path: '/profile/me' },
+]
+
+export const tribes = [
+  { id: 'all', label: 'Todos', icon: LayoutGrid },
+  { id: 'futebol', label: 'Futebol', icon: CircleDashed },
+  { id: 'futsal', label: 'Futsal', icon: Trophy },
+  { id: 'bike', label: 'Bike', icon: Bike },
+  { id: 'running', label: 'Corrida', icon: Footprints },
+  { id: 'crossfit', label: 'Crossfit', icon: Dumbbell },
+  { id: 'swimming', label: 'Natação', icon: Waves },
+  { id: 'boxing', label: 'Boxe', icon: Hand },
+  { id: 'climbing', label: 'Escalada', icon: Mountain },
+  { id: 'martial_arts', label: 'Lutas', icon: Swords },
 ]
 
 export const exploreCategories = [
@@ -549,6 +570,7 @@ export const mockVideos = [
     likes: '12K',
     comments: 340,
     shares: 500,
+    modality: 'futebol',
     user: {
       name: 'Escola de Futebol',
       avatar: 'https://img.usecurling.com/i?q=soccer&color=black',
@@ -565,9 +587,95 @@ export const mockVideos = [
     likes: '5K',
     comments: 120,
     shares: 200,
+    modality: 'crossfit',
     user: {
       name: 'Coach Pro',
       avatar: 'https://img.usecurling.com/i?q=dumbbell&color=red',
+    },
+  },
+  {
+    id: 'v3',
+    title: 'Downhill Extremo',
+    description: 'Descida radical na montanha',
+    thumbnail:
+      'https://img.usecurling.com/p/400/800?q=mountain%20bike&color=brown',
+    duration: '03:15',
+    views: '85K',
+    likes: '8K',
+    comments: 210,
+    shares: 450,
+    modality: 'bike',
+    user: {
+      name: 'Radical Sports',
+      avatar: 'https://img.usecurling.com/i?q=bike&color=blue',
+    },
+  },
+  {
+    id: 'v4',
+    title: 'Sprints de Velocidade',
+    description: 'Melhore sua arrancada com esses exercícios',
+    thumbnail:
+      'https://img.usecurling.com/p/400/800?q=sprinter%20running&color=cyan',
+    duration: '05:40',
+    views: '32K',
+    likes: '2.5K',
+    comments: 90,
+    shares: 120,
+    modality: 'running',
+    user: {
+      name: 'Runners Club',
+      avatar: 'https://img.usecurling.com/i?q=shoe&color=orange',
+    },
+  },
+  {
+    id: 'v5',
+    title: 'Natação: Técnica de Crawl',
+    description: 'Ajustes para nadar mais rápido',
+    thumbnail:
+      'https://img.usecurling.com/p/400/800?q=swimmer%20underwater&color=blue',
+    duration: '08:20',
+    views: '45K',
+    likes: '3.8K',
+    comments: 150,
+    shares: 280,
+    modality: 'swimming',
+    user: {
+      name: 'Swim Life',
+      avatar: 'https://img.usecurling.com/i?q=water&color=blue',
+    },
+  },
+  {
+    id: 'v6',
+    title: 'Escalada Indoor: Dicas',
+    description: 'Como começar no boulder',
+    thumbnail:
+      'https://img.usecurling.com/p/400/800?q=indoor%20climbing&color=gray',
+    duration: '12:00',
+    views: '28K',
+    likes: '1.9K',
+    comments: 60,
+    shares: 90,
+    modality: 'climbing',
+    user: {
+      name: 'Climb ON',
+      avatar: 'https://img.usecurling.com/i?q=mountain&color=green',
+    },
+  },
+  {
+    id: 'v7',
+    title: 'Boxe: Jab Direto',
+    description: 'A combinação básica perfeita',
+    thumbnail:
+      'https://img.usecurling.com/p/400/800?q=boxing%20training&color=red',
+    duration: '06:30',
+    views: '60K',
+    likes: '6K',
+    comments: 200,
+    shares: 300,
+    modality: 'boxing',
+    user: {
+      name: 'Fight Center',
+      avatar: 'https://img.usecurling.com/i?q=glove&color=red',
     },
   },
 ]

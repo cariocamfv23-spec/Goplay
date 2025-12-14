@@ -4,6 +4,7 @@ import {
   mockAiAnalysis,
   mockTrainingSuggestions,
   mockStatsHistory,
+  tribes,
 } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -16,6 +17,8 @@ import {
   Zap,
 } from 'lucide-react'
 import { AiAnalysisDrawer } from '@/components/AiAnalysisDrawer'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import { cn } from '@/lib/utils'
 
 const VideoCard = ({
   video,
@@ -171,6 +174,8 @@ const VideoCard = ({
 
 export default function Move() {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [activeTribe, setActiveTribe] = useState('all')
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const container = e.currentTarget
@@ -180,16 +185,76 @@ export default function Move() {
     }
   }
 
+  const filteredVideos =
+    activeTribe === 'all'
+      ? mockVideos
+      : mockVideos.filter((video) => video.modality === activeTribe)
+
+  const handleTribeChange = (tribeId: string) => {
+    setActiveTribe(tribeId)
+    setActiveIndex(0)
+    // Reset scroll position
+    if (containerRef.current) {
+      containerRef.current.scrollTop = 0
+    }
+  }
+
   return (
-    <div
-      className="h-[calc(100vh-64px)] w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth no-scrollbar bg-black"
-      onScroll={handleScroll}
-    >
-      {mockVideos.map((video, index) => (
-        <div key={video.id} className="h-full w-full snap-start">
-          <VideoCard video={video} isActive={index === activeIndex} />
-        </div>
-      ))}
+    <div className="h-[calc(100vh-64px)] w-full bg-black relative">
+      {/* Tribes Filter Bar */}
+      <div className="absolute top-0 left-0 right-0 z-30 pt-4 pb-4 bg-gradient-to-b from-black/80 to-transparent">
+        <ScrollArea className="w-full whitespace-nowrap px-4">
+          <div className="flex w-max space-x-2 px-4">
+            {tribes.map((tribe) => (
+              <button
+                key={tribe.id}
+                onClick={() => handleTribeChange(tribe.id)}
+                className={cn(
+                  'flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 backdrop-blur-md',
+                  activeTribe === tribe.id
+                    ? 'bg-primary text-primary-foreground shadow-[0_0_15px_rgba(var(--primary),0.5)] scale-105'
+                    : 'bg-white/10 text-white hover:bg-white/20',
+                )}
+              >
+                <tribe.icon
+                  className={cn(
+                    'h-4 w-4',
+                    activeTribe === tribe.id ? 'fill-current' : '',
+                  )}
+                />
+                {tribe.label}
+              </button>
+            ))}
+          </div>
+          <ScrollBar orientation="horizontal" className="hidden" />
+        </ScrollArea>
+      </div>
+
+      {/* Video Feed */}
+      <div
+        ref={containerRef}
+        className="h-full w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth no-scrollbar"
+        onScroll={handleScroll}
+      >
+        {filteredVideos.length > 0 ? (
+          filteredVideos.map((video, index) => (
+            <div key={video.id} className="h-full w-full snap-start">
+              <VideoCard video={video} isActive={index === activeIndex} />
+            </div>
+          ))
+        ) : (
+          <div className="h-full w-full flex flex-col items-center justify-center text-white p-6 text-center">
+            <div className="bg-zinc-800 p-4 rounded-full mb-4">
+              <Zap className="h-8 w-8 text-zinc-500" />
+            </div>
+            <h3 className="text-xl font-bold mb-2">Sem vídeos no momento</h3>
+            <p className="text-zinc-400">
+              Não encontramos vídeos para esta modalidade. Tente selecionar
+              outra tribo!
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
