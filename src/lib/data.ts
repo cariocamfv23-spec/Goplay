@@ -120,11 +120,27 @@ export interface FinancialTransaction {
   status: 'confirmed' | 'pending' | 'expired'
 }
 
+export interface Product {
+  id: string
+  name: string
+  category: string
+  price: number
+  pointsPrice: number
+  image: string
+  seller: string
+  rating: number
+  description: string
+  images: string[]
+  modality: string
+  isPremium: boolean
+  availability: 'in_stock' | 'low_stock' | 'out_of_stock'
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: Zap, label: 'Move', path: '/move' },
   { icon: Search, label: 'Explorar', path: '/explore' },
-  { icon: Trophy, label: 'Ranking', path: '/ranking' },
+  { icon: ShoppingBag, label: 'Loja', path: '/marketplace' },
   { icon: User, label: 'Perfil', path: '/profile/me' },
 ]
 
@@ -764,34 +780,81 @@ export const mockJobs = [
   },
 ]
 
-export const mockProducts = [
+export const mockProducts: Product[] = [
   {
     id: 'prod1',
     name: 'Chuteira Nike Mercurial',
     category: 'Calçados',
     price: 499.9,
+    pointsPrice: 5000,
     image:
       'https://img.usecurling.com/p/300/300?q=soccer%20cleats&color=orange',
     seller: 'Loja Oficial',
     rating: 4.8,
-    description: 'Chuteira de alta performance para velocidade.',
+    description:
+      'Chuteira de alta performance para velocidade, com travas estratégicas e material leve para melhor desempenho em campo.',
     images: [
       'https://img.usecurling.com/p/300/300?q=soccer%20cleats&color=orange',
       'https://img.usecurling.com/p/300/300?q=soccer%20cleats%20side&color=orange',
     ],
+    modality: 'Futebol',
+    isPremium: true,
+    availability: 'in_stock',
   },
   {
     id: 'prod2',
     name: 'Bola Oficial Champions',
     category: 'Equipamentos',
     price: 199.9,
+    pointsPrice: 2000,
     image: 'https://img.usecurling.com/p/300/300?q=soccer%20ball&color=white',
     seller: 'Adidas Store',
     rating: 5.0,
-    description: 'Bola oficial da competição.',
+    description:
+      'Bola oficial da competição, com tecnologia de voo preciso e durabilidade superior.',
     images: [
       'https://img.usecurling.com/p/300/300?q=soccer%20ball&color=white',
     ],
+    modality: 'Futebol',
+    isPremium: false,
+    availability: 'in_stock',
+  },
+  {
+    id: 'prod3',
+    name: 'Camisa Lakers LeBron',
+    category: 'Vestuário',
+    price: 349.9,
+    pointsPrice: 3500,
+    image:
+      'https://img.usecurling.com/p/300/300?q=basketball%20jersey&color=yellow',
+    seller: 'NBA Store',
+    rating: 4.9,
+    description:
+      'Jersey oficial do Lakers, edição limitada. Tecido respirável e acabamento premium.',
+    images: [
+      'https://img.usecurling.com/p/300/300?q=basketball%20jersey&color=yellow',
+    ],
+    modality: 'Basquete',
+    isPremium: true,
+    availability: 'low_stock',
+  },
+  {
+    id: 'prod4',
+    name: 'Whey Protein Gold',
+    category: 'Suplementos',
+    price: 249.9,
+    pointsPrice: 2500,
+    image: 'https://img.usecurling.com/p/300/300?q=whey%20protein&color=black',
+    seller: 'Growth Supplements',
+    rating: 4.7,
+    description:
+      'Proteína isolada para recuperação muscular rápida. Sabor chocolate.',
+    images: [
+      'https://img.usecurling.com/p/300/300?q=whey%20protein&color=black',
+    ],
+    modality: 'Fitness',
+    isPremium: false,
+    availability: 'in_stock',
   },
 ]
 
@@ -862,8 +925,8 @@ export const mockPointsHistory = [
 export const mockFinancialSummary = {
   balance: 1250.0,
   totalSpent: 450.5,
-  pointsBalance: 1250,
-  pointsEarned: 3500,
+  pointsBalance: 12500,
+  pointsEarned: 35000,
   conversionRate: '1000 pts = R$ 10,00',
   marketplaceStatus: 'Liberado',
 }

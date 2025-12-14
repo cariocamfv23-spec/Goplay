@@ -4,12 +4,17 @@ import { useNavigate } from 'react-router-dom'
 import { mockProducts } from '@/lib/data'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { PaymentDialog } from '@/components/PaymentDialog'
 
 export default function Cart() {
   const navigate = useNavigate()
   // Mock cart items
   const cartItems = [mockProducts[0], mockProducts[1]]
   const total = cartItems.reduce((acc, item) => acc + item.price, 0)
+  const totalPoints = cartItems.reduce(
+    (acc, item) => acc + (item.pointsPrice || 0),
+    0,
+  )
 
   return (
     <div className="min-h-screen bg-background flex flex-col pb-24 animate-fade-in">
@@ -41,9 +46,16 @@ export default function Cart() {
                   </p>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="font-bold text-primary">
-                    R$ {item.price.toFixed(2)}
-                  </span>
+                  <div className="flex flex-col">
+                    <span className="font-bold text-primary">
+                      R$ {item.price.toFixed(2)}
+                    </span>
+                    {item.pointsPrice > 0 && (
+                      <span className="text-[10px] text-gold font-medium">
+                        {item.pointsPrice} pts
+                      </span>
+                    )}
+                  </div>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -71,15 +83,28 @@ export default function Cart() {
           <Separator />
           <div className="flex justify-between text-lg font-bold">
             <span>Total</span>
-            <span>R$ {total.toFixed(2)}</span>
+            <div className="text-right">
+              <div>R$ {total.toFixed(2)}</div>
+              {totalPoints > 0 && (
+                <div className="text-xs text-gold font-medium">
+                  ou {totalPoints} pts
+                </div>
+              )}
+            </div>
           </div>
         </div>
-        <Button
-          size="lg"
-          className="w-full h-14 rounded-full font-bold text-lg shadow-lg"
+        <PaymentDialog
+          title={`Compra de ${cartItems.length} itens`}
+          price={total}
+          pointsPrice={totalPoints}
         >
-          <ShoppingBag className="mr-2 h-5 w-5" /> Finalizar Compra
-        </Button>
+          <Button
+            size="lg"
+            className="w-full h-14 rounded-full font-bold text-lg shadow-lg"
+          >
+            <ShoppingBag className="mr-2 h-5 w-5" /> Finalizar Compra
+          </Button>
+        </PaymentDialog>
       </div>
     </div>
   )

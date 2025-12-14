@@ -10,6 +10,7 @@ import {
   BarChart2,
   Users,
   FileText,
+  ShoppingBag,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -113,6 +114,7 @@ export default function AthleteView({
           </div>
         </div>
 
+        {/* Action Buttons Grid */}
         <div className="grid grid-cols-2 gap-3 mb-3">
           <Button
             className="bg-secondary text-foreground hover:bg-secondary/80 justify-start"
@@ -126,6 +128,14 @@ export default function AthleteView({
           >
             <Trophy className="mr-2 h-4 w-4" /> Ranking
           </Button>
+          {isMe && (
+            <Button
+              className="bg-gradient-to-r from-primary/10 to-purple-500/10 text-primary hover:bg-secondary/80 justify-start border border-primary/20 col-span-2"
+              onClick={() => navigate('/marketplace')}
+            >
+              <ShoppingBag className="mr-2 h-4 w-4" /> Acessar Loja Goplay
+            </Button>
+          )}
         </div>
 
         {isMe && (
