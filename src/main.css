@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
 
-    /* Roxo Serenity (Primary) - Consistently used as branding */
+    /* Roxo Serenity (Primary) - Branding Principal */
     --primary: 263.4 70% 50.4%;
     --primary-foreground: 0 0% 98%;
 
@@ -36,7 +36,7 @@
 
     --radius: 0.5rem;
 
-    /* Dourado Soft - Highlight color */
+    /* Dourado Soft - Premium Highlights */
     --gold: 48 96% 53%;
     --gold-foreground: 240 10% 3.9%;
 
@@ -59,7 +59,7 @@
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
 
-    /* Roxo Serenity (Primary) */
+    /* Roxo Serenity (Primary) - Dark Mode */
     --primary: 263.4 70% 50.4%;
     --primary-foreground: 210 40% 98%;
 
@@ -77,9 +77,9 @@
 
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    --ring: 263.4 70% 50.4%;
 
-    /* Dourado Soft */
+    /* Dourado Soft - Dark Mode */
     --gold: 48 96% 53%;
     --gold-foreground: 240 10% 3.9%;
 
@@ -91,7 +91,7 @@
     --chart-5: 340 75% 55%;
   }
 
-  /* Color Themes */
+  /* Alternative Color Themes */
   .theme-blue {
     --primary: 221.2 83.2% 53.3%;
     --ring: 221.2 83.2% 53.3%;

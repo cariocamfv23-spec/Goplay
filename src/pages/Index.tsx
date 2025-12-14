@@ -40,7 +40,7 @@ export default function Index() {
             <Logo variant="text" className="text-4xl justify-center" />
             <h1 className="text-3xl font-bold tracking-tight text-foreground leading-tight">
               O seu esporte, <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-gold">
                 levado a sério.
               </span>
             </h1>
