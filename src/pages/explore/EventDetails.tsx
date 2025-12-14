@@ -1,16 +1,19 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { mockEvents } from '@/lib/data'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Calendar, MapPin, Share2, Ticket } from 'lucide-react'
+import { ArrowLeft, Calendar, MapPin, Ticket, CheckCircle2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { CheckInModal } from '@/components/CheckInModal'
+import { useState } from 'react'
 
 export default function EventDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
   const event = mockEvents.find((e) => e.id === id) || mockEvents[0]
+  const [showCheckIn, setShowCheckIn] = useState(false)
 
   return (
-    <div className="min-h-screen bg-background pb-24 animate-fade-in">
+    <div className="min-h-screen bg-background pb-28 animate-fade-in">
       <div className="relative h-72 w-full">
         <img
           src={event.image}
@@ -21,7 +24,7 @@ export default function EventDetails() {
         <Button
           variant="ghost"
           size="icon"
-          className="absolute top-4 left-4 bg-background/50 backdrop-blur-md rounded-full"
+          className="absolute top-4 left-4 bg-background/50 backdrop-blur-md rounded-full hover:bg-background/80"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft className="h-5 w-5" />
@@ -61,14 +64,37 @@ export default function EventDetails() {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border/50 flex items-center gap-4">
-        <div>
+      {/* Check-in Modal Integration */}
+      <CheckInModal
+        open={showCheckIn}
+        onOpenChange={setShowCheckIn}
+        venueName={event.location}
+        points={150}
+      />
+
+      {/* Bottom Actions */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur-md border-t border-border/50 flex flex-row items-center gap-3 z-30 pb-safe">
+        <div className="hidden sm:block min-w-[100px]">
           <p className="text-xs text-muted-foreground">Ingressos a partir de</p>
           <p className="text-xl font-bold text-primary">
             R$ {event.price.toFixed(2)}
           </p>
         </div>
-        <Button size="lg" className="flex-1 rounded-full font-bold">
+
+        <Button
+          variant="outline"
+          size="lg"
+          className="flex-1 rounded-full font-bold border-primary text-primary hover:bg-primary/5 gap-2 h-14"
+          onClick={() => setShowCheckIn(true)}
+        >
+          <CheckCircle2 className="h-5 w-5" />
+          Check-in
+        </Button>
+
+        <Button
+          size="lg"
+          className="flex-1 rounded-full font-bold shadow-lg shadow-primary/20 h-14"
+        >
           <Ticket className="mr-2 h-5 w-5" /> Comprar
         </Button>
       </div>
