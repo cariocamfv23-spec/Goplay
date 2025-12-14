@@ -1,8 +1,9 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { mockNutrition } from '@/lib/data'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Star, Calendar } from 'lucide-react'
+import { ArrowLeft, Star, Calendar, CreditCard } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { PaymentDialog } from '@/components/PaymentDialog'
 
 export default function NutritionPartnerDetails() {
   const { id } = useParams()
@@ -37,14 +38,22 @@ export default function NutritionPartnerDetails() {
           </span>
         </div>
 
-        <div className="bg-card border p-4 rounded-xl mb-6">
-          <p className="text-sm text-muted-foreground">Consulta</p>
-          <p className="text-xl font-bold">{partner.price}</p>
+        <div className="bg-card border p-4 rounded-xl mb-6 shadow-sm">
+          <p className="text-sm text-muted-foreground mb-1">
+            Valor da Consulta
+          </p>
+          <p className="text-2xl font-bold">{partner.price}</p>
         </div>
 
-        <Button className="w-full h-12 font-bold rounded-xl">
-          <Calendar className="mr-2 h-5 w-5" /> Agendar Consulta
-        </Button>
+        <PaymentDialog
+          title={`Consulta com ${partner.name}`}
+          price={partner.price}
+          onSuccess={() => {}}
+        >
+          <Button className="w-full h-14 font-bold rounded-xl shadow-lg shadow-primary/20">
+            <CreditCard className="mr-2 h-5 w-5" /> Pagar Consulta
+          </Button>
+        </PaymentDialog>
       </div>
     </div>
   )

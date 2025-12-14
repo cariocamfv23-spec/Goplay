@@ -37,6 +37,9 @@ const NutritionPartnerDetails = lazy(
   () => import('./pages/nutrition/NutritionPartnerDetails'),
 )
 const ClinicDetails = lazy(() => import('./pages/clinics/ClinicDetails'))
+const HortifrutiDetails = lazy(
+  () => import('./pages/explore/HortifrutiDetails'),
+)
 
 // Profile & Stats
 const Profile = lazy(() => import('./pages/profile/Profile'))
@@ -117,6 +120,7 @@ const App = () => (
                 element={<NutritionPartnerDetails />}
               />
               <Route path="/clinics/:id" element={<ClinicDetails />} />
+              <Route path="/hortifrutis/:id" element={<HortifrutiDetails />} />
 
               {/* Profile & Stats */}
               <Route path="/profile/:id" element={<Profile />} />

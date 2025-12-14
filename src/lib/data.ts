@@ -11,6 +11,10 @@ import {
   User,
   Activity,
   Car,
+  Camera,
+  Dumbbell,
+  Stethoscope,
+  Apple,
 } from 'lucide-react'
 
 // Types
@@ -125,7 +129,7 @@ export const exploreCategories = [
   {
     id: 'photographers',
     label: 'Fotógrafos',
-    icon: Car,
+    icon: Camera,
     bg: 'bg-purple-100',
     color: 'text-purple-600',
   },
@@ -139,21 +143,21 @@ export const exploreCategories = [
   {
     id: 'gyms',
     label: 'Academias',
-    icon: Activity,
+    icon: Dumbbell,
     bg: 'bg-red-100',
     color: 'text-red-600',
   },
   {
     id: 'nutrition',
     label: 'Nutrição',
-    icon: User,
+    icon: Apple,
     bg: 'bg-yellow-100',
     color: 'text-yellow-600',
   },
   {
     id: 'clinics',
     label: 'Clínicas',
-    icon: Activity,
+    icon: Stethoscope,
     bg: 'bg-cyan-100',
     color: 'text-cyan-600',
   },
@@ -607,6 +611,32 @@ export const mockNutrition = [
     image: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=9',
     address: 'Av. Brasil, 2000',
     price: 'R$ 800/consulta',
+  },
+]
+
+export const mockHortifrutis = [
+  {
+    id: 'h1',
+    name: 'Hortifruti Natural da Terra',
+    rating: 4.8,
+    image:
+      'https://img.usecurling.com/p/400/300?q=fresh%20fruits%20vegetables&color=green',
+    address: 'Av. das Frutas, 123',
+    price: 'R$ 150,00',
+    description:
+      'A melhor seleção de frutas, verduras e legumes frescos para sua dieta.',
+    specialty: 'Produtos Orgânicos',
+  },
+  {
+    id: 'h2',
+    name: 'Oba Hortifruti',
+    rating: 4.7,
+    image:
+      'https://img.usecurling.com/p/400/300?q=vegetables%20market&color=orange',
+    address: 'Rua do Pomar, 450',
+    price: 'R$ 120,00',
+    description: 'Qualidade e frescor garantidos todos os dias.',
+    specialty: 'Frutas Exóticas',
   },
 ]
 
