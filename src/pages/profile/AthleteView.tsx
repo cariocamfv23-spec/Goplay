@@ -197,10 +197,11 @@ export default function AthleteView({
           </Button>
           {isMe && (
             <Button
-              className="bg-gradient-to-r from-primary/10 to-purple-500/10 text-primary hover:bg-secondary/80 justify-start border border-primary/20 col-span-2"
+              className="bg-secondary/30 text-primary hover:bg-secondary/50 border border-primary/20 justify-start col-span-2 w-full"
+              variant="outline"
               onClick={() => navigate('/marketplace')}
             >
-              <ShoppingBag className="mr-2 h-4 w-4" /> Acessar Loja Goplay
+              <ShoppingBag className="mr-2 h-4 w-4" /> Acessar loja Goplay
             </Button>
           )}
         </div>
