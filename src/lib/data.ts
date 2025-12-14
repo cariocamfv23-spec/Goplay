@@ -15,6 +15,7 @@ import {
   Dumbbell,
   Stethoscope,
   Apple,
+  Users,
 } from 'lucide-react'
 
 // Types
@@ -101,6 +102,11 @@ export interface ProfileData {
   }
   rides?: number
   responseTime?: string
+  age?: number
+  sport?: string
+  position?: string
+  height?: string
+  weight?: string
 }
 
 export interface FinancialTransaction {
@@ -145,6 +151,13 @@ export const navigationItems = [
 ]
 
 export const exploreCategories = [
+  {
+    id: 'talents',
+    label: 'Scouts & Agentes',
+    icon: Users,
+    bg: 'bg-indigo-100 dark:bg-indigo-900/20',
+    color: 'text-indigo-600 dark:text-indigo-400',
+  },
   {
     id: 'events',
     label: 'Eventos',
@@ -251,6 +264,11 @@ export const mockUser = {
   followers: '1.2k',
   following: '450',
   type: 'athlete',
+  age: 24,
+  sport: 'Futebol',
+  position: 'Meia-Atacante',
+  height: '1.78m',
+  weight: '74kg',
   stats: {
     matches: 42,
     wins: 28,
@@ -259,6 +277,83 @@ export const mockUser = {
 }
 
 export const mockCurrentUser = mockUser
+
+export const mockTalents: ProfileData[] = [
+  {
+    id: 't1',
+    name: 'Lucas Ferreira',
+    username: '@lucasf',
+    type: 'athlete',
+    age: 19,
+    sport: 'Futebol',
+    position: 'Atacante',
+    height: '1.82m',
+    weight: '78kg',
+    rating: 4.8,
+    location: 'Rio de Janeiro, RJ',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=30',
+    cover: 'https://img.usecurling.com/p/800/400?q=soccer%20field&color=green',
+    bio: 'Atacante rápido e finalizador. Busco oportunidade em clubes profissionais.',
+    followers: '5.4k',
+    stats: { matches: 50, wins: 35, mvp: 12 },
+  },
+  {
+    id: 't2',
+    name: 'Pedro Santos',
+    username: '@pedrinho10',
+    type: 'athlete',
+    age: 16, // Underage
+    sport: 'Futsal',
+    position: 'Ala',
+    height: '1.70m',
+    weight: '62kg',
+    rating: 4.9,
+    location: 'São Paulo, SP',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=31',
+    cover: 'https://img.usecurling.com/p/800/400?q=futsal%20court&color=blue',
+    bio: 'Promessa do futsal paulista. Destaque sub-17.',
+    followers: '2.1k',
+    stats: { matches: 30, wins: 22, mvp: 8 },
+  },
+  {
+    id: 't3',
+    name: 'Matheus Oliveira',
+    username: '@math_basket',
+    type: 'athlete',
+    age: 21,
+    sport: 'Basquete',
+    position: 'Armador',
+    height: '1.92m',
+    weight: '88kg',
+    rating: 4.7,
+    location: 'Franca, SP',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=32',
+    cover:
+      'https://img.usecurling.com/p/800/400?q=basketball%20court&color=orange',
+    bio: 'Visão de jogo e arremesso de 3 pontos apurado.',
+    followers: '3.2k',
+    stats: { matches: 45, wins: 30, mvp: 6 },
+  },
+  {
+    id: 't4',
+    name: 'João Vitor',
+    username: '@jv_volei',
+    type: 'athlete',
+    age: 17, // Underage
+    sport: 'Vôlei',
+    position: 'Ponteiro',
+    height: '1.95m',
+    weight: '85kg',
+    rating: 4.6,
+    location: 'Belo Horizonte, MG',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=33',
+    cover:
+      'https://img.usecurling.com/p/800/400?q=volleyball%20court&color=yellow',
+    bio: 'Atleta de base do Minas Tênis Clube.',
+    followers: '1.5k',
+    stats: { matches: 25, wins: 18, mvp: 4 },
+  },
+]
 
 export const mockStatsHistory: StatsHistoryPoint[] = [
   { date: 'Jan', rating: 3.5, matches: 10 },
@@ -753,6 +848,7 @@ export const mockPhotographers: ProfileData[] = [
 export const mockProfiles: ProfileData[] = [
   ...mockPhotographers,
   ...mockDrivers,
+  ...mockTalents,
   {
     id: 'u1',
     name: 'Alex Silva',

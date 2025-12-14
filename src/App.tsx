@@ -21,6 +21,7 @@ const Move = lazy(() => import('./pages/move/Move'))
 const Explore = lazy(() => import('./pages/explore/Explore'))
 
 // Explore Lists
+const TalentsList = lazy(() => import('./pages/explore/TalentsList'))
 const PhotographersList = lazy(
   () => import('./pages/explore/PhotographersList'),
 )
@@ -128,6 +129,7 @@ const App = () => {
                   <Route path="/explore" element={<Explore />} />
 
                   {/* Explore Lists Routes */}
+                  <Route path="/explore/talents" element={<TalentsList />} />
                   <Route
                     path="/explore/photographers"
                     element={<PhotographersList />}
