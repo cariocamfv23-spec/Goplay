@@ -81,13 +81,15 @@ export default function DriverView({ profile }: { profile: ProfileData }) {
 
           <Card className="bg-secondary/20 border-none shadow-sm mb-6">
             <CardContent className="p-4 flex items-center gap-4">
-              <div className="h-16 w-24 rounded-lg overflow-hidden bg-white">
-                <img
-                  src={profile.car?.photo}
-                  className="w-full h-full object-cover"
-                  alt="Car"
-                />
-              </div>
+              {profile.car?.photo && (
+                <div className="h-16 w-24 rounded-lg overflow-hidden bg-white shrink-0">
+                  <img
+                    src={profile.car.photo}
+                    className="w-full h-full object-cover"
+                    alt="Car"
+                  />
+                </div>
+              )}
               <div>
                 <h3 className="font-bold">{profile.car?.model}</h3>
                 <p className="text-sm text-muted-foreground">

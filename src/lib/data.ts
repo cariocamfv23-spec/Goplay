@@ -663,8 +663,7 @@ export const mockDrivers: ProfileData[] = [
       model: 'Honda Civic',
       color: 'Prata',
       plate: 'ABC-1234',
-      photo:
-        'https://img.usecurling.com/p/300/200?q=honda%20civic&color=silver',
+      photo: 'https://img.usecurling.com/p/300/200?q=honda%20civic&color=gray',
     },
     image: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=10',
     avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=10',
