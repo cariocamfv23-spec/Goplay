@@ -1,6 +1,6 @@
 import { mockPosts, mockStories } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Plus, Video, MapPin } from 'lucide-react'
+import { Plus, Video, MapPin, Box, Eye } from 'lucide-react'
 import { PostCard } from '@/components/PostCard'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { CreatePostFab } from '@/components/CreatePostFab'
@@ -9,6 +9,7 @@ import { CheckInModal } from '@/components/CheckInModal'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { WeatherAlertBanner } from '@/components/WeatherAlertBanner'
+import { AppIcon } from '@/components/AppIcon'
 
 const Home = () => {
   const navigate = useNavigate()
@@ -80,7 +81,7 @@ const Home = () => {
       <div className="p-4 pb-0 grid grid-cols-2 gap-3 animate-slide-up">
         {/* MOVE Highlight */}
         <div
-          className="col-span-1 rounded-2xl bg-gradient-to-r from-zinc-100 to-zinc-200 dark:from-zinc-900 dark:to-zinc-800 p-4 text-foreground dark:text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
+          className="col-span-1 rounded-2xl bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-900 dark:to-zinc-800 p-4 text-foreground dark:text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
           onClick={() => navigate('/move')}
         >
           <div className="relative z-10">
@@ -94,9 +95,42 @@ const Home = () => {
           <div className="absolute -right-6 -bottom-6 h-20 w-20 bg-primary/10 dark:bg-primary/20 rounded-full blur-2xl group-hover:bg-primary/20 dark:group-hover:bg-primary/30 transition-colors duration-500" />
         </div>
 
+        {/* Arena Mode Highlight - NEW */}
+        <div
+          className="col-span-1 rounded-2xl bg-black p-4 text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01] border border-white/10"
+          onClick={() => navigate('/ai/arena-mode')}
+        >
+          <div className="relative z-10">
+            <h2 className="font-bold text-lg flex items-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-gold">
+              <AppIcon className="h-5 w-5" /> ARENA
+            </h2>
+            <p className="text-xs text-zinc-400 group-hover:text-white transition-colors mt-1 flex items-center gap-1">
+              <Eye className="h-3 w-3" /> Realidade Aumentada
+            </p>
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-gold/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+          <div className="absolute -right-4 -top-4 w-20 h-20 bg-primary/30 blur-2xl rounded-full" />
+        </div>
+
+        {/* Ghost Play Highlight - NEW */}
+        <div
+          className="col-span-1 rounded-2xl bg-gradient-to-br from-purple-900 to-black p-4 text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01] border border-white/10"
+          onClick={() => navigate('/ai/ghost-play')}
+        >
+          <div className="relative z-10">
+            <h2 className="font-bold text-lg flex items-center gap-2">
+              <Box className="h-5 w-5 text-gold animate-pulse" /> Ghost Play
+            </h2>
+            <p className="text-xs text-zinc-400 group-hover:text-white transition-colors mt-1">
+              Replay 3D
+            </p>
+          </div>
+          <div className="absolute -right-6 -bottom-6 h-24 w-24 bg-gold/10 rounded-full blur-2xl group-hover:bg-gold/20 transition-colors duration-500" />
+        </div>
+
         {/* Check-in Highlight */}
         <div
-          className="col-span-1 rounded-2xl bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 p-4 text-foreground dark:text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
+          className="col-span-1 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 p-4 text-foreground dark:text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
           onClick={() => setShowCheckIn(true)}
         >
           <div className="relative z-10">
@@ -114,6 +148,7 @@ const Home = () => {
 
       {/* Feed Section */}
       <div className="max-w-xl mx-auto p-4 space-y-5">
+        <h3 className="font-bold text-lg px-2">Feed Principal</h3>
         {mockPosts.map((post, index) => (
           <div
             key={post.id}

@@ -86,6 +86,8 @@ const Notifications = lazy(() => import('./pages/notifications/Notifications'))
 
 const AiCoach = lazy(() => import('./pages/ai/AiCoach'))
 const VarzeaEditor = lazy(() => import('./pages/ai/VarzeaEditor'))
+const GhostPlay = lazy(() => import('./pages/ai/GhostPlay'))
+const ArenaMode = lazy(() => import('./pages/ai/ArenaMode'))
 
 const App = () => {
   const { color } = useThemeStore()
@@ -207,6 +209,8 @@ const App = () => {
                   {/* AI Tools */}
                   <Route path="/ai/coach" element={<AiCoach />} />
                   <Route path="/ai/editor" element={<VarzeaEditor />} />
+                  <Route path="/ai/ghost-play" element={<GhostPlay />} />
+                  <Route path="/ai/arena-mode" element={<ArenaMode />} />
                 </Route>
 
                 {/* Services & Driver Routes */}

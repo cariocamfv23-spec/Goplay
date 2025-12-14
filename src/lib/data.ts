@@ -302,25 +302,25 @@ export const photographerCategories = [
 export const narrationStyles = [
   {
     id: 'varzea',
-    name: 'Várzea Raiz',
+    name: 'Várzea',
     description: 'Gírias, humor e corneta',
     previewText: 'Olha esse chute, meu consagrado! Isolou na lua!',
   },
   {
     id: 'professional',
-    name: 'TV Profissional',
+    name: 'Profissional',
     description: 'Sério, técnico e vibrante',
     previewText: 'Autoriza o árbitro, bola rolando no gramado!',
   },
   {
     id: 'comedy',
-    name: 'Comediante',
+    name: 'Humor',
     description: 'Piadas e deboche',
     previewText: 'Parece eu jogando depois do churrasco, que beleza!',
   },
   {
     id: 'futuristic',
-    name: 'Cyberpunk',
+    name: 'Futurista',
     description: 'Robótico e analítico',
     previewText: 'Precisão calculada em 98%. Trajetória otimizada.',
   },
