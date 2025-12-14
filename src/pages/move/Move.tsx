@@ -216,12 +216,20 @@ export default function Move() {
                     : 'bg-white/10 text-white hover:bg-white/20',
                 )}
               >
-                <tribe.icon
-                  className={cn(
-                    'h-4 w-4',
-                    activeTribe === tribe.id ? 'fill-current' : '',
-                  )}
-                />
+                {'image' in tribe && tribe.image ? (
+                  <img
+                    src={tribe.image}
+                    alt={tribe.label}
+                    className="h-4 w-4 object-contain"
+                  />
+                ) : (
+                  <tribe.icon
+                    className={cn(
+                      'h-4 w-4',
+                      activeTribe === tribe.id ? 'fill-current' : '',
+                    )}
+                  />
+                )}
                 {tribe.label}
               </button>
             ))}

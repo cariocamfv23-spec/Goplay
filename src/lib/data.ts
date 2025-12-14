@@ -182,8 +182,18 @@ export const navigationItems = [
 export const tribes = [
   { id: 'all', label: 'Todos', icon: LayoutGrid },
   { id: 'futebol', label: 'Futebol', icon: CircleDashed },
-  { id: 'futsal', label: 'Futsal', icon: Trophy },
-  { id: 'bike', label: 'Bike', icon: Bike },
+  {
+    id: 'futsal',
+    label: 'Futsal',
+    icon: Trophy,
+    image: 'https://img.usecurling.com/i?q=futsal&color=white',
+  },
+  {
+    id: 'bike',
+    label: 'Bike',
+    icon: Bike,
+    image: 'https://img.usecurling.com/i?q=bicycle&color=white',
+  },
   { id: 'running', label: 'Corrida', icon: Footprints },
   { id: 'crossfit', label: 'Crossfit', icon: Dumbbell },
   { id: 'swimming', label: 'Natação', icon: Waves },
