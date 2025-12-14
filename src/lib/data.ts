@@ -678,6 +678,38 @@ export const mockVideos = [
       avatar: 'https://img.usecurling.com/i?q=glove&color=red',
     },
   },
+  {
+    id: 'v8',
+    title: 'Jiu-Jitsu: Armlock Voador',
+    description: 'Técnica de finalização surpresa',
+    thumbnail: 'https://img.usecurling.com/p/400/800?q=jiu%20jitsu&color=blue',
+    duration: '01:45',
+    views: '15K',
+    likes: '1.2K',
+    comments: 45,
+    shares: 30,
+    modality: 'martial_arts',
+    user: {
+      name: 'BJJ Masters',
+      avatar: 'https://img.usecurling.com/i?q=kimono&color=white',
+    },
+  },
+  {
+    id: 'v9',
+    title: 'BMX Freestyle Park',
+    description: 'Manobras radicais na pista',
+    thumbnail: 'https://img.usecurling.com/p/400/800?q=bmx%20bike&color=yellow',
+    duration: '04:20',
+    views: '22K',
+    likes: '3K',
+    comments: 110,
+    shares: 150,
+    modality: 'bike',
+    user: {
+      name: 'BMX Pro',
+      avatar: 'https://img.usecurling.com/i?q=bike&color=yellow',
+    },
+  },
 ]
 
 export const mockAiAnalysis = {
