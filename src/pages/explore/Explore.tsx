@@ -1,5 +1,11 @@
 import { Input } from '@/components/ui/input'
-import { Search, MapPin, Filter, CreditCard } from 'lucide-react'
+import {
+  Search,
+  MapPin,
+  Filter,
+  CreditCard,
+  Map as MapIcon,
+} from 'lucide-react'
 import { exploreCategories, mockEvents, mockVenues } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
 import { Card, CardContent } from '@/components/ui/card'
@@ -47,6 +53,36 @@ export default function Explore() {
       </div>
 
       <div className="p-4 space-y-6">
+        {/* Map & Events Feature Card */}
+        <div
+          onClick={() => navigate('/explore/map-events')}
+          className="relative w-full h-32 rounded-2xl overflow-hidden cursor-pointer group shadow-md"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-primary to-purple-800 opacity-90 group-hover:opacity-100 transition-opacity" />
+          <img
+            src="https://img.usecurling.com/p/800/300?q=map%203d%20city&color=purple"
+            alt="Mapa Interativo"
+            className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60"
+          />
+          <div className="absolute inset-0 flex flex-col justify-center px-6">
+            <div className="flex items-center gap-2 mb-1">
+              <MapIcon className="h-5 w-5 text-white" />
+              <Badge
+                variant="secondary"
+                className="bg-white/20 text-white hover:bg-white/30 border-0"
+              >
+                Novo
+              </Badge>
+            </div>
+            <h2 className="text-xl font-bold text-white mb-1">
+              Mapa & Eventos
+            </h2>
+            <p className="text-white/80 text-sm max-w-[200px] leading-tight">
+              Encontre eventos esportivos perto de você no mapa interativo.
+            </p>
+          </div>
+        </div>
+
         {/* Categories Grid */}
         <div className="grid grid-cols-4 gap-3">
           {exploreCategories.map((cat) => (
@@ -78,10 +114,11 @@ export default function Explore() {
             </Button>
           </div>
           <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 scrollbar-hide">
-            {mockEvents.map((event) => (
+            {mockEvents.slice(0, 3).map((event) => (
               <Card
                 key={event.id}
                 className="min-w-[280px] border-none shadow-sm bg-secondary/20 overflow-hidden cursor-pointer hover:shadow-md transition-all"
+                onClick={() => navigate(`/events/${event.id}`)}
               >
                 <div className="h-32 bg-muted relative">
                   <img
@@ -105,7 +142,9 @@ export default function Explore() {
                       {event.date}
                     </span>
                     <span className="text-sm font-bold">
-                      R$ {event.price.toFixed(2)}
+                      {event.price === 0
+                        ? 'Grátis'
+                        : `R$ ${event.price.toFixed(2)}`}
                     </span>
                   </div>
                 </CardContent>

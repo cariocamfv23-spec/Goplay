@@ -142,6 +142,27 @@ export interface Product {
   availability: 'in_stock' | 'low_stock' | 'out_of_stock'
 }
 
+export interface Event {
+  id: string
+  title: string
+  category: string
+  modality?: string
+  level?: 'Iniciante' | 'Intermediário' | 'Avançado' | 'Profissional'
+  date: string
+  time: string
+  location: string
+  address: string
+  city?: string
+  state?: string
+  country?: string
+  image: string
+  price: number
+  description: string
+  organizer: string
+  coordinates?: { x: number; y: number }
+  weather?: { temp: number; condition: 'sunny' | 'cloudy' | 'rainy' | 'windy' }
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: Zap, label: 'Move', path: '/move' },
@@ -654,33 +675,129 @@ export const mockRankings = [
   },
 ]
 
-export const mockEvents = [
+export const mockEvents: Event[] = [
   {
     id: 'e1',
     title: 'Campeonato Paulista de Futsal',
     category: 'Competição',
+    modality: 'Futsal',
+    level: 'Avançado',
     date: '24 Out',
     time: '14:00',
     location: 'Ginásio do Ibirapuera',
     address: 'Rua Manoel da Nóbrega, 1361',
+    city: 'São Paulo',
+    state: 'SP',
+    country: 'Brasil',
     image: 'https://img.usecurling.com/p/400/300?q=futsal%20match&color=blue',
     price: 50.0,
     description: 'Grande final do campeonato estadual.',
     organizer: 'Federação Paulista',
+    coordinates: { x: 55, y: 40 },
+    weather: { temp: 24, condition: 'cloudy' },
   },
   {
     id: 'e2',
     title: 'Maratona de São Paulo',
     category: 'Corrida',
+    modality: 'Corrida',
+    level: 'Intermediário',
     date: '15 Nov',
     time: '06:00',
     location: 'Obelisco',
     address: 'Av. Pedro Álvares Cabral',
+    city: 'São Paulo',
+    state: 'SP',
+    country: 'Brasil',
     image:
       'https://img.usecurling.com/p/400/300?q=marathon%20runners&color=orange',
     price: 120.0,
     description: '42km pelas ruas de SP.',
     organizer: 'Yescom',
+    coordinates: { x: 48, y: 65 },
+    weather: { temp: 18, condition: 'sunny' },
+  },
+  {
+    id: 'e3',
+    title: 'Passeio Ciclístico Noturno',
+    category: 'Lazer',
+    modality: 'Bike',
+    level: 'Iniciante',
+    date: '20 Nov',
+    time: '19:30',
+    location: 'Praça do Ciclista',
+    address: 'Av. Paulista, 2000',
+    city: 'São Paulo',
+    state: 'SP',
+    country: 'Brasil',
+    image:
+      'https://img.usecurling.com/p/400/300?q=night%20cycling&color=purple',
+    price: 0.0,
+    description: 'Pedalada leve pela cidade.',
+    organizer: 'Bike SP',
+    coordinates: { x: 52, y: 48 },
+    weather: { temp: 21, condition: 'windy' },
+  },
+  {
+    id: 'e4',
+    title: 'Workshop de Escalada',
+    category: 'Treino',
+    modality: 'Escalada',
+    level: 'Iniciante',
+    date: '22 Nov',
+    time: '09:00',
+    location: 'Casa de Pedra',
+    address: 'Rua Venâncio Aires, 31',
+    city: 'São Paulo',
+    state: 'SP',
+    country: 'Brasil',
+    image:
+      'https://img.usecurling.com/p/400/300?q=climbing%20wall&color=yellow',
+    price: 80.0,
+    description: 'Aprenda técnicas básicas de escalada indoor.',
+    organizer: 'Climb BR',
+    coordinates: { x: 30, y: 35 },
+    weather: { temp: 26, condition: 'sunny' },
+  },
+  {
+    id: 'e5',
+    title: 'Trilha Pedra Grande',
+    category: 'Aventura',
+    modality: 'Trilha',
+    level: 'Intermediário',
+    date: '28 Nov',
+    time: '07:00',
+    location: 'Parque da Cantareira',
+    address: 'Rua do Horto, 1799',
+    city: 'São Paulo',
+    state: 'SP',
+    country: 'Brasil',
+    image: 'https://img.usecurling.com/p/400/300?q=hiking%20trail&color=green',
+    price: 25.0,
+    description: 'Subida até a Pedra Grande com guia.',
+    organizer: 'EcoTrilhas',
+    coordinates: { x: 45, y: 20 },
+    weather: { temp: 22, condition: 'rainy' },
+  },
+  {
+    id: 'e6',
+    title: 'Montanhismo Serra Fina',
+    category: 'Expedição',
+    modality: 'Montanhismo',
+    level: 'Profissional',
+    date: '05 Dez',
+    time: '05:00',
+    location: 'Serra da Mantiqueira',
+    address: 'Passa Quatro',
+    city: 'Minas Gerais',
+    state: 'MG',
+    country: 'Brasil',
+    image: 'https://img.usecurling.com/p/400/300?q=mountains&color=gray',
+    price: 450.0,
+    description: 'Travessia completa da Serra Fina.',
+    organizer: 'Montanha Club',
+    coordinates: { x: 80, y: 15 },
+    weather: { temp: 15, condition: 'windy' },
   },
 ]
 

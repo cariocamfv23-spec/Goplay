@@ -31,6 +31,7 @@ const VenuesList = lazy(() => import('./pages/explore/VenuesList'))
 const GymsList = lazy(() => import('./pages/explore/GymsList'))
 const NutritionList = lazy(() => import('./pages/explore/NutritionList'))
 const ClinicsList = lazy(() => import('./pages/explore/ClinicsList'))
+const MapEvents = lazy(() => import('./pages/explore/MapEvents'))
 
 // Details
 const EventDetails = lazy(() => import('./pages/explore/EventDetails'))
@@ -144,6 +145,7 @@ const App = () => {
                   />
                   <Route path="/explore/clinics" element={<ClinicsList />} />
                   <Route path="/explore/jobs" element={<JobsList />} />
+                  <Route path="/explore/map-events" element={<MapEvents />} />
 
                   {/* Detail Routes */}
                   <Route path="/events/:id" element={<EventDetails />} />
