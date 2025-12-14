@@ -1,20 +1,20 @@
 import { mockPosts, mockStories } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Plus, Video, MapPin, CheckCircle } from 'lucide-react'
+import { Plus, Video, MapPin } from 'lucide-react'
 import { PostCard } from '@/components/PostCard'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { CreatePostFab } from '@/components/CreatePostFab'
 import { useNavigate } from 'react-router-dom'
 import { CheckInModal } from '@/components/CheckInModal'
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 const Home = () => {
   const navigate = useNavigate()
   const [showCheckIn, setShowCheckIn] = useState(false)
 
   return (
-    <div className="pb-20 relative bg-background min-h-screen animate-fade-in">
+    <div className="pb-20 relative bg-background min-h-screen animate-fade-in transition-colors duration-300">
       {/* Stories Section */}
       <div className="pt-2 pb-2 bg-background border-b border-border/40 sticky top-16 z-30 shadow-sm backdrop-blur-md bg-background/90 transition-all duration-300">
         <ScrollArea className="w-full whitespace-nowrap">
@@ -44,7 +44,12 @@ const Home = () => {
                 className="flex flex-col items-center space-y-1 cursor-pointer group"
               >
                 <div
-                  className={`p-[2px] rounded-full transform transition-transform duration-200 group-hover:scale-105 ${story.hasStory ? 'bg-gradient-to-tr from-primary via-purple-500 to-gold' : 'bg-muted'}`}
+                  className={cn(
+                    'p-[2px] rounded-full transform transition-transform duration-200 group-hover:scale-105',
+                    story.hasStory
+                      ? 'bg-gradient-to-tr from-primary via-purple-500 to-gold'
+                      : 'bg-muted',
+                  )}
                 >
                   <Avatar className="h-16 w-16 border-2 border-background">
                     <AvatarImage
@@ -71,35 +76,35 @@ const Home = () => {
       <div className="p-4 pb-0 grid grid-cols-2 gap-3 animate-slide-up">
         {/* MOVE Highlight */}
         <div
-          className="col-span-1 rounded-2xl bg-gradient-to-r from-zinc-900 to-zinc-800 p-4 text-white relative overflow-hidden shadow-lg cursor-pointer group hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
+          className="col-span-1 rounded-2xl bg-gradient-to-r from-zinc-100 to-zinc-200 dark:from-zinc-900 dark:to-zinc-800 p-4 text-foreground dark:text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
           onClick={() => navigate('/move')}
         >
           <div className="relative z-10">
             <h2 className="font-bold text-lg flex items-center gap-2">
               <Video className="h-5 w-5 text-primary animate-pulse" /> MOVE
             </h2>
-            <p className="text-xs text-zinc-400 group-hover:text-zinc-300 transition-colors mt-1">
+            <p className="text-xs text-muted-foreground dark:text-zinc-400 group-hover:text-foreground dark:group-hover:text-zinc-300 transition-colors mt-1">
               Destaques
             </p>
           </div>
-          <div className="absolute -right-6 -bottom-6 h-20 w-20 bg-primary/20 rounded-full blur-2xl group-hover:bg-primary/30 transition-colors duration-500" />
+          <div className="absolute -right-6 -bottom-6 h-20 w-20 bg-primary/10 dark:bg-primary/20 rounded-full blur-2xl group-hover:bg-primary/20 dark:group-hover:bg-primary/30 transition-colors duration-500" />
         </div>
 
         {/* Check-in Highlight */}
         <div
-          className="col-span-1 rounded-2xl bg-gradient-to-r from-green-900 to-green-800 p-4 text-white relative overflow-hidden shadow-lg cursor-pointer group hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
+          className="col-span-1 rounded-2xl bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 p-4 text-foreground dark:text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
           onClick={() => setShowCheckIn(true)}
         >
           <div className="relative z-10">
             <h2 className="font-bold text-lg flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-green-400 animate-bounce" />{' '}
+              <MapPin className="h-5 w-5 text-green-600 dark:text-green-400 animate-bounce" />{' '}
               Check-in
             </h2>
-            <p className="text-xs text-green-300 group-hover:text-green-200 transition-colors mt-1">
+            <p className="text-xs text-green-800/80 dark:text-green-300 group-hover:text-green-900 dark:group-hover:text-green-200 transition-colors mt-1">
               Marcar presença
             </p>
           </div>
-          <div className="absolute -right-6 -bottom-6 h-20 w-20 bg-green-500/20 rounded-full blur-2xl group-hover:bg-green-500/30 transition-colors duration-500" />
+          <div className="absolute -right-6 -bottom-6 h-20 w-20 bg-green-500/10 dark:bg-green-500/20 rounded-full blur-2xl group-hover:bg-green-500/20 dark:group-hover:bg-green-500/30 transition-colors duration-500" />
         </div>
       </div>
 

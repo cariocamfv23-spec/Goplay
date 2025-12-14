@@ -260,11 +260,11 @@ export function CheckInModal({
           {/* SUCCESS STATE */}
           {step === 'success' && (
             <div className="py-6 flex flex-col items-center gap-4 animate-in zoom-in duration-300">
-              <div className="h-24 w-24 rounded-full bg-green-100 flex items-center justify-center text-green-600 shadow-sm animate-bounce">
+              <div className="h-24 w-24 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 shadow-sm animate-bounce">
                 <CheckCircle className="h-12 w-12" />
               </div>
               <div className="space-y-1">
-                <h3 className="font-bold text-xl text-green-700">
+                <h3 className="font-bold text-xl text-green-700 dark:text-green-400">
                   Check-in Realizado!
                 </h3>
                 <p className="text-muted-foreground text-sm">

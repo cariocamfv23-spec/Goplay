@@ -1,10 +1,28 @@
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, User, Bell, Lock, HelpCircle, LogOut } from 'lucide-react'
+import {
+  ArrowLeft,
+  User,
+  Bell,
+  Lock,
+  HelpCircle,
+  LogOut,
+  Moon,
+  Sun,
+  Laptop,
+} from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Separator } from '@/components/ui/separator'
+import { useTheme } from 'next-themes'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 export default function Settings() {
   const navigate = useNavigate()
+  const { setTheme, theme } = useTheme()
 
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
@@ -16,6 +34,49 @@ export default function Settings() {
       </div>
 
       <div className="p-4 space-y-6">
+        <div className="space-y-1">
+          <h3 className="text-sm font-bold text-muted-foreground uppercase px-2">
+            Aparência
+          </h3>
+          <div className="px-2 py-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="w-full justify-between">
+                  <span className="flex items-center gap-2">
+                    {theme === 'light' && <Sun className="h-4 w-4" />}
+                    {theme === 'dark' && <Moon className="h-4 w-4" />}
+                    {theme === 'system' && <Laptop className="h-4 w-4" />}
+                    Tema
+                  </span>
+                  <span className="capitalize text-muted-foreground">
+                    {theme === 'system'
+                      ? 'Automático'
+                      : theme === 'dark'
+                        ? 'Escuro'
+                        : 'Claro'}
+                  </span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem onClick={() => setTheme('light')}>
+                  <Sun className="mr-2 h-4 w-4" />
+                  Claro
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme('dark')}>
+                  <Moon className="mr-2 h-4 w-4" />
+                  Escuro
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme('system')}>
+                  <Laptop className="mr-2 h-4 w-4" />
+                  Automático (Sistema)
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+
+        <Separator />
+
         <div className="space-y-1">
           <h3 className="text-sm font-bold text-muted-foreground uppercase px-2">
             Conta

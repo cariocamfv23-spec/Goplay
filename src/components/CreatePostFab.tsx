@@ -17,20 +17,25 @@ export function CreatePostFab() {
       label: 'Texto',
       icon: Type,
       color: 'text-blue-500',
-      bg: 'bg-blue-500/10',
+      bg: 'bg-blue-500/10 dark:bg-blue-500/20',
     },
     {
       label: 'Foto',
       icon: Image,
       color: 'text-purple-500',
-      bg: 'bg-purple-500/10',
+      bg: 'bg-purple-500/10 dark:bg-purple-500/20',
     },
-    { label: 'Vídeo', icon: Video, color: 'text-red-500', bg: 'bg-red-500/10' },
+    {
+      label: 'Vídeo',
+      icon: Video,
+      color: 'text-red-500',
+      bg: 'bg-red-500/10 dark:bg-red-500/20',
+    },
     {
       label: 'Artigo',
       icon: FileText,
       color: 'text-orange-500',
-      bg: 'bg-orange-500/10',
+      bg: 'bg-orange-500/10 dark:bg-orange-500/20',
     },
   ]
 
