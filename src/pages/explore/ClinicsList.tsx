@@ -1,8 +1,10 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Search, Star, MapPin } from 'lucide-react'
+import { Search, Star, MapPin, CreditCard } from 'lucide-react'
 import { mockClinics } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
+import { DigitalCard } from '@/components/DigitalCard'
+import { Button } from '@/components/ui/button'
 
 export default function ClinicsList() {
   const navigate = useNavigate()
@@ -10,7 +12,18 @@ export default function ClinicsList() {
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
       <div className="sticky top-0 bg-background z-20 p-4 border-b border-border/50">
-        <h1 className="text-xl font-bold mb-4">Fisioterapia e Recovery</h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-xl font-bold">Fisioterapia e Recovery</h1>
+          <DigitalCard>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-primary hover:bg-primary/10 rounded-full"
+            >
+              <CreditCard className="h-5 w-5" />
+            </Button>
+          </DigitalCard>
+        </div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input

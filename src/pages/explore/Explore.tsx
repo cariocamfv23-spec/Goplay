@@ -1,10 +1,11 @@
 import { Input } from '@/components/ui/input'
-import { Search, MapPin, Filter } from 'lucide-react'
+import { Search, MapPin, Filter, CreditCard } from 'lucide-react'
 import { exploreCategories, mockEvents, mockVenues } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { DigitalCard } from '@/components/DigitalCard'
 
 export default function Explore() {
   const navigate = useNavigate()
@@ -13,7 +14,20 @@ export default function Explore() {
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
       {/* Header & Search */}
       <div className="sticky top-0 bg-background/95 backdrop-blur z-20 p-4 border-b border-border/50">
-        <h1 className="text-2xl font-bold mb-4">Explorar</h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold">Explorar</h1>
+          <DigitalCard>
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary gap-2"
+            >
+              <CreditCard className="h-4 w-4" />
+              <span className="text-xs font-bold">Meu Cartão</span>
+            </Button>
+          </DigitalCard>
+        </div>
+
         <div className="flex gap-2">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
