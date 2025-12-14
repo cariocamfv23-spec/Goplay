@@ -1,14 +1,38 @@
-import { ArrowLeft, Bell, ShoppingCart, Settings } from 'lucide-react'
+import {
+  ArrowLeft,
+  Bell,
+  ShoppingCart,
+  Settings,
+  Palette,
+  Sun,
+  Moon,
+  Check,
+} from 'lucide-react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Logo } from '@/components/Logo'
 import useNotificationStore from '@/stores/useNotificationStore'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+} from '@/components/ui/dropdown-menu'
+import { useTheme } from 'next-themes'
+import { useThemeStore } from '@/stores/useThemeStore'
 
 export function TopBar() {
   const navigate = useNavigate()
   const location = useLocation()
   const { unreadCount } = useNotificationStore()
+  const { setTheme, theme } = useTheme()
+  const { color, setColor } = useThemeStore()
 
   const isProfile = location.pathname.includes('/profile')
   const isMarket = location.pathname.includes('/marketplace')
@@ -55,6 +79,71 @@ export function TopBar() {
             <ShoppingCart className="h-5 w-5" />
           </Button>
         )}
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full hover:bg-secondary/50"
+            >
+              <Palette className="h-5 w-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>Aparência</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => setTheme('light')}>
+              <Sun className="mr-2 h-4 w-4" />
+              <span>Claro</span>
+              {theme === 'light' && <Check className="ml-auto h-4 w-4" />}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme('dark')}>
+              <Moon className="mr-2 h-4 w-4" />
+              <span>Escuro</span>
+              {theme === 'dark' && <Check className="ml-auto h-4 w-4" />}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <Palette className="mr-2 h-4 w-4" />
+                <span>Mais cores disponíveis</span>
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem onClick={() => setColor('default')}>
+                  <div className="mr-2 h-4 w-4 rounded-full bg-[hsl(263.4,70%,50.4%)]" />
+                  <span>Roxo Serenity</span>
+                  {color === 'default' && <Check className="ml-auto h-4 w-4" />}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setColor('blue')}>
+                  <div className="mr-2 h-4 w-4 rounded-full bg-blue-600" />
+                  <span>Azul</span>
+                  {color === 'blue' && <Check className="ml-auto h-4 w-4" />}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setColor('green')}>
+                  <div className="mr-2 h-4 w-4 rounded-full bg-green-600" />
+                  <span>Verde</span>
+                  {color === 'green' && <Check className="ml-auto h-4 w-4" />}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setColor('orange')}>
+                  <div className="mr-2 h-4 w-4 rounded-full bg-orange-600" />
+                  <span>Laranja</span>
+                  {color === 'orange' && <Check className="ml-auto h-4 w-4" />}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setColor('red')}>
+                  <div className="mr-2 h-4 w-4 rounded-full bg-red-600" />
+                  <span>Vermelho</span>
+                  {color === 'red' && <Check className="ml-auto h-4 w-4" />}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setColor('rose')}>
+                  <div className="mr-2 h-4 w-4 rounded-full bg-rose-600" />
+                  <span>Rosa</span>
+                  {color === 'rose' && <Check className="ml-auto h-4 w-4" />}
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         <Link to="/notifications" className="relative">
           <Button
