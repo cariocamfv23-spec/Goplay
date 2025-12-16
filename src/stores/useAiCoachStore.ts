@@ -12,6 +12,7 @@ interface AiCoachState {
     feedbackFrequency: FeedbackFrequency
     enabledInArena: boolean
     voiceEnabled: boolean
+    emotionDetectionEnabled: boolean
   }
   setPreference: <K extends keyof AiCoachState['preferences']>(
     key: K,
@@ -29,6 +30,7 @@ export const useAiCoachStore = create<AiCoachState>()(
         feedbackFrequency: 'realtime',
         enabledInArena: true,
         voiceEnabled: true,
+        emotionDetectionEnabled: true,
       },
       setPreference: (key, value) =>
         set((state) => ({
@@ -42,6 +44,7 @@ export const useAiCoachStore = create<AiCoachState>()(
             feedbackFrequency: 'realtime',
             enabledInArena: true,
             voiceEnabled: true,
+            emotionDetectionEnabled: true,
           },
         }),
     }),

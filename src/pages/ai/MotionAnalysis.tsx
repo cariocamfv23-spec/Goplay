@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { X, Play, RotateCcw, Camera, Settings2 } from 'lucide-react'
+import { X, Play, RotateCcw, Camera, Settings2, Brain } from 'lucide-react'
 import { MotionAnalysisOverlay } from '@/components/MotionAnalysisOverlay'
 import {
   RealTimeFeedback,
@@ -11,6 +11,7 @@ import { Progress } from '@/components/ui/progress'
 import useSoundStore from '@/stores/useSoundStore'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { useAiCoachStore } from '@/stores/useAiCoachStore'
 
 interface Exercise {
   id: string
@@ -26,8 +27,13 @@ export default function MotionAnalysis() {
   const [reps, setReps] = useState(0)
   const [accuracy, setAccuracy] = useState(85)
   const [feedback, setFeedback] = useState<FeedbackMessage | null>(null)
-  const { playSound } = useSoundStore()
+
+  // Stores
+  const { playSound, playNarration } = useSoundStore()
+  const { preferences } = useAiCoachStore()
+
   const videoRef = useRef<HTMLVideoElement>(null)
+  const lastEmotionTime = useRef<number>(0)
 
   const selectedExercise = (location.state as { exercise?: Exercise })
     ?.exercise || {
@@ -40,10 +46,57 @@ export default function MotionAnalysis() {
     if (!isActive) return
 
     const interval = setInterval(() => {
-      // Randomly update accuracy
-      setAccuracy((prev) =>
-        Math.min(100, Math.max(60, prev + (Math.random() * 10 - 5))),
-      )
+      // Randomly update accuracy simulation
+      const fluctuation = Math.random() * 10 - 5
+      setAccuracy((prev) => {
+        const newAcc = Math.min(100, Math.max(60, prev + fluctuation))
+
+        // Emotion Detection Logic inside interval to access current accuracy state logic
+        if (preferences.emotionDetectionEnabled) {
+          const now = Date.now()
+          // Cooldown of 8 seconds for emotion feedback
+          if (now - lastEmotionTime.current > 8000) {
+            // Detect Confidence (High accuracy sustained)
+            if (newAcc > 92 && Math.random() > 0.7) {
+              const msg = 'Confiança detectada! Ritmo excelente.'
+              setFeedback({
+                id: now.toString(),
+                type: 'emotion',
+                text: msg,
+              })
+              if (preferences.voiceEnabled) {
+                playNarration({
+                  hasNarration: true,
+                  style: 'professional',
+                  text: msg,
+                  volume: 1,
+                })
+              }
+              lastEmotionTime.current = now
+            }
+            // Detect Frustration (Low accuracy drop)
+            else if (newAcc < 70 && Math.random() > 0.6) {
+              const msg = 'Frustração detectada. Respire e foque.'
+              setFeedback({
+                id: now.toString(),
+                type: 'emotion',
+                text: msg,
+              })
+              if (preferences.voiceEnabled) {
+                playNarration({
+                  hasNarration: true,
+                  style: 'professional',
+                  text: msg,
+                  volume: 1,
+                })
+              }
+              lastEmotionTime.current = now
+            }
+          }
+        }
+
+        return newAcc
+      })
 
       // Randomly increment reps every few seconds
       if (Math.random() > 0.8) {
@@ -69,7 +122,7 @@ export default function MotionAnalysis() {
     }, 2000)
 
     return () => clearInterval(interval)
-  }, [isActive, playSound])
+  }, [isActive, playSound, playNarration, preferences])
 
   const handleToggle = () => {
     setIsActive(!isActive)
@@ -117,6 +170,15 @@ export default function MotionAnalysis() {
             <Camera className="w-3 h-3 mr-1 text-red-500 animate-pulse" />
             AI Vision
           </Badge>
+          {preferences.emotionDetectionEnabled && (
+            <Badge
+              variant="outline"
+              className="bg-purple-900/40 text-purple-100 border-purple-500/20 backdrop-blur-md"
+            >
+              <Brain className="w-3 h-3 mr-1 text-purple-400" />
+              Emotion AI
+            </Badge>
+          )}
           <Badge
             variant="outline"
             className="bg-primary/20 text-primary border-primary/20 backdrop-blur-md uppercase tracking-wider text-[10px]"
@@ -191,6 +253,7 @@ export default function MotionAnalysis() {
             variant="outline"
             size="icon"
             className="h-12 w-12 rounded-full border-white/20 bg-black/40 text-white hover:bg-black/60 hover:text-white"
+            onClick={() => navigate('/ai/settings')}
           >
             <Settings2 className="w-5 h-5" />
           </Button>
