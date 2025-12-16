@@ -45,7 +45,12 @@ export const Logo = ({
       {showIcon && (
         <>
           {isDefault ? (
-            <div className={cn('h-8 w-8 aspect-square', iconClassName)}>
+            <div
+              className={cn(
+                'h-10 w-10 aspect-square filter drop-shadow-sm',
+                iconClassName,
+              )}
+            >
               <GoplayIcon className="w-full h-full" />
             </div>
           ) : (
@@ -61,7 +66,7 @@ export const Logo = ({
       {showText && (
         <span
           className={cn(
-            'font-bold tracking-tighter leading-none text-transparent bg-clip-text bg-gradient-to-r from-primary to-gold',
+            'font-bold tracking-tighter leading-none text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary to-gold drop-shadow-sm',
             textClassName,
           )}
         >

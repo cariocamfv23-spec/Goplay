@@ -22,7 +22,10 @@ export const AppIcon = ({
   if (src === defaultIcon) {
     return (
       <div
-        className={cn('relative flex items-center justify-center', className)}
+        className={cn(
+          'relative flex items-center justify-center transition-transform hover:scale-105 duration-300',
+          className,
+        )}
       >
         <GoplayIcon className="w-full h-full" aria-label={alt} />
       </div>
