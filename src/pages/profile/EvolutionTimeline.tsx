@@ -10,6 +10,7 @@ import {
   TrendingUp,
   Target,
   Flag,
+  Share2,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -20,10 +21,17 @@ import { cn } from '@/lib/utils'
 import { useGoalStore } from '@/stores/useGoalStore'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { useState } from 'react'
+import { ShareDialog } from '@/components/ShareDialog'
 
 export default function EvolutionTimeline() {
   const navigate = useNavigate()
   const { goals } = useGoalStore()
+  const [shareOpen, setShareOpen] = useState(false)
+  const [shareContent, setShareContent] = useState({
+    title: '',
+    description: '',
+  })
 
   // Convert Goals to Timeline Events for seamless integration
   const goalEvents: TimelineEvent[] = goals.map((goal) => ({
@@ -85,6 +93,22 @@ export default function EvolutionTimeline() {
     }
   }
 
+  const handleShareEvent = (event: TimelineEvent) => {
+    setShareContent({
+      title: event.title,
+      description: event.description,
+    })
+    setShareOpen(true)
+  }
+
+  const handleShareTimeline = () => {
+    setShareContent({
+      title: 'Minha Jornada no Goplay',
+      description: `Confira minha evolução no Goplay! Já completei ${allEvents.length} atividades e conquistas.`,
+    })
+    setShareOpen(true)
+  }
+
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
       {/* Header */}
@@ -103,15 +127,25 @@ export default function EvolutionTimeline() {
             </p>
           </div>
         </div>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => navigate('/goals')}
-          className="gap-2"
-        >
-          <Target className="h-4 w-4" />
-          Metas
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={handleShareTimeline}
+            className="text-primary hover:text-primary/80 hover:bg-primary/10"
+          >
+            <Share2 className="h-5 w-5" />
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => navigate('/goals')}
+            className="gap-2"
+          >
+            <Target className="h-4 w-4" />
+            Metas
+          </Button>
+        </div>
       </div>
 
       <div className="p-4 max-w-2xl mx-auto space-y-6">
@@ -169,7 +203,7 @@ export default function EvolutionTimeline() {
               {/* Event Card */}
               <Card
                 className={cn(
-                  'overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/30 group',
+                  'overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/30 group relative',
                   getEventColor(event.type),
                 )}
               >
@@ -187,12 +221,26 @@ export default function EvolutionTimeline() {
                   />
 
                   <CardContent className="p-4 flex-1">
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-8 w-8 rounded-full bg-background/50 hover:bg-background shadow-sm backdrop-blur-sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleShareEvent(event)
+                        }}
+                      >
+                        <Share2 className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                      </Button>
+                    </div>
+
                     <div className="flex items-start gap-3">
                       <div className="mt-1 p-2 rounded-full bg-background shadow-sm shrink-0">
                         {getEventIcon(event.type)}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-base leading-tight group-hover:text-primary transition-colors">
+                        <h3 className="font-bold text-base leading-tight group-hover:text-primary transition-colors pr-6">
                           {event.title}
                         </h3>
                         <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
@@ -246,6 +294,13 @@ export default function EvolutionTimeline() {
           </div>
         </div>
       </div>
+
+      <ShareDialog
+        open={shareOpen}
+        onOpenChange={setShareOpen}
+        title={shareContent.title}
+        description={shareContent.description}
+      />
     </div>
   )
 }
