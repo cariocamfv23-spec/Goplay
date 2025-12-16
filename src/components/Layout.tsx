@@ -9,21 +9,24 @@ export default function Layout() {
   // Define paths where BottomNav should be hidden
   const hideBottomNavPaths = [
     '/messages/', // Hide on chat rooms (except list)
+    '/ai/motion-analysis', // Hide on immersive motion analysis page
   ]
 
-  const shouldHideBottomNav =
-    hideBottomNavPaths.some(
-      (path) => location.pathname.includes(path) && location.pathname !== path,
-    ) || location.pathname.includes('/messages/') // Specific check for messages sub-routes
+  const shouldHideBottomNav = hideBottomNavPaths.some(
+    (path) =>
+      location.pathname.includes(path) &&
+      (path === '/messages/' ? location.pathname !== '/messages' : true),
+  )
 
-  // Hide TopBar on immersive pages like Move
-  const shouldHideTopBar = location.pathname === '/move'
+  // Hide TopBar on immersive pages
+  const shouldHideTopBar =
+    location.pathname === '/move' || location.pathname === '/ai/motion-analysis'
 
   return (
     <div className="min-h-screen bg-background flex flex-col relative">
       {!shouldHideTopBar && <TopBar />}
       <WeatherAlertManager />
-      <main className="flex-1 w-full pb-16">
+      <main className={`flex-1 w-full ${!shouldHideBottomNav ? 'pb-16' : ''}`}>
         <Outlet />
       </main>
       {!shouldHideBottomNav && <BottomNav />}
