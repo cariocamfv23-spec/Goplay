@@ -5,6 +5,7 @@ import {
   Filter,
   CreditCard,
   Map as MapIcon,
+  Globe,
 } from 'lucide-react'
 import { exploreCategories, mockEvents, mockVenues } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
@@ -53,6 +54,41 @@ export default function Explore() {
       </div>
 
       <div className="p-4 space-y-6">
+        {/* International Match Feature Card */}
+        <div
+          onClick={() => navigate('/explore/international')}
+          className="relative w-full h-24 rounded-2xl overflow-hidden cursor-pointer group shadow-md"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-indigo-900 opacity-90 group-hover:opacity-100 transition-opacity" />
+          <img
+            src="https://img.usecurling.com/p/800/300?q=world%20map&color=blue"
+            alt="Match Internacional"
+            className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-40"
+          />
+          <div className="absolute inset-0 flex items-center px-6 justify-between">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 mb-1">
+                <Globe className="h-5 w-5 text-white" />
+                <Badge
+                  variant="secondary"
+                  className="bg-white/20 text-white hover:bg-white/30 border-0"
+                >
+                  Novo
+                </Badge>
+              </div>
+              <h2 className="text-xl font-bold text-white mb-0">
+                Match Internacional
+              </h2>
+              <p className="text-white/80 text-xs">
+                Desafie atletas do mundo todo.
+              </p>
+            </div>
+            <div className="bg-white/10 p-2 rounded-full backdrop-blur-sm">
+              <Globe className="h-6 w-6 text-white" />
+            </div>
+          </div>
+        </div>
+
         {/* Map & Events Feature Card */}
         <div
           onClick={() => navigate('/explore/map-events')}
@@ -71,7 +107,7 @@ export default function Explore() {
                 variant="secondary"
                 className="bg-white/20 text-white hover:bg-white/30 border-0"
               >
-                Novo
+                Beta
               </Badge>
             </div>
             <h2 className="text-xl font-bold text-white mb-1">
@@ -89,7 +125,13 @@ export default function Explore() {
             <div
               key={cat.id}
               className="flex flex-col items-center gap-2 p-3 bg-card rounded-xl border border-border/50 shadow-sm hover:shadow-md transition-all cursor-pointer active:scale-95"
-              onClick={() => navigate(`/explore/${cat.id}`)}
+              onClick={() => {
+                if (cat.id === 'international') {
+                  navigate('/explore/international')
+                } else {
+                  navigate(`/explore/${cat.id}`)
+                }
+              }}
             >
               <div className={`p-3 rounded-full ${cat.bg}`}>
                 <cat.icon className={`h-5 w-5 ${cat.color}`} />

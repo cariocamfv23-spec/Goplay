@@ -24,6 +24,7 @@ import {
   Swords,
   CircleDashed,
   Hand,
+  Globe,
 } from 'lucide-react'
 
 // Types
@@ -229,6 +230,28 @@ export interface Goal {
   progress: number
 }
 
+export interface InternationalMatchOpponent {
+  id: string
+  opponentName: string
+  country: string
+  flag: string
+  level: string
+  avatar: string
+  rating: number
+  status: 'online' | 'offline'
+}
+
+export interface InternationalRankingUser {
+  id: string
+  position: number
+  name: string
+  country: string
+  flag: string
+  points: number
+  avatar: string
+  trend: 'up' | 'down' | 'same'
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: Zap, label: 'Move', path: '/move' },
@@ -244,13 +267,11 @@ export const tribes = [
     id: 'futsal',
     label: 'Futsal',
     icon: Trophy,
-    // Removed broken icon image url to fix menu display
   },
   {
     id: 'bike',
     label: 'Bike',
     icon: Bike,
-    // Removed broken icon image url to fix menu display
   },
   { id: 'running', label: 'Corrida', icon: Footprints },
   { id: 'crossfit', label: 'Crossfit', icon: Dumbbell },
@@ -262,8 +283,15 @@ export const tribes = [
 
 export const exploreCategories = [
   {
+    id: 'international',
+    label: 'Mundial',
+    icon: Globe,
+    bg: 'bg-indigo-100 dark:bg-indigo-900/20',
+    color: 'text-indigo-600 dark:text-indigo-400',
+  },
+  {
     id: 'talents',
-    label: 'Scouts & Agentes',
+    label: 'Scouts',
     icon: Users,
     bg: 'bg-indigo-100 dark:bg-indigo-900/20',
     color: 'text-indigo-600 dark:text-indigo-400',
@@ -284,7 +312,7 @@ export const exploreCategories = [
   },
   {
     id: 'photographers',
-    label: 'Fotógrafos',
+    label: 'Fotos',
     icon: Camera,
     bg: 'bg-purple-100 dark:bg-purple-900/20',
     color: 'text-purple-600 dark:text-purple-400',
@@ -298,31 +326,17 @@ export const exploreCategories = [
   },
   {
     id: 'gyms',
-    label: 'Academias',
+    label: 'Gyms',
     icon: Dumbbell,
     bg: 'bg-red-100 dark:bg-red-900/20',
     color: 'text-red-600 dark:text-red-400',
   },
   {
     id: 'nutrition',
-    label: 'Nutrição',
+    label: 'Nutri',
     icon: Apple,
     bg: 'bg-yellow-100 dark:bg-yellow-900/20',
     color: 'text-yellow-600 dark:text-yellow-400',
-  },
-  {
-    id: 'clinics',
-    label: 'Clínicas',
-    icon: Stethoscope,
-    bg: 'bg-cyan-100 dark:bg-cyan-900/20',
-    color: 'text-cyan-600 dark:text-cyan-400',
-  },
-  {
-    id: 'jobs',
-    label: 'Vagas',
-    icon: Briefcase,
-    bg: 'bg-gray-100 dark:bg-zinc-800',
-    color: 'text-gray-600 dark:text-zinc-400',
   },
 ]
 
@@ -1658,5 +1672,101 @@ export const mockGoals: Goal[] = [
     status: 'completed',
     createdAt: '2024-09-01',
     progress: 100,
+  },
+]
+
+export const mockInternationalMatches: InternationalMatchOpponent[] = [
+  {
+    id: 'im1',
+    opponentName: 'John Smith',
+    country: 'USA',
+    flag: 'https://img.usecurling.com/i?q=usa%20flag',
+    level: 'Pro',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=88',
+    rating: 4.8,
+    status: 'online',
+  },
+  {
+    id: 'im2',
+    opponentName: 'Pierre Dubois',
+    country: 'France',
+    flag: 'https://img.usecurling.com/i?q=france%20flag',
+    level: 'Amateur',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=89',
+    rating: 4.5,
+    status: 'offline',
+  },
+  {
+    id: 'im3',
+    opponentName: 'Hans Müller',
+    country: 'Germany',
+    flag: 'https://img.usecurling.com/i?q=germany%20flag',
+    level: 'Pro',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=90',
+    rating: 4.9,
+    status: 'online',
+  },
+  {
+    id: 'im4',
+    opponentName: 'Yuki Tanaka',
+    country: 'Japan',
+    flag: 'https://img.usecurling.com/i?q=japan%20flag',
+    level: 'Semi-Pro',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=91',
+    rating: 4.7,
+    status: 'offline',
+  },
+]
+
+export const mockInternationalRanking: InternationalRankingUser[] = [
+  {
+    id: 'ir1',
+    position: 1,
+    name: 'Carlos Silva',
+    country: 'Brasil',
+    flag: 'https://img.usecurling.com/i?q=brazil%20flag',
+    points: 2500,
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
+    trend: 'up',
+  },
+  {
+    id: 'ir2',
+    position: 2,
+    name: 'John Smith',
+    country: 'USA',
+    flag: 'https://img.usecurling.com/i?q=usa%20flag',
+    points: 2450,
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=88',
+    trend: 'same',
+  },
+  {
+    id: 'ir3',
+    position: 3,
+    name: 'Hans Müller',
+    country: 'Germany',
+    flag: 'https://img.usecurling.com/i?q=germany%20flag',
+    points: 2300,
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=90',
+    trend: 'up',
+  },
+  {
+    id: 'ir4',
+    position: 4,
+    name: 'Pierre Dubois',
+    country: 'France',
+    flag: 'https://img.usecurling.com/i?q=france%20flag',
+    points: 2100,
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=89',
+    trend: 'down',
+  },
+  {
+    id: 'ir5',
+    position: 5,
+    name: 'Yuki Tanaka',
+    country: 'Japan',
+    flag: 'https://img.usecurling.com/i?q=japan%20flag',
+    points: 1950,
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=91',
+    trend: 'same',
   },
 ]
