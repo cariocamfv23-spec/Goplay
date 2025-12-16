@@ -96,6 +96,7 @@ const GhostPlay = lazy(() => import('./pages/ai/GhostPlay'))
 const ArenaMode = lazy(() => import('./pages/ai/ArenaMode'))
 const AiCoachSettings = lazy(() => import('./pages/ai/AiCoachSettings'))
 const PerformanceReports = lazy(() => import('./pages/ai/PerformanceReports'))
+const GoalsDashboard = lazy(() => import('./pages/goals/GoalsDashboard'))
 
 const App = () => {
   const { color } = useThemeStore()
@@ -188,6 +189,9 @@ const App = () => {
                     path="/financials/transactions"
                     element={<TransactionHistory />}
                   />
+
+                  {/* Goals */}
+                  <Route path="/goals" element={<GoalsDashboard />} />
 
                   {/* Messages */}
                   <Route path="/messages" element={<MessagesList />} />

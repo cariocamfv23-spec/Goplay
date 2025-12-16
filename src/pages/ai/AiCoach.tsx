@@ -9,6 +9,7 @@ import {
   ArrowRight,
   Settings,
   BarChart2,
+  Target,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Card, CardContent } from '@/components/ui/card'
@@ -75,7 +76,7 @@ export default function AiCoach() {
         </Card>
 
         {/* Reports Access */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-2">
           <Button
             variant="outline"
             className="h-auto py-3 flex flex-col gap-1 items-center justify-center border-dashed"
@@ -87,10 +88,18 @@ export default function AiCoach() {
           <Button
             variant="outline"
             className="h-auto py-3 flex flex-col gap-1 items-center justify-center border-dashed"
+            onClick={() => navigate('/goals')}
+          >
+            <Target className="h-5 w-5 text-primary" />
+            <span className="text-xs font-semibold">Metas</span>
+          </Button>
+          <Button
+            variant="outline"
+            className="h-auto py-3 flex flex-col gap-1 items-center justify-center border-dashed"
             onClick={() => navigate('/ai/settings')}
           >
             <Settings className="h-5 w-5 text-primary" />
-            <span className="text-xs font-semibold">Configurar AI</span>
+            <span className="text-xs font-semibold">Configurar</span>
           </Button>
         </div>
 

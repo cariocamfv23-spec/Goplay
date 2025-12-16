@@ -215,6 +215,20 @@ export interface ProfileViewer {
   time: string
 }
 
+export interface Goal {
+  id: string
+  title: string
+  category: 'physical' | 'technical' | 'tactical' | 'mental'
+  metric: string
+  currentValue: number
+  targetValue: number
+  unit: string
+  deadline: string
+  status: 'active' | 'completed' | 'failed'
+  createdAt: string
+  progress: number
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: Zap, label: 'Move', path: '/move' },
@@ -1601,5 +1615,47 @@ export const mockProfileViewers: ProfileViewer[] = [
     type: 'Atleta',
     date: '2 dias atrás',
     time: '11:20',
+  },
+]
+
+export const mockGoals: Goal[] = [
+  {
+    id: 'g1',
+    title: 'Melhorar Velocidade',
+    category: 'physical',
+    metric: 'Velocidade Máxima',
+    currentValue: 28,
+    targetValue: 32,
+    unit: 'km/h',
+    deadline: '2024-12-31',
+    status: 'active',
+    createdAt: '2024-10-01',
+    progress: 70,
+  },
+  {
+    id: 'g2',
+    title: 'Aumentar Resistência',
+    category: 'physical',
+    metric: 'VO2 Max',
+    currentValue: 45,
+    targetValue: 55,
+    unit: 'ml/kg/min',
+    deadline: '2025-01-15',
+    status: 'active',
+    createdAt: '2024-10-10',
+    progress: 40,
+  },
+  {
+    id: 'g3',
+    title: 'Precisão de Passes',
+    category: 'technical',
+    metric: 'Taxa de Acerto',
+    currentValue: 85,
+    targetValue: 95,
+    unit: '%',
+    deadline: '2024-11-30',
+    status: 'completed',
+    createdAt: '2024-09-01',
+    progress: 100,
   },
 ]

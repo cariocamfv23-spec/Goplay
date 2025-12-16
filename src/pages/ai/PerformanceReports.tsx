@@ -6,6 +6,7 @@ import {
   Brain,
   Download,
   Share2,
+  ChevronRight,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -20,6 +21,8 @@ import { StatsHistoryChart } from '@/components/StatsHistoryChart'
 import { mockStatsHistory } from '@/lib/data'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
+import { useGoalStore } from '@/stores/useGoalStore'
+import { Progress } from '@/components/ui/progress'
 
 const mockSkills = [
   { label: 'Velocidade', value: 85, max: 100, unit: '%' },
@@ -32,6 +35,8 @@ const mockSkills = [
 
 export default function PerformanceReports() {
   const navigate = useNavigate()
+  const { goals } = useGoalStore()
+  const activeGoals = goals.filter((g) => g.status === 'active')
 
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
@@ -82,11 +87,96 @@ export default function PerformanceReports() {
           </Card>
         </div>
 
-        <Tabs defaultValue="skills" className="w-full">
+        {/* Goals Teaser */}
+        <Card
+          className="bg-card border-border/50 hover:border-primary/50 transition-colors cursor-pointer group"
+          onClick={() => navigate('/goals')}
+        >
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="bg-primary/10 p-1.5 rounded-md text-primary">
+                  <Target className="h-4 w-4" />
+                </div>
+                <h3 className="font-bold text-sm">Metas Ativas</h3>
+              </div>
+              <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+            </div>
+
+            {activeGoals.length > 0 ? (
+              <div className="space-y-3">
+                {activeGoals.slice(0, 2).map((goal) => (
+                  <div key={goal.id} className="space-y-1">
+                    <div className="flex justify-between text-xs">
+                      <span>{goal.title}</span>
+                      <span className="text-muted-foreground">
+                        {goal.progress}%
+                      </span>
+                    </div>
+                    <Progress value={goal.progress} className="h-1.5" />
+                  </div>
+                ))}
+                {activeGoals.length > 2 && (
+                  <p className="text-xs text-center text-muted-foreground pt-1">
+                    + {activeGoals.length - 2} outras metas
+                  </p>
+                )}
+              </div>
+            ) : (
+              <p className="text-xs text-muted-foreground">
+                Nenhuma meta ativa. Clique para definir.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Tabs defaultValue="history" className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-4">
-            <TabsTrigger value="skills">Habilidades</TabsTrigger>
             <TabsTrigger value="history">Evolução</TabsTrigger>
+            <TabsTrigger value="skills">Habilidades</TabsTrigger>
           </TabsList>
+
+          <TabsContent
+            value="history"
+            className="space-y-4 animate-in fade-in slide-in-from-bottom-2"
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  Histórico de Performance
+                </CardTitle>
+                <CardDescription>
+                  Evolução do seu score técnico nos últimos 6 meses.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[300px] w-full">
+                  <StatsHistoryChart data={mockStatsHistory} />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Brain className="h-5 w-5 text-purple-500" />
+                  Insights do AI Coach
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-secondary/30 p-4 rounded-lg text-sm">
+                  "Notei uma melhora significativa na sua consistência. Seus
+                  últimos 3 treinos mantiveram uma intensidade constante.
+                  Continue assim!"
+                </div>
+                <div className="bg-secondary/30 p-4 rounded-lg text-sm">
+                  "Sua recuperação entre séries está ótima. Considere aumentar a
+                  carga em 5% na próxima sessão de força."
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           <TabsContent
             value="skills"
@@ -149,48 +239,6 @@ export default function PerformanceReports() {
                 </CardContent>
               </Card>
             </div>
-          </TabsContent>
-
-          <TabsContent
-            value="history"
-            className="space-y-4 animate-in fade-in slide-in-from-bottom-2"
-          >
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-primary" />
-                  Histórico de Performance
-                </CardTitle>
-                <CardDescription>
-                  Evolução do seu score técnico nos últimos 6 meses.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px] w-full">
-                  <StatsHistoryChart data={mockStatsHistory} />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Brain className="h-5 w-5 text-purple-500" />
-                  Insights do AI Coach
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="bg-secondary/30 p-4 rounded-lg text-sm">
-                  "Notei uma melhora significativa na sua consistência. Seus
-                  últimos 3 treinos mantiveram uma intensidade constante.
-                  Continue assim!"
-                </div>
-                <div className="bg-secondary/30 p-4 rounded-lg text-sm">
-                  "Sua recuperação entre séries está ótima. Considere aumentar a
-                  carga em 5% na próxima sessão de força."
-                </div>
-              </CardContent>
-            </Card>
           </TabsContent>
         </Tabs>
       </div>

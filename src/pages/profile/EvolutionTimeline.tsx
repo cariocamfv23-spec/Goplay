@@ -8,22 +8,48 @@ import {
   Brain,
   History,
   TrendingUp,
+  Target,
+  Flag,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { mockTimelineEvents, mockStatsHistory, TimelineEvent } from '@/lib/data'
 import { StatsHistoryChart } from '@/components/StatsHistoryChart'
 import { cn } from '@/lib/utils'
+import { useGoalStore } from '@/stores/useGoalStore'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 export default function EvolutionTimeline() {
   const navigate = useNavigate()
+  const { goals } = useGoalStore()
+
+  // Convert Goals to Timeline Events for seamless integration
+  const goalEvents: TimelineEvent[] = goals.map((goal) => ({
+    id: `goal-${goal.id}`,
+    date: format(new Date(goal.createdAt), 'dd MMM', { locale: ptBR }),
+    fullDate: format(new Date(goal.createdAt), 'dd MMMM, yyyy', {
+      locale: ptBR,
+    }),
+    type: goal.status === 'completed' ? 'achievement' : 'milestone',
+    title:
+      goal.status === 'completed'
+        ? `Meta Alcançada: ${goal.title}`
+        : `Nova Meta: ${goal.title}`,
+    description: `Objetivo: Atingir ${goal.targetValue} ${goal.unit} em ${goal.metric}.`,
+    stats: [{ label: 'Progresso', value: `${goal.progress}%` }],
+  }))
+
+  // Merge and Sort events by date (simple string comparison for demo, ideally Date obj)
+  const allEvents = [...mockTimelineEvents, ...goalEvents].sort((a, b) => {
+    // Basic sort logic for demo purposes, assuming "Hoje" comes first
+    if (a.date === 'Hoje') return -1
+    if (b.date === 'Hoje') return 1
+    if (a.date === 'Ontem') return -1
+    if (b.date === 'Ontem') return 1
+    return 0 // Keep original order for others roughly
+  })
 
   const getEventIcon = (type: TimelineEvent['type']) => {
     switch (type) {
@@ -36,7 +62,7 @@ export default function EvolutionTimeline() {
       case 'achievement':
         return <Trophy className="h-5 w-5 text-gold" />
       case 'milestone':
-        return <History className="h-5 w-5 text-blue-500" />
+        return <Flag className="h-5 w-5 text-blue-500" />
       default:
         return <Activity className="h-5 w-5 text-muted-foreground" />
     }
@@ -77,6 +103,15 @@ export default function EvolutionTimeline() {
             </p>
           </div>
         </div>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => navigate('/goals')}
+          className="gap-2"
+        >
+          <Target className="h-4 w-4" />
+          Metas
+        </Button>
       </div>
 
       <div className="p-4 max-w-2xl mx-auto space-y-6">
@@ -96,7 +131,7 @@ export default function EvolutionTimeline() {
 
         {/* Timeline Container */}
         <div className="relative pl-6 space-y-8 before:absolute before:inset-y-0 before:left-2 before:w-[2px] before:bg-gradient-to-b before:from-primary/50 before:via-border before:to-transparent">
-          {mockTimelineEvents.map((event, index) => (
+          {allEvents.map((event, index) => (
             <div
               key={event.id}
               className="relative animate-in slide-in-from-bottom-4 duration-700"
