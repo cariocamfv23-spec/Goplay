@@ -2,17 +2,15 @@ import { Button } from '@/components/ui/button'
 import {
   ArrowLeft,
   Scan,
-  Zap,
   Shield,
   Info,
   Trophy,
   Play,
   RotateCcw,
   Timer,
-  Maximize2,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { AppIcon } from '@/components/AppIcon'
 import { ArTarget, ArTargetData } from '@/components/ar/ArTarget'
 import useSoundStore from '@/stores/useSoundStore'
@@ -35,82 +33,31 @@ export default function ArenaMode() {
   // Refs for loops
   const requestRef = useRef<number>(0)
   const lastSpawnTime = useRef<number>(0)
+  const gameStateRef = useRef(gameState)
+  const scoreRef = useRef(score)
+  const comboRef = useRef(combo)
 
-  // --- Lifecycle & Game Loop ---
-
+  // Sync refs
   useEffect(() => {
-    // Initial Scanning Phase
-    const timer = setTimeout(() => {
-      setGameState('ready')
-      playSound('notification_store') // Ready sound
-    }, 3000)
-    return () => clearTimeout(timer)
-  }, [playSound])
+    gameStateRef.current = gameState
+    scoreRef.current = score
+    comboRef.current = combo
+  }, [gameState, score, combo])
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout
+  // --- Functions ---
 
-    if (gameState === 'playing') {
-      // Timer Logic
-      interval = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            endGame()
-            return 0
-          }
-          return prev - 1
-        })
-      }, 1000)
-
-      // Start Game Loop for Spawning
-      requestRef.current = requestAnimationFrame(gameLoop)
-    }
-
-    return () => {
-      clearInterval(interval)
-      cancelAnimationFrame(requestRef.current)
-    }
-  }, [gameState])
-
-  const startGame = () => {
-    setGameState('playing')
-    setScore(0)
-    setTimeLeft(60)
-    setTargets([])
-    setCombo(0)
-    playSound('like_generic')
-  }
-
-  const endGame = () => {
+  const endGame = useCallback(() => {
     setGameState('finished')
+    // @ts-expect-error - using valid sound key
     playSound('notification_points')
-    if (score > 0) {
+    if (scoreRef.current > 0) {
       toast.success('Treino Finalizado!', {
-        description: `Você fez ${score} pontos com um combo máximo de ${combo}x!`,
+        description: `Você fez ${scoreRef.current} pontos com um combo máximo de ${comboRef.current}x!`,
       })
     }
-  }
+  }, [playSound])
 
-  const gameLoop = (timestamp: number) => {
-    if (!lastSpawnTime.current) lastSpawnTime.current = timestamp
-
-    // Spawn target every 1.5 - 3 seconds depending on combo
-    const spawnRate = Math.max(800, 2000 - combo * 100)
-
-    if (timestamp - lastSpawnTime.current > spawnRate) {
-      spawnTarget()
-      lastSpawnTime.current = timestamp
-    }
-
-    // Clean up expired targets
-    setTargets((prev) => prev.filter((t) => t.expiresAt > Date.now()))
-
-    if (gameState === 'playing') {
-      requestRef.current = requestAnimationFrame(gameLoop)
-    }
-  }
-
-  const spawnTarget = () => {
+  const spawnTarget = useCallback(() => {
     const id = Math.random().toString(36).substr(2, 9)
     // Random position within safe area (10-90%)
     const x = 15 + Math.random() * 70
@@ -142,6 +89,40 @@ export default function ArenaMode() {
     }
 
     setTargets((prev) => [...prev, newTarget])
+  }, [])
+
+  const gameLoop = useCallback(
+    (timestamp: number) => {
+      if (!lastSpawnTime.current) lastSpawnTime.current = timestamp
+
+      // Spawn target every 1.5 - 3 seconds depending on combo
+      const currentCombo = comboRef.current
+      const spawnRate = Math.max(800, 2000 - currentCombo * 100)
+
+      if (timestamp - lastSpawnTime.current > spawnRate) {
+        spawnTarget()
+        lastSpawnTime.current = timestamp
+      }
+
+      // Clean up expired targets
+      setTargets((prev) => prev.filter((t) => t.expiresAt > Date.now()))
+
+      if (gameStateRef.current === 'playing') {
+        requestRef.current = requestAnimationFrame(gameLoop)
+      }
+    },
+    [spawnTarget],
+  )
+
+  const startGame = () => {
+    setGameState('playing')
+    setScore(0)
+    setTimeLeft(60)
+    setTargets([])
+    setCombo(0)
+    lastSpawnTime.current = 0
+    // @ts-expect-error - using valid sound key
+    playSound('like_generic')
   }
 
   const handleInteraction = (
@@ -157,8 +138,8 @@ export default function ArenaMode() {
       setScore((prev) => Math.max(0, prev + value))
       setCombo(0)
       // @ts-expect-error - using valid sound key
-      playSound('notification_store') // Using generic error-ish sound if available or fallback
-      // Trigger visual shake?
+      playSound('notification_store')
+      // Trigger visual shake
       const body = document.querySelector('body')
       if (body) {
         body.classList.add('animate-shake')
@@ -181,6 +162,43 @@ export default function ArenaMode() {
       }
     }
   }
+
+  // --- Lifecycle ---
+
+  useEffect(() => {
+    // Initial Scanning Phase
+    const timer = setTimeout(() => {
+      setGameState('ready')
+      // @ts-expect-error - using valid sound key
+      playSound('notification_store') // Ready sound
+    }, 3000)
+    return () => clearTimeout(timer)
+  }, [playSound])
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+
+    if (gameState === 'playing') {
+      // Timer Logic
+      interval = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            endGame()
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
+
+      // Start Game Loop for Spawning
+      requestRef.current = requestAnimationFrame(gameLoop)
+    }
+
+    return () => {
+      clearInterval(interval)
+      cancelAnimationFrame(requestRef.current)
+    }
+  }, [gameState, endGame, gameLoop])
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden flex flex-col font-sans touch-none select-none">
