@@ -10,6 +10,7 @@ export default function Layout() {
   const hideBottomNavPaths = [
     '/messages/', // Hide on chat rooms (except list)
     '/ai/motion-analysis', // Hide on immersive motion analysis page
+    '/ai/avatar', // Hide on immersive AI Avatar page
   ]
 
   const shouldHideBottomNav = hideBottomNavPaths.some(
@@ -20,7 +21,9 @@ export default function Layout() {
 
   // Hide TopBar on immersive pages
   const shouldHideTopBar =
-    location.pathname === '/move' || location.pathname === '/ai/motion-analysis'
+    location.pathname === '/move' ||
+    location.pathname === '/ai/motion-analysis' ||
+    location.pathname === '/ai/avatar'
 
   return (
     <div className="min-h-screen bg-background flex flex-col relative">

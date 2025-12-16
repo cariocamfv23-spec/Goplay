@@ -14,6 +14,7 @@ import {
   Edit2,
   Eye,
   History,
+  Sparkles,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -243,7 +244,15 @@ export default function AthleteView({
           )}
           {isMe && (
             <Button
-              className="bg-secondary/30 text-primary hover:bg-secondary/50 border border-primary/20 justify-start w-full"
+              className="bg-gradient-to-r from-primary/20 to-cyan-500/20 text-foreground hover:from-primary/30 hover:to-cyan-500/30 border border-primary/10 justify-start shadow-sm"
+              onClick={() => navigate('/ai/avatar')}
+            >
+              <Sparkles className="mr-2 h-4 w-4 text-primary" /> AI Avatar
+            </Button>
+          )}
+          {isMe && (
+            <Button
+              className="bg-secondary/30 text-primary hover:bg-secondary/50 border border-primary/20 justify-start w-full col-span-2"
               variant="outline"
               onClick={() => navigate('/marketplace')}
             >

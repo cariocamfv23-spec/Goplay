@@ -97,6 +97,7 @@ const ArenaMode = lazy(() => import('./pages/ai/ArenaMode'))
 const AiCoachSettings = lazy(() => import('./pages/ai/AiCoachSettings'))
 const PerformanceReports = lazy(() => import('./pages/ai/PerformanceReports'))
 const GoalsDashboard = lazy(() => import('./pages/goals/GoalsDashboard'))
+const AiAvatar = lazy(() => import('./pages/ai/AiAvatar'))
 
 const App = () => {
   const { color } = useThemeStore()
@@ -235,6 +236,7 @@ const App = () => {
                   <Route path="/ai/editor" element={<VarzeaEditor />} />
                   <Route path="/ai/ghost-play" element={<GhostPlay />} />
                   <Route path="/ai/arena-mode" element={<ArenaMode />} />
+                  <Route path="/ai/avatar" element={<AiAvatar />} />
                 </Route>
 
                 {/* Services & Driver Routes */}
