@@ -17,38 +17,60 @@ export const GoplayIcon = ({ className, ...props }: GoplayIconProps) => {
     >
       <defs>
         <linearGradient
-          id="goplay-gradient"
+          id="goplay-primary-gradient"
           x1="0%"
           y1="0%"
           x2="100%"
           y2="100%"
         >
           <stop offset="0%" stopColor="hsl(var(--primary))" />
-          <stop offset="100%" stopColor="hsl(var(--gold))" />
+          <stop
+            offset="100%"
+            stopColor="hsl(var(--primary))"
+            stopOpacity="0.6"
+          />
         </linearGradient>
+        <linearGradient
+          id="goplay-gold-gradient"
+          x1="0%"
+          y1="0%"
+          x2="100%"
+          y2="100%"
+        >
+          <stop offset="0%" stopColor="hsl(var(--gold))" />
+          <stop offset="100%" stopColor="#FFF" />
+        </linearGradient>
+        <filter id="goplay-glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="2" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
       </defs>
 
-      {/* Outer Dynamic Ring - Abstract 'G' Motion */}
+      {/* Main G Arc - Modern & Dynamic */}
       <path
-        d="M 85 35 A 45 45 0 1 0 70 88"
-        stroke="hsl(var(--primary))"
+        d="M 88 30 A 42 42 0 1 0 88 70"
+        stroke="url(#goplay-primary-gradient)"
         strokeWidth="12"
         strokeLinecap="round"
-        className="opacity-100"
         fill="none"
+        className="opacity-100"
       />
 
-      {/* Inner Play Triangle - The 'Goal' */}
+      {/* Play Arrow - Geometric & Forward Motion */}
       <path
-        d="M 42 32 L 82 52 L 42 72 Z"
-        fill="hsl(var(--gold))"
+        d="M 52 38 L 85 50 L 52 62 L 56 50 Z"
+        fill="url(#goplay-gold-gradient)"
+        stroke="hsl(var(--background))"
+        strokeWidth="2"
+        strokeLinejoin="round"
+        filter="url(#goplay-glow)"
         className="drop-shadow-sm"
       />
 
-      {/* Futuristic Accent / Speed Notch */}
+      {/* Futuristic Orbit/Satellite Dot */}
       <circle
-        cx="85"
-        cy="35"
+        cx="88"
+        cy="70"
         r="6"
         fill="hsl(var(--primary))"
         className="animate-pulse duration-1000"
