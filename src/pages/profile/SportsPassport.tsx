@@ -1,13 +1,13 @@
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { ArrowLeft, Globe, ShieldCheck, QrCode } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { mockPassport } from '@/lib/data'
+import { mockPassport, mockCurrentUser } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Logo } from '@/components/Logo'
 
 export default function SportsPassport() {
   const navigate = useNavigate()
+  const user = mockCurrentUser
 
   return (
     <div className="min-h-screen bg-secondary/30 flex flex-col">
@@ -20,7 +20,7 @@ export default function SportsPassport() {
 
       <div className="flex-1 p-6 flex flex-col items-center justify-center -mt-20">
         {/* Passport Card */}
-        <div className="w-full max-w-sm aspect-[1.58/1] relative perspective-1000 group">
+        <div className="w-full max-w-sm aspect-[1.58/1] relative perspective-1000 group cursor-pointer">
           <div className="relative w-full h-full transition-transform duration-700 transform-style-3d hover:rotate-y-180">
             {/* Front Side */}
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 to-black rounded-2xl shadow-2xl p-6 text-white overflow-hidden border border-white/10 backface-hidden">
@@ -35,14 +35,14 @@ export default function SportsPassport() {
 
                 <div className="flex gap-4 items-center">
                   <Avatar className="h-20 w-20 border-2 border-white/30 rounded-lg">
-                    <AvatarImage src="https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99" />
-                    <AvatarFallback>EU</AvatarFallback>
+                    <AvatarImage src={user.avatar} />
+                    <AvatarFallback>{user.name[0]}</AvatarFallback>
                   </Avatar>
                   <div className="space-y-1">
                     <div className="text-[10px] text-white/60 uppercase tracking-widest">
-                      Atleta
+                      {user.type === 'athlete' ? 'Atleta' : user.role}
                     </div>
-                    <h2 className="text-lg font-bold">Lucas Oliveira</h2>
+                    <h2 className="text-lg font-bold">{user.name}</h2>
                     <div className="text-xs text-gold flex items-center gap-1">
                       <ShieldCheck className="h-3 w-3" /> Verificado
                     </div>

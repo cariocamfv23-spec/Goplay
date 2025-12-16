@@ -23,7 +23,8 @@ export default function Layout() {
   const shouldHideTopBar =
     location.pathname === '/move' ||
     location.pathname === '/ai/motion-analysis' ||
-    location.pathname === '/ai/avatar'
+    location.pathname === '/ai/avatar' ||
+    location.pathname === '/profile/passport'
 
   return (
     <div className="min-h-screen bg-background flex flex-col relative">

@@ -252,6 +252,14 @@ export interface InternationalRankingUser {
   trend: 'up' | 'down' | 'same'
 }
 
+export interface PassportData {
+  idNumber: string
+  expiry: string
+  issueDate: string
+  nationality: string
+  status: 'active' | 'suspended' | 'expired'
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: Zap, label: 'Move', path: '/move' },
@@ -447,6 +455,14 @@ export const mockUser = {
 }
 
 export const mockCurrentUser = mockUser
+
+export const mockPassport: PassportData = {
+  idNumber: 'GP-8821-XJ9',
+  expiry: '12/28',
+  issueDate: '01/24',
+  nationality: 'BRA',
+  status: 'active',
+}
 
 export const mockTalents: ProfileData[] = [
   {

@@ -15,6 +15,7 @@ import {
   Eye,
   History,
   Sparkles,
+  IdCard,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -237,6 +238,14 @@ export default function AthleteView({
           {isMe && (
             <Button
               className="bg-secondary text-foreground hover:bg-secondary/80 justify-start"
+              onClick={() => navigate('/profile/passport')}
+            >
+              <IdCard className="mr-2 h-4 w-4" /> Passaporte
+            </Button>
+          )}
+          {isMe && (
+            <Button
+              className="bg-secondary text-foreground hover:bg-secondary/80 justify-start"
               onClick={() => navigate('/profile/timeline')}
             >
               <History className="mr-2 h-4 w-4" /> Linha do Tempo
@@ -244,7 +253,7 @@ export default function AthleteView({
           )}
           {isMe && (
             <Button
-              className="bg-gradient-to-r from-primary/20 to-cyan-500/20 text-foreground hover:from-primary/30 hover:to-cyan-500/30 border border-primary/10 justify-start shadow-sm"
+              className="bg-gradient-to-r from-primary/20 to-cyan-500/20 text-foreground hover:from-primary/30 hover:to-cyan-500/30 border border-primary/10 justify-start shadow-sm col-span-2"
               onClick={() => navigate('/ai/avatar')}
             >
               <Sparkles className="mr-2 h-4 w-4 text-primary" /> AI Avatar

@@ -62,6 +62,7 @@ const ProfileViews = lazy(() => import('./pages/profile/ProfileViews'))
 const EvolutionTimeline = lazy(
   () => import('./pages/profile/EvolutionTimeline'),
 )
+const SportsPassport = lazy(() => import('./pages/profile/SportsPassport'))
 
 // Messages
 const MessagesList = lazy(() => import('./pages/messages/MessagesList'))
@@ -192,6 +193,10 @@ const App = () => {
                   <Route
                     path="/profile/timeline"
                     element={<EvolutionTimeline />}
+                  />
+                  <Route
+                    path="/profile/passport"
+                    element={<SportsPassport />}
                   />
                   <Route path="/wallet" element={<Wallet />} />
                   <Route
