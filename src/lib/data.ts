@@ -244,13 +244,13 @@ export const tribes = [
     id: 'futsal',
     label: 'Futsal',
     icon: Trophy,
-    image: 'https://img.usecurling.com/i?q=futsal&color=white',
+    // Removed broken icon image url to fix menu display
   },
   {
     id: 'bike',
     label: 'Bike',
     icon: Bike,
-    image: 'https://img.usecurling.com/i?q=bicycle&color=white',
+    // Removed broken icon image url to fix menu display
   },
   { id: 'running', label: 'Corrida', icon: Footprints },
   { id: 'crossfit', label: 'Crossfit', icon: Dumbbell },
@@ -365,42 +365,42 @@ export const mockMusicTracks: MusicTrack[] = [
     id: 'm1',
     title: 'We Are The Champions',
     artist: 'Queen',
-    cover: 'https://img.usecurling.com/i?q=queen%20band&color=black',
+    cover: 'https://img.usecurling.com/p/200/200?q=queen%20band',
     duration: '2:59',
   },
   {
     id: 'm2',
     title: 'Eye of the Tiger',
     artist: 'Survivor',
-    cover: 'https://img.usecurling.com/i?q=tiger&color=orange',
+    cover: 'https://img.usecurling.com/p/200/200?q=tiger',
     duration: '4:04',
   },
   {
     id: 'm3',
     title: 'Lose Yourself',
     artist: 'Eminem',
-    cover: 'https://img.usecurling.com/i?q=microphone&color=black',
+    cover: 'https://img.usecurling.com/p/200/200?q=microphone',
     duration: '5:26',
   },
   {
     id: 'm4',
     title: 'Waka Waka',
     artist: 'Shakira',
-    cover: 'https://img.usecurling.com/i?q=soccer%20world%20cup&color=yellow',
+    cover: 'https://img.usecurling.com/p/200/200?q=soccer%20world%20cup',
     duration: '3:22',
   },
   {
     id: 'm5',
     title: 'Believer',
     artist: 'Imagine Dragons',
-    cover: 'https://img.usecurling.com/i?q=dragon&color=red',
+    cover: 'https://img.usecurling.com/p/200/200?q=dragon',
     duration: '3:24',
   },
   {
     id: 'm6',
     title: 'Hall of Fame',
     artist: 'The Script',
-    cover: 'https://img.usecurling.com/i?q=fame&color=gold',
+    cover: 'https://img.usecurling.com/p/200/200?q=fame',
     duration: '3:22',
   },
 ]
@@ -567,7 +567,7 @@ export const mockTimelineEvents: TimelineEvent[] = [
     title: '50 Partidas Jogadas',
     description:
       'Parabéns! Você alcançou a marca de 50 jogos registrados na plataforma.',
-    image: 'https://img.usecurling.com/i?q=medal&color=gold',
+    image: 'https://img.usecurling.com/p/400/200?q=gold%20medal',
   },
   {
     id: 'te6',
@@ -969,7 +969,7 @@ export const mockRewards = [
     title: 'Vale Combustível',
     description: 'R$ 50,00 em créditos na rede Shell',
     points: 1500,
-    image: 'https://img.usecurling.com/i?q=fuel&color=orange',
+    image: 'https://img.usecurling.com/p/400/200?q=fuel%20station&color=orange',
     claimed: false,
   },
 ]
