@@ -87,6 +87,7 @@ const Notifications = lazy(() => import('./pages/notifications/Notifications'))
 
 const AiCoach = lazy(() => import('./pages/ai/AiCoach'))
 const MotionAnalysis = lazy(() => import('./pages/ai/MotionAnalysis'))
+const ExerciseLibrary = lazy(() => import('./pages/ai/ExerciseLibrary'))
 const VarzeaEditor = lazy(() => import('./pages/ai/VarzeaEditor'))
 const GhostPlay = lazy(() => import('./pages/ai/GhostPlay'))
 const ArenaMode = lazy(() => import('./pages/ai/ArenaMode'))
@@ -211,6 +212,7 @@ const App = () => {
 
                   {/* AI Tools */}
                   <Route path="/ai/coach" element={<AiCoach />} />
+                  <Route path="/ai/library" element={<ExerciseLibrary />} />
                   <Route
                     path="/ai/motion-analysis"
                     element={<MotionAnalysis />}

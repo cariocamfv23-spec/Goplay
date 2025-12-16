@@ -5,6 +5,8 @@ import {
   Zap,
   Activity,
   PlayCircle,
+  Dumbbell,
+  ArrowRight,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Card, CardContent } from '@/components/ui/card'
@@ -39,7 +41,7 @@ export default function AiCoach() {
         </p>
       </div>
 
-      <div className="space-y-4 flex-1">
+      <div className="space-y-4 flex-1 pb-20">
         {/* Chat Insight Card */}
         <Card className="bg-secondary/30 border-none shadow-sm">
           <CardContent className="p-4 flex gap-3">
@@ -86,9 +88,30 @@ export default function AiCoach() {
             </p>
 
             <Button className="w-full bg-white text-black hover:bg-zinc-200 font-bold group-hover:scale-[1.02] transition-transform">
-              <PlayCircle className="mr-2 h-5 w-5" /> Iniciar Sessão
+              <PlayCircle className="mr-2 h-5 w-5" /> Iniciar Sessão Rápida
             </Button>
           </div>
+        </Card>
+
+        {/* Exercise Library Link */}
+        <Card
+          className="bg-card border-border/50 hover:border-primary/50 transition-colors cursor-pointer"
+          onClick={() => navigate('/ai/library')}
+        >
+          <CardContent className="p-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-xl bg-secondary flex items-center justify-center text-primary">
+                <Dumbbell className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="font-bold">Biblioteca de Exercícios</h3>
+                <p className="text-xs text-muted-foreground">
+                  Explore +50 exercícios guiados por IA
+                </p>
+              </div>
+            </div>
+            <ArrowRight className="h-5 w-5 text-muted-foreground" />
+          </CardContent>
         </Card>
       </div>
 

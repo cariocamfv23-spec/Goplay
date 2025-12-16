@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { X, Play, RotateCcw, Camera, Settings2 } from 'lucide-react'
 import { MotionAnalysisOverlay } from '@/components/MotionAnalysisOverlay'
@@ -12,14 +12,28 @@ import useSoundStore from '@/stores/useSoundStore'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
+interface Exercise {
+  id: string
+  name: string
+  category: string
+  difficulty: string
+}
+
 export default function MotionAnalysis() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [isActive, setIsActive] = useState(false)
   const [reps, setReps] = useState(0)
   const [accuracy, setAccuracy] = useState(85)
   const [feedback, setFeedback] = useState<FeedbackMessage | null>(null)
   const { playSound } = useSoundStore()
   const videoRef = useRef<HTMLVideoElement>(null)
+
+  const selectedExercise = (location.state as { exercise?: Exercise })
+    ?.exercise || {
+    name: 'Agachamento Livre', // Default fallback
+    category: 'Fitness',
+  }
 
   // Simulate analysis loop
   useEffect(() => {
@@ -40,7 +54,7 @@ export default function MotionAnalysis() {
           setFeedback({
             id: Date.now().toString(),
             type: 'success',
-            text: 'Repetição Perfeita!',
+            text: 'Movimento Perfeito!',
           })
           return newReps
         })
@@ -49,7 +63,7 @@ export default function MotionAnalysis() {
         setFeedback({
           id: Date.now().toString(),
           type: 'warning',
-          text: 'Mantenha as costas retas',
+          text: 'Corrija a postura',
         })
       }
     }, 2000)
@@ -80,7 +94,7 @@ export default function MotionAnalysis() {
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 z-10" />
         <img
-          src="https://img.usecurling.com/p/800/1200?q=fitness%20squat%20person&color=blue"
+          src="https://img.usecurling.com/p/800/1200?q=fitness%20gym%20workout&color=blue"
           alt="Camera Feed"
           className="w-full h-full object-cover opacity-80"
         />
@@ -105,9 +119,9 @@ export default function MotionAnalysis() {
           </Badge>
           <Badge
             variant="outline"
-            className="bg-primary/20 text-primary border-primary/20 backdrop-blur-md"
+            className="bg-primary/20 text-primary border-primary/20 backdrop-blur-md uppercase tracking-wider text-[10px]"
           >
-            Squat Analysis
+            {selectedExercise.name}
           </Badge>
         </div>
         <Button
