@@ -8,16 +8,6 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { useWeatherStore } from '@/stores/useWeatherStore'
-import {
-  AlertTriangle,
-  CloudLightning,
-  CloudRain,
-  Sun,
-  Wind,
-  CloudFog,
-  CloudSnow,
-  ThermometerSun,
-} from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
@@ -50,7 +40,7 @@ export function WeatherAlertDialog() {
     switch (criticalAlert.type) {
       case 'storm':
         return {
-          icon: CloudLightning,
+          image: 'https://img.usecurling.com/i?q=thunderstorm&color=multicolor',
           color: 'text-red-600 dark:text-red-500',
           bg: 'bg-red-500/20',
           border: 'border-red-500/30',
@@ -60,7 +50,7 @@ export function WeatherAlertDialog() {
         }
       case 'rainy':
         return {
-          icon: CloudRain,
+          image: 'https://img.usecurling.com/i?q=heavy%20rain&color=multicolor',
           color: 'text-blue-600 dark:text-blue-500',
           bg: 'bg-blue-500/20',
           border: 'border-blue-500/30',
@@ -71,7 +61,8 @@ export function WeatherAlertDialog() {
         }
       case 'sunny':
         return {
-          icon: ThermometerSun,
+          image:
+            'https://img.usecurling.com/i?q=high%20temperature&color=multicolor',
           color: 'text-orange-600 dark:text-orange-500',
           bg: 'bg-orange-500/20',
           border: 'border-orange-500/30',
@@ -82,7 +73,8 @@ export function WeatherAlertDialog() {
         }
       case 'windy':
         return {
-          icon: Wind,
+          image:
+            'https://img.usecurling.com/i?q=strong%20wind&color=multicolor',
           color: 'text-zinc-600 dark:text-zinc-400',
           bg: 'bg-zinc-500/20',
           border: 'border-zinc-500/30',
@@ -93,7 +85,7 @@ export function WeatherAlertDialog() {
         }
       case 'snow':
         return {
-          icon: CloudSnow,
+          image: 'https://img.usecurling.com/i?q=snow&color=multicolor',
           color: 'text-cyan-600 dark:text-cyan-400',
           bg: 'bg-cyan-500/20',
           border: 'border-cyan-500/30',
@@ -104,7 +96,7 @@ export function WeatherAlertDialog() {
         }
       case 'fog':
         return {
-          icon: CloudFog,
+          image: 'https://img.usecurling.com/i?q=fog&color=multicolor',
           color: 'text-slate-600 dark:text-slate-400',
           bg: 'bg-slate-500/20',
           border: 'border-slate-500/30',
@@ -115,7 +107,7 @@ export function WeatherAlertDialog() {
         }
       default:
         return {
-          icon: AlertTriangle,
+          image: 'https://img.usecurling.com/i?q=warning&color=multicolor',
           color: 'text-yellow-600 dark:text-yellow-500',
           bg: 'bg-yellow-500/20',
           border: 'border-yellow-500/30',
@@ -128,7 +120,6 @@ export function WeatherAlertDialog() {
   }
 
   const config = getAlertConfig()
-  const Icon = config.icon
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -146,13 +137,17 @@ export function WeatherAlertDialog() {
           <div className="relative mb-6 group">
             <div
               className={cn(
-                'relative p-5 rounded-3xl ring-1 ring-inset shadow-lg backdrop-blur-sm transition-transform duration-700 hover:scale-105',
+                'relative p-6 rounded-3xl ring-1 ring-inset shadow-lg backdrop-blur-sm transition-transform duration-700 hover:scale-105 flex items-center justify-center',
                 config.bg,
                 config.color,
                 config.border,
               )}
             >
-              <Icon className="h-12 w-12 drop-shadow-sm" />
+              <img
+                src={config.image}
+                alt={config.label}
+                className="h-20 w-20 object-contain drop-shadow-md"
+              />
             </div>
             {/* Pulse Effect */}
             <div
