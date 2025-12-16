@@ -1,6 +1,8 @@
+import * as React from 'react'
 import { cn } from '@/lib/utils'
 import useBrandingStore, { defaultLogo } from '@/stores/useBrandingStore'
 import { useEffect, useState } from 'react'
+import { GoplayIcon } from '@/components/GoplayIcon'
 
 interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'full' | 'icon' | 'text'
@@ -30,6 +32,7 @@ export const Logo = ({
 
   const showIcon = variant === 'full' || variant === 'icon'
   const showText = variant === 'full' || variant === 'text'
+  const isDefault = src === defaultLogo
 
   return (
     <div
@@ -40,17 +43,25 @@ export const Logo = ({
       {...props}
     >
       {showIcon && (
-        <img
-          src={src}
-          alt="Goplay App Logo"
-          className={cn('object-contain h-full w-auto', iconClassName)}
-          onError={handleError}
-        />
+        <>
+          {isDefault ? (
+            <div className={cn('h-8 w-8 aspect-square', iconClassName)}>
+              <GoplayIcon className="w-full h-full" />
+            </div>
+          ) : (
+            <img
+              src={src}
+              alt="Goplay App Logo"
+              className={cn('object-contain h-full w-auto', iconClassName)}
+              onError={handleError}
+            />
+          )}
+        </>
       )}
       {showText && (
         <span
           className={cn(
-            'font-bold tracking-tighter text-primary leading-none',
+            'font-bold tracking-tighter leading-none text-transparent bg-clip-text bg-gradient-to-r from-primary to-gold',
             textClassName,
           )}
         >

@@ -14,20 +14,21 @@ type BrandingState = {
   resetBranding: () => void
 }
 
-export const defaultIcon =
-  'https://img.usecurling.com/i?q=play&color=violet&shape=fill'
-
-export const defaultLogo =
-  'https://img.usecurling.com/i?q=play&color=violet&shape=fill'
+// Set 'default' as the identifier for the internal SVG logo
+export const defaultIcon = 'default'
+export const defaultLogo = 'default'
 
 const BrandingContext = createContext<BrandingState | undefined>(undefined)
 
 export const BrandingProvider = ({ children }: { children: ReactNode }) => {
   const [logoUrl, setLogoUrl] = useState(() => {
     const stored = localStorage.getItem('goplay_logo')
+    // Migrate old image URLs to the new SVG default
     if (
       stored &&
-      (stored.includes('cloudinary') || stored.includes('subframe'))
+      (stored.includes('cloudinary') ||
+        stored.includes('subframe') ||
+        stored.includes('usecurling'))
     ) {
       return defaultLogo
     }
@@ -36,9 +37,12 @@ export const BrandingProvider = ({ children }: { children: ReactNode }) => {
 
   const [iconUrl, setIconUrl] = useState(() => {
     const stored = localStorage.getItem('goplay_icon')
+    // Migrate old image URLs to the new SVG default
     if (
       stored &&
-      (stored.includes('cloudinary') || stored.includes('subframe'))
+      (stored.includes('cloudinary') ||
+        stored.includes('subframe') ||
+        stored.includes('usecurling'))
     ) {
       return defaultIcon
     }
@@ -47,6 +51,7 @@ export const BrandingProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const preloadImage = (url: string) => {
+      if (url === 'default') return
       const img = new Image()
       img.src = url
     }
@@ -64,6 +69,9 @@ export const BrandingProvider = ({ children }: { children: ReactNode }) => {
   }, [iconUrl])
 
   const updateFavicon = (url: string) => {
+    // We don't update favicon for the SVG default yet as it requires a URL
+    if (url === 'default') return
+
     let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement
     if (!link) {
       link = document.createElement('link')
