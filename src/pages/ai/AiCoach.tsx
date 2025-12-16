@@ -7,6 +7,8 @@ import {
   PlayCircle,
   Dumbbell,
   ArrowRight,
+  Settings,
+  BarChart2,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Card, CardContent } from '@/components/ui/card'
@@ -18,16 +20,25 @@ export default function AiCoach() {
 
   return (
     <div className="min-h-screen bg-background p-4 animate-fade-in flex flex-col">
-      <div className="flex items-center mb-6">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate(-1)}
+            className="mr-2"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-xl font-bold">Goplay AI Coach</h1>
+        </div>
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => navigate(-1)}
-          className="mr-2"
+          onClick={() => navigate('/ai/settings')}
         >
-          <ArrowLeft className="h-5 w-5" />
+          <Settings className="h-5 w-5" />
         </Button>
-        <h1 className="text-xl font-bold">Goplay AI Coach</h1>
       </div>
 
       <div className="text-center mb-8 animate-in slide-in-from-top-4 duration-700">
@@ -62,6 +73,26 @@ export default function AiCoach() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Reports Access */}
+        <div className="grid grid-cols-2 gap-4">
+          <Button
+            variant="outline"
+            className="h-auto py-3 flex flex-col gap-1 items-center justify-center border-dashed"
+            onClick={() => navigate('/ai/reports')}
+          >
+            <BarChart2 className="h-5 w-5 text-primary" />
+            <span className="text-xs font-semibold">Relatórios</span>
+          </Button>
+          <Button
+            variant="outline"
+            className="h-auto py-3 flex flex-col gap-1 items-center justify-center border-dashed"
+            onClick={() => navigate('/ai/settings')}
+          >
+            <Settings className="h-5 w-5 text-primary" />
+            <span className="text-xs font-semibold">Configurar AI</span>
+          </Button>
+        </div>
 
         {/* Motion Analysis Call to Action */}
         <Card

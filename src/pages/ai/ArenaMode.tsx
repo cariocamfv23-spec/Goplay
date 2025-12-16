@@ -8,6 +8,7 @@ import {
   Play,
   RotateCcw,
   Timer,
+  Zap,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef, useCallback } from 'react'
@@ -16,10 +17,13 @@ import { ArTarget, ArTargetData } from '@/components/ar/ArTarget'
 import useSoundStore from '@/stores/useSoundStore'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import { useAiCoachStore } from '@/stores/useAiCoachStore'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export default function ArenaMode() {
   const navigate = useNavigate()
   const { playSound } = useSoundStore()
+  const { preferences } = useAiCoachStore()
 
   // Game State
   const [gameState, setGameState] = useState<
@@ -29,10 +33,12 @@ export default function ArenaMode() {
   const [timeLeft, setTimeLeft] = useState(60)
   const [targets, setTargets] = useState<ArTargetData[]>([])
   const [combo, setCombo] = useState(0)
+  const [coachTip, setCoachTip] = useState<string | null>(null)
 
   // Refs for loops
   const requestRef = useRef<number>(0)
   const lastSpawnTime = useRef<number>(0)
+  const lastTipTime = useRef<number>(0)
   const gameStateRef = useRef(gameState)
   const scoreRef = useRef(score)
   const comboRef = useRef(combo)
@@ -43,6 +49,27 @@ export default function ArenaMode() {
     scoreRef.current = score
     comboRef.current = combo
   }, [gameState, score, combo])
+
+  // Coach Tip Logic
+  const triggerCoachTip = useCallback(() => {
+    if (!preferences.enabledInArena) return
+
+    const tips = [
+      'Mantenha o foco nos alvos dourados!',
+      'Cuidado com as penalidades vermelhas!',
+      'Sua sequência está ótima, continue assim!',
+      'Respire fundo e mantenha o ritmo.',
+      'Olhos atentos nas bordas da tela!',
+      'Movimente-se para alcançar mais longe!',
+    ]
+    const randomTip = tips[Math.floor(Math.random() * tips.length)]
+    setCoachTip(randomTip)
+    setTimeout(() => setCoachTip(null), 4000)
+
+    if (preferences.feedbackType !== 'visual' && preferences.voiceEnabled) {
+      // Mock voice trigger if we had TTS in component (useSoundStore handles simple ones)
+    }
+  }, [preferences])
 
   // --- Functions ---
 
@@ -94,6 +121,7 @@ export default function ArenaMode() {
   const gameLoop = useCallback(
     (timestamp: number) => {
       if (!lastSpawnTime.current) lastSpawnTime.current = timestamp
+      if (!lastTipTime.current) lastTipTime.current = timestamp
 
       // Spawn target every 1.5 - 3 seconds depending on combo
       const currentCombo = comboRef.current
@@ -104,6 +132,12 @@ export default function ArenaMode() {
         lastSpawnTime.current = timestamp
       }
 
+      // Trigger Tip every 15 seconds roughly
+      if (timestamp - lastTipTime.current > 15000) {
+        triggerCoachTip()
+        lastTipTime.current = timestamp
+      }
+
       // Clean up expired targets
       setTargets((prev) => prev.filter((t) => t.expiresAt > Date.now()))
 
@@ -111,7 +145,7 @@ export default function ArenaMode() {
         requestRef.current = requestAnimationFrame(gameLoop)
       }
     },
-    [spawnTarget],
+    [spawnTarget, triggerCoachTip],
   )
 
   const startGame = () => {
@@ -121,6 +155,7 @@ export default function ArenaMode() {
     setTargets([])
     setCombo(0)
     lastSpawnTime.current = 0
+    lastTipTime.current = 0
     // @ts-expect-error - using valid sound key
     playSound('like_generic')
   }
@@ -144,6 +179,11 @@ export default function ArenaMode() {
       if (body) {
         body.classList.add('animate-shake')
         setTimeout(() => body.classList.remove('animate-shake'), 500)
+      }
+      // Negative Tip
+      if (preferences.enabledInArena) {
+        setCoachTip('Evite os alvos vermelhos!')
+        setTimeout(() => setCoachTip(null), 3000)
       }
     } else {
       // Success
@@ -291,6 +331,27 @@ export default function ArenaMode() {
           </Button>
         </div>
 
+        {/* AI Coach Overlay */}
+        {coachTip &&
+          preferences.enabledInArena &&
+          preferences.feedbackType !== 'verbal' && (
+            <div className="absolute top-24 left-1/2 -translate-x-1/2 w-full max-w-xs animate-in slide-in-from-top-4 fade-in duration-300 pointer-events-none">
+              <div className="bg-primary/90 backdrop-blur-lg p-3 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-3">
+                <div className="shrink-0 bg-white/20 p-2 rounded-full">
+                  <Zap className="h-4 w-4 text-white fill-white animate-pulse" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold uppercase text-white/70 tracking-wider">
+                    AI Coach
+                  </p>
+                  <p className="text-sm font-bold text-white leading-tight">
+                    {coachTip}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
         {/* Center Content based on State */}
         <div className="flex-1 flex items-center justify-center pointer-events-auto">
           {/* Scanning State */}
@@ -355,12 +416,22 @@ export default function ArenaMode() {
                 </div>
               </div>
 
-              <Button
-                className="w-full h-12 rounded-xl text-base font-bold bg-white text-black hover:bg-white/90"
-                onClick={startGame}
-              >
-                <RotateCcw className="mr-2 h-4 w-4" /> Tentar Novamente
-              </Button>
+              <div className="space-y-3">
+                <Button
+                  className="w-full h-12 rounded-xl text-base font-bold bg-white text-black hover:bg-white/90"
+                  onClick={startGame}
+                >
+                  <RotateCcw className="mr-2 h-4 w-4" /> Tentar Novamente
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className="w-full h-12 rounded-xl border-white/20 text-white hover:bg-white/10"
+                  onClick={() => navigate('/ai/reports')}
+                >
+                  Ver Análise Detalhada
+                </Button>
+              </div>
             </div>
           )}
         </div>

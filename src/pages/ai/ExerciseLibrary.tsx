@@ -14,8 +14,15 @@ import {
   Activity,
   Flame,
   PlayCircle,
+  Video,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 interface Exercise {
   id: string
@@ -26,6 +33,7 @@ interface Exercise {
   description: string
   duration: string
   calories: number
+  videoUrl?: string
 }
 
 const exercises: Exercise[] = [
@@ -40,6 +48,7 @@ const exercises: Exercise[] = [
       'Exercício fundamental para pernas e glúteos. Mantenha a postura ereta.',
     duration: '10 min',
     calories: 80,
+    videoUrl: 'https://img.usecurling.com/p/800/450?q=squat%20video',
   },
   {
     id: 'fit2',
@@ -51,6 +60,7 @@ const exercises: Exercise[] = [
       'Fortalece peitoral, ombros e tríceps. Mantenha o corpo alinhado.',
     duration: '5 min',
     calories: 45,
+    videoUrl: 'https://img.usecurling.com/p/800/450?q=pushup%20video',
   },
   {
     id: 'fit3',
@@ -62,6 +72,7 @@ const exercises: Exercise[] = [
     description: 'Exercício de corpo total de alta intensidade.',
     duration: '8 min',
     calories: 120,
+    videoUrl: 'https://img.usecurling.com/p/800/450?q=burpee%20video',
   },
   // Futebol
   {
@@ -74,6 +85,8 @@ const exercises: Exercise[] = [
     description: 'Melhore seu domínio e toque curto com a bola.',
     duration: '15 min',
     calories: 110,
+    videoUrl:
+      'https://img.usecurling.com/p/800/450?q=soccer%20dribbling%20video',
   },
   {
     id: 'soc2',
@@ -84,6 +97,7 @@ const exercises: Exercise[] = [
     description: 'Treino focado em acertar alvos específicos no gol.',
     duration: '20 min',
     calories: 140,
+    videoUrl: 'https://img.usecurling.com/p/800/450?q=soccer%20kick%20video',
   },
   // Basquete
   {
@@ -96,6 +110,8 @@ const exercises: Exercise[] = [
     description: 'Mecânica básica de arremesso para lances livres.',
     duration: '15 min',
     calories: 90,
+    videoUrl:
+      'https://img.usecurling.com/p/800/450?q=basketball%20shot%20video',
   },
   {
     id: 'bas2',
@@ -107,6 +123,8 @@ const exercises: Exercise[] = [
     description: 'Cross-over dribble para superar adversários.',
     duration: '12 min',
     calories: 130,
+    videoUrl:
+      'https://img.usecurling.com/p/800/450?q=basketball%20dribble%20video',
   },
   // Yoga
   {
@@ -119,6 +137,8 @@ const exercises: Exercise[] = [
     description: 'Sequência clássica para aquecer e alongar o corpo.',
     duration: '10 min',
     calories: 50,
+    videoUrl:
+      'https://img.usecurling.com/p/800/450?q=yoga%20sun%20salutation%20video',
   },
   {
     id: 'yog2',
@@ -129,6 +149,7 @@ const exercises: Exercise[] = [
     description: 'Fortalece pernas e melhora o equilíbrio.',
     duration: '8 min',
     calories: 40,
+    videoUrl: 'https://img.usecurling.com/p/800/450?q=yoga%20warrior%20video',
   },
 ]
 
@@ -136,6 +157,8 @@ export default function ExerciseLibrary() {
   const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
   const [activeTab, setActiveTab] = useState('todos')
+  const [selectedVideo, setSelectedVideo] = useState<Exercise | null>(null)
+  const [isPlaying, setIsPlaying] = useState(false)
 
   const filteredExercises = exercises.filter((exercise) => {
     const matchesSearch = exercise.name
@@ -150,11 +173,17 @@ export default function ExerciseLibrary() {
     { id: 'fitness', label: 'Fitness', icon: Dumbbell },
     { id: 'futebol', label: 'Futebol', icon: Trophy },
     { id: 'basquete', label: 'Basquete', icon: Flame },
-    { id: 'yoga', label: 'Yoga', icon: Activity }, // Reusing Activity icon for Yoga as placeholder
+    { id: 'yoga', label: 'Yoga', icon: Activity },
   ]
 
   const handleSelectExercise = (exercise: Exercise) => {
     navigate('/ai/motion-analysis', { state: { exercise } })
+  }
+
+  const handleOpenVideo = (e: React.MouseEvent, exercise: Exercise) => {
+    e.stopPropagation()
+    setSelectedVideo(exercise)
+    setIsPlaying(false)
   }
 
   return (
@@ -237,6 +266,14 @@ export default function ExerciseLibrary() {
                           </span>
                         </div>
                       </div>
+                      <Button
+                        variant="secondary"
+                        size="icon"
+                        className="absolute top-2 right-2 z-20 h-8 w-8 rounded-full bg-black/40 text-white hover:bg-black/60 backdrop-blur-md border border-white/20 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => handleOpenVideo(e, exercise)}
+                      >
+                        <Video className="h-4 w-4" />
+                      </Button>
                     </div>
                     <CardContent className="p-4">
                       <h3 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">
@@ -245,10 +282,23 @@ export default function ExerciseLibrary() {
                       <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
                         {exercise.description}
                       </p>
-                      <Button className="w-full bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground font-semibold group-hover:shadow-md transition-all">
-                        <PlayCircle className="w-4 h-4 mr-2" />
-                        Iniciar Análise
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          className="flex-1 bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground font-semibold group-hover:shadow-md transition-all text-xs"
+                          onClick={() => handleSelectExercise(exercise)}
+                        >
+                          <PlayCircle className="w-3 h-3 mr-2" />
+                          Iniciar Análise
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="flex-1 border-primary/20 hover:bg-primary/5 text-primary text-xs"
+                          onClick={(e) => handleOpenVideo(e, exercise)}
+                        >
+                          <Video className="w-3 h-3 mr-2" />
+                          Ver Demo
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
@@ -264,6 +314,65 @@ export default function ExerciseLibrary() {
           </TabsContent>
         </Tabs>
       </div>
+
+      <Dialog
+        open={!!selectedVideo}
+        onOpenChange={(o) => !o && setSelectedVideo(null)}
+      >
+        <DialogContent className="bg-background/95 backdrop-blur-xl border-border/50 sm:max-w-lg p-0 overflow-hidden gap-0">
+          <DialogHeader className="p-4 bg-secondary/20">
+            <DialogTitle>{selectedVideo?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="relative aspect-video bg-black flex items-center justify-center group">
+            {selectedVideo && (
+              <>
+                <img
+                  src={selectedVideo.image.replace('300', '600')}
+                  alt="Video Thumbnail"
+                  className={cn(
+                    'w-full h-full object-cover opacity-80 transition-opacity',
+                    isPlaying && 'opacity-0 pointer-events-none',
+                  )}
+                />
+                {!isPlaying ? (
+                  <Button
+                    size="icon"
+                    className="absolute h-16 w-16 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm border-2 border-white/50 text-white z-10 transition-transform hover:scale-110"
+                    onClick={() => setIsPlaying(true)}
+                  >
+                    <PlayCircle className="h-10 w-10 fill-white/20" />
+                  </Button>
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-full h-full bg-zinc-900 flex items-center justify-center text-zinc-500">
+                      <p className="animate-pulse">
+                        Reproduzindo demonstração...
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+          <div className="p-4">
+            <p className="text-sm text-muted-foreground mb-4">
+              {selectedVideo?.description}
+            </p>
+            <Button
+              className="w-full font-bold"
+              onClick={() => {
+                if (selectedVideo) {
+                  handleSelectExercise(selectedVideo)
+                  setSelectedVideo(null)
+                }
+              }}
+            >
+              <Activity className="mr-2 h-4 w-4" />
+              Praticar Agora
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

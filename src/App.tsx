@@ -91,6 +91,8 @@ const ExerciseLibrary = lazy(() => import('./pages/ai/ExerciseLibrary'))
 const VarzeaEditor = lazy(() => import('./pages/ai/VarzeaEditor'))
 const GhostPlay = lazy(() => import('./pages/ai/GhostPlay'))
 const ArenaMode = lazy(() => import('./pages/ai/ArenaMode'))
+const AiCoachSettings = lazy(() => import('./pages/ai/AiCoachSettings'))
+const PerformanceReports = lazy(() => import('./pages/ai/PerformanceReports'))
 
 const App = () => {
   const { color } = useThemeStore()
@@ -212,6 +214,8 @@ const App = () => {
 
                   {/* AI Tools */}
                   <Route path="/ai/coach" element={<AiCoach />} />
+                  <Route path="/ai/settings" element={<AiCoachSettings />} />
+                  <Route path="/ai/reports" element={<PerformanceReports />} />
                   <Route path="/ai/library" element={<ExerciseLibrary />} />
                   <Route
                     path="/ai/motion-analysis"
