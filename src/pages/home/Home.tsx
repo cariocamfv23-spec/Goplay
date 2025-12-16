@@ -1,6 +1,6 @@
 import { mockPosts, mockStories } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Plus, Video, MapPin, Box, Eye, Sparkles } from 'lucide-react'
+import { Plus, Video, MapPin, Box, Eye, Sparkles, Wand2 } from 'lucide-react'
 import { PostCard } from '@/components/PostCard'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { CreatePostFab } from '@/components/CreatePostFab'
@@ -142,6 +142,29 @@ const Home = () => {
             </p>
           </div>
           <div className="absolute -right-6 -bottom-6 h-24 w-24 bg-gold/10 rounded-full blur-2xl group-hover:bg-gold/20 transition-colors duration-500" />
+        </div>
+
+        {/* Varzea Editor Highlight - NEW Feature */}
+        <div
+          className="col-span-2 rounded-2xl bg-gradient-to-r from-yellow-500 to-orange-600 dark:from-yellow-600 dark:to-orange-700 p-4 text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
+          onClick={() => navigate('/ai/editor')}
+        >
+          <div className="relative z-10 flex items-center justify-between">
+            <div>
+              <h2 className="font-bold text-lg flex items-center gap-2">
+                <Wand2 className="h-5 w-5 text-white animate-pulse" /> Edição
+                Várzea
+              </h2>
+              <p className="text-xs text-white/90 group-hover:text-white transition-colors mt-1">
+                Transforme seus vídeos com gírias e efeitos virais
+              </p>
+            </div>
+            <div className="bg-white/20 p-2 rounded-full backdrop-blur-sm border border-white/30">
+              <Sparkles className="h-5 w-5 text-white" />
+            </div>
+          </div>
+          <div className="absolute -right-6 -bottom-6 h-32 w-32 bg-white/20 rounded-full blur-3xl group-hover:bg-white/30 transition-colors duration-500" />
+          <div className="absolute -left-6 -top-6 h-20 w-20 bg-orange-400/30 rounded-full blur-xl" />
         </div>
 
         {/* Check-in Highlight */}
