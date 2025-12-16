@@ -11,14 +11,15 @@ import {
   FileText,
   ShoppingBag,
   Music,
-  PlayCircle,
   Edit2,
+  Eye,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { MusicSelector } from '@/components/MusicSelector'
 import { toast } from 'sonner'
+import { Card, CardContent } from '@/components/ui/card'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -180,6 +181,42 @@ export default function AthleteView({
             )}
           </div>
         </div>
+
+        {isMe && (
+          <Card
+            className="mb-6 bg-gradient-to-r from-primary/10 to-transparent border-primary/20 cursor-pointer hover:bg-primary/15 transition-colors shadow-sm"
+            onClick={() => navigate('/profile/views')}
+          >
+            <CardContent className="p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="bg-primary/20 p-2.5 rounded-full ring-2 ring-primary/10">
+                  <Eye className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="font-bold text-sm">Quem viu seu perfil</p>
+                  <p className="text-xs text-muted-foreground">
+                    142 visualizações
+                  </p>
+                </div>
+              </div>
+              <div className="flex -space-x-2 pl-2">
+                {[1, 2, 3].map((i) => (
+                  <Avatar
+                    key={i}
+                    className="h-7 w-7 border-2 border-background shadow-sm"
+                  >
+                    <AvatarImage
+                      src={`https://img.usecurling.com/ppl/thumbnail?gender=male&seed=${i + 40}`}
+                    />
+                  </Avatar>
+                ))}
+                <div className="h-7 w-7 rounded-full bg-secondary flex items-center justify-center text-[9px] border-2 border-background font-bold text-primary shadow-sm">
+                  +9
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Action Buttons Grid */}
         <div className="grid grid-cols-2 gap-3 mb-3">

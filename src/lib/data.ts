@@ -195,6 +195,15 @@ export interface Event {
   }
 }
 
+export interface ProfileViewer {
+  id: string
+  name: string
+  avatar: string
+  type: string
+  date: string
+  time: string
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: Zap, label: 'Move', path: '/move' },
@@ -1462,5 +1471,48 @@ export const mockTrainingEvents = [
     date: new Date(new Date().setDate(new Date().getDate() + 2)),
     type: 'match',
     completed: false,
+  },
+]
+
+export const mockProfileViewers: ProfileViewer[] = [
+  {
+    id: 'v1',
+    name: 'Carlos Olheiro',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=40',
+    type: 'Scout',
+    date: 'Hoje',
+    time: '14:30',
+  },
+  {
+    id: 'v2',
+    name: 'Roberto Técnico',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=41',
+    type: 'Treinador',
+    date: 'Hoje',
+    time: '10:15',
+  },
+  {
+    id: 'v3',
+    name: 'Julia Agente',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=42',
+    type: 'Agente',
+    date: 'Ontem',
+    time: '18:45',
+  },
+  {
+    id: 'v4',
+    name: 'Marcelo Clube',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=43',
+    type: 'Recrutador',
+    date: 'Ontem',
+    time: '09:00',
+  },
+  {
+    id: 'v5',
+    name: 'Ana Esportes',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=44',
+    type: 'Atleta',
+    date: '2 dias atrás',
+    time: '11:20',
   },
 ]
