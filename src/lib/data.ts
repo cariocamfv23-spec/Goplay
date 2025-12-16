@@ -88,6 +88,17 @@ export interface MusicTrack {
   duration: string
 }
 
+export interface TimelineEvent {
+  id: string
+  date: string
+  fullDate: string
+  type: 'match' | 'training' | 'achievement' | 'milestone' | 'ai_insight'
+  title: string
+  description: string
+  stats?: { label: string; value: string | number }[]
+  image?: string
+}
+
 export interface ProfileData {
   id: string | number
   name: string
@@ -485,6 +496,82 @@ export const mockTalents: ProfileData[] = [
     bio: 'Atleta de base do Minas Tênis Clube.',
     followers: '1.5k',
     stats: { matches: 25, wins: 18, mvp: 4 },
+  },
+]
+
+export const mockTimelineEvents: TimelineEvent[] = [
+  {
+    id: 'te1',
+    date: 'Hoje',
+    fullDate: '24 Outubro, 2024',
+    type: 'match',
+    title: 'Vitória na Copa Goplay',
+    description: 'Atuação decisiva com 2 assistências e vitória por 3x1.',
+    stats: [
+      { label: 'Rating', value: 8.5 },
+      { label: 'Gols', value: 0 },
+      { label: 'Assists', value: 2 },
+    ],
+  },
+  {
+    id: 'te2',
+    date: 'Ontem',
+    fullDate: '23 Outubro, 2024',
+    type: 'ai_insight',
+    title: 'Evolução Técnica Detectada',
+    description:
+      'Sua precisão de passe aumentou 15% nas últimas 3 partidas. A IA recomenda manter o treino de passes longos.',
+    stats: [{ label: 'Precisão', value: '92%' }],
+  },
+  {
+    id: 'te3',
+    date: '20 Out',
+    fullDate: '20 Outubro, 2024',
+    type: 'achievement',
+    title: 'MVP da Rodada',
+    description:
+      'Eleito o melhor jogador da partida pela comunidade e organizadores.',
+    image: 'https://img.usecurling.com/p/400/200?q=trophy%20winner&color=gold',
+  },
+  {
+    id: 'te4',
+    date: '18 Out',
+    fullDate: '18 Outubro, 2024',
+    type: 'training',
+    title: 'Treino de Velocidade',
+    description: 'Sessão focada em sprints curtos e agilidade.',
+    stats: [
+      { label: 'Duração', value: '45m' },
+      { label: 'Calorias', value: 420 },
+    ],
+  },
+  {
+    id: 'te5',
+    date: '15 Out',
+    fullDate: '15 Outubro, 2024',
+    type: 'milestone',
+    title: '50 Partidas Jogadas',
+    description:
+      'Parabéns! Você alcançou a marca de 50 jogos registrados na plataforma.',
+    image: 'https://img.usecurling.com/i?q=medal&color=gold',
+  },
+  {
+    id: 'te6',
+    date: '10 Out',
+    fullDate: '10 Outubro, 2024',
+    type: 'match',
+    title: 'Amistoso vs Time B',
+    description: 'Jogo equilibrado, empate em 2x2.',
+    stats: [{ label: 'Rating', value: 7.2 }],
+  },
+  {
+    id: 'te7',
+    date: '05 Out',
+    fullDate: '05 Outubro, 2024',
+    type: 'ai_insight',
+    title: 'Novo Recorde Pessoal',
+    description: 'Você atingiu sua velocidade máxima histórica: 32km/h.',
+    stats: [{ label: 'Velocidade', value: '32km/h' }],
   },
 ]
 

@@ -56,6 +56,9 @@ const TransactionHistory = lazy(
   () => import('./pages/financials/TransactionHistory'),
 )
 const ProfileViews = lazy(() => import('./pages/profile/ProfileViews'))
+const EvolutionTimeline = lazy(
+  () => import('./pages/profile/EvolutionTimeline'),
+)
 
 // Messages
 const MessagesList = lazy(() => import('./pages/messages/MessagesList'))
@@ -176,6 +179,10 @@ const App = () => {
                     element={<FinancialStatement />}
                   />
                   <Route path="/profile/views" element={<ProfileViews />} />
+                  <Route
+                    path="/profile/timeline"
+                    element={<EvolutionTimeline />}
+                  />
                   <Route path="/wallet" element={<Wallet />} />
                   <Route
                     path="/financials/transactions"

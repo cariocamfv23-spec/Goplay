@@ -13,6 +13,7 @@ import {
   Music,
   Edit2,
   Eye,
+  History,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -234,11 +235,19 @@ export default function AthleteView({
           </Button>
           {isMe && (
             <Button
-              className="bg-secondary/30 text-primary hover:bg-secondary/50 border border-primary/20 justify-start col-span-2 w-full"
+              className="bg-secondary text-foreground hover:bg-secondary/80 justify-start"
+              onClick={() => navigate('/profile/timeline')}
+            >
+              <History className="mr-2 h-4 w-4" /> Linha do Tempo
+            </Button>
+          )}
+          {isMe && (
+            <Button
+              className="bg-secondary/30 text-primary hover:bg-secondary/50 border border-primary/20 justify-start w-full"
               variant="outline"
               onClick={() => navigate('/marketplace')}
             >
-              <ShoppingBag className="mr-2 h-4 w-4" /> Acessar loja Goplay
+              <ShoppingBag className="mr-2 h-4 w-4" /> Loja Goplay
             </Button>
           )}
         </div>
