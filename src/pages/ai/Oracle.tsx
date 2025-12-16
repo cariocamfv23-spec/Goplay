@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { ArrowLeft, Sparkles, TrendingUp, Brain, Star } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockOracle } from '@/lib/data'
@@ -8,17 +8,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart'
-import {
-  Bar,
-  BarChart,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  Radar,
-} from 'recharts'
+import { Bar, BarChart, XAxis, YAxis, ResponsiveContainer } from 'recharts'
 
 export default function Oracle() {
   const navigate = useNavigate()

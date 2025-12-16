@@ -1,6 +1,6 @@
 import { mockPosts, mockStories } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Plus, Video, MapPin, Box, Eye } from 'lucide-react'
+import { Plus, Video, MapPin, Box, Eye, Sparkles } from 'lucide-react'
 import { PostCard } from '@/components/PostCard'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { CreatePostFab } from '@/components/CreatePostFab'
@@ -95,7 +95,23 @@ const Home = () => {
           <div className="absolute -right-6 -bottom-6 h-20 w-20 bg-primary/10 dark:bg-primary/20 rounded-full blur-2xl group-hover:bg-primary/20 dark:group-hover:bg-primary/30 transition-colors duration-500" />
         </div>
 
-        {/* Arena Mode Highlight - NEW */}
+        {/* Oracle Highlight - NEW */}
+        <div
+          className="col-span-1 rounded-2xl bg-gradient-to-br from-purple-900 to-indigo-900 p-4 text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01] border border-white/10"
+          onClick={() => navigate('/ai/oracle')}
+        >
+          <div className="relative z-10">
+            <h2 className="font-bold text-lg flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-gold animate-pulse" /> Oráculo
+            </h2>
+            <p className="text-xs text-indigo-200 group-hover:text-white transition-colors mt-1">
+              Previsão AI
+            </p>
+          </div>
+          <div className="absolute -right-6 -bottom-6 h-20 w-20 bg-gold/10 rounded-full blur-2xl group-hover:bg-gold/20 transition-colors duration-500" />
+        </div>
+
+        {/* Arena Mode Highlight */}
         <div
           className="col-span-1 rounded-2xl bg-black p-4 text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01] border border-white/10"
           onClick={() => navigate('/ai/arena-mode')}
@@ -112,7 +128,7 @@ const Home = () => {
           <div className="absolute -right-4 -top-4 w-20 h-20 bg-primary/30 blur-2xl rounded-full" />
         </div>
 
-        {/* Ghost Play Highlight - NEW */}
+        {/* Ghost Play Highlight */}
         <div
           className="col-span-1 rounded-2xl bg-gradient-to-br from-purple-900 to-black p-4 text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01] border border-white/10"
           onClick={() => navigate('/ai/ghost-play')}
@@ -130,17 +146,19 @@ const Home = () => {
 
         {/* Check-in Highlight */}
         <div
-          className="col-span-1 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 p-4 text-foreground dark:text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
+          className="col-span-2 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 p-4 text-foreground dark:text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
           onClick={() => setShowCheckIn(true)}
         >
-          <div className="relative z-10">
-            <h2 className="font-bold text-lg flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-green-600 dark:text-green-400 animate-bounce" />{' '}
-              Check-in
-            </h2>
-            <p className="text-xs text-green-800/80 dark:text-green-300 group-hover:text-green-900 dark:group-hover:text-green-200 transition-colors mt-1">
-              Marcar presença
-            </p>
+          <div className="relative z-10 flex items-center justify-between">
+            <div>
+              <h2 className="font-bold text-lg flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-green-600 dark:text-green-400 animate-bounce" />{' '}
+                Check-in
+              </h2>
+              <p className="text-xs text-green-800/80 dark:text-green-300 group-hover:text-green-900 dark:group-hover:text-green-200 transition-colors mt-1">
+                Marcar presença
+              </p>
+            </div>
           </div>
           <div className="absolute -right-6 -bottom-6 h-20 w-20 bg-green-500/10 dark:bg-green-500/20 rounded-full blur-2xl group-hover:bg-green-500/20 dark:group-hover:bg-green-500/30 transition-colors duration-500" />
         </div>

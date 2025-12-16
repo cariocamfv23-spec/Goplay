@@ -103,6 +103,7 @@ const AiCoachSettings = lazy(() => import('./pages/ai/AiCoachSettings'))
 const PerformanceReports = lazy(() => import('./pages/ai/PerformanceReports'))
 const GoalsDashboard = lazy(() => import('./pages/goals/GoalsDashboard'))
 const AiAvatar = lazy(() => import('./pages/ai/AiAvatar'))
+const Oracle = lazy(() => import('./pages/ai/Oracle'))
 
 const App = () => {
   const { color } = useThemeStore()
@@ -254,6 +255,7 @@ const App = () => {
                   <Route path="/ai/ghost-play" element={<GhostPlay />} />
                   <Route path="/ai/arena-mode" element={<ArenaMode />} />
                   <Route path="/ai/avatar" element={<AiAvatar />} />
+                  <Route path="/ai/oracle" element={<Oracle />} />
                 </Route>
 
                 {/* Services & Driver Routes */}

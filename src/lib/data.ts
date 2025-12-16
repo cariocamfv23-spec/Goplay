@@ -1786,3 +1786,19 @@ export const mockInternationalRanking: InternationalRankingUser[] = [
     trend: 'same',
   },
 ]
+
+export const mockOracle = {
+  potentialIndex: 94,
+  predictedPosition: 'Meia-Atacante Profissional',
+  comparisonData: [
+    { subject: 'Técnica', A: 85, fullMark: 100 },
+    { subject: 'Físico', A: 92, fullMark: 100 },
+    { subject: 'Tática', A: 78, fullMark: 100 },
+    { subject: 'Mental', A: 88, fullMark: 100 },
+  ],
+  futureSkills: [
+    { name: 'Visão de Jogo', current: 75, projected: 92 },
+    { name: 'Finalização', current: 80, projected: 95 },
+    { name: 'Resistência', current: 70, projected: 88 },
+  ],
+}
