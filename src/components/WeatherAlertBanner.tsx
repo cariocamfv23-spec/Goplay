@@ -1,6 +1,14 @@
 import { useWeatherStore } from '@/stores/useWeatherStore'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { AlertTriangle, X, ThermometerSun, CloudRain, Zap } from 'lucide-react'
+import {
+  AlertTriangle,
+  X,
+  ThermometerSun,
+  CloudRain,
+  Zap,
+  Wind,
+  CloudSnow,
+  CloudFog,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -14,56 +22,115 @@ export function WeatherAlertBanner() {
 
   if (!alert.active) return null
 
-  const getAlertStyle = (severity: string) => {
-    switch (severity) {
-      case 'critical':
-        return 'border-red-500 bg-red-500/10 text-red-700 dark:text-red-400'
-      case 'high':
-        return 'border-orange-500 bg-orange-500/10 text-orange-700 dark:text-orange-400'
-      case 'medium':
-        return 'border-yellow-500 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400'
-      default:
-        return 'border-blue-500 bg-blue-500/10 text-blue-700 dark:text-blue-400'
-    }
-  }
-
-  const getIcon = () => {
+  const getTheme = () => {
     switch (alert.type) {
       case 'storm':
-        return <Zap className="h-5 w-5" />
+        return {
+          border: 'border-red-500/20',
+          bg: 'bg-gradient-to-r from-red-500/10 to-transparent',
+          text: 'text-red-700 dark:text-red-400',
+          iconBg: 'bg-red-100 dark:bg-red-900/30',
+          icon: Zap,
+        }
       case 'rainy':
-        return <CloudRain className="h-5 w-5" />
+        return {
+          border: 'border-blue-500/20',
+          bg: 'bg-gradient-to-r from-blue-500/10 to-transparent',
+          text: 'text-blue-700 dark:text-blue-400',
+          iconBg: 'bg-blue-100 dark:bg-blue-900/30',
+          icon: CloudRain,
+        }
       case 'sunny':
-        return <ThermometerSun className="h-5 w-5" />
+        return {
+          border: 'border-orange-500/20',
+          bg: 'bg-gradient-to-r from-orange-500/10 to-transparent',
+          text: 'text-orange-700 dark:text-orange-400',
+          iconBg: 'bg-orange-100 dark:bg-orange-900/30',
+          icon: ThermometerSun,
+        }
+      case 'windy':
+        return {
+          border: 'border-zinc-500/20',
+          bg: 'bg-gradient-to-r from-zinc-500/10 to-transparent',
+          text: 'text-zinc-700 dark:text-zinc-400',
+          iconBg: 'bg-zinc-100 dark:bg-zinc-800/50',
+          icon: Wind,
+        }
+      case 'snow':
+        return {
+          border: 'border-cyan-500/20',
+          bg: 'bg-gradient-to-r from-cyan-500/10 to-transparent',
+          text: 'text-cyan-700 dark:text-cyan-400',
+          iconBg: 'bg-cyan-100 dark:bg-cyan-900/30',
+          icon: CloudSnow,
+        }
+      case 'fog':
+        return {
+          border: 'border-slate-500/20',
+          bg: 'bg-gradient-to-r from-slate-500/10 to-transparent',
+          text: 'text-slate-700 dark:text-slate-400',
+          iconBg: 'bg-slate-100 dark:bg-slate-800/50',
+          icon: CloudFog,
+        }
       default:
-        return <AlertTriangle className="h-5 w-5" />
+        return {
+          border: 'border-yellow-500/20',
+          bg: 'bg-gradient-to-r from-yellow-500/10 to-transparent',
+          text: 'text-yellow-700 dark:text-yellow-400',
+          iconBg: 'bg-yellow-100 dark:bg-yellow-900/30',
+          icon: AlertTriangle,
+        }
     }
   }
 
+  const theme = getTheme()
+  const Icon = theme.icon
+
   return (
-    <div className="px-4 py-2 animate-in slide-in-from-top-4 fade-in duration-500">
-      <Alert
+    <div className="px-4 py-2 animate-in slide-in-from-top-4 fade-in duration-500 z-50 relative">
+      <div
         className={cn(
-          'relative pr-10 shadow-sm border-l-4',
-          getAlertStyle(alert.severity),
+          'relative flex items-center gap-3 p-3 rounded-2xl border shadow-sm backdrop-blur-md bg-background/80',
+          theme.border,
         )}
       >
-        {getIcon()}
-        <AlertTitle className="font-extrabold flex items-center gap-2">
-          {alert.title}
-        </AlertTitle>
-        <AlertDescription className="text-xs font-semibold opacity-90 mt-1 leading-snug">
-          {alert.message}
-        </AlertDescription>
+        <div
+          className={cn('absolute inset-0 rounded-2xl opacity-50', theme.bg)}
+        />
+
+        <div
+          className={cn(
+            'relative p-2.5 rounded-xl shadow-sm shrink-0',
+            theme.iconBg,
+            theme.text,
+          )}
+        >
+          <Icon className="h-5 w-5" />
+        </div>
+
+        <div className="relative flex-1 min-w-0 py-0.5">
+          <h5
+            className={cn(
+              'text-xs font-bold uppercase tracking-wide mb-0.5',
+              theme.text,
+            )}
+          >
+            {alert.title}
+          </h5>
+          <p className="text-xs font-medium opacity-80 leading-snug text-foreground line-clamp-1">
+            {alert.message}
+          </p>
+        </div>
+
         <Button
           variant="ghost"
           size="icon"
-          className="absolute top-2 right-2 h-6 w-6 rounded-full hover:bg-black/10"
+          className="relative h-8 w-8 rounded-full opacity-60 hover:opacity-100 hover:bg-background/50 transition-all shrink-0"
           onClick={() => dismissAlert(alert.id)}
         >
           <X className="h-4 w-4" />
         </Button>
-      </Alert>
+      </div>
     </div>
   )
 }
