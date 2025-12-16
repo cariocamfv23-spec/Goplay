@@ -545,7 +545,8 @@ export const mockTimelineEvents: TimelineEvent[] = [
     title: 'MVP da Rodada',
     description:
       'Eleito o melhor jogador da partida pela comunidade e organizadores.',
-    image: 'https://img.usecurling.com/p/400/200?q=trophy%20winner&color=gold',
+    image:
+      'https://img.usecurling.com/p/400/200?q=trophy%20winner&color=yellow',
   },
   {
     id: 'te4',
@@ -792,7 +793,7 @@ export const mockVideos = [
     title: 'Downhill Extremo',
     description: 'Descida radical na montanha',
     thumbnail:
-      'https://img.usecurling.com/p/400/800?q=mountain%20bike&color=brown',
+      'https://img.usecurling.com/p/400/800?q=mountain%20bike&color=orange',
     duration: '03:15',
     views: '85K',
     likes: '8K',
