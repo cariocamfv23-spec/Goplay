@@ -133,6 +133,27 @@ export default function AiCoach() {
           </div>
         </Card>
 
+        {/* Injury Scanner Link */}
+        <Card
+          className="bg-card border-border/50 hover:border-primary/50 transition-colors cursor-pointer"
+          onClick={() => navigate('/ai/injury-scanner')}
+        >
+          <CardContent className="p-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500">
+                <Activity className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="font-bold">Scanner Biométrico</h3>
+                <p className="text-xs text-muted-foreground">
+                  Identifique riscos de lesão com IA
+                </p>
+              </div>
+            </div>
+            <ArrowRight className="h-5 w-5 text-muted-foreground" />
+          </CardContent>
+        </Card>
+
         {/* Exercise Library Link */}
         <Card
           className="bg-card border-border/50 hover:border-primary/50 transition-colors cursor-pointer"

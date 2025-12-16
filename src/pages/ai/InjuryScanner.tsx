@@ -13,7 +13,16 @@ export default function InjuryScanner() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white flex flex-col">
+    <div className="min-h-screen bg-zinc-950 text-white flex flex-col relative overflow-hidden">
+      <style>{`
+        @keyframes scan {
+          0% { top: 0%; opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { top: 100%; opacity: 0; }
+        }
+      `}</style>
+
       <div className="p-4 flex items-center justify-between sticky top-0 z-10">
         <Button
           variant="ghost"
@@ -72,7 +81,11 @@ export default function InjuryScanner() {
                 <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
                   <div className="h-full w-[60%] bg-yellow-500" />
                 </div>
-                <Button className="w-full mt-4" variant="outline">
+                <Button
+                  className="w-full mt-4"
+                  variant="outline"
+                  onClick={() => navigate('/ai/library')}
+                >
                   Ver Exercícios Preventivos
                 </Button>
               </div>
