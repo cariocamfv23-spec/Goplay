@@ -16,6 +16,7 @@ import {
   History,
   Sparkles,
   IdCard,
+  Gift,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -249,6 +250,14 @@ export default function AthleteView({
               onClick={() => navigate('/profile/timeline')}
             >
               <History className="mr-2 h-4 w-4" /> Linha do Tempo
+            </Button>
+          )}
+          {isMe && (
+            <Button
+              className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 text-emerald-600 dark:text-emerald-400 hover:from-emerald-500/20 border border-emerald-500/20 justify-start shadow-sm col-span-2 font-bold"
+              onClick={() => navigate('/profile/referral')}
+            >
+              <Gift className="mr-2 h-4 w-4" /> Indicar Amigos (+200 pts)
             </Button>
           )}
           {isMe && (

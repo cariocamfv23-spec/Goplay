@@ -66,6 +66,7 @@ const EvolutionTimeline = lazy(
   () => import('./pages/profile/EvolutionTimeline'),
 )
 const SportsPassport = lazy(() => import('./pages/profile/SportsPassport'))
+const ReferralProgram = lazy(() => import('./pages/profile/ReferralProgram'))
 
 // Messages
 const MessagesList = lazy(() => import('./pages/messages/MessagesList'))
@@ -204,6 +205,10 @@ const App = () => {
                     <Route
                       path="/profile/passport"
                       element={<SportsPassport />}
+                    />
+                    <Route
+                      path="/profile/referral"
+                      element={<ReferralProgram />}
                     />
                     <Route path="/wallet" element={<Wallet />} />
                     <Route

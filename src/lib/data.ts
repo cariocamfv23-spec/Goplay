@@ -137,6 +137,11 @@ export interface ProfileData {
   height?: string
   weight?: string
   favoriteSong?: MusicTrack
+  referralCode?: string
+  referralStats?: {
+    invited: number
+    earned: number
+  }
 }
 
 export interface FinancialTransaction {
@@ -472,6 +477,11 @@ export const mockUser = {
     mvp: 5,
   },
   favoriteSong: mockMusicTracks[2],
+  referralCode: 'ALEX10',
+  referralStats: {
+    invited: 12,
+    earned: 2400,
+  },
 }
 
 export const mockCurrentUser = mockUser
