@@ -2,18 +2,115 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { Search, Filter, Baby, MapPin, Check, Star } from 'lucide-react'
-import { mockKidsVenues } from '@/lib/data'
+import { Search, Filter, Baby, MapPin, Check, Star, Clock } from 'lucide-react'
+import { mockKidsVenues, KidsVenue } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
+import { KidsFilterSheet, FilterState } from '@/components/KidsFilterSheet'
+import { cn } from '@/lib/utils'
+
+// Extended type for internal use
+interface ExtendedVenue extends KidsVenue {
+  minAge: number
+  maxAge: number
+  periods: string[]
+  displayHours: string
+}
+
+// Enhance mock data with filtering fields
+const extendedVenues: ExtendedVenue[] = mockKidsVenues.map((venue, index) => {
+  // Mock logic to distribute properties for testing filters
+  const minAge = index === 2 ? 0 : index === 1 ? 4 : 3
+  const maxAge = index === 2 ? 6 : index === 1 ? 14 : 12
+
+  let periods = ['afternoon']
+  let displayHours = '12h - 18h'
+
+  if (index === 0) {
+    // Arena Kids Sports
+    periods = ['morning', 'afternoon']
+    displayHours = '08h - 18h'
+  } else if (index === 1) {
+    // Complexo Esportivo
+    periods = ['afternoon', 'night']
+    displayHours = '14h - 22h'
+  } else {
+    // Clube do Sol
+    periods = ['morning', 'afternoon']
+    displayHours = '09h - 17h'
+  }
+
+  return {
+    ...venue,
+    minAge,
+    maxAge,
+    periods,
+    displayHours,
+  }
+})
+
+const allActivities = Array.from(
+  new Set(mockKidsVenues.flatMap((v) => v.activities)),
+).sort()
 
 export default function KidsFriendlyList() {
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
+  const [filters, setFilters] = useState<FilterState>({
+    activities: [],
+    ageGroup: 'all',
+    periods: [],
+  })
 
-  const filteredVenues = mockKidsVenues.filter((venue) =>
-    venue.name.toLowerCase().includes(search.toLowerCase()),
-  )
+  const filteredVenues = useMemo(() => {
+    return extendedVenues.filter((venue) => {
+      // 1. Text Search
+      if (search && !venue.name.toLowerCase().includes(search.toLowerCase())) {
+        return false
+      }
+
+      // 2. Activities Filter (OR logic: has at least one selected)
+      if (filters.activities.length > 0) {
+        const hasActivity = venue.activities.some((act) =>
+          filters.activities.includes(act),
+        )
+        if (!hasActivity) return false
+      }
+
+      // 3. Age Group Filter
+      if (filters.ageGroup !== 'all') {
+        const [minStr, maxStr] = filters.ageGroup.split('-')
+        const filterMin = parseInt(minStr)
+        const filterMax = parseInt(maxStr)
+
+        // Check for overlap: (StartA <= EndB) and (EndA >= StartB)
+        // Venue Range: [venue.minAge, venue.maxAge]
+        // Filter Range: [filterMin, filterMax]
+
+        // Special case for '10+'
+        if (filters.ageGroup === '10-14') {
+          // Treat as 10 to 14
+          if (!(venue.minAge <= 14 && venue.maxAge >= 10)) return false
+        } else {
+          if (!(venue.minAge <= filterMax && venue.maxAge >= filterMin))
+            return false
+        }
+      }
+
+      // 4. Time Periods Filter (OR logic)
+      if (filters.periods.length > 0) {
+        const hasPeriod = venue.periods.some((p) => filters.periods.includes(p))
+        if (!hasPeriod) return false
+      }
+
+      return true
+    })
+  }, [search, filters])
+
+  const activeFiltersCount =
+    filters.activities.length +
+    filters.periods.length +
+    (filters.ageGroup !== 'all' ? 1 : 0)
 
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
@@ -58,13 +155,100 @@ export default function KidsFriendlyList() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <Button variant="outline" size="icon" className="shrink-0 rounded-xl">
-            <Filter className="h-4 w-4" />
-          </Button>
+
+          <KidsFilterSheet
+            filters={filters}
+            setFilters={setFilters}
+            availableActivities={allActivities}
+            counts={{
+              total: extendedVenues.length,
+              filtered: filteredVenues.length,
+            }}
+          >
+            <Button
+              variant={activeFiltersCount > 0 ? 'default' : 'outline'}
+              size="icon"
+              className={cn(
+                'shrink-0 rounded-xl relative',
+                activeFiltersCount > 0 &&
+                  'bg-primary text-primary-foreground border-primary',
+              )}
+            >
+              <Filter className="h-4 w-4" />
+              {activeFiltersCount > 0 && (
+                <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full border-2 border-background" />
+              )}
+            </Button>
+          </KidsFilterSheet>
         </div>
       </div>
 
       <div className="p-4 space-y-4">
+        {/* Active Filters Summary (Optional but helpful) */}
+        {activeFiltersCount > 0 && (
+          <div className="flex flex-wrap gap-2 animate-fade-in-down">
+            {filters.ageGroup !== 'all' && (
+              <Badge variant="secondary" className="pl-1 pr-2 py-1 gap-1">
+                <X
+                  className="h-3 w-3 cursor-pointer"
+                  onClick={() => setFilters({ ...filters, ageGroup: 'all' })}
+                />
+                Idade: {filters.ageGroup}
+              </Badge>
+            )}
+            {filters.periods.map((p) => (
+              <Badge
+                key={p}
+                variant="secondary"
+                className="pl-1 pr-2 py-1 gap-1 capitalize"
+              >
+                <X
+                  className="h-3 w-3 cursor-pointer"
+                  onClick={() =>
+                    setFilters({
+                      ...filters,
+                      periods: filters.periods.filter((x) => x !== p),
+                    })
+                  }
+                />
+                {p === 'morning'
+                  ? 'Manhã'
+                  : p === 'afternoon'
+                    ? 'Tarde'
+                    : 'Noite'}
+              </Badge>
+            ))}
+            {filters.activities.map((a) => (
+              <Badge
+                key={a}
+                variant="secondary"
+                className="pl-1 pr-2 py-1 gap-1"
+              >
+                <X
+                  className="h-3 w-3 cursor-pointer"
+                  onClick={() =>
+                    setFilters({
+                      ...filters,
+                      activities: filters.activities.filter((x) => x !== a),
+                    })
+                  }
+                />
+                {a}
+              </Badge>
+            ))}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() =>
+                setFilters({ activities: [], ageGroup: 'all', periods: [] })
+              }
+              className="h-6 text-xs text-muted-foreground px-2"
+            >
+              Limpar tudo
+            </Button>
+          </div>
+        )}
+
         {filteredVenues.map((venue) => (
           <Card
             key={venue.id}
@@ -92,18 +276,23 @@ export default function KidsFriendlyList() {
                 </Badge>
                 <Badge
                   variant="secondary"
-                  className={`backdrop-blur shadow-sm ${
-                    venue.hasMonitors
-                      ? 'bg-blue-500/90 text-white'
-                      : 'bg-gray-500/90 text-white'
-                  }`}
+                  className="backdrop-blur shadow-sm bg-black/50 text-white gap-1 pl-1"
                 >
-                  {venue.hasMonitors ? 'Com Monitores' : 'Sem Monitores'}
+                  <Clock className="h-3 w-3" />
+                  {venue.displayHours}
                 </Badge>
               </div>
             </div>
             <CardContent className="p-4">
-              <h3 className="font-bold text-lg mb-1">{venue.name}</h3>
+              <div className="flex justify-between items-start">
+                <h3 className="font-bold text-lg mb-1">{venue.name}</h3>
+                <Badge
+                  variant="outline"
+                  className="text-[10px] whitespace-nowrap"
+                >
+                  {venue.minAge}-{venue.maxAge} anos
+                </Badge>
+              </div>
               <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
                 <MapPin className="h-3 w-3" /> {venue.location}
               </div>
@@ -134,7 +323,15 @@ export default function KidsFriendlyList() {
         {filteredVenues.length === 0 && (
           <div className="text-center py-10 text-muted-foreground">
             <Baby className="h-12 w-12 mx-auto mb-3 opacity-20" />
-            <p>Nenhum local encontrado.</p>
+            <p className="mb-2">Nenhum local encontrado com esses filtros.</p>
+            <Button
+              variant="link"
+              onClick={() =>
+                setFilters({ activities: [], ageGroup: 'all', periods: [] })
+              }
+            >
+              Limpar filtros
+            </Button>
           </div>
         )}
       </div>
