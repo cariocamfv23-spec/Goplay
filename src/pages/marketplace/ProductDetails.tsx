@@ -32,7 +32,7 @@ export default function ProductDetails() {
         <Button
           variant="secondary"
           size="icon"
-          className="pointer-events-auto rounded-full shadow-md bg-background/80 backdrop-blur"
+          className="pointer-events-auto rounded-full shadow-md bg-background/80 backdrop-blur-md border border-white/10"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft className="h-5 w-5" />
@@ -41,14 +41,14 @@ export default function ProductDetails() {
           <Button
             variant="secondary"
             size="icon"
-            className="rounded-full shadow-md bg-background/80 backdrop-blur"
+            className="rounded-full shadow-md bg-background/80 backdrop-blur-md border border-white/10"
           >
             <Share2 className="h-5 w-5" />
           </Button>
           <Button
             variant="secondary"
             size="icon"
-            className="rounded-full shadow-md bg-background/80 backdrop-blur"
+            className="rounded-full shadow-md bg-background/80 backdrop-blur-md border border-white/10"
             onClick={() => navigate('/marketplace/cart')}
           >
             <ShoppingCart className="h-5 w-5" />
@@ -61,7 +61,7 @@ export default function ProductDetails() {
           <CarouselContent>
             {product.images?.map((img, i) => (
               <CarouselItem key={i}>
-                <div className="h-[400px] bg-secondary/20 flex items-center justify-center p-8">
+                <div className="h-[450px] bg-secondary/10 flex items-center justify-center p-8">
                   <img
                     src={img}
                     alt={product.name}
@@ -74,9 +74,9 @@ export default function ProductDetails() {
         </Carousel>
       </div>
 
-      <div className="p-5 space-y-5">
+      <div className="px-5 pt-2 pb-6 space-y-6">
         <div className="flex justify-between items-start">
-          <div className="space-y-1">
+          <div className="space-y-2 flex-1 pr-4">
             <div className="flex gap-2">
               <Badge
                 variant="outline"
@@ -85,32 +85,37 @@ export default function ProductDetails() {
                 {product.modality}
               </Badge>
               {product.isPremium && (
-                <Badge className="bg-gold text-black text-[10px] uppercase tracking-wider">
+                <Badge className="bg-gold text-black hover:bg-gold/90 border-none text-[10px] uppercase tracking-wider">
                   Premium
                 </Badge>
               )}
             </div>
-            <h1 className="text-2xl font-bold mb-1">{product.name}</h1>
-            <p className="text-muted-foreground text-sm">{product.seller}</p>
+            <h1 className="text-2xl font-bold leading-tight">{product.name}</h1>
+            <p className="text-muted-foreground text-sm">
+              Vendido por{' '}
+              <span className="font-medium text-foreground">
+                {product.seller}
+              </span>
+            </p>
           </div>
-          <div className="flex flex-col items-end">
-            <div className="flex items-center gap-1 text-sm font-bold text-gold bg-gold/10 px-2 py-0.5 rounded-full mb-1">
-              <Star className="h-3.5 w-3.5 fill-gold" /> {product.rating}
+          <div className="flex flex-col items-end pt-1">
+            <div className="flex items-center gap-1 text-sm font-bold text-amber-500 bg-amber-500/10 px-2.5 py-1 rounded-full">
+              <Star className="h-3.5 w-3.5 fill-amber-500" /> {product.rating}
             </div>
           </div>
         </div>
 
-        <div className="bg-secondary/20 p-4 rounded-xl border border-border/50">
-          <div className="flex justify-between items-center mb-2">
+        <div className="bg-card p-4 rounded-xl border border-border shadow-sm">
+          <div className="flex justify-between items-center mb-1">
             <span className="text-muted-foreground text-sm">Preço</span>
             <span className="text-2xl font-bold text-primary">
               R$ {product.price.toFixed(2)}
             </span>
           </div>
           {product.pointsPrice > 0 && (
-            <div className="flex justify-between items-center pt-2 border-t border-border/50">
-              <span className="text-muted-foreground text-sm flex items-center gap-1">
-                <Trophy className="h-3 w-3" /> Pontos
+            <div className="flex justify-between items-center pt-3 mt-2 border-t border-border/50">
+              <span className="text-muted-foreground text-xs flex items-center gap-1.5 uppercase tracking-wide font-medium">
+                <Trophy className="h-3.5 w-3.5 text-gold" /> Com Pontos
               </span>
               <span className="text-lg font-bold text-gold">
                 {product.pointsPrice} pts
@@ -119,18 +124,18 @@ export default function ProductDetails() {
           )}
         </div>
 
-        <div className="flex gap-2 text-xs">
-          <div className="flex items-center gap-1 text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded">
-            <Truck className="h-3 w-3" /> Frete Grátis
+        <div className="flex flex-wrap gap-2 text-xs">
+          <div className="flex items-center gap-1.5 text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1.5 rounded-md font-medium border border-emerald-100 dark:border-emerald-800/30">
+            <Truck className="h-3.5 w-3.5" /> Frete Grátis
           </div>
-          <div className="flex items-center gap-1 text-blue-600 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded">
-            <ShieldCheck className="h-3 w-3" /> Garantia Oficial
+          <div className="flex items-center gap-1.5 text-blue-600 bg-blue-50 dark:bg-blue-900/20 px-3 py-1.5 rounded-md font-medium border border-blue-100 dark:border-blue-800/30">
+            <ShieldCheck className="h-3.5 w-3.5" /> Garantia Oficial
           </div>
           <Badge
             variant={
               product.availability === 'in_stock' ? 'outline' : 'destructive'
             }
-            className="text-[10px]"
+            className="text-[10px] py-1.5 px-3"
           >
             {product.availability === 'in_stock'
               ? 'Em Estoque'
@@ -138,37 +143,35 @@ export default function ProductDetails() {
           </Badge>
         </div>
 
-        <div>
-          <h3 className="font-bold text-lg mb-2">Descrição</h3>
+        <div className="pt-2">
+          <h3 className="font-bold text-lg mb-3">Descrição</h3>
           <p className="text-sm text-muted-foreground leading-relaxed">
             {product.description}
           </p>
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 pb-6 bg-background/80 backdrop-blur-md border-t border-border/50 flex gap-3 shadow-[0_-5px_20px_rgba(0,0,0,0.05)] z-50">
-        <Button
-          variant="outline"
-          size="lg"
-          className="flex-1 h-12 rounded-xl font-bold border-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all text-xs sm:text-sm"
-          onClick={() => addToCart(product)}
-        >
-          <ShoppingCart className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-          <span className="truncate">Adicionar ao Carrinho</span>
-        </Button>
-        <PaymentDialog
-          title={product.name}
-          price={product.price}
-          pointsPrice={product.pointsPrice}
-        >
+      <div className="fixed bottom-0 left-0 right-0 p-4 pb-6 bg-background/90 backdrop-blur-xl border-t border-border shadow-[0_-5px_20px_rgba(0,0,0,0.05)] z-50">
+        <div className="flex gap-3 max-w-lg mx-auto w-full">
           <Button
-            size="lg"
-            className="flex-[1.5] h-12 rounded-xl font-bold text-sm sm:text-base shadow-lg bg-primary hover:bg-primary/90 text-white"
+            variant="outline"
+            className="flex-1 h-11 rounded-xl font-bold border-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all text-xs active:scale-95"
+            onClick={() => addToCart(product)}
           >
-            <ShieldCheck className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-            Comprar Agora
+            <ShoppingCart className="mr-2 h-4 w-4" />
+            Adicionar
           </Button>
-        </PaymentDialog>
+          <PaymentDialog
+            title={product.name}
+            price={product.price}
+            pointsPrice={product.pointsPrice}
+          >
+            <Button className="flex-1 h-11 rounded-xl font-bold text-xs shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground active:scale-95 transition-all">
+              <ShieldCheck className="mr-2 h-4 w-4" />
+              Comprar Agora
+            </Button>
+          </PaymentDialog>
+        </div>
       </div>
     </div>
   )
