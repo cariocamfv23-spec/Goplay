@@ -10,7 +10,7 @@ import {
   ArrowDownLeft,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { DigitalCard } from '@/components/DigitalCard'
 import { mockFuelTransactions } from '@/lib/data'
 import { Badge } from '@/components/ui/badge'
@@ -79,7 +79,10 @@ export default function FuelCredits() {
                 <span className="text-xs font-medium">Como Funciona</span>
               </CardContent>
             </Card>
-            <Card className="border-none shadow-sm bg-secondary/30">
+            <Card
+              className="border-none shadow-sm bg-secondary/30 cursor-pointer hover:bg-secondary/50 transition-colors"
+              onClick={() => navigate('/explore/fuel/stations')}
+            >
               <CardContent className="p-4 flex flex-col items-center text-center gap-2">
                 <div className="p-2 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30">
                   <MapPin className="h-5 w-5" />
