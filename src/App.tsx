@@ -39,6 +39,7 @@ const InternationalMatch = lazy(
 )
 const LiveEvents = lazy(() => import('./pages/explore/LiveEvents'))
 const LiveStream = lazy(() => import('./pages/explore/LiveStream'))
+const FuelCredits = lazy(() => import('./pages/explore/FuelCredits'))
 
 // Details
 const EventDetails = lazy(() => import('./pages/explore/EventDetails'))
@@ -183,6 +184,7 @@ const App = () => {
                     />
                     <Route path="/explore/live" element={<LiveEvents />} />
                     <Route path="/explore/live/:id" element={<LiveStream />} />
+                    <Route path="/explore/fuel" element={<FuelCredits />} />
 
                     {/* Detail Routes */}
                     <Route path="/events/:id" element={<EventDetails />} />

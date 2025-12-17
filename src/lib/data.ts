@@ -26,6 +26,7 @@ import {
   Hand,
   Globe,
   GraduationCap,
+  Fuel,
 } from 'lucide-react'
 
 // Types
@@ -346,6 +347,13 @@ export const exploreCategories = [
     icon: Globe,
     bg: 'bg-indigo-100 dark:bg-indigo-900/20',
     color: 'text-indigo-600 dark:text-indigo-400',
+  },
+  {
+    id: 'fuel',
+    label: 'Combustível',
+    icon: Fuel,
+    bg: 'bg-yellow-100 dark:bg-yellow-900/20',
+    color: 'text-yellow-600 dark:text-yellow-400',
   },
   {
     id: 'talents',
@@ -2017,5 +2025,32 @@ export const mockLiveEvents: LiveEvent[] = [
     viewers: '10M',
     image: 'https://img.usecurling.com/p/600/400?q=boxing&color=black',
     score: 'KO Round 1',
+  },
+]
+
+export const mockFuelTransactions = [
+  {
+    id: 'ft1',
+    title: 'Copa Goplay - Final',
+    type: 'deposit',
+    amount: 150.0,
+    date: 'Hoje, 09:00',
+    description: 'Auxílio Combustível',
+  },
+  {
+    id: 'ft2',
+    title: 'Posto Shell',
+    type: 'spend',
+    amount: 50.0,
+    date: 'Ontem, 18:45',
+    description: 'Abastecimento',
+  },
+  {
+    id: 'ft3',
+    title: 'Time Eagles',
+    type: 'deposit',
+    amount: 80.0,
+    date: '20 Out',
+    description: 'Reembolso Viagem',
   },
 ]

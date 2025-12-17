@@ -1,13 +1,20 @@
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { CardContent } from '@/components/ui/card'
-import { QrCode, CreditCard, ShieldCheck, Wifi, Wallet } from 'lucide-react'
+import {
+  QrCode,
+  CreditCard,
+  ShieldCheck,
+  Wifi,
+  Wallet,
+  Fuel,
+} from 'lucide-react'
 import { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { mockCurrentUser } from '@/lib/data'
 
 interface DigitalCardProps {
   title?: string
-  type?: 'fit' | 'market' | 'recovery' | 'goplay'
+  type?: 'fit' | 'market' | 'recovery' | 'goplay' | 'fuel'
   balance?: string
   logoUrl?: string
   children?: ReactNode
@@ -29,6 +36,8 @@ export function DigitalCard({
         return 'bg-gradient-to-br from-emerald-600 to-teal-900'
       case 'recovery':
         return 'bg-gradient-to-br from-cyan-600 to-blue-900'
+      case 'fuel':
+        return 'bg-gradient-to-br from-orange-600 via-amber-500 to-yellow-600'
       case 'goplay':
       default:
         return 'bg-gradient-to-br from-[#6D28D9] via-[#4C1D95] to-[#B45309]' // Deep Purple to Bronze/Gold
@@ -43,8 +52,20 @@ export function DigitalCard({
         return <QrCode className="h-6 w-6 text-white/90" />
       case 'recovery':
         return <ShieldCheck className="h-6 w-6 text-white/90" />
+      case 'fuel':
+        return <Fuel className="h-6 w-6 text-white/90" />
       default:
         return <Wallet className="h-6 w-6 text-white/90" />
+    }
+  }
+
+  const getTitle = () => {
+    if (title !== 'Goplay Card') return title
+    switch (type) {
+      case 'fuel':
+        return 'Goplay Fuel'
+      default:
+        return title
     }
   }
 
@@ -82,7 +103,7 @@ export function DigitalCard({
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="font-bold text-xl tracking-tight drop-shadow-md">
-                    {title}
+                    {getTitle()}
                   </h3>
                   <p className="text-white/70 text-[10px] font-medium uppercase tracking-wider">
                     Virtual Member
