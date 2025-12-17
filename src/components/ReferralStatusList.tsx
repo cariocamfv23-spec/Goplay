@@ -2,7 +2,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Referral, ReferralStatus } from '@/lib/referral-data'
-import { Mail, Smartphone, UserCheck, Clock, Users } from 'lucide-react'
+import {
+  Mail,
+  Smartphone,
+  UserCheck,
+  Clock,
+  Users,
+  Plus,
+  Zap,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface ReferralStatusListProps {
@@ -81,38 +89,66 @@ export function ReferralStatusList({ referrals }: ReferralStatusListProps) {
           {referrals.map((referral) => {
             const statusConfig = getStatusConfig(referral.status)
             const StatusIcon = statusConfig.icon
+            const hasBonus = !!referral.bonusApplied
 
             return (
               <div
                 key={referral.id}
-                className="p-4 flex items-center gap-4 hover:bg-muted/30 transition-colors"
+                className="p-4 hover:bg-muted/30 transition-colors"
               >
-                <Avatar className="h-10 w-10 border border-border">
-                  <AvatarImage src={referral.avatar} alt={referral.name} />
-                  <AvatarFallback>{referral.name.charAt(0)}</AvatarFallback>
-                </Avatar>
+                <div className="flex items-center gap-4">
+                  <Avatar className="h-10 w-10 border border-border">
+                    <AvatarImage src={referral.avatar} alt={referral.name} />
+                    <AvatarFallback>{referral.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
 
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-foreground truncate">
-                    {referral.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
-                    <Clock className="h-3 w-3" />
-                    {referral.date}
-                  </p>
-                </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-bold text-foreground truncate">
+                        {referral.name}
+                      </p>
+                      {referral.pointsEarned && (
+                        <Badge
+                          variant="secondary"
+                          className={cn(
+                            'h-5 px-1.5 text-[10px] gap-0.5',
+                            hasBonus
+                              ? 'bg-primary/10 text-primary hover:bg-primary/20'
+                              : 'bg-green-500/10 text-green-600 hover:bg-green-500/20',
+                          )}
+                        >
+                          <Plus className="h-2.5 w-2.5" />
+                          {referral.pointsEarned} pts
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                      <Clock className="h-3 w-3" />
+                      {referral.date}
+                    </p>
+                  </div>
 
-                <div className="flex flex-col items-end gap-1">
-                  <div
-                    className={cn(
-                      'flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide border',
-                      statusConfig.color,
-                    )}
-                  >
-                    <StatusIcon className="h-3 w-3" />
-                    {statusConfig.label}
+                  <div className="flex flex-col items-end gap-1">
+                    <div
+                      className={cn(
+                        'flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide border',
+                        statusConfig.color,
+                      )}
+                    >
+                      <StatusIcon className="h-3 w-3" />
+                      {statusConfig.label}
+                    </div>
                   </div>
                 </div>
+
+                {hasBonus && (
+                  <div className="mt-2 ml-14 flex items-center gap-1.5 text-[10px] text-primary bg-primary/5 w-fit px-2 py-1 rounded-md">
+                    <Zap className="h-3 w-3 fill-primary" />
+                    <span className="font-medium">
+                      Bônus aplicado: {referral.bonusApplied}
+                    </span>
+                  </div>
+                )}
               </div>
             )
           })}

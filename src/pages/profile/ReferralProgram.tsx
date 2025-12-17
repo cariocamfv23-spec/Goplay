@@ -17,7 +17,14 @@ import { toast } from 'sonner'
 import { ReferralLevelProgress } from '@/components/ReferralLevelProgress'
 import useNotificationStore from '@/stores/useNotificationStore'
 import { ReferralStatusList } from '@/components/ReferralStatusList'
-import { mockReferrals, Referral } from '@/lib/referral-data'
+import {
+  mockReferrals,
+  Referral,
+  mockPromotions,
+  Promotion,
+} from '@/lib/referral-data'
+import { ActivePromotions } from '@/components/ActivePromotions'
+import { isWithinInterval } from 'date-fns'
 
 export default function ReferralProgram() {
   const navigate = useNavigate()
@@ -29,6 +36,9 @@ export default function ReferralProgram() {
   const [referralsList, setReferralsList] = useState<Referral[]>(mockReferrals)
   const [referralsCount, setReferralsCount] = useState(
     mockCurrentUser.referralStats?.invited || referralsList.length,
+  )
+  const [totalEarned, setTotalEarned] = useState(
+    mockCurrentUser.referralStats?.earned || 0,
   )
 
   // Track previous level to show notifications on level up
@@ -101,24 +111,57 @@ export default function ReferralProgram() {
     }
   }, [referralsCount, prevLevelId, addNotification])
 
-  const simulateReferral = () => {
-    // Update count
-    setReferralsCount((prev) => prev + 1)
+  // Get active promotions
+  const getActivePromotions = () => {
+    const now = new Date()
+    return mockPromotions.filter((promo) =>
+      isWithinInterval(now, {
+        start: new Date(promo.startDate),
+        end: new Date(promo.endDate),
+      }),
+    )
+  }
 
-    // Add new referral to list
+  const simulateReferral = () => {
+    // 1. Calculate points
+    const basePoints = 200
+    const activePromotions = getActivePromotions()
+    const bonusPoints = activePromotions.reduce(
+      (acc, promo) => acc + promo.bonusPoints,
+      0,
+    )
+    const totalPoints = basePoints + bonusPoints
+    const activePromoNames = activePromotions.map((p) => p.title).join(', ')
+
+    // 2. Update count and points
+    setReferralsCount((prev) => prev + 1)
+    setTotalEarned((prev) => prev + totalPoints)
+
+    // 3. Add new referral to list
     const newReferral: Referral = {
       id: Math.random().toString(36).substr(2, 9),
       name: 'Novo Usuário',
       avatar: `https://img.usecurling.com/ppl/thumbnail?gender=male&seed=${Math.floor(Math.random() * 100)}`,
       status: 'registered',
       date: 'Agora',
+      pointsEarned: totalPoints,
+      bonusApplied: activePromoNames || undefined,
     }
     setReferralsList((prev) => [newReferral, ...prev])
 
-    toast.success('Nova indicação simulada!', {
-      description: 'Lista de indicações e contagem atualizadas.',
-      icon: <TrendingUp className="h-4 w-4 text-green-500" />,
-    })
+    // 4. Feedback
+    if (bonusPoints > 0) {
+      toast.success(`+${totalPoints} Pontos Recebidos!`, {
+        description: `${basePoints} (Padrão) + ${bonusPoints} (Bônus: ${activePromoNames})`,
+        icon: <Gift className="h-5 w-5 text-primary" />,
+        duration: 4000,
+      })
+    } else {
+      toast.success(`+${totalPoints} Pontos Recebidos!`, {
+        description: 'Nova indicação confirmada.',
+        icon: <TrendingUp className="h-4 w-4 text-green-500" />,
+      })
+    }
   }
 
   return (
@@ -147,15 +190,21 @@ export default function ReferralProgram() {
             Ganhe pontos <br />
             <span className="text-gold">com amigos!</span>
           </h2>
-          <p className="text-white/80 text-sm max-w-[280px]">
-            Receba 200 pontos para cada amigo que baixar o app com seu código.
-          </p>
+          <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/10">
+            <span className="text-white/80 text-xs font-bold uppercase tracking-wider">
+              Total Ganho:
+            </span>
+            <span className="text-white font-black">{totalEarned} pts</span>
+          </div>
         </div>
       </div>
 
       <div className="px-4 -mt-8 relative z-20 space-y-6">
         {/* Level Progress Component */}
         <ReferralLevelProgress currentReferrals={referralsCount} />
+
+        {/* Active Promotions Component - New Feature */}
+        <ActivePromotions promotions={mockPromotions} />
 
         {/* Code Card */}
         <Card className="border-none shadow-lg bg-card overflow-hidden">
@@ -222,7 +271,7 @@ export default function ReferralProgram() {
             onClick={simulateReferral}
           >
             <TrendingUp className="mr-2 h-4 w-4" />
-            Simular +1 Indicação
+            Simular +1 Indicação (com bônus)
           </Button>
         </div>
       </div>

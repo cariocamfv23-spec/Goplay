@@ -6,7 +6,50 @@ export interface Referral {
   avatar: string
   status: ReferralStatus
   date: string
+  pointsEarned?: number
+  bonusApplied?: string
 }
+
+export interface Promotion {
+  id: string
+  title: string
+  description: string
+  startDate: string
+  endDate: string
+  bonusPoints: number
+  color: string
+  icon?: string
+}
+
+// Helper to get dates relative to now for demo purposes
+const now = new Date()
+const fiveDaysAgo = new Date(now)
+fiveDaysAgo.setDate(now.getDate() - 5)
+const tenDaysFromNow = new Date(now)
+tenDaysFromNow.setDate(now.getDate() + 10)
+
+export const mockPromotions: Promotion[] = [
+  {
+    id: 'promo1',
+    title: 'Verão de Prêmios',
+    description: 'Convide amigos e ganhe bônus extra por cada cadastro!',
+    startDate: fiveDaysAgo.toISOString(),
+    endDate: tenDaysFromNow.toISOString(),
+    bonusPoints: 100,
+    color: 'from-orange-500 to-red-600',
+    icon: 'sun',
+  },
+  {
+    id: 'promo2',
+    title: 'Sprint Final',
+    description: 'Últimos dias para dobrar seus pontos.',
+    startDate: '2025-12-01T00:00:00Z',
+    endDate: '2025-12-31T23:59:59Z',
+    bonusPoints: 200,
+    color: 'from-blue-500 to-cyan-500',
+    icon: 'zap',
+  },
+]
 
 export const mockReferrals: Referral[] = [
   {
@@ -15,6 +58,8 @@ export const mockReferrals: Referral[] = [
     avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=50',
     status: 'registered',
     date: 'Hoje, 10:30',
+    pointsEarned: 300,
+    bonusApplied: 'Verão de Prêmios',
   },
   {
     id: 'r2',
@@ -36,6 +81,7 @@ export const mockReferrals: Referral[] = [
     avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=53',
     status: 'registered',
     date: '1 semana atrás',
+    pointsEarned: 200,
   },
   {
     id: 'r5',
