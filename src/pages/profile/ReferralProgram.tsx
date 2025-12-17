@@ -1,25 +1,35 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { mockCurrentUser } from '@/lib/data'
+import { mockCurrentUser, referralLevels } from '@/lib/data'
 import {
   ArrowLeft,
   Copy,
   Share2,
   Gift,
-  Users,
-  CreditCard,
   MessageCircle,
+  TrendingUp,
+  Award,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { ShareDialog } from '@/components/ShareDialog'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
-import { cn } from '@/lib/utils'
+import { ReferralLevelProgress } from '@/components/ReferralLevelProgress'
+import useNotificationStore from '@/stores/useNotificationStore'
 
 export default function ReferralProgram() {
   const navigate = useNavigate()
+  const { addNotification } = useNotificationStore()
   const [isShareOpen, setIsShareOpen] = useState(false)
   const [copied, setCopied] = useState(false)
+
+  // Local state to simulate referral increments
+  const [referralsCount, setReferralsCount] = useState(
+    mockCurrentUser.referralStats?.invited || 0,
+  )
+
+  // Track previous level to show notifications on level up
+  const [prevLevelId, setPrevLevelId] = useState<string>('')
 
   const referralCode = mockCurrentUser.referralCode || 'GOPLAY2024'
   const inviteLink = `https://goplay.app/invite/${referralCode}`
@@ -35,6 +45,65 @@ export default function ReferralProgram() {
   const handleWhatsappShare = () => {
     const text = encodeURIComponent(inviteMessage)
     window.open(`https://wa.me/?text=${text}`, '_blank')
+  }
+
+  // Calculate Current Level ID
+  const getCurrentLevelId = (count: number) => {
+    const levelIndex = referralLevels.findIndex((level, index) => {
+      const nextLevel = referralLevels[index + 1]
+      return (
+        count >= level.minReferrals &&
+        (!nextLevel || count < nextLevel.minReferrals)
+      )
+    })
+    return referralLevels[levelIndex]?.id || 'rookie'
+  }
+
+  // Effect to check for level up
+  useEffect(() => {
+    const currentLevelId = getCurrentLevelId(referralsCount)
+
+    // Initial load
+    if (!prevLevelId) {
+      setPrevLevelId(currentLevelId)
+      return
+    }
+
+    // Check if level changed and improved
+    if (currentLevelId !== prevLevelId) {
+      const newLevel = referralLevels.find((l) => l.id === currentLevelId)
+      const oldLevelIndex = referralLevels.findIndex(
+        (l) => l.id === prevLevelId,
+      )
+      const newLevelIndex = referralLevels.findIndex(
+        (l) => l.id === currentLevelId,
+      )
+
+      if (newLevel && newLevelIndex > oldLevelIndex) {
+        // Level Up!
+        toast.success(`Parabéns! Você alcançou o nível ${newLevel.name}!`, {
+          description: 'Novos benefícios foram desbloqueados em sua conta.',
+          icon: <Award className="h-5 w-5 text-gold" />,
+          duration: 5000,
+        })
+
+        addNotification({
+          title: 'Novo Nível Alcançado!',
+          message: `Você agora é nível ${newLevel.name} no programa de indicação. Aproveite seus novos benefícios!`,
+          type: 'system',
+          priority: 'high',
+        })
+      }
+      setPrevLevelId(currentLevelId)
+    }
+  }, [referralsCount, prevLevelId, addNotification])
+
+  const simulateReferral = () => {
+    setReferralsCount((prev) => prev + 1)
+    toast.success('Nova indicação simulada!', {
+      description: 'Contagem de indicações atualizada.',
+      icon: <TrendingUp className="h-4 w-4 text-green-500" />,
+    })
   }
 
   return (
@@ -70,6 +139,9 @@ export default function ReferralProgram() {
       </div>
 
       <div className="px-4 -mt-8 relative z-20 space-y-6">
+        {/* Level Progress Component */}
+        <ReferralLevelProgress currentReferrals={referralsCount} />
+
         {/* Code Card */}
         <Card className="border-none shadow-lg bg-card overflow-hidden">
           <CardContent className="p-6 flex flex-col items-center">
@@ -121,57 +193,20 @@ export default function ReferralProgram() {
           </Button>
         </div>
 
-        {/* Stats */}
-        <div>
-          <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-            <Users className="h-5 w-5 text-primary" /> Seus Resultados
-          </h3>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-secondary/30 p-4 rounded-xl border border-border/50">
-              <p className="text-3xl font-black text-foreground mb-1">
-                {mockCurrentUser.referralStats?.invited || 0}
-              </p>
-              <p className="text-xs text-muted-foreground uppercase font-bold">
-                Amigos convidados
-              </p>
-            </div>
-            <div className="bg-secondary/30 p-4 rounded-xl border border-border/50">
-              <p className="text-3xl font-black text-gold mb-1">
-                {mockCurrentUser.referralStats?.earned || 0}
-              </p>
-              <p className="text-xs text-muted-foreground uppercase font-bold">
-                Pontos ganhos
-              </p>
-            </div>
-          </div>
+        {/* Developer Tool: Simulation Button */}
+        <div className="pt-4 border-t border-dashed border-border/50">
+          <p className="text-xs text-muted-foreground text-center mb-2">
+            Área de Simulação (Dev)
+          </p>
+          <Button
+            variant="secondary"
+            className="w-full border border-primary/20 bg-primary/5 text-primary"
+            onClick={simulateReferral}
+          >
+            <TrendingUp className="mr-2 h-4 w-4" />
+            Simular +1 Indicação
+          </Button>
         </div>
-
-        {/* Info Card */}
-        <Card className="bg-gradient-to-r from-primary/10 to-transparent border-primary/20">
-          <CardContent className="p-4 flex gap-4 items-start">
-            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-              <CreditCard className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h4 className="font-bold text-sm mb-1">Use no Cartão Goplay</h4>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Seus pontos acumulados viram saldo real para gastar na loja ou
-                com parceiros.
-                <br />
-                <span className="font-semibold text-primary block mt-1">
-                  1000 pts = R$ 10,00
-                </span>
-              </p>
-              <Button
-                variant="link"
-                className="px-0 h-auto mt-2 text-xs font-bold"
-                onClick={() => navigate('/wallet')}
-              >
-                Ir para Carteira &rarr;
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       <ShareDialog

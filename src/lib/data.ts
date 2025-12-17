@@ -28,6 +28,10 @@ import {
   GraduationCap,
   Fuel,
   Baby,
+  Medal,
+  Crown,
+  Gem,
+  Star,
 } from 'lucide-react'
 
 // Types
@@ -64,7 +68,7 @@ export interface Notification {
   message: string
   time: string
   read: boolean
-  type: 'challenge' | 'invite' | 'system' | 'like' | 'weather'
+  type: 'challenge' | 'invite' | 'system' | 'like' | 'weather' | 'level_up'
   date?: string
   priority?: 'low' | 'medium' | 'high' | 'critical'
 }
@@ -317,6 +321,15 @@ export interface KidsVenue {
   description: string
 }
 
+export interface ReferralLevel {
+  id: string
+  name: string
+  minReferrals: number
+  color: string
+  icon: any
+  benefits: string[]
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: Zap, label: 'Move', path: '/move' },
@@ -450,6 +463,49 @@ export const narrationStyles = [
     name: 'Futurista',
     description: 'Robótico e analítico',
     previewText: 'Precisão calculada em 98%. Trajetória otimizada.',
+  },
+]
+
+export const referralLevels: ReferralLevel[] = [
+  {
+    id: 'rookie',
+    name: 'Membro',
+    minReferrals: 0,
+    color: 'text-slate-500',
+    icon: User,
+    benefits: ['Ganhe 200 pts por indicação'],
+  },
+  {
+    id: 'bronze',
+    name: 'Bronze',
+    minReferrals: 5,
+    color: 'text-amber-600',
+    icon: Medal,
+    benefits: ['5% OFF na Loja', 'Badge Bronze no Perfil'],
+  },
+  {
+    id: 'silver',
+    name: 'Prata',
+    minReferrals: 10,
+    color: 'text-slate-400',
+    icon: Star,
+    benefits: ['10% OFF na Loja', 'Acesso Antecipado a Eventos'],
+  },
+  {
+    id: 'gold',
+    name: 'Ouro',
+    minReferrals: 20,
+    color: 'text-yellow-500',
+    icon: Crown,
+    benefits: ['15% OFF na Loja', 'Suporte VIP', 'Badge Gold'],
+  },
+  {
+    id: 'diamond',
+    name: 'Diamante',
+    minReferrals: 50,
+    color: 'text-cyan-400',
+    icon: Gem,
+    benefits: ['25% OFF na Loja', 'Status Verificado', 'Convites Exclusivos'],
   },
 ]
 
