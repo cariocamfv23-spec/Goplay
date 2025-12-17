@@ -86,6 +86,8 @@ const NewChat = lazy(() => import('./pages/messages/NewChat'))
 const Marketplace = lazy(() => import('./pages/marketplace/Marketplace'))
 const ProductDetails = lazy(() => import('./pages/marketplace/ProductDetails'))
 const Cart = lazy(() => import('./pages/marketplace/Cart'))
+const OrderHistory = lazy(() => import('./pages/marketplace/OrderHistory'))
+const OrderDetails = lazy(() => import('./pages/marketplace/OrderDetails'))
 
 // Jobs
 const JobsList = lazy(() => import('./pages/jobs/JobsList'))
@@ -257,6 +259,14 @@ const App = () => {
                       element={<ProductDetails />}
                     />
                     <Route path="/marketplace/cart" element={<Cart />} />
+                    <Route
+                      path="/marketplace/orders"
+                      element={<OrderHistory />}
+                    />
+                    <Route
+                      path="/marketplace/orders/:id"
+                      element={<OrderDetails />}
+                    />
 
                     {/* Jobs */}
                     <Route path="/jobs" element={<JobsList />} />

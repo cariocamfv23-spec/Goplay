@@ -17,6 +17,7 @@ import {
   Sparkles,
   IdCard,
   Gift,
+  Package,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -270,11 +271,20 @@ export default function AthleteView({
           )}
           {isMe && (
             <Button
-              className="bg-secondary/30 text-primary hover:bg-secondary/50 border border-primary/20 justify-start w-full col-span-2"
+              className="bg-secondary/30 text-primary hover:bg-secondary/50 border border-primary/20 justify-start w-full"
               variant="outline"
               onClick={() => navigate('/marketplace')}
             >
               <ShoppingBag className="mr-2 h-4 w-4" /> Loja Goplay
+            </Button>
+          )}
+          {isMe && (
+            <Button
+              className="bg-secondary/30 text-foreground hover:bg-secondary/50 border border-border/50 justify-start w-full"
+              variant="outline"
+              onClick={() => navigate('/marketplace/orders')}
+            >
+              <Package className="mr-2 h-4 w-4" /> Meus Pedidos
             </Button>
           )}
         </div>
