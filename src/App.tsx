@@ -32,6 +32,7 @@ const VenuesList = lazy(() => import('./pages/explore/VenuesList'))
 const GymsList = lazy(() => import('./pages/explore/GymsList'))
 const NutritionList = lazy(() => import('./pages/explore/NutritionList'))
 const ClinicsList = lazy(() => import('./pages/explore/ClinicsList'))
+const Scholarships = lazy(() => import('./pages/explore/Scholarships'))
 const MapEvents = lazy(() => import('./pages/explore/MapEvents'))
 const InternationalMatch = lazy(
   () => import('./pages/explore/InternationalMatch'),
@@ -49,6 +50,9 @@ const NutritionPartnerDetails = lazy(
 const ClinicDetails = lazy(() => import('./pages/clinics/ClinicDetails'))
 const HortifrutiDetails = lazy(
   () => import('./pages/explore/HortifrutiDetails'),
+)
+const ScholarshipDetails = lazy(
+  () => import('./pages/explore/ScholarshipDetails'),
 )
 
 // Profile & Stats
@@ -167,6 +171,10 @@ const App = () => {
                       element={<NutritionList />}
                     />
                     <Route path="/explore/clinics" element={<ClinicsList />} />
+                    <Route
+                      path="/explore/scholarships"
+                      element={<Scholarships />}
+                    />
                     <Route path="/explore/jobs" element={<JobsList />} />
                     <Route path="/explore/map-events" element={<MapEvents />} />
                     <Route
@@ -188,6 +196,10 @@ const App = () => {
                     <Route
                       path="/hortifrutis/:id"
                       element={<HortifrutiDetails />}
+                    />
+                    <Route
+                      path="/explore/scholarships/:id"
+                      element={<ScholarshipDetails />}
                     />
 
                     {/* Profile & Stats */}

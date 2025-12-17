@@ -25,6 +25,7 @@ import {
   CircleDashed,
   Hand,
   Globe,
+  GraduationCap,
 } from 'lucide-react'
 
 // Types
@@ -285,6 +286,23 @@ export interface LiveEvent {
   startTime?: string
 }
 
+export interface Scholarship {
+  id: string
+  university: string
+  country: string
+  city: string
+  neighborhood?: string
+  sport: string
+  logo: string
+  image: string
+  value: number // Percentage coverage
+  accommodation: string
+  documentation: string
+  process: string
+  fee: number // Fee for institution to unlock profile
+  deadline: string
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: Zap, label: 'Move', path: '/move' },
@@ -315,6 +333,13 @@ export const tribes = [
 ]
 
 export const exploreCategories = [
+  {
+    id: 'scholarships',
+    label: 'Bolsas',
+    icon: GraduationCap,
+    bg: 'bg-emerald-100 dark:bg-emerald-900/20',
+    color: 'text-emerald-600 dark:text-emerald-400',
+  },
   {
     id: 'international',
     label: 'Mundial',
@@ -404,6 +429,88 @@ export const narrationStyles = [
     name: 'Futurista',
     description: 'Robótico e analítico',
     previewText: 'Precisão calculada em 98%. Trajetória otimizada.',
+  },
+]
+
+export const mockScholarships: Scholarship[] = [
+  {
+    id: 's1',
+    university: 'University of Florida',
+    country: 'USA',
+    city: 'Gainesville',
+    neighborhood: 'University Park',
+    sport: 'Futebol',
+    logo: 'https://img.usecurling.com/i?q=florida%20gators%20logo&color=orange',
+    image:
+      'https://img.usecurling.com/p/800/400?q=university%20campus%20florida&color=green',
+    value: 100,
+    accommodation:
+      'Dormitórios no campus inclusos, com alimentação (Meal Plan) e acesso total às instalações esportivas.',
+    documentation:
+      'TOEFL > 80, SAT > 1200, Histórico Escolar traduzido e juramentado, Vídeo de Highlights (Max 5min).',
+    process:
+      'Envio de material > Análise Técnica > Entrevista com Coach > Oferta Oficial.',
+    fee: 49.9,
+    deadline: '15/05/2025',
+  },
+  {
+    id: 's2',
+    university: 'Universidade de Coimbra',
+    country: 'Portugal',
+    city: 'Coimbra',
+    neighborhood: 'Alta',
+    sport: 'Futsal',
+    logo: 'https://img.usecurling.com/i?q=university%20coimbra%20logo&color=black',
+    image:
+      'https://img.usecurling.com/p/800/400?q=coimbra%20university&color=white',
+    value: 50,
+    accommodation:
+      'Auxílio moradia de 300€/mês ou residência universitária (sujeito a vagas).',
+    documentation:
+      'Passaporte válido, ENEM (Notas do último ano), Carta de Recomendação do Clube atual.',
+    process:
+      'Inscrição Online > Teste Prático (Presencial ou Vídeo) > Validação Acadêmica.',
+    fee: 29.9,
+    deadline: '30/06/2025',
+  },
+  {
+    id: 's3',
+    university: 'UCLA',
+    country: 'USA',
+    city: 'Los Angeles',
+    neighborhood: 'Westwood',
+    sport: 'Basquete',
+    logo: 'https://img.usecurling.com/i?q=ucla%20bruins%20logo&color=blue',
+    image: 'https://img.usecurling.com/p/800/400?q=ucla%20campus&color=blue',
+    value: 100,
+    accommodation:
+      'Apartamento estudantil compartilhado próximo ao campus + Seguro Saúde.',
+    documentation:
+      'TOEFL > 90, SAT > 1300, 2 Cartas de Recomendação, Stats oficiais da última temporada.',
+    process:
+      'Scouting em campeonatos > Contato Oficial > Visita ao Campus > Assinatura NLI.',
+    fee: 59.9,
+    deadline: '01/04/2025',
+  },
+  {
+    id: 's4',
+    university: 'Waseda University',
+    country: 'Japão',
+    city: 'Tóquio',
+    neighborhood: 'Shinjuku',
+    sport: 'Judô',
+    logo: 'https://img.usecurling.com/i?q=waseda%20university&color=red',
+    image:
+      'https://img.usecurling.com/p/800/400?q=tokyo%20university&color=red',
+    value: 80,
+    accommodation:
+      'Dormitório internacional WISH. Inclui aulas de japonês intensivo.',
+    documentation:
+      'JLPT N4 (Desejável) ou TOEFL, Vídeo de competições recentes, Exame médico.',
+    process:
+      'Análise Documental > Entrevista Online > Teste de Aptidão Física (no Japão ou Representante).',
+    fee: 39.9,
+    deadline: '10/08/2025',
   },
 ]
 
