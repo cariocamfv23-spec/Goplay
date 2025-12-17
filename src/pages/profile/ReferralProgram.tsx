@@ -16,6 +16,8 @@ import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 import { ReferralLevelProgress } from '@/components/ReferralLevelProgress'
 import useNotificationStore from '@/stores/useNotificationStore'
+import { ReferralStatusList } from '@/components/ReferralStatusList'
+import { mockReferrals, Referral } from '@/lib/referral-data'
 
 export default function ReferralProgram() {
   const navigate = useNavigate()
@@ -23,9 +25,10 @@ export default function ReferralProgram() {
   const [isShareOpen, setIsShareOpen] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  // Local state to simulate referral increments
+  // Local state for referrals list and count
+  const [referralsList, setReferralsList] = useState<Referral[]>(mockReferrals)
   const [referralsCount, setReferralsCount] = useState(
-    mockCurrentUser.referralStats?.invited || 0,
+    mockCurrentUser.referralStats?.invited || referralsList.length,
   )
 
   // Track previous level to show notifications on level up
@@ -99,9 +102,21 @@ export default function ReferralProgram() {
   }, [referralsCount, prevLevelId, addNotification])
 
   const simulateReferral = () => {
+    // Update count
     setReferralsCount((prev) => prev + 1)
+
+    // Add new referral to list
+    const newReferral: Referral = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: 'Novo Usuário',
+      avatar: `https://img.usecurling.com/ppl/thumbnail?gender=male&seed=${Math.floor(Math.random() * 100)}`,
+      status: 'registered',
+      date: 'Agora',
+    }
+    setReferralsList((prev) => [newReferral, ...prev])
+
     toast.success('Nova indicação simulada!', {
-      description: 'Contagem de indicações atualizada.',
+      description: 'Lista de indicações e contagem atualizadas.',
       icon: <TrendingUp className="h-4 w-4 text-green-500" />,
     })
   }
@@ -192,6 +207,9 @@ export default function ReferralProgram() {
             Outras opções
           </Button>
         </div>
+
+        {/* Referral Status List */}
+        <ReferralStatusList referrals={referralsList} />
 
         {/* Developer Tool: Simulation Button */}
         <div className="pt-4 border-t border-dashed border-border/50">
