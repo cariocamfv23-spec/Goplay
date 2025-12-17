@@ -8,6 +8,7 @@ import {
   Globe,
   Radio,
   Play,
+  Baby,
 } from 'lucide-react'
 import { exploreCategories, mockEvents, mockVenues } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
@@ -169,6 +170,41 @@ export default function Explore() {
             <p className="text-white/80 text-sm max-w-[200px] leading-tight">
               Encontre eventos esportivos perto de você no mapa interativo.
             </p>
+          </div>
+        </div>
+
+        {/* Kids Friendly Feature Card - NEW */}
+        <div
+          onClick={() => navigate('/explore/kids')}
+          className="relative w-full h-28 rounded-2xl overflow-hidden cursor-pointer group shadow-md"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-600 opacity-90 group-hover:opacity-100 transition-opacity" />
+          <img
+            src="https://img.usecurling.com/p/800/300?q=kids%20playground&color=pink"
+            alt="Locais Esportivos com Recreação Infantil"
+            className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-50"
+          />
+          <div className="absolute inset-0 flex items-center px-6 justify-between">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 mb-1">
+                <Baby className="h-5 w-5 text-white" />
+                <Badge
+                  variant="secondary"
+                  className="bg-white/20 text-white hover:bg-white/30 border-0"
+                >
+                  Novo
+                </Badge>
+              </div>
+              <h2 className="text-lg font-bold text-white mb-0 leading-tight">
+                Locais Esportivos com Recreação Infantil
+              </h2>
+              <p className="text-white/90 text-[10px] mt-1">
+                Treine tranquilo enquanto seus filhos se divertem.
+              </p>
+            </div>
+            <div className="bg-white/10 p-2 rounded-full backdrop-blur-sm shrink-0">
+              <Baby className="h-6 w-6 text-white" />
+            </div>
           </div>
         </div>
 

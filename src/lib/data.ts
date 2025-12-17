@@ -27,6 +27,7 @@ import {
   Globe,
   GraduationCap,
   Fuel,
+  Baby,
 } from 'lucide-react'
 
 // Types
@@ -302,6 +303,18 @@ export interface Scholarship {
   process: string
   fee: number // Fee for institution to unlock profile
   deadline: string
+}
+
+export interface KidsVenue {
+  id: string
+  name: string
+  image: string
+  location: string
+  rating: number
+  isFree: boolean
+  hasMonitors: boolean
+  activities: string[]
+  description: string
 }
 
 export const navigationItems = [
@@ -1344,6 +1357,46 @@ export const mockVenues = [
     price: 'R$ 200/h',
     amenities: ['Churrasqueira', 'Bar'],
     description: 'Campo society com grama sintética de última geração.',
+  },
+]
+
+export const mockKidsVenues: KidsVenue[] = [
+  {
+    id: 'k1',
+    name: 'Arena Kids Sports',
+    image:
+      'https://img.usecurling.com/p/600/400?q=kids%20sports%20playground&color=blue',
+    location: 'Vila Olímpia, SP',
+    rating: 4.8,
+    isFree: true,
+    hasMonitors: true,
+    activities: ['Futebol de Sabão', 'Pula-Pula', 'Pintura Facial'],
+    description:
+      'Espaço completo para pais praticarem esportes enquanto os filhos se divertem com segurança.',
+  },
+  {
+    id: 'k2',
+    name: 'Complexo Esportivo Família',
+    image:
+      'https://img.usecurling.com/p/600/400?q=playground%20park&color=green',
+    location: 'Pinheiros, SP',
+    rating: 4.5,
+    isFree: false,
+    hasMonitors: true,
+    activities: ['Gincana Esportiva', 'Oficina de Artes'],
+    description: 'Monitores especializados e área kids climatizada.',
+  },
+  {
+    id: 'k3',
+    name: 'Clube do Sol',
+    image: 'https://img.usecurling.com/p/600/400?q=kids%20playing&color=yellow',
+    location: 'Morumbi, SP',
+    rating: 4.7,
+    isFree: true,
+    hasMonitors: false,
+    activities: ['Playground Aberto', 'Caixa de Areia'],
+    description:
+      'Área kids ao ar livre, perfeita para dias de sol. Pais responsáveis pela supervisão.',
   },
 ]
 

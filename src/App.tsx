@@ -43,6 +43,7 @@ const FuelCredits = lazy(() => import('./pages/explore/FuelCredits'))
 const PartnerGasStations = lazy(
   () => import('./pages/explore/PartnerGasStations'),
 )
+const KidsFriendlyList = lazy(() => import('./pages/explore/KidsFriendlyList'))
 
 // Details
 const EventDetails = lazy(() => import('./pages/explore/EventDetails'))
@@ -191,6 +192,10 @@ const App = () => {
                     <Route
                       path="/explore/fuel/stations"
                       element={<PartnerGasStations />}
+                    />
+                    <Route
+                      path="/explore/kids"
+                      element={<KidsFriendlyList />}
                     />
 
                     {/* Detail Routes */}
