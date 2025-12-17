@@ -17,20 +17,17 @@ import {
 } from '@/components/ui/carousel'
 import { Badge } from '@/components/ui/badge'
 import { PaymentDialog } from '@/components/PaymentDialog'
-import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import { useCartStore } from '@/stores/useCartStore'
 
 export default function ProductDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
   const product = mockProducts.find((p) => p.id === id) || mockProducts[0]
-
-  const handleAddToCart = () => {
-    toast.success('Produto adicionado ao carrinho!')
-  }
+  const { addToCart } = useCartStore()
 
   return (
-    <div className="min-h-screen bg-background pb-24 animate-fade-in">
+    <div className="min-h-screen bg-background pb-32 animate-fade-in relative">
       <div className="sticky top-0 z-20 flex justify-between p-4 bg-transparent pointer-events-none">
         <Button
           variant="secondary"
@@ -149,14 +146,15 @@ export default function ProductDetails() {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border/50 flex gap-3 shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
+      <div className="fixed bottom-0 left-0 right-0 p-4 pb-6 bg-background/80 backdrop-blur-md border-t border-border/50 flex gap-3 shadow-[0_-5px_20px_rgba(0,0,0,0.05)] z-50">
         <Button
           variant="outline"
           size="lg"
-          className="flex-1 h-14 rounded-xl font-bold border-2"
-          onClick={handleAddToCart}
+          className="flex-1 h-12 rounded-xl font-bold border-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all text-xs sm:text-sm"
+          onClick={() => addToCart(product)}
         >
-          Adicionar
+          <ShoppingCart className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+          <span className="truncate">Adicionar ao Carrinho</span>
         </Button>
         <PaymentDialog
           title={product.name}
@@ -165,8 +163,9 @@ export default function ProductDetails() {
         >
           <Button
             size="lg"
-            className="flex-[2] h-14 rounded-xl font-bold text-lg shadow-lg"
+            className="flex-[1.5] h-12 rounded-xl font-bold text-sm sm:text-base shadow-lg bg-primary hover:bg-primary/90 text-white"
           >
+            <ShieldCheck className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
             Comprar Agora
           </Button>
         </PaymentDialog>
