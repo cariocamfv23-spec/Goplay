@@ -1,15 +1,62 @@
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Trash2, ShoppingBag } from 'lucide-react'
+import {
+  ArrowLeft,
+  Trash2,
+  ShoppingBag,
+  Truck,
+  Zap,
+  Package,
+  Clock,
+} from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { PaymentDialog } from '@/components/PaymentDialog'
 import { useCartStore } from '@/stores/useCartStore'
 import { cn } from '@/lib/utils'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Label } from '@/components/ui/label'
 
 export default function Cart() {
   const navigate = useNavigate()
   const { cart, removeFromCart, clearCart, total, totalPoints } = useCartStore()
+
+  const [shippingMethod, setShippingMethod] = useState('standard')
+
+  const shippingOptions = [
+    {
+      id: 'standard',
+      name: 'Frete Padrão',
+      price: 0,
+      time: '5-7 dias úteis',
+      icon: Truck,
+    },
+    {
+      id: 'express',
+      name: 'Entrega Expressa',
+      price: 14.9,
+      time: '2-3 dias úteis',
+      icon: Zap,
+    },
+    {
+      id: 'flash',
+      name: 'Entrega Flash',
+      price: 29.9,
+      time: 'Chega amanhã',
+      icon: Package,
+    },
+  ]
+
+  const selectedShipping =
+    shippingOptions.find((o) => o.id === shippingMethod) || shippingOptions[0]
+
+  const finalPrice = total + selectedShipping.price
+
+  // Conversion estimate: 1 BRL = 100 Points (based on 1000pts = 10BRL)
+  // Only apply points shipping cost if the cart is purchasable with points
+  const shippingPoints = Math.round(selectedShipping.price * 100)
+  const finalPoints = totalPoints > 0 ? totalPoints + shippingPoints : 0
 
   return (
     <div className="min-h-screen bg-background flex flex-col pb-24 animate-fade-in">
@@ -51,72 +98,150 @@ export default function Cart() {
             </Button>
           </div>
         ) : (
-          cart.map((item) => (
-            <Card
-              key={item.id}
-              className="border border-border/50 shadow-sm overflow-hidden bg-card/50 hover:bg-card transition-colors group"
-            >
-              <CardContent className="p-3 flex gap-4">
-                {/* Product Image - Enhanced Visibility */}
-                <div className="h-28 w-24 bg-secondary/20 rounded-xl p-2 flex items-center justify-center shrink-0 border border-border/30 overflow-hidden relative">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
-                  />
-                </div>
-
-                {/* Product Details with Description */}
-                <div className="flex-1 flex flex-col min-h-[7rem]">
-                  <div className="flex-1 space-y-1">
-                    <div className="flex justify-between items-start gap-2">
-                      <h3 className="font-bold text-sm leading-tight line-clamp-2 text-foreground">
-                        {item.name}
-                      </h3>
+          <>
+            <div className="space-y-4">
+              {cart.map((item) => (
+                <Card
+                  key={item.id}
+                  className="border border-border/50 shadow-sm overflow-hidden bg-card/50 hover:bg-card transition-colors group"
+                >
+                  <CardContent className="p-3 flex gap-4">
+                    {/* Product Image - Enhanced Visibility */}
+                    <div className="h-28 w-24 bg-secondary/20 rounded-xl p-2 flex items-center justify-center shrink-0 border border-border/30 overflow-hidden relative">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
+                      />
                     </div>
 
-                    <p className="text-[10px] font-bold text-primary uppercase tracking-wider">
-                      {item.category}
-                    </p>
+                    {/* Product Details with Description */}
+                    <div className="flex-1 flex flex-col min-h-[7rem]">
+                      <div className="flex-1 space-y-1">
+                        <div className="flex justify-between items-start gap-2">
+                          <h3 className="font-bold text-sm leading-tight line-clamp-2 text-foreground">
+                            {item.name}
+                          </h3>
+                        </div>
 
-                    {/* New Description Field */}
-                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed opacity-90">
-                      {item.description}
-                    </p>
-                  </div>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-wider">
+                          {item.category}
+                        </p>
 
-                  <div className="flex justify-between items-end mt-3 pt-2 border-t border-border/30">
-                    <div className="flex flex-col">
-                      <div className="flex items-baseline gap-1">
-                        <span className="font-bold text-base text-foreground">
-                          R$ {item.price.toFixed(2)}
-                        </span>
-                        {item.quantity > 1 && (
-                          <span className="text-xs text-muted-foreground font-normal">
-                            x{item.quantity}
-                          </span>
-                        )}
+                        {/* New Description Field */}
+                        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed opacity-90">
+                          {item.description}
+                        </p>
                       </div>
-                      {item.pointsPrice > 0 && (
-                        <span className="text-[10px] text-gold font-bold flex items-center gap-1">
-                          +{item.pointsPrice * item.quantity} pts
-                        </span>
-                      )}
-                    </div>
 
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                      onClick={() => removeFromCart(item.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))
+                      <div className="flex justify-between items-end mt-3 pt-2 border-t border-border/30">
+                        <div className="flex flex-col">
+                          <div className="flex items-baseline gap-1">
+                            <span className="font-bold text-base text-foreground">
+                              R$ {item.price.toFixed(2)}
+                            </span>
+                            {item.quantity > 1 && (
+                              <span className="text-xs text-muted-foreground font-normal">
+                                x{item.quantity}
+                              </span>
+                            )}
+                          </div>
+                          {item.pointsPrice > 0 && (
+                            <span className="text-[10px] text-gold font-bold flex items-center gap-1">
+                              +{item.pointsPrice * item.quantity} pts
+                            </span>
+                          )}
+                        </div>
+
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                          onClick={() => removeFromCart(item.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Shipping Options */}
+            <div className="space-y-3 pt-2">
+              <h3 className="font-bold text-sm flex items-center gap-2 px-1 text-foreground">
+                <Truck className="h-4 w-4 text-primary" />
+                Opções de Entrega
+              </h3>
+              <RadioGroup
+                value={shippingMethod}
+                onValueChange={setShippingMethod}
+                className="grid gap-3"
+              >
+                {shippingOptions.map((option) => (
+                  <Label
+                    key={option.id}
+                    htmlFor={option.id}
+                    className={cn(
+                      'flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all duration-200',
+                      shippingMethod === option.id
+                        ? 'border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20'
+                        : 'border-border/50 bg-card/30 hover:bg-card hover:border-primary/30',
+                    )}
+                  >
+                    <div className="flex items-center gap-4">
+                      <RadioGroupItem
+                        value={option.id}
+                        id={option.id}
+                        className="sr-only"
+                      />
+                      <div
+                        className={cn(
+                          'p-2.5 rounded-full transition-colors',
+                          shippingMethod === option.id
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-secondary text-muted-foreground',
+                        )}
+                      >
+                        <option.icon className="h-5 w-5" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <p
+                          className={cn(
+                            'font-semibold text-sm',
+                            shippingMethod === option.id
+                              ? 'text-foreground'
+                              : 'text-muted-foreground',
+                          )}
+                        >
+                          {option.name}
+                        </p>
+                        <p className="text-xs text-muted-foreground flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {option.time}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span
+                        className={cn(
+                          'font-bold text-sm',
+                          shippingMethod === option.id
+                            ? 'text-primary'
+                            : 'text-foreground',
+                        )}
+                      >
+                        {option.price === 0
+                          ? 'Grátis'
+                          : `R$ ${option.price.toFixed(2)}`}
+                      </span>
+                    </div>
+                  </Label>
+                ))}
+              </RadioGroup>
+            </div>
+          </>
         )}
       </div>
 
@@ -129,18 +254,29 @@ export default function Cart() {
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Frete</span>
-              <span className="text-green-600 font-medium">Grátis</span>
+              <span
+                className={cn(
+                  'font-medium',
+                  selectedShipping.price === 0
+                    ? 'text-green-600'
+                    : 'text-foreground',
+                )}
+              >
+                {selectedShipping.price === 0
+                  ? 'Grátis'
+                  : `R$ ${selectedShipping.price.toFixed(2)}`}
+              </span>
             </div>
             <Separator className="bg-border/50" />
             <div className="flex justify-between items-end">
               <span className="text-lg font-bold">Total</span>
               <div className="text-right">
                 <div className="text-xl font-bold text-primary">
-                  R$ {total.toFixed(2)}
+                  R$ {finalPrice.toFixed(2)}
                 </div>
-                {totalPoints > 0 && (
+                {finalPoints > 0 && (
                   <div className="text-xs text-gold font-bold">
-                    ou {totalPoints} pts
+                    ou {finalPoints} pts
                   </div>
                 )}
               </div>
@@ -148,8 +284,8 @@ export default function Cart() {
           </div>
           <PaymentDialog
             title={`Compra de ${cart.length} ${cart.length === 1 ? 'item' : 'itens'}`}
-            price={total}
-            pointsPrice={totalPoints}
+            price={finalPrice}
+            pointsPrice={finalPoints}
             onSuccess={clearCart}
           >
             <Button
