@@ -67,7 +67,7 @@ export default function Scholarships() {
             variant="ghost"
             size="icon"
             className="-ml-2 hover:bg-secondary/50 rounded-full"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/explore')}
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>

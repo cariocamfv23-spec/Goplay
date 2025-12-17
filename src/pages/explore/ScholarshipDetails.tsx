@@ -3,7 +3,6 @@ import { mockScholarships } from '@/lib/data'
 import {
   ArrowLeft,
   MapPin,
-  GraduationCap,
   Calendar,
   CheckCircle2,
   FileText,
@@ -12,10 +11,10 @@ import {
   Building2,
   Unlock,
   AlertCircle,
+  Trophy,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { PaymentDialog } from '@/components/PaymentDialog'
 import { toast } from 'sonner'
 import { useState } from 'react'
@@ -147,7 +146,7 @@ export default function ScholarshipDetails() {
               <ShieldCheck className="h-5 w-5 text-primary" /> Processo da Bolsa
             </h3>
             <div className="bg-secondary/20 p-4 rounded-xl border border-border/40">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground font-medium">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground font-medium flex-wrap">
                 {scholarship.process.split('>').map((step, i, arr) => (
                   <div key={i} className="contents">
                     <span className="text-center">{step.trim()}</span>
