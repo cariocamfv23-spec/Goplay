@@ -2,7 +2,14 @@ import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import { Logo } from '@/components/Logo'
 import { AppIcon } from '@/components/AppIcon'
-import { ArrowRight, Trophy, Users, Activity } from 'lucide-react'
+import {
+  ArrowRight,
+  Trophy,
+  Users,
+  Activity,
+  Sparkles,
+  Play,
+} from 'lucide-react'
 
 export default function Index() {
   const navigate = useNavigate()
@@ -47,6 +54,40 @@ export default function Index() {
             <p className="text-sm text-muted-foreground leading-relaxed">
               A plataforma completa para atletas, times e organizadores.
             </p>
+          </div>
+
+          {/* New Retrospective Banner */}
+          <div
+            onClick={() => navigate('/retrospective')}
+            className="w-full relative group cursor-pointer overflow-hidden rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-900 to-indigo-900 opacity-90" />
+            <div
+              className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay group-hover:scale-110 transition-transform duration-700"
+              style={{
+                backgroundImage:
+                  "url('https://img.usecurling.com/p/400/200?q=celebration%20confetti')",
+              }}
+            />
+            <div className="relative p-4 flex items-center justify-between">
+              <div className="text-left">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <Sparkles className="h-3 w-3 text-gold animate-pulse" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-gold">
+                    Especial 2024
+                  </span>
+                </div>
+                <h3 className="text-white font-bold text-lg leading-tight">
+                  Sua Retrospectiva
+                </h3>
+                <p className="text-white/70 text-xs">
+                  Reviva seus melhores momentos do ano.
+                </p>
+              </div>
+              <div className="h-10 w-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 group-hover:bg-white group-hover:text-purple-900 transition-colors">
+                <Play className="h-4 w-4 fill-current ml-0.5" />
+              </div>
+            </div>
           </div>
 
           {/* Value Props / Features Preview */}

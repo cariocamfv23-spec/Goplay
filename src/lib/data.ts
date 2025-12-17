@@ -33,6 +33,9 @@ import {
   Gem,
   Star,
   Plane,
+  Flag,
+  TrendingUp,
+  CheckCircle,
 } from 'lucide-react'
 
 // Types
@@ -459,12 +462,75 @@ export const exploreCategories = [
   },
 ]
 
+export const mockRetrospective = {
+  year: 2024,
+  stats: {
+    videosWatched: 842,
+    topCategory: 'Futebol',
+    topCategoryIcon: Trophy,
+    hoursWatched: 124,
+    mostWatchedDate: '14 de Agosto',
+  },
+  milestones: [
+    {
+      id: 1,
+      label: 'Primeira Partida',
+      date: '12 Fev',
+      icon: Flag,
+      color: 'text-blue-500',
+    },
+    {
+      id: 2,
+      label: '3 Bolsas Aplicadas',
+      date: '15 Mai',
+      icon: GraduationCap,
+      color: 'text-emerald-500',
+    },
+    {
+      id: 3,
+      label: 'Conexão com Agência',
+      date: '20 Ago',
+      icon: Briefcase,
+      color: 'text-purple-500',
+    },
+  ],
+  achievements: [
+    {
+      id: 1,
+      title: 'Perfil Campeão',
+      description: '100% dos dados preenchidos',
+      icon: CheckCircle,
+      color: 'text-green-500',
+    },
+    {
+      id: 2,
+      title: 'Top Candidato',
+      description: 'Entre os 5% mais ativos',
+      icon: Star,
+      color: 'text-gold',
+    },
+    {
+      id: 3,
+      title: 'Embaixador',
+      description: 'Convidou 10+ amigos',
+      icon: Users,
+      color: 'text-primary',
+    },
+  ],
+  summary: {
+    message:
+      'Foi um ano incrível de superação e conquistas. Estamos ansiosos para ver o que você fará em 2025!',
+  },
+}
+
 export const photographerCategories = [
   'Esportes',
   'Retrato',
   'Eventos',
   'Produtos',
 ]
+
+// ... (rest of the file remains unchanged, just exporting mockRetrospective)
 
 export const narrationStyles = [
   {
@@ -1262,6 +1328,8 @@ export const mockVideos = [
     },
   },
 ]
+
+// ... (rest of imports and data)
 
 export const mockAiAnalysis = {
   score: 85,

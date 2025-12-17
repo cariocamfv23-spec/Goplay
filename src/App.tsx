@@ -17,6 +17,9 @@ const Register = lazy(() => import('./pages/auth/Register'))
 const Onboarding = lazy(() => import('./pages/auth/Onboarding'))
 const ProfileSelection = lazy(() => import('./pages/auth/ProfileSelection'))
 
+// New Retrospective Page
+const Retrospective = lazy(() => import('./pages/retrospective/Retrospective'))
+
 const Home = lazy(() => import('./pages/home/Home'))
 const Move = lazy(() => import('./pages/move/Move'))
 const Explore = lazy(() => import('./pages/explore/Explore'))
@@ -162,6 +165,7 @@ const App = () => {
                     path="/profile-selection"
                     element={<ProfileSelection />}
                   />
+                  <Route path="/retrospective" element={<Retrospective />} />
 
                   <Route element={<Layout />}>
                     <Route path="/home" element={<Home />} />
