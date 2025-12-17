@@ -36,6 +36,8 @@ const MapEvents = lazy(() => import('./pages/explore/MapEvents'))
 const InternationalMatch = lazy(
   () => import('./pages/explore/InternationalMatch'),
 )
+const LiveEvents = lazy(() => import('./pages/explore/LiveEvents'))
+const LiveStream = lazy(() => import('./pages/explore/LiveStream'))
 
 // Details
 const EventDetails = lazy(() => import('./pages/explore/EventDetails'))
@@ -170,6 +172,8 @@ const App = () => {
                       path="/explore/international"
                       element={<InternationalMatch />}
                     />
+                    <Route path="/explore/live" element={<LiveEvents />} />
+                    <Route path="/explore/live/:id" element={<LiveStream />} />
 
                     {/* Detail Routes */}
                     <Route path="/events/:id" element={<EventDetails />} />

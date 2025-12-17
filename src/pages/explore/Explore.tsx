@@ -6,6 +6,8 @@ import {
   CreditCard,
   Map as MapIcon,
   Globe,
+  Radio,
+  Play,
 } from 'lucide-react'
 import { exploreCategories, mockEvents, mockVenues } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
@@ -54,6 +56,57 @@ export default function Explore() {
       </div>
 
       <div className="p-4 space-y-6">
+        {/* NEW FEATURE: Live Events (Cinematic/Premium Card) */}
+        <div
+          onClick={() => navigate('/explore/live')}
+          className="relative w-full h-36 rounded-2xl overflow-hidden cursor-pointer group shadow-lg ring-1 ring-white/10"
+        >
+          {/* Animated Background */}
+          <div className="absolute inset-0 bg-black">
+            <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-red-900 to-black opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+            {/* Subtle grainy texture */}
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay"></div>
+            <img
+              src="https://img.usecurling.com/p/800/300?q=stadium%20lights%20crowd&color=red"
+              className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-50 scale-100 group-hover:scale-105 transition-transform duration-1000"
+              alt="Background"
+            />
+          </div>
+
+          {/* Content */}
+          <div className="absolute inset-0 p-5 flex flex-col justify-between">
+            <div className="flex justify-between items-start">
+              <div className="flex items-center gap-2">
+                {/* Cinematic Icon Construction */}
+                <div className="relative flex items-center justify-center h-8 w-8 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_0_15px_rgba(239,68,68,0.5)]">
+                  <Radio className="h-4 w-4 text-white animate-pulse" />
+                  <span className="absolute top-0 right-0 -mt-1 -mr-1 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-black animate-bounce shadow-lg"></span>
+                </div>
+                <Badge
+                  variant="destructive"
+                  className="bg-red-600 text-white border-0 shadow-lg tracking-wider font-bold text-[10px]"
+                >
+                  AO VIVO
+                </Badge>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70 tracking-tight drop-shadow-sm mb-1">
+                Eventos ao Vivo
+              </h2>
+              <p className="text-white/60 text-xs font-medium max-w-[240px] leading-relaxed">
+                Assista agora aos maiores campeonatos e lutas em tempo real.
+              </p>
+            </div>
+
+            {/* Floating Action Button inside card */}
+            <div className="absolute bottom-4 right-4 h-10 w-10 rounded-full bg-white text-red-600 flex items-center justify-center shadow-lg transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+              <Play className="h-5 w-5 fill-current ml-0.5" />
+            </div>
+          </div>
+        </div>
+
         {/* International Match Feature Card */}
         <div
           onClick={() => navigate('/explore/international')}

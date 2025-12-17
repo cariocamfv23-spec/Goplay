@@ -260,6 +260,26 @@ export interface PassportData {
   status: 'active' | 'suspended' | 'expired'
 }
 
+export interface LiveEvent {
+  id: string
+  title: string
+  championship: string
+  modality:
+    | 'futebol'
+    | 'futsal'
+    | 'tênis'
+    | 'surf'
+    | 'boxe'
+    | 'lutas'
+    | 'outros'
+  city: string
+  status: 'live' | 'upcoming' | 'ended'
+  viewers: string
+  image: string
+  score?: string
+  startTime?: string
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: Zap, label: 'Move', path: '/move' },
@@ -1802,3 +1822,83 @@ export const mockOracle = {
     { name: 'Resistência', current: 70, projected: 88 },
   ],
 }
+
+export const mockLiveEvents: LiveEvent[] = [
+  {
+    id: 'le1',
+    title: 'Flamengo vs Palmeiras',
+    championship: 'Brasileirão Série A',
+    modality: 'futebol',
+    city: 'Rio de Janeiro',
+    status: 'live',
+    viewers: '2.4M',
+    image: 'https://img.usecurling.com/p/600/400?q=soccer%20match&color=red',
+    score: '2 - 1',
+  },
+  {
+    id: 'le2',
+    title: 'UFC 300: Main Event',
+    championship: 'UFC',
+    modality: 'lutas',
+    city: 'Las Vegas',
+    status: 'live',
+    viewers: '5.1M',
+    image: 'https://img.usecurling.com/p/600/400?q=ufc%20fight&color=red',
+    score: 'Round 3',
+  },
+  {
+    id: 'le3',
+    title: 'Final da Superliga',
+    championship: 'Superliga de Vôlei',
+    modality: 'outros',
+    city: 'Belo Horizonte',
+    status: 'live',
+    viewers: '800K',
+    image: 'https://img.usecurling.com/p/600/400?q=volleyball&color=yellow',
+    score: 'Set 4',
+  },
+  {
+    id: 'le4',
+    title: 'WSL Saquarema',
+    championship: 'World Surf League',
+    modality: 'surf',
+    city: 'Saquarema',
+    status: 'upcoming',
+    viewers: '0',
+    image: 'https://img.usecurling.com/p/600/400?q=surfing&color=blue',
+    startTime: '14:00',
+  },
+  {
+    id: 'le5',
+    title: 'Nadal vs Alcaraz',
+    championship: 'Roland Garros',
+    modality: 'tênis',
+    city: 'Paris',
+    status: 'live',
+    viewers: '3.2M',
+    image: 'https://img.usecurling.com/p/600/400?q=tennis%20match&color=orange',
+    score: 'Set 2 (4-3)',
+  },
+  {
+    id: 'le6',
+    title: 'Magnus Futsal vs Corinthians',
+    championship: 'LNF',
+    modality: 'futsal',
+    city: 'Sorocaba',
+    status: 'live',
+    viewers: '150K',
+    image: 'https://img.usecurling.com/p/600/400?q=futsal&color=blue',
+    score: '3 - 3',
+  },
+  {
+    id: 'le7',
+    title: 'Popó vs Bambam',
+    championship: 'Fight Music Show',
+    modality: 'boxe',
+    city: 'São Paulo',
+    status: 'ended',
+    viewers: '10M',
+    image: 'https://img.usecurling.com/p/600/400?q=boxing&color=black',
+    score: 'KO Round 1',
+  },
+]
