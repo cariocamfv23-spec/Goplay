@@ -1,6 +1,17 @@
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import {
   ArrowLeft,
   MapPin,
@@ -9,6 +20,8 @@ import {
   Navigation,
   Star,
   Info,
+  Map as MapIcon,
+  Car,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
@@ -82,6 +95,33 @@ const stations = [
 
 export default function PartnerGasStations() {
   const navigate = useNavigate()
+  const [selectedStation, setSelectedStation] = useState<
+    (typeof stations)[0] | null
+  >(null)
+  const [origin, setOrigin] = useState('')
+
+  const handleTraceRoute = (service: 'google' | 'waze') => {
+    if (!selectedStation) return
+
+    const destination = `${selectedStation.address}, ${selectedStation.city}`
+    let url = ''
+
+    if (service === 'waze') {
+      // Waze usually navigates from current location
+      url = `https://waze.com/ul?q=${encodeURIComponent(destination)}&navigate=yes`
+    } else {
+      // Google Maps
+      if (origin.trim()) {
+        url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`
+      } else {
+        url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`
+      }
+    }
+
+    window.open(url, '_blank')
+    setSelectedStation(null)
+    setOrigin('')
+  }
 
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
@@ -176,6 +216,7 @@ export default function PartnerGasStations() {
                 <Button
                   className="w-full mt-4 h-9 text-xs font-semibold gap-2"
                   variant="outline"
+                  onClick={() => setSelectedStation(station)}
                 >
                   <Navigation className="h-3 w-3" />
                   Traçar Rota
@@ -185,6 +226,65 @@ export default function PartnerGasStations() {
           </Card>
         ))}
       </div>
+
+      <Dialog
+        open={!!selectedStation}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedStation(null)
+            setOrigin('')
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Traçar Rota</DialogTitle>
+            <DialogDescription>
+              Escolha como deseja chegar até o {selectedStation?.name}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="destination">Destino</Label>
+              <div className="flex items-center gap-2 p-2.5 border rounded-md bg-muted/50 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4 text-primary" />
+                <span className="truncate">
+                  {selectedStation?.address} - {selectedStation?.region}
+                </span>
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="origin">Partida (Opcional)</Label>
+              <Input
+                id="origin"
+                placeholder="Sua localização atual"
+                value={origin}
+                onChange={(e) => setOrigin(e.target.value)}
+              />
+              <p className="text-[10px] text-muted-foreground">
+                Deixe em branco para usar o GPS do seu dispositivo.
+              </p>
+            </div>
+          </div>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button
+              variant="outline"
+              className="w-full sm:w-1/2 gap-2"
+              onClick={() => handleTraceRoute('waze')}
+            >
+              <Car className="h-4 w-4" />
+              Waze
+            </Button>
+            <Button
+              className="w-full sm:w-1/2 gap-2"
+              onClick={() => handleTraceRoute('google')}
+            >
+              <MapIcon className="h-4 w-4" />
+              Google Maps
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
