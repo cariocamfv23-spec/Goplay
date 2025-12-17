@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   X,
@@ -13,6 +13,14 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { mockRetrospective, mockCurrentUser } from '@/lib/data'
 
+const SLIDES = [
+  { id: 'intro', type: 'intro' },
+  { id: 'stats', type: 'stats' },
+  { id: 'milestones', type: 'milestones' },
+  { id: 'achievements', type: 'achievements' },
+  { id: 'outro', type: 'outro' },
+]
+
 export default function Retrospective() {
   const navigate = useNavigate()
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -22,14 +30,6 @@ export default function Retrospective() {
   const progressInterval = useRef<ReturnType<typeof setInterval> | null>(null)
   const [progress, setProgress] = useState(0)
   const SLIDE_DURATION = 6000 // 6 seconds per slide
-
-  const slides = [
-    { id: 'intro', type: 'intro' },
-    { id: 'stats', type: 'stats' },
-    { id: 'milestones', type: 'milestones' },
-    { id: 'achievements', type: 'achievements' },
-    { id: 'outro', type: 'outro' },
-  ]
 
   useEffect(() => {
     // Initialize Audio
@@ -68,14 +68,36 @@ export default function Retrospective() {
     }
   }, [isMuted, isPlaying])
 
+  const handleNext = useCallback(() => {
+    setProgress(0)
+    if (currentSlide < SLIDES.length - 1) {
+      setCurrentSlide((prev) => prev + 1)
+    } else {
+      setIsPlaying(false) // Stop at the end
+    }
+  }, [currentSlide])
+
+  const handlePrev = useCallback(() => {
+    setProgress(0)
+    if (currentSlide > 0) {
+      setCurrentSlide((prev) => prev - 1)
+    }
+  }, [currentSlide])
+
+  // Watch progress to trigger next slide
+  useEffect(() => {
+    if (progress >= 100 && isPlaying) {
+      handleNext()
+    }
+  }, [progress, isPlaying, handleNext])
+
   useEffect(() => {
     if (isPlaying) {
       setProgress(0)
       progressInterval.current = setInterval(() => {
         setProgress((prev) => {
           if (prev >= 100) {
-            handleNext()
-            return 0
+            return 100
           }
           return prev + 100 / (SLIDE_DURATION / 100) // Update every 100ms
         })
@@ -88,20 +110,6 @@ export default function Retrospective() {
       if (progressInterval.current) clearInterval(progressInterval.current)
     }
   }, [currentSlide, isPlaying])
-
-  const handleNext = () => {
-    if (currentSlide < slides.length - 1) {
-      setCurrentSlide((prev) => prev + 1)
-    } else {
-      setIsPlaying(false) // Stop at the end
-    }
-  }
-
-  const handlePrev = () => {
-    if (currentSlide > 0) {
-      setCurrentSlide((prev) => prev - 1)
-    }
-  }
 
   const toggleMute = () => setIsMuted(!isMuted)
   const togglePlay = () => setIsPlaying(!isPlaying)
@@ -139,7 +147,7 @@ export default function Retrospective() {
       <div className="relative z-20 w-full max-w-md h-full sm:h-[90vh] sm:rounded-3xl bg-black/40 backdrop-blur-md shadow-2xl overflow-hidden flex flex-col">
         {/* Progress Bars */}
         <div className="absolute top-0 left-0 right-0 p-3 z-30 flex gap-1.5">
-          {slides.map((_, index) => (
+          {SLIDES.map((_, index) => (
             <div
               key={index}
               className="h-1 flex-1 bg-white/30 rounded-full overflow-hidden"
@@ -207,7 +215,7 @@ export default function Retrospective() {
             className="w-1/3 h-full cursor-pointer flex items-center justify-center"
             onClick={togglePlay}
           >
-            {!isPlaying && currentSlide < slides.length - 1 && (
+            {!isPlaying && currentSlide < SLIDES.length - 1 && (
               <div className="bg-black/40 p-4 rounded-full backdrop-blur-sm animate-in zoom-in fade-in">
                 <Play className="h-8 w-8 fill-white" />
               </div>
@@ -225,7 +233,7 @@ export default function Retrospective() {
 
         {/* Slide Content */}
         <div className="flex-1 relative z-0 flex items-center justify-center p-6 text-center">
-          {slides[currentSlide].type === 'intro' && (
+          {SLIDES[currentSlide].type === 'intro' && (
             <div className="animate-in fade-in zoom-in duration-1000 slide-in-from-bottom-8">
               <h2 className="text-4xl font-black mb-2 tracking-tighter">
                 Seu ano no
@@ -243,7 +251,7 @@ export default function Retrospective() {
             </div>
           )}
 
-          {slides[currentSlide].type === 'stats' && (
+          {SLIDES[currentSlide].type === 'stats' && (
             <div className="space-y-8 w-full animate-in fade-in slide-in-from-right duration-700">
               <h3 className="text-2xl font-bold uppercase tracking-widest text-gold mb-8">
                 Histórico
@@ -278,7 +286,7 @@ export default function Retrospective() {
             </div>
           )}
 
-          {slides[currentSlide].type === 'milestones' && (
+          {SLIDES[currentSlide].type === 'milestones' && (
             <div className="w-full animate-in fade-in slide-in-from-bottom duration-700">
               <h3 className="text-2xl font-bold uppercase tracking-widest text-primary mb-8">
                 Marcos do Ano
@@ -308,7 +316,7 @@ export default function Retrospective() {
             </div>
           )}
 
-          {slides[currentSlide].type === 'achievements' && (
+          {SLIDES[currentSlide].type === 'achievements' && (
             <div className="w-full animate-in fade-in zoom-in duration-700">
               <h3 className="text-2xl font-bold uppercase tracking-widest text-green-400 mb-8">
                 Conquistas
@@ -332,7 +340,7 @@ export default function Retrospective() {
             </div>
           )}
 
-          {slides[currentSlide].type === 'outro' && (
+          {SLIDES[currentSlide].type === 'outro' && (
             <div className="animate-in fade-in slide-in-from-bottom duration-1000 text-center w-full">
               <div className="w-24 h-24 rounded-full border-4 border-gold mx-auto mb-6 shadow-2xl overflow-hidden">
                 <img
