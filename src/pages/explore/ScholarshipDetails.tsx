@@ -12,18 +12,31 @@ import {
   Unlock,
   AlertCircle,
   Trophy,
+  Send,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { PaymentDialog } from '@/components/PaymentDialog'
 import { toast } from 'sonner'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { cn } from '@/lib/utils'
 
 export default function ScholarshipDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
   const scholarship = mockScholarships.find((s) => s.id === id)
   const [unlocked, setUnlocked] = useState(false)
+  const [isApplied, setIsApplied] = useState(false)
+
+  useEffect(() => {
+    // Check if applied
+    if (id) {
+      const applied = localStorage.getItem(`applied_scholarship_${id}`)
+      if (applied) {
+        setIsApplied(true)
+      }
+    }
+  }, [id])
 
   if (!scholarship) {
     return (
@@ -214,9 +227,29 @@ export default function ScholarshipDetails() {
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-xl border-t border-border/50 z-20 pb-safe">
         <Button
           size="lg"
-          className="w-full font-bold h-12 text-base rounded-xl"
+          className={cn(
+            'w-full font-bold h-12 text-base rounded-xl transition-all',
+            isApplied
+              ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+              : 'bg-primary hover:bg-primary/90 text-primary-foreground',
+          )}
+          onClick={() => {
+            if (!isApplied) {
+              navigate(`/explore/scholarships/${id}/apply`)
+            }
+          }}
+          disabled={isApplied}
         >
-          Aplicar para esta Bolsa
+          {isApplied ? (
+            <>
+              <CheckCircle2 className="mr-2 h-5 w-5 text-emerald-500" />
+              Candidatura Enviada
+            </>
+          ) : (
+            <>
+              Aplicar para esta Bolsa <Send className="ml-2 h-4 w-4" />
+            </>
+          )}
         </Button>
       </div>
     </div>

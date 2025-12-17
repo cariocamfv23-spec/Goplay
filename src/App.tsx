@@ -59,6 +59,9 @@ const HortifrutiDetails = lazy(
 const ScholarshipDetails = lazy(
   () => import('./pages/explore/ScholarshipDetails'),
 )
+const ScholarshipApplication = lazy(
+  () => import('./pages/explore/ScholarshipApplication'),
+)
 
 // Profile & Stats
 const Profile = lazy(() => import('./pages/profile/Profile'))
@@ -216,6 +219,10 @@ const App = () => {
                     <Route
                       path="/explore/scholarships/:id"
                       element={<ScholarshipDetails />}
+                    />
+                    <Route
+                      path="/explore/scholarships/:id/apply"
+                      element={<ScholarshipApplication />}
                     />
 
                     {/* Profile & Stats */}
