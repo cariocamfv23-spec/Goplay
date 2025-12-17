@@ -12,6 +12,7 @@ import {
   CloudRain,
   Thermometer,
   Zap,
+  GraduationCap,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Separator } from '@/components/ui/separator'
@@ -24,12 +25,17 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Switch } from '@/components/ui/switch'
 import { useWeatherStore } from '@/stores/useWeatherStore'
+import { useScholarshipStore } from '@/stores/useScholarshipStore'
 import { Label } from '@/components/ui/label'
 
 export default function Settings() {
   const navigate = useNavigate()
   const { setTheme, theme } = useTheme()
   const { preferences, toggleAll, toggleType } = useWeatherStore()
+  const {
+    preferences: scholarshipPrefs,
+    toggleNotifications: toggleScholarshipNotifs,
+  } = useScholarshipStore()
 
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
@@ -79,6 +85,33 @@ export default function Settings() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          </div>
+        </div>
+
+        <Separator />
+
+        {/* Scholarships Alerts Section */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-bold text-muted-foreground uppercase px-2">
+            Oportunidades
+          </h3>
+
+          <div className="px-2 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <GraduationCap className="h-4 w-4 text-emerald-500" />
+                  <Label className="text-base">Novas Bolsas Compatíveis</Label>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Receba alertas quando surgirem bolsas para seu perfil.
+                </p>
+              </div>
+              <Switch
+                checked={scholarshipPrefs.notifications}
+                onCheckedChange={toggleScholarshipNotifs}
+              />
+            </div>
           </div>
         </div>
 

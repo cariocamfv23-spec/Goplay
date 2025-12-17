@@ -68,9 +68,17 @@ export interface Notification {
   message: string
   time: string
   read: boolean
-  type: 'challenge' | 'invite' | 'system' | 'like' | 'weather' | 'level_up'
+  type:
+    | 'challenge'
+    | 'invite'
+    | 'system'
+    | 'like'
+    | 'weather'
+    | 'level_up'
+    | 'scholarship'
   date?: string
   priority?: 'low' | 'medium' | 'high' | 'critical'
+  link?: string
 }
 
 export interface NarrationConfig {

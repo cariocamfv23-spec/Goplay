@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { TopBar } from './TopBar'
 import { BottomNav } from './BottomNav'
 import { WeatherAlertManager } from './WeatherAlertManager'
+import { ScholarshipAlertManager } from './ScholarshipAlertManager'
 
 export default function Layout() {
   const location = useLocation()
@@ -30,6 +31,7 @@ export default function Layout() {
     <div className="min-h-screen bg-background flex flex-col relative">
       {!shouldHideTopBar && <TopBar />}
       <WeatherAlertManager />
+      <ScholarshipAlertManager />
       <main className={`flex-1 w-full ${!shouldHideBottomNav ? 'pb-16' : ''}`}>
         <Outlet />
       </main>
