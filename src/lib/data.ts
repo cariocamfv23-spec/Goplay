@@ -32,6 +32,7 @@ import {
   Crown,
   Gem,
   Star,
+  Plane,
 } from 'lucide-react'
 
 // Types
@@ -317,6 +318,24 @@ export interface Scholarship {
   deadline: string
 }
 
+export interface Agency {
+  id: string
+  name: string
+  logo: string
+  cover: string
+  description: string
+  shortDescription: string
+  services: string[]
+  location: string
+  rating: number
+  website: string
+  email: string
+  phone: string
+  whatsapp?: string
+  instagram?: string
+  programs: { title: string; description: string }[]
+}
+
 export interface KidsVenue {
   id: string
   name: string
@@ -376,6 +395,13 @@ export const exploreCategories = [
     color: 'text-emerald-600 dark:text-emerald-400',
   },
   {
+    id: 'agencies',
+    label: 'Agências',
+    icon: Plane,
+    bg: 'bg-sky-100 dark:bg-sky-900/20',
+    color: 'text-sky-600 dark:text-sky-400',
+  },
+  {
     id: 'international',
     label: 'Mundial',
     icon: Globe,
@@ -430,13 +456,6 @@ export const exploreCategories = [
     icon: Dumbbell,
     bg: 'bg-red-100 dark:bg-red-900/20',
     color: 'text-red-600 dark:text-red-400',
-  },
-  {
-    id: 'nutrition',
-    label: 'Nutri',
-    icon: Apple,
-    bg: 'bg-yellow-100 dark:bg-yellow-900/20',
-    color: 'text-yellow-600 dark:text-yellow-400',
   },
 ]
 
@@ -514,6 +533,88 @@ export const referralLevels: ReferralLevel[] = [
     color: 'text-cyan-400',
     icon: Gem,
     benefits: ['25% OFF na Loja', 'Status Verificado', 'Convites Exclusivos'],
+  },
+]
+
+export const mockAgencies: Agency[] = [
+  {
+    id: 'a1',
+    name: 'NextLevel Sports',
+    logo: 'https://img.usecurling.com/i?q=next%20level%20logo&color=blue',
+    cover:
+      'https://img.usecurling.com/p/800/400?q=university%20students&color=blue',
+    description:
+      'Especialistas em bolsas esportivas nos EUA e Europa. Transformamos atletas em estudantes-atletas internacionais.',
+    shortDescription: 'Bolsas esportivas nos EUA e Europa.',
+    services: [
+      'Consultoria Acadêmica',
+      'Produção de Vídeo Highlights',
+      'Assessoria de Vistos',
+      'Showcases',
+    ],
+    location: 'São Paulo, SP',
+    rating: 4.9,
+    website: 'https://nextlevel.example.com',
+    email: 'contact@nextlevel.example.com',
+    phone: '+55 11 99999-9999',
+    programs: [
+      {
+        title: 'Programa Elite USA',
+        description: 'Bolsas de 100% em universidades da Divisão I da NCAA.',
+      },
+      {
+        title: 'Intercâmbio High School',
+        description: 'Estude e jogue o ensino médio nos Estados Unidos.',
+      },
+    ],
+  },
+  {
+    id: 'a2',
+    name: 'EuroFut Agency',
+    logo: 'https://img.usecurling.com/i?q=eurofut%20logo&color=red',
+    cover:
+      'https://img.usecurling.com/p/800/400?q=european%20soccer%20field&color=green',
+    description:
+      'A ponte direta para o futebol europeu. Testes em clubes da Espanha, Portugal e Itália.',
+    shortDescription: 'Testes em clubes da Europa.',
+    services: [
+      'Agenciamento de Carreira',
+      'Intercâmbio Esportivo',
+      'Clínicas de Futebol',
+    ],
+    location: 'Rio de Janeiro, RJ',
+    rating: 4.7,
+    website: 'https://eurofut.example.com',
+    email: 'scout@eurofut.example.com',
+    phone: '+55 21 98888-8888',
+    programs: [
+      {
+        title: 'Summer Camp Barcelona',
+        description: '2 semanas de treinamento intensivo na Espanha.',
+      },
+    ],
+  },
+  {
+    id: 'a3',
+    name: 'Global Scholar',
+    logo: 'https://img.usecurling.com/i?q=global%20scholar%20logo&color=green',
+    cover:
+      'https://img.usecurling.com/p/800/400?q=library%20students&color=orange',
+    description:
+      'Focados na excelência acadêmica e esportiva. Bolsas para Tênis, Natação e Vôlei.',
+    shortDescription: 'Excelência acadêmica e esportiva.',
+    services: ['Preparação TOEFL/SAT', 'Tradução de Documentos', 'Mentoria'],
+    location: 'Curitiba, PR',
+    rating: 4.8,
+    website: 'https://globalscholar.example.com',
+    email: 'info@globalscholar.example.com',
+    phone: '+55 41 97777-7777',
+    programs: [
+      {
+        title: 'Tennis Pro Path',
+        description: 'Caminho para o tênis universitário americano.',
+      },
+    ],
   },
 ]
 

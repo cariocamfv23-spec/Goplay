@@ -33,6 +33,7 @@ const GymsList = lazy(() => import('./pages/explore/GymsList'))
 const NutritionList = lazy(() => import('./pages/explore/NutritionList'))
 const ClinicsList = lazy(() => import('./pages/explore/ClinicsList'))
 const Scholarships = lazy(() => import('./pages/explore/Scholarships'))
+const AgenciesList = lazy(() => import('./pages/explore/AgenciesList'))
 const MapEvents = lazy(() => import('./pages/explore/MapEvents'))
 const InternationalMatch = lazy(
   () => import('./pages/explore/InternationalMatch'),
@@ -59,6 +60,7 @@ const HortifrutiDetails = lazy(
 const ScholarshipDetails = lazy(
   () => import('./pages/explore/ScholarshipDetails'),
 )
+const AgencyDetails = lazy(() => import('./pages/explore/AgencyDetails'))
 const ScholarshipApplication = lazy(
   () => import('./pages/explore/ScholarshipApplication'),
 )
@@ -185,6 +187,10 @@ const App = () => {
                       path="/explore/scholarships"
                       element={<Scholarships />}
                     />
+                    <Route
+                      path="/explore/agencies"
+                      element={<AgenciesList />}
+                    />
                     <Route path="/explore/jobs" element={<JobsList />} />
                     <Route path="/explore/map-events" element={<MapEvents />} />
                     <Route
@@ -219,6 +225,10 @@ const App = () => {
                     <Route
                       path="/explore/scholarships/:id"
                       element={<ScholarshipDetails />}
+                    />
+                    <Route
+                      path="/explore/agencies/:id"
+                      element={<AgencyDetails />}
                     />
                     <Route
                       path="/explore/scholarships/:id/apply"
