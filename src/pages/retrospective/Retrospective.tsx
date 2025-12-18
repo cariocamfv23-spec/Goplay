@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { mockRetrospective } from '@/lib/data'
 import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
+import { AppIcon } from '@/components/AppIcon'
 
 import IntroSlide from './IntroSlide'
 import StatsSlide from './StatsSlide'
@@ -164,8 +165,8 @@ export default function Retrospective() {
         {/* Top Controls */}
         <div className="absolute top-8 left-0 right-0 px-6 z-40 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center">
-              <span className="font-bold text-[10px] tracking-tighter">GP</span>
+            <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center p-1.5 shadow-sm">
+              <AppIcon className="w-full h-full drop-shadow-sm" />
             </div>
             <span className="text-xs font-bold uppercase tracking-widest opacity-90 drop-shadow-md">
               Retrospectiva {mockRetrospective.year}
