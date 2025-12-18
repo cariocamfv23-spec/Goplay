@@ -377,8 +377,8 @@ export interface RetrospectiveYear {
 }
 
 export const navigationItems = [
-  { icon: LayoutList, label: 'Feed', path: '/feed' },
   { icon: Home, label: 'Home', path: '/home' },
+  { icon: LayoutList, label: 'Feed', path: '/feed' },
   { icon: Zap, label: 'Move', path: '/move' },
   { icon: Search, label: 'Explorar', path: '/explore' },
   { icon: ShoppingBag, label: 'Loja', path: '/marketplace' },
