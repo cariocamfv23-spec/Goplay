@@ -44,7 +44,8 @@ export function TopBar() {
     location.pathname !== '/explore' &&
     location.pathname !== '/messages' &&
     location.pathname !== '/jobs' &&
-    location.pathname !== '/marketplace'
+    location.pathname !== '/marketplace' &&
+    location.pathname !== '/feed'
 
   return (
     <div className="sticky top-0 z-40 w-full h-16 bg-background/80 backdrop-blur-xl border-b border-border/40 flex items-center justify-between px-4 transition-all shadow-sm">

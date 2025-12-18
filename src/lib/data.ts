@@ -36,6 +36,7 @@ import {
   Flag,
   TrendingUp,
   CheckCircle,
+  LayoutList,
 } from 'lucide-react'
 
 // Types
@@ -376,6 +377,7 @@ export interface RetrospectiveYear {
 }
 
 export const navigationItems = [
+  { icon: LayoutList, label: 'Feed', path: '/feed' },
   { icon: Home, label: 'Home', path: '/home' },
   { icon: Zap, label: 'Move', path: '/move' },
   { icon: Search, label: 'Explorar', path: '/explore' },

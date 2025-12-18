@@ -21,6 +21,7 @@ const ProfileSelection = lazy(() => import('./pages/auth/ProfileSelection'))
 const Retrospective = lazy(() => import('./pages/retrospective/Retrospective'))
 
 const Home = lazy(() => import('./pages/home/Home'))
+const Feed = lazy(() => import('./pages/feed/Feed'))
 const Move = lazy(() => import('./pages/move/Move'))
 const Explore = lazy(() => import('./pages/explore/Explore'))
 const CheckIn = lazy(() => import('./pages/checkin/CheckIn'))
@@ -171,6 +172,7 @@ const App = () => {
 
                   <Route element={<Layout />}>
                     <Route path="/home" element={<Home />} />
+                    <Route path="/feed" element={<Feed />} />
                     <Route path="/move" element={<Move />} />
                     <Route path="/explore" element={<Explore />} />
                     <Route path="/check-in" element={<CheckIn />} />
