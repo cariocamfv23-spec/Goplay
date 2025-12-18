@@ -35,6 +35,7 @@ import { AppIcon } from '@/components/AppIcon'
 import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
 import { RetrospectiveThemeSelector } from '@/components/RetrospectiveThemeSelector'
 import { cn } from '@/lib/utils'
+import { PostDetailDialog } from '@/components/PostDetailDialog'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -50,6 +51,10 @@ export default function AthleteView({
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
   const [isThemeSelectorOpen, setIsThemeSelectorOpen] = useState(false)
 
+  // Post Detail State
+  const [selectedPost, setSelectedPost] = useState<any>(null)
+  const [isDetailOpen, setIsDetailOpen] = useState(false)
+
   const { getTheme } = useRetrospectiveStore()
   const currentTheme = getTheme()
 
@@ -62,6 +67,11 @@ export default function AthleteView({
       description: `${track.title} - ${track.artist}`,
       icon: <Music className="h-4 w-4 text-primary" />,
     })
+  }
+
+  const handlePostClick = (post: any) => {
+    setSelectedPost(post)
+    setIsDetailOpen(true)
   }
 
   return (
@@ -471,10 +481,7 @@ export default function AthleteView({
                 <div
                   key={post.id}
                   className="aspect-square bg-muted relative overflow-hidden cursor-pointer hover:opacity-90 group"
-                  onClick={() => {
-                    // In a real app, this would open the post details
-                    toast.info(`Visualizando post ${post.id}`)
-                  }}
+                  onClick={() => handlePostClick(post)}
                 >
                   {post.media && post.media.length > 0 ? (
                     <img
@@ -521,6 +528,7 @@ export default function AthleteView({
                   <div
                     key={post.id}
                     className="aspect-square bg-muted relative overflow-hidden cursor-pointer hover:opacity-90 group"
+                    onClick={() => handlePostClick(post)}
                   >
                     <img
                       src={post.media?.[0]}
@@ -620,6 +628,12 @@ export default function AthleteView({
             </div>
           </div>
         }
+      />
+
+      <PostDetailDialog
+        post={selectedPost}
+        open={isDetailOpen}
+        onOpenChange={setIsDetailOpen}
       />
     </div>
   )

@@ -10,7 +10,6 @@ import {
   Play,
   HeartHandshake,
   ExternalLink,
-  Volume2,
   Mic,
 } from 'lucide-react'
 import {
@@ -28,6 +27,8 @@ import { cn } from '@/lib/utils'
 import useSoundStore from '@/stores/useSoundStore'
 import { SoundWaveVisualizer } from './SoundWaveVisualizer'
 import { NarrationConfig } from '@/lib/data'
+import { useLikeInteraction } from '@/hooks/useLikeInteraction'
+import { PostDetailDialog } from '@/components/PostDetailDialog'
 
 interface PostProps {
   post: {
@@ -49,92 +50,31 @@ interface PostProps {
     cools?: number
     time: string
     narration?: NarrationConfig
+    liked?: boolean
   }
 }
 
 export function PostCard({ post }: PostProps) {
   const [showComments, setShowComments] = useState(false)
-  const [isLiked, setIsLiked] = useState(false)
-  const [likeCount, setLikeCount] = useState(post.likes)
+  const [showDetail, setShowDetail] = useState(false)
+
+  const { isLiked, likeCount, handleLike } = useLikeInteraction(
+    post,
+    post.likes,
+    post.liked,
+  )
+
   const [isCool, setIsCool] = useState(false)
   const [coolCount, setCoolCount] = useState(post.cools || 0)
   const [isPlayingNarration, setIsPlayingNarration] = useState(false)
 
   const { playSound, playNarration } = useSoundStore()
 
-  const handleLike = () => {
-    const newIsLiked = !isLiked
-    setIsLiked(newIsLiked)
-    setLikeCount(newIsLiked ? likeCount + 1 : likeCount - 1)
-
-    if (newIsLiked) {
-      // Determine sound based on content or user type
-      let soundCategory = 'like_generic'
-      const content = (post.content || '').toLowerCase()
-      const hashtags = (post.hashtags || []).map((h) => h.toLowerCase())
-      const fullText = content + ' ' + hashtags.join(' ')
-
-      if (
-        fullText.includes('futebol') ||
-        fullText.includes('soccer') ||
-        fullText.includes('gol') ||
-        fullText.includes('chute')
-      ) {
-        soundCategory = 'like_football'
-      } else if (
-        fullText.includes('futsal') ||
-        fullText.includes('quadra') ||
-        fullText.includes('salao')
-      ) {
-        soundCategory = 'like_futsal'
-      } else if (
-        fullText.includes('basquete') ||
-        fullText.includes('basketball') ||
-        fullText.includes('basket') ||
-        fullText.includes('dunk') ||
-        fullText.includes('cesta')
-      ) {
-        soundCategory = 'like_basketball'
-      } else if (
-        fullText.includes('volei') ||
-        fullText.includes('volleyball') ||
-        fullText.includes('manchete') ||
-        fullText.includes('saque')
-      ) {
-        soundCategory = 'like_volleyball'
-      } else if (
-        fullText.includes('tennis') ||
-        fullText.includes('tenis') ||
-        fullText.includes('raquete')
-      ) {
-        soundCategory = 'like_tennis'
-      } else if (
-        fullText.includes('treino') ||
-        fullText.includes('gym') ||
-        fullText.includes('academia') ||
-        fullText.includes('workout') ||
-        fullText.includes('crossfit')
-      ) {
-        soundCategory = 'like_workout'
-      } else if (
-        fullText.includes('parceiro') ||
-        fullText.includes('partner') ||
-        fullText.includes('nutri') ||
-        fullText.includes('fisioterapeuta')
-      ) {
-        soundCategory = 'like_partner'
-      }
-
-      // @ts-expect-error
-      playSound(soundCategory)
-    }
-  }
-
   const handleCool = () => {
     setIsCool(!isCool)
     setCoolCount(isCool ? coolCount - 1 : coolCount + 1)
     if (!isCool) {
-      // @ts-expect-error
+      // @ts-expect-error - Sound category
       playSound('like_generic')
     }
   }
@@ -144,7 +84,6 @@ export function PostCard({ post }: PostProps) {
       if (!isPlayingNarration) {
         playNarration(post.narration)
         setIsPlayingNarration(true)
-        // Mock stopping after 3 seconds for visual effect
         setTimeout(() => setIsPlayingNarration(false), 3000)
       } else {
         setIsPlayingNarration(false)
@@ -152,11 +91,18 @@ export function PostCard({ post }: PostProps) {
     }
   }
 
+  const openDetail = () => {
+    setShowDetail(true)
+  }
+
   const renderContent = () => {
     switch (post.type) {
       case 'video':
         return (
-          <div className="relative rounded-xl overflow-hidden mb-3 group transform transition-all duration-300 hover:shadow-md">
+          <div
+            className="relative rounded-xl overflow-hidden mb-3 group transform transition-all duration-300 hover:shadow-md cursor-pointer"
+            onClick={openDetail}
+          >
             <img
               src={post.media?.[0]}
               alt="Thumbnail"
@@ -233,12 +179,15 @@ export function PostCard({ post }: PostProps) {
               <CarouselContent>
                 {post.media?.map((url, index) => (
                   <CarouselItem key={index}>
-                    <div className="aspect-square relative rounded-xl overflow-hidden bg-muted">
+                    <div
+                      className="aspect-square relative rounded-xl overflow-hidden bg-muted cursor-pointer"
+                      onClick={openDetail}
+                    >
                       <img
                         src={url}
                         alt={`Slide ${index}`}
                         loading="lazy"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                       />
                     </div>
                   </CarouselItem>
@@ -253,7 +202,10 @@ export function PostCard({ post }: PostProps) {
         )
       case 'article':
         return (
-          <div className="mb-3 border border-border rounded-xl overflow-hidden bg-secondary/20 hover:bg-secondary/30 transition-colors">
+          <div
+            className="mb-3 border border-border rounded-xl overflow-hidden bg-secondary/20 hover:bg-secondary/30 transition-colors cursor-pointer"
+            onClick={openDetail}
+          >
             <div className="aspect-[2/1] relative overflow-hidden">
               <img
                 src={post.media?.[0]}
@@ -274,12 +226,15 @@ export function PostCard({ post }: PostProps) {
         )
       default:
         return post.media && post.media.length > 0 ? (
-          <div className="rounded-xl overflow-hidden mb-3">
+          <div
+            className="rounded-xl overflow-hidden mb-3 cursor-pointer"
+            onClick={openDetail}
+          >
             <img
               src={post.media[0]}
               alt="Post"
               loading="lazy"
-              className="w-full h-auto object-cover max-h-[500px]"
+              className="w-full h-auto object-cover max-h-[500px] hover:scale-105 transition-transform duration-500"
             />
           </div>
         ) : null
@@ -416,6 +371,11 @@ export function PostCard({ post }: PostProps) {
       </Card>
 
       <CommentsSheet open={showComments} onOpenChange={setShowComments} />
+      <PostDetailDialog
+        post={post}
+        open={showDetail}
+        onOpenChange={setShowDetail}
+      />
     </>
   )
 }
