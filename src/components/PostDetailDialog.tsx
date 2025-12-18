@@ -38,21 +38,29 @@ export function PostDetailDialog({
   open,
   onOpenChange,
 }: PostDetailDialogProps) {
-  if (!post) return null
+  // Hooks must be called unconditionally.
+  // We use fallback values when post is null/undefined to satisfy hooks requirements.
+  const safePost = post || {}
 
-  const { isLiked, likeCount, handleLike } = useLikeInteraction(
-    post,
-    post.likes,
-    post.liked,
-  )
+  const { isLiked, likeCount, handleLike, setIsLiked, setLikeCount } =
+    useLikeInteraction(safePost, safePost.likes || 0, safePost.liked || false)
+
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const { playNarration } = useSoundStore()
   const [isPlayingNarration, setIsPlayingNarration] = useState(false)
 
+  // Sync state when post data changes (e.g. going from null to populated)
+  useEffect(() => {
+    if (post) {
+      setIsLiked(post.liked || false)
+      setLikeCount(post.likes || 0)
+    }
+  }, [post?.id, post?.liked, post?.likes, setIsLiked, setLikeCount])
+
   // Auto-play sound/narration on open if applicable
   useEffect(() => {
-    if (open) {
+    if (open && post) {
       if (post.type === 'video') {
         setIsPlaying(true)
       }
@@ -61,7 +69,10 @@ export function PostDetailDialog({
       setIsPlaying(false)
       setIsPlayingNarration(false)
     }
-  }, [open, post.type])
+  }, [open, post?.type])
+
+  // Early return if no post (now safe as hooks are called above)
+  if (!post) return null
 
   const toggleNarration = () => {
     if (post.narration) {
