@@ -1,224 +1,257 @@
-import { mockPosts, mockStories } from '@/lib/data'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Plus, Video, MapPin, Box, Eye, Sparkles, Wand2 } from 'lucide-react'
-import { PostCard } from '@/components/PostCard'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { CreatePostFab } from '@/components/CreatePostFab'
+import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import {
+  Zap,
+  Brain,
+  Crosshair,
+  Ghost,
+  Wand2,
+  MapPin,
+  ChevronRight,
+  TrendingUp,
+  Flame,
+} from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { CheckInModal } from '@/components/CheckInModal'
-import { useState } from 'react'
+import { mockCurrentUser } from '@/lib/data'
+import { useThemeStore } from '@/stores/useThemeStore'
 import { cn } from '@/lib/utils'
-import { WeatherAlertBanner } from '@/components/WeatherAlertBanner'
-import { AppIcon } from '@/components/AppIcon'
 
-const Home = () => {
+export default function Home() {
   const navigate = useNavigate()
-  const [showCheckIn, setShowCheckIn] = useState(false)
+  const { color } = useThemeStore()
+
+  const mainFeatures = [
+    {
+      id: 'move',
+      label: 'Move',
+      icon: Zap,
+      path: '/move',
+      color: 'text-yellow-500',
+      bg: 'bg-yellow-500/10',
+      border: 'border-yellow-500/20',
+      description: 'Feed de vídeos esportivos',
+    },
+    {
+      id: 'oracle',
+      label: 'Oráculo',
+      icon: Brain,
+      path: '/ai/oracle',
+      color: 'text-purple-500',
+      bg: 'bg-purple-500/10',
+      border: 'border-purple-500/20',
+      description: 'Previsões de carreira com IA',
+    },
+    {
+      id: 'arena',
+      label: 'Arena',
+      icon: Crosshair,
+      path: '/ai/arena-mode',
+      color: 'text-red-500',
+      bg: 'bg-red-500/10',
+      border: 'border-red-500/20',
+      description: 'Treino em Realidade Aumentada',
+    },
+    {
+      id: 'ghost',
+      label: 'Grosso Play',
+      icon: Ghost,
+      path: '/ai/ghost-play',
+      color: 'text-cyan-500',
+      bg: 'bg-cyan-500/10',
+      border: 'border-cyan-500/20',
+      description: 'Reconstrução 3D de jogadas',
+    },
+    {
+      id: 'editor',
+      label: 'Edição da Várzea',
+      icon: Wand2,
+      path: '/ai/editor',
+      color: 'text-orange-500',
+      bg: 'bg-orange-500/10',
+      border: 'border-orange-500/20',
+      description: 'Editor automático de highlights',
+    },
+    {
+      id: 'checkin',
+      label: 'Check-in',
+      icon: MapPin,
+      path: '/check-in',
+      color: 'text-green-500',
+      bg: 'bg-green-500/10',
+      border: 'border-green-500/20',
+      description: 'Ganhe pontos nos locais parceiros',
+    },
+  ]
 
   return (
-    <div className="pb-20 relative bg-background min-h-screen animate-fade-in transition-colors duration-300">
-      {/* Weather Alerts */}
-      <WeatherAlertBanner />
+    <div className="min-h-screen bg-background pb-20">
+      {/* Welcome Header */}
+      <div className="px-6 pt-8 pb-4">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">
+              Olá, {mockCurrentUser.name.split(' ')[0]}! 👋
+            </h1>
+            <p className="text-muted-foreground text-sm">
+              Vamos superar seus limites hoje?
+            </p>
+          </div>
+          <Avatar className="h-12 w-12 border-2 border-primary/20">
+            <AvatarImage src={mockCurrentUser.avatar} />
+            <AvatarFallback>{mockCurrentUser.name[0]}</AvatarFallback>
+          </Avatar>
+        </div>
 
-      {/* Stories Section */}
-      <div className="pt-2 pb-2 bg-background border-b border-border/40 sticky top-16 z-30 shadow-sm backdrop-blur-md bg-background/90 transition-all duration-300">
-        <ScrollArea className="w-full whitespace-nowrap">
-          <div className="flex w-max space-x-4 p-2 px-4">
-            {/* My Story */}
-            <div className="flex flex-col items-center space-y-1 cursor-pointer group">
-              <div className="relative transform transition-transform duration-200 group-hover:scale-105">
-                <div className="p-[2px] rounded-full bg-transparent">
-                  <Avatar className="h-16 w-16 border-2 border-background shadow-sm">
-                    <AvatarImage src="https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99" />
-                    <AvatarFallback>EU</AvatarFallback>
-                  </Avatar>
-                </div>
-                <div className="absolute bottom-0 right-0 bg-primary text-white rounded-full p-1 border-2 border-background shadow-sm group-hover:bg-primary/90 transition-colors">
-                  <Plus className="h-3 w-3" />
-                </div>
-              </div>
-              <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">
-                Seu Story
+        {/* Status Card */}
+        <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20 overflow-hidden relative">
+          <div className="absolute right-0 top-0 p-3 opacity-10">
+            <Flame className="w-24 h-24 text-primary" />
+          </div>
+          <CardContent className="p-4 flex items-center gap-4 relative z-10">
+            <div className="flex flex-col items-center justify-center h-14 w-14 rounded-2xl bg-background shadow-sm border border-border/50">
+              <span className="text-xl font-black text-primary">
+                {mockCurrentUser.level}
+              </span>
+              <span className="text-[10px] uppercase font-bold text-muted-foreground">
+                Level
               </span>
             </div>
-
-            {/* Other Stories */}
-            {mockStories.map((story) => (
-              <div
-                key={story.id}
-                className="flex flex-col items-center space-y-1 cursor-pointer group"
-              >
-                <div
-                  className={cn(
-                    'p-[2px] rounded-full transform transition-transform duration-200 group-hover:scale-105',
-                    story.hasStory
-                      ? 'bg-gradient-to-tr from-primary via-purple-500 to-gold'
-                      : 'bg-muted',
-                  )}
-                >
-                  <Avatar className="h-16 w-16 border-2 border-background">
-                    <AvatarImage
-                      src={story.avatar || story.user?.avatar}
-                      loading="lazy"
-                      alt={story.name || story.user?.name}
-                    />
-                    <AvatarFallback>
-                      {(story.name || story.user?.name)?.[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-                <span className="text-xs text-muted-foreground max-w-[64px] truncate group-hover:text-foreground transition-colors">
-                  {story.name || story.user?.name}
+            <div className="flex-1">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-sm font-semibold">Próximo Nível</span>
+                <span className="text-xs text-muted-foreground">
+                  {mockCurrentUser.points} / 2000 XP
                 </span>
+              </div>
+              <div className="h-2 w-full bg-background rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-primary"
+                  style={{
+                    width: `${(mockCurrentUser.points / 2000) * 100}%`,
+                  }}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Navigation Grid */}
+      <div className="px-6 py-2">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-bold text-lg flex items-center gap-2">
+            <Zap className="h-4 w-4 text-gold" /> Acesso Rápido
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          {mainFeatures.map((feature) => (
+            <Card
+              key={feature.id}
+              className={cn(
+                'group cursor-pointer hover:shadow-md transition-all duration-300 border-l-4',
+                feature.border,
+              )}
+              onClick={() => navigate(feature.path)}
+            >
+              <CardContent className="p-3">
+                <div className="flex items-start justify-between mb-2">
+                  <div
+                    className={cn(
+                      'h-10 w-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110',
+                      feature.bg,
+                    )}
+                  >
+                    <feature.icon className={cn('h-5 w-5', feature.color)} />
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground/30 group-hover:text-foreground transition-colors" />
+                </div>
+                <h3 className="font-bold text-sm leading-tight mb-1">
+                  {feature.label}
+                </h3>
+                <p className="text-[10px] text-muted-foreground line-clamp-2">
+                  {feature.description}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Trending / Highlights */}
+      <div className="mt-4">
+        <div className="px-6 flex items-center justify-between mb-3">
+          <h2 className="font-bold text-lg flex items-center gap-2">
+            <TrendingUp className="h-4 w-4 text-green-500" /> Em Alta
+          </h2>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs h-7"
+            onClick={() => navigate('/explore')}
+          >
+            Ver tudo
+          </Button>
+        </div>
+
+        <ScrollArea className="w-full whitespace-nowrap pb-4">
+          <div className="flex w-max space-x-4 px-6">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="w-64 aspect-video rounded-xl bg-muted relative overflow-hidden cursor-pointer group"
+                onClick={() => navigate('/move')}
+              >
+                <img
+                  src={`https://img.usecurling.com/p/400/225?q=soccer%20match&seed=${i}`}
+                  alt="Trending"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-3">
+                  <Badge className="self-start mb-1 bg-primary text-primary-foreground border-none">
+                    Ao Vivo
+                  </Badge>
+                  <p className="text-white font-bold text-sm truncate">
+                    Final do Campeonato Regional
+                  </p>
+                  <p className="text-white/70 text-xs">
+                    Arena Tatuapé • 1.2k assistindo
+                  </p>
+                </div>
               </div>
             ))}
           </div>
-          <ScrollBar orientation="horizontal" className="invisible" />
+          <ScrollBar orientation="horizontal" className="hidden" />
         </ScrollArea>
       </div>
 
-      {/* Quick Actions / Highlights */}
-      <div className="p-4 pb-0 grid grid-cols-2 gap-3 animate-slide-up">
-        {/* MOVE Highlight */}
-        <div
-          className="col-span-1 rounded-2xl bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-900 dark:to-zinc-800 p-4 text-foreground dark:text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
-          onClick={() => navigate('/move')}
-        >
-          <div className="relative z-10">
-            <h2 className="font-bold text-lg flex items-center gap-2">
-              <Video className="h-5 w-5 text-primary animate-pulse" /> MOVE
-            </h2>
-            <p className="text-xs text-muted-foreground dark:text-zinc-400 group-hover:text-foreground dark:group-hover:text-zinc-300 transition-colors mt-1">
-              Destaques
-            </p>
-          </div>
-          <div className="absolute -right-6 -bottom-6 h-20 w-20 bg-primary/10 dark:bg-primary/20 rounded-full blur-2xl group-hover:bg-primary/20 dark:group-hover:bg-primary/30 transition-colors duration-500" />
-        </div>
-
-        {/* Oracle Highlight - NEW */}
-        <div
-          className="col-span-1 rounded-2xl bg-gradient-to-br from-purple-900 to-indigo-900 p-4 text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01] border border-white/10"
-          onClick={() => navigate('/ai/oracle')}
-        >
-          <div className="relative z-10">
-            <h2 className="font-bold text-lg flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-gold animate-pulse" /> Oráculo
-            </h2>
-            <p className="text-xs text-indigo-200 group-hover:text-white transition-colors mt-1">
-              Previsão AI
-            </p>
-          </div>
-          <div className="absolute -right-6 -bottom-6 h-20 w-20 bg-gold/10 rounded-full blur-2xl group-hover:bg-gold/20 transition-colors duration-500" />
-        </div>
-
-        {/* Arena Mode Highlight */}
-        <div
-          className="col-span-1 rounded-2xl bg-black p-4 text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01] border border-white/10"
+      {/* Daily Challenge Banner */}
+      <div className="px-6 mt-2">
+        <Card
+          className="bg-gradient-to-br from-zinc-900 to-black text-white border-none overflow-hidden relative cursor-pointer"
           onClick={() => navigate('/ai/arena-mode')}
         >
-          <div className="relative z-10">
-            <h2 className="font-bold text-lg flex items-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-gold">
-              <AppIcon className="h-5 w-5" /> ARENA
-            </h2>
-            <p className="text-xs text-zinc-400 group-hover:text-white transition-colors mt-1 flex items-center gap-1">
-              <Eye className="h-3 w-3" /> Realidade Aumentada
-            </p>
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-gold/10 opacity-50 group-hover:opacity-100 transition-opacity" />
-          <div className="absolute -right-4 -top-4 w-20 h-20 bg-primary/30 blur-2xl rounded-full" />
-        </div>
-
-        {/* Ghost Play Highlight */}
-        <div
-          className="col-span-1 rounded-2xl bg-gradient-to-br from-purple-900 to-black p-4 text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01] border border-white/10"
-          onClick={() => navigate('/ai/ghost-play')}
-        >
-          <div className="relative z-10">
-            <h2 className="font-bold text-lg flex items-center gap-2">
-              <Box className="h-5 w-5 text-gold animate-pulse" /> Ghost Play
-            </h2>
-            <p className="text-xs text-zinc-400 group-hover:text-white transition-colors mt-1">
-              Replay 3D
-            </p>
-          </div>
-          <div className="absolute -right-6 -bottom-6 h-24 w-24 bg-gold/10 rounded-full blur-2xl group-hover:bg-gold/20 transition-colors duration-500" />
-        </div>
-
-        {/* Varzea Editor Highlight - NEW Feature */}
-        <div
-          className="col-span-2 rounded-2xl bg-gradient-to-r from-yellow-500 to-orange-600 dark:from-yellow-600 dark:to-orange-700 p-4 text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
-          onClick={() => navigate('/ai/editor')}
-        >
-          <div className="relative z-10 flex items-center justify-between">
-            <div>
-              <h2 className="font-bold text-lg flex items-center gap-2">
-                <Wand2 className="h-5 w-5 text-white animate-pulse" /> Edição
-                Várzea
-              </h2>
-              <p className="text-xs text-white/90 group-hover:text-white transition-colors mt-1">
-                Transforme seus vídeos com gírias e efeitos virais
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <CardContent className="p-4 relative z-10 flex items-center gap-4">
+            <div className="h-12 w-12 rounded-full border-2 border-white/20 flex items-center justify-center bg-white/10 backdrop-blur-sm animate-pulse">
+              <Crosshair className="h-6 w-6 text-primary" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-bold text-sm text-gold uppercase tracking-wider mb-1">
+                Desafio Diário
+              </h3>
+              <p className="text-sm font-medium leading-snug">
+                Acerte 50 alvos na Arena Mode
               </p>
+              <p className="text-xs text-white/60 mt-1">Recompensa: +500 XP</p>
             </div>
-            <div className="bg-white/20 p-2 rounded-full backdrop-blur-sm border border-white/30">
-              <Sparkles className="h-5 w-5 text-white" />
-            </div>
-          </div>
-          <div className="absolute -right-6 -bottom-6 h-32 w-32 bg-white/20 rounded-full blur-3xl group-hover:bg-white/30 transition-colors duration-500" />
-          <div className="absolute -left-6 -top-6 h-20 w-20 bg-orange-400/30 rounded-full blur-xl" />
-        </div>
-
-        {/* Check-in Highlight */}
-        <div
-          className="col-span-2 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 p-4 text-foreground dark:text-white relative overflow-hidden shadow-sm dark:shadow-lg cursor-pointer group hover:shadow-md dark:hover:shadow-xl transition-all duration-300 hover:scale-[1.01]"
-          onClick={() => setShowCheckIn(true)}
-        >
-          <div className="relative z-10 flex items-center justify-between">
-            <div>
-              <h2 className="font-bold text-lg flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-green-600 dark:text-green-400 animate-bounce" />{' '}
-                Check-in
-              </h2>
-              <p className="text-xs text-green-800/80 dark:text-green-300 group-hover:text-green-900 dark:group-hover:text-green-200 transition-colors mt-1">
-                Marcar presença
-              </p>
-            </div>
-          </div>
-          <div className="absolute -right-6 -bottom-6 h-20 w-20 bg-green-500/10 dark:bg-green-500/20 rounded-full blur-2xl group-hover:bg-green-500/20 dark:group-hover:bg-green-500/30 transition-colors duration-500" />
-        </div>
+            <ChevronRight className="h-5 w-5 text-white/50" />
+          </CardContent>
+        </Card>
       </div>
-
-      {/* Feed Section */}
-      <div className="max-w-xl mx-auto p-4 space-y-5">
-        <h3 className="font-bold text-lg px-2">Feed Principal</h3>
-        {mockPosts.map((post, index) => (
-          <div
-            key={post.id}
-            className="animate-slide-up"
-            style={{ animationDelay: `${(index + 2) * 100}ms` }}
-          >
-            <PostCard post={post} />
-          </div>
-        ))}
-
-        <div className="text-center py-8">
-          <div className="inline-block h-1 w-1 bg-muted-foreground rounded-full mx-1 animate-bounce [animation-delay:-0.3s]" />
-          <div className="inline-block h-1 w-1 bg-muted-foreground rounded-full mx-1 animate-bounce [animation-delay:-0.15s]" />
-          <div className="inline-block h-1 w-1 bg-muted-foreground rounded-full mx-1 animate-bounce" />
-        </div>
-      </div>
-
-      {/* Create Post FAB */}
-      <CreatePostFab />
-
-      {/* Check-in Modal */}
-      <CheckInModal
-        open={showCheckIn}
-        onOpenChange={setShowCheckIn}
-        venueName="Arena Central"
-        points={50}
-      />
     </div>
   )
 }
-
-export default Home

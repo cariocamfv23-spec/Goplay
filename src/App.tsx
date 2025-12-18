@@ -23,6 +23,7 @@ const Retrospective = lazy(() => import('./pages/retrospective/Retrospective'))
 const Home = lazy(() => import('./pages/home/Home'))
 const Move = lazy(() => import('./pages/move/Move'))
 const Explore = lazy(() => import('./pages/explore/Explore'))
+const CheckIn = lazy(() => import('./pages/checkin/CheckIn'))
 
 // Explore Lists
 const TalentsList = lazy(() => import('./pages/explore/TalentsList'))
@@ -172,6 +173,7 @@ const App = () => {
                     <Route path="/home" element={<Home />} />
                     <Route path="/move" element={<Move />} />
                     <Route path="/explore" element={<Explore />} />
+                    <Route path="/check-in" element={<CheckIn />} />
 
                     {/* Explore Lists Routes */}
                     <Route path="/explore/talents" element={<TalentsList />} />
