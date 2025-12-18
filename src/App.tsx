@@ -82,6 +82,7 @@ const ProfileViews = lazy(() => import('./pages/profile/ProfileViews'))
 const EvolutionTimeline = lazy(
   () => import('./pages/profile/EvolutionTimeline'),
 )
+const EvolutionMode = lazy(() => import('./pages/profile/EvolutionMode'))
 const SportsPassport = lazy(() => import('./pages/profile/SportsPassport'))
 const ReferralProgram = lazy(() => import('./pages/profile/ReferralProgram'))
 
@@ -250,6 +251,10 @@ const App = () => {
                     <Route
                       path="/profile/timeline"
                       element={<EvolutionTimeline />}
+                    />
+                    <Route
+                      path="/profile/evolution"
+                      element={<EvolutionMode />}
                     />
                     <Route
                       path="/profile/passport"

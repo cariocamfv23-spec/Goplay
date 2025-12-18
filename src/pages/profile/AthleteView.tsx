@@ -21,6 +21,7 @@ import {
   Play,
   Share2,
   Palette,
+  TrendingUp,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -368,6 +369,15 @@ export default function AthleteView({
               onClick={() => navigate('/profile/timeline')}
             >
               <History className="mr-2 h-4 w-4" /> Linha do Tempo
+            </Button>
+          )}
+          {isMe && (
+            <Button
+              className="bg-secondary text-foreground hover:bg-secondary/80 justify-start col-span-2"
+              onClick={() => navigate('/profile/evolution')}
+            >
+              <TrendingUp className="mr-2 h-4 w-4 text-green-500" />
+              Modo Evolução
             </Button>
           )}
           {isMe && (

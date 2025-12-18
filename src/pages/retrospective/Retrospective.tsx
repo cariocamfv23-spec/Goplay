@@ -10,6 +10,7 @@ import IntroSlide from './IntroSlide'
 import StatsSlide from './StatsSlide'
 import MilestonesSlide from './MilestonesSlide'
 import AchievementsSlide from './AchievementsSlide'
+import EvolutionSlide from './EvolutionSlide'
 import OutroSlide from './OutroSlide'
 
 const SLIDES = [
@@ -17,6 +18,7 @@ const SLIDES = [
   { id: 'stats', component: StatsSlide },
   { id: 'milestones', component: MilestonesSlide },
   { id: 'achievements', component: AchievementsSlide },
+  { id: 'evolution', component: EvolutionSlide },
   { id: 'outro', component: OutroSlide },
 ]
 
@@ -224,7 +226,7 @@ export default function Retrospective() {
         <div className="flex-1 relative z-10 pt-20">
           {/* We use a key to force re-render animation on slide change */}
           <div key={currentSlide} className="h-full w-full">
-            {currentSlide === 4 ? (
+            {currentSlide === SLIDES.length - 1 ? (
               <OutroSlide onRestart={restart} onClose={handleClose} />
             ) : (
               <ActiveComponent />
