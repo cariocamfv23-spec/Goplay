@@ -611,8 +611,6 @@ export const photographerCategories = [
   'Produtos',
 ]
 
-// ... (rest of the file remains unchanged, just exporting mockRetrospective)
-
 export const narrationStyles = [
   {
     id: 'varzea',
@@ -683,7 +681,6 @@ export const referralLevels: ReferralLevel[] = [
   },
 ]
 
-// ... existing mocks ...
 export const mockAgencies: Agency[] = [
   {
     id: 'a1',
@@ -935,7 +932,6 @@ export const mockPassport: PassportData = {
   status: 'active',
 }
 
-// ... rest of exports (mockTalents, etc.) to ensure file validity
 export const mockTalents: ProfileData[] = [
   {
     id: 't1',
@@ -1030,12 +1026,83 @@ export const mockDrivers: ProfileData[] = []
 export const mockPhotographers: ProfileData[] = []
 export const mockProfiles: ProfileData[] = [...mockTalents]
 export const mockJobs = []
-export const mockProducts: Product[] = []
+
+export const mockProducts: Product[] = [
+  {
+    id: '1',
+    name: 'Camisa Térmica Pro',
+    category: 'Vestuário',
+    price: 89.9,
+    pointsPrice: 800,
+    image:
+      'https://img.usecurling.com/p/300/300?q=t-shirt%20sports&color=black',
+    seller: 'GoPlay Store',
+    rating: 4.8,
+    description: 'Camisa térmica para alta performance.',
+    images: [],
+    modality: 'Fitness',
+    isPremium: false,
+    availability: 'in_stock',
+  },
+  {
+    id: '2',
+    name: 'Chuteira Elite Gold',
+    category: 'Calçados',
+    price: 299.9,
+    pointsPrice: 3000,
+    image: 'https://img.usecurling.com/p/300/300?q=soccer%20shoes&color=gold',
+    seller: 'Nike',
+    rating: 4.9,
+    description: 'Chuteira de campo profissional.',
+    images: [],
+    modality: 'Futebol',
+    isPremium: true,
+    availability: 'in_stock',
+  },
+  {
+    id: '3',
+    name: 'Whey Protein Isolado',
+    category: 'Suplementos',
+    price: 149.9,
+    pointsPrice: 1500,
+    image: 'https://img.usecurling.com/p/300/300?q=whey%20protein&color=white',
+    seller: 'Max Titanium',
+    rating: 4.7,
+    description: 'Suplemento proteico para recuperação.',
+    images: [],
+    modality: 'Fitness',
+    isPremium: false,
+    availability: 'in_stock',
+  },
+  {
+    id: '4',
+    name: 'Bola de Futevôlei',
+    category: 'Equipamentos',
+    price: 120.0,
+    pointsPrice: 1200,
+    image: 'https://img.usecurling.com/p/300/300?q=soccer%20ball&color=white',
+    seller: 'Mikasa',
+    rating: 4.8,
+    description: 'Bola oficial de futevôlei.',
+    images: [],
+    modality: 'Futebol',
+    isPremium: false,
+    availability: 'in_stock',
+  },
+]
+
 export const mockNotifications: Notification[] = []
 export const mockNotificationsList = mockNotifications
 export const mockChats = []
 export const mockPointsHistory = []
-export const mockFinancialSummary = {}
+
+export const mockFinancialSummary = {
+  balance: 1250.5,
+  pointsBalance: 3500,
+  monthlySpending: 450.0,
+  monthlyIncome: 3200.0,
+}
+
 export const mockFinancialHistory: FinancialTransaction[] = []
 export const mockTrainingEvents = []
 export const mockProfileViewers: ProfileViewer[] = []

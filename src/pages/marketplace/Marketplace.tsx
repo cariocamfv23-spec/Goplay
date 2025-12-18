@@ -66,13 +66,13 @@ export default function Marketplace() {
             <div className="flex-1 bg-secondary/50 rounded-lg p-2 flex items-center gap-2 border border-border/50">
               <Wallet className="h-4 w-4 text-primary" />
               <span className="text-xs font-bold">
-                R$ {mockFinancialSummary.balance.toFixed(2)}
+                R$ {(mockFinancialSummary?.balance ?? 0).toFixed(2)}
               </span>
             </div>
             <div className="flex-1 bg-secondary/50 rounded-lg p-2 flex items-center gap-2 border border-border/50">
               <Trophy className="h-4 w-4 text-gold" />
               <span className="text-xs font-bold">
-                {mockFinancialSummary.pointsBalance} pts
+                {mockFinancialSummary?.pointsBalance ?? 0} pts
               </span>
             </div>
           </div>
@@ -193,7 +193,7 @@ export default function Marketplace() {
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-primary text-sm">
-                    R$ {product.price.toFixed(2)}
+                    R$ {(product.price ?? 0).toFixed(2)}
                   </span>
                   <Button
                     size="icon"
