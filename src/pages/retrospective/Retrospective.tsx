@@ -1,24 +1,22 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import {
-  X,
-  Volume2,
-  VolumeX,
-  ChevronLeft,
-  ChevronRight,
-  Play,
-  RotateCcw,
-} from 'lucide-react'
+import { X, Volume2, VolumeX, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { mockRetrospective, mockCurrentUser } from '@/lib/data'
+import { mockRetrospective } from '@/lib/data'
+
+import IntroSlide from './IntroSlide'
+import StatsSlide from './StatsSlide'
+import MilestonesSlide from './MilestonesSlide'
+import AchievementsSlide from './AchievementsSlide'
+import OutroSlide from './OutroSlide'
 
 const SLIDES = [
-  { id: 'intro', type: 'intro' },
-  { id: 'stats', type: 'stats' },
-  { id: 'milestones', type: 'milestones' },
-  { id: 'achievements', type: 'achievements' },
-  { id: 'outro', type: 'outro' },
+  { id: 'intro', component: IntroSlide, theme: 'brand' },
+  { id: 'stats', component: StatsSlide, theme: 'neon' },
+  { id: 'milestones', component: MilestonesSlide, theme: 'nature' },
+  { id: 'achievements', component: AchievementsSlide, theme: 'fire' },
+  { id: 'outro', component: OutroSlide, theme: 'dark' },
 ]
 
 export default function Retrospective() {
@@ -31,8 +29,8 @@ export default function Retrospective() {
   const [progress, setProgress] = useState(0)
   const SLIDE_DURATION = 6000 // 6 seconds per slide
 
+  // --- Audio Logic ---
   useEffect(() => {
-    // Initialize Audio
     const audio = new Audio(
       'https://assets.mixkit.co/music/preview/mixkit-uplifting-strings-and-piano-1341.mp3',
     )
@@ -40,15 +38,11 @@ export default function Retrospective() {
     audio.volume = 0.4
     audioRef.current = audio
 
-    // Try to play audio automatically
     const playPromise = audio.play()
     if (playPromise !== undefined) {
       playPromise
-        .then(() => {
-          // Automatic playback started!
-        })
+        .then(() => {})
         .catch(() => {
-          // Auto-play was prevented
           setIsMuted(true)
         })
     }
@@ -64,16 +58,19 @@ export default function Retrospective() {
       audioRef.current.muted = isMuted
       if (!isMuted && isPlaying) {
         audioRef.current.play().catch(() => {})
+      } else {
+        audioRef.current.pause()
       }
     }
   }, [isMuted, isPlaying])
 
+  // --- Navigation Logic ---
   const handleNext = useCallback(() => {
     setProgress(0)
     if (currentSlide < SLIDES.length - 1) {
       setCurrentSlide((prev) => prev + 1)
     } else {
-      setIsPlaying(false) // Stop at the end
+      setIsPlaying(false)
     }
   }, [currentSlide])
 
@@ -84,7 +81,7 @@ export default function Retrospective() {
     }
   }, [currentSlide])
 
-  // Watch progress to trigger next slide
+  // --- Progress Logic ---
   useEffect(() => {
     if (progress >= 100 && isPlaying) {
       handleNext()
@@ -96,24 +93,35 @@ export default function Retrospective() {
       setProgress(0)
       progressInterval.current = setInterval(() => {
         setProgress((prev) => {
-          if (prev >= 100) {
-            return 100
-          }
-          return prev + 100 / (SLIDE_DURATION / 100) // Update every 100ms
+          if (prev >= 100) return 100
+          return prev + 100 / (SLIDE_DURATION / 100)
         })
       }, 100)
     } else {
       if (progressInterval.current) clearInterval(progressInterval.current)
     }
-
     return () => {
       if (progressInterval.current) clearInterval(progressInterval.current)
     }
   }, [currentSlide, isPlaying])
 
-  const toggleMute = () => setIsMuted(!isMuted)
-  const togglePlay = () => setIsPlaying(!isPlaying)
-  const handleClose = () => navigate('/')
+  // --- Theme Logic ---
+  const getThemeBackground = (theme: string) => {
+    switch (theme) {
+      case 'brand':
+        return 'bg-gradient-to-br from-primary via-purple-900 to-black'
+      case 'neon':
+        return 'bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600'
+      case 'nature':
+        return 'bg-gradient-to-br from-teal-500 via-emerald-600 to-green-800'
+      case 'fire':
+        return 'bg-gradient-to-br from-orange-500 via-red-600 to-rose-700'
+      case 'dark':
+        return 'bg-gradient-to-br from-gray-900 via-gray-800 to-black'
+      default:
+        return 'bg-black'
+    }
+  }
 
   const restart = () => {
     setCurrentSlide(0)
@@ -121,39 +129,33 @@ export default function Retrospective() {
     setProgress(0)
   }
 
+  const toggleMute = () => setIsMuted(!isMuted)
+  const togglePlay = () => setIsPlaying(!isPlaying)
+  const handleClose = () => navigate('/')
+
+  const ActiveComponent = SLIDES[currentSlide].component
+
   return (
-    <div className="fixed inset-0 z-50 bg-black text-white flex items-center justify-center overflow-hidden">
-      {/* Background Ambience */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-black z-10 opacity-60" />
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-40 blur-sm scale-110"
-          style={{
-            backgroundImage:
-              currentSlide === 0
-                ? "url('https://img.usecurling.com/p/800/1200?q=celebration%20confetti')"
-                : currentSlide === 1
-                  ? "url('https://img.usecurling.com/p/800/1200?q=soccer%20stadium%20lights')"
-                  : currentSlide === 2
-                    ? "url('https://img.usecurling.com/p/800/1200?q=trophy%20shelf')"
-                    : currentSlide === 3
-                      ? "url('https://img.usecurling.com/p/800/1200?q=mountain%20top')"
-                      : "url('https://img.usecurling.com/p/800/1200?q=fireworks%20night')",
-          }}
-        />
-      </div>
+    <div className="fixed inset-0 z-50 bg-black text-white flex items-center justify-center overflow-hidden font-sans">
+      {/* Dynamic Background */}
+      <div
+        className={cn(
+          'absolute inset-0 transition-all duration-1000 ease-in-out',
+          getThemeBackground(SLIDES[currentSlide].theme),
+        )}
+      />
 
       {/* Main Container */}
-      <div className="relative z-20 w-full max-w-md h-full sm:h-[90vh] sm:rounded-3xl bg-black/40 backdrop-blur-md shadow-2xl overflow-hidden flex flex-col">
-        {/* Progress Bars */}
-        <div className="absolute top-0 left-0 right-0 p-3 z-30 flex gap-1.5">
+      <div className="relative z-20 w-full max-w-md h-full sm:h-[90vh] sm:rounded-3xl bg-black/10 backdrop-blur-sm shadow-2xl overflow-hidden flex flex-col border-x border-white/5 sm:border border-white/10">
+        {/* Top Progress Bars */}
+        <div className="absolute top-0 left-0 right-0 p-4 z-40 flex gap-2">
           {SLIDES.map((_, index) => (
             <div
               key={index}
               className="h-1 flex-1 bg-white/30 rounded-full overflow-hidden"
             >
               <div
-                className="h-full bg-white transition-all duration-100 ease-linear"
+                className="h-full bg-white transition-all duration-100 ease-linear shadow-[0_0_10px_rgba(255,255,255,0.5)]"
                 style={{
                   width:
                     index < currentSlide
@@ -168,12 +170,12 @@ export default function Retrospective() {
         </div>
 
         {/* Top Controls */}
-        <div className="absolute top-6 left-0 right-0 px-4 z-30 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-black/50 backdrop-blur border border-white/10 flex items-center justify-center">
-              <span className="font-bold text-xs">GP</span>
+        <div className="absolute top-8 left-0 right-0 px-6 z-40 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center">
+              <span className="font-bold text-[10px] tracking-tighter">GP</span>
             </div>
-            <span className="text-xs font-medium opacity-80 uppercase tracking-widest">
+            <span className="text-xs font-bold uppercase tracking-widest opacity-90 drop-shadow-md">
               Retrospectiva {mockRetrospective.year}
             </span>
           </div>
@@ -181,7 +183,7 @@ export default function Retrospective() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 rounded-full bg-black/20 hover:bg-black/40 text-white"
+              className="h-9 w-9 rounded-full bg-black/20 hover:bg-black/30 text-white backdrop-blur-md border border-white/10"
               onClick={toggleMute}
             >
               {isMuted ? (
@@ -193,7 +195,7 @@ export default function Retrospective() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 rounded-full bg-black/20 hover:bg-black/40 text-white"
+              className="h-9 w-9 rounded-full bg-black/20 hover:bg-black/30 text-white backdrop-blur-md border border-white/10"
               onClick={handleClose}
             >
               <X className="h-4 w-4" />
@@ -201,10 +203,10 @@ export default function Retrospective() {
           </div>
         </div>
 
-        {/* Navigation Zones (Invisible) */}
-        <div className="absolute inset-0 z-10 flex">
+        {/* Navigation Zones (Invisible Touch Areas) */}
+        <div className="absolute inset-0 z-30 flex">
           <div
-            className="w-1/3 h-full cursor-pointer"
+            className="w-1/3 h-full cursor-pointer active:bg-black/5 transition-colors"
             onClick={handlePrev}
             onMouseDown={() => setIsPlaying(false)}
             onMouseUp={() => setIsPlaying(true)}
@@ -215,14 +217,15 @@ export default function Retrospective() {
             className="w-1/3 h-full cursor-pointer flex items-center justify-center"
             onClick={togglePlay}
           >
+            {/* Play/Pause Indicator Overlay */}
             {!isPlaying && currentSlide < SLIDES.length - 1 && (
-              <div className="bg-black/40 p-4 rounded-full backdrop-blur-sm animate-in zoom-in fade-in">
-                <Play className="h-8 w-8 fill-white" />
+              <div className="bg-black/40 p-6 rounded-full backdrop-blur-md animate-in zoom-in fade-in">
+                <ChevronRight className="h-10 w-10 fill-white text-white ml-1" />
               </div>
             )}
           </div>
           <div
-            className="w-1/3 h-full cursor-pointer"
+            className="w-1/3 h-full cursor-pointer active:bg-black/5 transition-colors"
             onClick={handleNext}
             onMouseDown={() => setIsPlaying(false)}
             onMouseUp={() => setIsPlaying(true)}
@@ -232,159 +235,37 @@ export default function Retrospective() {
         </div>
 
         {/* Slide Content */}
-        <div className="flex-1 relative z-0 flex items-center justify-center p-6 text-center">
-          {SLIDES[currentSlide].type === 'intro' && (
-            <div className="animate-in fade-in zoom-in duration-1000 slide-in-from-bottom-8">
-              <h2 className="text-4xl font-black mb-2 tracking-tighter">
-                Seu ano no
-                <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-gold">
-                  Goplay
-                </span>
-              </h2>
-              <p className="text-xl font-light opacity-90">
-                Foi uma jornada e tanto!
-              </p>
-              <div className="mt-8 animate-bounce">
-                <div className="w-16 h-1 bg-white/50 mx-auto rounded-full" />
-              </div>
-            </div>
-          )}
-
-          {SLIDES[currentSlide].type === 'stats' && (
-            <div className="space-y-8 w-full animate-in fade-in slide-in-from-right duration-700">
-              <h3 className="text-2xl font-bold uppercase tracking-widest text-gold mb-8">
-                Histórico
-              </h3>
-
-              <div className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 transition-all duration-500 hover:scale-[1.02]">
-                <div className="mb-4">
-                  <mockRetrospective.stats.topCategoryIcon className="w-12 h-12 mx-auto text-gold" />
-                </div>
-                <h4 className="text-4xl font-black mb-1">
-                  {mockRetrospective.stats.topCategory}
-                </h4>
-                <p className="text-sm opacity-80 uppercase tracking-wide">
-                  Sua paixão principal
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white/5 backdrop-blur-sm p-4 rounded-2xl border border-white/10">
-                  <p className="text-3xl font-bold">
-                    {mockRetrospective.stats.videosWatched}
-                  </p>
-                  <p className="text-xs opacity-70">Vídeos Assistidos</p>
-                </div>
-                <div className="bg-white/5 backdrop-blur-sm p-4 rounded-2xl border border-white/10">
-                  <p className="text-3xl font-bold">
-                    {mockRetrospective.stats.hoursWatched}h
-                  </p>
-                  <p className="text-xs opacity-70">Horas de Conteúdo</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {SLIDES[currentSlide].type === 'milestones' && (
-            <div className="w-full animate-in fade-in slide-in-from-bottom duration-700">
-              <h3 className="text-2xl font-bold uppercase tracking-widest text-primary mb-8">
-                Marcos do Ano
-              </h3>
-
-              <div className="space-y-4">
-                {mockRetrospective.milestones.map((item, index) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center gap-4 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 animate-in slide-in-from-left"
-                    style={{ animationDelay: `${index * 200}ms` }}
-                  >
-                    <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                      <item.icon className={cn('w-6 h-6', item.color)} />
-                    </div>
-                    <div className="text-left">
-                      <p className="font-bold text-lg leading-none mb-1">
-                        {item.label}
-                      </p>
-                      <p className="text-xs opacity-70 font-mono">
-                        {item.date} • {mockRetrospective.year}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {SLIDES[currentSlide].type === 'achievements' && (
-            <div className="w-full animate-in fade-in zoom-in duration-700">
-              <h3 className="text-2xl font-bold uppercase tracking-widest text-green-400 mb-8">
-                Conquistas
-              </h3>
-
-              <div className="grid gap-4">
-                {mockRetrospective.achievements.map((item, index) => (
-                  <div
-                    key={item.id}
-                    className="bg-gradient-to-br from-white/10 to-transparent backdrop-blur-md p-6 rounded-3xl border border-white/20 text-center animate-in scale-90 fade-in"
-                    style={{ animationDelay: `${index * 300}ms` }}
-                  >
-                    <item.icon
-                      className={cn('w-10 h-10 mx-auto mb-3', item.color)}
-                    />
-                    <h4 className="font-bold text-xl mb-1">{item.title}</h4>
-                    <p className="text-sm opacity-70">{item.description}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {SLIDES[currentSlide].type === 'outro' && (
-            <div className="animate-in fade-in slide-in-from-bottom duration-1000 text-center w-full">
-              <div className="w-24 h-24 rounded-full border-4 border-gold mx-auto mb-6 shadow-2xl overflow-hidden">
-                <img
-                  src={mockCurrentUser.avatar}
-                  className="w-full h-full object-cover"
-                  alt="Avatar"
-                />
-              </div>
-
-              <h2 className="text-3xl font-bold mb-4">
-                Obrigado, <br />
-                <span className="text-gold">
-                  {mockCurrentUser.name.split(' ')[0]}!
-                </span>
-              </h2>
-
-              <p className="text-lg opacity-90 font-light italic max-w-xs mx-auto mb-8">
-                "{mockRetrospective.summary.message}"
-              </p>
-
-              <div className="flex gap-3 justify-center">
-                <Button
-                  className="bg-white text-black hover:bg-white/90 font-bold rounded-full px-8"
-                  onClick={handleClose}
-                >
-                  Continuar
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="rounded-full border-white/30 hover:bg-white/10 text-white"
-                  onClick={restart}
-                >
-                  <RotateCcw className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          )}
+        <div className="flex-1 relative z-10 pt-20">
+          {/* We use a key to force re-render animation on slide change */}
+          <div key={currentSlide} className="h-full w-full">
+            {currentSlide === 4 ? (
+              <OutroSlide onRestart={restart} onClose={handleClose} />
+            ) : (
+              <ActiveComponent />
+            )}
+          </div>
         </div>
 
-        {/* Bottom Nav Hint (Only for desktop feel or large screens) */}
-        <div className="absolute bottom-6 left-0 right-0 z-30 flex justify-between px-8 opacity-0 sm:opacity-50 pointer-events-none">
-          <ChevronLeft className="h-6 w-6" />
-          <ChevronRight className="h-6 w-6" />
+        {/* Desktop Hints */}
+        <div className="hidden sm:flex absolute top-1/2 left-4 z-40 -translate-y-1/2 opacity-20 hover:opacity-100 transition-opacity">
+          <Button
+            size="icon"
+            variant="ghost"
+            className="rounded-full text-white"
+            onClick={handlePrev}
+          >
+            <ChevronLeft className="h-8 w-8" />
+          </Button>
+        </div>
+        <div className="hidden sm:flex absolute top-1/2 right-4 z-40 -translate-y-1/2 opacity-20 hover:opacity-100 transition-opacity">
+          <Button
+            size="icon"
+            variant="ghost"
+            className="rounded-full text-white"
+            onClick={handleNext}
+          >
+            <ChevronRight className="h-8 w-8" />
+          </Button>
         </div>
       </div>
     </div>

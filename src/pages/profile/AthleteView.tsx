@@ -194,12 +194,12 @@ export default function AthleteView({
             onClick={() => navigate('/retrospective')}
             className="mb-6 relative group cursor-pointer overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] border border-white/10"
           >
-            {/* Premium Animated Background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-800 via-indigo-700 to-blue-800 animate-gradient-xy" />
+            {/* Premium Animated Background - Updated for consistency with new Retrospective */}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary via-purple-800 to-indigo-900 animate-gradient-xy" />
 
             {/* Starfield Texture */}
             <div
-              className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay"
+              className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay"
               style={{
                 backgroundImage:
                   "url('https://img.usecurling.com/p/600/300?q=stars%20space&color=black')",
@@ -207,23 +207,23 @@ export default function AthleteView({
             />
 
             {/* Gold Glow Effects */}
-            <div className="absolute -top-10 -right-10 w-32 h-32 bg-gold/30 rounded-full blur-3xl" />
-            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/30 rounded-full blur-3xl" />
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-gold/30 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/40 rounded-full blur-3xl" />
 
             {/* Content */}
             <div className="relative p-5 z-10 flex items-center justify-between">
               <div className="flex-1 pr-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="bg-white/10 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-gold border border-gold/30 flex items-center gap-1">
+                  <div className="bg-white/10 backdrop-blur-md px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-gold border border-gold/30 flex items-center gap-1">
                     <Sparkles className="h-3 w-3 animate-pulse" />
-                    Especial
+                    Wrapped 2024
                   </div>
                 </div>
                 <h3 className="text-white font-black text-xl italic tracking-tight drop-shadow-lg leading-none mb-1">
-                  RETROSPECTIVA <span className="text-gold">2024</span>
+                  SUA <span className="text-gold">RETROSPECTIVA</span>
                 </h3>
                 <p className="text-indigo-100 text-xs font-medium opacity-90">
-                  Sua temporada de estrela. Veja seus melhores momentos!
+                  Assista agora aos seus melhores momentos!
                 </p>
               </div>
 
