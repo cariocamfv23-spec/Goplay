@@ -1,37 +1,19 @@
-import { useState, useRef, useEffect } from 'react'
-import {
-  mockAiAnalysis,
-  mockStatsHistory,
-  mockTrainingSuggestions,
-  tribes,
-} from '@/lib/data'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import {
-  Heart,
-  MessageCircle,
-  Share2,
-  Play,
-  Zap,
-  Music,
-  Plus,
-} from 'lucide-react'
-import { AiAnalysisDrawer } from '@/components/AiAnalysisDrawer'
+import { useState, useRef } from 'react'
+import { tribes } from '@/lib/data'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
-import { CommentsSheet } from '@/components/CommentsSheet'
-import { ShareDialog } from '@/components/ShareDialog'
-import { toast } from 'sonner'
+import { Zap } from 'lucide-react'
+import { VideoCard, VideoData } from '@/components/move/VideoCard'
 
-// Local Mock Data since src/lib/data.ts is empty/read-only in context
-const LOCAL_MOCK_VIDEOS = [
+const MOVE_VIDEOS: VideoData[] = [
+  // Futebol
   {
-    id: 'v1',
-    url: '',
+    id: 'futebol1',
     thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=soccer%20juggling&color=green',
-    title: 'Domínio total no treino de hoje! ⚽️',
-    description: 'Focando no controle de bola e reflexos. O que acharam?',
+      'https://img.usecurling.com/p/600/1000?q=soccer%20goal%20celebration&color=green',
+    title: 'Golaço de falta no ângulo! ⚽️',
+    description:
+      'Treino de bolas paradas rendendo frutos. A dedicação compensa!',
     likes: 1240,
     comments: 45,
     shares: 89,
@@ -41,289 +23,324 @@ const LOCAL_MOCK_VIDEOS = [
       avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=10',
       isFollowing: false,
     },
-    music: {
-      title: 'Samba de Janeiro',
-      artist: 'Bellini',
-    },
+    music: { title: 'Samba de Janeiro', artist: 'Bellini' },
     modality: 'futebol',
   },
   {
-    id: 'v2',
-    url: '',
+    id: 'futebol2',
     thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=basketball%20dunk&color=orange',
-    title: 'Dunk contest warmup 🏀',
-    description: 'Getting ready for the big game.',
-    likes: 3500,
-    comments: 120,
-    shares: 400,
+      'https://img.usecurling.com/p/600/1000?q=soccer%20dribbling&color=green',
+    title: 'Dribles rápidos e controle de bola ⚡️',
+    description: 'Melhorando a agilidade e a condução em espaço curto.',
+    likes: 850,
+    comments: 22,
+    shares: 34,
     user: {
       id: 'u2',
-      name: 'Jordan Poole',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=23',
+      name: 'Gabigol',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=11',
       isFollowing: true,
     },
-    music: {
-      title: 'Industry Baby',
-      artist: 'Lil Nas X',
+    music: null,
+    modality: 'futebol',
+  },
+  // Futsal
+  {
+    id: 'futsal1',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=futsal%20skill&color=blue',
+    title: 'Falcão style na quadra 👑',
+    description: 'Tentando replicar os movimentos do rei.',
+    likes: 2100,
+    comments: 150,
+    shares: 500,
+    user: {
+      id: 'u3',
+      name: 'Falcão 12',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=12',
+      isFollowing: true,
     },
-    modality: 'futebol', // Using futebol to show in 'all' or filtered
+    music: { title: 'Ousadia e Alegria', artist: 'Thiaguinho' },
+    modality: 'futsal',
   },
   {
-    id: 'v3',
-    url: '',
+    id: 'futsal2',
     thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=crossfit%20workout&color=red',
+      'https://img.usecurling.com/p/600/1000?q=indoor%20soccer%20goal&color=blue',
+    title: 'Finalização de bico precisa',
+    description: 'Aquele chute seco que o goleiro nem vê.',
+    likes: 540,
+    comments: 18,
+    shares: 10,
+    user: {
+      id: 'u4',
+      name: 'Ricardinho',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=13',
+      isFollowing: false,
+    },
+    music: null,
+    modality: 'futsal',
+  },
+  // Bike
+  {
+    id: 'bike1',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=mountain%20bike%20trail&color=orange',
+    title: 'Trilha insana no fim de semana 🚵',
+    description: 'Muita lama, pedras e adrenalina. O MTB não para!',
+    likes: 1500,
+    comments: 60,
+    shares: 120,
+    user: {
+      id: 'u5',
+      name: 'Avancini',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=14',
+      isFollowing: true,
+    },
+    music: { title: 'Born to be Wild', artist: 'Steppenwolf' },
+    modality: 'bike',
+  },
+  {
+    id: 'bike2',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=road%20cycling%20sunset&color=orange',
+    title: 'Pedal de estrada ao pôr do sol',
+    description: '100km pra conta hoje. A vista compensa o esforço.',
+    likes: 980,
+    comments: 40,
+    shares: 25,
+    user: {
+      id: 'u6',
+      name: 'Cycling Life',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=15',
+      isFollowing: false,
+    },
+    music: null,
+    modality: 'bike',
+  },
+  // Running
+  {
+    id: 'running1',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=marathon%20runner&color=red',
+    title: 'Preparação para a Maratona 🏃💨',
+    description: 'Longão de 32km hoje. Ritmo forte do início ao fim.',
+    likes: 3200,
+    comments: 200,
+    shares: 150,
+    user: {
+      id: 'u7',
+      name: 'Kipchoge Fan',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=16',
+      isFollowing: false,
+    },
+    music: { title: 'Eye of the Tiger', artist: 'Survivor' },
+    modality: 'running',
+  },
+  {
+    id: 'running2',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=sprinting%20track&color=red',
+    title: 'Tiros de velocidade na pista',
+    description: 'Treino de explosão. 10x 100m.',
+    likes: 670,
+    comments: 15,
+    shares: 8,
+    user: {
+      id: 'u8',
+      name: 'Speedster',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=17',
+      isFollowing: true,
+    },
+    music: null,
+    modality: 'running',
+  },
+  // Crossfit
+  {
+    id: 'crossfit1',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=crossfit%20workout&color=black',
     title: 'WOD from hell 🔥',
-    description: 'No pain no gain. 21-15-9 Thrusters and Pull-ups.',
+    description: 'No pain no gain. 21-15-9 Thrusters e Pull-ups.',
     likes: 890,
     comments: 32,
     shares: 15,
     user: {
-      id: 'u3',
+      id: 'u9',
       name: 'Sarah Fit',
       avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=45',
       isFollowing: false,
     },
+    music: { title: 'Till I Collapse', artist: 'Eminem' },
+    modality: 'crossfit',
+  },
+  {
+    id: 'crossfit2',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=weightlifting%20snatch&color=black',
+    title: 'Novo PR de Snatch! 🏋️‍♀️',
+    description: 'Técnica e força alinhadas. Muito feliz com o progresso.',
+    likes: 1200,
+    comments: 55,
+    shares: 40,
+    user: {
+      id: 'u10',
+      name: 'Mat Fraser',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=19',
+      isFollowing: true,
+    },
     music: null,
     modality: 'crossfit',
   },
+  // Swimming
+  {
+    id: 'swimming1',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=swimming%20pool%20underwater&color=cyan',
+    title: "Debaixo d'água 🌊",
+    description: 'Focando na técnica de virada olímpica.',
+    likes: 1800,
+    comments: 90,
+    shares: 200,
+    user: {
+      id: 'u11',
+      name: 'Phelps Shark',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=20',
+      isFollowing: true,
+    },
+    music: { title: 'Believer', artist: 'Imagine Dragons' },
+    modality: 'swimming',
+  },
+  {
+    id: 'swimming2',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=swimming%20butterfly&color=cyan',
+    title: 'Borboleta: o estilo mais difícil',
+    description: 'Exige muito cardio e coordenação.',
+    likes: 760,
+    comments: 25,
+    shares: 12,
+    user: {
+      id: 'u12',
+      name: 'Aqua Girl',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=21',
+      isFollowing: false,
+    },
+    music: null,
+    modality: 'swimming',
+  },
+  // Boxing
+  {
+    id: 'boxing1',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=boxing%20gloves%20ring&color=red',
+    title: 'Sparring day 🥊',
+    description: 'Afiando os reflexos e a esquiva.',
+    likes: 2500,
+    comments: 110,
+    shares: 80,
+    user: {
+      id: 'u13',
+      name: 'Rocky',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=22',
+      isFollowing: true,
+    },
+    music: { title: 'Gonna Fly Now', artist: 'Bill Conti' },
+    modality: 'boxing',
+  },
+  {
+    id: 'boxing2',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=punching%20bag%20training&color=red',
+    title: 'Saco de pancada',
+    description: 'Treino de potência e resistência.',
+    likes: 1100,
+    comments: 45,
+    shares: 20,
+    user: {
+      id: 'u14',
+      name: 'Iron Mike',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=23',
+      isFollowing: false,
+    },
+    music: null,
+    modality: 'boxing',
+  },
+  // Climbing
+  {
+    id: 'climbing1',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=rock%20climbing%20mountain&color=gray',
+    title: 'Escalada em rocha natural 🧗',
+    description: 'Superando limites e o medo de altura.',
+    likes: 3100,
+    comments: 130,
+    shares: 300,
+    user: {
+      id: 'u15',
+      name: 'Alex Honnold',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=24',
+      isFollowing: true,
+    },
+    music: { title: 'Higher', artist: 'Creed' },
+    modality: 'climbing',
+  },
+  {
+    id: 'climbing2',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=bouldering%20indoor&color=gray',
+    title: 'Bouldering problem resolvido',
+    description: 'Aquele projeto que demorou semanas para sair.',
+    likes: 850,
+    comments: 30,
+    shares: 15,
+    user: {
+      id: 'u16',
+      name: 'Spider Woman',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=25',
+      isFollowing: false,
+    },
+    music: null,
+    modality: 'climbing',
+  },
+  // Martial Arts
+  {
+    id: 'martial_arts1',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=judo%20throw&color=white',
+    title: 'Ippon perfeito! 🥋',
+    description: 'A técnica supera a força bruta.',
+    likes: 1900,
+    comments: 70,
+    shares: 90,
+    user: {
+      id: 'u17',
+      name: 'Sensei Tanaka',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=26',
+      isFollowing: true,
+    },
+    music: { title: 'Kung Fu Fighting', artist: 'Carl Douglas' },
+    modality: 'martial_arts',
+  },
+  {
+    id: 'martial_arts2',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=karate%20kick&color=white',
+    title: 'High kick training',
+    description: 'Flexibilidade e precisão.',
+    likes: 1300,
+    comments: 50,
+    shares: 40,
+    user: {
+      id: 'u18',
+      name: 'Dragon Lee',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=27',
+      isFollowing: false,
+    },
+    music: null,
+    modality: 'martial_arts',
+  },
 ]
-
-const VideoCard = ({
-  video,
-  isActive,
-}: {
-  video: (typeof LOCAL_MOCK_VIDEOS)[0]
-  isActive: boolean
-}) => {
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [isLiked, setIsLiked] = useState(false)
-  const [likesCount, setLikesCount] = useState(video.likes)
-  const [showAnalysis, setShowAnalysis] = useState(false)
-  const [showComments, setShowComments] = useState(false)
-  const [showShare, setShowShare] = useState(false)
-  const [isFollowing, setIsFollowing] = useState(video.user.isFollowing)
-
-  useEffect(() => {
-    if (isActive) {
-      setIsPlaying(true)
-    } else {
-      setIsPlaying(false)
-    }
-  }, [isActive])
-
-  const togglePlay = () => {
-    setIsPlaying(!isPlaying)
-  }
-
-  const handleLike = () => {
-    setIsLiked(!isLiked)
-    setLikesCount((prev) => (isLiked ? prev - 1 : prev + 1))
-  }
-
-  const handleFollow = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setIsFollowing(!isFollowing)
-    toast.success(
-      isFollowing ? 'Deixou de seguir' : `Você agora segue ${video.user.name}`,
-    )
-  }
-
-  const enrichedAiData = {
-    ...mockAiAnalysis,
-    score: 88,
-    aiStats: [
-      { label: 'Velocidade', value: 28, max: 35, unit: 'km/h' },
-      { label: 'Força', value: 850, max: 1000, unit: 'N' },
-      { label: 'Técnica', value: 92, max: 100, unit: 'pts' },
-    ],
-    history:
-      mockStatsHistory.length > 0
-        ? mockStatsHistory
-        : [
-            { date: 'Jan', rating: 3.5, matches: 10 },
-            { date: 'Fev', rating: 3.8, matches: 12 },
-          ],
-    suggestions:
-      mockTrainingSuggestions.length > 0
-        ? mockTrainingSuggestions
-        : [
-            {
-              id: '1',
-              title: 'Melhorar Postura',
-              description: 'Mantenha as costas retas durante o movimento.',
-              difficulty: 'Iniciante',
-              reason: 'Prevenção de lesão',
-              exercises: [{ name: 'Prancha', sets: 3, reps: 30 }],
-            },
-          ],
-  }
-
-  return (
-    <div className="relative h-full w-full snap-start bg-black overflow-hidden">
-      {/* Video Placeholder/Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
-        style={{
-          backgroundImage: `url(${video.thumbnail})`,
-          transform: isPlaying ? 'scale(1.0)' : 'scale(1.05)',
-        }}
-        onClick={togglePlay}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/90" />
-      </div>
-
-      {/* Play/Pause Overlay */}
-      {!isPlaying && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-          <Play className="h-16 w-16 text-white/70 fill-white/70 animate-pulse" />
-        </div>
-      )}
-
-      {/* Side Actions (Right) */}
-      <div className="absolute right-2 bottom-24 flex flex-col items-center gap-6 z-20 pb-4">
-        {/* Profile Avatar with Follow Badge */}
-        <div className="relative mb-2">
-          <Avatar className="h-12 w-12 border-2 border-white shadow-lg cursor-pointer transition-transform hover:scale-110">
-            <AvatarImage src={video.user.avatar} />
-            <AvatarFallback>{video.user.name[0]}</AvatarFallback>
-          </Avatar>
-          {!isFollowing && (
-            <button
-              onClick={handleFollow}
-              className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-primary text-white rounded-full p-0.5 shadow-md hover:bg-primary/90 transition-colors"
-            >
-              <Plus className="h-3 w-3" />
-            </button>
-          )}
-        </div>
-
-        <div className="flex flex-col items-center gap-1">
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-12 w-12 rounded-full bg-transparent hover:bg-transparent text-white"
-            onClick={handleLike}
-          >
-            <Heart
-              className={cn(
-                'h-8 w-8 transition-all duration-300 drop-shadow-md',
-                isLiked ? 'fill-red-500 text-red-500 scale-110' : '',
-              )}
-            />
-          </Button>
-          <span className="text-white text-xs font-bold drop-shadow-md">
-            {likesCount}
-          </span>
-        </div>
-
-        <div className="flex flex-col items-center gap-1">
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-12 w-12 rounded-full bg-transparent hover:bg-transparent text-white"
-            onClick={() => setShowComments(true)}
-          >
-            <MessageCircle className="h-8 w-8 drop-shadow-md" />
-          </Button>
-          <span className="text-white text-xs font-bold drop-shadow-md">
-            {video.comments}
-          </span>
-        </div>
-
-        <div className="flex flex-col items-center gap-1">
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-12 w-12 rounded-full bg-black/40 text-primary hover:bg-black/60 border border-primary/50 animate-pulse shadow-[0_0_15px_rgba(var(--primary),0.5)]"
-            onClick={() => setShowAnalysis(true)}
-          >
-            <Zap className="h-6 w-6 fill-current" />
-          </Button>
-          <span className="text-white text-xs font-bold drop-shadow-md">
-            AI Skip
-          </span>
-        </div>
-
-        <div className="flex flex-col items-center gap-1">
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-12 w-12 rounded-full bg-transparent hover:bg-transparent text-white"
-            onClick={() => setShowShare(true)}
-          >
-            <Share2 className="h-8 w-8 drop-shadow-md" />
-          </Button>
-          <span className="text-white text-xs font-bold drop-shadow-md">
-            {video.shares}
-          </span>
-        </div>
-      </div>
-
-      {/* Bottom Info (Left) */}
-      <div className="absolute bottom-0 left-0 right-16 p-4 pb-6 z-20 pointer-events-none text-left">
-        <div className="pointer-events-auto">
-          <h3 className="text-white font-bold text-base shadow-black drop-shadow-md mb-1">
-            {video.user.name}
-          </h3>
-          <p className="text-white/90 text-sm mb-3 line-clamp-2 drop-shadow-md leading-snug">
-            {video.title}{' '}
-            <span className="text-white/70 font-normal">
-              {video.description}
-            </span>
-          </p>
-
-          <div className="flex items-center gap-2">
-            <div className="px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-xs text-white flex items-center gap-2 max-w-[90%] border border-white/10">
-              {video.music ? (
-                <>
-                  <Music className="h-3 w-3 animate-[spin_3s_linear_infinite]" />
-                  <span className="truncate font-medium">
-                    {video.music.title} - {video.music.artist}
-                  </span>
-                </>
-              ) : (
-                <>
-                  <Music className="h-3 w-3" />
-                  <span>Som original - {video.user.name}</span>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Rotating Disc (Bottom Right) */}
-      <div className="absolute bottom-6 right-4 z-20 pointer-events-none">
-        <div className="w-10 h-10 rounded-full bg-black border-4 border-zinc-800 flex items-center justify-center animate-[spin_5s_linear_infinite]">
-          <Avatar className="w-6 h-6">
-            <AvatarImage src={video.user.avatar} />
-          </Avatar>
-        </div>
-      </div>
-
-      {/* Drawers & Dialogs */}
-      <AiAnalysisDrawer
-        open={showAnalysis}
-        onOpenChange={setShowAnalysis}
-        data={enrichedAiData}
-      />
-
-      <CommentsSheet
-        open={showComments}
-        onOpenChange={setShowComments}
-        videoId={video.id}
-      />
-
-      <ShareDialog
-        open={showShare}
-        onOpenChange={setShowShare}
-        videoTitle={video.title}
-      />
-    </div>
-  )
-}
 
 export default function Move() {
   const [activeIndex, setActiveIndex] = useState(0)
@@ -340,11 +357,8 @@ export default function Move() {
 
   const filteredVideos =
     activeTribe === 'all'
-      ? LOCAL_MOCK_VIDEOS
-      : LOCAL_MOCK_VIDEOS.filter(
-          (video) =>
-            video.modality === activeTribe || activeTribe === 'futebol',
-        )
+      ? MOVE_VIDEOS
+      : MOVE_VIDEOS.filter((video) => video.modality === activeTribe)
 
   const handleTribeChange = (tribeId: string) => {
     setActiveTribe(tribeId)
@@ -386,7 +400,7 @@ export default function Move() {
               >
                 {'image' in tribe && tribe.image ? (
                   <img
-                    src={tribe.image}
+                    src={tribe.image as string}
                     alt={tribe.label}
                     className="h-3 w-3 object-contain"
                   />
