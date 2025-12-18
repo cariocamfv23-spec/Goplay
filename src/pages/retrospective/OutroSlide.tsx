@@ -35,7 +35,7 @@ export default function OutroSlide({ onRestart, onFinish }: OutroSlideProps) {
             currentTheme.accent,
           )}
         >
-          Lenda 2024
+          Lenda {mockRetrospective.year}
         </div>
       </div>
 
@@ -73,10 +73,7 @@ export default function OutroSlide({ onRestart, onFinish }: OutroSlideProps) {
           <RotateCcw className="mr-2 h-4 w-4" /> Replay
         </Button>
         <Button
-          className={cn(
-            'w-full h-12 rounded-xl font-bold border-none transition-transform active:scale-95',
-            currentTheme.button,
-          )}
+          className="w-full h-12 rounded-xl font-bold border-none transition-transform active:scale-95 bg-gold text-black hover:bg-gold/90 shadow-lg shadow-gold/20"
           onClick={onFinish}
         >
           Continuar <ArrowRight className="ml-2 h-4 w-4" />
