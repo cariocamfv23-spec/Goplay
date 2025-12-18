@@ -124,7 +124,10 @@ export default function Retrospective() {
   const ActiveComponent = SLIDES[currentSlide].component
 
   return (
-    <div className="fixed inset-0 z-50 bg-black text-white flex items-center justify-center overflow-hidden font-sans">
+    <div
+      className="fixed inset-0 z-50 bg-black text-white flex items-center justify-center overflow-hidden font-sans"
+      style={currentTheme.customVars as React.CSSProperties}
+    >
       {/* Dynamic Background based on Theme */}
       <div
         className={cn(

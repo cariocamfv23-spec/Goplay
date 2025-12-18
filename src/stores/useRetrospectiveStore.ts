@@ -8,6 +8,7 @@ export type RetroThemeId =
   | 'fire'
   | 'royal'
   | 'nature'
+  | string
 
 export interface RetroTheme {
   id: RetroThemeId
@@ -20,9 +21,29 @@ export interface RetroTheme {
   ring: string
   button: string
   icon: string
+  isCustom?: boolean
+  customVars?: {
+    '--retro-bg-start': string
+    '--retro-bg-mid': string
+    '--retro-bg-end': string
+    '--retro-accent': string
+    '--retro-text': string
+  }
 }
 
-export const retroThemes: Record<RetroThemeId, RetroTheme> = {
+export interface CustomThemeConfig {
+  id: string
+  label: string
+  colors: {
+    bgStart: string
+    bgMid: string
+    bgEnd: string
+    accent: string
+    text: string
+  }
+}
+
+export const retroThemes: Record<string, RetroTheme> = {
   gold: {
     id: 'gold',
     label: 'Golden Star',
@@ -101,16 +122,64 @@ export const retroThemes: Record<RetroThemeId, RetroTheme> = {
 
 interface RetrospectiveState {
   themeId: RetroThemeId
+  customThemes: CustomThemeConfig[]
   setThemeId: (id: RetroThemeId) => void
   getTheme: () => RetroTheme
+  addCustomTheme: (config: CustomThemeConfig) => void
+  removeCustomTheme: (id: string) => void
 }
 
 export const useRetrospectiveStore = create<RetrospectiveState>()(
   persist(
     (set, get) => ({
       themeId: 'gold',
+      customThemes: [],
       setThemeId: (themeId) => set({ themeId }),
-      getTheme: () => retroThemes[get().themeId],
+      addCustomTheme: (config) =>
+        set((state) => ({
+          customThemes: [...state.customThemes, config],
+          themeId: config.id, // Auto select
+        })),
+      removeCustomTheme: (id) =>
+        set((state) => ({
+          customThemes: state.customThemes.filter((t) => t.id !== id),
+          themeId: state.themeId === id ? 'gold' : state.themeId,
+        })),
+      getTheme: () => {
+        const state = get()
+        const id = state.themeId
+
+        // Check presets first
+        if (retroThemes[id]) return retroThemes[id]
+
+        // Check custom themes
+        const custom = state.customThemes.find((t) => t.id === id)
+        if (custom) {
+          return {
+            id: custom.id,
+            label: custom.label,
+            gradient: 'retro-gradient-custom',
+            cardGradient: 'retro-card-gradient-custom',
+            accent: 'bg-retro-custom',
+            accentText: 'text-retro-custom',
+            glow: 'bg-retro-custom/30',
+            ring: 'ring-retro-custom',
+            button: 'bg-retro-custom text-white hover:opacity-90',
+            icon: 'text-retro-custom',
+            isCustom: true,
+            customVars: {
+              '--retro-bg-start': custom.colors.bgStart,
+              '--retro-bg-mid': custom.colors.bgMid,
+              '--retro-bg-end': custom.colors.bgEnd,
+              '--retro-accent': custom.colors.accent,
+              '--retro-text': custom.colors.text,
+            },
+          }
+        }
+
+        // Fallback
+        return retroThemes.gold
+      },
     }),
     {
       name: 'goplay-retrospective-theme',

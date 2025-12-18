@@ -206,6 +206,7 @@ export default function AthleteView({
           <div
             onClick={() => navigate('/retrospective')}
             className="mb-6 relative group cursor-pointer overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] border border-white/10"
+            style={currentTheme.customVars as React.CSSProperties}
           >
             {/* Premium Animated Background */}
             <div
@@ -513,6 +514,7 @@ export default function AthleteView({
                 'absolute inset-0 animate-gradient-xy',
                 currentTheme.cardGradient,
               )}
+              style={currentTheme.customVars as React.CSSProperties}
             />
             <div
               className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay"
