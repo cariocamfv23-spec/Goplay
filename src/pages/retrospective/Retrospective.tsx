@@ -257,7 +257,7 @@ export default function Retrospective() {
                 Histórico
               </h3>
 
-              <div className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 transform rotate-2 hover:rotate-0 transition-transform duration-500">
+              <div className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 transition-all duration-500 hover:scale-[1.02]">
                 <div className="mb-4">
                   <mockRetrospective.stats.topCategoryIcon className="w-12 h-12 mx-auto text-gold" />
                 </div>
