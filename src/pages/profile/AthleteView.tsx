@@ -22,6 +22,7 @@ import {
   Share2,
   Palette,
   TrendingUp,
+  ImageOff,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -52,6 +53,9 @@ export default function AthleteView({
   const { getTheme } = useRetrospectiveStore()
   const currentTheme = getTheme()
 
+  // Filter posts based on user if needed. Currently showing all mockPosts for demo
+  const userPosts = mockPosts
+
   const handleMusicSelect = (track: MusicTrack) => {
     setUser({ ...user, favoriteSong: track })
     toast.success('Música do perfil atualizada!', {
@@ -67,6 +71,10 @@ export default function AthleteView({
           src={user.cover}
           alt="Cover"
           className="w-full h-full object-cover opacity-80"
+          onError={(e) => {
+            e.currentTarget.src =
+              'https://img.usecurling.com/p/800/400?q=abstract%20gradient&color=blue'
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
       </div>
@@ -126,6 +134,10 @@ export default function AthleteView({
                     src={user.favoriteSong.cover}
                     alt="Album"
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src =
+                        'https://img.usecurling.com/p/200/200?q=music%20note'
+                    }}
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/20">
                     <Music className="h-4 w-4 text-white" />
@@ -455,19 +467,46 @@ export default function AthleteView({
 
           <TabsContent value="posts" className="mt-4">
             <div className="grid grid-cols-3 gap-1">
-              {mockPosts.map((post) => (
+              {userPosts.map((post) => (
                 <div
                   key={post.id}
-                  className="aspect-square bg-muted relative overflow-hidden cursor-pointer hover:opacity-90"
+                  className="aspect-square bg-muted relative overflow-hidden cursor-pointer hover:opacity-90 group"
+                  onClick={() => {
+                    // In a real app, this would open the post details
+                    toast.info(`Visualizando post ${post.id}`)
+                  }}
                 >
-                  <img
-                    src={post.image || post.media?.[0]}
-                    alt="Post"
-                    className="w-full h-full object-cover"
-                  />
+                  {post.media && post.media.length > 0 ? (
+                    <img
+                      src={post.media[0]}
+                      alt={post.title || 'Post'}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none'
+                        e.currentTarget.nextElementSibling?.classList.remove(
+                          'hidden',
+                        )
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-secondary flex items-center justify-center">
+                      <ImageOff className="h-6 w-6 text-muted-foreground/50" />
+                    </div>
+                  )}
+
+                  {/* Fallback container hidden by default */}
+                  <div className="hidden absolute inset-0 bg-secondary flex items-center justify-center">
+                    <ImageOff className="h-6 w-6 text-muted-foreground/50" />
+                  </div>
+
                   {post.type === 'video' && (
-                    <div className="absolute top-1 right-1">
-                      <Video className="h-4 w-4 text-white drop-shadow-md" />
+                    <div className="absolute top-1 right-1 bg-black/50 rounded-full p-1">
+                      <Video className="h-3 w-3 text-white" />
+                    </div>
+                  )}
+                  {post.media && post.media.length > 1 && (
+                    <div className="absolute top-1 right-1 bg-black/50 rounded-full p-1">
+                      <Package className="h-3 w-3 text-white" />
                     </div>
                   )}
                 </div>
@@ -475,9 +514,37 @@ export default function AthleteView({
             </div>
           </TabsContent>
           <TabsContent value="media">
-            <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
-              <Video className="h-10 w-10 mb-2 opacity-20" />
-              <p>Nenhum vídeo ainda</p>
+            <div className="grid grid-cols-3 gap-1">
+              {userPosts
+                .filter((p) => p.type === 'video')
+                .map((post) => (
+                  <div
+                    key={post.id}
+                    className="aspect-square bg-muted relative overflow-hidden cursor-pointer hover:opacity-90 group"
+                  >
+                    <img
+                      src={post.media?.[0]}
+                      alt="Video Thumbnail"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src =
+                          'https://img.usecurling.com/p/300/300?q=abstract&color=black'
+                      }}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
+                      <Play className="h-8 w-8 text-white fill-white opacity-80" />
+                    </div>
+                    <div className="absolute bottom-1 right-1 text-[10px] text-white bg-black/60 px-1 rounded">
+                      {post.videoDuration}
+                    </div>
+                  </div>
+                ))}
+              {userPosts.filter((p) => p.type === 'video').length === 0 && (
+                <div className="col-span-3 flex flex-col items-center justify-center py-10 text-muted-foreground">
+                  <Video className="h-10 w-10 mb-2 opacity-20" />
+                  <p>Nenhum vídeo ainda</p>
+                </div>
+              )}
             </div>
           </TabsContent>
           <TabsContent value="tagged">

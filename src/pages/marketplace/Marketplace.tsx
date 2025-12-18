@@ -9,6 +9,7 @@ import {
   Filter,
   Trophy,
   Wallet,
+  ImageOff,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -169,13 +170,22 @@ export default function Marketplace() {
                 src={product.image}
                 alt={product.name}
                 className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none'
+                  e.currentTarget.nextElementSibling?.classList.remove('hidden')
+                }}
               />
-              <div className="absolute top-2 right-2 bg-background/90 backdrop-blur rounded-full px-1.5 py-0.5 flex items-center gap-1">
+              {/* Fallback container hidden by default */}
+              <div className="hidden absolute inset-0 bg-secondary flex items-center justify-center">
+                <ImageOff className="h-8 w-8 text-muted-foreground/30" />
+              </div>
+
+              <div className="absolute top-2 right-2 bg-background/90 backdrop-blur rounded-full px-1.5 py-0.5 flex items-center gap-1 z-10">
                 <Star className="h-3 w-3 fill-gold text-gold" />
                 <span className="text-[10px] font-bold">{product.rating}</span>
               </div>
               {product.isPremium && (
-                <div className="absolute top-2 left-2 bg-gold text-black rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                <div className="absolute top-2 left-2 bg-gold text-black rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider z-10">
                   Premium
                 </div>
               )}

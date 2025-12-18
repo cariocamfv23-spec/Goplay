@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   Truck,
   Trophy,
+  ImageOff,
 } from 'lucide-react'
 import {
   Carousel,
@@ -61,12 +62,23 @@ export default function ProductDetails() {
           <CarouselContent>
             {product.images?.map((img, i) => (
               <CarouselItem key={i}>
-                <div className="h-[450px] bg-secondary/10 flex items-center justify-center p-8">
+                <div className="h-[450px] bg-secondary/10 flex items-center justify-center p-8 relative">
                   <img
                     src={img}
                     alt={product.name}
                     className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none'
+                      e.currentTarget.nextElementSibling?.classList.remove(
+                        'hidden',
+                      )
+                    }}
                   />
+                  {/* Fallback container */}
+                  <div className="hidden absolute inset-0 flex flex-col items-center justify-center text-muted-foreground/40">
+                    <ImageOff className="h-20 w-20 mb-2" />
+                    <p className="text-sm">Imagem indisponível</p>
+                  </div>
                 </div>
               </CarouselItem>
             ))}
