@@ -56,7 +56,7 @@ export function PostDetailDialog({
       setIsLiked(post.liked || false)
       setLikeCount(post.likes || 0)
     }
-  }, [post?.id, post?.liked, post?.likes, setIsLiked, setLikeCount])
+  }, [post, setIsLiked, setLikeCount])
 
   // Auto-play sound/narration on open if applicable
   useEffect(() => {
@@ -69,7 +69,7 @@ export function PostDetailDialog({
       setIsPlaying(false)
       setIsPlayingNarration(false)
     }
-  }, [open, post?.type])
+  }, [open, post])
 
   // Early return if no post (now safe as hooks are called above)
   if (!post) return null
