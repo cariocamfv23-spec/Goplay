@@ -11,7 +11,6 @@ import {
   Wallet,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { Badge } from '@/components/ui/badge'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -155,7 +154,7 @@ export default function Marketplace() {
       )}
 
       {/* Product Grid */}
-      <div className="p-4 grid grid-cols-2 gap-4">
+      <div className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filteredProducts.map((product) => (
           <Card
             key={product.id}
@@ -219,7 +218,7 @@ export default function Marketplace() {
           </Card>
         ))}
         {filteredProducts.length === 0 && (
-          <div className="col-span-2 text-center py-10 text-muted-foreground">
+          <div className="col-span-2 md:col-span-3 lg:col-span-4 text-center py-10 text-muted-foreground">
             <p>Nenhum produto encontrado.</p>
             <Button
               variant="link"
