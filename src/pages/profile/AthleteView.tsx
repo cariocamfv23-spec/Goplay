@@ -20,6 +20,7 @@ import {
   Package,
   Play,
   Share2,
+  Palette,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -29,6 +30,9 @@ import { toast } from 'sonner'
 import { Card, CardContent } from '@/components/ui/card'
 import { ShareDialog } from '@/components/ShareDialog'
 import { AppIcon } from '@/components/AppIcon'
+import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
+import { RetrospectiveThemeSelector } from '@/components/RetrospectiveThemeSelector'
+import { cn } from '@/lib/utils'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -42,6 +46,10 @@ export default function AthleteView({
   const [user, setUser] = useState(initialUser)
   const [isMusicSelectorOpen, setIsMusicSelectorOpen] = useState(false)
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
+  const [isThemeSelectorOpen, setIsThemeSelectorOpen] = useState(false)
+
+  const { getTheme } = useRetrospectiveStore()
+  const currentTheme = getTheme()
 
   const handleMusicSelect = (track: MusicTrack) => {
     setUser({ ...user, favoriteSong: track })
@@ -199,7 +207,12 @@ export default function AthleteView({
             className="mb-6 relative group cursor-pointer overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] border border-white/10"
           >
             {/* Premium Animated Background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-primary via-purple-800 to-indigo-900 animate-gradient-xy" />
+            <div
+              className={cn(
+                'absolute inset-0 animate-gradient-xy transition-all duration-500',
+                currentTheme.cardGradient,
+              )}
+            />
 
             {/* Starfield Texture */}
             <div
@@ -210,44 +223,81 @@ export default function AthleteView({
               }}
             />
 
-            {/* Gold Glow Effects */}
-            <div className="absolute -top-10 -right-10 w-32 h-32 bg-gold/30 rounded-full blur-3xl animate-pulse" />
+            {/* Glow Effects */}
+            <div
+              className={cn(
+                'absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl animate-pulse transition-all duration-500',
+                currentTheme.glow,
+              )}
+            />
             <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/40 rounded-full blur-3xl" />
 
             {/* Content */}
             <div className="relative p-5 z-10 flex items-center justify-between">
               <div className="flex-1 pr-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="bg-white/10 backdrop-blur-md px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-gold border border-gold/30 flex items-center gap-1">
+                  <div
+                    className={cn(
+                      'backdrop-blur-md px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border flex items-center gap-1 transition-all duration-500',
+                      'bg-white/10 border-white/20',
+                      currentTheme.accentText,
+                    )}
+                  >
                     <Sparkles className="h-3 w-3 animate-pulse" />
                     Wrapped 2024
                   </div>
                 </div>
                 <h3 className="text-white font-black text-xl italic tracking-tight drop-shadow-lg leading-none mb-1">
-                  SUA <span className="text-gold">RETROSPECTIVA</span>
+                  SUA{' '}
+                  <span
+                    className={cn(
+                      'transition-colors duration-500',
+                      currentTheme.accentText,
+                    )}
+                  >
+                    RETROSPECTIVA
+                  </span>
                 </h3>
-                <p className="text-indigo-100 text-xs font-medium opacity-90">
+                <p className="text-white/80 text-xs font-medium opacity-90">
                   Assista agora aos seus melhores momentos!
                 </p>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                {/* Customize Button */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-9 w-9 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/10 transition-colors z-20 hover:scale-105"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setIsThemeSelectorOpen(true)
+                  }}
+                >
+                  <Palette className="h-4 w-4" />
+                </Button>
+
                 {/* Share Button */}
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/10 transition-colors z-20 hover:scale-105"
+                  className="h-9 w-9 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/10 transition-colors z-20 hover:scale-105"
                   onClick={(e) => {
                     e.stopPropagation()
                     setIsShareDialogOpen(true)
                   }}
                 >
-                  <Share2 className="h-5 w-5" />
+                  <Share2 className="h-4 w-4" />
                 </Button>
 
                 {/* Play Button */}
-                <div className="h-12 w-12 rounded-full bg-gradient-to-br from-gold to-orange-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 border-2 border-white/20">
-                  <Play className="h-5 w-5 text-white fill-white ml-0.5" />
+                <div
+                  className={cn(
+                    'h-11 w-11 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-500 border-2 border-white/20',
+                    currentTheme.cardGradient,
+                  )}
+                >
+                  <Play className="h-4 w-4 text-white fill-white ml-0.5" />
                 </div>
               </div>
             </div>
@@ -435,6 +485,11 @@ export default function AthleteView({
         selectedTrack={user.favoriteSong}
       />
 
+      <RetrospectiveThemeSelector
+        open={isThemeSelectorOpen}
+        onOpenChange={setIsThemeSelectorOpen}
+      />
+
       <ShareDialog
         open={isShareDialogOpen}
         onOpenChange={setIsShareDialogOpen}
@@ -443,7 +498,12 @@ export default function AthleteView({
         url={`${window.location.origin}/#/retrospective`}
         preview={
           <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg border border-white/10 group">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary via-purple-800 to-indigo-900 animate-gradient-xy" />
+            <div
+              className={cn(
+                'absolute inset-0 animate-gradient-xy',
+                currentTheme.cardGradient,
+              )}
+            />
             <div
               className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay"
               style={{
@@ -452,7 +512,12 @@ export default function AthleteView({
               }}
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10">
-              <div className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-gold border border-gold/30 flex items-center gap-1.5 mb-3 shadow-sm">
+              <div
+                className={cn(
+                  'backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border flex items-center gap-1.5 mb-3 shadow-sm bg-white/10 border-white/20',
+                  currentTheme.accentText,
+                )}
+              >
                 <Sparkles className="h-3.5 w-3.5" />
                 Wrapped 2024
               </div>
@@ -460,7 +525,9 @@ export default function AthleteView({
                 RETROSPECTIVA
               </h3>
               <div className="flex items-center gap-2 justify-center">
-                <span className="text-gold font-bold text-lg">
+                <span
+                  className={cn('font-bold text-lg', currentTheme.accentText)}
+                >
                   {user.name.split(' ')[0]}
                 </span>
                 <span className="text-white/60 text-sm">•</span>

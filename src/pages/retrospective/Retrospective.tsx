@@ -4,6 +4,7 @@ import { X, Volume2, VolumeX, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { mockRetrospective } from '@/lib/data'
+import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
 
 import IntroSlide from './IntroSlide'
 import StatsSlide from './StatsSlide'
@@ -12,11 +13,11 @@ import AchievementsSlide from './AchievementsSlide'
 import OutroSlide from './OutroSlide'
 
 const SLIDES = [
-  { id: 'intro', component: IntroSlide, theme: 'brand' },
-  { id: 'stats', component: StatsSlide, theme: 'neon' },
-  { id: 'milestones', component: MilestonesSlide, theme: 'nature' },
-  { id: 'achievements', component: AchievementsSlide, theme: 'fire' },
-  { id: 'outro', component: OutroSlide, theme: 'dark' },
+  { id: 'intro', component: IntroSlide },
+  { id: 'stats', component: StatsSlide },
+  { id: 'milestones', component: MilestonesSlide },
+  { id: 'achievements', component: AchievementsSlide },
+  { id: 'outro', component: OutroSlide },
 ]
 
 export default function Retrospective() {
@@ -28,6 +29,9 @@ export default function Retrospective() {
   const progressInterval = useRef<ReturnType<typeof setInterval> | null>(null)
   const [progress, setProgress] = useState(0)
   const SLIDE_DURATION = 6000 // 6 seconds per slide
+
+  const { getTheme } = useRetrospectiveStore()
+  const currentTheme = getTheme()
 
   // --- Audio Logic ---
   useEffect(() => {
@@ -105,24 +109,6 @@ export default function Retrospective() {
     }
   }, [currentSlide, isPlaying])
 
-  // --- Theme Logic ---
-  const getThemeBackground = (theme: string) => {
-    switch (theme) {
-      case 'brand':
-        return 'bg-gradient-to-br from-primary via-purple-900 to-black'
-      case 'neon':
-        return 'bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600'
-      case 'nature':
-        return 'bg-gradient-to-br from-teal-500 via-emerald-600 to-green-800'
-      case 'fire':
-        return 'bg-gradient-to-br from-orange-500 via-red-600 to-rose-700'
-      case 'dark':
-        return 'bg-gradient-to-br from-gray-900 via-gray-800 to-black'
-      default:
-        return 'bg-black'
-    }
-  }
-
   const restart = () => {
     setCurrentSlide(0)
     setIsPlaying(true)
@@ -137,11 +123,11 @@ export default function Retrospective() {
 
   return (
     <div className="fixed inset-0 z-50 bg-black text-white flex items-center justify-center overflow-hidden font-sans">
-      {/* Dynamic Background */}
+      {/* Dynamic Background based on Theme */}
       <div
         className={cn(
           'absolute inset-0 transition-all duration-1000 ease-in-out',
-          getThemeBackground(SLIDES[currentSlide].theme),
+          currentTheme.gradient,
         )}
       />
 

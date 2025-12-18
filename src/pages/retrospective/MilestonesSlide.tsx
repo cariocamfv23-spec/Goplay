@@ -1,7 +1,11 @@
 import { mockRetrospective } from '@/lib/data'
 import { cn } from '@/lib/utils'
+import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
 
 export default function MilestonesSlide() {
+  const { getTheme } = useRetrospectiveStore()
+  const currentTheme = getTheme()
+
   return (
     <div className="flex flex-col h-full w-full p-8 text-white relative overflow-hidden">
       <h3 className="text-sm font-bold uppercase tracking-widest opacity-80 mb-8 animate-in slide-in-from-top-4 fade-in duration-700">
@@ -20,7 +24,12 @@ export default function MilestonesSlide() {
             )}
             style={{ animationDelay: `${index * 300 + 200}ms` }}
           >
-            <div className="w-8 h-8 rounded-full bg-white text-primary flex items-center justify-center shadow-lg shrink-0 z-10">
+            <div
+              className={cn(
+                'w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-lg shrink-0 z-10',
+                currentTheme.icon,
+              )}
+            >
               <item.icon className="w-4 h-4" />
             </div>
             <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 flex-1 hover:bg-white/20 transition-colors duration-300">

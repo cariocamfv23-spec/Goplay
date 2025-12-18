@@ -1,6 +1,8 @@
 import { mockCurrentUser, mockRetrospective } from '@/lib/data'
 import { Button } from '@/components/ui/button'
 import { RotateCcw, Share2, ArrowRight } from 'lucide-react'
+import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
+import { cn } from '@/lib/utils'
 
 interface OutroSlideProps {
   onRestart: () => void
@@ -8,10 +10,18 @@ interface OutroSlideProps {
 }
 
 export default function OutroSlide({ onRestart, onClose }: OutroSlideProps) {
+  const { getTheme } = useRetrospectiveStore()
+  const currentTheme = getTheme()
+
   return (
     <div className="flex flex-col h-full w-full p-8 text-center items-center justify-center text-white space-y-8">
       <div className="relative animate-in zoom-in fade-in duration-1000">
-        <div className="absolute inset-0 bg-gold blur-3xl opacity-20 animate-pulse" />
+        <div
+          className={cn(
+            'absolute inset-0 blur-3xl opacity-40 animate-pulse',
+            currentTheme.accent,
+          )}
+        />
         <div className="w-32 h-32 rounded-full border-4 border-white shadow-2xl overflow-hidden relative z-10 mx-auto">
           <img
             src={mockCurrentUser.avatar}
@@ -19,7 +29,12 @@ export default function OutroSlide({ onRestart, onClose }: OutroSlideProps) {
             alt="Avatar"
           />
         </div>
-        <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-gold text-black text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider z-20 whitespace-nowrap">
+        <div
+          className={cn(
+            'absolute -bottom-3 left-1/2 -translate-x-1/2 text-black text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider z-20 whitespace-nowrap',
+            currentTheme.accent,
+          )}
+        >
           Lenda 2024
         </div>
       </div>
@@ -27,7 +42,7 @@ export default function OutroSlide({ onRestart, onClose }: OutroSlideProps) {
       <div className="space-y-4 max-w-xs animate-in slide-in-from-bottom-8 fade-in duration-1000 delay-300 fill-mode-both">
         <h2 className="text-3xl font-bold">
           Obrigado, <br />
-          <span className="text-gold">
+          <span className={cn(currentTheme.accentText)}>
             {mockCurrentUser.name.split(' ')[0]}
           </span>
         </h2>
@@ -45,7 +60,10 @@ export default function OutroSlide({ onRestart, onClose }: OutroSlideProps) {
           <RotateCcw className="mr-2 h-4 w-4" /> Replay
         </Button>
         <Button
-          className="w-full bg-white text-black hover:bg-white/90 h-12 rounded-xl font-bold"
+          className={cn(
+            'w-full h-12 rounded-xl font-bold border-none',
+            currentTheme.button,
+          )}
           onClick={onClose}
         >
           Continuar <ArrowRight className="ml-2 h-4 w-4" />

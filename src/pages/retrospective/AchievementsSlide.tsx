@@ -1,7 +1,11 @@
 import { mockRetrospective } from '@/lib/data'
 import { cn } from '@/lib/utils'
+import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
 
 export default function AchievementsSlide() {
+  const { getTheme } = useRetrospectiveStore()
+  const currentTheme = getTheme()
+
   return (
     <div className="flex flex-col h-full w-full p-8 text-white">
       <h3 className="text-sm font-bold uppercase tracking-widest opacity-80 mb-6 animate-in slide-in-from-top-4 fade-in duration-700">
@@ -29,7 +33,8 @@ export default function AchievementsSlide() {
             <div
               className={cn(
                 'w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner shrink-0',
-                'bg-white text-primary',
+                'bg-white',
+                currentTheme.icon,
               )}
             >
               <item.icon className="w-7 h-7" />

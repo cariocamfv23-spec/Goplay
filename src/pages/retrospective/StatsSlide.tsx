@@ -1,7 +1,12 @@
 import { mockRetrospective } from '@/lib/data'
 import { Trophy, Clock, PlayCircle } from 'lucide-react'
+import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
+import { cn } from '@/lib/utils'
 
 export default function StatsSlide() {
+  const { getTheme } = useRetrospectiveStore()
+  const currentTheme = getTheme()
+
   return (
     <div className="flex flex-col h-full w-full p-8 text-white">
       <h3 className="text-sm font-bold uppercase tracking-widest opacity-80 mb-12 animate-in slide-in-from-top-4 fade-in duration-700">
@@ -19,7 +24,12 @@ export default function StatsSlide() {
                 {mockRetrospective.stats.topCategory}
               </h4>
             </div>
-            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-primary">
+            <div
+              className={cn(
+                'w-12 h-12 bg-white rounded-full flex items-center justify-center',
+                currentTheme.icon,
+              )}
+            >
               <Trophy className="w-6 h-6 fill-current" />
             </div>
           </div>
@@ -30,14 +40,18 @@ export default function StatsSlide() {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-black/20 backdrop-blur-sm p-5 rounded-3xl animate-in slide-in-from-bottom-8 fade-in duration-700 delay-400">
-            <PlayCircle className="w-8 h-8 mb-3 opacity-80" />
+            <PlayCircle
+              className={cn('w-8 h-8 mb-3 opacity-80', currentTheme.icon)}
+            />
             <p className="text-3xl font-bold">
               {mockRetrospective.stats.videosWatched}
             </p>
             <p className="text-xs opacity-70 mt-1">Vídeos Assistidos</p>
           </div>
           <div className="bg-black/20 backdrop-blur-sm p-5 rounded-3xl animate-in slide-in-from-bottom-8 fade-in duration-700 delay-500">
-            <Clock className="w-8 h-8 mb-3 opacity-80" />
+            <Clock
+              className={cn('w-8 h-8 mb-3 opacity-80', currentTheme.icon)}
+            />
             <p className="text-3xl font-bold">
               {mockRetrospective.stats.hoursWatched}h
             </p>
