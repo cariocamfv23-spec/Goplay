@@ -19,6 +19,7 @@ import {
   Gift,
   Package,
   Play,
+  Share2,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -26,6 +27,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { MusicSelector } from '@/components/MusicSelector'
 import { toast } from 'sonner'
 import { Card, CardContent } from '@/components/ui/card'
+import { ShareDialog } from '@/components/ShareDialog'
+import { AppIcon } from '@/components/AppIcon'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -38,6 +41,7 @@ export default function AthleteView({
   const [activeTab, setActiveTab] = useState('posts')
   const [user, setUser] = useState(initialUser)
   const [isMusicSelectorOpen, setIsMusicSelectorOpen] = useState(false)
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
 
   const handleMusicSelect = (track: MusicTrack) => {
     setUser({ ...user, favoriteSong: track })
@@ -194,7 +198,7 @@ export default function AthleteView({
             onClick={() => navigate('/retrospective')}
             className="mb-6 relative group cursor-pointer overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] border border-white/10"
           >
-            {/* Premium Animated Background - Updated for consistency with new Retrospective */}
+            {/* Premium Animated Background */}
             <div className="absolute inset-0 bg-gradient-to-r from-primary via-purple-800 to-indigo-900 animate-gradient-xy" />
 
             {/* Starfield Texture */}
@@ -227,8 +231,24 @@ export default function AthleteView({
                 </p>
               </div>
 
-              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-gold to-orange-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 border-2 border-white/20">
-                <Play className="h-5 w-5 text-white fill-white ml-0.5" />
+              <div className="flex items-center gap-3">
+                {/* Share Button */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/10 transition-colors z-20 hover:scale-105"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setIsShareDialogOpen(true)
+                  }}
+                >
+                  <Share2 className="h-5 w-5" />
+                </Button>
+
+                {/* Play Button */}
+                <div className="h-12 w-12 rounded-full bg-gradient-to-br from-gold to-orange-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 border-2 border-white/20">
+                  <Play className="h-5 w-5 text-white fill-white ml-0.5" />
+                </div>
               </div>
             </div>
           </div>
@@ -413,6 +433,47 @@ export default function AthleteView({
         onOpenChange={setIsMusicSelectorOpen}
         onSelect={handleMusicSelect}
         selectedTrack={user.favoriteSong}
+      />
+
+      <ShareDialog
+        open={isShareDialogOpen}
+        onOpenChange={setIsShareDialogOpen}
+        title={`Retrospectiva 2024 de ${user.name}`}
+        description="Confira meus melhores momentos, estatísticas e conquistas da temporada no Goplay!"
+        url={`${window.location.origin}/#/retrospective`}
+        preview={
+          <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg border border-white/10 group">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary via-purple-800 to-indigo-900 animate-gradient-xy" />
+            <div
+              className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay"
+              style={{
+                backgroundImage:
+                  "url('https://img.usecurling.com/p/600/300?q=stars%20space&color=black')",
+              }}
+            />
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10">
+              <div className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-gold border border-gold/30 flex items-center gap-1.5 mb-3 shadow-sm">
+                <Sparkles className="h-3.5 w-3.5" />
+                Wrapped 2024
+              </div>
+              <h3 className="text-white font-black text-2xl italic tracking-tight drop-shadow-xl leading-none mb-2">
+                RETROSPECTIVA
+              </h3>
+              <div className="flex items-center gap-2 justify-center">
+                <span className="text-gold font-bold text-lg">
+                  {user.name.split(' ')[0]}
+                </span>
+                <span className="text-white/60 text-sm">•</span>
+                <span className="text-white/80 text-sm font-medium">
+                  Goplay Super Star
+                </span>
+              </div>
+            </div>
+            <div className="absolute bottom-3 right-3 opacity-50">
+              <AppIcon className="w-8 h-8 opacity-80" />
+            </div>
+          </div>
+        }
       />
     </div>
   )

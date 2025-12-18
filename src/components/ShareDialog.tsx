@@ -26,6 +26,7 @@ interface ShareDialogProps {
   title: string
   description: string
   url?: string
+  preview?: React.ReactNode
 }
 
 export function ShareDialog({
@@ -34,6 +35,7 @@ export function ShareDialog({
   title,
   description,
   url = window.location.href,
+  preview,
 }: ShareDialogProps) {
   const [copied, setCopied] = useState(false)
 
@@ -99,9 +101,7 @@ export function ShareDialog({
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle className="text-center">
-            Compartilhar Conquista
-          </DrawerTitle>
+          <DrawerTitle className="text-center">Compartilhar</DrawerTitle>
           <DrawerDescription className="text-center">
             Mostre sua evolução para o mundo
           </DrawerDescription>
@@ -109,15 +109,19 @@ export function ShareDialog({
 
         <div className="p-4 space-y-6">
           {/* Preview Card */}
-          <div className="bg-secondary/30 p-4 rounded-xl border border-border/50">
-            <h4 className="font-bold text-sm mb-1">{title}</h4>
-            <p className="text-xs text-muted-foreground line-clamp-2">
-              {description}
-            </p>
-          </div>
+          {preview ? (
+            preview
+          ) : (
+            <div className="bg-secondary/30 p-4 rounded-xl border border-border/50">
+              <h4 className="font-bold text-sm mb-1">{title}</h4>
+              <p className="text-xs text-muted-foreground line-clamp-2">
+                {description}
+              </p>
+            </div>
+          )}
 
           {/* Share Grid */}
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-4 sm:grid-cols-5 gap-4">
             <button
               onClick={() => handleSocialShare('whatsapp')}
               className="flex flex-col items-center gap-2 group"
@@ -126,6 +130,16 @@ export function ShareDialog({
                 <MessageCircle className="h-6 w-6" />
               </div>
               <span className="text-xs text-muted-foreground">WhatsApp</span>
+            </button>
+
+            <button
+              onClick={() => handleSocialShare('instagram')}
+              className="flex flex-col items-center gap-2 group"
+            >
+              <div className="h-12 w-12 rounded-full bg-pink-500/10 flex items-center justify-center text-pink-600 group-hover:bg-pink-500/20 transition-colors">
+                <Instagram className="h-6 w-6" />
+              </div>
+              <span className="text-xs text-muted-foreground">Instagram</span>
             </button>
 
             <button
@@ -139,13 +153,13 @@ export function ShareDialog({
             </button>
 
             <button
-              onClick={() => handleSocialShare('instagram')}
+              onClick={() => handleSocialShare('facebook')}
               className="flex flex-col items-center gap-2 group"
             >
-              <div className="h-12 w-12 rounded-full bg-pink-500/10 flex items-center justify-center text-pink-600 group-hover:bg-pink-500/20 transition-colors">
-                <Instagram className="h-6 w-6" />
+              <div className="h-12 w-12 rounded-full bg-blue-600/10 flex items-center justify-center text-blue-600 group-hover:bg-blue-600/20 transition-colors">
+                <Facebook className="h-6 w-6" />
               </div>
-              <span className="text-xs text-muted-foreground">Instagram</span>
+              <span className="text-xs text-muted-foreground">Facebook</span>
             </button>
 
             <button
