@@ -9,7 +9,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden transition-colors duration-300">
-      {/* Dynamic Background with improved performance using CSS gradients and low-res overlay */}
+      {/* Dynamic Background with improved performance */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-background z-10" />
         <div
