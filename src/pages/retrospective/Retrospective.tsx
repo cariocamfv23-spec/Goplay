@@ -119,7 +119,8 @@ export default function Retrospective() {
 
   const toggleMute = () => setIsMuted(!isMuted)
   const togglePlay = () => setIsPlaying(!isPlaying)
-  const handleClose = () => navigate('/')
+  const handleClose = () => navigate('/') // X Button -> Home
+  const handleFinish = () => navigate('/profile/me') // Continue Button -> Profile
 
   const ActiveComponent = SLIDES[currentSlide].component
 
@@ -230,7 +231,7 @@ export default function Retrospective() {
           {/* We use a key to force re-render animation on slide change */}
           <div key={currentSlide} className="h-full w-full">
             {currentSlide === SLIDES.length - 1 ? (
-              <OutroSlide onRestart={restart} onClose={handleClose} />
+              <OutroSlide onRestart={restart} onFinish={handleFinish} />
             ) : (
               <ActiveComponent />
             )}

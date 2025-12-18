@@ -6,10 +6,10 @@ import { cn } from '@/lib/utils'
 
 interface OutroSlideProps {
   onRestart: () => void
-  onClose: () => void
+  onFinish: () => void
 }
 
-export default function OutroSlide({ onRestart, onClose }: OutroSlideProps) {
+export default function OutroSlide({ onRestart, onFinish }: OutroSlideProps) {
   const { getTheme } = useRetrospectiveStore()
   const currentTheme = getTheme()
 
@@ -54,17 +54,30 @@ export default function OutroSlide({ onRestart, onClose }: OutroSlideProps) {
       <div className="grid grid-cols-2 gap-3 w-full animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-700 fill-mode-both">
         <Button
           variant="outline"
-          className="w-full border-white/30 hover:bg-white/10 text-white bg-transparent h-12 rounded-xl"
+          className={cn(
+            'w-full h-12 rounded-xl border-2 bg-transparent font-bold transition-all duration-300',
+            currentTheme.id === 'gold'
+              ? 'border-gold text-gold hover:bg-gold/10 hover:text-gold hover:border-gold'
+              : cn(currentTheme.accentText, currentTheme.ring),
+          )}
+          style={
+            currentTheme.isCustom
+              ? {
+                  borderColor: 'var(--retro-accent)',
+                  color: 'var(--retro-accent)',
+                }
+              : undefined
+          }
           onClick={onRestart}
         >
           <RotateCcw className="mr-2 h-4 w-4" /> Replay
         </Button>
         <Button
           className={cn(
-            'w-full h-12 rounded-xl font-bold border-none',
+            'w-full h-12 rounded-xl font-bold border-none transition-transform active:scale-95',
             currentTheme.button,
           )}
-          onClick={onClose}
+          onClick={onFinish}
         >
           Continuar <ArrowRight className="ml-2 h-4 w-4" />
         </Button>

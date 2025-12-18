@@ -1,7 +1,8 @@
 import { mockRetrospective } from '@/lib/data'
-import { Sparkles, Play } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
 import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
 import { cn } from '@/lib/utils'
+import { AppIcon } from '@/components/AppIcon'
 
 export default function IntroSlide() {
   const { getTheme } = useRetrospectiveStore()
@@ -10,10 +11,10 @@ export default function IntroSlide() {
   return (
     <div className="flex flex-col items-center justify-center h-full w-full p-6 text-center text-white space-y-8">
       <div className="animate-in fade-in zoom-in duration-1000 delay-300 fill-mode-both">
-        <div className="w-24 h-24 bg-white rounded-3xl rotate-12 flex items-center justify-center shadow-2xl mb-6 mx-auto">
-          <Play
-            className={cn('w-12 h-12 fill-current ml-1', currentTheme.icon)}
-          />
+        <div className="w-28 h-28 bg-white rounded-3xl rotate-12 flex items-center justify-center shadow-2xl mb-6 mx-auto overflow-hidden">
+          <div className="-rotate-12 w-20 h-20 flex items-center justify-center">
+            <AppIcon className="w-full h-full drop-shadow-md" />
+          </div>
         </div>
       </div>
 
