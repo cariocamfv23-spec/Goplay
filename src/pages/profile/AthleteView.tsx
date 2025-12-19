@@ -23,7 +23,7 @@ import {
   Palette,
   TrendingUp,
   ImageOff,
-  Phone,
+  UserPlus,
   MessageCircle,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
@@ -107,41 +107,21 @@ export default function AthleteView({
                 Editar Perfil
               </Button>
             ) : (
-              <>
-                <Button size="sm" className="bg-primary text-white">
+              <div className="flex items-center gap-2">
+                <Button size="sm" className="bg-primary text-white shadow-md">
+                  <UserPlus className="h-4 w-4 mr-2" />
                   Seguir
                 </Button>
-                <div className="flex bg-secondary rounded-md p-1 gap-1">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="h-8 w-8 p-0 rounded-full hover:bg-background/80"
-                    onClick={() => navigate(`/messages/user-${user.id}`)}
-                  >
-                    <MessageCircle className="h-4 w-4 text-foreground" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="h-8 w-8 p-0 rounded-full hover:bg-background/80"
-                    onClick={() =>
-                      navigate(`/messages/user-${user.id}?action=voice`)
-                    }
-                  >
-                    <Phone className="h-4 w-4 text-foreground" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="h-8 w-8 p-0 rounded-full hover:bg-background/80"
-                    onClick={() =>
-                      navigate(`/messages/user-${user.id}?action=video`)
-                    }
-                  >
-                    <Video className="h-4 w-4 text-foreground" />
-                  </Button>
-                </div>
-              </>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm"
+                  onClick={() => navigate(`/messages/user-${user.id}`)}
+                >
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  Mensagem
+                </Button>
+              </div>
             )}
           </div>
         </div>

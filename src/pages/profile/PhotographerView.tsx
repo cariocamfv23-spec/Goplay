@@ -13,8 +13,6 @@ import {
   FileText,
   Camera,
   Layers,
-  Phone,
-  Video,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -28,7 +26,7 @@ export default function PhotographerView({
   const navigate = useNavigate()
 
   // Simulate if this is the logged-in user's profile for demo purposes
-  const isOwnProfile = true
+  const isOwnProfile = false
 
   return (
     <div className="pb-8 animate-fade-in">
@@ -48,39 +46,18 @@ export default function PhotographerView({
             <AvatarFallback>{profile.name[0]}</AvatarFallback>
           </Avatar>
           <div className="flex gap-2 mb-2 items-center">
-            <Button size="sm" className="rounded-full shadow-md">
-              <UserPlus className="h-4 w-4 mr-1" /> Seguir
+            <Button size="sm" className="bg-primary text-white shadow-md">
+              <UserPlus className="h-4 w-4 mr-2" /> Seguir
             </Button>
-            <div className="flex bg-secondary/80 rounded-full p-1 gap-1 shadow-md">
-              <Button
-                size="sm"
-                variant="ghost"
-                className="rounded-full h-9 w-9 p-0 hover:bg-background/80"
-                onClick={() => navigate(`/messages/user-${profile.id}`)}
-              >
-                <MessageCircle className="h-4 w-4" />
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="rounded-full h-9 w-9 p-0 hover:bg-background/80"
-                onClick={() =>
-                  navigate(`/messages/user-${profile.id}?action=voice`)
-                }
-              >
-                <Phone className="h-4 w-4" />
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="rounded-full h-9 w-9 p-0 hover:bg-background/80"
-                onClick={() =>
-                  navigate(`/messages/user-${profile.id}?action=video`)
-                }
-              >
-                <Video className="h-4 w-4" />
-              </Button>
-            </div>
+            <Button
+              size="sm"
+              variant="secondary"
+              className="bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm"
+              onClick={() => navigate(`/messages/user-${profile.id}`)}
+            >
+              <MessageCircle className="h-4 w-4 mr-2" />
+              Mensagem
+            </Button>
           </div>
         </div>
 

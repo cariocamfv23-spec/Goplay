@@ -1,5 +1,5 @@
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
-import { mockChats } from '@/lib/data'
+import { mockChats, mockProfiles, mockTalents } from '@/lib/data'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, Phone, Video, Send } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -33,14 +33,20 @@ export default function ChatRoom() {
   // If no chat found (e.g. starting new chat from profile), create a mock one
   if (!chat) {
     const mockId = id?.replace('user-', '') || 'unknown'
+    const profileUser =
+      mockProfiles.find((p) => p.id === mockId) ||
+      mockTalents.find((p) => p.id === mockId)
+
     chat = {
       id: id || 'temp',
       user: {
         id: mockId,
-        name: `Usuário ${mockId}`,
-        avatar: `https://img.usecurling.com/ppl/medium?gender=male&seed=${mockId}`,
+        name: profileUser ? profileUser.name : `Usuário ${mockId}`,
+        avatar: profileUser
+          ? profileUser.avatar
+          : `https://img.usecurling.com/ppl/medium?gender=male&seed=${mockId}`,
         online: true,
-        type: 'User',
+        type: profileUser ? (profileUser.type as any) : 'User',
       },
       messages: [],
       unread: 0,
@@ -78,13 +84,13 @@ export default function ChatRoom() {
             variant="ghost"
             size="icon"
             className="-ml-2"
-            onClick={() => navigate('/messages')}
+            onClick={() => navigate(-1)}
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div
             className="cursor-pointer"
-            onClick={() => navigate(`/profile/${chat.user.id}`)}
+            onClick={() => navigate(`/profile/${chat?.user.id}`)}
           >
             <Avatar className="h-9 w-9">
               <AvatarImage src={chat.user.avatar} />
@@ -119,7 +125,7 @@ export default function ChatRoom() {
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {chat.messages?.length > 0 ? (
+        {chat.messages && chat.messages.length > 0 ? (
           chat.messages?.map((m) => (
             <div
               key={m.id}
