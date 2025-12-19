@@ -1540,7 +1540,97 @@ export const mockNotifications: Notification[] = [
   },
 ]
 export const mockNotificationsList = mockNotifications
-export const mockChats = []
+
+export const mockChats = [
+  {
+    id: '1',
+    user: {
+      id: 'u2',
+      name: 'Flamengo Oficial',
+      avatar: 'https://img.usecurling.com/i?q=flamengo&color=red',
+      online: true,
+      type: 'Clube',
+    },
+    unread: 2,
+    lastMessage: 'Confirmação do teste para a equipe sub-20.',
+    time: '10:30',
+    messages: [
+      {
+        id: 'm1',
+        sender: 'me',
+        text: 'Olá! Enviei meu vídeo de highlights. Conseguiram avaliar?',
+        time: '09:15',
+      },
+      {
+        id: 'm2',
+        sender: 'them',
+        text: 'Olá Alex. Sim, gostamos muito do material.',
+        time: '10:28',
+      },
+      {
+        id: 'm3',
+        sender: 'them',
+        text: 'Confirmação do teste para a equipe sub-20.',
+        time: '10:30',
+      },
+    ],
+  },
+  {
+    id: '2',
+    user: {
+      id: 'u3',
+      name: 'Coach Carter',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=45',
+      online: false,
+      type: 'Treinador',
+    },
+    unread: 0,
+    lastMessage: 'Foco na recuperação muscular hoje.',
+    time: 'Ontem',
+    messages: [
+      {
+        id: 'm1',
+        sender: 'them',
+        text: 'Grande jogo ontem! A movimentação foi excelente.',
+        time: 'Ontem',
+      },
+      {
+        id: 'm2',
+        sender: 'me',
+        text: 'Obrigado Coach! Senti um pouco a perna no final.',
+        time: 'Ontem',
+      },
+      {
+        id: 'm3',
+        sender: 'them',
+        text: 'Foco na recuperação muscular hoje.',
+        time: 'Ontem',
+      },
+    ],
+  },
+  {
+    id: '3',
+    user: {
+      id: 'u4',
+      name: 'Julia Santos',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=12',
+      online: true,
+      type: 'Atleta',
+    },
+    unread: 5,
+    lastMessage: 'Vamos fechar aquele time para o campeonato?',
+    time: 'Seg',
+    messages: [
+      {
+        id: 'm1',
+        sender: 'them',
+        text: 'Vamos fechar aquele time para o campeonato?',
+        time: 'Seg',
+      },
+    ],
+  },
+]
+
 export const mockPointsHistory = []
 
 export const mockFinancialSummary = {

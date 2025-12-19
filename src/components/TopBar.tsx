@@ -7,6 +7,10 @@ import {
   Sun,
   Moon,
   Check,
+  User,
+  MessageSquare,
+  LogOut,
+  CreditCard,
 } from 'lucide-react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -26,6 +30,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useTheme } from 'next-themes'
 import { useThemeStore } from '@/stores/useThemeStore'
+import { mockCurrentUser } from '@/lib/data'
 
 export function TopBar() {
   const navigate = useNavigate()
@@ -34,7 +39,6 @@ export function TopBar() {
   const { setTheme, theme } = useTheme()
   const { color, setColor } = useThemeStore()
 
-  const isProfile = location.pathname.includes('/profile')
   const isMarket = location.pathname.includes('/marketplace')
 
   // Pages where we don't show the back button (Main tabs)
@@ -76,6 +80,7 @@ export function TopBar() {
             variant="ghost"
             size="icon"
             className="rounded-full hover:bg-secondary/50"
+            onClick={() => navigate('/marketplace/cart')}
           >
             <ShoppingCart className="h-5 w-5" />
           </Button>
@@ -159,24 +164,55 @@ export function TopBar() {
           )}
         </Link>
 
-        {isProfile ? (
-          <Link to="/settings">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              size="icon"
-              className="rounded-full hover:bg-secondary/50"
+              className="relative h-9 w-9 rounded-full ml-1"
             >
-              <Settings className="h-5 w-5" />
+              <Avatar className="h-9 w-9 border-2 border-border/50 hover:border-primary transition-colors">
+                <AvatarImage src={mockCurrentUser.avatar} />
+                <AvatarFallback>
+                  {mockCurrentUser.name.substring(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
             </Button>
-          </Link>
-        ) : (
-          <Link to="/profile/me">
-            <Avatar className="h-9 w-9 ml-2 border-2 border-border/50 hover:border-primary transition-colors">
-              <AvatarImage src="https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99" />
-              <AvatarFallback>EU</AvatarFallback>
-            </Avatar>
-          </Link>
-        )}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuLabel className="font-normal">
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium leading-none">
+                  {mockCurrentUser.name}
+                </p>
+                <p className="text-xs leading-none text-muted-foreground">
+                  {mockCurrentUser.username}
+                </p>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => navigate('/profile/me')}>
+              <User className="mr-2 h-4 w-4" />
+              <span>Meu Perfil</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/messages')}>
+              <MessageSquare className="mr-2 h-4 w-4" />
+              <span>Mensagens</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/wallet')}>
+              <CreditCard className="mr-2 h-4 w-4" />
+              <span>Carteira</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/settings')}>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Configurações</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => navigate('/login')}>
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Sair</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   )
