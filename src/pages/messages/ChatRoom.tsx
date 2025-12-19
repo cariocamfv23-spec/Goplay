@@ -3,7 +3,7 @@ import { mockChats, mockProfiles, mockTalents } from '@/lib/data'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, Phone, Video } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { CallOverlay } from '@/components/chat/CallOverlay'
 import { toast } from 'sonner'
 import { ChatBubble } from '@/components/chat/ChatBubble'
@@ -29,18 +29,18 @@ export default function ChatRoom() {
     }
   }, [searchParams])
 
-  // Find chat logic
-  const chatData = mockChats.find((c) => c.id === id)
+  // Memoize chat to avoid infinite loop in useEffect when adding chat.messages to dependencies
+  const chat = useMemo(() => {
+    const chatData = mockChats.find((c) => c.id === id)
 
-  // Create mock chat object if not found
-  let chat = chatData
-  if (!chat) {
+    if (chatData) return chatData
+
     const mockId = id?.replace('user-', '') || 'unknown'
     const profileUser =
       mockProfiles.find((p) => p.id === mockId) ||
       mockTalents.find((p) => p.id === mockId)
 
-    chat = {
+    return {
       id: id || 'temp',
       user: {
         id: mockId,
@@ -56,7 +56,7 @@ export default function ChatRoom() {
       lastMessage: '',
       time: 'Agora',
     }
-  }
+  }, [id])
 
   // Initialize messages state
   useEffect(() => {
@@ -70,7 +70,7 @@ export default function ChatRoom() {
       }))
       setMessages(initialMessages)
     }
-  }, [chat?.id])
+  }, [chat?.messages])
 
   // Scroll to bottom when messages change
   useEffect(() => {
