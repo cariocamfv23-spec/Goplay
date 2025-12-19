@@ -1239,7 +1239,6 @@ export const mockProducts: Product[] = [
     isPremium: false,
     availability: 'in_stock',
   },
-  // New Products - Futebol
   {
     id: '5',
     name: 'Bola de Futebol Campo',
@@ -1294,7 +1293,6 @@ export const mockProducts: Product[] = [
     isPremium: false,
     availability: 'in_stock',
   },
-  // New Products - Basquete
   {
     id: '8',
     name: 'Tênis Air Court',
@@ -1347,7 +1345,6 @@ export const mockProducts: Product[] = [
     isPremium: false,
     availability: 'in_stock',
   },
-  // New Products - Fitness
   {
     id: '11',
     name: 'Creatina Turbo',
@@ -1401,7 +1398,6 @@ export const mockProducts: Product[] = [
     isPremium: false,
     availability: 'in_stock',
   },
-  // New Products - Corrida
   {
     id: '14',
     name: 'Tênis Speed Runner',
@@ -1450,7 +1446,6 @@ export const mockProducts: Product[] = [
     isPremium: false,
     availability: 'in_stock',
   },
-  // New Products - Vôlei
   {
     id: '17',
     name: 'Bola Vôlei Praia',
@@ -1486,7 +1481,64 @@ export const mockProducts: Product[] = [
   },
 ]
 
-export const mockNotifications: Notification[] = []
+export const mockNotifications: Notification[] = [
+  {
+    id: 'n1',
+    title: 'DEFESA CIVIL: ALERTA DE TEMPESTADE',
+    message:
+      'Previsão de chuvas intensas e ventos fortes na sua região. Busque abrigo seguro e evite áreas abertas.',
+    time: 'Agora',
+    read: false,
+    type: 'weather',
+    priority: 'critical',
+    date: 'Hoje',
+  },
+  {
+    id: 'n2',
+    title: 'Convite de Jogo',
+    message:
+      'Você foi convidado para a partida "Futebol de Quinta" na Arena XP.',
+    time: '2h atrás',
+    read: false,
+    type: 'invite',
+    priority: 'medium',
+    link: '/events/e1',
+    date: 'Hoje',
+  },
+  {
+    id: 'n3',
+    title: 'Parabéns! Nível 16',
+    message:
+      'Você subiu de nível! Continue evoluindo para desbloquear novas conquistas.',
+    time: '5h atrás',
+    read: true,
+    type: 'level_up',
+    priority: 'low',
+    date: 'Hoje',
+  },
+  {
+    id: 'n4',
+    title: 'Bolsa de Estudos Compatível',
+    message:
+      'Nova oportunidade na University of Florida compatível com seu perfil.',
+    time: '1d atrás',
+    read: true,
+    type: 'scholarship',
+    priority: 'high',
+    link: '/explore/scholarships/s1',
+    date: 'Ontem',
+  },
+  {
+    id: 'n5',
+    title: 'Flamengo curtiu seu highlight',
+    message: 'Seu vídeo "Golaço de falta" recebeu um like do clube.',
+    time: '2d atrás',
+    read: true,
+    type: 'like',
+    priority: 'low',
+    date: '22 Out',
+  },
+]
 export const mockNotificationsList = mockNotifications
 export const mockChats = []
 export const mockPointsHistory = []
