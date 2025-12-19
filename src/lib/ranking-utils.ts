@@ -1,4 +1,9 @@
-import { mockRankings, RankingEntry, SpecialAchievement } from '@/lib/data'
+import {
+  mockRankings,
+  RankingEntry,
+  SpecialAchievement,
+  mockChallenges,
+} from '@/lib/data'
 
 // Simple pseudo-random generator
 const seededRandom = (seed: number) => {
@@ -60,6 +65,9 @@ export const getRankings = (
     if (metric === 'wins') baseValue = Math.floor(baseValue / 20)
     else if (metric === 'matches') baseValue = Math.floor(baseValue / 15)
     else if (metric === 'assists') baseValue = Math.floor(baseValue / 40)
+    else if (metric === 'goals') baseValue = Math.floor(baseValue / 50)
+    else if (metric === 'km') baseValue = Math.floor(baseValue / 10)
+    else if (metric === 'hits') baseValue = Math.floor(baseValue / 8)
 
     // Simulate different time ranges scaling
     if (timeRange === 'daily') baseValue = Math.floor(baseValue / 30)
@@ -87,4 +95,10 @@ export const getRankings = (
     ...entry,
     position: index + 1,
   }))
+}
+
+export const getChallengeRankings = (challengeId: string): RankingEntry[] => {
+  const challenge = mockChallenges.find((c) => c.id === challengeId)
+  const metric = challenge?.metric || 'points'
+  return getRankings('all_time', metric)
 }

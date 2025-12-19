@@ -401,6 +401,22 @@ export interface RankingEntry {
   specialAchievement?: SpecialAchievement
 }
 
+export interface Challenge {
+  id: string
+  title: string
+  description: string
+  status: 'active' | 'upcoming' | 'ended'
+  startDate: string
+  endDate: string
+  image: string
+  banner: string
+  rules: string
+  rewards: string[]
+  metric: string
+  metricLabel: string
+  participants: number
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: LayoutList, label: 'Feed', path: '/feed' },
@@ -1293,6 +1309,82 @@ export const mockRankings: RankingEntry[] = [
       avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=1',
       team: 'Goplay Team',
     },
+  },
+]
+
+export const mockChallenges: Challenge[] = [
+  {
+    id: 'c1',
+    title: 'Rei da Várzea',
+    description:
+      'Quem fizer mais gols em partidas oficiais da várzea neste fim de semana vence.',
+    status: 'active',
+    startDate: '2024-10-25T00:00:00',
+    endDate: '2024-10-27T23:59:59',
+    image:
+      'https://img.usecurling.com/p/400/400?q=soccer%20mud%20field&color=orange',
+    banner:
+      'https://img.usecurling.com/p/800/300?q=soccer%20mud%20field%20wide&color=orange',
+    rules: 'Apenas gols validados por súmula digital contam.',
+    rewards: [
+      'Troféu Virtual "Rei da Várzea"',
+      '5000 Pontos',
+      'Chuteira Nike Mercurial',
+    ],
+    metric: 'goals',
+    metricLabel: 'Gols',
+    participants: 1240,
+  },
+  {
+    id: 'c2',
+    title: 'Maratona de Sprints',
+    description: 'Acumule a maior distância em alta velocidade nos treinos.',
+    status: 'active',
+    startDate: '2024-10-20T00:00:00',
+    endDate: '2024-10-30T23:59:59',
+    image:
+      'https://img.usecurling.com/p/400/400?q=running%20track%20sprint&color=blue',
+    banner:
+      'https://img.usecurling.com/p/800/300?q=running%20track%20sprint%20wide&color=blue',
+    rules: 'Dados sincronizados via GPS/Smartwatch. Sprints acima de 25km/h.',
+    rewards: ['Badge "Speedster"', '2000 Pontos'],
+    metric: 'km',
+    metricLabel: 'Km (Sprint)',
+    participants: 850,
+  },
+  {
+    id: 'c3',
+    title: 'Copa das Estrelas',
+    description: 'Torneio de verão. Os melhores de cada região.',
+    status: 'upcoming',
+    startDate: '2024-12-01T00:00:00',
+    endDate: '2024-12-20T23:59:59',
+    image:
+      'https://img.usecurling.com/p/400/400?q=golden%20trophy%20cup&color=yellow',
+    banner:
+      'https://img.usecurling.com/p/800/300?q=golden%20trophy%20cup%20wide&color=yellow',
+    rules: 'Inscrição prévia necessária.',
+    rewards: ['Vaga na Peneira Oficial', 'Kit Completo Adidas'],
+    metric: 'points',
+    metricLabel: 'Pts',
+    participants: 5000,
+  },
+  {
+    id: 'c4',
+    title: 'Desafio do Travessão',
+    description: 'Maior número de acertos no travessão registrados em vídeo.',
+    status: 'ended',
+    startDate: '2024-09-01T00:00:00',
+    endDate: '2024-09-15T23:59:59',
+    image:
+      'https://img.usecurling.com/p/400/400?q=soccer%20crossbar&color=gray',
+    banner:
+      'https://img.usecurling.com/p/800/300?q=soccer%20crossbar%20wide&color=gray',
+    rules: 'Vídeos devem ser postados com a hashtag #TravessaoGoplay.',
+    rewards: ['1000 Pontos', 'Bola Oficial'],
+    metric: 'hits',
+    metricLabel: 'Acertos',
+    participants: 3200,
   },
 ]
 
