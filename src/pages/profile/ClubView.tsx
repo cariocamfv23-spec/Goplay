@@ -1,11 +1,21 @@
 import { ProfileData } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { MapPin, Star, Users, Trophy } from 'lucide-react'
+import {
+  MapPin,
+  Star,
+  Users,
+  Trophy,
+  MessageCircle,
+  UserPlus,
+} from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { useNavigate } from 'react-router-dom'
 
 export default function ClubView({ profile }: { profile: ProfileData }) {
+  const navigate = useNavigate()
+
   return (
     <div className="pb-8 animate-fade-in">
       <div className="relative h-48 w-full bg-muted">
@@ -23,7 +33,19 @@ export default function ClubView({ profile }: { profile: ProfileData }) {
             <AvatarImage src={profile.avatar} />
             <AvatarFallback>{profile.name[0]}</AvatarFallback>
           </Avatar>
-          <Button size="sm">Seguir Clube</Button>
+          <div className="flex gap-2 mb-2">
+            <Button size="sm" className="bg-primary text-white shadow-md">
+              <UserPlus className="h-4 w-4 mr-1" /> Seguir
+            </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              className="rounded-full shadow-md"
+              onClick={() => navigate(`/messages/user-${profile.id}`)}
+            >
+              <MessageCircle className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
 
         <div className="mt-3">

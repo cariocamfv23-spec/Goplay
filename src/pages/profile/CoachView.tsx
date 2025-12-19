@@ -1,10 +1,20 @@
 import { ProfileData } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { MapPin, Star, Award, Calendar } from 'lucide-react'
+import {
+  MapPin,
+  Star,
+  Award,
+  Calendar,
+  MessageCircle,
+  Briefcase,
+} from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
+import { useNavigate } from 'react-router-dom'
 
 export default function CoachView({ profile }: { profile: ProfileData }) {
+  const navigate = useNavigate()
+
   return (
     <div className="pb-8 animate-fade-in">
       <div className="relative h-48 w-full bg-muted">
@@ -22,7 +32,19 @@ export default function CoachView({ profile }: { profile: ProfileData }) {
             <AvatarImage src={profile.avatar} />
             <AvatarFallback>{profile.name[0]}</AvatarFallback>
           </Avatar>
-          <Button size="sm">Contratar</Button>
+          <div className="flex gap-2 mb-2">
+            <Button size="sm" className="bg-primary text-white shadow-md">
+              <Briefcase className="h-4 w-4 mr-1" /> Contratar
+            </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              className="rounded-full shadow-md"
+              onClick={() => navigate(`/messages/user-${profile.id}`)}
+            >
+              <MessageCircle className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
 
         <div className="mt-3">
