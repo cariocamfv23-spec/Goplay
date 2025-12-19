@@ -8,7 +8,6 @@ import {
   Video,
   FileText,
   X,
-  StopCircle,
 } from 'lucide-react'
 import { useState, useRef } from 'react'
 import {
@@ -18,7 +17,7 @@ import {
   DrawerTitle,
   DrawerClose,
 } from '@/components/ui/drawer'
-import { ChatMessage } from '@/lib/data'
+import { ChatMessage } from '@/types/chat'
 
 interface ChatInputProps {
   onSendMessage: (msg: Partial<ChatMessage>) => void
@@ -55,10 +54,13 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
 
     if (type === 'image') {
       msg.mediaUrl = 'https://img.usecurling.com/p/400/300?q=chat%20image'
+      msg.text = 'Imagem enviada'
     } else if (type === 'video') {
       msg.mediaUrl = 'https://img.usecurling.com/p/400/300?q=chat%20video'
+      msg.text = 'Vídeo enviado'
     } else {
       msg.fileName = 'Documento_Anexo.pdf'
+      msg.text = 'Documento enviado'
     }
 
     onSendMessage(msg)
@@ -94,7 +96,7 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
   }
 
   return (
-    <div className="p-3 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shrink-0">
+    <div className="p-3 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shrink-0 z-20 pb-safe">
       {isRecording ? (
         <div className="flex items-center gap-4 animate-in fade-in bg-secondary rounded-full px-4 py-2">
           <div className="h-3 w-3 bg-red-500 rounded-full animate-pulse" />
@@ -125,7 +127,7 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="shrink-0 text-muted-foreground hover:text-primary"
+            className="shrink-0 text-muted-foreground hover:text-primary transition-colors"
             onClick={() => setIsDrawerOpen(true)}
           >
             <Paperclip className="h-5 w-5" />
@@ -149,7 +151,7 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="shrink-0 text-muted-foreground hover:text-primary"
+              className="shrink-0 text-muted-foreground hover:text-primary transition-colors"
               onClick={toggleRecording}
             >
               <Mic className="h-5 w-5" />
@@ -161,7 +163,7 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
         <DrawerContent className="pb-8">
           <DrawerHeader className="relative">
-            <DrawerTitle className="text-center">Anexar</DrawerTitle>
+            <DrawerTitle className="text-center">Anexar Mídia</DrawerTitle>
             <DrawerClose asChild>
               <Button
                 variant="ghost"
@@ -172,33 +174,33 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
               </Button>
             </DrawerClose>
           </DrawerHeader>
-          <div className="flex justify-center gap-8 py-6">
+          <div className="flex justify-center gap-10 py-8">
             <div
-              className="flex flex-col items-center gap-2 cursor-pointer group"
+              className="flex flex-col items-center gap-3 cursor-pointer group"
               onClick={() => handleSendMedia('image')}
             >
-              <div className="h-14 w-14 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform">
-                <ImageIcon className="h-6 w-6" />
+              <div className="h-16 w-16 rounded-2xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 group-hover:scale-105 transition-transform shadow-sm">
+                <ImageIcon className="h-7 w-7" />
               </div>
-              <span className="text-xs">Galeria</span>
+              <span className="text-xs font-medium">Galeria</span>
             </div>
             <div
-              className="flex flex-col items-center gap-2 cursor-pointer group"
+              className="flex flex-col items-center gap-3 cursor-pointer group"
               onClick={() => handleSendMedia('video')}
             >
-              <div className="h-14 w-14 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center text-pink-600 group-hover:scale-110 transition-transform">
-                <Video className="h-6 w-6" />
+              <div className="h-16 w-16 rounded-2xl bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center text-pink-600 group-hover:scale-105 transition-transform shadow-sm">
+                <Video className="h-7 w-7" />
               </div>
-              <span className="text-xs">Vídeo</span>
+              <span className="text-xs font-medium">Vídeo</span>
             </div>
             <div
-              className="flex flex-col items-center gap-2 cursor-pointer group"
+              className="flex flex-col items-center gap-3 cursor-pointer group"
               onClick={() => handleSendMedia('document')}
             >
-              <div className="h-14 w-14 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
-                <FileText className="h-6 w-6" />
+              <div className="h-16 w-16 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 group-hover:scale-105 transition-transform shadow-sm">
+                <FileText className="h-7 w-7" />
               </div>
-              <span className="text-xs">Documento</span>
+              <span className="text-xs font-medium">Documento</span>
             </div>
           </div>
         </DrawerContent>

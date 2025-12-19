@@ -1,21 +1,23 @@
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { mockChats, mockProfiles, mockTalents } from '@/lib/data'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Phone, Video, Send } from 'lucide-react'
+import { ArrowLeft, Phone, Video } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Input } from '@/components/ui/input'
-import { useState, useEffect } from 'react'
-import { cn } from '@/lib/utils'
+import { useState, useEffect, useRef } from 'react'
 import { CallOverlay } from '@/components/chat/CallOverlay'
 import { toast } from 'sonner'
+import { ChatBubble } from '@/components/chat/ChatBubble'
+import { ChatInput } from '@/components/chat/ChatInput'
+import { ChatMessage } from '@/types/chat'
 
 export default function ChatRoom() {
   const { id } = useParams()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const [msg, setMsg] = useState('')
   const [isCallOpen, setIsCallOpen] = useState(false)
   const [callType, setCallType] = useState<'voice' | 'video'>('voice')
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   // Auto-start call from query params
   useEffect(() => {
@@ -27,10 +29,11 @@ export default function ChatRoom() {
     }
   }, [searchParams])
 
-  // Enhanced chat finding/mocking logic
-  let chat = mockChats.find((c) => c.id === id)
+  // Find chat logic
+  const chatData = mockChats.find((c) => c.id === id)
 
-  // If no chat found (e.g. starting new chat from profile), create a mock one
+  // Create mock chat object if not found
+  let chat = chatData
   if (!chat) {
     const mockId = id?.replace('user-', '') || 'unknown'
     const profileUser =
@@ -55,17 +58,54 @@ export default function ChatRoom() {
     }
   }
 
+  // Initialize messages state
+  useEffect(() => {
+    if (chat?.messages) {
+      const initialMessages: ChatMessage[] = chat.messages.map((m) => ({
+        ...m,
+        type: (m.type as any) || 'text',
+        isMe: m.sender === 'me',
+        mediaUrl: m.mediaUrl || undefined,
+        fileName: m.fileName || undefined,
+      }))
+      setMessages(initialMessages)
+    }
+  }, [chat?.id])
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+    }
+  }, [messages])
+
   const handleStartCall = (type: 'voice' | 'video') => {
     setCallType(type)
     setIsCallOpen(true)
     toast.info(`Iniciando chamada de ${type === 'voice' ? 'voz' : 'vídeo'}...`)
   }
 
-  const handleSendMessage = () => {
-    if (!msg.trim()) return
-    // Here we would actually send the message
-    setMsg('')
-    toast.success('Mensagem enviada')
+  const handleSendMessage = (newMsg: Partial<ChatMessage>) => {
+    const message: ChatMessage = {
+      id: `new-${Date.now()}`,
+      sender: 'me',
+      time: new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+      type: 'text',
+      isMe: true,
+      ...newMsg,
+    }
+
+    setMessages((prev) => [...prev, message])
+
+    // Play sound or vibration could go here
+    if (message.type === 'text') {
+      // toast.success('Mensagem enviada')
+    } else {
+      toast.success('Mídia enviada')
+    }
   }
 
   return (
@@ -78,30 +118,38 @@ export default function ChatRoom() {
         onEndCall={() => setIsCallOpen(false)}
       />
 
-      <div className="sticky top-0 bg-background/95 backdrop-blur z-20 p-3 border-b border-border/50 flex items-center justify-between">
+      <div className="sticky top-0 bg-background/95 backdrop-blur z-20 p-3 border-b border-border/50 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
             size="icon"
-            className="-ml-2"
+            className="-ml-2 hover:bg-secondary/50"
             onClick={() => navigate(-1)}
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div
-            className="cursor-pointer"
+            className="cursor-pointer flex items-center gap-3"
             onClick={() => navigate(`/profile/${chat?.user.id}`)}
           >
-            <Avatar className="h-9 w-9">
-              <AvatarImage src={chat.user.avatar} />
-              <AvatarFallback>{chat.user.name[0]}</AvatarFallback>
-            </Avatar>
-          </div>
-          <div>
-            <h3 className="font-bold text-sm">{chat.user.name}</h3>
-            {chat.user.online && (
-              <span className="text-xs text-green-500 block">Online</span>
-            )}
+            <div className="relative">
+              <Avatar className="h-10 w-10 border border-border">
+                <AvatarImage src={chat.user.avatar} />
+                <AvatarFallback>{chat.user.name[0]}</AvatarFallback>
+              </Avatar>
+              {chat.user.online && (
+                <span className="absolute bottom-0 right-0 h-2.5 w-2.5 bg-green-500 border-2 border-background rounded-full"></span>
+              )}
+            </div>
+
+            <div className="flex flex-col">
+              <h3 className="font-bold text-sm leading-none mb-1">
+                {chat.user.name}
+              </h3>
+              <span className="text-xs text-muted-foreground block">
+                {chat.user.online ? 'Online' : 'Visto por último recentemente'}
+              </span>
+            </div>
           </div>
         </div>
         <div className="flex gap-1">
@@ -109,7 +157,7 @@ export default function ChatRoom() {
             variant="ghost"
             size="icon"
             onClick={() => handleStartCall('voice')}
-            className="hover:bg-primary/10 hover:text-primary transition-colors"
+            className="hover:bg-primary/10 hover:text-primary transition-colors rounded-full"
           >
             <Phone className="h-5 w-5" />
           </Button>
@@ -117,67 +165,45 @@ export default function ChatRoom() {
             variant="ghost"
             size="icon"
             onClick={() => handleStartCall('video')}
-            className="hover:bg-primary/10 hover:text-primary transition-colors"
+            className="hover:bg-primary/10 hover:text-primary transition-colors rounded-full"
           >
             <Video className="h-5 w-5" />
           </Button>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {chat.messages && chat.messages.length > 0 ? (
-          chat.messages?.map((m) => (
-            <div
+      <div
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto p-4 space-y-2 bg-slate-50 dark:bg-black/20"
+      >
+        {messages.length > 0 ? (
+          messages.map((m) => (
+            <ChatBubble
               key={m.id}
-              className={cn(
-                'flex',
-                m.sender === 'me' ? 'justify-end' : 'justify-start',
-              )}
-            >
-              <div
-                className={cn(
-                  'max-w-[75%] px-4 py-2 rounded-2xl text-sm',
-                  m.sender === 'me'
-                    ? 'bg-primary text-primary-foreground rounded-tr-none'
-                    : 'bg-secondary text-secondary-foreground rounded-tl-none',
-                )}
-              >
-                <p>{m.text}</p>
-                <span className="text-[10px] opacity-70 block text-right mt-1">
-                  {m.time}
-                </span>
-              </div>
-            </div>
+              message={m}
+              senderAvatar={chat?.user.avatar}
+              senderName={chat?.user.name}
+            />
           ))
         ) : (
-          <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground p-8">
-            <div className="h-16 w-16 bg-secondary/50 rounded-full flex items-center justify-center mb-4">
-              <Send className="h-6 w-6 opacity-20" />
+          <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground p-8 animate-fade-in">
+            <div className="h-20 w-20 bg-secondary/50 rounded-full flex items-center justify-center mb-4">
+              <Avatar className="h-20 w-20 opacity-50">
+                <AvatarImage src={chat?.user.avatar} />
+                <AvatarFallback>{chat?.user.name[0]}</AvatarFallback>
+              </Avatar>
             </div>
-            <p className="text-sm">Inicie a conversa com {chat.user.name}</p>
+            <p className="text-sm font-medium">
+              Inicie a conversa com {chat?.user.name}
+            </p>
             <p className="text-xs opacity-50 mt-1">
-              Mande um "Oi" para começar!
+              Suas mensagens e chamadas são protegidas.
             </p>
           </div>
         )}
       </div>
 
-      <div className="p-3 bg-background border-t border-border/50 flex gap-2 pb-safe">
-        <Input
-          placeholder="Digite uma mensagem..."
-          className="flex-1 rounded-full bg-secondary border-none"
-          value={msg}
-          onChange={(e) => setMsg(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-        />
-        <Button
-          size="icon"
-          className="rounded-full shrink-0"
-          onClick={handleSendMessage}
-        >
-          <Send className="h-4 w-4" />
-        </Button>
-      </div>
+      <ChatInput onSendMessage={handleSendMessage} />
     </div>
   )
 }
