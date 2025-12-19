@@ -37,6 +37,9 @@ import {
   TrendingUp,
   CheckCircle,
   LayoutList,
+  Flame,
+  Shield,
+  Award,
 } from 'lucide-react'
 
 // Types
@@ -376,6 +379,13 @@ export interface RetrospectiveYear {
   achievements: number
 }
 
+export type AchievementType = 'mvp' | 'streak' | 'veteran' | 'rising_star'
+
+export interface SpecialAchievement {
+  type: AchievementType
+  label: string
+}
+
 export interface RankingEntry {
   id: string
   position: number
@@ -387,6 +397,7 @@ export interface RankingEntry {
     avatar: string
     team?: string
   }
+  specialAchievement?: SpecialAchievement
 }
 
 export const navigationItems = [
@@ -1217,6 +1228,10 @@ export const mockRankings: RankingEntry[] = [
       avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=99',
       team: 'T-800 FC',
     },
+    specialAchievement: {
+      type: 'mvp',
+      label: 'MVP da Temporada',
+    },
   },
   {
     id: 'r2',
@@ -1228,6 +1243,10 @@ export const mockRankings: RankingEntry[] = [
       name: 'John Wick',
       avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=88',
       team: 'Continental',
+    },
+    specialAchievement: {
+      type: 'streak',
+      label: 'Sequência de Vitórias',
     },
   },
   {
@@ -1241,6 +1260,10 @@ export const mockRankings: RankingEntry[] = [
       avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=77',
       team: 'Matrix United',
     },
+    specialAchievement: {
+      type: 'veteran',
+      label: 'Veterano de Elite',
+    },
   },
   {
     id: 'r4',
@@ -1252,6 +1275,10 @@ export const mockRankings: RankingEntry[] = [
       name: 'Trinity',
       avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=66',
       team: 'Nebuchadnezzar',
+    },
+    specialAchievement: {
+      type: 'rising_star',
+      label: 'Estrela em Ascensão',
     },
   },
   {

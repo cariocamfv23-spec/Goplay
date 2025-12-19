@@ -1,8 +1,23 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { RankingEntry, mockRankings, mockCurrentUser } from '@/lib/data'
-import { Trophy, TrendingUp, Minus, TrendingDown, Crown } from 'lucide-react'
+import {
+  Trophy,
+  TrendingUp,
+  Minus,
+  TrendingDown,
+  Crown,
+  Star,
+  Flame,
+  Shield,
+  Zap,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 export function RankingWidget() {
   const topRankings = mockRankings.filter((r) => r.position <= 3)
@@ -55,6 +70,41 @@ function RankingItem({
   isMe?: boolean
 }) {
   const isFirst = rank.position === 1
+  const achievement = rank.specialAchievement
+
+  const getAchievementIcon = (type: string) => {
+    switch (type) {
+      case 'mvp':
+        return Star
+      case 'streak':
+        return Flame
+      case 'veteran':
+        return Shield
+      case 'rising_star':
+        return Zap
+      default:
+        return Star
+    }
+  }
+
+  const getAchievementColor = (type: string) => {
+    switch (type) {
+      case 'mvp':
+        return 'text-yellow-500'
+      case 'streak':
+        return 'text-orange-500'
+      case 'veteran':
+        return 'text-blue-500'
+      case 'rising_star':
+        return 'text-purple-500'
+      default:
+        return 'text-primary'
+    }
+  }
+
+  const AchievementIcon = achievement
+    ? getAchievementIcon(achievement.type)
+    : null
 
   return (
     <div
@@ -95,14 +145,31 @@ function RankingItem({
       </div>
 
       <div className="flex-1 min-w-0">
-        <p
-          className={cn(
-            'font-semibold text-sm truncate',
-            isMe && 'text-primary',
+        <div className="flex items-center gap-1.5">
+          <p
+            className={cn(
+              'font-semibold text-sm truncate',
+              isMe && 'text-primary',
+            )}
+          >
+            {isMe ? 'Você' : rank.user.name}
+          </p>
+          {achievement && AchievementIcon && (
+            <Tooltip>
+              <TooltipTrigger>
+                <AchievementIcon
+                  className={cn(
+                    'w-3 h-3',
+                    getAchievementColor(achievement.type),
+                  )}
+                />
+              </TooltipTrigger>
+              <TooltipContent className="text-xs">
+                {achievement.label}
+              </TooltipContent>
+            </Tooltip>
           )}
-        >
-          {isMe ? 'Você' : rank.user.name}
-        </p>
+        </div>
         <p className="text-xs text-muted-foreground truncate">
           {rank.user.team || 'Atleta'}
         </p>

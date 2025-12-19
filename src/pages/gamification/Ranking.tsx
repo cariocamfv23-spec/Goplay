@@ -8,9 +8,18 @@ import {
   TrendingDown,
   Trophy,
   Medal,
+  Flame,
+  Shield,
+  Star,
+  Zap,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { mockRankings, mockCurrentUser, type RankingEntry } from '@/lib/data'
+import {
+  mockRankings,
+  mockCurrentUser,
+  type RankingEntry,
+  type SpecialAchievement,
+} from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -21,6 +30,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 type TimeRange = 'daily' | 'weekly' | 'monthly' | 'all_time'
 type MetricType = 'points' | 'matches' | 'wins' | 'assists'
@@ -33,25 +47,42 @@ export default function Ranking() {
   const rankings = useMemo(() => {
     // Generate some extra dummy users to flesh out the list for demonstration
     const extraUsers: RankingEntry[] = Array.from({ length: 20 }).map(
-      (_, i) => ({
-        id: `dummy_${i}`,
-        position: 0, // placeholder, will be recalculated
-        points: 1500 - i * 60 + Math.floor(Math.random() * 200),
-        trend:
-          Math.random() > 0.6
-            ? 'up'
-            : Math.random() > 0.3
-              ? 'down'
-              : ('same' as 'up' | 'down' | 'same'),
-        user: {
-          id: `u_dummy_${i}`,
-          name: `Atleta ${['Alpha', 'Beta', 'Gama', 'Delta', 'Sigma'][i % 5]} ${i + 1}`,
-          avatar: `https://img.usecurling.com/ppl/medium?gender=${i % 2 === 0 ? 'male' : 'female'}&seed=${i + 200}`,
-          team: ['Red Wolves', 'Blue Sharks', 'Green Eagles', 'Iron Team'][
-            i % 4
-          ],
-        },
-      }),
+      (_, i) => {
+        // Random chance for achievement
+        const hasAchievement = Math.random() > 0.75
+        let achievement: SpecialAchievement | undefined
+
+        if (hasAchievement) {
+          const type = Math.random()
+          if (type > 0.8) achievement = { type: 'mvp', label: 'MVP da Rodada' }
+          else if (type > 0.5)
+            achievement = { type: 'streak', label: 'Em Chamas' }
+          else if (type > 0.25)
+            achievement = { type: 'veteran', label: 'Veterano' }
+          else achievement = { type: 'rising_star', label: 'Revelação' }
+        }
+
+        return {
+          id: `dummy_${i}`,
+          position: 0, // placeholder, will be recalculated
+          points: 1500 - i * 60 + Math.floor(Math.random() * 200),
+          trend:
+            Math.random() > 0.6
+              ? 'up'
+              : Math.random() > 0.3
+                ? 'down'
+                : ('same' as 'up' | 'down' | 'same'),
+          user: {
+            id: `u_dummy_${i}`,
+            name: `Atleta ${['Alpha', 'Beta', 'Gama', 'Delta', 'Sigma'][i % 5]} ${i + 1}`,
+            avatar: `https://img.usecurling.com/ppl/medium?gender=${i % 2 === 0 ? 'male' : 'female'}&seed=${i + 200}`,
+            team: ['Red Wolves', 'Blue Sharks', 'Green Eagles', 'Iron Team'][
+              i % 4
+            ],
+          },
+          specialAchievement: achievement,
+        }
+      },
     )
 
     // Combine original mock data with extra users
@@ -116,6 +147,51 @@ export default function Ranking() {
 
   // Find my current stats in the filtered list
   const myRank = rankings.find((r) => r.user.id === mockCurrentUser.id)
+
+  const getAchievementIcon = (type: string) => {
+    switch (type) {
+      case 'mvp':
+        return Star
+      case 'streak':
+        return Flame
+      case 'veteran':
+        return Shield
+      case 'rising_star':
+        return Zap
+      default:
+        return Star
+    }
+  }
+
+  const getAchievementColor = (type: string) => {
+    switch (type) {
+      case 'mvp':
+        return 'text-yellow-500'
+      case 'streak':
+        return 'text-orange-500'
+      case 'veteran':
+        return 'text-blue-500'
+      case 'rising_star':
+        return 'text-purple-500'
+      default:
+        return 'text-primary'
+    }
+  }
+
+  const getAchievementBg = (type: string) => {
+    switch (type) {
+      case 'mvp':
+        return 'bg-yellow-500/10 border-yellow-500/30'
+      case 'streak':
+        return 'bg-orange-500/10 border-orange-500/30'
+      case 'veteran':
+        return 'bg-blue-500/10 border-blue-500/30'
+      case 'rising_star':
+        return 'bg-purple-500/10 border-purple-500/30'
+      default:
+        return ''
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in flex flex-col">
@@ -220,17 +296,33 @@ export default function Ranking() {
           {rankings.map((rank) => {
             const isMe = rank.user.id === mockCurrentUser.id
             const isTop3 = rank.position <= 3
+            const achievement = rank.specialAchievement
+
+            // Determine special styling based on achievement
+            const achievementStyle = achievement
+              ? getAchievementBg(achievement.type)
+              : ''
+            const Icon = achievement
+              ? getAchievementIcon(achievement.type)
+              : null
 
             return (
               <div
                 key={rank.id}
                 className={cn(
                   'relative flex items-center gap-4 p-3 pr-4 rounded-2xl border transition-all duration-300 group',
+                  // Base styles
                   isTop3
                     ? 'bg-gradient-to-r from-card to-background border-border/60 shadow-sm'
                     : 'bg-card border-border/30 hover:border-border/60',
+                  // Me highlight
                   isMe &&
-                    'bg-primary/5 border-primary/40 shadow-[0_0_15px_rgba(var(--primary),0.1)] scale-[1.02]',
+                    'bg-primary/5 border-primary/40 shadow-[0_0_15px_rgba(var(--primary),0.1)] scale-[1.02] z-10',
+                  // Achievement highlight (overrides normal style if not me, blends if me)
+                  achievement && !isMe && achievementStyle,
+                  achievement &&
+                    isMe &&
+                    'ring-1 ring-offset-1 ring-offset-background ring-primary/50',
                 )}
               >
                 {/* Position Badge */}
@@ -276,6 +368,17 @@ export default function Ranking() {
                             ? 'border-orange-700'
                             : 'border-transparent bg-muted',
                       isMe && 'border-primary ring-2 ring-primary/20',
+                      // Achievement border
+                      achievement &&
+                        !isMe &&
+                        !isTop3 &&
+                        cn(
+                          'border-opacity-50',
+                          getAchievementColor(achievement.type).replace(
+                            'text-',
+                            'border-',
+                          ),
+                        ),
                     )}
                   >
                     <AvatarImage
@@ -287,6 +390,17 @@ export default function Ranking() {
                   {isMe && (
                     <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-primary border-2 border-white rounded-full flex items-center justify-center">
                       <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                    </div>
+                  )}
+                  {/* Achievement Icon Overlay on Avatar (Alternative placement) */}
+                  {achievement && (
+                    <div
+                      className={cn(
+                        'absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center border border-white shadow-sm bg-background',
+                        getAchievementColor(achievement.type),
+                      )}
+                    >
+                      {Icon && <Icon className="w-3 h-3 fill-current" />}
                     </div>
                   )}
                 </div>
@@ -302,6 +416,28 @@ export default function Ranking() {
                     >
                       {isMe ? 'Você' : rank.user.name}
                     </p>
+
+                    {/* Achievement Icon next to name with Tooltip */}
+                    {achievement && Icon && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div
+                            className={cn(
+                              'cursor-help p-0.5 rounded-full hover:bg-muted transition-colors',
+                              getAchievementColor(achievement.type),
+                            )}
+                          >
+                            <Icon className="w-3.5 h-3.5" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side="right"
+                          className="text-xs bg-popover text-popover-foreground"
+                        >
+                          <p className="font-semibold">{achievement.label}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
                   </div>
                   <p className="text-xs text-muted-foreground truncate leading-tight mt-0.5">
                     {rank.user.team || 'Atleta Independente'}
