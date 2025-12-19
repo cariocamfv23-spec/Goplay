@@ -1,10 +1,10 @@
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { mockChats } from '@/lib/data'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, Phone, Video, Send } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { CallOverlay } from '@/components/chat/CallOverlay'
 import { toast } from 'sonner'
@@ -12,9 +12,20 @@ import { toast } from 'sonner'
 export default function ChatRoom() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [msg, setMsg] = useState('')
   const [isCallOpen, setIsCallOpen] = useState(false)
   const [callType, setCallType] = useState<'voice' | 'video'>('voice')
+
+  // Auto-start call from query params
+  useEffect(() => {
+    const action = searchParams.get('action')
+    if (action === 'voice') {
+      handleStartCall('voice')
+    } else if (action === 'video') {
+      handleStartCall('video')
+    }
+  }, [searchParams])
 
   // Enhanced chat finding/mocking logic
   let chat = mockChats.find((c) => c.id === id)

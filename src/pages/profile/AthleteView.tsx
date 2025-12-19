@@ -23,6 +23,8 @@ import {
   Palette,
   TrendingUp,
   ImageOff,
+  Phone,
+  MessageCircle,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -95,7 +97,7 @@ export default function AthleteView({
             <AvatarImage src={user.avatar} />
             <AvatarFallback>{user.name[0]}</AvatarFallback>
           </Avatar>
-          <div className="flex gap-2 mb-2">
+          <div className="flex gap-2 mb-2 items-center">
             {isMe ? (
               <Button
                 variant="outline"
@@ -109,13 +111,36 @@ export default function AthleteView({
                 <Button size="sm" className="bg-primary text-white">
                   Seguir
                 </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => navigate(`/messages/user-${user.id}`)}
-                >
-                  Mensagem
-                </Button>
+                <div className="flex bg-secondary rounded-md p-1 gap-1">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-8 w-8 p-0 rounded-full hover:bg-background/80"
+                    onClick={() => navigate(`/messages/user-${user.id}`)}
+                  >
+                    <MessageCircle className="h-4 w-4 text-foreground" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-8 w-8 p-0 rounded-full hover:bg-background/80"
+                    onClick={() =>
+                      navigate(`/messages/user-${user.id}?action=voice`)
+                    }
+                  >
+                    <Phone className="h-4 w-4 text-foreground" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-8 w-8 p-0 rounded-full hover:bg-background/80"
+                    onClick={() =>
+                      navigate(`/messages/user-${user.id}?action=video`)
+                    }
+                  >
+                    <Video className="h-4 w-4 text-foreground" />
+                  </Button>
+                </div>
               </>
             )}
           </div>

@@ -8,6 +8,8 @@ import {
   Calendar,
   MessageCircle,
   Briefcase,
+  Phone,
+  Video,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { useNavigate } from 'react-router-dom'
@@ -32,18 +34,40 @@ export default function CoachView({ profile }: { profile: ProfileData }) {
             <AvatarImage src={profile.avatar} />
             <AvatarFallback>{profile.name[0]}</AvatarFallback>
           </Avatar>
-          <div className="flex gap-2 mb-2">
+          <div className="flex gap-2 mb-2 items-center">
             <Button size="sm" className="bg-primary text-white shadow-md">
               <Briefcase className="h-4 w-4 mr-1" /> Contratar
             </Button>
-            <Button
-              size="sm"
-              variant="secondary"
-              className="rounded-full shadow-md"
-              onClick={() => navigate(`/messages/user-${profile.id}`)}
-            >
-              <MessageCircle className="h-4 w-4" />
-            </Button>
+            <div className="flex bg-secondary/80 rounded-full p-1 gap-1 shadow-md">
+              <Button
+                size="sm"
+                variant="ghost"
+                className="rounded-full h-9 w-9 p-0 hover:bg-background/80"
+                onClick={() => navigate(`/messages/user-${profile.id}`)}
+              >
+                <MessageCircle className="h-4 w-4" />
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="rounded-full h-9 w-9 p-0 hover:bg-background/80"
+                onClick={() =>
+                  navigate(`/messages/user-${profile.id}?action=voice`)
+                }
+              >
+                <Phone className="h-4 w-4" />
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="rounded-full h-9 w-9 p-0 hover:bg-background/80"
+                onClick={() =>
+                  navigate(`/messages/user-${profile.id}?action=video`)
+                }
+              >
+                <Video className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
 
