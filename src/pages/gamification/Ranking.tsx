@@ -241,7 +241,7 @@ export default function Ranking() {
                   )}
                 >
                   {rank.position === 1 ? (
-                    <Crown className="h-7 w-7 text-yellow-500 fill-yellow-500 animate-bounce duration-[2000ms]" />
+                    <Crown className="h-7 w-7 text-yellow-500 fill-yellow-500 animate-[bounce_2s_infinite]" />
                   ) : rank.position === 2 ? (
                     <div className="relative">
                       <Medal className="h-6 w-6 text-slate-400 fill-slate-200" />
