@@ -8,13 +8,12 @@ import {
   Trophy,
   CloudLightning,
   GraduationCap,
-  Check,
   Zap,
+  TrendingUp,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
 import { cn } from '@/lib/utils'
-import { Separator } from '@/components/ui/separator'
 
 export default function Notifications() {
   const navigate = useNavigate()
@@ -35,6 +34,8 @@ export default function Notifications() {
         return <GraduationCap className="h-5 w-5 text-emerald-500" />
       case 'level_up':
         return <Zap className="h-5 w-5 text-purple-500" />
+      case 'ranking':
+        return <TrendingUp className="h-5 w-5 text-green-500" />
       default:
         return <Bell className="h-5 w-5 text-primary" />
     }

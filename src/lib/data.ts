@@ -84,6 +84,7 @@ export interface Notification {
     | 'weather'
     | 'level_up'
     | 'scholarship'
+    | 'ranking'
   date?: string
   priority?: 'low' | 'medium' | 'high' | 'critical'
   link?: string

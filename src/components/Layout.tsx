@@ -3,6 +3,7 @@ import { TopBar } from './TopBar'
 import { BottomNav } from './BottomNav'
 import { WeatherAlertManager } from './WeatherAlertManager'
 import { ScholarshipAlertManager } from './ScholarshipAlertManager'
+import { RankingAlertManager } from './RankingAlertManager'
 
 export default function Layout() {
   const location = useLocation()
@@ -32,6 +33,7 @@ export default function Layout() {
       {!shouldHideTopBar && <TopBar />}
       <WeatherAlertManager />
       <ScholarshipAlertManager />
+      <RankingAlertManager />
       <main className={`flex-1 w-full ${!shouldHideBottomNav ? 'pb-16' : ''}`}>
         <Outlet />
       </main>

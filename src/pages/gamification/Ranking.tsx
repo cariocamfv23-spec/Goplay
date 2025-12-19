@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   ArrowLeft,
@@ -13,13 +13,9 @@ import {
   Star,
   Zap,
 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import {
-  mockRankings,
-  mockCurrentUser,
-  type RankingEntry,
-  type SpecialAchievement,
-} from '@/lib/data'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { mockCurrentUser } from '@/lib/data'
+import { getRankings } from '@/lib/ranking-utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -41,93 +37,14 @@ type MetricType = 'points' | 'matches' | 'wins' | 'assists'
 
 export default function Ranking() {
   const navigate = useNavigate()
-  const [timeRange, setTimeRange] = useState<TimeRange>('weekly')
+  const [searchParams] = useSearchParams()
+  const initialTab = (searchParams.get('tab') as TimeRange) || 'weekly'
+  const [timeRange, setTimeRange] = useState<TimeRange>(initialTab)
   const [metric, setMetric] = useState<MetricType>('points')
 
+  // Use the shared deterministic logic
   const rankings = useMemo(() => {
-    // Generate some extra dummy users to flesh out the list for demonstration
-    const extraUsers: RankingEntry[] = Array.from({ length: 20 }).map(
-      (_, i) => {
-        // Random chance for achievement
-        const hasAchievement = Math.random() > 0.75
-        let achievement: SpecialAchievement | undefined
-
-        if (hasAchievement) {
-          const type = Math.random()
-          if (type > 0.8) achievement = { type: 'mvp', label: 'MVP da Rodada' }
-          else if (type > 0.5)
-            achievement = { type: 'streak', label: 'Em Chamas' }
-          else if (type > 0.25)
-            achievement = { type: 'veteran', label: 'Veterano' }
-          else achievement = { type: 'rising_star', label: 'Revelação' }
-        }
-
-        return {
-          id: `dummy_${i}`,
-          position: 0, // placeholder, will be recalculated
-          points: 1500 - i * 60 + Math.floor(Math.random() * 200),
-          trend:
-            Math.random() > 0.6
-              ? 'up'
-              : Math.random() > 0.3
-                ? 'down'
-                : ('same' as 'up' | 'down' | 'same'),
-          user: {
-            id: `u_dummy_${i}`,
-            name: `Atleta ${['Alpha', 'Beta', 'Gama', 'Delta', 'Sigma'][i % 5]} ${i + 1}`,
-            avatar: `https://img.usecurling.com/ppl/medium?gender=${i % 2 === 0 ? 'male' : 'female'}&seed=${i + 200}`,
-            team: ['Red Wolves', 'Blue Sharks', 'Green Eagles', 'Iron Team'][
-              i % 4
-            ],
-          },
-          specialAchievement: achievement,
-        }
-      },
-    )
-
-    // Combine original mock data with extra users
-    // Filter out potential ID collisions
-    const allEntries = [...mockRankings, ...extraUsers].filter(
-      (v, i, a) => a.findIndex((t) => t.user.id === v.user.id) === i,
-    )
-
-    // Apply modifiers based on filters to simulate API response
-    const seed = timeRange.length + metric.length
-
-    const processedData = allEntries.map((entry) => {
-      let baseValue = entry.points
-
-      // Simulate different metrics scaling
-      if (metric === 'wins') baseValue = Math.floor(baseValue / 20)
-      else if (metric === 'matches') baseValue = Math.floor(baseValue / 15)
-      else if (metric === 'assists') baseValue = Math.floor(baseValue / 40)
-
-      // Simulate different time ranges scaling
-      if (timeRange === 'daily') baseValue = Math.floor(baseValue / 30)
-      else if (timeRange === 'weekly') baseValue = Math.floor(baseValue / 4)
-      else if (timeRange === 'monthly') baseValue = Math.floor(baseValue / 1.5)
-
-      // Add randomization to shuffle positions based on user ID and current filters
-      const userFactor = entry.user.id.charCodeAt(entry.user.id.length - 1)
-      const randomVariance = ((userFactor * seed) % 50) - 25
-
-      // Ensure non-negative
-      const finalValue = Math.max(0, baseValue + randomVariance)
-
-      return {
-        ...entry,
-        points: finalValue,
-      }
-    })
-
-    // Sort descending by value
-    processedData.sort((a, b) => b.points - a.points)
-
-    // Assign new positions
-    return processedData.map((entry, index) => ({
-      ...entry,
-      position: index + 1,
-    }))
+    return getRankings(timeRange, metric)
   }, [timeRange, metric])
 
   const getMetricUnit = () => {
