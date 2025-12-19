@@ -376,6 +376,19 @@ export interface RetrospectiveYear {
   achievements: number
 }
 
+export interface RankingEntry {
+  id: string
+  position: number
+  points: number
+  trend: 'up' | 'down' | 'same'
+  user: {
+    id: string
+    name: string
+    avatar: string
+    team?: string
+  }
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: LayoutList, label: 'Feed', path: '/feed' },
@@ -1191,7 +1204,70 @@ export const mockTrainingSuggestions: TrainingSuggestion[] = [
 export const mockRideRequests = []
 export const mockRewards = []
 export const mockRideHistory = []
-export const mockRankings = []
+
+export const mockRankings: RankingEntry[] = [
+  {
+    id: 'r1',
+    position: 1,
+    points: 2450,
+    trend: 'up',
+    user: {
+      id: 'u_top1',
+      name: 'Sarah Connor',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=99',
+      team: 'T-800 FC',
+    },
+  },
+  {
+    id: 'r2',
+    position: 2,
+    points: 2320,
+    trend: 'same',
+    user: {
+      id: 'u_top2',
+      name: 'John Wick',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=88',
+      team: 'Continental',
+    },
+  },
+  {
+    id: 'r3',
+    position: 3,
+    points: 2100,
+    trend: 'down',
+    user: {
+      id: 'u_top3',
+      name: 'Neo Anderson',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=77',
+      team: 'Matrix United',
+    },
+  },
+  {
+    id: 'r4',
+    position: 4,
+    points: 1950,
+    trend: 'up',
+    user: {
+      id: 'u_top4',
+      name: 'Trinity',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=66',
+      team: 'Nebuchadnezzar',
+    },
+  },
+  {
+    id: 'r5',
+    position: 15,
+    points: 1250,
+    trend: 'up',
+    user: {
+      id: 'u1', // Matches mockCurrentUser.id
+      name: 'Alex Silva',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=1',
+      team: 'Goplay Team',
+    },
+  },
+]
+
 export const mockEvents: Event[] = []
 export const mockVenues = []
 export const mockKidsVenues: KidsVenue[] = []

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Logo } from '@/components/Logo'
 import { AppIcon } from '@/components/AppIcon'
 import { ArrowRight, Trophy, Users, Activity } from 'lucide-react'
+import { RankingWidget } from '@/components/RankingWidget'
 
 export default function Index() {
   const navigate = useNavigate()
@@ -66,6 +67,11 @@ export default function Index() {
                 </span>
               </div>
             ))}
+          </div>
+
+          {/* Ranking Widget Section */}
+          <div className="w-full animate-in fade-in slide-in-from-bottom-12 duration-700 delay-100">
+            <RankingWidget />
           </div>
         </div>
 
