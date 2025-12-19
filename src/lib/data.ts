@@ -967,6 +967,57 @@ export const mockUser = {
 
 export const mockCurrentUser = mockUser
 
+export const mockFeedUsers = [
+  {
+    id: 'u3',
+    name: 'Mariana Souza',
+    type: 'Atleta',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=12',
+  },
+  {
+    id: 'u4',
+    name: 'Carlos Eduardo',
+    type: 'Treinador',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=45',
+  },
+  {
+    id: 'u5',
+    name: 'Beatriz Lima',
+    type: 'Nutricionista',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=23',
+  },
+  {
+    id: 'u6',
+    name: 'Pedro Santos',
+    type: 'Atleta',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=67',
+  },
+  {
+    id: 'u7',
+    name: 'Fernanda Oliveira',
+    type: 'Fisioterapeuta',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=89',
+  },
+  {
+    id: 'u8',
+    name: 'Lucas Mendes',
+    type: 'Atleta',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=34',
+  },
+  {
+    id: 'u9',
+    name: 'Juliana Costa',
+    type: 'Psicóloga',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=56',
+  },
+  {
+    id: 'u10',
+    name: 'Rafael Torres',
+    type: 'Scout',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=78',
+  },
+]
+
 export const mockPassport: PassportData = {
   idNumber: 'GP-8821-XJ9',
   expiry: '12/28',
@@ -1053,7 +1104,7 @@ export const mockPosts = [
   {
     id: 2,
     type: 'image',
-    user: mockCurrentUser,
+    user: mockFeedUsers[0],
     time: '4h',
     title: 'Treino de hoje',
     content: 'Dia de perna pesado! Foco total na preparação física.',
@@ -1071,7 +1122,7 @@ export const mockPosts = [
   {
     id: 3,
     type: 'image',
-    user: mockCurrentUser,
+    user: mockFeedUsers[5],
     time: '1d',
     title: 'Nova Chuteira',
     content: 'Pronto para estrear minha nova companheira de gols. ⚽🔥',
@@ -1089,7 +1140,7 @@ export const mockPosts = [
   {
     id: 4,
     type: 'video',
-    user: mockCurrentUser,
+    user: mockFeedUsers[3],
     time: '2d',
     title: 'Highlights da Semana',
     content: 'Alguns lances do jogo de domingo. Vitória importante! 3x1',
@@ -1108,7 +1159,7 @@ export const mockPosts = [
   {
     id: 5,
     type: 'image',
-    user: mockCurrentUser,
+    user: mockFeedUsers[0],
     time: '3d',
     title: 'Recovery',
     content: 'Pós-treino regenerativo. Cuidar do corpo é essencial.',
@@ -1124,7 +1175,7 @@ export const mockPosts = [
   {
     id: 6,
     type: 'image',
-    user: mockCurrentUser,
+    user: mockFeedUsers[1],
     time: '5d',
     title: 'Time Completo',
     content: 'A união faz a força! Time focado no campeonato.',
@@ -1140,7 +1191,7 @@ export const mockPosts = [
   {
     id: 7,
     type: 'image',
-    user: mockCurrentUser,
+    user: mockFeedUsers[2],
     time: '1w',
     title: 'Alimentação Saudável',
     content: 'Combustível para o corpo. 🥗🍗',
@@ -1175,7 +1226,7 @@ export const mockPosts = [
   {
     id: 9,
     type: 'image',
-    user: mockCurrentUser,
+    user: mockFeedUsers[7],
     time: '2w',
     title: 'Visual do Jogo',
     content: 'Estádio lotado, energia incrível!',
