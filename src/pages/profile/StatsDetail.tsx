@@ -14,6 +14,10 @@ import { Card, CardContent } from '@/components/ui/card'
 export default function StatsDetail() {
   const navigate = useNavigate()
 
+  // Defensive coding: ensure aiStats exists before mapping
+  // We use 'as any' to safely access properties that might not be inferred correctly in all contexts
+  const aiStats = (mockAiAnalysis as any)?.aiStats || []
+
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
       <div className="sticky top-0 bg-background/95 backdrop-blur z-20 p-4 border-b border-border/50 flex items-center gap-4">
@@ -55,22 +59,29 @@ export default function StatsDetail() {
           </h3>
           <Card>
             <CardContent className="p-5 space-y-4">
-              {mockAiAnalysis.aiStats.map((stat, i) => (
-                <div key={i} className="space-y-1">
-                  <div className="flex justify-between text-sm">
-                    <span className="font-medium text-muted-foreground">
-                      {stat.label}
-                    </span>
-                    <span className="font-bold">
-                      {stat.value} {stat.unit}
-                    </span>
+              {aiStats && aiStats.length > 0 ? (
+                aiStats.map((stat: any, i: number) => (
+                  <div key={i} className="space-y-1">
+                    <div className="flex justify-between text-sm">
+                      <span className="font-medium text-muted-foreground">
+                        {stat.label}
+                      </span>
+                      <span className="font-bold">
+                        {stat.value} {stat.unit}
+                      </span>
+                    </div>
+                    <Progress
+                      value={(stat.value / stat.max) * 100}
+                      className="h-2"
+                    />
                   </div>
-                  <Progress
-                    value={(stat.value / stat.max) * 100}
-                    className="h-2"
-                  />
+                ))
+              ) : (
+                <div className="text-center py-6 text-muted-foreground text-sm">
+                  <Activity className="h-8 w-8 mx-auto mb-2 opacity-20" />
+                  <p>Dados insuficientes para análise detalhada.</p>
                 </div>
-              ))}
+              )}
             </CardContent>
           </Card>
         </div>

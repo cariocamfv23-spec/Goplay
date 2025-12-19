@@ -1151,8 +1151,43 @@ export const mockPosts = [
   },
 ]
 export const mockVideos = []
-export const mockAiAnalysis = {}
-export const mockTrainingSuggestions: TrainingSuggestion[] = []
+
+export const mockAiAnalysis = {
+  aiStats: [
+    { label: 'Velocidade', value: 88, max: 100, unit: 'pts' },
+    { label: 'Resistência', value: 92, max: 100, unit: 'pts' },
+    { label: 'Força', value: 85, max: 100, unit: 'pts' },
+    { label: 'Técnica', value: 90, max: 100, unit: 'pts' },
+  ],
+}
+
+export const mockTrainingSuggestions: TrainingSuggestion[] = [
+  {
+    id: 'ts1',
+    title: 'Melhorar Resistência',
+    description:
+      'Sua performance cai significativamente nos últimos 15 minutos de jogo.',
+    difficulty: 'Intermediário',
+    reason: 'Queda de rendimento',
+    exercises: [
+      { name: 'Sprints Intervalados', sets: 5, reps: 400 },
+      { name: 'Trote Regenerativo', sets: 1, reps: 2000 },
+    ],
+  },
+  {
+    id: 'ts2',
+    title: 'Potência de Chute',
+    description:
+      'Aumente a força do seu chute para finalizações de fora da área.',
+    difficulty: 'Avançado',
+    reason: 'Finalizações fracas',
+    exercises: [
+      { name: 'Agachamento Explosivo', sets: 4, reps: 8 },
+      { name: 'Chute com Peso', sets: 3, reps: 15 },
+    ],
+  },
+]
+
 export const mockRideRequests = []
 export const mockRewards = []
 export const mockRideHistory = []
