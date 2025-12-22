@@ -117,7 +117,9 @@ export function PostCard({ post }: PostProps) {
     let text = 'curtiu isso'
 
     if (type === 'comment') {
-      icon = <MessageCircle className="h-3 w-3 text-muted-foreground/50" />
+      icon = (
+        <MessageCircle className="h-3 w-3 text-muted-foreground fill-muted-foreground/10" />
+      )
       text = 'comentou nisso'
     } else if (type === 'repost') {
       icon = <Share2 className="h-3 w-3 text-muted-foreground/50" />
