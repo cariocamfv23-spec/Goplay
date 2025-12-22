@@ -23,6 +23,12 @@ import {
   AlignVerticalJustifyStart,
   AlignVerticalJustifyEnd,
   Sticker,
+  Crown,
+  ScanFace,
+  Glasses,
+  Shirt,
+  Music,
+  Smile,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -32,12 +38,14 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Slider } from '@/components/ui/slider'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Switch } from '@/components/ui/switch'
 import { toast } from 'sonner'
 import { ShareDialog } from '@/components/ShareDialog'
 import { cn } from '@/lib/utils'
-import { NftCard, NftStyleConfig } from '@/components/NftCard'
+import { NftCard, NftStyleConfig, Accessory } from '@/components/NftCard'
 
 type NftStyle =
+  | 'bored-ape'
   | 'sticker-cultura'
   | 'classic'
   | 'cyberpunk'
@@ -68,6 +76,21 @@ interface StyleConfig {
 }
 
 const styles: StyleConfig[] = [
+  {
+    id: 'bored-ape',
+    name: 'Bored Ape',
+    color: 'from-lime-500 to-green-700',
+    icon: Crown,
+    defaults: {
+      brightness: 110,
+      contrast: 130,
+      saturate: 160,
+      sepia: 20,
+      blur: 0,
+      hue: 0,
+      grayscale: 0,
+    },
+  },
   {
     id: 'sticker-cultura',
     name: 'Sticker Cultura',
@@ -220,6 +243,57 @@ const styles: StyleConfig[] = [
   },
 ]
 
+const availableAccessories: Accessory[] = [
+  {
+    id: 'glasses-1',
+    emoji: '🕶️',
+    label: 'VIP Shades',
+    position: { top: '35%', left: '50%', scale: 1.2, rotate: 0 },
+  },
+  {
+    id: 'glasses-2',
+    emoji: '👓',
+    label: 'Geek',
+    position: { top: '35%', left: '50%', scale: 1.2, rotate: 0 },
+  },
+  {
+    id: 'hat-1',
+    emoji: '🧢',
+    label: 'Trucker',
+    position: { top: '15%', left: '50%', scale: 1.5, rotate: -5 },
+  },
+  {
+    id: 'hat-2',
+    emoji: '👑',
+    label: 'King',
+    position: { top: '12%', left: '50%', scale: 1.5, rotate: 0 },
+  },
+  {
+    id: 'chain',
+    emoji: '⛓️',
+    label: 'Chain',
+    position: { top: '75%', left: '50%', scale: 1.5, rotate: 0 },
+  },
+  {
+    id: 'earring',
+    emoji: '💎',
+    label: 'Ice',
+    position: { top: '40%', left: '30%', scale: 0.8, rotate: 0 },
+  },
+  {
+    id: 'smoke',
+    emoji: '🚬',
+    label: 'Chill',
+    position: { top: '55%', left: '60%', scale: 1, rotate: 15 },
+  },
+  {
+    id: 'music',
+    emoji: '🎧',
+    label: 'DJ',
+    position: { top: '35%', left: '50%', scale: 1.8, rotate: 0 },
+  },
+]
+
 export default function NftCreator() {
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -227,8 +301,8 @@ export default function NftCreator() {
   const [step, setStep] = useState<'upload' | 'processing' | 'result'>('upload')
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
-  const [selectedStyle, setSelectedStyle] =
-    useState<NftStyle>('sticker-cultura')
+  const [processingStatus, setProcessingStatus] = useState('Iniciando IA...')
+  const [selectedStyle, setSelectedStyle] = useState<NftStyle>('bored-ape')
   const [showShare, setShowShare] = useState(false)
 
   // Customization State
@@ -236,6 +310,8 @@ export default function NftCreator() {
   const [textPosition, setTextPosition] = useState<TextPosition>('bottom')
   const [filters, setFilters] = useState(styles[0].defaults)
   const [intensity, setIntensity] = useState(100)
+  const [stickerMode, setStickerMode] = useState(false)
+  const [selectedAccessories, setSelectedAccessories] = useState<string[]>([])
 
   // Load defaults when style changes
   useEffect(() => {
@@ -243,11 +319,19 @@ export default function NftCreator() {
     if (style) {
       setFilters(style.defaults)
       setIntensity(100)
+      // Auto enable sticker mode for certain styles
+      if (style.id === 'sticker-cultura') setStickerMode(true)
     }
   }, [selectedStyle])
 
   const updateFilter = (key: keyof typeof filters, value: number) => {
     setFilters((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const toggleAccessory = (id: string) => {
+    setSelectedAccessories((prev) =>
+      prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id],
+    )
   }
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -265,16 +349,38 @@ export default function NftCreator() {
     if (!selectedImage) return
     setStep('processing')
     setProgress(0)
+    setProcessingStatus('Enviando para o Oráculo...')
+
+    // Simulate specialized BAYC processing steps
+    const isBayc = selectedStyle === 'bored-ape'
+
     const interval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 100) {
+        const next = prev + (isBayc ? 2 : 5)
+
+        // Update status text based on progress
+        if (next > 20 && next < 40)
+          setProcessingStatus(
+            isBayc ? 'Detectando traços faciais...' : 'Aplicando filtros...',
+          )
+        if (next > 40 && next < 60)
+          setProcessingStatus(
+            isBayc ? 'Vectorizando outlines...' : 'Ajustando iluminação...',
+          )
+        if (next > 60 && next < 80)
+          setProcessingStatus(
+            isBayc ? 'Gerando assets BAYC...' : 'Renderizando texturas...',
+          )
+        if (next > 80) setProcessingStatus('Finalizando arte...')
+
+        if (next >= 100) {
           clearInterval(interval)
           setTimeout(() => setStep('result'), 500)
           return 100
         }
-        return prev + 5
+        return next
       })
-    }, 150)
+    }, 100)
   }
 
   const handleDownload = () => {
@@ -285,6 +391,16 @@ export default function NftCreator() {
 
   const getNftStyles = (style: NftStyle): NftStyleConfig => {
     switch (style) {
+      case 'bored-ape':
+        return {
+          container:
+            'bg-gradient-to-b from-lime-400 to-green-700 shadow-2xl border-4 border-black',
+          overlay:
+            'bg-[url("https://img.usecurling.com/p/100/100?q=noise&color=black")] opacity-10 mix-blend-overlay',
+          badge: 'bg-black text-yellow-400 border border-yellow-400',
+          border: 'border-4 border-black rounded-xl',
+          text: 'text-yellow-300 font-mono tracking-tighter drop-shadow-md',
+        }
       case 'sticker-cultura':
         return {
           container:
@@ -408,7 +524,16 @@ export default function NftCreator() {
           )}
         </Button>
         <h1 className="text-lg font-bold flex items-center gap-2">
-          <Gem className="h-5 w-5 text-purple-500" /> NFT & Sticker Creator
+          {step === 'result' && selectedStyle === 'bored-ape' ? (
+            <>
+              <Crown className="h-5 w-5 text-yellow-500 fill-yellow-500" /> BAYC
+              Creator
+            </>
+          ) : (
+            <>
+              <Gem className="h-5 w-5 text-purple-500" /> NFT & Sticker Creator
+            </>
+          )}
         </h1>
       </div>
 
@@ -417,10 +542,10 @@ export default function NftCreator() {
           <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500 flex-1 flex flex-col">
             {!selectedImage ? (
               <div className="text-center space-y-2">
-                <h2 className="text-2xl font-bold">Transforme sua Jogada</h2>
+                <h2 className="text-2xl font-bold">Crie seu Próprio BAYC</h2>
                 <p className="text-muted-foreground text-sm">
-                  Crie Figurinhas Digitais e colecionáveis únicos com estilos
-                  artísticos exclusivos.
+                  Transforme suas fotos em Stickers digitais e avatares no
+                  estilo Bored Ape.
                 </p>
               </div>
             ) : null}
@@ -445,6 +570,10 @@ export default function NftCreator() {
                     intensity={intensity}
                     customText={customText}
                     textPosition={textPosition}
+                    stickerMode={stickerMode}
+                    accessories={availableAccessories.filter((a) =>
+                      selectedAccessories.includes(a.id),
+                    )}
                     onClick={() =>
                       !selectedImage && fileInputRef.current?.click()
                     }
@@ -485,15 +614,30 @@ export default function NftCreator() {
               {selectedImage && (
                 <div className="space-y-4">
                   <Tabs defaultValue="style" className="w-full">
-                    <TabsList className="grid w-full grid-cols-3 mb-4">
-                      <TabsTrigger value="style" className="text-xs">
-                        <Palette className="h-3.5 w-3.5 mr-2" /> Estilo
+                    <TabsList className="grid w-full grid-cols-4 mb-4">
+                      <TabsTrigger
+                        value="style"
+                        className="text-[10px] sm:text-xs"
+                      >
+                        <Palette className="h-3.5 w-3.5 mr-1" /> Estilo
                       </TabsTrigger>
-                      <TabsTrigger value="adjust" className="text-xs">
-                        <Sliders className="h-3.5 w-3.5 mr-2" /> Ajustes
+                      <TabsTrigger
+                        value="items"
+                        className="text-[10px] sm:text-xs"
+                      >
+                        <Glasses className="h-3.5 w-3.5 mr-1" /> Itens
                       </TabsTrigger>
-                      <TabsTrigger value="text" className="text-xs">
-                        <Type className="h-3.5 w-3.5 mr-2" /> Texto
+                      <TabsTrigger
+                        value="adjust"
+                        className="text-[10px] sm:text-xs"
+                      >
+                        <Sliders className="h-3.5 w-3.5 mr-1" /> Ajustes
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="text"
+                        className="text-[10px] sm:text-xs"
+                      >
+                        <Type className="h-3.5 w-3.5 mr-1" /> Texto
                       </TabsTrigger>
                     </TabsList>
 
@@ -532,7 +676,53 @@ export default function NftCreator() {
                       </ScrollArea>
                     </TabsContent>
 
+                    <TabsContent value="items" className="mt-0">
+                      <ScrollArea className="w-full whitespace-nowrap pb-2">
+                        <div className="flex w-max space-x-3 p-1">
+                          {availableAccessories.map((acc) => (
+                            <button
+                              key={acc.id}
+                              onClick={() => toggleAccessory(acc.id)}
+                              className={cn(
+                                'flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all min-w-[80px] bg-card',
+                                selectedAccessories.includes(acc.id)
+                                  ? 'border-primary bg-primary/5'
+                                  : 'border-border hover:border-primary/50',
+                              )}
+                            >
+                              <div className="text-3xl filter drop-shadow-md">
+                                {acc.emoji}
+                              </div>
+                              <span className="text-[10px] font-medium">
+                                {acc.label}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                        <ScrollBar orientation="horizontal" />
+                      </ScrollArea>
+                      <p className="text-xs text-muted-foreground mt-2 text-center">
+                        Adicione acessórios para dar personalidade ao seu
+                        personagem.
+                      </p>
+                    </TabsContent>
+
                     <TabsContent value="adjust" className="mt-0 space-y-5">
+                      <div className="flex items-center justify-between p-3 rounded-lg border bg-card">
+                        <div className="space-y-0.5">
+                          <Label className="text-sm font-medium">
+                            Sticker Mode
+                          </Label>
+                          <p className="text-xs text-muted-foreground">
+                            Adicionar borda branca e recorte
+                          </p>
+                        </div>
+                        <Switch
+                          checked={stickerMode}
+                          onCheckedChange={setStickerMode}
+                        />
+                      </div>
+
                       <div className="space-y-3">
                         <div className="flex justify-between">
                           <Label className="text-xs">Brilho</Label>
@@ -564,23 +754,6 @@ export default function NftCreator() {
                           step={5}
                           onValueChange={(val) =>
                             updateFilter('contrast', val[0])
-                          }
-                        />
-                      </div>
-                      <div className="space-y-3">
-                        <div className="flex justify-between">
-                          <Label className="text-xs">Saturação</Label>
-                          <span className="text-xs text-muted-foreground">
-                            {filters.saturate}%
-                          </span>
-                        </div>
-                        <Slider
-                          value={[filters.saturate]}
-                          min={0}
-                          max={200}
-                          step={5}
-                          onValueChange={(val) =>
-                            updateFilter('saturate', val[0])
                           }
                         />
                       </div>
@@ -678,7 +851,11 @@ export default function NftCreator() {
           <div className="flex-1 flex flex-col items-center justify-center space-y-8 animate-in zoom-in duration-500">
             <div className="relative">
               <div className="h-32 w-32 rounded-full border-4 border-muted flex items-center justify-center bg-secondary/30">
-                <Gem className="h-12 w-12 text-muted-foreground/20" />
+                {selectedStyle === 'bored-ape' ? (
+                  <ScanFace className="h-16 w-16 text-muted-foreground/50 animate-pulse" />
+                ) : (
+                  <Gem className="h-12 w-12 text-muted-foreground/20" />
+                )}
               </div>
               <div
                 className="absolute inset-0 rounded-full border-4 border-primary border-t-transparent animate-spin"
@@ -690,11 +867,18 @@ export default function NftCreator() {
             </div>
 
             <div className="text-center space-y-2 max-w-xs">
-              <h3 className="text-xl font-bold">Aplicando Filtros IA...</h3>
+              <h3 className="text-xl font-bold">Processando IA...</h3>
               <p className="text-muted-foreground text-sm">
-                Gerando texturas e ajustando iluminação para o estilo{' '}
-                {styles.find((s) => s.id === selectedStyle)?.name}.
+                {processingStatus}
               </p>
+              {selectedStyle === 'bored-ape' && (
+                <Badge
+                  variant="outline"
+                  className="mt-2 border-yellow-500 text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20"
+                >
+                  Modo Bored Ape Ativo
+                </Badge>
+              )}
             </div>
 
             <div className="w-full max-w-xs space-y-2">
@@ -730,6 +914,10 @@ export default function NftCreator() {
                   intensity={intensity}
                   customText={customText}
                   textPosition={textPosition}
+                  stickerMode={stickerMode}
+                  accessories={availableAccessories.filter((a) =>
+                    selectedAccessories.includes(a.id),
+                  )}
                   className="shadow-2xl"
                 />
               </div>

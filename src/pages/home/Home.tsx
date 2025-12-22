@@ -20,6 +20,7 @@ import {
   Timer,
   Gem,
   Sticker,
+  Crown,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockCurrentUser } from '@/lib/data'
@@ -58,13 +59,13 @@ export default function Home() {
     },
     {
       id: 'nft',
-      label: 'NFTs & Stickers',
-      icon: Sticker,
+      label: 'NFTs & BAYC',
+      icon: Crown,
       path: '/ai/nft-creator',
       color: 'text-pink-500',
       bg: 'bg-pink-500/10',
       border: 'border-pink-500/20',
-      description: 'Crie sua Arte',
+      description: 'Crie Sticker & Arte',
     },
     {
       id: 'arena',
