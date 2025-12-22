@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { mockHortifrutis } from '@/lib/data'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Star, MapPin, ShoppingBag } from 'lucide-react'
+import { ArrowLeft, Star, MapPin, ShoppingBag, CheckCircle } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { PaymentDialog } from '@/components/PaymentDialog'
 
@@ -53,11 +53,20 @@ export default function HortifrutiDetails() {
       </div>
 
       <div className="p-5 -mt-12 relative z-10">
-        <div className="flex justify-between items-start mb-2">
-          <h1 className="text-2xl font-bold">{shop.name}</h1>
-          <div className="flex items-center gap-1 bg-background/80 backdrop-blur-sm px-2 py-1 rounded-full border shadow-sm">
-            <Star className="h-4 w-4 text-gold fill-gold" />
-            <span className="font-bold text-sm">{shop.rating}</span>
+        <div className="flex flex-col mb-4">
+          <div className="flex justify-between items-start mb-2">
+            <h1 className="text-2xl font-bold">{shop.name}</h1>
+            <div className="flex items-center gap-1 bg-background/80 backdrop-blur-sm px-2 py-1 rounded-full border shadow-sm">
+              <Star className="h-4 w-4 text-gold fill-gold" />
+              <span className="font-bold text-sm">{shop.rating}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Badge className="bg-green-600/10 text-green-700 dark:text-green-400 hover:bg-green-600/20 border-green-600/20 gap-1.5 pl-2 pr-3 py-1">
+              <CheckCircle className="h-3.5 w-3.5" />
+              <span className="font-semibold text-xs">Conveniado GoPlay</span>
+            </Badge>
           </div>
         </div>
 

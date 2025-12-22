@@ -1,12 +1,13 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Search, Star, MapPin, CreditCard } from 'lucide-react'
+import { Search, Star, MapPin, CreditCard, CheckCircle } from 'lucide-react'
 import { mockNutrition, mockHortifrutis } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { DigitalCard } from '@/components/DigitalCard'
+import { Badge } from '@/components/ui/badge'
 
 export default function NutritionList() {
   const navigate = useNavigate()
@@ -35,7 +36,7 @@ export default function NutritionList() {
         </div>
       </div>
 
-      <Tabs defaultValue="nutritionists" className="w-full px-4 pt-4">
+      <Tabs defaultValue="hortifrutis" className="w-full px-4 pt-4">
         <TabsList className="w-full grid grid-cols-2 mb-4 bg-secondary/50 rounded-xl p-1 h-auto">
           <TabsTrigger
             value="nutritionists"
@@ -104,6 +105,13 @@ export default function NutritionList() {
                 <div className="absolute top-2 right-2 bg-background/80 backdrop-blur-md px-2 py-1 rounded-full text-xs font-bold shadow-sm flex items-center gap-1">
                   <Star className="h-3 w-3 text-gold fill-gold" />
                   {shop.rating}
+                </div>
+                {/* Partners Badge */}
+                <div className="absolute top-2 left-2">
+                  <Badge className="bg-green-600 hover:bg-green-700 text-white border-0 shadow-lg gap-1 px-2 pointer-events-none">
+                    <CheckCircle className="h-3 w-3" />
+                    Conveniado GoPlay
+                  </Badge>
                 </div>
               </div>
               <CardContent className="p-4">
