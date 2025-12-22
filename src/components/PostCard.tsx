@@ -30,6 +30,15 @@ import { NarrationConfig } from '@/lib/data'
 import { useLikeInteraction } from '@/hooks/useLikeInteraction'
 import { PostDetailDialog } from '@/components/PostDetailDialog'
 
+export interface SocialContext {
+  type: 'like' | 'comment' | 'repost'
+  user: {
+    id: string
+    name: string
+    avatar?: string
+  }
+}
+
 interface PostProps {
   post: {
     id: number
@@ -51,6 +60,7 @@ interface PostProps {
     time: string
     narration?: NarrationConfig
     liked?: boolean
+    socialContext?: SocialContext
   }
 }
 
@@ -93,6 +103,41 @@ export function PostCard({ post }: PostProps) {
 
   const openDetail = () => {
     setShowDetail(true)
+  }
+
+  const renderSocialContext = () => {
+    if (!post.socialContext) return null
+
+    const { type, user } = post.socialContext
+
+    // Icon mapping
+    let icon = (
+      <Heart className="w-3 h-3 text-muted-foreground fill-muted-foreground/30" />
+    )
+    let text = 'curtiu isso'
+
+    if (type === 'comment') {
+      icon = <MessageCircle className="h-3 w-3 text-muted-foreground/50" />
+      text = 'comentou nisso'
+    } else if (type === 'repost') {
+      icon = <Share2 className="h-3 w-3 text-muted-foreground/50" />
+      text = 'repostou isso'
+    }
+
+    return (
+      <div className="flex items-center gap-2 px-4 pt-3 pb-0 -mb-2">
+        {icon}
+        <span className="text-xs text-muted-foreground">
+          <Link
+            to={`/profile/${user.id}`}
+            className="font-semibold hover:text-foreground hover:underline transition-colors"
+          >
+            {user.name}
+          </Link>{' '}
+          {text}
+        </span>
+      </div>
+    )
   }
 
   const renderContent = () => {
@@ -244,6 +289,7 @@ export function PostCard({ post }: PostProps) {
   return (
     <>
       <Card className="border-none shadow-sm rounded-2xl overflow-hidden bg-card mb-4 animate-fade-in hover:shadow-md transition-shadow duration-300">
+        {renderSocialContext()}
         <CardHeader className="flex flex-row items-center p-4 pb-2 space-y-0 gap-3">
           <Link to={`/profile/${post.user.id || 'me'}`}>
             <Avatar className="h-10 w-10 border border-border cursor-pointer hover:border-primary transition-colors">
