@@ -11,6 +11,7 @@ import {
   Baby,
   Image as ImageIcon,
   Sparkles,
+  Camera,
 } from 'lucide-react'
 import { exploreCategories, mockEvents, mockVenues } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
@@ -110,137 +111,76 @@ export default function Explore() {
           </div>
         </div>
 
-        {/* International Match Feature Card */}
+        {/* Featured Photographer Card (Restored) */}
         <div
-          onClick={() => navigate('/explore/international')}
-          className="relative w-full h-24 rounded-2xl overflow-hidden cursor-pointer group shadow-md"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-indigo-900 opacity-90 group-hover:opacity-100 transition-opacity" />
-          <img
-            src="https://img.usecurling.com/p/800/300?q=world%20map&color=blue"
-            alt="Match Internacional"
-            className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-40"
-          />
-          <div className="absolute inset-0 flex items-center px-6 justify-between">
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2 mb-1">
-                <Globe className="h-5 w-5 text-white" />
-                <Badge
-                  variant="secondary"
-                  className="bg-white/20 text-white hover:bg-white/30 border-0"
-                >
-                  Novo
-                </Badge>
-              </div>
-              <h2 className="text-xl font-bold text-white mb-0">
-                Match Internacional
-              </h2>
-              <p className="text-white/80 text-xs">
-                Desafie atletas do mundo todo.
-              </p>
-            </div>
-            <div className="bg-white/10 p-2 rounded-full backdrop-blur-sm">
-              <Globe className="h-6 w-6 text-white" />
-            </div>
-          </div>
-        </div>
-
-        {/* Map & Events Feature Card */}
-        <div
-          onClick={() => navigate('/explore/map-events')}
+          onClick={() => navigate('/explore/photographers')}
           className="relative w-full h-32 rounded-2xl overflow-hidden cursor-pointer group shadow-md"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary to-purple-800 opacity-90 group-hover:opacity-100 transition-opacity" />
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-800 to-indigo-900 opacity-90 group-hover:opacity-100 transition-opacity" />
           <img
-            src="https://img.usecurling.com/p/800/300?q=map%203d%20city&color=purple"
-            alt="Mapa Interativo"
-            className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60"
-          />
-          <div className="absolute inset-0 flex flex-col justify-center px-6">
-            <div className="flex items-center gap-2 mb-1">
-              <MapIcon className="h-5 w-5 text-white" />
-              <Badge
-                variant="secondary"
-                className="bg-white/20 text-white hover:bg-white/30 border-0"
-              >
-                Beta
-              </Badge>
-            </div>
-            <h2 className="text-xl font-bold text-white mb-1">
-              Mapa & Eventos
-            </h2>
-            <p className="text-white/80 text-sm max-w-[200px] leading-tight">
-              Encontre eventos esportivos perto de você no mapa interativo.
-            </p>
-          </div>
-        </div>
-
-        {/* Flyer Creator Feature Card - NEW */}
-        <div
-          onClick={() => navigate('/explore/flyer-creator')}
-          className="relative w-full h-28 rounded-2xl overflow-hidden cursor-pointer group shadow-md"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-90 group-hover:opacity-100 transition-opacity" />
-          <img
-            src="https://img.usecurling.com/p/800/300?q=graphic%20design%20sports&color=purple"
-            alt="Criador de Flyers AI"
-            className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-50"
+            src="https://img.usecurling.com/p/800/300?q=photographer%20lens%20sports&color=purple"
+            alt="Fotografia Esportiva"
+            className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-50 scale-105 group-hover:scale-110 transition-transform duration-700"
           />
           <div className="absolute inset-0 flex items-center px-6 justify-between">
-            <div className="flex flex-col">
+            <div className="flex flex-col z-10">
               <div className="flex items-center gap-2 mb-1">
-                <Sparkles className="h-4 w-4 text-white" />
+                <Camera className="h-5 w-5 text-white" />
                 <Badge
                   variant="secondary"
-                  className="bg-white/20 text-white hover:bg-white/30 border-0 text-[10px]"
+                  className="bg-white/20 text-white hover:bg-white/30 border-0 backdrop-blur-md"
                 >
-                  AI Tools
+                  Profissionais
                 </Badge>
               </div>
-              <h2 className="text-lg font-bold text-white mb-0 leading-tight">
-                Criador de Flyers
+              <h2 className="text-xl font-bold text-white mb-1">
+                Fotógrafos Esportivos
               </h2>
-              <p className="text-white/90 text-[10px] mt-1 max-w-[160px]">
-                Crie artes profissionais para seus jogos em segundos.
+              <p className="text-white/80 text-xs max-w-[200px] leading-relaxed">
+                Encontre especialistas para registrar seus melhores momentos no
+                esporte.
               </p>
             </div>
-            <div className="bg-white/10 p-2.5 rounded-full backdrop-blur-sm shrink-0 border border-white/20">
-              <ImageIcon className="h-6 w-6 text-white" />
+            <div className="bg-white/10 p-3 rounded-full backdrop-blur-md border border-white/20 shadow-lg group-hover:scale-110 transition-transform">
+              <Camera className="h-6 w-6 text-white" />
             </div>
           </div>
         </div>
 
-        {/* Kids Friendly Feature Card */}
-        <div
-          onClick={() => navigate('/explore/kids')}
-          className="relative w-full h-24 rounded-2xl overflow-hidden cursor-pointer group shadow-md"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-600 opacity-90 group-hover:opacity-100 transition-opacity" />
-          <img
-            src="https://img.usecurling.com/p/800/300?q=kids%20playground&color=pink"
-            alt="Locais Esportivos com Recreação Infantil"
-            className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-50"
-          />
-          <div className="absolute inset-0 flex items-center px-6 justify-between">
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2 mb-1">
-                <Baby className="h-5 w-5 text-white" />
-                <Badge
-                  variant="secondary"
-                  className="bg-white/20 text-white hover:bg-white/30 border-0"
-                >
-                  Novo
-                </Badge>
-              </div>
-              <h2 className="text-lg font-bold text-white mb-0 leading-tight">
-                Locais Kids Friendly
-              </h2>
-              <p className="text-white/90 text-[10px] mt-1">
-                Treine tranquilo enquanto seus filhos se divertem.
-              </p>
+        <div className="grid grid-cols-2 gap-3">
+          {/* International Match Feature Card */}
+          <div
+            onClick={() => navigate('/explore/international')}
+            className="relative w-full h-24 rounded-2xl overflow-hidden cursor-pointer group shadow-sm"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-900 to-indigo-800 opacity-90" />
+            <img
+              src="https://img.usecurling.com/p/400/200?q=world%20map&color=blue"
+              className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-40"
+            />
+            <div className="absolute inset-0 p-4 flex flex-col justify-between">
+              <Globe className="h-5 w-5 text-white/90" />
+              <span className="text-sm font-bold text-white leading-tight">
+                Match Mundial
+              </span>
             </div>
-            <div className="bg-white/10 p-2 rounded-full backdrop-blur-sm shrink-0">
-              <Baby className="h-6 w-6 text-white" />
+          </div>
+
+          {/* Map Feature Card */}
+          <div
+            onClick={() => navigate('/explore/map-events')}
+            className="relative w-full h-24 rounded-2xl overflow-hidden cursor-pointer group shadow-sm"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-800 to-teal-700 opacity-90" />
+            <img
+              src="https://img.usecurling.com/p/400/200?q=map%203d%20city&color=green"
+              className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-40"
+            />
+            <div className="absolute inset-0 p-4 flex flex-col justify-between">
+              <MapIcon className="h-5 w-5 text-white/90" />
+              <span className="text-sm font-bold text-white leading-tight">
+                Mapa Interativo
+              </span>
             </div>
           </div>
         </div>

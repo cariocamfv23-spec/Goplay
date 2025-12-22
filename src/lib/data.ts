@@ -470,6 +470,13 @@ export const exploreCategories = [
     color: 'text-indigo-600 dark:text-indigo-400',
   },
   {
+    id: 'photographers',
+    label: 'Fotos',
+    icon: Camera,
+    bg: 'bg-purple-100 dark:bg-purple-900/20',
+    color: 'text-purple-600 dark:text-purple-400',
+  },
+  {
     id: 'fuel',
     label: 'Combustível',
     icon: Fuel,
@@ -496,13 +503,6 @@ export const exploreCategories = [
     icon: MapPin,
     bg: 'bg-blue-100 dark:bg-blue-900/20',
     color: 'text-blue-600 dark:text-blue-400',
-  },
-  {
-    id: 'photographers',
-    label: 'Fotos',
-    icon: Camera,
-    bg: 'bg-purple-100 dark:bg-purple-900/20',
-    color: 'text-purple-600 dark:text-purple-400',
   },
   {
     id: 'drivers',
@@ -648,10 +648,14 @@ export const mockEvolution = [
 ]
 
 export const photographerCategories = [
-  'Esportes',
-  'Retrato',
+  'Futebol',
+  'Surfing',
+  'Skate',
   'Eventos',
-  'Produtos',
+  'Motorsports',
+  'Basquete',
+  'Retrato',
+  'Ação',
 ]
 
 export const narrationStyles = [
@@ -1045,6 +1049,141 @@ export const mockTalents: ProfileData[] = [
     followers: '5.4k',
     stats: { matches: 50, wins: 35, mvp: 12 },
     favoriteSong: mockMusicTracks[0],
+  },
+]
+
+export const mockPhotographers: ProfileData[] = [
+  {
+    id: 'ph1',
+    name: 'Ana Clara',
+    username: '@anaclara.fotos',
+    type: 'photographer',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=42',
+    cover:
+      'https://img.usecurling.com/p/800/400?q=surfing%20photographer&color=blue',
+    bio: 'Especialista em fotografia de esportes aquáticos e eventos ao ar livre. Capturando a adrenalina do momento.',
+    location: 'Florianópolis, SC',
+    rating: 4.9,
+    categories: ['Surfing', 'Eventos', 'Natureza', 'Ação'],
+    portfolio: [
+      'https://img.usecurling.com/p/300/300?q=surfing%20action',
+      'https://img.usecurling.com/p/300/300?q=beach%20volleyball',
+      'https://img.usecurling.com/p/300/300?q=ocean%20waves',
+    ],
+    packages: [
+      {
+        title: 'Sessão Surf',
+        price: 'R$ 250',
+        description: '2 horas de cobertura na água com caixa estanque.',
+      },
+      {
+        title: 'Evento Completo',
+        price: 'R$ 800',
+        description: 'Cobertura completa de campeonato (até 6 horas).',
+      },
+      {
+        title: 'Ensaio Lifestyle',
+        price: 'R$ 400',
+        description: 'Fotos na praia para portfólio pessoal.',
+      },
+    ],
+    portfolioProjects: [
+      {
+        id: 'pp1',
+        title: 'WSL Saquarema 2024',
+        date: 'Out 2024',
+        cover:
+          'https://img.usecurling.com/p/800/400?q=surfing%20competition&color=blue',
+        description: 'Cobertura oficial da etapa brasileira do mundial.',
+        images: [
+          'https://img.usecurling.com/p/300/300?q=gabriel%20medina%20surf',
+          'https://img.usecurling.com/p/300/300?q=surf%20crowd',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'ph2',
+    name: 'João Pedro',
+    username: '@jp.sports',
+    type: 'photographer',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=15',
+    cover:
+      'https://img.usecurling.com/p/800/400?q=soccer%20match%20camera&color=green',
+    bio: 'Fotógrafo oficial de campeonatos de várzea e base. Registrando a paixão pelo futebol.',
+    location: 'São Paulo, SP',
+    rating: 4.7,
+    categories: ['Futebol', 'Eventos', 'Retrato'],
+    portfolio: [
+      'https://img.usecurling.com/p/300/300?q=soccer%20goal',
+      'https://img.usecurling.com/p/300/300?q=soccer%20team',
+      'https://img.usecurling.com/p/300/300?q=soccer%20stadium',
+    ],
+    packages: [
+      {
+        title: 'Partida Única',
+        price: 'R$ 150',
+        description: 'Cobertura de um jogo (60 min). Entrega em 24h.',
+      },
+      {
+        title: 'Pacote Mensal',
+        price: 'R$ 500',
+        description: '4 jogos no mês com desconto especial.',
+      },
+    ],
+  },
+  {
+    id: 'ph3',
+    name: 'Carla Skate',
+    username: '@carla.sk8',
+    type: 'photographer',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=88',
+    cover: 'https://img.usecurling.com/p/800/400?q=skatepark&color=gray',
+    bio: 'Capturando a alma do skate urbano e a cultura de rua.',
+    location: 'Rio de Janeiro, RJ',
+    rating: 5.0,
+    categories: ['Skate', 'Urbano', 'Ação'],
+    portfolio: [
+      'https://img.usecurling.com/p/300/300?q=skate%20trick',
+      'https://img.usecurling.com/p/300/300?q=skatepark%20sunset',
+      'https://img.usecurling.com/p/300/300?q=skateboard%20close',
+    ],
+    packages: [
+      {
+        title: 'Sessão Street',
+        price: 'R$ 200',
+        description: 'Fotos em spots de rua e skateparks.',
+      },
+      {
+        title: 'Vídeo Part',
+        price: 'R$ 1200',
+        description: 'Produção de vídeo part completa (filmagem e edição).',
+      },
+    ],
+  },
+  {
+    id: 'ph4',
+    name: 'Marcos Speed',
+    username: '@speed.lens',
+    type: 'photographer',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=66',
+    cover: 'https://img.usecurling.com/p/800/400?q=race%20track&color=red',
+    bio: 'Especialista em Motorsports. Kart, Track Days e Corridas.',
+    location: 'Interlagos, SP',
+    rating: 4.8,
+    categories: ['Motorsports', 'Ação', 'Eventos'],
+    portfolio: [
+      'https://img.usecurling.com/p/300/300?q=go%20kart%20racing',
+      'https://img.usecurling.com/p/300/300?q=race%20car',
+      'https://img.usecurling.com/p/300/300?q=checkered%20flag',
+    ],
+    packages: [
+      {
+        title: 'Track Day',
+        price: 'R$ 350',
+        description: 'Cobertura exclusiva do seu carro na pista.',
+      },
+    ],
   },
 ]
 
@@ -1559,8 +1698,10 @@ export const mockNutrition = []
 export const mockHortifrutis = []
 export const mockClinics = []
 export const mockDrivers: ProfileData[] = []
-export const mockPhotographers: ProfileData[] = []
-export const mockProfiles: ProfileData[] = [...mockTalents]
+export const mockProfiles: ProfileData[] = [
+  ...mockTalents,
+  ...mockPhotographers,
+]
 export const mockJobs = []
 
 export const mockProducts: Product[] = [
