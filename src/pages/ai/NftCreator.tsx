@@ -22,6 +22,7 @@ import {
   AlignVerticalJustifyCenter,
   AlignVerticalJustifyStart,
   AlignVerticalJustifyEnd,
+  Sticker,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -37,6 +38,7 @@ import { cn } from '@/lib/utils'
 import { NftCard, NftStyleConfig } from '@/components/NftCard'
 
 type NftStyle =
+  | 'sticker-cultura'
   | 'classic'
   | 'cyberpunk'
   | 'gold'
@@ -66,6 +68,21 @@ interface StyleConfig {
 }
 
 const styles: StyleConfig[] = [
+  {
+    id: 'sticker-cultura',
+    name: 'Sticker Cultura',
+    color: 'from-purple-600 to-yellow-400',
+    icon: Sticker,
+    defaults: {
+      brightness: 105,
+      contrast: 115,
+      saturate: 140,
+      sepia: 0,
+      blur: 0,
+      hue: 0,
+      grayscale: 0,
+    },
+  },
   {
     id: 'classic',
     name: 'Clássico',
@@ -210,13 +227,14 @@ export default function NftCreator() {
   const [step, setStep] = useState<'upload' | 'processing' | 'result'>('upload')
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
-  const [selectedStyle, setSelectedStyle] = useState<NftStyle>('cyberpunk')
+  const [selectedStyle, setSelectedStyle] =
+    useState<NftStyle>('sticker-cultura')
   const [showShare, setShowShare] = useState(false)
 
   // Customization State
   const [customText, setCustomText] = useState('')
   const [textPosition, setTextPosition] = useState<TextPosition>('bottom')
-  const [filters, setFilters] = useState(styles[1].defaults)
+  const [filters, setFilters] = useState(styles[0].defaults)
   const [intensity, setIntensity] = useState(100)
 
   // Load defaults when style changes
@@ -267,6 +285,17 @@ export default function NftCreator() {
 
   const getNftStyles = (style: NftStyle): NftStyleConfig => {
     switch (style) {
+      case 'sticker-cultura':
+        return {
+          container:
+            'shadow-[0_10px_0_rgba(0,0,0,0.2)] bg-gradient-to-br from-purple-600 via-pink-500 to-yellow-400 rotate-1 scale-95 hover:scale-100 hover:rotate-0 transition-all',
+          overlay:
+            'bg-[url("https://img.usecurling.com/p/100/100?q=noise&color=white")] opacity-20 mix-blend-overlay',
+          badge:
+            'bg-white text-black font-black uppercase -rotate-2 border-2 border-black shadow-[2px_2px_0_#000]',
+          border: 'border-[8px] border-white rounded-[2.5rem]',
+          text: 'text-white drop-shadow-[2px_2px_0_#000] font-black italic tracking-tighter',
+        }
       case 'cyberpunk':
         return {
           container:
@@ -379,7 +408,7 @@ export default function NftCreator() {
           )}
         </Button>
         <h1 className="text-lg font-bold flex items-center gap-2">
-          <Gem className="h-5 w-5 text-purple-500" /> NFT Creator
+          <Gem className="h-5 w-5 text-purple-500" /> NFT & Sticker Creator
         </h1>
       </div>
 
@@ -390,8 +419,8 @@ export default function NftCreator() {
               <div className="text-center space-y-2">
                 <h2 className="text-2xl font-bold">Transforme sua Jogada</h2>
                 <p className="text-muted-foreground text-sm">
-                  Crie colecionáveis digitais únicos com estilos artísticos
-                  exclusivos.
+                  Crie Figurinhas Digitais e colecionáveis únicos com estilos
+                  artísticos exclusivos.
                 </p>
               </div>
             ) : null}
@@ -640,7 +669,7 @@ export default function NftCreator() {
               disabled={!selectedImage}
               onClick={handleGenerate}
             >
-              <Wand2 className="mr-2 h-5 w-5" /> Criar NFT
+              <Wand2 className="mr-2 h-5 w-5" /> Criar Asset
             </Button>
           </div>
         )}
@@ -685,9 +714,9 @@ export default function NftCreator() {
                 variant="outline"
                 className="mb-2 border-primary/50 text-primary bg-primary/10"
               >
-                Collectible Criado
+                Asset Criado
               </Badge>
-              <h2 className="text-2xl font-bold">Seu Goplay NFT</h2>
+              <h2 className="text-2xl font-bold">Seu Goplay Asset</h2>
             </div>
 
             {/* NFT Card Result */}
@@ -730,7 +759,7 @@ export default function NftCreator() {
       <ShareDialog
         open={showShare}
         onOpenChange={setShowShare}
-        videoTitle="Meu Goplay NFT"
+        videoTitle="Meu Goplay Asset"
       />
     </div>
   )

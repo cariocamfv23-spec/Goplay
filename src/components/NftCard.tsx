@@ -1,4 +1,4 @@
-import { Gem } from 'lucide-react'
+import { Gem, Sticker } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { mockCurrentUser } from '@/lib/data'
@@ -94,7 +94,9 @@ export function NftCard({
                   ? 'Legendary'
                   : styleId === 'cyberpunk'
                     ? 'Epic'
-                    : 'Rare'}
+                    : styleId === 'sticker-cultura'
+                      ? 'Sticker'
+                      : 'Rare'}
               </Badge>
               <div className="flex flex-col items-end">
                 <div className="bg-black/40 backdrop-blur-md rounded-lg p-2 text-white border border-white/10 text-xs font-mono shadow-sm">
@@ -111,7 +113,11 @@ export function NftCard({
             {/* Bottom: Info */}
             <div className="space-y-1">
               <div className="flex items-center gap-2 mb-2">
-                <Gem className="h-6 w-6 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
+                {styleId === 'sticker-cultura' ? (
+                  <Sticker className="h-6 w-6 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
+                ) : (
+                  <Gem className="h-6 w-6 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
+                )}
               </div>
               <h3
                 className={cn(

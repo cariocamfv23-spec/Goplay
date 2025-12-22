@@ -19,6 +19,7 @@ import {
   Users,
   Timer,
   Gem,
+  Sticker,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockCurrentUser } from '@/lib/data'
@@ -57,13 +58,13 @@ export default function Home() {
     },
     {
       id: 'nft',
-      label: 'NFT Creator',
-      icon: Gem,
+      label: 'NFTs & Stickers',
+      icon: Sticker,
       path: '/ai/nft-creator',
       color: 'text-pink-500',
       bg: 'bg-pink-500/10',
       border: 'border-pink-500/20',
-      description: 'Colecionáveis',
+      description: 'Crie sua Arte',
     },
     {
       id: 'arena',
