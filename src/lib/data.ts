@@ -551,6 +551,20 @@ export const exploreCategories = [
     bg: 'bg-red-100 dark:bg-red-900/20',
     color: 'text-red-600 dark:text-red-400',
   },
+  {
+    id: 'nutrition',
+    label: 'Nutrição',
+    icon: Apple,
+    bg: 'bg-lime-100 dark:bg-lime-900/20',
+    color: 'text-lime-600 dark:text-lime-400',
+  },
+  {
+    id: 'clinics',
+    label: 'Clínicas',
+    icon: Stethoscope,
+    bg: 'bg-teal-100 dark:bg-teal-900/20',
+    color: 'text-teal-600 dark:text-teal-400',
+  },
 ]
 
 export const mockRetrospective = {

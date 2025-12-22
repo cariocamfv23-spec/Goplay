@@ -24,8 +24,6 @@ import {
   LayoutList,
   Sparkles,
   Palette,
-  Apple,
-  Stethoscope,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockCurrentUser } from '@/lib/data'
@@ -122,26 +120,6 @@ export default function Home() {
       bg: 'bg-green-500/10',
       border: 'border-green-500/20',
       description: 'Locais',
-    },
-    {
-      id: 'nutrition',
-      label: 'Nutrição',
-      icon: Apple,
-      path: '/explore/nutrition',
-      color: 'text-lime-500',
-      bg: 'bg-lime-500/10',
-      border: 'border-lime-500/20',
-      description: 'Hortifruti & Dietas',
-    },
-    {
-      id: 'clinics',
-      label: 'Clínicas',
-      icon: Stethoscope,
-      path: '/explore/clinics',
-      color: 'text-teal-500',
-      bg: 'bg-teal-500/10',
-      border: 'border-teal-500/20',
-      description: 'Saúde & Recovery',
     },
     {
       id: 'oracle',
