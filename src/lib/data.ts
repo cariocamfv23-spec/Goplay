@@ -417,6 +417,39 @@ export interface Challenge {
   participants: number
 }
 
+export interface NutritionPartner {
+  id: string
+  name: string
+  specialty: string
+  rating: number
+  image: string
+  price: string
+  description: string
+}
+
+export interface Hortifruti {
+  id: string
+  name: string
+  specialty: string
+  rating: number
+  image: string
+  address: string
+  description: string
+  price: string
+}
+
+export interface Clinic {
+  id: string
+  name: string
+  specialty: string
+  address: string
+  image: string
+  rating: number
+  price: string
+  services: string[]
+  description: string
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: LayoutList, label: 'Feed', path: '/feed' },
@@ -1694,9 +1727,6 @@ export const mockEvents: Event[] = []
 export const mockVenues = []
 export const mockKidsVenues: KidsVenue[] = []
 export const mockGyms = []
-export const mockNutrition = []
-export const mockHortifrutis = []
-export const mockClinics = []
 export const mockDrivers: ProfileData[] = []
 export const mockProfiles: ProfileData[] = [
   ...mockTalents,
@@ -2184,3 +2214,81 @@ export const mockInternationalRanking: InternationalRankingUser[] = []
 export const mockOracle = {}
 export const mockLiveEvents: LiveEvent[] = []
 export const mockFuelTransactions = []
+
+export const mockNutrition: NutritionPartner[] = [
+  {
+    id: 'n1',
+    name: 'Dr. Roberto Nutrition',
+    specialty: 'Nutrição Esportiva',
+    rating: 4.9,
+    image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=88',
+    price: 'R$ 350,00',
+    description:
+      'Especialista em hipertrofia e performance para atletas de alto rendimento.',
+  },
+  {
+    id: 'n2',
+    name: 'Dra. Camila Wellness',
+    specialty: 'Reeducação Alimentar',
+    rating: 4.8,
+    image: 'https://img.usecurling.com/ppl/medium?gender=female&seed=42',
+    price: 'R$ 300,00',
+    description:
+      'Foco em saúde, bem-estar e longevidade através da alimentação natural.',
+  },
+]
+
+export const mockHortifrutis: Hortifruti[] = [
+  {
+    id: 'h1',
+    name: 'Hortifruti Natural da Terra',
+    specialty: 'Orgânicos & Frescos',
+    rating: 4.7,
+    image:
+      'https://img.usecurling.com/p/800/400?q=fresh%20vegetables%20market&color=green',
+    address: 'Rua das Flores, 123 - SP',
+    description:
+      'A melhor seleção de frutas, verduras e legumes orgânicos direto do produtor.',
+    price: 'R$ 150,00', // Cesta semanal média
+  },
+  {
+    id: 'h2',
+    name: 'Pomar Delivery',
+    specialty: 'Frutas Selecionadas',
+    rating: 4.9,
+    image: 'https://img.usecurling.com/p/800/400?q=fruit%20basket&color=orange',
+    address: 'Av. Paulista, 1000 - SP',
+    description:
+      'Entrega de frutas higienizadas e prontas para consumo no seu escritório ou casa.',
+    price: 'R$ 120,00',
+  },
+]
+
+export const mockClinics: Clinic[] = [
+  {
+    id: 'c1',
+    name: 'PhysioSport Center',
+    specialty: 'Fisioterapia Esportiva',
+    address: 'Av. Brasil, 500 - SP',
+    image:
+      'https://img.usecurling.com/p/800/400?q=physiotherapy%20clinic&color=blue',
+    rating: 4.9,
+    price: 'R$ 250,00',
+    services: ['Fisioterapia', 'Osteopatia', 'Recovery'],
+    description:
+      'Centro de excelência em reabilitação e prevenção de lesões esportivas.',
+  },
+  {
+    id: 'c2',
+    name: 'Recovery Lab',
+    specialty: 'Recuperação Muscular',
+    address: 'Rua Oscar Freire, 300 - SP',
+    image:
+      'https://img.usecurling.com/p/800/400?q=cryotherapy%20chamber&color=cyan',
+    rating: 5.0,
+    price: 'R$ 180,00',
+    services: ['Crioterapia', 'Bota Pneumática', 'Massagem'],
+    description:
+      'Tecnologia de ponta para acelerar sua recuperação pós-treino.',
+  },
+]

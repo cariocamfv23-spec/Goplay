@@ -77,11 +77,18 @@ export default function NutritionPartnerDetails() {
           </span>
         </div>
 
-        <div className="bg-card border border-border/50 p-5 rounded-xl mb-6 shadow-sm space-y-1">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-            Valor da Consulta
+        <div className="bg-card border border-border/50 p-5 rounded-xl mb-6 shadow-sm space-y-3">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            {partner.description}
           </p>
-          <p className="text-2xl font-bold text-foreground">{partner.price}</p>
+          <div className="pt-2">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Valor da Consulta
+            </p>
+            <p className="text-2xl font-bold text-foreground">
+              {partner.price}
+            </p>
+          </div>
         </div>
 
         <div className="space-y-3">

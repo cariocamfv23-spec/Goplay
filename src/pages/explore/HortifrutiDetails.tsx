@@ -10,6 +10,29 @@ export default function HortifrutiDetails() {
   const navigate = useNavigate()
   const shop = mockHortifrutis.find((s) => s.id === id) || mockHortifrutis[0]
 
+  if (!shop) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
+        <p className="text-muted-foreground mb-4">Parceiro não encontrado.</p>
+        <Button onClick={() => navigate(-1)} variant="outline">
+          Voltar
+        </Button>
+      </div>
+    )
+  }
+
+  // Helper to extract numeric price
+  const getNumericPrice = (priceStr: string) => {
+    if (!priceStr) return 0
+    let clean = priceStr.replace(/\./g, '')
+    clean = clean.replace(/[^0-9,]/g, '')
+    clean = clean.replace(',', '.')
+    const value = parseFloat(clean)
+    return isNaN(value) ? 0 : value
+  }
+
+  const numericPrice = getNumericPrice(shop.price)
+
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
       <div className="relative h-64">
@@ -63,7 +86,7 @@ export default function HortifrutiDetails() {
 
         <PaymentDialog
           title={`Pedido em ${shop.name}`}
-          price={shop.price}
+          price={numericPrice}
           onSuccess={() => {}}
         >
           <Button className="w-full h-14 text-lg font-bold rounded-xl shadow-lg shadow-primary/20">
