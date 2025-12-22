@@ -26,6 +26,7 @@ import {
   Palette,
   Box,
   Bot,
+  Activity,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockCurrentUser } from '@/lib/data'
@@ -72,6 +73,16 @@ export default function Home() {
       bg: 'bg-yellow-500/10',
       border: 'border-yellow-500/20',
       description: 'Competição',
+    },
+    {
+      id: 'evolution',
+      label: 'Evolução',
+      icon: Activity,
+      path: '/profile/evolution',
+      color: 'text-rose-500',
+      bg: 'bg-rose-500/10',
+      border: 'border-rose-500/20',
+      description: 'Seu Progresso',
     },
     {
       id: 'wallet',
