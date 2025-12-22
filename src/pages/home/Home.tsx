@@ -25,6 +25,7 @@ import {
   Sparkles,
   Palette,
   Box,
+  Bot,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockCurrentUser } from '@/lib/data'
@@ -121,6 +122,16 @@ export default function Home() {
       bg: 'bg-green-500/10',
       border: 'border-green-500/20',
       description: 'Locais',
+    },
+    {
+      id: 'ai-coach',
+      label: 'Coach IA',
+      icon: Bot,
+      path: '/ai/coach',
+      color: 'text-sky-500',
+      bg: 'bg-sky-500/10',
+      border: 'border-sky-500/20',
+      description: 'Treinador Virtual',
     },
     {
       id: 'oracle',
