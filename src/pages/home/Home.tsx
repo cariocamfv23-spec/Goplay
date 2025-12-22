@@ -19,6 +19,7 @@ import {
   Play,
   Users,
   Timer,
+  Gem,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockCurrentUser } from '@/lib/data'
@@ -66,14 +67,14 @@ export default function Home() {
       description: 'Treino AR',
     },
     {
-      id: 'ghost',
-      label: 'Grosso Play',
-      icon: Ghost,
-      path: '/ai/ghost-play',
-      color: 'text-cyan-500',
-      bg: 'bg-cyan-500/10',
-      border: 'border-cyan-500/20',
-      description: 'Replay 3D',
+      id: 'nft',
+      label: 'NFT Creator',
+      icon: Gem,
+      path: '/ai/nft-creator',
+      color: 'text-pink-500',
+      bg: 'bg-pink-500/10',
+      border: 'border-pink-500/20',
+      description: 'Colecionáveis',
     },
     {
       id: 'editor',

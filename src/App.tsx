@@ -131,6 +131,7 @@ const PerformanceReports = lazy(() => import('./pages/ai/PerformanceReports'))
 const GoalsDashboard = lazy(() => import('./pages/goals/GoalsDashboard'))
 const AiAvatar = lazy(() => import('./pages/ai/AiAvatar'))
 const Oracle = lazy(() => import('./pages/ai/Oracle'))
+const NftCreator = lazy(() => import('./pages/ai/NftCreator'))
 
 const App = () => {
   const { color } = useThemeStore()
@@ -341,6 +342,7 @@ const App = () => {
                     <Route path="/ai/arena-mode" element={<ArenaMode />} />
                     <Route path="/ai/avatar" element={<AiAvatar />} />
                     <Route path="/ai/oracle" element={<Oracle />} />
+                    <Route path="/ai/nft-creator" element={<NftCreator />} />
                   </Route>
 
                   {/* Services & Driver Routes */}
