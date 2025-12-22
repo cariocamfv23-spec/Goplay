@@ -20,6 +20,7 @@ import {
   RotateCcw,
   MonitorPlay,
   Trash2,
+  RefreshCw,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
