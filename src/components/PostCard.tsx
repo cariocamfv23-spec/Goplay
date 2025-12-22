@@ -122,8 +122,8 @@ export function PostCard({ post }: PostProps) {
       )
       text = 'comentou nisso'
     } else if (type === 'repost') {
-      icon = <Share2 className="h-3 w-3 text-muted-foreground/50" />
-      text = 'repostou isso'
+      icon = <Share2 className="h-3 w-3 text-muted-foreground" />
+      text = 'compartilhou isso'
     }
 
     return (

@@ -1102,6 +1102,34 @@ export const mockPosts = [
     liked: true,
   },
   {
+    id: 105,
+    type: 'image',
+    user: {
+      id: 'u_adidas',
+      name: 'Adidas Football',
+      type: 'Marca',
+      avatar: 'https://img.usecurling.com/i?q=adidas%20logo&color=black',
+    },
+    time: '30min',
+    title: 'A Nova Era',
+    content:
+      'O jogo mudou. Prepare-se para o novo lançamento da Predator. 👟⚽',
+    media: [
+      'https://img.usecurling.com/p/600/600?q=adidas%20predator%20cleats&dpr=2',
+    ],
+    hashtags: ['#adidas', '#predator', '#football'],
+    likes: 25000,
+    comments: 850,
+    shares: 4200,
+    applauds: 1500,
+    supports: 300,
+    liked: false,
+    socialContext: {
+      type: 'repost',
+      user: { id: 'u3', name: 'Mariana Souza' },
+    },
+  },
+  {
     id: 99,
     type: 'video',
     user: {
