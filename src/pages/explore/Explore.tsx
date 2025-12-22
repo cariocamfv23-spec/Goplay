@@ -9,6 +9,8 @@ import {
   Radio,
   Play,
   Baby,
+  Image as ImageIcon,
+  Sparkles,
 } from 'lucide-react'
 import { exploreCategories, mockEvents, mockVenues } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
@@ -173,10 +175,45 @@ export default function Explore() {
           </div>
         </div>
 
-        {/* Kids Friendly Feature Card - NEW */}
+        {/* Flyer Creator Feature Card - NEW */}
+        <div
+          onClick={() => navigate('/explore/flyer-creator')}
+          className="relative w-full h-28 rounded-2xl overflow-hidden cursor-pointer group shadow-md"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-90 group-hover:opacity-100 transition-opacity" />
+          <img
+            src="https://img.usecurling.com/p/800/300?q=graphic%20design%20sports&color=purple"
+            alt="Criador de Flyers AI"
+            className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-50"
+          />
+          <div className="absolute inset-0 flex items-center px-6 justify-between">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 mb-1">
+                <Sparkles className="h-4 w-4 text-white" />
+                <Badge
+                  variant="secondary"
+                  className="bg-white/20 text-white hover:bg-white/30 border-0 text-[10px]"
+                >
+                  AI Tools
+                </Badge>
+              </div>
+              <h2 className="text-lg font-bold text-white mb-0 leading-tight">
+                Criador de Flyers
+              </h2>
+              <p className="text-white/90 text-[10px] mt-1 max-w-[160px]">
+                Crie artes profissionais para seus jogos em segundos.
+              </p>
+            </div>
+            <div className="bg-white/10 p-2.5 rounded-full backdrop-blur-sm shrink-0 border border-white/20">
+              <ImageIcon className="h-6 w-6 text-white" />
+            </div>
+          </div>
+        </div>
+
+        {/* Kids Friendly Feature Card */}
         <div
           onClick={() => navigate('/explore/kids')}
-          className="relative w-full h-28 rounded-2xl overflow-hidden cursor-pointer group shadow-md"
+          className="relative w-full h-24 rounded-2xl overflow-hidden cursor-pointer group shadow-md"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-600 opacity-90 group-hover:opacity-100 transition-opacity" />
           <img
@@ -196,7 +233,7 @@ export default function Explore() {
                 </Badge>
               </div>
               <h2 className="text-lg font-bold text-white mb-0 leading-tight">
-                Locais Esportivos com Recreação Infantil
+                Locais Kids Friendly
               </h2>
               <p className="text-white/90 text-[10px] mt-1">
                 Treine tranquilo enquanto seus filhos se divertem.

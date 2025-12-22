@@ -50,6 +50,7 @@ const PartnerGasStations = lazy(
   () => import('./pages/explore/PartnerGasStations'),
 )
 const KidsFriendlyList = lazy(() => import('./pages/explore/KidsFriendlyList'))
+const FlyerCreator = lazy(() => import('./pages/explore/FlyerCreator'))
 
 // Details
 const EventDetails = lazy(() => import('./pages/explore/EventDetails'))
@@ -216,6 +217,10 @@ const App = () => {
                     <Route
                       path="/explore/kids"
                       element={<KidsFriendlyList />}
+                    />
+                    <Route
+                      path="/explore/flyer-creator"
+                      element={<FlyerCreator />}
                     />
 
                     {/* Detail Routes */}
