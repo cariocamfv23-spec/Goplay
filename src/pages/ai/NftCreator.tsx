@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   ArrowLeft,
@@ -10,8 +10,6 @@ import {
   Wand2,
   RefreshCw,
   Palette,
-  Check,
-  Grid3X3,
   Box,
   Zap,
   Ghost,
@@ -19,16 +17,24 @@ import {
   Paintbrush,
   Star,
   Monitor,
+  Sliders,
+  Type,
+  AlignVerticalJustifyCenter,
+  AlignVerticalJustifyStart,
+  AlignVerticalJustifyEnd,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Label } from '@/components/ui/label'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import { Slider } from '@/components/ui/slider'
+import { Input } from '@/components/ui/input'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from 'sonner'
 import { ShareDialog } from '@/components/ShareDialog'
-import { mockCurrentUser } from '@/lib/data'
 import { cn } from '@/lib/utils'
+import { NftCard, NftStyleConfig } from '@/components/NftCard'
 
 type NftStyle =
   | 'classic'
@@ -41,6 +47,162 @@ type NftStyle =
   | 'sketch'
   | 'oil'
 
+type TextPosition = 'top' | 'center' | 'bottom'
+
+interface StyleConfig {
+  id: NftStyle
+  name: string
+  color: string
+  icon: any
+  defaults: {
+    brightness: number
+    contrast: number
+    saturate: number
+    sepia: number
+    blur: number
+    hue: number
+    grayscale: number
+  }
+}
+
+const styles: StyleConfig[] = [
+  {
+    id: 'classic',
+    name: 'Clássico',
+    color: 'from-slate-700 to-slate-900',
+    icon: Gem,
+    defaults: {
+      brightness: 100,
+      contrast: 100,
+      saturate: 100,
+      sepia: 0,
+      blur: 0,
+      hue: 0,
+      grayscale: 0,
+    },
+  },
+  {
+    id: 'cyberpunk',
+    name: 'Cyberpunk',
+    color: 'from-pink-500 to-cyan-500',
+    icon: Zap,
+    defaults: {
+      brightness: 100,
+      contrast: 125,
+      saturate: 150,
+      sepia: 0,
+      blur: 0,
+      hue: 15,
+      grayscale: 0,
+    },
+  },
+  {
+    id: 'gold',
+    name: 'Lendário',
+    color: 'from-yellow-400 to-yellow-600',
+    icon: Star,
+    defaults: {
+      brightness: 100,
+      contrast: 110,
+      saturate: 125,
+      sepia: 30,
+      blur: 0,
+      hue: 0,
+      grayscale: 0,
+    },
+  },
+  {
+    id: 'holographic',
+    name: 'Holográfico',
+    color: 'from-indigo-400 to-purple-400',
+    icon: Ghost,
+    defaults: {
+      brightness: 110,
+      contrast: 110,
+      saturate: 100,
+      sepia: 0,
+      blur: 0,
+      hue: 0,
+      grayscale: 0,
+    },
+  },
+  {
+    id: 'pixel',
+    name: 'Retro Pixel',
+    color: 'from-green-500 to-emerald-700',
+    icon: Monitor,
+    defaults: {
+      brightness: 90,
+      contrast: 125,
+      saturate: 0,
+      sepia: 0,
+      blur: 0,
+      hue: 0,
+      grayscale: 100,
+    },
+  },
+  {
+    id: '3d',
+    name: 'Modern 3D',
+    color: 'from-blue-400 to-blue-600',
+    icon: Box,
+    defaults: {
+      brightness: 105,
+      contrast: 105,
+      saturate: 110,
+      sepia: 0,
+      blur: 0,
+      hue: 0,
+      grayscale: 0,
+    },
+  },
+  {
+    id: 'pop',
+    name: 'Pop Art',
+    color: 'from-rose-500 to-orange-500',
+    icon: Palette,
+    defaults: {
+      brightness: 110,
+      contrast: 125,
+      saturate: 200,
+      sepia: 0,
+      blur: 0,
+      hue: 0,
+      grayscale: 0,
+    },
+  },
+  {
+    id: 'sketch',
+    name: 'Sketch',
+    color: 'from-stone-500 to-stone-700',
+    icon: Paintbrush,
+    defaults: {
+      brightness: 125,
+      contrast: 150,
+      saturate: 0,
+      sepia: 0,
+      blur: 0,
+      hue: 0,
+      grayscale: 100,
+    },
+  },
+  {
+    id: 'oil',
+    name: 'Óleo',
+    color: 'from-amber-600 to-orange-700',
+    icon: Layers,
+    defaults: {
+      brightness: 100,
+      contrast: 125,
+      saturate: 150,
+      sepia: 20,
+      blur: 0.5,
+      hue: 0,
+      grayscale: 0,
+    },
+  },
+]
+
 export default function NftCreator() {
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -51,62 +213,24 @@ export default function NftCreator() {
   const [selectedStyle, setSelectedStyle] = useState<NftStyle>('cyberpunk')
   const [showShare, setShowShare] = useState(false)
 
-  const styles: { id: NftStyle; name: string; color: string; icon: any }[] = [
-    {
-      id: 'classic',
-      name: 'Clássico',
-      color: 'from-slate-700 to-slate-900',
-      icon: Gem,
-    },
-    {
-      id: 'cyberpunk',
-      name: 'Cyberpunk',
-      color: 'from-pink-500 to-cyan-500',
-      icon: Zap,
-    },
-    {
-      id: 'gold',
-      name: 'Lendário',
-      color: 'from-yellow-400 to-yellow-600',
-      icon: Star,
-    },
-    {
-      id: 'holographic',
-      name: 'Holográfico',
-      color: 'from-indigo-400 to-purple-400',
-      icon: Ghost,
-    },
-    {
-      id: 'pixel',
-      name: 'Retro Pixel',
-      color: 'from-green-500 to-emerald-700',
-      icon: Monitor,
-    },
-    {
-      id: '3d',
-      name: 'Modern 3D',
-      color: 'from-blue-400 to-blue-600',
-      icon: Box,
-    },
-    {
-      id: 'pop',
-      name: 'Pop Art',
-      color: 'from-rose-500 to-orange-500',
-      icon: Palette,
-    },
-    {
-      id: 'sketch',
-      name: 'Sketch',
-      color: 'from-stone-500 to-stone-700',
-      icon: Paintbrush,
-    },
-    {
-      id: 'oil',
-      name: 'Óleo',
-      color: 'from-amber-600 to-orange-700',
-      icon: Layers,
-    },
-  ]
+  // Customization State
+  const [customText, setCustomText] = useState('')
+  const [textPosition, setTextPosition] = useState<TextPosition>('bottom')
+  const [filters, setFilters] = useState(styles[1].defaults)
+  const [intensity, setIntensity] = useState(100)
+
+  // Load defaults when style changes
+  useEffect(() => {
+    const style = styles.find((s) => s.id === selectedStyle)
+    if (style) {
+      setFilters(style.defaults)
+      setIntensity(100)
+    }
+  }, [selectedStyle])
+
+  const updateFilter = (key: keyof typeof filters, value: number) => {
+    setFilters((prev) => ({ ...prev, [key]: value }))
+  }
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -121,10 +245,8 @@ export default function NftCreator() {
 
   const handleGenerate = () => {
     if (!selectedImage) return
-
     setStep('processing')
     setProgress(0)
-
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
@@ -139,17 +261,16 @@ export default function NftCreator() {
 
   const handleDownload = () => {
     toast.success('NFT salvo na galeria!', {
-      description: 'Imagem salva em alta resolução.',
+      description: 'Imagem salva em alta resolução com personalizações.',
     })
   }
 
-  const getNftStyles = (style: NftStyle) => {
+  const getNftStyles = (style: NftStyle): NftStyleConfig => {
     switch (style) {
       case 'cyberpunk':
         return {
           container:
             'border-cyan-500/50 shadow-[0_0_30px_rgba(6,182,212,0.3)] bg-slate-950',
-          image: 'contrast-125 saturate-150 hue-rotate-15',
           overlay:
             'bg-gradient-to-t from-cyan-900/80 via-transparent to-pink-500/20',
           badge: 'bg-cyan-500 text-black',
@@ -160,7 +281,6 @@ export default function NftCreator() {
         return {
           container:
             'border-yellow-500/50 shadow-[0_0_30px_rgba(234,179,8,0.3)] bg-amber-950',
-          image: 'sepia-[.3] contrast-110 saturate-125',
           overlay:
             'bg-gradient-to-t from-yellow-900/80 via-transparent to-yellow-500/10',
           badge: 'bg-yellow-500 text-black',
@@ -171,7 +291,6 @@ export default function NftCreator() {
         return {
           container:
             'border-indigo-500/50 shadow-[0_0_30px_rgba(99,102,241,0.3)] bg-slate-900',
-          image: 'brightness-110 contrast-110',
           overlay:
             'bg-gradient-to-tr from-indigo-500/20 via-transparent to-purple-500/20 mix-blend-overlay',
           badge: 'bg-indigo-500 text-white',
@@ -182,7 +301,6 @@ export default function NftCreator() {
         return {
           container:
             'border-green-500/50 shadow-[0_0_20px_rgba(34,197,94,0.3)] bg-black',
-          image: 'grayscale contrast-125 brightness-90',
           overlay:
             'bg-[url("https://img.usecurling.com/p/10/10?q=grid&color=green")] bg-repeat opacity-20 mix-blend-overlay',
           badge: 'bg-green-500 text-black font-mono',
@@ -193,7 +311,6 @@ export default function NftCreator() {
         return {
           container:
             'border-blue-400/30 shadow-2xl bg-gradient-to-br from-slate-800 to-slate-950',
-          image: 'brightness-105 contrast-105 saturate-110',
           overlay: 'bg-gradient-to-t from-black/60 via-transparent to-white/10',
           badge: 'bg-blue-500 text-white shadow-lg',
           border: 'border border-blue-400/50 rounded-3xl',
@@ -203,7 +320,6 @@ export default function NftCreator() {
         return {
           container:
             'border-white shadow-[10px_10px_0px_0px_rgba(255,255,255,0.2)] bg-yellow-400',
-          image: 'saturate-[2.5] contrast-125 brightness-110',
           overlay:
             'bg-gradient-to-br from-rose-500/30 to-blue-500/30 mix-blend-color-dodge',
           badge:
@@ -214,7 +330,6 @@ export default function NftCreator() {
       case 'sketch':
         return {
           container: 'border-stone-400 shadow-xl bg-white',
-          image: 'grayscale contrast-[1.5] brightness-125',
           overlay: 'bg-white/10 mix-blend-multiply',
           badge: 'bg-black text-white font-serif',
           border: 'border-2 border-black',
@@ -223,17 +338,15 @@ export default function NftCreator() {
       case 'oil':
         return {
           container: 'border-amber-700/50 shadow-2xl bg-stone-900',
-          image: 'sepia-[.2] contrast-125 saturate-150 blur-[0.5px]',
           overlay:
             'bg-gradient-to-t from-black/50 via-amber-500/10 to-transparent',
           badge: 'bg-amber-600 text-white',
           border: 'border-8 border-double border-amber-800',
           text: 'text-amber-100 font-serif italic',
         }
-      default: // classic
+      default:
         return {
           container: 'border-white/20 shadow-xl bg-black',
-          image: '',
           overlay:
             'bg-gradient-to-t from-black/80 via-transparent to-transparent',
           badge: 'bg-white text-black',
@@ -273,26 +386,19 @@ export default function NftCreator() {
       <div className="flex-1 p-6 max-w-md mx-auto w-full flex flex-col">
         {step === 'upload' && (
           <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500 flex-1 flex flex-col">
-            <div className="text-center space-y-2">
-              <h2 className="text-2xl font-bold">Transforme sua Jogada</h2>
-              <p className="text-muted-foreground text-sm">
-                Crie colecionáveis digitais únicos com estilos artísticos
-                exclusivos.
-              </p>
-            </div>
+            {!selectedImage ? (
+              <div className="text-center space-y-2">
+                <h2 className="text-2xl font-bold">Transforme sua Jogada</h2>
+                <p className="text-muted-foreground text-sm">
+                  Crie colecionáveis digitais únicos com estilos artísticos
+                  exclusivos.
+                </p>
+              </div>
+            ) : null}
 
-            {/* Upload Area with Live Preview */}
+            {/* Main Preview Area */}
             <div className="flex-1 flex flex-col gap-6">
-              <div
-                className={cn(
-                  'relative aspect-[4/5] rounded-2xl border-2 border-dashed border-muted-foreground/25 flex flex-col items-center justify-center cursor-pointer transition-all hover:border-primary/50 group overflow-hidden bg-secondary/10',
-                  selectedImage ? 'border-solid border-primary' : '',
-                  // Apply container style for preview if image is selected
-                  selectedImage && activeStyle.container,
-                  selectedImage && activeStyle.border,
-                )}
-                onClick={() => fileInputRef.current?.click()}
-              >
+              <div className="relative">
                 <input
                   type="file"
                   accept="image/*"
@@ -302,24 +408,23 @@ export default function NftCreator() {
                 />
 
                 {selectedImage ? (
-                  <>
-                    <img
-                      src={selectedImage}
-                      alt="Preview"
-                      className={cn(
-                        'w-full h-full object-cover transition-all duration-300',
-                        activeStyle.image,
-                      )}
-                    />
-                    <div
-                      className={cn(
-                        'absolute inset-0 transition-all duration-300 pointer-events-none',
-                        activeStyle.overlay,
-                      )}
-                    />
-                  </>
+                  <NftCard
+                    image={selectedImage}
+                    activeStyle={activeStyle}
+                    styleId={selectedStyle}
+                    filters={filters}
+                    intensity={intensity}
+                    customText={customText}
+                    textPosition={textPosition}
+                    onClick={() =>
+                      !selectedImage && fileInputRef.current?.click()
+                    }
+                  />
                 ) : (
-                  <>
+                  <div
+                    className="aspect-[4/5] rounded-2xl border-2 border-dashed border-muted-foreground/25 flex flex-col items-center justify-center cursor-pointer transition-all hover:border-primary/50 group bg-secondary/10"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
                     <div className="h-20 w-20 rounded-full bg-secondary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                       <Upload className="h-10 w-10 text-muted-foreground" />
                     </div>
@@ -327,56 +432,206 @@ export default function NftCreator() {
                     <p className="text-xs text-muted-foreground mt-1">
                       JPG ou PNG
                     </p>
-                  </>
+                  </div>
                 )}
 
                 {selectedImage && (
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20">
-                    <p className="text-white font-medium flex items-center gap-2">
-                      <RefreshCw className="h-4 w-4" /> Trocar Imagem
-                    </p>
+                  <div className="absolute top-2 right-2 flex gap-2 z-30">
+                    <Button
+                      variant="secondary"
+                      size="icon"
+                      className="h-8 w-8 rounded-full bg-black/50 text-white hover:bg-black/70 border border-white/20"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        fileInputRef.current?.click()
+                      }}
+                    >
+                      <RefreshCw className="h-4 w-4" />
+                    </Button>
                   </div>
                 )}
               </div>
 
-              {/* Styles Scroll Area */}
-              <div className="space-y-3">
-                <Label className="flex items-center gap-2">
-                  <Palette className="h-4 w-4" /> Estilo do Card
-                </Label>
-                <ScrollArea className="w-full whitespace-nowrap pb-4">
-                  <div className="flex w-max space-x-3 p-1">
-                    {styles.map((style) => (
-                      <button
-                        key={style.id}
-                        onClick={() => setSelectedStyle(style.id)}
-                        className={cn(
-                          'flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all min-w-[100px] relative overflow-hidden bg-card',
-                          selectedStyle === style.id
-                            ? 'border-primary bg-primary/5'
-                            : 'border-border hover:border-primary/50',
-                        )}
-                      >
-                        <div
-                          className={cn(
-                            'h-10 w-10 rounded-full bg-gradient-to-br flex items-center justify-center text-white shadow-sm',
-                            style.color,
-                          )}
-                        >
-                          <style.icon className="h-5 w-5" />
+              {/* Controls Tabs */}
+              {selectedImage && (
+                <div className="space-y-4">
+                  <Tabs defaultValue="style" className="w-full">
+                    <TabsList className="grid w-full grid-cols-3 mb-4">
+                      <TabsTrigger value="style" className="text-xs">
+                        <Palette className="h-3.5 w-3.5 mr-2" /> Estilo
+                      </TabsTrigger>
+                      <TabsTrigger value="adjust" className="text-xs">
+                        <Sliders className="h-3.5 w-3.5 mr-2" /> Ajustes
+                      </TabsTrigger>
+                      <TabsTrigger value="text" className="text-xs">
+                        <Type className="h-3.5 w-3.5 mr-2" /> Texto
+                      </TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="style" className="mt-0">
+                      <ScrollArea className="w-full whitespace-nowrap pb-2">
+                        <div className="flex w-max space-x-3 p-1">
+                          {styles.map((style) => (
+                            <button
+                              key={style.id}
+                              onClick={() => setSelectedStyle(style.id)}
+                              className={cn(
+                                'flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all min-w-[90px] relative overflow-hidden bg-card',
+                                selectedStyle === style.id
+                                  ? 'border-primary bg-primary/5'
+                                  : 'border-border hover:border-primary/50',
+                              )}
+                            >
+                              <div
+                                className={cn(
+                                  'h-10 w-10 rounded-full bg-gradient-to-br flex items-center justify-center text-white shadow-sm',
+                                  style.color,
+                                )}
+                              >
+                                <style.icon className="h-5 w-5" />
+                              </div>
+                              <span className="text-[10px] font-medium">
+                                {style.name}
+                              </span>
+                              {selectedStyle === style.id && (
+                                <div className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-primary" />
+                              )}
+                            </button>
+                          ))}
                         </div>
-                        <span className="text-xs font-medium">
-                          {style.name}
-                        </span>
-                        {selectedStyle === style.id && (
-                          <div className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary" />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                  <ScrollBar orientation="horizontal" />
-                </ScrollArea>
-              </div>
+                        <ScrollBar orientation="horizontal" />
+                      </ScrollArea>
+                    </TabsContent>
+
+                    <TabsContent value="adjust" className="mt-0 space-y-5">
+                      <div className="space-y-3">
+                        <div className="flex justify-between">
+                          <Label className="text-xs">Brilho</Label>
+                          <span className="text-xs text-muted-foreground">
+                            {filters.brightness}%
+                          </span>
+                        </div>
+                        <Slider
+                          value={[filters.brightness]}
+                          min={0}
+                          max={200}
+                          step={5}
+                          onValueChange={(val) =>
+                            updateFilter('brightness', val[0])
+                          }
+                        />
+                      </div>
+                      <div className="space-y-3">
+                        <div className="flex justify-between">
+                          <Label className="text-xs">Contraste</Label>
+                          <span className="text-xs text-muted-foreground">
+                            {filters.contrast}%
+                          </span>
+                        </div>
+                        <Slider
+                          value={[filters.contrast]}
+                          min={0}
+                          max={200}
+                          step={5}
+                          onValueChange={(val) =>
+                            updateFilter('contrast', val[0])
+                          }
+                        />
+                      </div>
+                      <div className="space-y-3">
+                        <div className="flex justify-between">
+                          <Label className="text-xs">Saturação</Label>
+                          <span className="text-xs text-muted-foreground">
+                            {filters.saturate}%
+                          </span>
+                        </div>
+                        <Slider
+                          value={[filters.saturate]}
+                          min={0}
+                          max={200}
+                          step={5}
+                          onValueChange={(val) =>
+                            updateFilter('saturate', val[0])
+                          }
+                        />
+                      </div>
+                      <div className="space-y-3 pt-2 border-t border-border/50">
+                        <div className="flex justify-between">
+                          <Label className="text-xs font-semibold text-primary">
+                            Intensidade do Filtro
+                          </Label>
+                          <span className="text-xs text-muted-foreground">
+                            {intensity}%
+                          </span>
+                        </div>
+                        <Slider
+                          value={[intensity]}
+                          min={0}
+                          max={100}
+                          step={5}
+                          onValueChange={(val) => setIntensity(val[0])}
+                          className="[&_.range]:bg-primary"
+                        />
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="text" className="mt-0 space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="custom-text">Texto Adicional</Label>
+                        <Input
+                          id="custom-text"
+                          placeholder="Digite algo épico..."
+                          value={customText}
+                          onChange={(e) => setCustomText(e.target.value)}
+                          maxLength={30}
+                        />
+                        <p className="text-[10px] text-muted-foreground text-right">
+                          {customText.length}/30
+                        </p>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Posição</Label>
+                        <div className="grid grid-cols-3 gap-2">
+                          <Button
+                            variant={
+                              textPosition === 'top' ? 'default' : 'outline'
+                            }
+                            size="sm"
+                            onClick={() => setTextPosition('top')}
+                            className="h-9"
+                          >
+                            <AlignVerticalJustifyStart className="h-4 w-4 mr-2" />
+                            Topo
+                          </Button>
+                          <Button
+                            variant={
+                              textPosition === 'center' ? 'default' : 'outline'
+                            }
+                            size="sm"
+                            onClick={() => setTextPosition('center')}
+                            className="h-9"
+                          >
+                            <AlignVerticalJustifyCenter className="h-4 w-4 mr-2" />
+                            Meio
+                          </Button>
+                          <Button
+                            variant={
+                              textPosition === 'bottom' ? 'default' : 'outline'
+                            }
+                            size="sm"
+                            onClick={() => setTextPosition('bottom')}
+                            className="h-9"
+                          >
+                            <AlignVerticalJustifyEnd className="h-4 w-4 mr-2" />
+                            Baixo
+                          </Button>
+                        </div>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                </div>
+              )}
             </div>
 
             <Button
@@ -437,96 +692,17 @@ export default function NftCreator() {
 
             {/* NFT Card Result */}
             <div className="flex-1 flex items-center justify-center py-4">
-              <div
-                className={cn(
-                  'relative w-full max-w-[320px] aspect-[3/4] rounded-2xl overflow-hidden transition-all duration-500 group shadow-2xl',
-                  activeStyle.container,
-                  activeStyle.border,
-                )}
-              >
-                {/* Background Image with Effects */}
-                <img
-                  src={selectedImage}
-                  alt="NFT"
-                  className={cn(
-                    'w-full h-full object-cover transition-all',
-                    activeStyle.image,
-                  )}
+              <div className="w-full max-w-[320px]">
+                <NftCard
+                  image={selectedImage}
+                  activeStyle={activeStyle}
+                  styleId={selectedStyle}
+                  filters={filters}
+                  intensity={intensity}
+                  customText={customText}
+                  textPosition={textPosition}
+                  className="shadow-2xl"
                 />
-
-                {/* Overlay Gradient */}
-                <div
-                  className={cn(
-                    'absolute inset-0 pointer-events-none',
-                    activeStyle.overlay,
-                  )}
-                />
-
-                {/* Card Content */}
-                <div className="absolute inset-0 p-5 flex flex-col justify-between">
-                  {/* Top: Rarity & Stats */}
-                  <div className="flex justify-between items-start">
-                    <Badge
-                      className={cn(
-                        'border-0 font-bold uppercase tracking-wider shadow-sm',
-                        activeStyle.badge,
-                      )}
-                    >
-                      {selectedStyle === 'gold'
-                        ? 'Legendary'
-                        : selectedStyle === 'cyberpunk'
-                          ? 'Epic'
-                          : 'Rare'}
-                    </Badge>
-                    <div className="flex flex-col items-end">
-                      <div className="bg-black/40 backdrop-blur-md rounded-lg p-2 text-white border border-white/10 text-xs font-mono shadow-sm">
-                        <div>
-                          PWR <span className="text-green-400">98</span>
-                        </div>
-                        <div>
-                          SPD <span className="text-yellow-400">92</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Bottom: Info */}
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Gem className="h-6 w-6 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
-                    </div>
-                    <h3
-                      className={cn(
-                        'text-2xl font-black uppercase italic tracking-tighter drop-shadow-lg',
-                        activeStyle.text,
-                      )}
-                    >
-                      {mockCurrentUser.name}
-                    </h3>
-                    <div
-                      className={cn(
-                        'flex justify-between items-end text-xs font-medium opacity-90',
-                        activeStyle.text,
-                      )}
-                    >
-                      <span>{new Date().toLocaleDateString()}</span>
-                      <span className="font-mono opacity-80">
-                        #GP-{Math.floor(Math.random() * 9000) + 1000}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Special Effects */}
-                {selectedStyle === 'holographic' && (
-                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-50 pointer-events-none mix-blend-overlay" />
-                )}
-                {selectedStyle === 'pixel' && (
-                  <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] pointer-events-none z-10" />
-                )}
-                {selectedStyle === '3d' && (
-                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/20 pointer-events-none rounded-2xl" />
-                )}
               </div>
             </div>
 
