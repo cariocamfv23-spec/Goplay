@@ -9,15 +9,12 @@ import {
   Sparkles,
   Wand2,
   RefreshCw,
-  Layers,
   Palette,
   Check,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 import { ShareDialog } from '@/components/ShareDialog'

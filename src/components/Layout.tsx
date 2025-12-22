@@ -13,6 +13,7 @@ export default function Layout() {
     '/messages/', // Hide on chat rooms (except list)
     '/ai/motion-analysis', // Hide on immersive motion analysis page
     '/ai/avatar', // Hide on immersive AI Avatar page
+    '/ai/nft-creator', // Hide on immersive NFT Creator page
   ]
 
   const shouldHideBottomNav = hideBottomNavPaths.some(
@@ -26,7 +27,8 @@ export default function Layout() {
     location.pathname === '/move' ||
     location.pathname === '/ai/motion-analysis' ||
     location.pathname === '/ai/avatar' ||
-    location.pathname === '/profile/passport'
+    location.pathname === '/profile/passport' ||
+    location.pathname === '/ai/nft-creator'
 
   return (
     <div className="min-h-screen bg-background flex flex-col relative">
