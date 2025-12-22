@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Button } from '@/components/ui/button'
 import {
   Zap,
   Brain,
@@ -18,9 +18,13 @@ import {
   Play,
   Users,
   Timer,
-  Gem,
-  Sticker,
   Crown,
+  Wallet,
+  ShoppingBag,
+  LayoutList,
+  MessageSquare,
+  Sparkles,
+  Palette,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockCurrentUser } from '@/lib/data'
@@ -38,34 +42,15 @@ export default function Home() {
 
   const mainFeatures = [
     {
-      id: 'move',
-      label: 'Move',
-      icon: Zap,
-      path: '/move',
-      color: 'text-yellow-500',
-      bg: 'bg-yellow-500/10',
-      border: 'border-yellow-500/20',
-      description: 'Feed Esportivo',
-    },
-    {
-      id: 'oracle',
-      label: 'Oráculo',
-      icon: Brain,
-      path: '/ai/oracle',
-      color: 'text-purple-500',
-      bg: 'bg-purple-500/10',
-      border: 'border-purple-500/20',
-      description: 'Mentoria IA',
-    },
-    {
       id: 'nft',
-      label: 'NFTs & BAYC',
-      icon: Crown,
+      label: 'NFT Creator',
+      icon: Palette,
       path: '/ai/nft-creator',
       color: 'text-pink-500',
       bg: 'bg-pink-500/10',
       border: 'border-pink-500/20',
-      description: 'Crie Sticker & Arte',
+      description: 'Crie Stickers',
+      badge: 'NOVO',
     },
     {
       id: 'arena',
@@ -75,17 +60,57 @@ export default function Home() {
       color: 'text-red-500',
       bg: 'bg-red-500/10',
       border: 'border-red-500/20',
-      description: 'Treino AR',
+      description: 'Jogar Agora',
     },
     {
-      id: 'editor',
-      label: 'Editor',
-      icon: Wand2,
-      path: '/ai/editor',
+      id: 'ranking',
+      label: 'Ranking',
+      icon: Trophy,
+      path: '/ranking',
+      color: 'text-gold',
+      bg: 'bg-yellow-500/10',
+      border: 'border-yellow-500/20',
+      description: 'Competição',
+    },
+    {
+      id: 'wallet',
+      label: 'Carteira',
+      icon: Wallet,
+      path: '/wallet',
+      color: 'text-emerald-500',
+      bg: 'bg-emerald-500/10',
+      border: 'border-emerald-500/20',
+      description: 'Seus Ganhos',
+    },
+    {
+      id: 'market',
+      label: 'Loja',
+      icon: ShoppingBag,
+      path: '/marketplace',
+      color: 'text-blue-500',
+      bg: 'bg-blue-500/10',
+      border: 'border-blue-500/20',
+      description: 'Produtos',
+    },
+    {
+      id: 'feed',
+      label: 'Feed',
+      icon: LayoutList,
+      path: '/feed',
+      color: 'text-purple-500',
+      bg: 'bg-purple-500/10',
+      border: 'border-purple-500/20',
+      description: 'Social',
+    },
+    {
+      id: 'move',
+      label: 'Move',
+      icon: Zap,
+      path: '/move',
       color: 'text-orange-500',
       bg: 'bg-orange-500/10',
       border: 'border-orange-500/20',
-      description: 'Highlights',
+      description: 'Atividades',
     },
     {
       id: 'checkin',
@@ -96,6 +121,26 @@ export default function Home() {
       bg: 'bg-green-500/10',
       border: 'border-green-500/20',
       description: 'Locais',
+    },
+    {
+      id: 'oracle',
+      label: 'Oráculo',
+      icon: Brain,
+      path: '/ai/oracle',
+      color: 'text-indigo-500',
+      bg: 'bg-indigo-500/10',
+      border: 'border-indigo-500/20',
+      description: 'IA Coach',
+    },
+    {
+      id: 'editor',
+      label: 'Editor',
+      icon: Wand2,
+      path: '/ai/editor',
+      color: 'text-cyan-500',
+      bg: 'bg-cyan-500/10',
+      border: 'border-cyan-500/20',
+      description: 'Highlights',
     },
   ]
 
@@ -111,8 +156,8 @@ export default function Home() {
         </div>
         <Skeleton className="h-40 w-full rounded-2xl" />
         <div className="grid grid-cols-2 gap-3">
-          {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-20 rounded-xl" />
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <Skeleton key={i} className="h-24 rounded-xl" />
           ))}
         </div>
       </div>
@@ -202,19 +247,57 @@ export default function Home() {
         </Card>
       </div>
 
-      {/* Quick Access Grid */}
+      {/* Featured NFT Creator Banner - NEW */}
+      <div className="px-6 pb-4">
+        <div
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-zinc-900 to-zinc-800 p-4 shadow-lg cursor-pointer group border border-white/10"
+          onClick={() => navigate('/ai/nft-creator')}
+        >
+          <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+            <Crown className="w-24 h-24 rotate-[-15deg] translate-x-4 -translate-y-4 text-white" />
+          </div>
+          <div className="relative z-10 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+                <Sparkles className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-bold text-white text-base">
+                    NFT Creator
+                  </h3>
+                  <Badge className="bg-gradient-to-r from-gold to-yellow-500 text-black border-none text-[10px] px-1.5 h-4 font-extrabold">
+                    NOVO
+                  </Badge>
+                </div>
+                <p className="text-xs text-zinc-400 font-medium mt-0.5">
+                  Crie stickers estilo BAYC
+                </p>
+              </div>
+            </div>
+            <div className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+              <ChevronRight className="w-4 h-4 text-white" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Access Grid - Restored & Expanded */}
       <div className="px-6 py-2">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-bold text-lg flex items-center gap-2 text-foreground">
             <Zap className="h-4 w-4 text-gold fill-gold" />
-            Acesso Rápido
+            Menu Principal
           </h2>
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {mainFeatures.map((feature) => (
             <Card
               key={feature.id}
-              className="border-none bg-card/80 hover:bg-card transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md hover:-translate-y-0.5"
+              className={cn(
+                'border-none bg-card/80 hover:bg-card transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md hover:-translate-y-0.5 relative overflow-hidden',
+                feature.id === 'nft' && 'hidden', // Hide NFT from grid as it has a banner
+              )}
               onClick={() => navigate(feature.path)}
             >
               <CardContent className="p-3 flex items-center gap-3">
@@ -227,8 +310,13 @@ export default function Home() {
                   <feature.icon className={cn('h-5 w-5', feature.color)} />
                 </div>
                 <div className="overflow-hidden">
-                  <h3 className="font-bold text-sm truncate leading-tight group-hover:text-primary transition-colors">
+                  <h3 className="font-bold text-sm truncate leading-tight group-hover:text-primary transition-colors flex items-center gap-1.5">
                     {feature.label}
+                    {feature.badge && (
+                      <span className="text-[8px] bg-primary text-primary-foreground px-1 rounded-sm font-bold">
+                        {feature.badge}
+                      </span>
+                    )}
                   </h3>
                   <p className="text-[10px] text-muted-foreground truncate font-medium">
                     {feature.description}
