@@ -14,6 +14,7 @@ export default function Layout() {
     '/ai/motion-analysis', // Hide on immersive motion analysis page
     '/ai/avatar', // Hide on immersive AI Avatar page
     '/ai/nft-creator', // Hide on immersive NFT Creator page
+    '/ai/ghost-play', // Hide on immersive Ghost Play page
   ]
 
   const shouldHideBottomNav = hideBottomNavPaths.some(
@@ -28,7 +29,8 @@ export default function Layout() {
     location.pathname === '/ai/motion-analysis' ||
     location.pathname === '/ai/avatar' ||
     location.pathname === '/profile/passport' ||
-    location.pathname === '/ai/nft-creator'
+    location.pathname === '/ai/nft-creator' ||
+    location.pathname === '/ai/ghost-play'
 
   return (
     <div className="min-h-screen bg-background flex flex-col relative">

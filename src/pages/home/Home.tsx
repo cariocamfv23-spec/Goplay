@@ -24,6 +24,7 @@ import {
   LayoutList,
   Sparkles,
   Palette,
+  Box,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockCurrentUser } from '@/lib/data'
@@ -140,6 +141,16 @@ export default function Home() {
       bg: 'bg-cyan-500/10',
       border: 'border-cyan-500/20',
       description: 'Highlights',
+    },
+    {
+      id: 'ghost',
+      label: 'Replay 3D',
+      icon: Box,
+      path: '/ai/ghost-play',
+      color: 'text-teal-500',
+      bg: 'bg-teal-500/10',
+      border: 'border-teal-500/20',
+      description: 'Lance Fantasma',
     },
   ]
 

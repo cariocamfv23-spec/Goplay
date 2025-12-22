@@ -21,7 +21,7 @@ export default function GhostPlay() {
   const [viewMode, setViewMode] = useState<'normal' | 'ghost'>('ghost')
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col animate-fade-in font-sans">
+    <div className="min-h-screen bg-black text-white flex flex-col animate-in fade-in duration-500 font-sans">
       {/* Header */}
       <div className="p-4 flex items-center justify-between bg-zinc-900/50 backdrop-blur-md border-b border-white/10 sticky top-0 z-10">
         <Button
