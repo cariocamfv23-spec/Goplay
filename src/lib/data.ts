@@ -89,6 +89,7 @@ export interface Notification {
     | 'goal_deadline'
     | 'verification'
     | 'sponsorship_match'
+    | 'kids_zone'
   date?: string
   priority?: 'low' | 'medium' | 'high' | 'critical'
   link?: string
@@ -1548,7 +1549,41 @@ export const mockProfiles: ProfileData[] = [
 ]
 export const mockJobs = []
 export const mockProducts: Product[] = []
-export const mockNotifications: Notification[] = []
+export const mockNotifications: Notification[] = [
+  {
+    id: 'n1',
+    title: 'Match de Patrocínio!',
+    message:
+      'A Red Bull expressou interesse no seu perfil. Confira os detalhes.',
+    time: '2 min',
+    read: false,
+    type: 'sponsorship_match',
+    date: 'Hoje',
+    priority: 'high',
+    link: '/explore/sponsorship',
+  },
+  {
+    id: 'n2',
+    title: 'Nova Atividade Kids',
+    message: 'O espaço "Arena Kids" abriu novas vagas para Futebol de Sabão.',
+    time: '1 hora',
+    read: false,
+    type: 'kids_zone',
+    date: 'Hoje',
+    link: '/move/kids-map',
+  },
+  {
+    id: 'n3',
+    title: 'Evento Próximo',
+    message: 'Faltam 2 dias para o Campeonato Regional. Prepare-se!',
+    time: '3 horas',
+    read: true,
+    type: 'event_reminder',
+    date: 'Hoje',
+    priority: 'medium',
+    link: '/events/e1',
+  },
+]
 export const mockNotificationsList = mockNotifications
 export const mockChats = []
 export const mockPointsHistory = []

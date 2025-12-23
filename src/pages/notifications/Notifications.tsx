@@ -13,6 +13,8 @@ import {
   Target,
   ShieldCheck,
   Clock,
+  Handshake,
+  Baby,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -45,6 +47,10 @@ export default function Notifications() {
         return <Target className="h-5 w-5 text-red-500" />
       case 'verification':
         return <ShieldCheck className="h-5 w-5 text-blue-600" />
+      case 'sponsorship_match':
+        return <Handshake className="h-5 w-5 text-indigo-500" />
+      case 'kids_zone':
+        return <Baby className="h-5 w-5 text-pink-500" />
       default:
         return <Bell className="h-5 w-5 text-primary" />
     }

@@ -1,6 +1,5 @@
 import {
   ArrowLeft,
-  Bell,
   ShoppingCart,
   Settings,
   Palette,
@@ -16,7 +15,6 @@ import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Logo } from '@/components/Logo'
-import useNotificationStore from '@/stores/useNotificationStore'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,11 +29,11 @@ import {
 import { useTheme } from 'next-themes'
 import { useThemeStore } from '@/stores/useThemeStore'
 import { mockCurrentUser } from '@/lib/data'
+import { NotificationMenu } from '@/components/NotificationMenu'
 
 export function TopBar() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { unreadCount } = useNotificationStore()
   const { setTheme, theme } = useTheme()
   const { color, setColor } = useThemeStore()
 
@@ -151,18 +149,7 @@ export function TopBar() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Link to="/notifications" className="relative">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full hover:bg-secondary/50"
-          >
-            <Bell className="h-5 w-5" />
-          </Button>
-          {unreadCount > 0 && (
-            <span className="absolute top-2 right-2 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-background animate-pulse" />
-          )}
-        </Link>
+        <NotificationMenu />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
