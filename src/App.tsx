@@ -63,6 +63,9 @@ const PartnerGasStations = lazy(
 const KidsFriendlyList = lazy(() => import('./pages/explore/KidsFriendlyList'))
 const FlyerCreator = lazy(() => import('./pages/explore/FlyerCreator'))
 
+// Sponsors
+const SponsorshipMatch = lazy(() => import('./pages/sponsors/SponsorshipMatch'))
+
 // Details
 const EventDetails = lazy(() => import('./pages/explore/EventDetails'))
 const VenueDetails = lazy(() => import('./pages/venues/VenueDetails'))
@@ -206,6 +209,10 @@ const App = () => {
                     />
 
                     {/* Explore Lists Routes */}
+                    <Route
+                      path="/explore/sponsorship"
+                      element={<SponsorshipMatch />}
+                    />
                     <Route path="/explore/talents" element={<TalentsList />} />
                     <Route
                       path="/explore/photographers"

@@ -39,6 +39,7 @@ import {
   Flame,
   Shield,
   Award,
+  Handshake,
 } from 'lucide-react'
 
 // Types
@@ -87,6 +88,7 @@ export interface Notification {
     | 'event_reminder'
     | 'goal_deadline'
     | 'verification'
+    | 'sponsorship_match'
   date?: string
   priority?: 'low' | 'medium' | 'high' | 'critical'
   link?: string
@@ -137,7 +139,7 @@ export interface ProfileData {
   rating?: number
   followers?: string
   following?: string
-  type: 'athlete' | 'photographer' | 'driver' | 'club' | 'coach'
+  type: 'athlete' | 'photographer' | 'driver' | 'club' | 'coach' | 'team'
   categories?: string[]
   portfolio?: string[]
   packages?: { title: string; price: string; description: string }[]
@@ -168,6 +170,10 @@ export interface ProfileData {
     invited: number
     earned: number
   }
+  // New metrics for sponsorship
+  totalViews?: number
+  totalLikes?: number
+  ranking?: number
 }
 
 export interface FinancialTransaction {
@@ -577,6 +583,13 @@ export const tribes = [
 ]
 
 export const exploreCategories = [
+  {
+    id: 'sponsorship',
+    label: 'Patrocínio',
+    icon: Handshake,
+    bg: 'bg-gold/20 dark:bg-gold/10',
+    color: 'text-gold dark:text-gold',
+  },
   {
     id: 'scholarships',
     label: 'Bolsas',
@@ -1137,6 +1150,64 @@ export const mockTalents: ProfileData[] = [
     followers: '5.4k',
     stats: { matches: 50, wins: 35, mvp: 12 },
     favoriteSong: mockMusicTracks[0],
+    totalViews: 15420,
+    totalLikes: 3200,
+    ranking: 1,
+  },
+  {
+    id: 't2',
+    name: 'Red Wolves FC',
+    username: '@redwolves',
+    type: 'team',
+    location: 'São Paulo, SP',
+    avatar: 'https://img.usecurling.com/i?q=wolf%20logo&color=red',
+    cover: 'https://img.usecurling.com/p/800/400?q=stadium%20night&color=red',
+    bio: 'Time de Futebol Society focado em alta performance e campeonatos regionais.',
+    followers: '12.5k',
+    rating: 4.9,
+    sport: 'Futebol Society',
+    stats: { matches: 120, wins: 85, mvp: 0 },
+    totalViews: 45000,
+    totalLikes: 8900,
+    ranking: 3,
+  },
+  {
+    id: 't3',
+    name: 'Pedro Santos',
+    username: '@pedros',
+    type: 'athlete',
+    age: 21,
+    sport: 'Futsal',
+    position: 'Fixo',
+    height: '1.75m',
+    weight: '72kg',
+    rating: 4.6,
+    location: 'Belo Horizonte, MG',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=67',
+    cover: 'https://img.usecurling.com/p/800/400?q=futsal%20indoor&color=blue',
+    bio: 'Fixo com ótima marcação e saída de bola.',
+    followers: '3.1k',
+    stats: { matches: 80, wins: 50, mvp: 8 },
+    totalViews: 8200,
+    totalLikes: 1500,
+    ranking: 15,
+  },
+  {
+    id: 't4',
+    name: 'Blue Sharks',
+    username: '@bluesharks',
+    type: 'team',
+    location: 'Rio de Janeiro, RJ',
+    avatar: 'https://img.usecurling.com/i?q=shark%20logo&color=blue',
+    cover: 'https://img.usecurling.com/p/800/400?q=ocean%20stadium&color=blue',
+    bio: 'Equipe de Futevôlei competindo no circuito nacional.',
+    followers: '8.2k',
+    rating: 4.7,
+    sport: 'Futevôlei',
+    stats: { matches: 60, wins: 40, mvp: 0 },
+    totalViews: 22000,
+    totalLikes: 4100,
+    ranking: 8,
   },
 ]
 
