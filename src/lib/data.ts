@@ -450,6 +450,36 @@ export interface Clinic {
   description: string
 }
 
+// Passport New Interfaces
+export interface Competition {
+  id: string
+  name: string
+  date: string
+  role: string
+  result?: string
+  verified: boolean
+  location: string
+  organizer: string
+}
+
+export interface Certification {
+  id: string
+  name: string
+  issuer: string
+  date: string
+  expiry?: string
+  verified: boolean
+  credentialId?: string
+}
+
+export interface PassportGoal {
+  id: string
+  title: string
+  targetDate: string
+  status: 'pending' | 'in_progress' | 'achieved'
+  category: string
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: LayoutList, label: 'Feed', path: '/feed' },
@@ -1076,6 +1106,82 @@ export const mockPassport: PassportData = {
   nationality: 'BRA',
   status: 'active',
 }
+
+export const mockCompetitions: Competition[] = [
+  {
+    id: 'c1',
+    name: 'Campeonato Paulista Amador',
+    date: '15/05/2024',
+    role: 'Atleta',
+    result: 'Campeão',
+    verified: true,
+    location: 'São Paulo, SP',
+    organizer: 'FPF',
+  },
+  {
+    id: 'c2',
+    name: 'Copa Regional de Futsal',
+    date: '10/02/2024',
+    role: 'Atleta',
+    result: 'Vice-Campeão',
+    verified: true,
+    location: 'Campinas, SP',
+    organizer: 'Liga Regional',
+  },
+  {
+    id: 'c3',
+    name: 'Torneio de Verão',
+    date: '12/01/2024',
+    role: 'Atleta',
+    result: 'Semifinalista',
+    verified: false,
+    location: 'Santos, SP',
+    organizer: 'Clube local',
+  },
+]
+
+export const mockCertifications: Certification[] = [
+  {
+    id: 'cert1',
+    name: 'Registro Federativo - FPF',
+    issuer: 'Federação Paulista de Futebol',
+    date: '01/01/2024',
+    expiry: '01/01/2025',
+    verified: true,
+    credentialId: 'FPF-2024-8821',
+  },
+  {
+    id: 'cert2',
+    name: 'Curso de Primeiros Socorros',
+    issuer: 'Cruz Vermelha',
+    date: '15/06/2023',
+    verified: false,
+  },
+]
+
+export const mockPassportGoals: PassportGoal[] = [
+  {
+    id: 'pg1',
+    title: 'Conquistar vaga em time profissional',
+    targetDate: '31/12/2025',
+    status: 'in_progress',
+    category: 'Carreira',
+  },
+  {
+    id: 'pg2',
+    title: 'Atingir 100 partidas oficiais',
+    targetDate: '30/06/2026',
+    status: 'pending',
+    category: 'Estatísticas',
+  },
+  {
+    id: 'pg3',
+    title: 'Ganhar MVP da temporada',
+    targetDate: '15/12/2024',
+    status: 'achieved',
+    category: 'Conquistas',
+  },
+]
 
 export const mockTalents: ProfileData[] = [
   {

@@ -3,10 +3,11 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import {
-  Link,
+  Link as LinkIcon,
   MessageCircle,
   Instagram,
   Facebook,
@@ -15,19 +16,29 @@ import {
   MoreHorizontal,
   Check,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, ReactNode } from 'react'
 
 interface ShareDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  videoTitle?: string
+  title?: string
+  description?: string
+  url?: string
+  preview?: ReactNode
 }
 
-export function ShareDialog({ open, onOpenChange }: ShareDialogProps) {
+export function ShareDialog({
+  open,
+  onOpenChange,
+  title = 'Compartilhar',
+  description,
+  url = window.location.href,
+  preview,
+}: ShareDialogProps) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(window.location.href)
+    navigator.clipboard.writeText(url)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
@@ -45,8 +56,15 @@ export function ShareDialog({ open, onOpenChange }: ShareDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md bg-zinc-950 border-zinc-800 text-white">
         <DialogHeader>
-          <DialogTitle>Compartilhar para</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
+          {description && (
+            <DialogDescription className="text-zinc-400">
+              {description}
+            </DialogDescription>
+          )}
         </DialogHeader>
+
+        {preview && <div className="py-2">{preview}</div>}
 
         <div className="grid grid-cols-4 gap-4 py-4">
           {shareOptions.map((option) => (
@@ -67,12 +85,10 @@ export function ShareDialog({ open, onOpenChange }: ShareDialogProps) {
         </div>
 
         <div className="border-t border-zinc-800 pt-4">
-          <p className="text-sm font-medium text-zinc-400 mb-2">
-            Link do vídeo
-          </p>
+          <p className="text-sm font-medium text-zinc-400 mb-2">Link</p>
           <div className="flex gap-2">
             <div className="flex-1 bg-zinc-900 rounded-md px-3 py-2 text-sm text-zinc-300 truncate border border-zinc-800">
-              https://goplay.app/v/{Math.random().toString(36).substr(2, 9)}
+              {url}
             </div>
             <Button
               onClick={handleCopy}
@@ -81,7 +97,7 @@ export function ShareDialog({ open, onOpenChange }: ShareDialogProps) {
               {copied ? (
                 <Check className="w-4 h-4 mr-1" />
               ) : (
-                <Link className="w-4 h-4 mr-1" />
+                <LinkIcon className="w-4 h-4 mr-1" />
               )}
               {copied ? 'Copiado' : 'Copiar'}
             </Button>

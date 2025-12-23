@@ -1,94 +1,115 @@
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Globe, ShieldCheck, QrCode } from 'lucide-react'
+import { ArrowLeft, Share2, Wallet, Download, QrCode } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { mockPassport, mockCurrentUser } from '@/lib/data'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Logo } from '@/components/Logo'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { PassportCard } from '@/components/passport/PassportCard'
+import { CompetitionHistory } from '@/components/passport/CompetitionHistory'
+import { Certifications } from '@/components/passport/Certifications'
+import { GoalsTracker } from '@/components/passport/GoalsTracker'
+import { EventLinkDialog } from '@/components/passport/EventLinkDialog'
+import { useState } from 'react'
+import { ShareDialog } from '@/components/ShareDialog'
+import { mockCurrentUser } from '@/lib/data'
 
 export default function SportsPassport() {
   const navigate = useNavigate()
-  const user = mockCurrentUser
+  const [isEventLinkOpen, setIsEventLinkOpen] = useState(false)
+  const [isShareOpen, setIsShareOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-secondary/30 flex flex-col">
-      <div className="p-4 flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-          <ArrowLeft className="h-6 w-6" />
-        </Button>
-        <h1 className="font-bold text-xl">Passaporte Esportivo</h1>
-      </div>
-
-      <div className="flex-1 p-6 flex flex-col items-center justify-center -mt-20">
-        {/* Passport Card */}
-        <div className="w-full max-w-sm aspect-[1.58/1] relative perspective-1000 group cursor-pointer">
-          <div className="relative w-full h-full transition-transform duration-700 transform-style-3d hover:rotate-y-180">
-            {/* Front Side */}
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 to-black rounded-2xl shadow-2xl p-6 text-white overflow-hidden border border-white/10 backface-hidden">
-              {/* Background Pattern */}
-              <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/world-map.png')] bg-cover" />
-
-              <div className="relative z-10 h-full flex flex-col justify-between">
-                <div className="flex justify-between items-start">
-                  <Logo variant="full" className="text-white brightness-200" />
-                  <Globe className="h-8 w-8 text-white/50" />
-                </div>
-
-                <div className="flex gap-4 items-center">
-                  <Avatar className="h-20 w-20 border-2 border-white/30 rounded-lg">
-                    <AvatarImage src={user.avatar} />
-                    <AvatarFallback>{user.name[0]}</AvatarFallback>
-                  </Avatar>
-                  <div className="space-y-1">
-                    <div className="text-[10px] text-white/60 uppercase tracking-widest">
-                      {user.type === 'athlete' ? 'Atleta' : user.role}
-                    </div>
-                    <h2 className="text-lg font-bold">{user.name}</h2>
-                    <div className="text-xs text-gold flex items-center gap-1">
-                      <ShieldCheck className="h-3 w-3" /> Verificado
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 text-xs">
-                  <div>
-                    <div className="text-white/50">ID Goplay</div>
-                    <div className="font-mono">{mockPassport.idNumber}</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-white/50">Validade</div>
-                    <div>{mockPassport.expiry}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Back Side (QR Code) */}
-            <div className="absolute inset-0 bg-white rounded-2xl shadow-2xl p-6 flex flex-col items-center justify-center backface-hidden rotate-y-180 border border-border">
-              <QrCode className="h-32 w-32 text-black mb-4" />
-              <p className="text-xs text-center text-muted-foreground">
-                Escaneie para validar o perfil do atleta em competições
-                oficiais.
-              </p>
-              <div className="mt-4 text-xs font-mono text-zinc-400">
-                {mockPassport.idNumber}
-              </div>
-            </div>
+    <div className="min-h-screen bg-background flex flex-col pb-6">
+      <div className="p-4 flex items-center justify-between border-b border-border/50 bg-background/80 backdrop-blur-md sticky top-0 z-20">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div>
+            <h1 className="font-bold text-lg leading-none">
+              Passaporte Esportivo
+            </h1>
+            <p className="text-xs text-muted-foreground">ID Digital & CV</p>
           </div>
         </div>
-
-        <p className="text-center text-sm text-muted-foreground mt-8 animate-pulse">
-          Toque no cartão para virar
-        </p>
-
-        <div className="mt-8 w-full max-w-sm space-y-3">
-          <Button className="w-full" variant="outline">
-            Baixar PDF
-          </Button>
-          <Button className="w-full bg-gold hover:bg-gold/90 text-black border-none">
-            Adicionar à Carteira Google
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-primary"
+          onClick={() => setIsShareOpen(true)}
+        >
+          <Share2 className="h-5 w-5" />
+        </Button>
       </div>
+
+      <div className="flex-1 p-4">
+        <Tabs defaultValue="digital" className="w-full">
+          <TabsList className="grid w-full grid-cols-4 mb-6">
+            <TabsTrigger value="digital">ID Digital</TabsTrigger>
+            <TabsTrigger value="history">Histórico</TabsTrigger>
+            <TabsTrigger value="certs">Certif.</TabsTrigger>
+            <TabsTrigger value="goals">Metas</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="digital" className="space-y-6 animate-fade-in">
+            <PassportCard />
+
+            <div className="grid gap-3 max-w-sm mx-auto">
+              <Button
+                className="w-full font-bold shadow-lg"
+                size="lg"
+                onClick={() => setIsEventLinkOpen(true)}
+              >
+                <QrCode className="mr-2 h-5 w-5" />
+                Validar em Evento
+              </Button>
+              <div className="grid grid-cols-2 gap-3">
+                <Button variant="outline" className="w-full">
+                  <Download className="mr-2 h-4 w-4" />
+                  PDF
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full bg-black text-white hover:bg-black/90 hover:text-white border-black"
+                >
+                  <Wallet className="mr-2 h-4 w-4" />
+                  Wallet
+                </Button>
+              </div>
+            </div>
+
+            <div className="text-center space-y-2 mt-8">
+              <p className="text-xs text-muted-foreground">
+                Este documento digital é pessoal e intransferível.
+              </p>
+              <p className="text-[10px] text-muted-foreground/60 uppercase tracking-widest">
+                ID: {mockCurrentUser.id.toUpperCase()}-GOPLAY-VERIFIED
+              </p>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="history" className="animate-fade-in">
+            <CompetitionHistory />
+          </TabsContent>
+
+          <TabsContent value="certs" className="animate-fade-in">
+            <Certifications />
+          </TabsContent>
+
+          <TabsContent value="goals" className="animate-fade-in">
+            <GoalsTracker />
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      <EventLinkDialog
+        open={isEventLinkOpen}
+        onOpenChange={setIsEventLinkOpen}
+      />
+      <ShareDialog
+        open={isShareOpen}
+        onOpenChange={setIsShareOpen}
+        title={`Passaporte de ${mockCurrentUser.name}`}
+        description="Confira meu currículo esportivo oficial no Goplay!"
+      />
     </div>
   )
 }
