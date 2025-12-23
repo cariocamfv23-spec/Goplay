@@ -4,6 +4,7 @@ import { BottomNav } from './BottomNav'
 import { WeatherAlertManager } from './WeatherAlertManager'
 import { ScholarshipAlertManager } from './ScholarshipAlertManager'
 import { RankingAlertManager } from './RankingAlertManager'
+import { SmartNotificationManager } from './SmartNotificationManager'
 
 export default function Layout() {
   const location = useLocation()
@@ -38,6 +39,7 @@ export default function Layout() {
       <WeatherAlertManager />
       <ScholarshipAlertManager />
       <RankingAlertManager />
+      <SmartNotificationManager />
       <main className={`flex-1 w-full ${!shouldHideBottomNav ? 'pb-16' : ''}`}>
         <Outlet />
       </main>

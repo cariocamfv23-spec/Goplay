@@ -10,6 +10,9 @@ import {
   GraduationCap,
   Zap,
   TrendingUp,
+  Target,
+  ShieldCheck,
+  Clock,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -36,6 +39,12 @@ export default function Notifications() {
         return <Zap className="h-5 w-5 text-purple-500" />
       case 'ranking':
         return <TrendingUp className="h-5 w-5 text-green-500" />
+      case 'event_reminder':
+        return <Clock className="h-5 w-5 text-orange-500" />
+      case 'goal_deadline':
+        return <Target className="h-5 w-5 text-red-500" />
+      case 'verification':
+        return <ShieldCheck className="h-5 w-5 text-blue-600" />
       default:
         return <Bell className="h-5 w-5 text-primary" />
     }

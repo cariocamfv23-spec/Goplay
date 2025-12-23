@@ -15,8 +15,10 @@ interface PassportState {
   goals: PassportGoal[]
   addCompetition: (competition: Competition) => void
   removeCompetition: (id: string) => void
+  verifyCompetition: (id: string) => void
   addCertification: (certification: Certification) => void
   removeCertification: (id: string) => void
+  verifyCertification: (id: string) => void
   addGoal: (goal: PassportGoal) => void
   updateGoalStatus: (id: string) => void
   removeGoal: (id: string) => void
@@ -39,6 +41,13 @@ export const usePassportStore = create<PassportState>()(
           competitions: state.competitions.filter((c) => c.id !== id),
         })),
 
+      verifyCompetition: (id) =>
+        set((state) => ({
+          competitions: state.competitions.map((c) =>
+            c.id === id ? { ...c, verified: true } : c,
+          ),
+        })),
+
       addCertification: (cert) =>
         set((state) => ({
           certifications: [cert, ...state.certifications],
@@ -47,6 +56,13 @@ export const usePassportStore = create<PassportState>()(
       removeCertification: (id) =>
         set((state) => ({
           certifications: state.certifications.filter((c) => c.id !== id),
+        })),
+
+      verifyCertification: (id) =>
+        set((state) => ({
+          certifications: state.certifications.map((c) =>
+            c.id === id ? { ...c, verified: true } : c,
+          ),
         })),
 
       addGoal: (goal) =>

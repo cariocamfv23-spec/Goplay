@@ -85,6 +85,9 @@ export interface Notification {
     | 'level_up'
     | 'scholarship'
     | 'ranking'
+    | 'event_reminder'
+    | 'goal_deadline'
+    | 'verification'
   date?: string
   priority?: 'low' | 'medium' | 'high' | 'critical'
   link?: string
