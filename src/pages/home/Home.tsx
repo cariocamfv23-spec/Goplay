@@ -29,6 +29,7 @@ import {
   Activity,
   Stethoscope,
   Globe,
+  ClipboardList,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockCurrentUser } from '@/lib/data'
@@ -45,6 +46,17 @@ export default function Home() {
   }, [])
 
   const mainFeatures = [
+    {
+      id: 'organizer',
+      label: 'Organizador',
+      icon: Trophy,
+      path: '/organizer',
+      color: 'text-yellow-600',
+      bg: 'bg-yellow-600/10',
+      border: 'border-yellow-600/20',
+      description: 'Seus Torneios',
+      badge: 'NEW',
+    },
     {
       id: 'nft',
       label: 'NFT Creator',

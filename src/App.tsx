@@ -26,6 +26,17 @@ const Move = lazy(() => import('./pages/move/Move'))
 const Explore = lazy(() => import('./pages/explore/Explore'))
 const CheckIn = lazy(() => import('./pages/checkin/CheckIn'))
 
+// Organizer Pages
+const ChampionshipsList = lazy(
+  () => import('./pages/organizer/ChampionshipsList'),
+)
+const CreateChampionship = lazy(
+  () => import('./pages/organizer/CreateChampionship'),
+)
+const ChampionshipDashboard = lazy(
+  () => import('./pages/organizer/ChampionshipDashboard'),
+)
+
 // Explore Lists
 const TalentsList = lazy(() => import('./pages/explore/TalentsList'))
 const PhotographersList = lazy(
@@ -178,6 +189,17 @@ const App = () => {
                     <Route path="/move" element={<Move />} />
                     <Route path="/explore" element={<Explore />} />
                     <Route path="/check-in" element={<CheckIn />} />
+
+                    {/* Organizer Routes */}
+                    <Route path="/organizer" element={<ChampionshipsList />} />
+                    <Route
+                      path="/organizer/create"
+                      element={<CreateChampionship />}
+                    />
+                    <Route
+                      path="/organizer/:id"
+                      element={<ChampionshipDashboard />}
+                    />
 
                     {/* Explore Lists Routes */}
                     <Route path="/explore/talents" element={<TalentsList />} />
