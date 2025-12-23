@@ -362,6 +362,15 @@ export interface KidsVenue {
   hasMonitors: boolean
   activities: string[]
   description: string
+  // New fields for restored feature
+  linkedEvent?: string
+  minAge: number
+  maxAge: number
+  hours: string
+  periods: string[]
+  capacity: string
+  safetyProtocols: string[]
+  monitorsList?: string[]
 }
 
 export interface ReferralLevel {
@@ -610,6 +619,13 @@ export const exploreCategories = [
     icon: Globe,
     bg: 'bg-indigo-100 dark:bg-indigo-900/20',
     color: 'text-indigo-600 dark:text-indigo-400',
+  },
+  {
+    id: 'kids',
+    label: 'Área Kids',
+    icon: Baby,
+    bg: 'bg-pink-100 dark:bg-pink-900/20',
+    color: 'text-pink-600 dark:text-pink-400',
   },
   {
     id: 'photographers',
@@ -1464,7 +1480,20 @@ export const mockKidsVenues: KidsVenue[] = [
     hasMonitors: true,
     activities: ['Futebol', 'Queimada', 'Gincanas'],
     description:
-      'Espaço seguro com monitores especializados e diversas atividades esportivas para crianças de 4 a 12 anos.',
+      'Espaço seguro com monitores especializados e diversas atividades esportivas para crianças de 4 a 12 anos. Ideal para deixar seus filhos enquanto você assiste aos jogos.',
+    linkedEvent: 'Copa Regional de Futsal',
+    minAge: 4,
+    maxAge: 12,
+    hours: '08:00 - 18:00',
+    periods: ['morning', 'afternoon'],
+    capacity: '30 crianças',
+    safetyProtocols: [
+      'Check-in Biométrico',
+      'Monitoramento por Câmera',
+      'Pulseira de Identificação',
+      'Primeiros Socorros no Local',
+    ],
+    monitorsList: ['Ana Paula', 'Ricardo Santos'],
   },
   {
     id: 'k2',
@@ -1478,6 +1507,14 @@ export const mockKidsVenues: KidsVenue[] = [
     activities: ['Basquete', 'Skate', 'Parquinho'],
     description:
       'Área pública com quadras adaptadas e parquinho infantil. Ótimo para finais de semana em família.',
+    linkedEvent: 'Torneio de Verão',
+    minAge: 6,
+    maxAge: 14,
+    hours: '14:00 - 22:00',
+    periods: ['afternoon', 'night'],
+    capacity: 'Livre',
+    safetyProtocols: ['Área Cercada', 'Iluminação Noturna'],
+    monitorsList: [],
   },
   {
     id: 'k3',
@@ -1489,7 +1526,18 @@ export const mockKidsVenues: KidsVenue[] = [
     hasMonitors: true,
     activities: ['Natação', 'Vôlei', 'Artes'],
     description:
-      'Clube privado com área exclusiva para recreação infantil monitorada, incluindo piscina rasa.',
+      'Clube privado com área exclusiva para recreação infantil monitorada, incluindo piscina rasa e atividades artísticas.',
+    minAge: 3,
+    maxAge: 10,
+    hours: '09:00 - 17:00',
+    periods: ['morning', 'afternoon'],
+    capacity: '20 crianças',
+    safetyProtocols: [
+      'Salva-vidas na Piscina',
+      'Controle de Acesso',
+      'Lanche Incluso',
+    ],
+    monitorsList: ['Carla Dias', 'Felipe Nunes'],
   },
 ]
 export const mockGyms = []
