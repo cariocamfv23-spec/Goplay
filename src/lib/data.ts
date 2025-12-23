@@ -527,6 +527,24 @@ export interface LightningChallenge {
   duration: number
 }
 
+export interface KidZone {
+  id: string
+  name: string
+  location: string
+  description: string
+  ageGroup: string
+  capacity: {
+    current: number
+    max: number
+  }
+  status: 'open' | 'closed' | 'full' | 'maintenance'
+  activities: string[]
+  monitors: string[]
+  coordinates: { x: number; y: number }
+  rules: string[]
+  image: string
+}
+
 // Navigation Items
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
@@ -1448,3 +1466,66 @@ export const mockAiAnalysis = {
 }
 
 export const mockTrainingSuggestions: TrainingSuggestion[] = []
+
+export const mockKidZones: KidZone[] = [
+  {
+    id: 'kz1',
+    name: 'Espaço Kids - Setor Norte',
+    location: 'Próximo à entrada principal, ao lado da praça de alimentação.',
+    description:
+      'Área segura com gramado sintético, piscina de bolinhas e monitores especializados. Ideal para crianças pequenas.',
+    ageGroup: '3 a 8 anos',
+    capacity: {
+      current: 12,
+      max: 20,
+    },
+    status: 'open',
+    activities: [
+      'Piscina de Bolinhas',
+      'Pintura Facial',
+      'Contação de Histórias',
+    ],
+    monitors: ['Ana Paula', 'Ricardo Santos'],
+    coordinates: { x: 30, y: 40 },
+    rules: ['Obrigatório acompanhamento na entrada/saída', 'Sem sapatos'],
+    image:
+      'https://img.usecurling.com/p/400/300?q=kids%20play%20area&color=blue',
+  },
+  {
+    id: 'kz2',
+    name: 'Arena Teen - Setor Sul',
+    location: 'Atrás das arquibancadas do setor sul.',
+    description:
+      'Espaço dedicado aos mais velhos com videogames, pebolim e mini-quadra de basquete.',
+    ageGroup: '9 a 14 anos',
+    capacity: {
+      current: 28,
+      max: 30,
+    },
+    status: 'full',
+    activities: ['Videogames (FIFA)', 'Pebolim', 'Mini Basquete'],
+    monitors: ['Carlos Eduardo'],
+    coordinates: { x: 70, y: 60 },
+    rules: ['Respeito aos colegas', 'Tempo limite nos jogos: 15 min'],
+    image:
+      'https://img.usecurling.com/p/400/300?q=arcade%20game%20room&color=purple',
+  },
+  {
+    id: 'kz3',
+    name: 'Berçário Vip',
+    location: 'Camarotes - Nível 2',
+    description:
+      'Espaço tranquilo para descanso e amamentação, com trocadores e microondas.',
+    ageGroup: '0 a 3 anos',
+    capacity: {
+      current: 2,
+      max: 8,
+    },
+    status: 'open',
+    activities: ['Área de Sono', 'Cantinho da Amamentação'],
+    monitors: ['Enf. Júlia'],
+    coordinates: { x: 50, y: 20 },
+    rules: ['Apenas pais e bebês', 'Silêncio obrigatório'],
+    image: 'https://img.usecurling.com/p/400/300?q=nursery%20room&color=pink',
+  },
+]

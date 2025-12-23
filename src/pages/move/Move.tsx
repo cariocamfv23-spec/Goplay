@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { tribes } from '@/lib/data'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
-import { Zap, MapPin, Baby } from 'lucide-react'
+import { Zap, MapPin, Baby, Map as MapIcon } from 'lucide-react'
 import { VideoCard, VideoData } from '@/components/move/VideoCard'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -378,7 +378,7 @@ export default function Move() {
       <div className="absolute top-4 left-0 right-0 z-30 flex flex-col items-center">
         {/* Standard "Following | For You" Tabs */}
         <div className="flex items-center justify-between w-full px-4 mb-2">
-          <div className="w-8"></div> {/* Spacer for centering */}
+          <div className="w-24"></div> {/* Spacer for centering */}
           <div className="flex items-center gap-4 text-white text-sm font-bold shadow-black drop-shadow-md">
             <span className="opacity-60 hover:opacity-100 cursor-pointer transition-opacity">
               Seguindo
@@ -388,15 +388,15 @@ export default function Move() {
               Para Você
             </span>
           </div>
-          {/* Kids Map Integration */}
+          {/* Kids Map Integration - Enhanced Button */}
           <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate('/explore/kids')}
-            className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 hover:bg-white/40 text-white shadow-lg"
+            size="sm"
+            onClick={() => navigate('/move/kids-map')}
+            className="w-auto h-8 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 border border-white/20 hover:opacity-90 text-white shadow-lg text-[10px] font-bold px-3 gap-1.5"
             title="Mapeamento para recreação de crianças"
           >
-            <Baby className="h-4 w-4" />
+            <MapIcon className="h-3 w-3" />
+            Mapa Kids
           </Button>
         </div>
 

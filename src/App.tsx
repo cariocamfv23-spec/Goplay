@@ -144,6 +144,9 @@ const AiAvatar = lazy(() => import('./pages/ai/AiAvatar'))
 const Oracle = lazy(() => import('./pages/ai/Oracle'))
 const NftCreator = lazy(() => import('./pages/ai/NftCreator'))
 
+// Move Pages
+const KidsZoneMap = lazy(() => import('./pages/move/KidsZoneMap'))
+
 const App = () => {
   const { color } = useThemeStore()
 
@@ -187,6 +190,7 @@ const App = () => {
                     <Route path="/home" element={<Home />} />
                     <Route path="/feed" element={<Feed />} />
                     <Route path="/move" element={<Move />} />
+                    <Route path="/move/kids-map" element={<KidsZoneMap />} />
                     <Route path="/explore" element={<Explore />} />
                     <Route path="/check-in" element={<CheckIn />} />
 
