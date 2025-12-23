@@ -528,6 +528,7 @@ export interface LightningChallenge {
   duration: number
 }
 
+// Navigation Items
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: LayoutList, label: 'Feed', path: '/feed' },
@@ -853,8 +854,6 @@ export const referralLevels: ReferralLevel[] = [
   },
 ]
 
-// ... (Rest of the data remains the same until mock data needs extension)
-
 export const mockMatches = [
   {
     id: 'm1',
@@ -902,6 +901,38 @@ export const mockLightningChallenges: LightningChallenge[] = [
   },
 ]
 
+// Mock Music Tracks - Moved up to avoid ReferenceError
+export const mockMusicTracks: MusicTrack[] = [
+  {
+    id: '1',
+    title: 'Victory Anthem',
+    artist: 'Epic Score',
+    cover: 'https://img.usecurling.com/i?q=music%20notes&color=gold',
+    duration: '3:45',
+  },
+  {
+    id: '2',
+    title: 'Urban Beat',
+    artist: 'Street Flow',
+    cover: 'https://img.usecurling.com/i?q=headphones&color=purple',
+    duration: '2:30',
+  },
+  {
+    id: '3',
+    title: 'Focus & Grind',
+    artist: 'Training Mode',
+    cover: 'https://img.usecurling.com/i?q=gym&color=red',
+    duration: '4:10',
+  },
+  {
+    id: '4',
+    title: 'Chill Vibes',
+    artist: 'Sunset Lo-Fi',
+    cover: 'https://img.usecurling.com/i?q=sunset&color=orange',
+    duration: '3:15',
+  },
+]
+
 export const mockUser = {
   id: 'u1',
   name: 'Alex Silva',
@@ -935,8 +966,6 @@ export const mockUser = {
 }
 
 export const mockCurrentUser = mockUser
-
-// ... (Rest of existing mock data)
 
 export const mockFeedUsers = [
   {
@@ -1145,7 +1174,6 @@ export const mockPhotographers: ProfileData[] = [
       },
     ],
   },
-  // ... other mock photographers
 ]
 
 export const mockTimelineEvents: TimelineEvent[] = [
@@ -1219,7 +1247,7 @@ export const mockHortifrutis: Hortifruti[] = []
 export const mockClinics: Clinic[] = []
 export const mockAgencies: Agency[] = []
 export const mockScholarships: Scholarship[] = []
-export const mockMusicTracks: MusicTrack[] = []
+
 export const mockAiAnalysis = {
   aiStats: [
     { label: 'Velocidade', value: 88, max: 100, unit: 'pts' },
