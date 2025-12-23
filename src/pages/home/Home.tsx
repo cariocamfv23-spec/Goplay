@@ -28,6 +28,7 @@ import {
   Bot,
   Activity,
   Stethoscope,
+  Globe,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockCurrentUser } from '@/lib/data'
@@ -134,6 +135,16 @@ export default function Home() {
       bg: 'bg-green-500/10',
       border: 'border-green-500/20',
       description: 'Locais',
+    },
+    {
+      id: 'passport',
+      label: 'Passaporte',
+      icon: Globe,
+      path: '/profile/passport',
+      color: 'text-indigo-500',
+      bg: 'bg-indigo-500/10',
+      border: 'border-indigo-500/20',
+      description: 'Identidade',
     },
     {
       id: 'ai-coach',
