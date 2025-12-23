@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { Search, Filter, Trophy, Star, MapPin } from 'lucide-react'
+import { Search, Filter, Trophy, Star, MapPin, X } from 'lucide-react'
 import { mockVenues } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -62,10 +62,18 @@ export default function VenuesList() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Buscar quadras, campos..."
-              className="pl-9 bg-secondary border-none rounded-xl"
+              className="pl-9 pr-8 bg-secondary border-none rounded-xl"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
+            {search && (
+              <button
+                onClick={() => setSearch('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            )}
           </div>
           <Button variant="outline" size="icon" className="shrink-0 rounded-xl">
             <Filter className="h-4 w-4" />
