@@ -34,7 +34,6 @@ import {
   Star,
   Plane,
   Flag,
-  TrendingUp,
   CheckCircle,
   LayoutList,
   Flame,
@@ -901,7 +900,6 @@ export const mockLightningChallenges: LightningChallenge[] = [
   },
 ]
 
-// Mock Music Tracks - Moved up to avoid ReferenceError
 export const mockMusicTracks: MusicTrack[] = [
   {
     id: '1',
@@ -1202,17 +1200,209 @@ export const mockStatsHistory: StatsHistoryPoint[] = [
 ]
 
 export const mockComments: Comment[] = []
-export const mockStories = []
-export const mockPosts = [] // Kept empty to save space, assuming previous mockPosts if needed can be restored from context or simplified.
+
+export const mockStories = [
+  {
+    id: '1',
+    user: {
+      id: 'u3',
+      name: 'Mariana',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=12',
+    },
+    image:
+      'https://img.usecurling.com/p/400/800?q=gym%20selfie&color=purple&dpr=2',
+    viewed: false,
+  },
+  {
+    id: '2',
+    user: {
+      id: 'u4',
+      name: 'Carlos',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=45',
+    },
+    image:
+      'https://img.usecurling.com/p/400/800?q=soccer%20field%20sunset&color=orange&dpr=2',
+    viewed: false,
+  },
+  {
+    id: '3',
+    user: {
+      id: 'u5',
+      name: 'Beatriz',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=23',
+    },
+    image:
+      'https://img.usecurling.com/p/400/800?q=healthy%20food%20bowl&color=green&dpr=2',
+    viewed: true,
+  },
+  {
+    id: '4',
+    user: {
+      id: 'u10',
+      name: 'Rafael',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=78',
+    },
+    image:
+      'https://img.usecurling.com/p/400/800?q=tactical%20board%20soccer&color=blue&dpr=2',
+    viewed: true,
+  },
+]
+
+export const mockPosts = [
+  {
+    id: 1,
+    type: 'video',
+    user: {
+      id: 'u3',
+      name: 'Mariana Souza',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=12',
+      type: 'Atleta',
+    },
+    content:
+      'Treino intenso hoje! Focando na preparação física para o campeonato estadual. 🏋️‍♀️🔥 #NoPainNoGain #Fitness',
+    media: [
+      'https://img.usecurling.com/p/600/800?q=female%20athlete%20gym&color=purple',
+    ],
+    videoDuration: '0:45',
+    title: 'Preparação Física 2024',
+    hashtags: ['#Treino', '#Foco', '#Atleta'],
+    likes: 245,
+    comments: 18,
+    shares: 5,
+    applauds: 40,
+    supports: 12,
+    time: '2h',
+    liked: true,
+  },
+  {
+    id: 2,
+    type: 'carousel',
+    user: {
+      id: 'u4',
+      name: 'Carlos Eduardo',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=45',
+      type: 'Treinador',
+    },
+    content:
+      'Alguns registros da nossa vitória de ontem! Orgulho desse time que nunca desiste. ⚽️🏆',
+    media: [
+      'https://img.usecurling.com/p/600/600?q=soccer%20team%20celebration&color=blue',
+      'https://img.usecurling.com/p/600/600?q=soccer%20coach%20shouting&color=blue',
+      'https://img.usecurling.com/p/600/600?q=soccer%20trophy&color=gold',
+    ],
+    likes: 890,
+    comments: 124,
+    shares: 56,
+    applauds: 120,
+    supports: 80,
+    time: '5h',
+  },
+  {
+    id: 3,
+    type: 'article',
+    user: {
+      id: 'goplay',
+      name: 'Goplay News',
+      avatar: 'https://img.usecurling.com/i?q=newspaper&color=blue',
+      type: 'Oficial',
+    },
+    content:
+      'Confira as novas regras para a temporada 2025 da Liga Nacional. Mudanças importantes na arbitragem de vídeo.',
+    media: [
+      'https://img.usecurling.com/p/800/400?q=referee%20var%20monitor&color=black',
+    ],
+    articleTitle: 'Novas Regras VAR 2025: O que muda?',
+    articleDomain: 'goplay.sports',
+    likes: 156,
+    comments: 42,
+    shares: 89,
+    applauds: 20,
+    supports: 10,
+    time: '1d',
+  },
+  {
+    id: 4,
+    type: 'default',
+    user: {
+      id: 'u5',
+      name: 'Beatriz Lima',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=23',
+      type: 'Nutricionista',
+    },
+    content:
+      'Dica rápida: A hidratação pré-treino é tão importante quanto durante o exercício. Bebam água! 💧🥦',
+    media: [],
+    likes: 320,
+    comments: 15,
+    shares: 22,
+    applauds: 55,
+    supports: 30,
+    time: '1d',
+  },
+]
+
 export const mockVideos = []
 export const mockRideRequests = []
 export const mockRewards = []
 export const mockRideHistory = []
 export const mockRankings: RankingEntry[] = []
 export const mockChallenges: Challenge[] = []
-export const mockEvents: Event[] = []
+export const mockEvents: Event[] = [
+  {
+    id: 'e1',
+    title: 'Copa Regional de Futsal',
+    category: 'Campeonato',
+    date: '15 Mai',
+    time: '09:00',
+    location: 'Ginásio Municipal',
+    address: 'Rua do Esporte, 100',
+    image: 'https://img.usecurling.com/p/400/200?q=futsal%20court&color=blue',
+    price: 50,
+    description: 'Maior campeonato regional da temporada.',
+    organizer: 'Liga Regional',
+  },
+]
 export const mockVenues = []
-export const mockKidsVenues: KidsVenue[] = []
+export const mockKidsVenues: KidsVenue[] = [
+  {
+    id: 'k1',
+    name: 'Arena Kids Sports',
+    image:
+      'https://img.usecurling.com/p/400/300?q=kids%20soccer%20field&color=green',
+    location: 'Centro Esportivo Norte',
+    rating: 4.8,
+    isFree: false,
+    hasMonitors: true,
+    activities: ['Futebol', 'Queimada', 'Gincanas'],
+    description:
+      'Espaço seguro com monitores especializados e diversas atividades esportivas para crianças de 4 a 12 anos.',
+  },
+  {
+    id: 'k2',
+    name: 'Complexo Esportivo da Juventude',
+    image:
+      'https://img.usecurling.com/p/400/300?q=playground%20park&color=blue',
+    location: 'Parque da Cidade',
+    rating: 4.5,
+    isFree: true,
+    hasMonitors: false,
+    activities: ['Basquete', 'Skate', 'Parquinho'],
+    description:
+      'Área pública com quadras adaptadas e parquinho infantil. Ótimo para finais de semana em família.',
+  },
+  {
+    id: 'k3',
+    name: 'Clube do Sol - Área Kids',
+    image: 'https://img.usecurling.com/p/400/300?q=kids%20pool&color=cyan',
+    location: 'Zona Sul',
+    rating: 4.9,
+    isFree: false,
+    hasMonitors: true,
+    activities: ['Natação', 'Vôlei', 'Artes'],
+    description:
+      'Clube privado com área exclusiva para recreação infantil monitorada, incluindo piscina rasa.',
+  },
+]
 export const mockGyms = []
 export const mockDrivers: ProfileData[] = []
 export const mockProfiles: ProfileData[] = [

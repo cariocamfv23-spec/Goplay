@@ -2,8 +2,10 @@ import { useState, useRef } from 'react'
 import { tribes } from '@/lib/data'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
-import { Zap } from 'lucide-react'
+import { Zap, MapPin, Baby } from 'lucide-react'
 import { VideoCard, VideoData } from '@/components/move/VideoCard'
+import { useNavigate } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
 
 const MOVE_VIDEOS: VideoData[] = [
   // Futebol
@@ -346,6 +348,7 @@ export default function Move() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [activeTribe, setActiveTribe] = useState('all')
   const containerRef = useRef<HTMLDivElement>(null)
+  const navigate = useNavigate()
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const container = e.currentTarget
@@ -374,14 +377,27 @@ export default function Move() {
       {/* Header / Tribes Filter Bar */}
       <div className="absolute top-4 left-0 right-0 z-30 flex flex-col items-center">
         {/* Standard "Following | For You" Tabs */}
-        <div className="flex items-center gap-4 text-white text-sm font-bold shadow-black drop-shadow-md mb-4">
-          <span className="opacity-60 hover:opacity-100 cursor-pointer transition-opacity">
-            Seguindo
-          </span>
-          <span className="opacity-60">|</span>
-          <span className="opacity-100 border-b-2 border-white pb-0.5">
-            Para Você
-          </span>
+        <div className="flex items-center justify-between w-full px-4 mb-2">
+          <div className="w-8"></div> {/* Spacer for centering */}
+          <div className="flex items-center gap-4 text-white text-sm font-bold shadow-black drop-shadow-md">
+            <span className="opacity-60 hover:opacity-100 cursor-pointer transition-opacity">
+              Seguindo
+            </span>
+            <span className="opacity-60">|</span>
+            <span className="opacity-100 border-b-2 border-white pb-0.5">
+              Para Você
+            </span>
+          </div>
+          {/* Kids Map Integration */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate('/explore/kids')}
+            className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 hover:bg-white/40 text-white shadow-lg"
+            title="Mapeamento para recreação de crianças"
+          >
+            <Baby className="h-4 w-4" />
+          </Button>
         </div>
 
         {/* Tribes Scroll */}
