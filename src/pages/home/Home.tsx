@@ -27,6 +27,7 @@ import {
   Box,
   Bot,
   Activity,
+  Stethoscope,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { mockCurrentUser } from '@/lib/data'
@@ -173,6 +174,16 @@ export default function Home() {
       bg: 'bg-teal-500/10',
       border: 'border-teal-500/20',
       description: 'Lance Fantasma',
+    },
+    {
+      id: 'injury-scanner',
+      label: 'Scanner Lesão',
+      icon: Stethoscope,
+      path: '/ai/injury-scanner',
+      color: 'text-red-500',
+      bg: 'bg-red-500/10',
+      border: 'border-red-500/20',
+      description: 'Análise Risco',
     },
   ]
 
