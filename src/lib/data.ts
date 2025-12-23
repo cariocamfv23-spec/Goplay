@@ -171,7 +171,6 @@ export interface ProfileData {
     invited: number
     earned: number
   }
-  // New metrics for sponsorship
   totalViews?: number
   totalLikes?: number
   ranking?: number
@@ -327,11 +326,11 @@ export interface Scholarship {
   sport: string
   logo: string
   image: string
-  value: number // Percentage coverage
+  value: number
   accommodation: string
   documentation: string
   process: string
-  fee: number // Fee for institution to unlock profile
+  fee: number
   deadline: string
 }
 
@@ -363,7 +362,6 @@ export interface KidsVenue {
   hasMonitors: boolean
   activities: string[]
   description: string
-  // New fields for restored feature
   linkedEvent?: string
   minAge: number
   maxAge: number
@@ -468,7 +466,6 @@ export interface Clinic {
   description: string
 }
 
-// Passport New Interfaces
 export interface Competition {
   id: string
   name: string
@@ -561,7 +558,23 @@ export interface KidZone {
   image: string
 }
 
-// Navigation Items
+export interface Venue {
+  id: string
+  name: string
+  type: string
+  rating: number
+  reviews: number
+  distance: string
+  location: string
+  address: string
+  image: string
+  price: string
+  amenities: string[]
+  description: string
+  openHours?: string
+  coordinates?: { x: number; y: number }
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: LayoutList, label: 'Feed', path: '/feed' },
@@ -574,16 +587,8 @@ export const navigationItems = [
 export const tribes = [
   { id: 'all', label: 'Todos', icon: LayoutGrid },
   { id: 'futebol', label: 'Futebol', icon: CircleDashed },
-  {
-    id: 'futsal',
-    label: 'Futsal',
-    icon: Trophy,
-  },
-  {
-    id: 'bike',
-    label: 'Bike',
-    icon: Bike,
-  },
+  { id: 'futsal', label: 'Futsal', icon: Trophy },
+  { id: 'bike', label: 'Bike', icon: Bike },
   { id: 'running', label: 'Corrida', icon: Footprints },
   { id: 'crossfit', label: 'Crossfit', icon: Dumbbell },
   { id: 'swimming', label: 'Natação', icon: Waves },
@@ -937,14 +942,14 @@ export const mockLightningChallenges: LightningChallenge[] = [
     title: 'Desafio do Travessão',
     description: 'Acerte o travessão em até 3 tentativas. Grave e poste!',
     reward: 500,
-    duration: 300, // 5 minutes
+    duration: 300,
   },
   {
     id: 'lc2',
     title: '50 Embaixadinhas',
     description: 'Faça 50 embaixadinhas sem deixar a bola cair.',
     reward: 300,
-    duration: 120, // 2 minutes
+    duration: 120,
   },
 ]
 
@@ -1468,7 +1473,106 @@ export const mockEvents: Event[] = [
     organizer: 'Liga Regional',
   },
 ]
-export const mockVenues = []
+export const mockVenues: Venue[] = [
+  {
+    id: 'v1',
+    name: 'Arena Beach',
+    type: 'Futevôlei',
+    rating: 4.8,
+    reviews: 42,
+    distance: '3.0 km',
+    location: 'Barra Funda',
+    address: 'Av. Marques, 100',
+    image:
+      'https://img.usecurling.com/p/600/400?q=beach%20volleyball&color=yellow',
+    price: 'R$ 180/h',
+    amenities: ['Ducha', 'Bar', 'Areia Fina', 'Iluminação'],
+    description:
+      'Quadra de areia oficial para futevôlei e beach tennis. Estrutura completa com bar e vestiários.',
+    openHours: '06:00 - 23:00',
+  },
+  {
+    id: 'v2',
+    name: 'Futsal Pro',
+    type: 'Futsal',
+    rating: 4.9,
+    reviews: 156,
+    distance: '1.2 km',
+    location: 'Centro',
+    address: 'Rua Central, 50',
+    image: 'https://img.usecurling.com/p/600/400?q=futsal%20indoor&color=blue',
+    price: 'R$ 120/h',
+    amenities: ['Vestiário', 'Wi-Fi', 'Arquibancada', 'Placar Eletrônico'],
+    description:
+      'Quadra de futsal profissional com dimensões oficiais (40x20m). Piso flutuante de alta performance.',
+    openHours: '08:00 - 00:00',
+  },
+  {
+    id: 'v3',
+    name: 'Society Club',
+    type: 'Society',
+    rating: 4.6,
+    reviews: 88,
+    distance: '4.5 km',
+    location: 'Zona Sul',
+    address: 'Av. dos Bandeirantes, 2000',
+    image: 'https://img.usecurling.com/p/600/400?q=soccer%20field&color=green',
+    price: 'R$ 220/h',
+    amenities: ['Churrasqueira', 'Estacionamento', 'Bar', 'TV'],
+    description:
+      'Campo society com grama sintética monofilamento. Ideal para jogos com amigos e campeonatos amadores.',
+    openHours: '07:00 - 23:00',
+  },
+  {
+    id: 'v4',
+    name: 'Ace Tennis',
+    type: 'Tênis',
+    rating: 4.9,
+    reviews: 64,
+    distance: '6.0 km',
+    location: 'Jardins',
+    address: 'Rua Oscar Freire, 1500',
+    image: 'https://img.usecurling.com/p/600/400?q=tennis%20court&color=orange',
+    price: 'R$ 250/h',
+    amenities: ['Saibro', 'Aluguel de Raquetes', 'Professor', 'Loja'],
+    description:
+      'Quadras de saibro impecáveis. Ambiente exclusivo e aulas particulares disponíveis.',
+    openHours: '06:00 - 22:00',
+  },
+  {
+    id: 'v5',
+    name: 'Padel Center',
+    type: 'Padel',
+    rating: 4.7,
+    reviews: 32,
+    distance: '2.5 km',
+    location: 'Pinheiros',
+    address: 'Rua dos Pinheiros, 800',
+    image: 'https://img.usecurling.com/p/600/400?q=padel%20court&color=blue',
+    price: 'R$ 200/h',
+    amenities: ['Vidro Panorâmico', 'Bar', 'Lounge'],
+    description:
+      'O melhor clube de Padel da região. Quadras panorâmicas de última geração.',
+    openHours: '07:00 - 23:00',
+  },
+  {
+    id: 'v6',
+    name: 'Street Court',
+    type: 'Basquete',
+    rating: 4.5,
+    reviews: 120,
+    distance: '8.0 km',
+    location: 'Mooca',
+    address: 'Rua da Mooca, 300',
+    image:
+      'https://img.usecurling.com/p/600/400?q=basketball%20court&color=orange',
+    price: 'Gratuito',
+    amenities: ['Iluminação', 'Área de Lazer', 'Bebedouro'],
+    description:
+      'Quadra pública de basquete 3x3 e inteira. Piso de concreto pintado e aros de fibra.',
+    openHours: '24h',
+  },
+]
 export const mockKidsVenues: KidsVenue[] = [
   {
     id: 'k1',

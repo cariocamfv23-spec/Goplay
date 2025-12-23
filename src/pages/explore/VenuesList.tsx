@@ -13,88 +13,41 @@ export default function VenuesList() {
   const [search, setSearch] = useState('')
   const [activeFilter, setActiveFilter] = useState('todos')
 
-  // Extend mock data to support all filters and better visualization
-  const allVenues = [
-    ...mockVenues,
-    {
-      id: 'v3',
-      name: 'Arena Beach',
-      type: 'Quadra de Areia',
-      rating: 4.8,
-      reviews: 42,
-      distance: '3.0 km',
-      location: 'Barra Funda',
-      address: 'Av. Marques, 100',
-      image:
-        'https://img.usecurling.com/p/400/300?q=beach%20volleyball&color=yellow',
-      img: 'beach%20volleyball',
-      price: 'R$ 180/h',
-      amenities: ['Ducha', 'Bar', 'Areia Fina'],
-      description: 'Quadra de areia oficial.',
-    },
-    {
-      id: 'v4',
-      name: 'Futsal Pro',
-      type: 'Futsal',
-      rating: 4.9,
-      reviews: 156,
-      distance: '1.2 km',
-      location: 'Centro',
-      address: 'Rua Central, 50',
-      image:
-        'https://img.usecurling.com/p/400/300?q=futsal%20indoor&color=blue',
-      img: 'futsal%20indoor',
-      price: 'R$ 120/h',
-      amenities: ['Vestiário', 'Wi-Fi', 'Arquibancada'],
-      description: 'Quadra de futsal profissional com dimensões oficiais.',
-    },
-    {
-      id: 'v5',
-      name: 'Society Club',
-      type: 'Campo Society',
-      rating: 4.6,
-      reviews: 88,
-      distance: '4.5 km',
-      location: 'Zona Sul',
-      address: 'Av. dos Bandeirantes, 2000',
-      image:
-        'https://img.usecurling.com/p/400/300?q=soccer%20field&color=green',
-      img: 'soccer%20field',
-      price: 'R$ 220/h',
-      amenities: ['Churrasqueira', 'Estacionamento', 'Bar'],
-      description: 'Campo society com grama sintética nova.',
-    },
-  ]
-
   const filters = [
     { id: 'todos', label: 'Todos' },
-    { id: 'futsal', label: 'Futsal' },
-    { id: 'society', label: 'Society' },
+    { id: 'futebol', label: 'Futebol' },
     { id: 'areia', label: 'Areia' },
+    { id: 'raquete', label: 'Raquete' },
+    { id: 'outros', label: 'Outros' },
   ]
 
-  const filteredVenues = allVenues.filter((venue) => {
+  const filteredVenues = mockVenues.filter((venue) => {
     // Search Filter
     const matchesSearch =
       venue.name.toLowerCase().includes(search.toLowerCase()) ||
-      venue.address.toLowerCase().includes(search.toLowerCase())
+      venue.address.toLowerCase().includes(search.toLowerCase()) ||
+      venue.type.toLowerCase().includes(search.toLowerCase())
 
     // Category Filter
     let matchesFilter = true
     if (activeFilter !== 'todos') {
       const type = venue.type.toLowerCase()
-      if (activeFilter === 'futsal') {
-        matchesFilter =
-          type.includes('futsal') ||
-          type.includes('poliesportiva') ||
-          type.includes('indoor')
-      } else if (activeFilter === 'society') {
-        matchesFilter = type.includes('society') || type.includes('campo')
+      if (activeFilter === 'futebol') {
+        matchesFilter = type.includes('futsal') || type.includes('society')
       } else if (activeFilter === 'areia') {
         matchesFilter =
           type.includes('areia') ||
           type.includes('beach') ||
+          type.includes('futevôlei') ||
           type.includes('vôlei')
+      } else if (activeFilter === 'raquete') {
+        matchesFilter =
+          type.includes('tênis') ||
+          type.includes('padel') ||
+          type.includes('squash')
+      } else if (activeFilter === 'outros') {
+        matchesFilter =
+          type.includes('basquete') || type.includes('poliesportiva')
       }
     }
 
@@ -149,20 +102,17 @@ export default function VenuesList() {
           {filteredVenues.map((venue) => (
             <Card
               key={venue.id}
-              className="overflow-hidden border-none shadow-md cursor-pointer active:scale-[0.99] transition-transform animate-slide-up hover:shadow-lg"
-              onClick={() => navigate(`/venues/${venue.id.split('-')[0]}`)}
+              className="overflow-hidden border-none shadow-md cursor-pointer active:scale-[0.99] transition-transform animate-slide-up hover:shadow-lg group"
+              onClick={() => navigate(`/venues/${venue.id}`)}
             >
-              <div className="relative h-40">
+              <div className="relative h-44">
                 <img
-                  src={
-                    venue.img
-                      ? `https://img.usecurling.com/p/600/400?q=${venue.img}&dpr=2`
-                      : venue.image
-                  }
-                  className="w-full h-full object-cover"
+                  src={venue.image}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   alt={venue.name}
                   loading="lazy"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60" />
                 <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded-md text-xs font-bold shadow-sm flex items-center gap-1">
                   <Star className="h-3 w-3 fill-gold text-gold" />{' '}
                   {venue.rating}
@@ -181,21 +131,31 @@ export default function VenuesList() {
               </div>
               <CardContent className="p-4">
                 <div className="flex justify-between items-start mb-1">
-                  <h3 className="font-bold text-lg">{venue.name}</h3>
+                  <h3 className="font-bold text-lg leading-tight">
+                    {venue.name}
+                  </h3>
                 </div>
-                <p className="text-sm text-muted-foreground truncate mb-3">
-                  {venue.address}
+                <p className="text-sm text-muted-foreground truncate mb-3 flex items-center gap-1">
+                  <MapPin className="h-3 w-3" /> {venue.address}
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {venue.amenities.map((item, i) => (
+                  {venue.amenities.slice(0, 3).map((item, i) => (
                     <Badge
                       key={i}
                       variant="secondary"
-                      className="text-[10px] h-6 bg-secondary/50"
+                      className="text-[10px] h-6 bg-secondary/50 font-normal"
                     >
                       {item}
                     </Badge>
                   ))}
+                  {venue.amenities.length > 3 && (
+                    <Badge
+                      variant="secondary"
+                      className="text-[10px] h-6 bg-secondary/50 font-normal"
+                    >
+                      +{venue.amenities.length - 3}
+                    </Badge>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -203,16 +163,23 @@ export default function VenuesList() {
         </div>
 
         {filteredVenues.length === 0 && (
-          <div className="text-center py-10 text-muted-foreground animate-fade-in">
-            <Trophy className="h-12 w-12 mx-auto mb-3 opacity-20" />
-            <p>
-              Nenhuma quadra encontrada para o filtro "
-              {filters.find((f) => f.id === activeFilter)?.label}".
+          <div className="text-center py-10 text-muted-foreground animate-fade-in flex flex-col items-center">
+            <div className="h-16 w-16 bg-secondary rounded-full flex items-center justify-center mb-4">
+              <Search className="h-8 w-8 opacity-40" />
+            </div>
+            <p className="font-medium">
+              Nenhuma quadra encontrada para o filtro.
+            </p>
+            <p className="text-sm opacity-70 mb-4">
+              Tente buscar por outro termo ou categoria.
             </p>
             <Button
-              variant="link"
-              onClick={() => setActiveFilter('todos')}
-              className="mt-2 text-primary"
+              variant="outline"
+              onClick={() => {
+                setSearch('')
+                setActiveFilter('todos')
+              }}
+              className="mt-2"
             >
               Limpar filtros
             </Button>
