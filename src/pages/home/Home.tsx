@@ -1,503 +1,357 @@
-import { useState, useEffect } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Button } from '@/components/ui/button'
+import { useNavigate } from 'react-router-dom'
 import {
-  Zap,
-  Brain,
-  Crosshair,
-  Wand2,
   MapPin,
+  Wallet,
+  MessageSquare,
+  Trophy,
+  GraduationCap,
+  Plane,
+  Globe,
+  Apple,
+  Stethoscope,
+  Dumbbell,
+  Camera,
+  Car,
+  Baby,
+  Calendar,
+  ArrowRight,
+  Search,
+  Activity,
+  Star,
   ChevronRight,
   TrendingUp,
-  Flame,
-  Trophy,
-  Play,
-  Users,
-  Timer,
-  Crown,
-  Wallet,
-  ShoppingBag,
-  LayoutList,
-  Sparkles,
-  Palette,
-  Box,
-  Bot,
-  Activity,
-  Stethoscope,
-  Globe,
-  ClipboardList,
 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { mockCurrentUser } from '@/lib/data'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { mockCurrentUser, mockMatches } from '@/lib/data'
 import { cn } from '@/lib/utils'
 
 export default function Home() {
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(true)
+  const nextMatch = mockMatches[0]
 
-  // Simulate data loading
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 800)
-    return () => clearTimeout(timer)
-  }, [])
-
-  const mainFeatures = [
+  // Priority Shortcuts Configuration
+  const shortcuts = [
     {
-      id: 'organizer',
-      label: 'Organizador',
-      icon: Trophy,
-      path: '/organizer',
-      color: 'text-yellow-600',
-      bg: 'bg-yellow-600/10',
-      border: 'border-yellow-600/20',
-      description: 'Seus Torneios',
-      badge: 'NEW',
+      label: 'Check-in',
+      icon: MapPin,
+      path: '/check-in',
+      color: 'text-primary',
+      bg: 'bg-primary/10',
     },
     {
-      id: 'nft',
-      label: 'NFT Creator',
-      icon: Palette,
-      path: '/ai/nft-creator',
-      color: 'text-pink-500',
-      bg: 'bg-pink-500/10',
-      border: 'border-pink-500/20',
-      description: 'Crie Stickers',
-      badge: 'NOVO',
+      label: 'Carteira',
+      icon: Wallet,
+      path: '/wallet',
+      color: 'text-emerald-600',
+      bg: 'bg-emerald-500/10',
     },
     {
-      id: 'arena',
-      label: 'Arena',
-      icon: Crosshair,
-      path: '/ai/arena-mode',
-      color: 'text-red-500',
-      bg: 'bg-red-500/10',
-      border: 'border-red-500/20',
-      description: 'Jogar Agora',
+      label: 'Mensagens',
+      icon: MessageSquare,
+      path: '/messages',
+      color: 'text-blue-600',
+      bg: 'bg-blue-500/10',
     },
     {
-      id: 'ranking',
       label: 'Ranking',
       icon: Trophy,
       path: '/ranking',
       color: 'text-gold',
-      bg: 'bg-yellow-500/10',
-      border: 'border-yellow-500/20',
-      description: 'Competição',
-    },
-    {
-      id: 'evolution',
-      label: 'Evolução',
-      icon: Activity,
-      path: '/profile/evolution',
-      color: 'text-rose-500',
-      bg: 'bg-rose-500/10',
-      border: 'border-rose-500/20',
-      description: 'Seu Progresso',
-    },
-    {
-      id: 'wallet',
-      label: 'Carteira',
-      icon: Wallet,
-      path: '/wallet',
-      color: 'text-emerald-500',
-      bg: 'bg-emerald-500/10',
-      border: 'border-emerald-500/20',
-      description: 'Seus Ganhos',
-    },
-    {
-      id: 'market',
-      label: 'Loja',
-      icon: ShoppingBag,
-      path: '/marketplace',
-      color: 'text-blue-500',
-      bg: 'bg-blue-500/10',
-      border: 'border-blue-500/20',
-      description: 'Produtos',
-    },
-    {
-      id: 'feed',
-      label: 'Feed',
-      icon: LayoutList,
-      path: '/feed',
-      color: 'text-purple-500',
-      bg: 'bg-purple-500/10',
-      border: 'border-purple-500/20',
-      description: 'Social',
-    },
-    {
-      id: 'move',
-      label: 'Move',
-      icon: Zap,
-      path: '/move',
-      color: 'text-orange-500',
-      bg: 'bg-orange-500/10',
-      border: 'border-orange-500/20',
-      description: 'Atividades',
-    },
-    {
-      id: 'checkin',
-      label: 'Check-in',
-      icon: MapPin,
-      path: '/check-in',
-      color: 'text-green-500',
-      bg: 'bg-green-500/10',
-      border: 'border-green-500/20',
-      description: 'Locais',
-    },
-    {
-      id: 'passport',
-      label: 'Passaporte',
-      icon: Globe,
-      path: '/profile/passport',
-      color: 'text-indigo-500',
-      bg: 'bg-indigo-500/10',
-      border: 'border-indigo-500/20',
-      description: 'Identidade',
-    },
-    {
-      id: 'ai-coach',
-      label: 'Coach IA',
-      icon: Bot,
-      path: '/ai/coach',
-      color: 'text-sky-500',
-      bg: 'bg-sky-500/10',
-      border: 'border-sky-500/20',
-      description: 'Treinador Virtual',
-    },
-    {
-      id: 'oracle',
-      label: 'Oráculo',
-      icon: Brain,
-      path: '/ai/oracle',
-      color: 'text-indigo-500',
-      bg: 'bg-indigo-500/10',
-      border: 'border-indigo-500/20',
-      description: 'IA Coach',
-    },
-    {
-      id: 'editor',
-      label: 'Editor',
-      icon: Wand2,
-      path: '/ai/editor',
-      color: 'text-cyan-500',
-      bg: 'bg-cyan-500/10',
-      border: 'border-cyan-500/20',
-      description: 'Highlights',
-    },
-    {
-      id: 'ghost',
-      label: 'Replay 3D',
-      icon: Box,
-      path: '/ai/ghost-play',
-      color: 'text-teal-500',
-      bg: 'bg-teal-500/10',
-      border: 'border-teal-500/20',
-      description: 'Lance Fantasma',
-    },
-    {
-      id: 'injury-scanner',
-      label: 'Scanner Lesão',
-      icon: Stethoscope,
-      path: '/ai/injury-scanner',
-      color: 'text-red-500',
-      bg: 'bg-red-500/10',
-      border: 'border-red-500/20',
-      description: 'Análise Risco',
+      bg: 'bg-[hsl(var(--gold)/0.1)]',
     },
   ]
 
-  if (isLoading) {
-    return (
-      <div className="p-6 space-y-6 pt-8">
-        <div className="flex justify-between items-center">
-          <div className="space-y-2">
-            <Skeleton className="h-8 w-48" />
-            <Skeleton className="h-4 w-32" />
-          </div>
-          <Skeleton className="h-12 w-12 rounded-xl" />
-        </div>
-        <Skeleton className="h-40 w-full rounded-2xl" />
-        <div className="grid grid-cols-2 gap-3">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <Skeleton key={i} className="h-24 rounded-xl" />
-          ))}
-        </div>
-      </div>
-    )
-  }
-
-  const nextLevelXP = 2000
-  const progressPercentage = (mockCurrentUser.points / nextLevelXP) * 100
+  // Grouped Features Configuration
+  const featureGroups = [
+    {
+      title: 'Carreira & Oportunidades',
+      description: 'Evolua sua carreira no esporte',
+      icon: TrendingUp,
+      color: 'text-amber-600',
+      items: [
+        {
+          label: 'Bolsas',
+          icon: GraduationCap,
+          path: '/explore/scholarships',
+          iconColor: 'text-emerald-600',
+          bg: 'bg-emerald-100 dark:bg-emerald-900/20',
+        },
+        {
+          label: 'Agências',
+          icon: Plane,
+          path: '/explore/agencies',
+          iconColor: 'text-sky-600',
+          bg: 'bg-sky-100 dark:bg-sky-900/20',
+        },
+        {
+          label: 'Mundial',
+          icon: Globe,
+          path: '/explore/international',
+          iconColor: 'text-indigo-600',
+          bg: 'bg-indigo-100 dark:bg-indigo-900/20',
+        },
+      ],
+    },
+    {
+      title: 'Saúde & Performance',
+      description: 'Cuide do seu corpo e mente',
+      icon: Activity,
+      color: 'text-rose-600',
+      items: [
+        {
+          label: 'Nutrição',
+          icon: Apple,
+          path: '/explore/nutrition',
+          iconColor: 'text-lime-600',
+          bg: 'bg-lime-100 dark:bg-lime-900/20',
+        },
+        {
+          label: 'Clínicas',
+          icon: Stethoscope,
+          path: '/explore/clinics',
+          iconColor: 'text-teal-600',
+          bg: 'bg-teal-100 dark:bg-teal-900/20',
+        },
+        {
+          label: 'Academias',
+          icon: Dumbbell,
+          path: '/explore/gyms',
+          iconColor: 'text-red-600',
+          bg: 'bg-red-100 dark:bg-red-900/20',
+        },
+      ],
+    },
+    {
+      title: 'Serviços & Lazer',
+      description: 'Facilidades para o seu dia a dia',
+      icon: Star,
+      color: 'text-primary',
+      items: [
+        {
+          label: 'Fotos',
+          icon: Camera,
+          path: '/explore/photographers',
+          iconColor: 'text-purple-600',
+          bg: 'bg-purple-100 dark:bg-purple-900/20',
+        },
+        {
+          label: 'Uber',
+          icon: Car,
+          path: '/explore/drivers',
+          iconColor: 'text-green-600',
+          bg: 'bg-green-100 dark:bg-green-900/20',
+        },
+        {
+          label: 'Kids',
+          icon: Baby,
+          path: '/explore/kids',
+          iconColor: 'text-pink-600',
+          bg: 'bg-pink-100 dark:bg-pink-900/20',
+        },
+        {
+          label: 'Eventos',
+          icon: Calendar,
+          path: '/explore/events',
+          iconColor: 'text-orange-600',
+          bg: 'bg-orange-100 dark:bg-orange-900/20',
+        },
+      ],
+    },
+  ]
 
   return (
     <div className="min-h-screen bg-background pb-24 animate-in fade-in duration-500">
-      {/* Header & Greeting */}
-      <div className="px-6 pt-6 pb-4">
-        <div className="flex items-center justify-between mb-5">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              Olá, {mockCurrentUser.name.split(' ')[0]}
-              <span className="inline-block animate-wave ml-2 origin-bottom-right hover:animate-spin cursor-default">
-                👋
-              </span>
+      {/* Welcome / Hero Section */}
+      <div className="px-5 pt-6 pb-2">
+        <div className="flex justify-between items-start mb-6">
+          <div className="space-y-1">
+            <h1 className="text-2xl font-bold tracking-tight">
+              Olá,{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
+                {mockCurrentUser.name.split(' ')[0]}
+              </span>{' '}
+              👋
             </h1>
-            <p className="text-muted-foreground text-sm font-medium">
-              Pronto para superar seus limites?
+            <p className="text-sm text-muted-foreground">
+              Pronto para o jogo de hoje?
             </p>
           </div>
-
-          {/* Level Badge */}
           <div
-            className="flex flex-col items-center justify-center bg-card shadow-sm p-2.5 rounded-2xl border border-border/50 cursor-pointer hover:bg-accent/50 transition-colors"
-            onClick={() => navigate('/profile/stats')}
+            className="flex flex-col items-end cursor-pointer"
+            onClick={() => navigate('/profile/me')}
           >
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-              Level
-            </span>
-            <span className="text-xl font-black text-primary leading-none">
-              {mockCurrentUser.level}
-            </span>
-          </div>
-        </div>
-
-        {/* Gamification Status Card */}
-        <Card
-          className="border-none bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-primary-foreground shadow-xl shadow-primary/20 relative overflow-hidden group cursor-pointer transition-all duration-300 hover:scale-[1.01] hover:shadow-primary/30"
-          onClick={() => navigate('/ranking')}
-        >
-          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity duration-500">
-            <Flame className="w-32 h-32 rotate-12 -translate-y-8 translate-x-8" />
-          </div>
-
-          <CardContent className="p-5 relative z-10">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <Badge className="bg-white/20 hover:bg-white/30 text-white border-none mb-2 backdrop-blur-md transition-colors">
-                  <Trophy className="w-3 h-3 mr-1.5 text-gold" />
-                  Ranking Semanal
-                </Badge>
-                <h3 className="font-bold text-lg text-white tracking-tight">
-                  Rumo ao Pro
-                </h3>
-                <p className="text-white/80 text-xs font-medium">
-                  Faltam {nextLevelXP - mockCurrentUser.points} XP para o
-                  próximo nível
-                </p>
-              </div>
-              <div className="text-right">
-                <span className="text-2xl font-black text-white tracking-tight">
-                  {mockCurrentUser.points}
-                </span>
-                <span className="text-[10px] font-bold text-white/70 block uppercase tracking-wider">
-                  XP Total
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <div className="flex justify-between text-[10px] font-bold text-white/90 uppercase tracking-wider">
-                <span>Progresso</span>
-                <span>{Math.round(progressPercentage)}%</span>
-              </div>
-              <Progress
-                value={progressPercentage}
-                className="h-2.5 bg-black/20"
-                indicatorClassName="bg-gradient-to-r from-gold to-yellow-300"
-              />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Featured NFT Creator Banner - NEW */}
-      <div className="px-6 pb-4">
-        <div
-          className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-zinc-900 to-zinc-800 p-4 shadow-lg cursor-pointer group border border-white/10"
-          onClick={() => navigate('/ai/nft-creator')}
-        >
-          <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-            <Crown className="w-24 h-24 rotate-[-15deg] translate-x-4 -translate-y-4 text-white" />
-          </div>
-          <div className="relative z-10 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-                <Sparkles className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-white text-base">
-                    NFT Creator
-                  </h3>
-                  <Badge className="bg-gradient-to-r from-gold to-yellow-500 text-black border-none text-[10px] px-1.5 h-4 font-extrabold">
-                    NOVO
-                  </Badge>
-                </div>
-                <p className="text-xs text-zinc-400 font-medium mt-0.5">
-                  Crie stickers estilo BAYC
-                </p>
-              </div>
-            </div>
-            <div className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-              <ChevronRight className="w-4 h-4 text-white" />
+            <div className="relative">
+              <Avatar className="h-12 w-12 border-2 border-primary/20 hover:border-primary transition-colors">
+                <AvatarImage src={mockCurrentUser.avatar} />
+                <AvatarFallback>
+                  {mockCurrentUser.name.substring(0, 2)}
+                </AvatarFallback>
+              </Avatar>
+              <Badge
+                className="absolute -bottom-2 -right-1 bg-gradient-to-r from-gold to-amber-600 border-2 border-background px-1.5 py-0 text-[10px] font-bold"
+                variant="secondary"
+              >
+                Lv. {mockCurrentUser.level}
+              </Badge>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Quick Access Grid - Restored & Expanded */}
-      <div className="px-6 py-2">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-bold text-lg flex items-center gap-2 text-foreground">
-            <Zap className="h-4 w-4 text-gold fill-gold" />
-            Menu Principal
-          </h2>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {mainFeatures.map((feature) => (
-            <Card
-              key={feature.id}
-              className={cn(
-                'border-none bg-card/80 hover:bg-card transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md hover:-translate-y-0.5 relative overflow-hidden',
-                feature.id === 'nft' && 'hidden', // Hide NFT from grid as it has a banner
-              )}
-              onClick={() => navigate(feature.path)}
+        {/* Priority Shortcuts */}
+        <div className="grid grid-cols-4 gap-3 mb-6">
+          {shortcuts.map((shortcut, idx) => (
+            <button
+              key={idx}
+              onClick={() => navigate(shortcut.path)}
+              className="flex flex-col items-center gap-2 group"
             >
-              <CardContent className="p-3 flex items-center gap-3">
-                <div
-                  className={cn(
-                    'h-10 w-10 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 shadow-sm',
-                    feature.bg,
-                  )}
-                >
-                  <feature.icon className={cn('h-5 w-5', feature.color)} />
-                </div>
-                <div className="overflow-hidden">
-                  <h3 className="font-bold text-sm truncate leading-tight group-hover:text-primary transition-colors flex items-center gap-1.5">
-                    {feature.label}
-                    {feature.badge && (
-                      <span className="text-[8px] bg-primary text-primary-foreground px-1 rounded-sm font-bold">
-                        {feature.badge}
-                      </span>
-                    )}
-                  </h3>
-                  <p className="text-[10px] text-muted-foreground truncate font-medium">
-                    {feature.description}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+              <div
+                className={cn(
+                  'w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-md group-hover:scale-105 group-active:scale-95',
+                  shortcut.bg,
+                  shortcut.color,
+                )}
+              >
+                <shortcut.icon className="w-6 h-6" />
+              </div>
+              <span className="text-[11px] font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+                {shortcut.label}
+              </span>
+            </button>
           ))}
         </div>
-      </div>
 
-      {/* Trending / Live Section */}
-      <div className="mt-4 pb-2">
-        <div className="px-6 flex items-center justify-between mb-3">
-          <h2 className="font-bold text-lg flex items-center gap-2 text-foreground">
-            <TrendingUp className="h-4 w-4 text-green-500" />
-            Em Alta
-          </h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-xs h-7 px-2 font-medium text-muted-foreground hover:text-foreground"
-            onClick={() => navigate('/explore')}
-          >
-            Ver tudo <ChevronRight className="w-3 h-3 ml-1" />
-          </Button>
-        </div>
-
-        <ScrollArea className="w-full whitespace-nowrap">
-          <div className="flex w-max space-x-4 px-6 pb-4">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="w-72 aspect-video rounded-2xl bg-muted relative overflow-hidden cursor-pointer group shadow-sm hover:shadow-md transition-all"
-                onClick={() => navigate('/move')}
-              >
-                <img
-                  src={`https://img.usecurling.com/p/500/280?q=soccer%20match%20action&seed=${i}`}
-                  alt="Trending"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-4 flex flex-col justify-end">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <Badge className="bg-red-600 text-white border-none px-1.5 py-0 h-5 text-[10px] font-bold animate-pulse">
-                      AO VIVO
-                    </Badge>
-                    <div className="flex items-center text-white/90 text-[10px] font-bold gap-1 bg-black/40 px-1.5 py-0.5 rounded-full backdrop-blur-sm">
-                      <Users className="w-3 h-3" />
-                      1.2k
-                    </div>
-                  </div>
-                  <h4 className="text-white font-bold text-sm truncate leading-tight drop-shadow-sm">
-                    Final Regional: Tatuapé vs Mooca
-                  </h4>
-                  <p className="text-white/70 text-xs mt-0.5 font-medium">
-                    Arena SP • Futebol Society
-                  </p>
-                </div>
-
-                {/* Hover Play Button */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 backdrop-blur-[1px]">
-                  <div className="h-12 w-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-lg transform scale-90 group-hover:scale-100 transition-transform">
-                    <Play className="w-5 h-5 text-white fill-white ml-0.5" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <ScrollBar orientation="horizontal" className="hidden" />
-        </ScrollArea>
-      </div>
-
-      {/* Daily Challenge Banner */}
-      <div className="px-6 pb-6">
+        {/* Highlight Card - Next Activity */}
         <Card
-          className="border-none bg-zinc-900 dark:bg-zinc-950 text-white overflow-hidden relative cursor-pointer group shadow-lg hover:shadow-xl transition-all"
-          onClick={() => navigate('/ai/arena-mode')}
+          className="mb-8 border-none shadow-lg bg-gradient-to-br from-primary/90 to-purple-900 text-white overflow-hidden relative cursor-pointer group hover:shadow-xl transition-all"
+          onClick={() => navigate('/profile/stats')}
         >
-          {/* Abstract background effects */}
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/30 transition-colors duration-500" />
-          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-gold/10 rounded-full blur-3xl group-hover:bg-gold/20 transition-colors duration-500" />
+          {/* Decorative background elements */}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
 
-          <CardContent className="p-4 relative z-10 flex items-center gap-4">
-            <div className="h-12 w-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center shrink-0">
-              <Crosshair className="h-6 w-6 text-primary group-hover:scale-110 transition-transform duration-300" />
+          <CardHeader className="pb-2 relative z-10">
+            <div className="flex justify-between items-center">
+              <Badge className="bg-white/20 hover:bg-white/30 text-white border-none backdrop-blur-sm">
+                Próximo Jogo
+              </Badge>
+              <ArrowRight className="w-5 h-5 text-white/70 group-hover:translate-x-1 transition-transform" />
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-0.5">
-                <h3 className="font-bold text-sm text-gold uppercase tracking-wider">
-                  Desafio Diário
-                </h3>
-                <Badge
-                  variant="outline"
-                  className="border-gold/30 text-gold text-[9px] h-4 px-1 py-0 bg-gold/5"
-                >
-                  NOVO
-                </Badge>
+            <CardTitle className="text-xl mt-2 flex items-center gap-2">
+              {nextMatch ? nextMatch.teamName : 'Sem jogos agendados'}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="relative z-10">
+            {nextMatch ? (
+              <div className="flex items-center gap-4 text-sm text-white/90">
+                <div className="flex items-center gap-1.5">
+                  <Calendar className="w-4 h-4" />
+                  <span>{nextMatch.time.split(',')[0]}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <MapPin className="w-4 h-4" />
+                  <span className="truncate max-w-[120px]">
+                    {nextMatch.location}
+                  </span>
+                </div>
               </div>
-              <p className="text-sm font-semibold leading-tight truncate text-white/90">
-                Acerte 50 alvos na Arena
+            ) : (
+              <p className="text-sm text-white/80">
+                Agende sua próxima partida e comece a pontuar.
               </p>
-              <div className="flex items-center gap-3 mt-2">
-                <div className="flex items-center gap-1 text-[10px] text-white/60">
-                  <Trophy className="w-3 h-3" />
-                  <span>+500 XP</span>
-                </div>
-                <div className="flex items-center gap-1 text-[10px] text-white/60">
-                  <Timer className="w-3 h-3" />
-                  <span>30 min</span>
-                </div>
-              </div>
-            </div>
-            <ChevronRight className="h-5 w-5 text-white/30 group-hover:text-white group-hover:translate-x-1 transition-all" />
+            )}
           </CardContent>
         </Card>
+
+        {/* Main Dashboard Grid */}
+        <div className="space-y-6">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-lg font-bold flex items-center gap-2">
+              <LayoutGrid className="w-5 h-5 text-primary" />
+              Dashboard
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {featureGroups.map((group, groupIdx) => (
+              <Card
+                key={groupIdx}
+                className="border-border/50 shadow-sm hover:shadow-md transition-all duration-300"
+              >
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div
+                      className={cn('p-2 rounded-lg bg-secondary', group.color)}
+                    >
+                      <group.icon className="w-4 h-4" />
+                    </div>
+                    <CardTitle className="text-base font-bold">
+                      {group.title}
+                    </CardTitle>
+                  </div>
+                  <CardDescription className="text-xs">
+                    {group.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-3 gap-2">
+                    {group.items.map((item, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => navigate(item.path)}
+                        className="flex flex-col items-center gap-2 p-2 rounded-xl hover:bg-secondary/50 transition-colors group/item"
+                      >
+                        <div
+                          className={cn(
+                            'w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover/item:scale-110',
+                            item.bg,
+                            item.iconColor,
+                          )}
+                        >
+                          <item.icon className="w-5 h-5" />
+                        </div>
+                        <span className="text-[10px] font-medium text-center leading-tight">
+                          {item.label}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                  <Button
+                    variant="ghost"
+                    className="w-full mt-2 text-xs h-8 text-muted-foreground hover:text-primary"
+                    onClick={() => navigate('/explore')}
+                  >
+                    Ver categoria completa
+                    <ChevronRight className="w-3 h-3 ml-1" />
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Quick Access to Full Explore */}
+          <div className="pt-2">
+            <Button
+              variant="outline"
+              className="w-full h-12 rounded-xl border-dashed border-2 hover:bg-secondary/50 hover:border-primary/50 group"
+              onClick={() => navigate('/explore')}
+            >
+              <Search className="w-4 h-4 mr-2 group-hover:text-primary transition-colors" />
+              <span className="font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
+                Não encontrou o que procura? Explorar tudo
+              </span>
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   )
