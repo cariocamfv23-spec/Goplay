@@ -14,7 +14,6 @@ import {
   Calendar,
   X,
   Trophy,
-  ArrowRight,
   Star,
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
@@ -386,7 +385,7 @@ export default function Explore() {
             </div>
 
             {/* Categories Grid */}
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
               {exploreCategories.map((cat) => (
                 <div
                   key={cat.id}

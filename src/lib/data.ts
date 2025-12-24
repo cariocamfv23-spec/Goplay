@@ -159,6 +159,7 @@ export interface ProfileData {
     photo: string
   }
   rides?: number
+  distance?: string
   responseTime?: string
   age?: number
   sport?: string
@@ -575,6 +576,16 @@ export interface Venue {
   coordinates?: { x: number; y: number }
 }
 
+export interface Gym {
+  id: string
+  name: string
+  image: string
+  rating: number
+  address: string
+  type: string
+  price: string
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: LayoutList, label: 'Feed', path: '/feed' },
@@ -677,7 +688,7 @@ export const exploreCategories = [
   },
   {
     id: 'gyms',
-    label: 'Gyms',
+    label: 'Academia',
     icon: Dumbbell,
     bg: 'bg-red-100 dark:bg-red-900/20',
     color: 'text-red-600 dark:text-red-400',
@@ -1471,6 +1482,24 @@ export const mockEvents: Event[] = [
     price: 50,
     description: 'Maior campeonato regional da temporada.',
     organizer: 'Liga Regional',
+    city: 'São Paulo',
+    state: 'SP',
+  },
+  {
+    id: 'e2',
+    title: 'Maratona da Cidade',
+    category: 'Corrida',
+    date: '22 Jul',
+    time: '07:00',
+    location: 'Parque Ibirapuera',
+    address: 'Av. Pedro Álvares Cabral',
+    image:
+      'https://img.usecurling.com/p/400/200?q=marathon%20runners&color=orange',
+    price: 90,
+    description: '42km de superação pelas ruas da cidade.',
+    organizer: 'Corpore',
+    city: 'São Paulo',
+    state: 'SP',
   },
 ]
 export const mockVenues: Venue[] = [
@@ -1645,11 +1674,83 @@ export const mockKidsVenues: KidsVenue[] = [
     monitorsList: ['Carla Dias', 'Felipe Nunes'],
   },
 ]
-export const mockGyms = []
-export const mockDrivers: ProfileData[] = []
+export const mockGyms: Gym[] = [
+  {
+    id: 'g1',
+    name: 'Ironberg CT',
+    image:
+      'https://img.usecurling.com/p/400/300?q=gym%20bodybuilding&color=black',
+    rating: 5.0,
+    address: 'Av. Paulista, 1000',
+    type: 'Musculação',
+    price: 'R$ 150/mês',
+  },
+  {
+    id: 'g2',
+    name: 'Smart Fit - Jardins',
+    image: 'https://img.usecurling.com/p/400/300?q=gym%20cardio&color=yellow',
+    rating: 4.5,
+    address: 'Rua Augusta, 1500',
+    type: 'Geral',
+    price: 'R$ 119/mês',
+  },
+  {
+    id: 'g3',
+    name: 'Crossfit BlackSheep',
+    image: 'https://img.usecurling.com/p/400/300?q=crossfit%20gym&color=red',
+    rating: 4.8,
+    address: 'Rua dos Pinheiros, 500',
+    type: 'Crossfit',
+    price: 'R$ 350/mês',
+  },
+]
+export const mockDrivers: ProfileData[] = [
+  {
+    id: 'd1',
+    name: 'Roberto Carlos',
+    username: '@rcarlos',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=99',
+    type: 'driver',
+    rating: 4.9,
+    distance: '1.2 km',
+    cover: 'https://img.usecurling.com/p/800/400?q=city%20road&color=gray',
+    bio: 'Motorista parceiro com foco em segurança e conforto.',
+    location: 'São Paulo, SP',
+    car: {
+      model: 'Toyota Corolla',
+      color: 'Prata',
+      plate: 'ABC-1234',
+      photo:
+        'https://img.usecurling.com/p/400/300?q=toyota%20corolla&color=silver',
+    },
+    rides: 1540,
+    responseTime: '3 min',
+  },
+  {
+    id: 'd2',
+    name: 'Maria Silva',
+    username: '@msilva',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=88',
+    type: 'driver',
+    rating: 4.8,
+    distance: '2.5 km',
+    cover: 'https://img.usecurling.com/p/800/400?q=city%20night&color=blue',
+    bio: 'Pontualidade e carro sempre limpo.',
+    location: 'São Paulo, SP',
+    car: {
+      model: 'Honda Civic',
+      color: 'Preto',
+      plate: 'XYZ-9876',
+      photo: 'https://img.usecurling.com/p/400/300?q=honda%20civic&color=black',
+    },
+    rides: 890,
+    responseTime: '7 min',
+  },
+]
 export const mockProfiles: ProfileData[] = [
   ...mockTalents,
   ...mockPhotographers,
+  ...mockDrivers,
 ]
 export const mockJobs = []
 export const mockProducts: Product[] = []
@@ -1703,16 +1804,220 @@ export const mockFinancialHistory: FinancialTransaction[] = []
 export const mockTrainingEvents = []
 export const mockProfileViewers: ProfileViewer[] = []
 export const mockGoals: Goal[] = []
-export const mockInternationalMatches: InternationalMatchOpponent[] = []
-export const mockInternationalRanking: InternationalRankingUser[] = []
+export const mockInternationalMatches: InternationalMatchOpponent[] = [
+  {
+    id: 'im1',
+    opponentName: 'John Smith',
+    country: 'USA',
+    flag: 'https://img.usecurling.com/i?q=usa%20flag&color=red',
+    level: 'Pro',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=101',
+    rating: 4.8,
+    status: 'online',
+  },
+  {
+    id: 'im2',
+    opponentName: 'Pierre Dubois',
+    country: 'France',
+    flag: 'https://img.usecurling.com/i?q=france%20flag&color=blue',
+    level: 'Advanced',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=102',
+    rating: 4.6,
+    status: 'offline',
+  },
+]
+export const mockInternationalRanking: InternationalRankingUser[] = [
+  {
+    id: 'ir1',
+    position: 1,
+    name: 'Carlos Santanna',
+    country: 'Brazil',
+    flag: 'https://img.usecurling.com/i?q=brazil%20flag&color=green',
+    points: 2500,
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=103',
+    trend: 'same',
+  },
+  {
+    id: 'ir2',
+    position: 2,
+    name: 'Liam Miller',
+    country: 'UK',
+    flag: 'https://img.usecurling.com/i?q=uk%20flag&color=blue',
+    points: 2450,
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=104',
+    trend: 'up',
+  },
+]
 export const mockOracle = {}
 export const mockLiveEvents: LiveEvent[] = []
 export const mockFuelTransactions = []
-export const mockNutrition: NutritionPartner[] = []
-export const mockHortifrutis: Hortifruti[] = []
-export const mockClinics: Clinic[] = []
-export const mockAgencies: Agency[] = []
-export const mockScholarships: Scholarship[] = []
+export const mockNutrition: NutritionPartner[] = [
+  {
+    id: 'n1',
+    name: 'Dra. Julia Mendes',
+    specialty: 'Nutrição Esportiva',
+    rating: 4.9,
+    image: 'https://img.usecurling.com/ppl/medium?gender=female&seed=111',
+    price: 'R$ 350',
+    description:
+      'Especialista em alta performance e suplementação para atletas.',
+  },
+  {
+    id: 'n2',
+    name: 'Dr. Marcos Nutri',
+    specialty: 'Performance',
+    rating: 4.7,
+    image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=112',
+    price: 'R$ 300',
+    description: 'Foco em ganho de massa muscular e definição.',
+  },
+]
+export const mockHortifrutis: Hortifruti[] = [
+  {
+    id: 'h1',
+    name: 'Hortifruti Natural',
+    specialty: 'Orgânicos',
+    rating: 4.8,
+    image:
+      'https://img.usecurling.com/p/400/300?q=fruits%20vegetables&color=green',
+    address: 'Rua da Saúde, 123',
+    description: 'Frutas e verduras frescas selecionadas diariamente.',
+    price: 'R$ 50,00',
+  },
+  {
+    id: 'h2',
+    name: 'Green Life Market',
+    specialty: 'Saudável',
+    rating: 4.9,
+    image:
+      'https://img.usecurling.com/p/400/300?q=healthy%20market&color=green',
+    address: 'Av. Brasil, 456',
+    description: 'Produtos naturais, grãos e suplementos.',
+    price: 'R$ 80,00',
+  },
+]
+export const mockClinics: Clinic[] = [
+  {
+    id: 'cl1',
+    name: 'Recovery Pro',
+    specialty: 'Fisioterapia',
+    address: 'Rua dos Pinheiros, 100',
+    image:
+      'https://img.usecurling.com/p/400/300?q=physiotherapy%20clinic&color=blue',
+    rating: 4.8,
+    price: 'R$ 200',
+    services: ['Massagem', 'Crioterapia', 'Osteopatia'],
+    description:
+      'Clínica especializada em recuperação muscular e prevenção de lesões.',
+  },
+  {
+    id: 'cl2',
+    name: 'Sports Med',
+    specialty: 'Medicina Esportiva',
+    address: 'Av. Faria Lima, 2000',
+    image: 'https://img.usecurling.com/p/400/300?q=sports%20clinic&color=white',
+    rating: 5.0,
+    price: 'R$ 450',
+    services: ['Check-up', 'Ergoespirometria', 'Nutrologia'],
+    description:
+      'Centro de excelência em medicina do esporte para atletas de alto rendimento.',
+  },
+]
+export const mockAgencies: Agency[] = [
+  {
+    id: 'a1',
+    name: 'GoGlobal Sports',
+    logo: 'https://img.usecurling.com/i?q=globe&color=blue',
+    cover:
+      'https://img.usecurling.com/p/800/400?q=university%20campus&color=blue',
+    description:
+      'Especialistas em bolsas esportivas para universidades nos EUA e Europa.',
+    shortDescription: 'Bolsas esportivas internacionais.',
+    services: ['Intercâmbio', 'Visto', 'Preparação'],
+    location: 'São Paulo, SP',
+    rating: 4.9,
+    website: 'https://goglobal.com',
+    email: 'contact@goglobal.com',
+    phone: '+55 11 99999-9999',
+    programs: [
+      {
+        title: 'Soccer Scholarship USA',
+        description: 'Bolsas de até 100% para jogadores de futebol.',
+      },
+    ],
+  },
+  {
+    id: 'a2',
+    name: 'NextLevel Agency',
+    logo: 'https://img.usecurling.com/i?q=rocket&color=red',
+    cover: 'https://img.usecurling.com/p/800/400?q=meeting%20room&color=gray',
+    description: 'Gestão de carreira para atletas profissionais e amadores.',
+    shortDescription: 'Gestão de carreira e imagem.',
+    services: ['Marketing', 'Contratos', 'Assessoria'],
+    location: 'Rio de Janeiro, RJ',
+    rating: 4.7,
+    website: 'https://nextlevel.com',
+    email: 'info@nextlevel.com',
+    phone: '+55 21 98888-8888',
+    programs: [
+      {
+        title: 'Pro Player Path',
+        description: 'Mentoria para transição ao profissional.',
+      },
+    ],
+  },
+]
+export const mockScholarships: Scholarship[] = [
+  {
+    id: 's1',
+    university: 'University of Florida',
+    country: 'USA',
+    city: 'Gainesville',
+    neighborhood: 'Campus',
+    sport: 'Futebol',
+    logo: 'https://img.usecurling.com/i?q=university%20logo&color=orange',
+    image:
+      'https://img.usecurling.com/p/800/400?q=university%20stadium&color=orange',
+    value: 100,
+    accommodation: 'Dormitório no Campus',
+    documentation: 'Passaporte, Histórico Escolar, TOEFL',
+    process: 'Inscrição > Vídeo > Entrevista',
+    fee: 150,
+    deadline: '30/11',
+  },
+  {
+    id: 's2',
+    university: 'UCLA',
+    country: 'USA',
+    city: 'Los Angeles',
+    neighborhood: 'Westwood',
+    sport: 'Basquete',
+    logo: 'https://img.usecurling.com/i?q=university%20crest&color=blue',
+    image:
+      'https://img.usecurling.com/p/800/400?q=basketball%20arena&color=blue',
+    value: 80,
+    accommodation: 'Apartamento Estudantil',
+    documentation: 'Passaporte, SAT, Vídeo de Highlights',
+    process: 'Showcase > Oferta > Assinatura',
+    fee: 200,
+    deadline: '15/01',
+  },
+  {
+    id: 's3',
+    university: 'University of Sydney',
+    country: 'Australia',
+    city: 'Sydney',
+    sport: 'Rugby',
+    logo: 'https://img.usecurling.com/i?q=shield&color=red',
+    image: 'https://img.usecurling.com/p/800/400?q=rugby%20field&color=green',
+    value: 50,
+    accommodation: 'Auxílio Moradia',
+    documentation: 'Visto de Estudante, IELTS',
+    process: 'Aplicação Online > Teste Físico',
+    fee: 100,
+    deadline: '20/02',
+  },
+]
 
 export const mockAiAnalysis = {
   aiStats: [
