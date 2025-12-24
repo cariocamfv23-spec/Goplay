@@ -10,6 +10,7 @@ import {
   Truck,
   Trophy,
   ImageOff,
+  AlertCircle,
 } from 'lucide-react'
 import {
   Carousel,
@@ -18,14 +19,32 @@ import {
 } from '@/components/ui/carousel'
 import { Badge } from '@/components/ui/badge'
 import { PaymentDialog } from '@/components/PaymentDialog'
-import { cn } from '@/lib/utils'
 import { useCartStore } from '@/stores/useCartStore'
 
 export default function ProductDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const product = mockProducts.find((p) => p.id === id) || mockProducts[0]
   const { addToCart } = useCartStore()
+
+  // Improved Safety Check
+  const product = mockProducts.find((p) => p.id === id)
+
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center animate-fade-in">
+        <div className="h-20 w-20 bg-destructive/10 rounded-full flex items-center justify-center mb-4">
+          <AlertCircle className="h-10 w-10 text-destructive" />
+        </div>
+        <h2 className="text-xl font-bold mb-2">Produto não encontrado</h2>
+        <p className="text-muted-foreground mb-6">
+          O produto que você está procurando não existe ou foi removido.
+        </p>
+        <Button onClick={() => navigate('/marketplace')}>
+          Voltar para Loja
+        </Button>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background pb-32 animate-fade-in relative">
@@ -33,7 +52,7 @@ export default function ProductDetails() {
         <Button
           variant="secondary"
           size="icon"
-          className="pointer-events-auto rounded-full shadow-md bg-background/80 backdrop-blur-md border border-white/10"
+          className="pointer-events-auto rounded-full shadow-md bg-background/80 backdrop-blur-md border border-white/10 hover:bg-background"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft className="h-5 w-5" />
@@ -42,14 +61,14 @@ export default function ProductDetails() {
           <Button
             variant="secondary"
             size="icon"
-            className="rounded-full shadow-md bg-background/80 backdrop-blur-md border border-white/10"
+            className="rounded-full shadow-md bg-background/80 backdrop-blur-md border border-white/10 hover:bg-background"
           >
             <Share2 className="h-5 w-5" />
           </Button>
           <Button
             variant="secondary"
             size="icon"
-            className="rounded-full shadow-md bg-background/80 backdrop-blur-md border border-white/10"
+            className="rounded-full shadow-md bg-background/80 backdrop-blur-md border border-white/10 hover:bg-background"
             onClick={() => navigate('/marketplace/cart')}
           >
             <ShoppingCart className="h-5 w-5" />
@@ -60,28 +79,40 @@ export default function ProductDetails() {
       <div className="-mt-20">
         <Carousel className="w-full">
           <CarouselContent>
-            {product.images?.map((img, i) => (
-              <CarouselItem key={i}>
+            {product.images?.length > 0 ? (
+              product.images.map((img, i) => (
+                <CarouselItem key={i}>
+                  <div className="h-[450px] bg-secondary/10 flex items-center justify-center p-8 relative">
+                    <img
+                      src={img}
+                      alt={product.name}
+                      className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal transition-opacity duration-300"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none'
+                        e.currentTarget.nextElementSibling?.classList.remove(
+                          'hidden',
+                        )
+                      }}
+                    />
+                    {/* Fallback container */}
+                    <div className="hidden absolute inset-0 flex flex-col items-center justify-center text-muted-foreground/40">
+                      <ImageOff className="h-20 w-20 mb-2" />
+                      <p className="text-sm">Imagem indisponível</p>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))
+            ) : (
+              // Fallback if images array is empty
+              <CarouselItem>
                 <div className="h-[450px] bg-secondary/10 flex items-center justify-center p-8 relative">
-                  <img
-                    src={img}
-                    alt={product.name}
-                    className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none'
-                      e.currentTarget.nextElementSibling?.classList.remove(
-                        'hidden',
-                      )
-                    }}
-                  />
-                  {/* Fallback container */}
-                  <div className="hidden absolute inset-0 flex flex-col items-center justify-center text-muted-foreground/40">
+                  <div className="flex flex-col items-center justify-center text-muted-foreground/40">
                     <ImageOff className="h-20 w-20 mb-2" />
-                    <p className="text-sm">Imagem indisponível</p>
+                    <p className="text-sm">Sem imagens</p>
                   </div>
                 </div>
               </CarouselItem>
-            ))}
+            )}
           </CarouselContent>
         </Carousel>
       </div>
