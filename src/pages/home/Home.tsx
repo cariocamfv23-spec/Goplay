@@ -20,6 +20,7 @@ import {
   Star,
   ChevronRight,
   TrendingUp,
+  LayoutGrid,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
