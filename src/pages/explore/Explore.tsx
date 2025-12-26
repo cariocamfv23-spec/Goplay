@@ -15,11 +15,15 @@ import {
   X,
   Trophy,
   Star,
+  Briefcase,
+  Activity,
+  ChevronRight,
+  TrendingUp,
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DigitalCard } from '@/components/DigitalCard'
 import { exploreCategories, mockEvents, mockVenues, tribes } from '@/lib/data'
 import { cn } from '@/lib/utils'
@@ -31,6 +35,7 @@ export default function Explore() {
 
   const hasActiveSearch = search.length > 0 || activeSport !== 'all'
 
+  // Search Logic (Preserved)
   const filteredResults = useMemo(() => {
     if (!hasActiveSearch) return { venues: [], events: [] }
 
@@ -57,7 +62,6 @@ export default function Explore() {
           ''
         ).toLowerCase()
 
-        // Improve matching logic based on tribe IDs
         if (activeSport === 'futebol') {
           matchesSport =
             type.includes('futebol') ||
@@ -87,19 +91,88 @@ export default function Explore() {
     setActiveSport('all')
   }
 
+  // Dashboard Grouping Logic
+  const getCategoryData = (id: string) => {
+    if (id === 'map-events') {
+      return {
+        id: 'map-events',
+        label: 'Mapa',
+        icon: MapIcon,
+        bg: 'bg-emerald-100 dark:bg-emerald-900/20',
+        color: 'text-emerald-600 dark:text-emerald-400',
+        path: '/explore/map-events',
+      }
+    }
+    const cat = exploreCategories.find((c) => c.id === id)
+    if (cat) {
+      return {
+        ...cat,
+        path:
+          cat.id === 'international'
+            ? '/explore/international'
+            : `/explore/${cat.id}`,
+      }
+    }
+    return null
+  }
+
+  const dashboardGroups = [
+    {
+      id: 'play',
+      title: 'Competir & Jogar',
+      icon: Trophy,
+      description: 'Encontre seu jogo',
+      items: ['venues', 'events', 'international', 'map-events'],
+      color: 'text-primary',
+    },
+    {
+      id: 'career',
+      title: 'Carreira Pro',
+      icon: Briefcase,
+      description: 'Oportunidades reais',
+      items: ['sponsorship', 'scholarships', 'agencies', 'talents'],
+      color: 'text-blue-500',
+    },
+    {
+      id: 'services',
+      title: 'Serviços & Saúde',
+      icon: Activity,
+      description: 'Logística e bem-estar',
+      items: [
+        'nutrition',
+        'clinics',
+        'gyms',
+        'fuel',
+        'drivers',
+        'photographers',
+      ],
+      color: 'text-green-500',
+    },
+    {
+      id: 'lifestyle',
+      title: 'Lifestyle',
+      icon: Sparkles,
+      description: 'Diversão e família',
+      items: ['kids'],
+      color: 'text-purple-500',
+    },
+  ]
+
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in flex flex-col">
-      {/* Header & Search */}
-      <div className="sticky top-0 bg-background/95 backdrop-blur z-30 p-4 border-b border-border/50">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">Explorar</h1>
+      {/* 1. Header & Search (Sticky) */}
+      <div className="sticky top-0 bg-background/95 backdrop-blur z-30 px-4 py-3 border-b border-border/50 shadow-sm">
+        <div className="flex items-center justify-between mb-3">
+          <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+            Explorar
+          </h1>
           <DigitalCard>
             <Button
               variant="outline"
               size="sm"
-              className="rounded-full border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary gap-2"
+              className="rounded-full border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary gap-2 h-8 px-3"
             >
-              <CreditCard className="h-4 w-4" />
+              <CreditCard className="h-3.5 w-3.5" />
               <span className="text-xs font-bold">Meu Cartão</span>
             </Button>
           </DigitalCard>
@@ -107,29 +180,31 @@ export default function Explore() {
 
         <div className="space-y-3">
           <div className="flex gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <div className="relative flex-1 group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
               <Input
-                placeholder="Buscar arenas, eventos, esportes..."
-                className="pl-9 pr-8 bg-secondary border-none rounded-xl"
+                placeholder="Buscar arenas, eventos, serviços..."
+                className="pl-9 pr-8 bg-secondary/50 border-transparent hover:bg-secondary/80 focus:bg-background focus:border-primary/20 rounded-xl transition-all"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
               {search && (
                 <button
                   onClick={() => setSearch('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 rounded-full hover:bg-muted"
                 >
                   <X className="h-3 w-3" />
                 </button>
               )}
             </div>
             <Button
-              variant={activeSport !== 'all' ? 'default' : 'ghost'}
+              variant={activeSport !== 'all' ? 'default' : 'secondary'}
               size="icon"
               className={cn(
-                'rounded-xl transition-colors',
-                activeSport === 'all' && 'bg-secondary',
+                'rounded-xl transition-all shadow-sm',
+                activeSport !== 'all'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-secondary text-foreground hover:bg-secondary/80',
               )}
               onClick={() => setActiveSport('all')}
             >
@@ -137,18 +212,18 @@ export default function Explore() {
             </Button>
           </div>
 
-          {/* Quick Category Filters (Tribes) */}
-          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-4 px-4">
+          {/* Quick Filters (Tribes) */}
+          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-4 px-4 mask-fade-sides">
             {tribes.map((tribe) => (
               <Button
                 key={tribe.id}
                 variant={activeSport === tribe.id ? 'default' : 'outline'}
                 size="sm"
                 className={cn(
-                  'rounded-full h-8 px-3 text-xs font-medium shrink-0 border-border/50',
+                  'rounded-full h-8 px-3 text-xs font-medium shrink-0 border-border/40 transition-all active:scale-95',
                   activeSport === tribe.id
-                    ? 'shadow-md'
-                    : 'bg-background hover:bg-secondary',
+                    ? 'shadow-md ring-2 ring-primary/20'
+                    : 'bg-background hover:bg-secondary/80 hover:border-border',
                 )}
                 onClick={() =>
                   setActiveSport(activeSport === tribe.id ? 'all' : tribe.id)
@@ -162,11 +237,11 @@ export default function Explore() {
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 p-4 space-y-6">
+      {/* 2. Main Content */}
+      <div className="flex-1 p-4 space-y-8">
         {hasActiveSearch ? (
-          // Search Results View
-          <div className="space-y-6 animate-fade-in">
+          // Search Results View (Preserved)
+          <div className="space-y-6 animate-in slide-in-from-bottom-2 duration-500">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold">Resultados</h2>
               <Button
@@ -189,16 +264,16 @@ export default function Explore() {
                 {filteredResults.events.map((event) => (
                   <Card
                     key={event.id}
-                    className="flex border-none shadow-sm bg-card overflow-hidden cursor-pointer hover:shadow-md transition-all active:scale-[0.99]"
+                    className="flex border-none shadow-sm bg-card overflow-hidden cursor-pointer hover:shadow-md transition-all active:scale-[0.99] group"
                     onClick={() => navigate(`/events/${event.id}`)}
                   >
-                    <div className="w-24 h-24 relative shrink-0">
+                    <div className="w-24 h-24 relative shrink-0 overflow-hidden">
                       <img
                         src={event.image}
                         alt={event.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
-                      <Badge className="absolute top-1 left-1 text-[8px] h-4 px-1">
+                      <Badge className="absolute top-1 left-1 text-[8px] h-4 px-1 backdrop-blur-md bg-black/60 border-none text-white">
                         {event.category}
                       </Badge>
                     </div>
@@ -233,13 +308,13 @@ export default function Explore() {
                 {filteredResults.venues.map((venue) => (
                   <Card
                     key={venue.id}
-                    className="border-none shadow-sm bg-card overflow-hidden cursor-pointer hover:shadow-md transition-all active:scale-[0.99]"
+                    className="border-none shadow-sm bg-card overflow-hidden cursor-pointer hover:shadow-md transition-all active:scale-[0.99] group"
                     onClick={() => navigate(`/venues/${venue.id}`)}
                   >
-                    <div className="h-32 relative">
+                    <div className="h-32 relative overflow-hidden">
                       <img
                         src={venue.image}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         alt={venue.name}
                       />
                       <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-0.5 rounded-md text-xs font-bold flex items-center gap-1 shadow-sm">
@@ -298,14 +373,13 @@ export default function Explore() {
               )}
           </div>
         ) : (
-          // Default Dashboard View
-          <div className="space-y-6 animate-fade-in">
-            {/* NEW FEATURE: Live Events (Cinematic/Premium Card) */}
+          // Intelligent Dashboard View
+          <div className="space-y-8 animate-in fade-in duration-500">
+            {/* HERO: Live Events */}
             <div
               onClick={() => navigate('/explore/live')}
-              className="relative w-full h-36 rounded-2xl overflow-hidden cursor-pointer group shadow-lg ring-1 ring-white/10"
+              className="relative w-full h-40 rounded-3xl overflow-hidden cursor-pointer group shadow-xl ring-1 ring-white/10 transform transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
-              {/* Animated Background */}
               <div className="absolute inset-0 bg-black">
                 <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-red-900 to-black opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay"></div>
@@ -316,7 +390,6 @@ export default function Explore() {
                 />
               </div>
 
-              {/* Content */}
               <div className="absolute inset-0 p-5 flex flex-col justify-between">
                 <div className="flex justify-between items-start">
                   <div className="flex items-center gap-2">
@@ -334,10 +407,10 @@ export default function Explore() {
                 </div>
 
                 <div>
-                  <h2 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70 tracking-tight drop-shadow-sm mb-1">
+                  <h2 className="text-2xl font-black text-white tracking-tight drop-shadow-sm mb-1">
                     Eventos ao Vivo
                   </h2>
-                  <p className="text-white/60 text-xs font-medium max-w-[240px] leading-relaxed">
+                  <p className="text-white/70 text-xs font-medium max-w-[240px] leading-relaxed">
                     Assista agora aos maiores campeonatos e lutas em tempo real.
                   </p>
                 </div>
@@ -348,125 +421,139 @@ export default function Explore() {
               </div>
             </div>
 
-            {/* Featured Kids Card */}
-            <div
-              onClick={() => navigate('/explore/kids')}
-              className="relative w-full h-28 rounded-2xl overflow-hidden cursor-pointer group shadow-md"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-600 opacity-90 group-hover:opacity-100 transition-opacity" />
-              <img
-                src="https://img.usecurling.com/p/800/300?q=kids%20playing%20sports&color=pink"
-                alt="Recreação Infantil"
-                className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-40 scale-105 group-hover:scale-110 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 flex items-center px-6 justify-between">
-                <div className="flex flex-col z-10">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Baby className="h-5 w-5 text-white" />
-                    <Badge
-                      variant="secondary"
-                      className="bg-white/20 text-white hover:bg-white/30 border-0 backdrop-blur-md"
-                    >
-                      Área Kids
-                    </Badge>
+            {/* PRIORITY SHORTCUTS */}
+            <div>
+              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3 px-1">
+                Acesso Rápido
+              </h3>
+              <div className="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide snap-x">
+                <Button
+                  variant="outline"
+                  className="h-12 rounded-xl border-border/60 bg-card hover:bg-secondary/50 hover:border-primary/30 flex-shrink-0 gap-2 snap-start shadow-sm"
+                  onClick={() => navigate('/explore/map-events')}
+                >
+                  <div className="h-8 w-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                    <MapIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                   </div>
-                  <h2 className="text-xl font-bold text-white mb-1">
-                    Recreação Infantil
-                  </h2>
-                  <p className="text-white/80 text-xs max-w-[200px] leading-relaxed">
-                    Segurança e diversão para as crianças enquanto você curte o
-                    esporte.
-                  </p>
-                </div>
-                <div className="bg-white/10 p-3 rounded-full backdrop-blur-md border border-white/20 shadow-lg group-hover:scale-110 transition-transform">
-                  <Sparkles className="h-6 w-6 text-white" />
-                </div>
+                  <span className="font-medium text-xs">Mapa</span>
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className="h-12 rounded-xl border-border/60 bg-card hover:bg-secondary/50 hover:border-primary/30 flex-shrink-0 gap-2 snap-start shadow-sm"
+                  onClick={() => navigate('/ranking')}
+                >
+                  <div className="h-8 w-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                    <TrendingUp className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                  </div>
+                  <span className="font-medium text-xs">Ranking</span>
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className="h-12 rounded-xl border-border/60 bg-card hover:bg-secondary/50 hover:border-primary/30 flex-shrink-0 gap-2 snap-start shadow-sm"
+                  onClick={() => navigate('/explore/international')}
+                >
+                  <div className="h-8 w-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+                    <Globe className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                  </div>
+                  <span className="font-medium text-xs">Mundial</span>
+                </Button>
+
+                <DigitalCard>
+                  <Button
+                    variant="outline"
+                    className="h-12 rounded-xl border-border/60 bg-card hover:bg-secondary/50 hover:border-primary/30 flex-shrink-0 gap-2 snap-start shadow-sm"
+                  >
+                    <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <CreditCard className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="font-medium text-xs">Carteira</span>
+                  </Button>
+                </DigitalCard>
               </div>
             </div>
 
-            {/* Categories Grid */}
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
-              {exploreCategories.map((cat) => (
-                <div
-                  key={cat.id}
-                  className="flex flex-col items-center gap-2 p-3 bg-card rounded-xl border border-border/50 shadow-sm hover:shadow-md transition-all cursor-pointer active:scale-95 group"
-                  onClick={() => {
-                    if (cat.id === 'international') {
-                      navigate('/explore/international')
-                    } else {
-                      navigate(`/explore/${cat.id}`)
-                    }
-                  }}
+            {/* FUNCTIONAL GROUPS (Dashboard Grid) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {dashboardGroups.map((group) => (
+                <Card
+                  key={group.id}
+                  className="border-none shadow-sm bg-card/50 backdrop-blur-sm ring-1 ring-border/50"
                 >
-                  <div
-                    className={`p-3 rounded-full transition-transform group-hover:scale-110 ${cat.bg}`}
-                  >
-                    <cat.icon className={`h-5 w-5 ${cat.color}`} />
-                  </div>
-                  <span className="text-[10px] font-medium text-center leading-tight">
-                    {cat.label}
-                  </span>
-                </div>
+                  <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className={cn(
+                          'p-2 rounded-lg bg-secondary/50',
+                          group.color,
+                        )}
+                      >
+                        <group.icon className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-sm font-bold">
+                          {group.title}
+                        </CardTitle>
+                        <p className="text-[10px] text-muted-foreground font-medium">
+                          {group.description}
+                        </p>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-4 pt-3">
+                    <div className="grid grid-cols-3 gap-2">
+                      {group.items.map((itemId) => {
+                        const data = getCategoryData(itemId)
+                        if (!data) return null
+                        return (
+                          <div
+                            key={itemId}
+                            className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-secondary/60 transition-colors cursor-pointer active:scale-95 group/item"
+                            onClick={() => navigate(data.path)}
+                          >
+                            <div
+                              className={cn(
+                                'h-10 w-10 rounded-full flex items-center justify-center transition-transform group-hover/item:scale-110 shadow-sm',
+                                data.bg,
+                              )}
+                            >
+                              <data.icon
+                                className={cn('h-5 w-5', data.color)}
+                              />
+                            </div>
+                            <span className="text-[10px] font-medium text-center leading-tight line-clamp-1">
+                              {data.label}
+                            </span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              {/* International Match Feature */}
-              <div
-                onClick={() => navigate('/explore/international')}
-                className="relative w-full h-24 rounded-2xl overflow-hidden cursor-pointer group shadow-sm hover:shadow-md transition-all"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-900 to-indigo-800 opacity-90" />
-                <img
-                  src="https://img.usecurling.com/p/400/200?q=world%20map&color=blue"
-                  className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-40 group-hover:scale-105 transition-transform duration-500"
-                  alt="Mundial"
-                />
-                <div className="absolute inset-0 p-4 flex flex-col justify-between">
-                  <Globe className="h-5 w-5 text-white/90" />
-                  <span className="text-sm font-bold text-white leading-tight">
-                    Match Mundial
-                  </span>
-                </div>
-              </div>
-
-              {/* Map Feature */}
-              <div
-                onClick={() => navigate('/explore/map-events')}
-                className="relative w-full h-24 rounded-2xl overflow-hidden cursor-pointer group shadow-sm hover:shadow-md transition-all"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-800 to-teal-700 opacity-90" />
-                <img
-                  src="https://img.usecurling.com/p/400/200?q=map%203d%20city&color=green"
-                  className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-40 group-hover:scale-105 transition-transform duration-500"
-                  alt="Mapa"
-                />
-                <div className="absolute inset-0 p-4 flex flex-col justify-between">
-                  <MapIcon className="h-5 w-5 text-white/90" />
-                  <span className="text-sm font-bold text-white leading-tight">
-                    Mapa Interativo
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Featured Events */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-lg font-bold">Eventos em Destaque</h2>
+            {/* CONTENT FEED: Featured Events */}
+            <div className="pt-2">
+              <div className="flex items-center justify-between mb-4 px-1">
+                <h2 className="text-lg font-bold flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-gold" /> Destaques
+                </h2>
                 <Button
-                  variant="link"
-                  className="text-xs text-primary h-auto p-0"
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs h-auto p-0 text-muted-foreground hover:text-primary gap-1"
                   onClick={() => navigate('/explore/events')}
                 >
-                  Ver tudo
+                  Ver todos <ChevronRight className="h-3 w-3" />
                 </Button>
               </div>
-              <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 scrollbar-hide">
+              <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 scrollbar-hide snap-x">
                 {mockEvents.slice(0, 3).map((event) => (
                   <Card
                     key={event.id}
-                    className="min-w-[280px] border-none shadow-sm bg-secondary/20 overflow-hidden cursor-pointer hover:shadow-md transition-all active:scale-[0.99]"
+                    className="min-w-[260px] border-none shadow-sm bg-secondary/20 overflow-hidden cursor-pointer hover:shadow-md transition-all active:scale-[0.99] snap-start"
                     onClick={() => navigate(`/events/${event.id}`)}
                   >
                     <div className="h-32 bg-muted relative">
@@ -475,7 +562,7 @@ export default function Explore() {
                         alt={event.title}
                         className="w-full h-full object-cover"
                       />
-                      <Badge className="absolute top-2 right-2 bg-background/80 text-foreground backdrop-blur-md shadow-sm">
+                      <Badge className="absolute top-2 right-2 bg-background/90 text-foreground backdrop-blur-md shadow-sm border-none text-[10px]">
                         {event.category}
                       </Badge>
                     </div>
@@ -502,23 +589,26 @@ export default function Explore() {
               </div>
             </div>
 
-            {/* Top Venues */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-lg font-bold">Arenas Populares</h2>
+            {/* CONTENT FEED: Top Venues */}
+            <div className="pb-8">
+              <div className="flex items-center justify-between mb-4 px-1">
+                <h2 className="text-lg font-bold flex items-center gap-2">
+                  <Trophy className="h-4 w-4 text-primary" /> Arenas Populares
+                </h2>
                 <Button
-                  variant="link"
-                  className="text-xs text-primary h-auto p-0"
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs h-auto p-0 text-muted-foreground hover:text-primary gap-1"
                   onClick={() => navigate('/explore/venues')}
                 >
-                  Ver tudo
+                  Ver todas <ChevronRight className="h-3 w-3" />
                 </Button>
               </div>
               <div className="space-y-3">
-                {mockVenues.map((venue) => (
+                {mockVenues.slice(0, 3).map((venue) => (
                   <Card
                     key={venue.id}
-                    className="flex border-none shadow-sm bg-card overflow-hidden cursor-pointer hover:bg-secondary/20 transition-colors active:scale-[0.99]"
+                    className="flex border-none shadow-sm bg-card overflow-hidden cursor-pointer hover:bg-secondary/20 transition-all active:scale-[0.99]"
                     onClick={() => navigate(`/venues/${venue.id}`)}
                   >
                     <div className="w-24 h-24 bg-muted relative shrink-0">
@@ -542,7 +632,7 @@ export default function Explore() {
                       <div className="flex items-center gap-2 mt-auto">
                         <Badge
                           variant="secondary"
-                          className="text-[10px] h-5 px-1.5 font-normal bg-secondary"
+                          className="text-[10px] h-5 px-1.5 font-normal bg-secondary border-none"
                         >
                           {venue.type}
                         </Badge>
