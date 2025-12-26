@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useRankingStore } from '@/stores/useRankingStore'
 import useNotificationStore from '@/stores/useNotificationStore'
 import { toast } from 'sonner'
@@ -11,41 +11,53 @@ export function RankingAlertManager() {
   const addNotification = useNotificationStore((state) => state.addNotification)
   const navigate = useNavigate()
 
+  // Use a ref to prevent spamming notifications if re-renders happen quickly
+  const lastCheckTime = useRef(Date.now())
+
   useEffect(() => {
-    // Simulate a ranking check shortly after app launch
-    const timer = setTimeout(() => {
+    const checkRanking = () => {
       // Calculate current actual rank based on our deterministic utility
+      // We focus on 'weekly' 'points' as the main ranking driver
       const currentRankings = getRankings('weekly', 'points')
       const userEntry = currentRankings.find(
         (r) => r.user.id === mockCurrentUser.id,
       )
-      const currentRank = userEntry?.position || lastWeeklyRank
+
+      if (!userEntry) return
+
+      const currentRank = userEntry.position
+
+      // Initial state sync (if first time ever, don't notify, just set)
+      if (lastWeeklyRank === 0) {
+        updateLastWeeklyRank(currentRank)
+        return
+      }
 
       // Check if rank changed significantly (>= 1 spot)
       if (currentRank !== lastWeeklyRank) {
-        const difference = lastWeeklyRank - currentRank
+        const difference = lastWeeklyRank - currentRank // Positive means improvement (e.g. 8 -> 5 = 3)
         const isImprovement = difference > 0
         const absDiff = Math.abs(difference)
 
+        // Only notify if there is a change
         if (absDiff >= 1) {
-          const title = isImprovement
-            ? 'Subiu no Ranking!'
-            : 'Desceu no Ranking'
-          const message = isImprovement
-            ? `Parabéns! Você subiu ${absDiff} posições no Ranking Semanal. Agora você está em #${currentRank}.`
-            : `Atenção! Você desceu ${absDiff} posições no Ranking Semanal.`
+          const title = isImprovement ? 'Subiu no Ranking!' : 'Caiu no Ranking'
 
-          // Add app notification
+          const message = isImprovement
+            ? `Parabéns! Você subiu ${absDiff} ${absDiff === 1 ? 'posição' : 'posições'} no Ranking Semanal. Agora você está em #${currentRank}.`
+            : `Atenção! Você desceu ${absDiff} ${absDiff === 1 ? 'posição' : 'posições'} no Ranking Semanal. Agora você está em #${currentRank}.`
+
+          // Add app notification history
           addNotification({
             title,
             message,
             type: 'ranking',
-            priority: isImprovement ? 'high' : 'medium',
+            priority: isImprovement ? 'high' : 'medium', // Downgrade isn't critical, just alert
             link: '/ranking?tab=weekly',
-            date: 'Hoje',
+            date: 'Agora',
           })
 
-          // Add Toast
+          // Add Toast for immediate feedback
           toast(title, {
             description: message,
             action: {
@@ -53,15 +65,28 @@ export function RankingAlertManager() {
               onClick: () => navigate('/ranking?tab=weekly'),
             },
             duration: 8000,
+            // Style the toast based on improvement or drop
+            className: isImprovement
+              ? 'border-l-4 border-l-green-500'
+              : 'border-l-4 border-l-orange-500',
           })
 
-          // Update store so we don't notify again for this specific change immediately
+          // Update store so we don't notify again for this specific change
           updateLastWeeklyRank(currentRank)
         }
       }
-    }, 4000) // 4 seconds delay to simulate "new arrival"
+    }
 
-    return () => clearTimeout(timer)
+    // Run check immediately on mount (simulating "while you were away")
+    const initialTimer = setTimeout(checkRanking, 2000)
+
+    // Run periodic checks to simulate real-time updates (every 10 seconds)
+    const intervalTimer = setInterval(checkRanking, 10000)
+
+    return () => {
+      clearTimeout(initialTimer)
+      clearInterval(intervalTimer)
+    }
   }, [lastWeeklyRank, updateLastWeeklyRank, addNotification, navigate])
 
   return null

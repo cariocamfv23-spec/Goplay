@@ -21,6 +21,7 @@ import {
   Handshake,
   Baby,
   Info,
+  TrendingDown,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -42,7 +43,7 @@ export function NotificationMenu() {
     }
   }
 
-  const getIcon = (type: string) => {
+  const getIcon = (type: string, title: string = '') => {
     switch (type) {
       case 'challenge':
         return <Trophy className="h-4 w-4 text-gold" />
@@ -57,6 +58,12 @@ export function NotificationMenu() {
       case 'level_up':
         return <Zap className="h-4 w-4 text-purple-500" />
       case 'ranking':
+        if (
+          title.toLowerCase().includes('caiu') ||
+          title.toLowerCase().includes('desceu')
+        ) {
+          return <TrendingDown className="h-4 w-4 text-orange-500" />
+        }
         return <TrendingUp className="h-4 w-4 text-green-500" />
       case 'event_reminder':
         return <Clock className="h-4 w-4 text-orange-500" />
@@ -121,7 +128,7 @@ export function NotificationMenu() {
                         : 'bg-muted border-transparent',
                     )}
                   >
-                    {getIcon(notification.type)}
+                    {getIcon(notification.type, notification.title)}
                   </div>
                   <div className="flex-1 space-y-1">
                     <p

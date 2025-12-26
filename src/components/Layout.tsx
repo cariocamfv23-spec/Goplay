@@ -1,49 +1,53 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { TopBar } from './TopBar'
-import { BottomNav } from './BottomNav'
-import { WeatherAlertManager } from './WeatherAlertManager'
-import { ScholarshipAlertManager } from './ScholarshipAlertManager'
-import { RankingAlertManager } from './RankingAlertManager'
-import { SmartNotificationManager } from './SmartNotificationManager'
+import { TopBar } from '@/components/TopBar'
+import { BottomNav } from '@/components/BottomNav'
+import { RankingAlertManager } from '@/components/RankingAlertManager'
+import { SmartNotificationManager } from '@/components/SmartNotificationManager'
+import { ScholarshipAlertManager } from '@/components/ScholarshipAlertManager'
+import { WeatherAlertManager } from '@/components/WeatherAlertManager'
+import { Toaster } from '@/components/ui/toaster'
+import { cn } from '@/lib/utils'
 
 export default function Layout() {
   const location = useLocation()
 
-  // Define paths where BottomNav should be hidden
-  const hideBottomNavPaths = [
-    '/messages/', // Hide on chat rooms (except list)
-    '/ai/motion-analysis', // Hide on immersive motion analysis page
-    '/ai/avatar', // Hide on immersive AI Avatar page
-    '/ai/nft-creator', // Hide on immersive NFT Creator page
-    '/ai/ghost-play', // Hide on immersive Ghost Play page
-  ]
-
-  const shouldHideBottomNav = hideBottomNavPaths.some(
-    (path) =>
-      location.pathname.includes(path) &&
-      (path === '/messages/' ? location.pathname !== '/messages' : true),
-  )
-
-  // Hide TopBar on immersive pages
-  const shouldHideTopBar =
-    location.pathname === '/move' ||
-    location.pathname === '/ai/motion-analysis' ||
-    location.pathname === '/ai/avatar' ||
-    location.pathname === '/profile/passport' ||
-    location.pathname === '/ai/nft-creator' ||
-    location.pathname === '/ai/ghost-play'
+  // Routes where we want a cleaner layout (e.g., Maps)
+  const isMapRoute =
+    location.pathname.includes('/map') || location.pathname.includes('/move')
+  const isMessageRoute =
+    location.pathname.includes('/messages/') &&
+    location.pathname !== '/messages'
 
   return (
-    <div className="min-h-screen bg-background flex flex-col relative">
-      {!shouldHideTopBar && <TopBar />}
-      <WeatherAlertManager />
-      <ScholarshipAlertManager />
+    <div className="min-h-screen bg-background font-sans antialiased flex flex-col relative">
+      {/* Global Alert Managers */}
       <RankingAlertManager />
       <SmartNotificationManager />
-      <main className={`flex-1 w-full ${!shouldHideBottomNav ? 'pb-16' : ''}`}>
+      <ScholarshipAlertManager />
+      <WeatherAlertManager />
+
+      {/* Main Navigation */}
+      <TopBar />
+
+      {/* Content Area */}
+      <main
+        className={cn(
+          'flex-1 w-full pb-20 md:pb-0 transition-all duration-300',
+          // Add margin/padding adjustments if needed for desktop sidebar in future
+        )}
+      >
         <Outlet />
       </main>
-      {!shouldHideBottomNav && <BottomNav />}
+
+      {/* Mobile Navigation */}
+      {!isMessageRoute && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50">
+          <BottomNav />
+        </div>
+      )}
+
+      {/* Toast Container */}
+      <Toaster />
     </div>
   )
 }

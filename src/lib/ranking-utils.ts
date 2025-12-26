@@ -3,6 +3,7 @@ import {
   RankingEntry,
   SpecialAchievement,
   mockChallenges,
+  mockCurrentUser,
 } from '@/lib/data'
 
 // Simple pseudo-random generator
@@ -49,9 +50,30 @@ export const getRankings = (
     }
   })
 
-  // Combine original mock data with extra users
-  // Filter out potential ID collisions
-  const allEntries = [...mockRankings, ...extraUsers].filter(
+  // Ensure current user is in the list with dynamic points to simulate real-time changes
+  const userBasePoints = mockCurrentUser.points || 1250
+
+  // Create a time-based fluctuation to simulate live ranking changes
+  // Using a sine wave with a period of roughly 1-2 minutes to allow for "Rank Up" and "Rank Down" testing
+  const timeFactor = Date.now() / 20000 // Slow oscillation
+  const fluctuation = Math.floor(Math.sin(timeFactor) * 300) // +/- 300 points swing
+
+  const currentUserEntry: RankingEntry = {
+    id: 'current_user_entry',
+    position: 0, // Calculated later
+    points: Math.max(0, userBasePoints + fluctuation),
+    trend: fluctuation > 0 ? 'up' : fluctuation < 0 ? 'down' : 'same',
+    user: {
+      id: mockCurrentUser.id,
+      name: mockCurrentUser.name,
+      avatar: mockCurrentUser.avatar,
+      team: 'Goplay Team',
+    },
+    specialAchievement: { type: 'rising_star', label: 'Você' },
+  }
+
+  // Combine original mock data, extra users and current user
+  const allEntries = [...mockRankings, ...extraUsers, currentUserEntry].filter(
     (v, i, a) => a.findIndex((t) => t.user.id === v.user.id) === i,
   )
 
@@ -59,6 +81,11 @@ export const getRankings = (
   const seed = timeRange.length + metric.length
 
   const processedData = allEntries.map((entry) => {
+    // Don't modify current user points with random filters, keep the time-based simulation
+    if (entry.user.id === mockCurrentUser.id) {
+      return entry
+    }
+
     let baseValue = entry.points
 
     // Simulate different metrics scaling

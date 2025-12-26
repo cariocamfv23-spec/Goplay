@@ -15,6 +15,7 @@ import {
   Clock,
   Handshake,
   Baby,
+  TrendingDown,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -25,7 +26,7 @@ export default function Notifications() {
   const { notifications, markAsRead, markAllAsRead, unreadCount } =
     useNotificationStore()
 
-  const getIcon = (type: string) => {
+  const getIcon = (type: string, title: string = '') => {
     switch (type) {
       case 'challenge':
         return <Trophy className="h-5 w-5 text-gold" />
@@ -40,6 +41,14 @@ export default function Notifications() {
       case 'level_up':
         return <Zap className="h-5 w-5 text-purple-500" />
       case 'ranking':
+        // Distinguish between up and down based on title context if needed,
+        // but broadly ranking uses TrendingUp. We can check if title contains "Caiu" or "Desceu"
+        if (
+          title.toLowerCase().includes('caiu') ||
+          title.toLowerCase().includes('desceu')
+        ) {
+          return <TrendingDown className="h-5 w-5 text-orange-500" />
+        }
         return <TrendingUp className="h-5 w-5 text-green-500" />
       case 'event_reminder':
         return <Clock className="h-5 w-5 text-orange-500" />
@@ -60,7 +69,7 @@ export default function Notifications() {
     if (priority === 'critical')
       return 'border-l-4 border-l-red-500 bg-red-500/10 dark:bg-red-900/20'
     if (priority === 'high')
-      return 'border-l-4 border-l-orange-500 bg-orange-500/10 dark:bg-orange-900/20'
+      return 'border-l-4 border-l-green-500 bg-green-500/10 dark:bg-green-900/20' // Changed high to green for positive ranking
     return 'hover:bg-secondary/30'
   }
 
@@ -141,7 +150,7 @@ export default function Notifications() {
                         not.read ? 'bg-secondary/50' : 'bg-secondary',
                       )}
                     >
-                      {getIcon(not.type)}
+                      {getIcon(not.type, not.title)}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-start gap-2 mb-1">
@@ -174,7 +183,7 @@ export default function Notifications() {
                               not.priority === 'critical'
                                 ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
                                 : not.priority === 'high'
-                                  ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300'
+                                  ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
                                   : 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
                             )}
                           >
