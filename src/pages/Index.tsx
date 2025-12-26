@@ -3,18 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import { Logo } from '@/components/Logo'
 import { AppIcon } from '@/components/AppIcon'
 import { ArrowRight, Trophy, Users, Activity } from 'lucide-react'
-import { NotificationMenu } from '@/components/NotificationMenu'
 
 export default function Index() {
   const navigate = useNavigate()
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden transition-colors duration-300">
-      {/* Floating Notification Bell for Landing Page Access */}
-      <div className="absolute top-4 right-4 z-50">
-        <NotificationMenu />
-      </div>
-
       {/* Dynamic Background with improved performance */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-background z-10" />
