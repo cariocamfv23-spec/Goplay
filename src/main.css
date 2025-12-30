@@ -154,4 +154,53 @@
   .border-retro-custom {
     border-color: var(--retro-accent);
   }
+
+  /* Athlete Aura Animations */
+  .animate-aura-spin {
+    animation: aura-spin 10s linear infinite;
+  }
+  .animate-aura-pulse-slow {
+    animation: aura-pulse 4s ease-in-out infinite;
+  }
+  .animate-aura-pulse-fast {
+    animation: aura-pulse 2s ease-in-out infinite;
+  }
+  .animate-aura-pulse-intense {
+    animation: aura-pulse-intense 2s ease-in-out infinite;
+  }
+}
+
+@keyframes aura-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes aura-pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes aura-pulse-intense {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+    filter: brightness(1.3);
+  }
 }

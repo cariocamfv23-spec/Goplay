@@ -39,6 +39,8 @@ import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
 import { RetrospectiveThemeSelector } from '@/components/RetrospectiveThemeSelector'
 import { cn } from '@/lib/utils'
 import { PostDetailDialog } from '@/components/PostDetailDialog'
+import { AthleteAura } from '@/components/AthleteAura'
+import { getAuraConfig } from '@/lib/aura-utils'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -60,6 +62,7 @@ export default function AthleteView({
 
   const { getTheme } = useRetrospectiveStore()
   const currentTheme = getTheme()
+  const auraConfig = getAuraConfig(user)
 
   // Filter posts based on user if needed. Currently showing all mockPosts for demo
   const userPosts = mockPosts
@@ -79,25 +82,38 @@ export default function AthleteView({
 
   return (
     <div className="pb-8 animate-fade-in">
-      <div className="h-32 bg-muted relative">
+      <div className="h-32 bg-muted relative overflow-hidden group">
         <img
           src={user.cover}
           alt="Cover"
-          className="w-full h-full object-cover opacity-80"
+          className="w-full h-full object-cover opacity-80 transition-transform duration-1000 group-hover:scale-105"
           onError={(e) => {
             e.currentTarget.src =
               'https://img.usecurling.com/p/800/400?q=abstract%20gradient&color=blue'
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
+
+        {/* Subtle Aura Reflection on Cover */}
+        {auraConfig.type !== 'none' && (
+          <div
+            className="absolute bottom-0 left-0 w-full h-1/2 opacity-30 mix-blend-overlay pointer-events-none"
+            style={{
+              background: `linear-gradient(to top, ${auraConfig.colorEnd}, transparent)`,
+            }}
+          />
+        )}
       </div>
 
       <div className="px-4 relative -mt-12 mb-4">
         <div className="flex justify-between items-end mb-4">
-          <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
-            <AvatarImage src={user.avatar} />
-            <AvatarFallback>{user.name[0]}</AvatarFallback>
-          </Avatar>
+          <AthleteAura profile={user} size="xl" showLabel className="-ml-1">
+            <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
+              <AvatarImage src={user.avatar} />
+              <AvatarFallback>{user.name[0]}</AvatarFallback>
+            </Avatar>
+          </AthleteAura>
+
           <div className="flex gap-2 mb-2 items-center">
             {isMe ? (
               <Button
@@ -133,6 +149,11 @@ export default function AthleteView({
             {user.level && (
               <span className="text-[10px] bg-gold text-black px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
                 LVL {user.level}
+              </span>
+            )}
+            {auraConfig.type === 'royal' && (
+              <span className="text-[10px] bg-purple-600 text-white px-1.5 py-0.5 rounded font-bold uppercase tracking-wider flex items-center gap-1 animate-pulse">
+                <Eye className="w-3 h-3" /> Scouted
               </span>
             )}
           </h1>
