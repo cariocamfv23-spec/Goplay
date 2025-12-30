@@ -30,6 +30,7 @@ import { useTheme } from 'next-themes'
 import { useThemeStore } from '@/stores/useThemeStore'
 import { mockCurrentUser } from '@/lib/data'
 import { NotificationMenu } from '@/components/NotificationMenu'
+import { AthleteAura } from '@/components/AthleteAura'
 
 export function TopBar() {
   const navigate = useNavigate()
@@ -155,14 +156,20 @@ export function TopBar() {
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="relative h-9 w-9 rounded-full ml-1"
+              className="relative h-10 w-10 rounded-full ml-1"
             >
-              <Avatar className="h-9 w-9 border-2 border-border/50 hover:border-primary transition-colors">
-                <AvatarImage src={mockCurrentUser.avatar} />
-                <AvatarFallback>
-                  {mockCurrentUser.name.substring(0, 2).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <AthleteAura
+                profile={mockCurrentUser}
+                size="sm"
+                disableAnimation={false}
+              >
+                <Avatar className="h-9 w-9 border-2 border-border/50 hover:border-primary transition-colors">
+                  <AvatarImage src={mockCurrentUser.avatar} />
+                  <AvatarFallback>
+                    {mockCurrentUser.name.substring(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </AthleteAura>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end" forceMount>

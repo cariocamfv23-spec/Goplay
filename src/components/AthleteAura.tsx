@@ -10,6 +10,7 @@ interface AthleteAuraProps {
   size?: 'sm' | 'md' | 'lg' | 'xl'
   className?: string
   showLabel?: boolean
+  disableAnimation?: boolean
 }
 
 export function AthleteAura({
@@ -18,6 +19,7 @@ export function AthleteAura({
   size = 'md',
   className,
   showLabel = false,
+  disableAnimation = false,
 }: AthleteAuraProps) {
   const config = getAuraConfig(profile)
 
@@ -26,6 +28,7 @@ export function AthleteAura({
   }
 
   const getAnimationClass = (anim: AuraConfig['animation']) => {
+    if (disableAnimation) return ''
     switch (anim) {
       case 'spin':
         return 'animate-aura-spin'
@@ -38,11 +41,11 @@ export function AthleteAura({
     }
   }
 
-  const sizeClasses = {
-    sm: 'p-0.5',
-    md: 'p-1',
-    lg: 'p-1.5',
-    xl: 'p-2',
+  const ringPadding = {
+    sm: '1px',
+    md: '2px',
+    lg: '3px',
+    xl: '4px',
   }
 
   const Icon = () => {
@@ -67,32 +70,33 @@ export function AthleteAura({
         className,
       )}
     >
-      {/* Back Glow Layer */}
+      {/* Back Glow Layer - Cinematic Effect */}
       <div
         className={cn(
-          'absolute inset-0 rounded-full blur-xl transition-all duration-1000 opacity-50',
+          'absolute inset-0 rounded-full blur-xl transition-all duration-1000 opacity-60',
           getAnimationClass(
             config.animation === 'spin' ? 'pulse' : config.animation,
           ),
         )}
         style={{
           background: config.glowColor,
-          transform: 'scale(1.2)',
+          transform: 'scale(1.25)',
         }}
       />
 
-      {/* Rotating Ring Layer (for spin animation or high intensity) */}
+      {/* Rotating Ring Layer */}
       <div
         className={cn(
           'absolute inset-0 rounded-full',
-          config.animation === 'spin' ? 'animate-aura-spin' : '',
+          !disableAnimation && config.animation === 'spin'
+            ? 'animate-aura-spin'
+            : '',
         )}
         style={{
-          padding: size === 'xl' ? '4px' : '2px',
+          padding: ringPadding[size],
           background: `conic-gradient(from 0deg, ${config.colorStart}, ${config.colorEnd}, transparent, ${config.colorStart})`,
           maskImage: 'linear-gradient(black, black)',
           WebkitMaskImage: 'linear-gradient(black, black)',
-          // Create a ring effect by masking the center
           maskComposite: 'exclude',
           WebkitMaskComposite: 'xor',
         }}
@@ -105,7 +109,7 @@ export function AthleteAura({
       {showLabel && config.label && (
         <div
           className={cn(
-            'absolute -bottom-2 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-white shadow-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300',
+            'absolute -bottom-2 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-white shadow-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none',
             'animate-in fade-in slide-in-from-top-1',
           )}
           style={{
@@ -117,8 +121,8 @@ export function AthleteAura({
         </div>
       )}
 
-      {/* Particle Effects (CSS pseudo-elements simulated) */}
-      {config.intensity === 'high' && (
+      {/* High Intensity Particle Effects */}
+      {!disableAnimation && config.intensity === 'high' && (
         <>
           <div
             className="absolute -top-1 right-0 w-1.5 h-1.5 rounded-full bg-white animate-ping opacity-75"

@@ -26,6 +26,7 @@ import {
   UserPlus,
   MessageCircle,
   Bot,
+  Info,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -41,6 +42,7 @@ import { cn } from '@/lib/utils'
 import { PostDetailDialog } from '@/components/PostDetailDialog'
 import { AthleteAura } from '@/components/AthleteAura'
 import { getAuraConfig } from '@/lib/aura-utils'
+import { AuraLegend } from '@/components/AuraLegend'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -55,6 +57,7 @@ export default function AthleteView({
   const [isMusicSelectorOpen, setIsMusicSelectorOpen] = useState(false)
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
   const [isThemeSelectorOpen, setIsThemeSelectorOpen] = useState(false)
+  const [isAuraLegendOpen, setIsAuraLegendOpen] = useState(false)
 
   // Post Detail State
   const [selectedPost, setSelectedPost] = useState<any>(null)
@@ -81,8 +84,31 @@ export default function AthleteView({
   }
 
   return (
-    <div className="pb-8 animate-fade-in">
-      <div className="h-32 bg-muted relative overflow-hidden group">
+    <div className="pb-8 animate-fade-in relative">
+      {/* Cinematic Profile Background Contextual Aura */}
+      {auraConfig.type !== 'none' && (
+        <div
+          className="absolute inset-0 z-0 pointer-events-none overflow-hidden"
+          style={{ height: '500px' }}
+        >
+          {/* Main Gradient */}
+          <div
+            className="absolute top-0 inset-x-0 h-full opacity-10 mix-blend-screen transition-colors duration-1000"
+            style={{
+              background: `radial-gradient(circle at 50% 30%, ${auraConfig.colorEnd}, transparent 70%)`,
+            }}
+          />
+          {/* Secondary Pulse */}
+          <div
+            className="absolute top-0 inset-x-0 h-full opacity-5 mix-blend-plus-lighter animate-pulse transition-colors duration-1000"
+            style={{
+              background: `radial-gradient(circle at 50% 20%, ${auraConfig.colorStart}, transparent 60%)`,
+            }}
+          />
+        </div>
+      )}
+
+      <div className="h-32 bg-muted relative overflow-hidden group z-10">
         <img
           src={user.cover}
           alt="Cover"
@@ -93,19 +119,9 @@ export default function AthleteView({
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
-
-        {/* Subtle Aura Reflection on Cover */}
-        {auraConfig.type !== 'none' && (
-          <div
-            className="absolute bottom-0 left-0 w-full h-1/2 opacity-30 mix-blend-overlay pointer-events-none"
-            style={{
-              background: `linear-gradient(to top, ${auraConfig.colorEnd}, transparent)`,
-            }}
-          />
-        )}
       </div>
 
-      <div className="px-4 relative -mt-12 mb-4">
+      <div className="px-4 relative -mt-12 mb-4 z-10">
         <div className="flex justify-between items-end mb-4">
           <AthleteAura profile={user} size="xl" showLabel className="-ml-1">
             <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
@@ -144,19 +160,24 @@ export default function AthleteView({
         </div>
 
         <div>
-          <h1 className="text-xl font-bold flex items-center gap-2">
-            {user.name}
-            {user.level && (
-              <span className="text-[10px] bg-gold text-black px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
-                LVL {user.level}
-              </span>
-            )}
-            {auraConfig.type === 'royal' && (
-              <span className="text-[10px] bg-purple-600 text-white px-1.5 py-0.5 rounded font-bold uppercase tracking-wider flex items-center gap-1 animate-pulse">
-                <Eye className="w-3 h-3" /> Scouted
-              </span>
-            )}
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-bold flex items-center gap-2">
+              {user.name}
+              {user.level && (
+                <span className="text-[10px] bg-gold text-black px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
+                  LVL {user.level}
+                </span>
+              )}
+            </h1>
+            {/* Aura Legend Trigger */}
+            <button
+              onClick={() => setIsAuraLegendOpen(true)}
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Info className="w-4 h-4" />
+            </button>
+          </div>
+
           <p className="text-sm text-muted-foreground mb-2">{user.role}</p>
           <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
             <MapPin className="h-3 w-3" /> {user.location}
@@ -250,22 +271,19 @@ export default function AthleteView({
           </div>
         </div>
 
-        {/* Retrospective Banner - Premium Super Star UI */}
+        {/* Retrospective Banner */}
         {isMe && (
           <div
             onClick={() => navigate('/retrospective')}
             className="mb-6 relative group cursor-pointer overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] border border-white/10"
             style={currentTheme.customVars as React.CSSProperties}
           >
-            {/* Premium Animated Background */}
             <div
               className={cn(
                 'absolute inset-0 animate-gradient-xy transition-all duration-500',
                 currentTheme.cardGradient,
               )}
             />
-
-            {/* Starfield Texture */}
             <div
               className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay"
               style={{
@@ -273,8 +291,6 @@ export default function AthleteView({
                   "url('https://img.usecurling.com/p/600/300?q=stars%20space&color=black')",
               }}
             />
-
-            {/* Glow Effects */}
             <div
               className={cn(
                 'absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl animate-pulse transition-all duration-500',
@@ -282,8 +298,6 @@ export default function AthleteView({
               )}
             />
             <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/40 rounded-full blur-3xl" />
-
-            {/* Content */}
             <div className="relative p-5 z-10 flex items-center justify-between">
               <div className="flex-1 pr-4">
                 <div className="flex items-center gap-2 mb-2">
@@ -313,9 +327,7 @@ export default function AthleteView({
                   Assista agora aos seus melhores momentos!
                 </p>
               </div>
-
               <div className="flex items-center gap-2">
-                {/* Customize Button */}
                 <Button
                   variant="ghost"
                   size="icon"
@@ -327,8 +339,6 @@ export default function AthleteView({
                 >
                   <Palette className="h-4 w-4" />
                 </Button>
-
-                {/* Share Button */}
                 <Button
                   variant="ghost"
                   size="icon"
@@ -340,8 +350,6 @@ export default function AthleteView({
                 >
                   <Share2 className="h-4 w-4" />
                 </Button>
-
-                {/* Play Button */}
                 <div
                   className={cn(
                     'h-11 w-11 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-500 border-2 border-white/20',
@@ -610,6 +618,8 @@ export default function AthleteView({
         open={isThemeSelectorOpen}
         onOpenChange={setIsThemeSelectorOpen}
       />
+
+      <AuraLegend open={isAuraLegendOpen} onOpenChange={setIsAuraLegendOpen} />
 
       <ShareDialog
         open={isShareDialogOpen}
