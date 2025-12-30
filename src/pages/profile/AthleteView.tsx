@@ -43,6 +43,7 @@ import { PostDetailDialog } from '@/components/PostDetailDialog'
 import { AthleteAura } from '@/components/AthleteAura'
 import { getAuraConfig } from '@/lib/aura-utils'
 import { AuraLegend } from '@/components/AuraLegend'
+import { EcoHumanoWaves } from '@/components/EcoHumanoWaves'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -123,12 +124,21 @@ export default function AthleteView({
 
       <div className="px-4 relative -mt-12 mb-4 z-10">
         <div className="flex justify-between items-end mb-4">
-          <AthleteAura profile={user} size="xl" showLabel className="-ml-1">
-            <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
-              <AvatarImage src={user.avatar} />
-              <AvatarFallback>{user.name[0]}</AvatarFallback>
-            </Avatar>
-          </AthleteAura>
+          <div className="relative">
+            {/* Eco Humano Waves - Background Layer */}
+            <EcoHumanoWaves
+              profile={user}
+              className="scale-150 opacity-80 -z-10"
+            />
+
+            {/* Athlete Aura - Foreground Layer */}
+            <AthleteAura profile={user} size="xl" showLabel className="-ml-1">
+              <Avatar className="h-24 w-24 border-4 border-background shadow-lg relative z-20">
+                <AvatarImage src={user.avatar} />
+                <AvatarFallback>{user.name[0]}</AvatarFallback>
+              </Avatar>
+            </AthleteAura>
+          </div>
 
           <div className="flex gap-2 mb-2 items-center">
             {isMe ? (

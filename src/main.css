@@ -168,6 +168,18 @@
   .animate-aura-pulse-intense {
     animation: aura-pulse-intense 2s ease-in-out infinite;
   }
+
+  /* Eco Humano Organic Waves */
+  .animate-blob-pulse {
+    animation: blob-pulse 8s ease-in-out infinite;
+  }
+  .animate-eco-ripple {
+    animation: eco-ripple 4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+  .animate-eco-ripple-delayed {
+    animation: eco-ripple 4s cubic-bezier(0, 0, 0.2, 1) infinite;
+    animation-delay: 2s;
+  }
 }
 
 @keyframes aura-spin {
@@ -202,5 +214,38 @@
     opacity: 1;
     transform: scale(1.1);
     filter: brightness(1.3);
+  }
+}
+
+@keyframes blob-pulse {
+  0% {
+    transform: scale(1);
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  33% {
+    transform: scale(1.05);
+    border-radius: 40% 60% 70% 30% / 50% 60% 30% 60%;
+  }
+  66% {
+    transform: scale(0.95);
+    border-radius: 70% 30% 50% 50% / 30% 50% 70% 50%;
+  }
+  100% {
+    transform: scale(1);
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+}
+
+@keyframes eco-ripple {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
   }
 }
