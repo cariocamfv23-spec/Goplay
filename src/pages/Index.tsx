@@ -45,7 +45,7 @@ export default function Index() {
               </span>
             </h1>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              A plataforma completa para atletas, times e organizadores.
+              Seu talento merece um palco do tamanho do mundo.
             </p>
           </div>
 
