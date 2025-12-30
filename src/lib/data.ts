@@ -177,6 +177,9 @@ export interface ProfileData {
   totalLikes?: number
   ranking?: number
   isDiscovered?: boolean // New field for map markers
+  discoveryReason?: string
+  engagement?: number
+  coordinates?: { x: number; y: number }
 }
 
 export interface FinancialTransaction {
@@ -1196,6 +1199,9 @@ export const mockTalents: ProfileData[] = [
     totalLikes: 3200,
     ranking: 1,
     isDiscovered: true,
+    discoveryReason: 'Artilheiro da Copa Goplay SP',
+    engagement: 95,
+    coordinates: { x: 75, y: 75 }, // Southeast
   },
   {
     id: 't2',
@@ -1297,6 +1303,9 @@ export const mockTalents: ProfileData[] = [
     totalLikes: 3400,
     ranking: 12,
     isDiscovered: true,
+    discoveryReason: 'Precisão de passe de nível profissional',
+    engagement: 88,
+    coordinates: { x: 40, y: 85 }, // South
   },
   {
     id: 't7',
@@ -1363,6 +1372,61 @@ export const mockTalents: ProfileData[] = [
     totalLikes: 1200,
     ranking: 25,
     isDiscovered: true,
+    discoveryReason: 'Velocidade acima da média em testes regionais',
+    engagement: 82,
+    coordinates: { x: 25, y: 25 }, // North
+  },
+  // New Regional Talents for Map Examples
+  {
+    id: 't10',
+    name: 'Moana Santos',
+    username: '@moana_beach',
+    type: 'athlete',
+    age: 20,
+    sport: 'Vôlei',
+    position: 'Ponteira',
+    height: '1.80m',
+    weight: '65kg',
+    rating: 4.9,
+    location: 'Recife, PE',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=115',
+    cover:
+      'https://img.usecurling.com/p/800/400?q=beach%20volleyball&color=yellow',
+    bio: 'Dominância no circuito de base nordestino. Pronta para o profissional.',
+    followers: '15.2k',
+    stats: { matches: 58, wins: 45, mvp: 20 },
+    totalViews: 32000,
+    totalLikes: 6500,
+    ranking: 4,
+    isDiscovered: true,
+    discoveryReason: 'Dominância no circuito de base nordestino',
+    engagement: 92,
+    coordinates: { x: 85, y: 30 }, // Northeast
+  },
+  {
+    id: 't12',
+    name: 'Julia Costa',
+    username: '@juju_futsal',
+    type: 'athlete',
+    age: 17,
+    sport: 'Futsal',
+    position: 'Ala',
+    height: '1.65m',
+    weight: '58kg',
+    rating: 4.7,
+    location: 'Brasília, DF',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=120',
+    cover: 'https://img.usecurling.com/p/800/400?q=futsal%20court&color=pink',
+    bio: 'Dribles rápidos e visão de jogo.',
+    followers: '5.1k',
+    stats: { matches: 40, wins: 28, mvp: 6 },
+    totalViews: 11000,
+    totalLikes: 2300,
+    ranking: 18,
+    isDiscovered: true,
+    discoveryReason: 'Destaque nos Jogos Escolares Brasileiros',
+    engagement: 78,
+    coordinates: { x: 50, y: 50 }, // Center-West
   },
 ]
 

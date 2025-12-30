@@ -9,6 +9,8 @@ import {
   Activity,
   ArrowRight,
   FileSignature,
+  Sparkles,
+  Zap,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
@@ -121,7 +123,19 @@ export function TalentPreviewCard({
           </p>
         </div>
 
-        {/* Mini Stats */}
+        {/* Discovery Details (New Section) */}
+        {isDiscovered && talent.discoveryReason && (
+          <div className="mb-4 bg-cyan-950/30 border border-cyan-500/20 rounded-lg p-2.5 animate-in slide-in-from-left-2 fade-in duration-300">
+            <h4 className="text-[10px] uppercase font-bold text-cyan-400 mb-1 flex items-center gap-1">
+              <Sparkles className="w-3 h-3" /> Motivo da Descoberta
+            </h4>
+            <p className="text-xs text-cyan-100 leading-snug italic">
+              "{talent.discoveryReason}"
+            </p>
+          </div>
+        )}
+
+        {/* Mini Stats Grid */}
         <div className="grid grid-cols-3 gap-2 mb-4">
           <div className="bg-secondary/50 rounded-lg p-2 text-center border border-border/50">
             <span className="block font-bold text-sm">
@@ -132,10 +146,26 @@ export function TalentPreviewCard({
             </span>
           </div>
           <div className="bg-secondary/50 rounded-lg p-2 text-center border border-border/50">
-            <span className="block font-bold text-sm">{talent.age || '-'}</span>
-            <span className="text-[9px] text-muted-foreground uppercase font-medium">
-              Idade
-            </span>
+            {talent.engagement ? (
+              <>
+                <span className="block font-bold text-sm text-green-400 flex items-center justify-center gap-0.5">
+                  <Zap className="w-3 h-3 fill-current" />
+                  {talent.engagement}%
+                </span>
+                <span className="text-[9px] text-muted-foreground uppercase font-medium">
+                  Engajamento
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="block font-bold text-sm">
+                  {talent.age || '-'}
+                </span>
+                <span className="text-[9px] text-muted-foreground uppercase font-medium">
+                  Idade
+                </span>
+              </>
+            )}
           </div>
           <div className="bg-secondary/50 rounded-lg p-2 text-center border border-border/50">
             <span
@@ -156,7 +186,7 @@ export function TalentPreviewCard({
           className={cn(
             'w-full h-9 font-semibold gap-2 text-xs uppercase tracking-wide',
             isDiscovered
-              ? 'bg-cyan-600 hover:bg-cyan-700'
+              ? 'bg-cyan-600 hover:bg-cyan-700 shadow-[0_0_15px_rgba(8,145,178,0.4)]'
               : 'bg-primary hover:bg-primary/90',
           )}
           onClick={() => navigate(`/profile/${talent.id}`)}

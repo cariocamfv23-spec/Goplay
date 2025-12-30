@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Search, Radar, Target } from 'lucide-react'
+import { ArrowLeft, Search, Radar, Target, Trophy } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -13,6 +13,8 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { mockTalents } from '@/lib/data'
 import { TalentMapMarker } from '@/components/TalentMapMarker'
+import { Toggle } from '@/components/ui/toggle'
+import { cn } from '@/lib/utils'
 
 // Helper to generate consistent coordinates based on ID
 const generateCoordinates = (id: string | number) => {
@@ -33,12 +35,14 @@ export default function InvisibleTalentMap() {
   const [sportFilter, setSportFilter] = useState('all')
   const [positionFilter, setPositionFilter] = useState('all')
   const [ratingFilter, setRatingFilter] = useState('all')
+  const [showDiscoveriesOnly, setShowDiscoveriesOnly] = useState(false)
 
   // Initialize talents with coordinates
   const mapData = useMemo(() => {
     return mockTalents.map((t) => ({
       ...t,
-      ...generateCoordinates(t.id),
+      // Priority: explicit coordinates > generated coordinates
+      ...(t.coordinates ? t.coordinates : generateCoordinates(t.id)),
     }))
   }, [])
 
@@ -59,7 +63,16 @@ export default function InvisibleTalentMap() {
     const matchesRating =
       ratingFilter === 'all' || (talent.rating || 0) >= parseFloat(ratingFilter)
 
-    return matchesSearch && matchesSport && matchesPosition && matchesRating
+    const matchesDiscovery =
+      !showDiscoveriesOnly || talent.isDiscovered === true
+
+    return (
+      matchesSearch &&
+      matchesSport &&
+      matchesPosition &&
+      matchesRating &&
+      matchesDiscovery
+    )
   })
 
   // Unique values for filters
@@ -95,7 +108,7 @@ export default function InvisibleTalentMap() {
       </div>
 
       {/* Header UI */}
-      <div className="relative z-30 flex flex-col gap-2 p-4 bg-gradient-to-b from-black/80 to-transparent">
+      <div className="relative z-30 flex flex-col gap-2 p-4 bg-gradient-to-b from-black/90 to-transparent">
         <div className="flex items-center gap-2">
           <Button
             variant="secondary"
@@ -126,7 +139,21 @@ export default function InvisibleTalentMap() {
         </div>
 
         {/* Filters Scroll */}
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide mask-fade-right">
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide mask-fade-right items-center">
+          <Toggle
+            pressed={showDiscoveriesOnly}
+            onPressedChange={setShowDiscoveriesOnly}
+            className={cn(
+              'h-8 rounded-full border border-white/10 text-xs px-3 gap-1.5 transition-all',
+              showDiscoveriesOnly
+                ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/50 shadow-[0_0_10px_rgba(6,182,212,0.3)]'
+                : 'bg-black/40 text-white hover:bg-white/10',
+            )}
+          >
+            <Trophy className="w-3.5 h-3.5" />
+            Descobertas
+          </Toggle>
+
           <Select value={sportFilter} onValueChange={setSportFilter}>
             <SelectTrigger className="w-[120px] h-8 rounded-full bg-black/40 backdrop-blur-md border-white/10 text-xs text-white">
               <SelectValue placeholder="Esporte" />
@@ -176,6 +203,7 @@ export default function InvisibleTalentMap() {
               setPositionFilter('all')
               setRatingFilter('all')
               setSearch('')
+              setShowDiscoveriesOnly(false)
             }}
           >
             Limpar
@@ -218,8 +246,16 @@ export default function InvisibleTalentMap() {
             <Button
               size="icon"
               className="rounded-full h-10 w-10 bg-primary hover:bg-primary/90 text-white shadow-[0_0_15px_hsl(var(--primary))]"
+              onClick={() => {
+                setShowDiscoveriesOnly(!showDiscoveriesOnly)
+              }}
             >
-              <Target className="h-5 w-5" />
+              <Target
+                className={cn(
+                  'h-5 w-5 transition-transform',
+                  showDiscoveriesOnly && 'scale-110',
+                )}
+              />
             </Button>
           </div>
         </div>
