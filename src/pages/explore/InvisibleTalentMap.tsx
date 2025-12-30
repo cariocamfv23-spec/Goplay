@@ -1,17 +1,6 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import {
-  ArrowLeft,
-  Search,
-  Map as MapIcon,
-  List,
-  Filter,
-  Trophy,
-  Target,
-  Users,
-  Eye,
-  Radar,
-} from 'lucide-react'
+import { ArrowLeft, Search, Radar, Target } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -22,9 +11,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { mockTalents, ProfileData } from '@/lib/data'
+import { mockTalents } from '@/lib/data'
 import { TalentMapMarker } from '@/components/TalentMapMarker'
-import { cn } from '@/lib/utils'
 
 // Helper to generate consistent coordinates based on ID
 const generateCoordinates = (id: string | number) => {
@@ -96,6 +84,11 @@ export default function InvisibleTalentMap() {
         />
         {/* Grid Overlay for "Scanner" feel */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,100,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,100,0.03)_1px,transparent_1px)] bg-[size:40px_40px]" />
+
+        {/* Hotspots - Visual representation of density */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen animate-pulse" />
+        <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-cyan-500/10 rounded-full blur-[80px] pointer-events-none mix-blend-screen animate-pulse delay-700" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gold/5 rounded-full blur-[60px] pointer-events-none mix-blend-screen" />
 
         {/* Radar Sweep Animation */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent w-[200%] h-full animate-[spin_8s_linear_infinite] origin-bottom-left opacity-30 pointer-events-none" />
