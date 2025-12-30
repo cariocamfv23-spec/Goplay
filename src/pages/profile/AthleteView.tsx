@@ -27,6 +27,7 @@ import {
   MessageCircle,
   Bot,
   Info,
+  Waves,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -44,6 +45,7 @@ import { AthleteAura } from '@/components/AthleteAura'
 import { getAuraConfig } from '@/lib/aura-utils'
 import { AuraLegend } from '@/components/AuraLegend'
 import { EcoHumanoWaves } from '@/components/EcoHumanoWaves'
+import { EcoLegend } from '@/components/EcoLegend'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -59,6 +61,7 @@ export default function AthleteView({
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
   const [isThemeSelectorOpen, setIsThemeSelectorOpen] = useState(false)
   const [isAuraLegendOpen, setIsAuraLegendOpen] = useState(false)
+  const [isEcoLegendOpen, setIsEcoLegendOpen] = useState(false)
 
   // Post Detail State
   const [selectedPost, setSelectedPost] = useState<any>(null)
@@ -183,8 +186,17 @@ export default function AthleteView({
             <button
               onClick={() => setIsAuraLegendOpen(true)}
               className="text-muted-foreground hover:text-primary transition-colors"
+              aria-label="Legenda da Aura"
             >
               <Info className="w-4 h-4" />
+            </button>
+            {/* New Eco Legend Trigger */}
+            <button
+              onClick={() => setIsEcoLegendOpen(true)}
+              className="text-muted-foreground hover:text-emerald-500 transition-colors"
+              aria-label="Eco Humano"
+            >
+              <Waves className="w-4 h-4" />
             </button>
           </div>
 
@@ -630,6 +642,7 @@ export default function AthleteView({
       />
 
       <AuraLegend open={isAuraLegendOpen} onOpenChange={setIsAuraLegendOpen} />
+      <EcoLegend open={isEcoLegendOpen} onOpenChange={setIsEcoLegendOpen} />
 
       <ShareDialog
         open={isShareDialogOpen}

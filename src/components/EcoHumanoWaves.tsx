@@ -1,15 +1,37 @@
 import { ProfileData } from '@/lib/data'
-import { getEcoConfig } from '@/lib/eco-utils'
+import { getEcoConfig, EcoConfig } from '@/lib/eco-utils'
 import { cn } from '@/lib/utils'
 import { useMemo } from 'react'
 
 interface EcoHumanoWavesProps {
-  profile: ProfileData
+  profile?: ProfileData
+  configOverride?: Partial<EcoConfig>
   className?: string
 }
 
-export function EcoHumanoWaves({ profile, className }: EcoHumanoWavesProps) {
-  const config = useMemo(() => getEcoConfig(profile), [profile])
+export function EcoHumanoWaves({
+  profile,
+  configOverride,
+  className,
+}: EcoHumanoWavesProps) {
+  const config = useMemo(() => {
+    const baseConfig = profile
+      ? getEcoConfig(profile)
+      : {
+          active: true,
+          resonance: 50,
+          frequency: 50,
+          range: 50,
+          colorTheme: 'neutral' as const,
+          particles: false,
+          description: 'Eco Padrão',
+        }
+
+    if (configOverride) {
+      return { ...baseConfig, ...configOverride }
+    }
+    return baseConfig
+  }, [profile, configOverride])
 
   if (!config.active) return null
 
@@ -42,7 +64,7 @@ export function EcoHumanoWaves({ profile, className }: EcoHumanoWavesProps) {
     },
   }
 
-  const colors = themeColors[config.colorTheme]
+  const colors = themeColors[config.colorTheme] || themeColors.neutral
 
   // Calculate dynamic scales
   // Base scale is 1.0, expands up to 2.0 based on range
