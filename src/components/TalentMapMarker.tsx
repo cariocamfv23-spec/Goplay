@@ -33,7 +33,10 @@ export function TalentMapMarker({ talent, isTopTalent }: TalentMapMarkerProps) {
           {/* Discovery Ripple Effect for new talents */}
           {isDiscovered && (
             <>
-              <div className="absolute inset-0 rounded-full bg-cyan-400/30 animate-ping duration-[3000ms]" />
+              <div
+                className="absolute inset-0 rounded-full bg-cyan-400/30 animate-ping"
+                style={{ animationDuration: '3s' }}
+              />
               <div className="absolute -inset-2 rounded-full border border-cyan-400/50 animate-pulse" />
             </>
           )}
