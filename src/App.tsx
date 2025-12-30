@@ -156,6 +156,7 @@ const GoalsDashboard = lazy(() => import('./pages/goals/GoalsDashboard'))
 const AiAvatar = lazy(() => import('./pages/ai/AiAvatar'))
 const Oracle = lazy(() => import('./pages/ai/Oracle'))
 const NftCreator = lazy(() => import('./pages/ai/NftCreator'))
+const BotDaVerdade = lazy(() => import('./pages/ai/BotDaVerdade'))
 
 // Move Pages
 const KidsZoneMap = lazy(() => import('./pages/move/KidsZoneMap'))
@@ -404,6 +405,10 @@ const App = () => {
                     <Route path="/ai/avatar" element={<AiAvatar />} />
                     <Route path="/ai/oracle" element={<Oracle />} />
                     <Route path="/ai/nft-creator" element={<NftCreator />} />
+                    <Route
+                      path="/ai/bot-da-verdade"
+                      element={<BotDaVerdade />}
+                    />
                   </Route>
 
                   {/* Services & Driver Routes */}

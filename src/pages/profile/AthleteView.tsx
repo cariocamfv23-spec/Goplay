@@ -25,6 +25,7 @@ import {
   ImageOff,
   UserPlus,
   MessageCircle,
+  Bot,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -397,6 +398,14 @@ export default function AthleteView({
               onClick={() => navigate('/profile/timeline')}
             >
               <History className="mr-2 h-4 w-4" /> Linha do Tempo
+            </Button>
+          )}
+          {isMe && (
+            <Button
+              className="bg-gradient-to-r from-red-600/10 to-red-900/10 text-red-600 dark:text-red-400 hover:from-red-600/20 border border-red-500/20 justify-start shadow-sm col-span-2 font-bold"
+              onClick={() => navigate('/ai/bot-da-verdade')}
+            >
+              <Bot className="mr-2 h-4 w-4" /> Bot da Verdade
             </Button>
           )}
           {isMe && (
