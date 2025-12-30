@@ -20,6 +20,7 @@ import {
   ChevronRight,
   TrendingUp,
   FileSignature,
+  ScanEye,
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -104,6 +105,16 @@ export default function Explore() {
         path: '/explore/map-events',
       }
     }
+    if (id === 'talent-map') {
+      return {
+        id: 'talent-map',
+        label: 'Talent Map',
+        icon: ScanEye,
+        bg: 'bg-indigo-100 dark:bg-indigo-900/20',
+        color: 'text-indigo-600 dark:text-indigo-400',
+        path: '/explore/talent-map',
+      }
+    }
     const cat = exploreCategories.find((c) => c.id === id)
     if (cat) {
       let path = `/explore/${cat.id}`
@@ -132,7 +143,13 @@ export default function Explore() {
       title: 'Carreira Pro',
       icon: Briefcase,
       description: 'Oportunidades reais',
-      items: ['contracts', 'sponsorship', 'scholarships', 'agencies'],
+      items: [
+        'talent-map',
+        'contracts',
+        'sponsorship',
+        'scholarships',
+        'agencies',
+      ],
       color: 'text-blue-500',
     },
     {

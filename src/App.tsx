@@ -46,6 +46,9 @@ const ChampionshipDashboard = lazy(
 
 // Explore Lists
 const TalentsList = lazy(() => import('./pages/explore/TalentsList'))
+const InvisibleTalentMap = lazy(
+  () => import('./pages/explore/InvisibleTalentMap'),
+)
 const PhotographersList = lazy(
   () => import('./pages/explore/PhotographersList'),
 )
@@ -235,6 +238,10 @@ const App = () => {
                       element={<SponsorshipMatch />}
                     />
                     <Route path="/explore/talents" element={<TalentsList />} />
+                    <Route
+                      path="/explore/talent-map"
+                      element={<InvisibleTalentMap />}
+                    />
                     <Route
                       path="/explore/photographers"
                       element={<PhotographersList />}
