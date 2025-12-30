@@ -38,7 +38,7 @@ export default function Explore() {
 
   const hasActiveSearch = search.length > 0 || activeSport !== 'all'
 
-  // Search Logic (Preserved)
+  // Search Logic
   const filteredResults = useMemo(() => {
     if (!hasActiveSearch) return { venues: [], events: [] }
 
@@ -75,6 +75,17 @@ export default function Explore() {
             type.includes('luta') || type.includes('artes marciais')
         } else if (activeSport === 'boxing') {
           matchesSport = type.includes('boxe')
+        } else if (activeSport === 'volleyball') {
+          matchesSport = type.includes('vôlei') || type.includes('volleyball')
+        } else if (activeSport === 'basketball') {
+          matchesSport =
+            type.includes('basquete') || type.includes('basketball')
+        } else if (activeSport === 'tennis') {
+          matchesSport = type.includes('tênis') || type.includes('tennis')
+        } else if (activeSport === 'skate') {
+          matchesSport = type.includes('skate')
+        } else if (activeSport === 'surf') {
+          matchesSport = type.includes('surf')
         } else {
           matchesSport = type.includes(activeSport)
         }
@@ -506,12 +517,12 @@ export default function Explore() {
                     <div
                       key={tribe.id}
                       onClick={() => setActiveSport(tribe.id)}
-                      className="relative min-w-[140px] h-[200px] rounded-2xl overflow-hidden cursor-pointer group snap-start shadow-md"
+                      className="relative min-w-[140px] h-[200px] rounded-2xl overflow-hidden cursor-pointer group snap-start shadow-md bg-muted"
                     >
                       <img
                         src={tribe.image}
                         alt={tribe.label}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80" />
 

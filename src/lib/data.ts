@@ -621,63 +621,105 @@ export const tribes = [
     label: 'Todos',
     icon: LayoutGrid,
     image:
-      'https://img.usecurling.com/p/400/300?q=sports%20collage&color=black',
+      'https://img.usecurling.com/p/400/600?q=sports%20collage&color=black&dpr=2',
   },
   {
     id: 'futebol',
     label: 'Futebol',
     icon: CircleDashed,
-    image: 'https://img.usecurling.com/p/400/300?q=soccer%20match&color=green',
+    image:
+      'https://img.usecurling.com/p/400/600?q=soccer%20match&color=green&dpr=2',
   },
   {
     id: 'futsal',
     label: 'Futsal',
     icon: Trophy,
-    image: 'https://img.usecurling.com/p/400/300?q=futsal%20court&color=blue',
+    image:
+      'https://img.usecurling.com/p/400/600?q=futsal%20court&color=blue&dpr=2',
   },
   {
     id: 'bike',
     label: 'Bike',
     icon: Bike,
     image:
-      'https://img.usecurling.com/p/400/300?q=mountain%20bike&color=orange',
+      'https://img.usecurling.com/p/400/600?q=mountain%20bike%20cyclist&color=orange&dpr=2',
   },
   {
     id: 'running',
     label: 'Corrida',
     icon: Footprints,
-    image: 'https://img.usecurling.com/p/400/300?q=running%20track&color=red',
+    image:
+      'https://img.usecurling.com/p/400/600?q=runner%20sprinting%20track&color=red&dpr=2',
   },
   {
     id: 'crossfit',
     label: 'Crossfit',
     icon: Dumbbell,
     image:
-      'https://img.usecurling.com/p/400/300?q=crossfit%20workout&color=black',
+      'https://img.usecurling.com/p/400/600?q=crossfit%20athlete%20gym&color=black&dpr=2',
   },
   {
     id: 'swimming',
     label: 'Natação',
     icon: Waves,
-    image: 'https://img.usecurling.com/p/400/300?q=swimming%20pool&color=cyan',
+    image:
+      'https://img.usecurling.com/p/400/600?q=swimmer%20underwater&color=cyan&dpr=2',
   },
   {
     id: 'boxing',
     label: 'Boxe',
     icon: Hand,
-    image: 'https://img.usecurling.com/p/400/300?q=boxing%20ring&color=red',
+    image:
+      'https://img.usecurling.com/p/400/600?q=boxing%20gloves%20ring&color=red&dpr=2',
   },
   {
     id: 'climbing',
     label: 'Escalada',
     icon: Mountain,
-    image: 'https://img.usecurling.com/p/400/300?q=rock%20climbing&color=gray',
+    image:
+      'https://img.usecurling.com/p/400/600?q=rock%20climber%20cliff&color=gray&dpr=2',
   },
   {
     id: 'martial_arts',
     label: 'Lutas',
     icon: Swords,
-    image: 'https://img.usecurling.com/p/400/300?q=martial%20arts&color=white',
+    image:
+      'https://img.usecurling.com/p/400/600?q=judo%20fight&color=white&dpr=2',
+  },
+  {
+    id: 'basketball',
+    label: 'Basquete',
+    icon: Medal,
+    image:
+      'https://img.usecurling.com/p/400/600?q=basketball%20dunk%20hoop&color=orange&dpr=2',
+  },
+  {
+    id: 'volleyball',
+    label: 'Vôlei',
+    icon: Users,
+    image:
+      'https://img.usecurling.com/p/400/600?q=volleyball%20smash&color=yellow&dpr=2',
+  },
+  {
+    id: 'tennis',
+    label: 'Tênis',
+    icon: Activity,
+    image:
+      'https://img.usecurling.com/p/400/600?q=tennis%20player%20court&color=green&dpr=2',
+  },
+  {
+    id: 'surf',
+    label: 'Surf',
+    icon: Waves,
+    image:
+      'https://img.usecurling.com/p/400/600?q=surfer%20wave%20ocean&color=blue&dpr=2',
+  },
+  {
+    id: 'skate',
+    label: 'Skate',
+    icon: Zap,
+    image:
+      'https://img.usecurling.com/p/400/600?q=skateboarder%20trick&color=gray&dpr=2',
   },
 ]
 
