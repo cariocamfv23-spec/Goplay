@@ -616,19 +616,70 @@ export const navigationItems = [
 ]
 
 export const tribes = [
-  { id: 'all', label: 'Todos', icon: LayoutGrid },
-  { id: 'futebol', label: 'Futebol', icon: CircleDashed },
-  { id: 'futsal', label: 'Futsal', icon: Trophy },
-  { id: 'bike', label: 'Bike', icon: Bike },
-  { id: 'running', label: 'Corrida', icon: Footprints },
-  { id: 'crossfit', label: 'Crossfit', icon: Dumbbell },
-  { id: 'swimming', label: 'Natação', icon: Waves },
-  { id: 'boxing', label: 'Boxe', icon: Hand },
-  { id: 'climbing', label: 'Escalada', icon: Mountain },
-  { id: 'martial_arts', label: 'Lutas', icon: Swords },
+  {
+    id: 'all',
+    label: 'Todos',
+    icon: LayoutGrid,
+    image:
+      'https://img.usecurling.com/p/400/300?q=sports%20collage&color=black',
+  },
+  {
+    id: 'futebol',
+    label: 'Futebol',
+    icon: CircleDashed,
+    image: 'https://img.usecurling.com/p/400/300?q=soccer%20match&color=green',
+  },
+  {
+    id: 'futsal',
+    label: 'Futsal',
+    icon: Trophy,
+    image: 'https://img.usecurling.com/p/400/300?q=futsal%20court&color=blue',
+  },
+  {
+    id: 'bike',
+    label: 'Bike',
+    icon: Bike,
+    image:
+      'https://img.usecurling.com/p/400/300?q=mountain%20bike&color=orange',
+  },
+  {
+    id: 'running',
+    label: 'Corrida',
+    icon: Footprints,
+    image: 'https://img.usecurling.com/p/400/300?q=running%20track&color=red',
+  },
+  {
+    id: 'crossfit',
+    label: 'Crossfit',
+    icon: Dumbbell,
+    image:
+      'https://img.usecurling.com/p/400/300?q=crossfit%20workout&color=black',
+  },
+  {
+    id: 'swimming',
+    label: 'Natação',
+    icon: Waves,
+    image: 'https://img.usecurling.com/p/400/300?q=swimming%20pool&color=cyan',
+  },
+  {
+    id: 'boxing',
+    label: 'Boxe',
+    icon: Hand,
+    image: 'https://img.usecurling.com/p/400/300?q=boxing%20ring&color=red',
+  },
+  {
+    id: 'climbing',
+    label: 'Escalada',
+    icon: Mountain,
+    image: 'https://img.usecurling.com/p/400/300?q=rock%20climbing&color=gray',
+  },
+  {
+    id: 'martial_arts',
+    label: 'Lutas',
+    icon: Swords,
+    image: 'https://img.usecurling.com/p/400/300?q=martial%20arts&color=white',
+  },
 ]
-
-// ... (rest of the file remains unchanged, but adding mockPsychologicalRankings)
 
 export const mockPsychologicalRankings: PsychologicalProfile[] = [
   {
@@ -703,7 +754,6 @@ export const mockPsychologicalRankings: PsychologicalProfile[] = [
   },
 ]
 
-// ... (exporting other variables as they were)
 export const exploreCategories = [
   {
     id: 'sponsorship',

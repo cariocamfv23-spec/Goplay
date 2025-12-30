@@ -21,6 +21,7 @@ import {
   TrendingUp,
   FileSignature,
   ScanEye,
+  ArrowRight,
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -490,6 +491,44 @@ export default function Explore() {
                     <span className="font-medium text-xs">Carteira</span>
                   </Button>
                 </DigitalCard>
+              </div>
+            </div>
+
+            {/* VISUAL CATEGORY GALLERY (New) */}
+            <div className="pt-2">
+              <div className="flex items-center justify-between mb-3 px-1">
+                <h2 className="text-lg font-bold">Navegue por Esporte</h2>
+              </div>
+              <div className="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide snap-x">
+                {tribes
+                  .filter((t) => t.id !== 'all')
+                  .map((tribe) => (
+                    <div
+                      key={tribe.id}
+                      onClick={() => setActiveSport(tribe.id)}
+                      className="relative min-w-[140px] h-[200px] rounded-2xl overflow-hidden cursor-pointer group snap-start shadow-md"
+                    >
+                      <img
+                        src={tribe.image}
+                        alt={tribe.label}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80" />
+
+                      <div className="absolute top-3 right-3 bg-white/10 backdrop-blur-md p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <ChevronRight className="w-3 h-3 text-white" />
+                      </div>
+
+                      <div className="absolute bottom-3 left-3 text-white">
+                        <div className="bg-primary/20 p-1.5 rounded-lg w-fit mb-2 backdrop-blur-sm">
+                          <tribe.icon className="w-4 h-4 text-primary-foreground" />
+                        </div>
+                        <span className="font-bold text-sm tracking-wide block">
+                          {tribe.label}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
               </div>
             </div>
 
