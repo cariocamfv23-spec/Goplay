@@ -591,6 +591,21 @@ export interface Gym {
   price: string
 }
 
+export interface PsychologicalProfile {
+  id: string
+  position: number
+  user: {
+    id: string
+    name: string
+    avatar: string
+    team?: string
+  }
+  eqScore: number // Emotional Intelligence
+  resilienceScore: number
+  totalScore: number
+  trend: 'up' | 'down' | 'same'
+}
+
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: LayoutList, label: 'Feed', path: '/feed' },
@@ -613,6 +628,82 @@ export const tribes = [
   { id: 'martial_arts', label: 'Lutas', icon: Swords },
 ]
 
+// ... (rest of the file remains unchanged, but adding mockPsychologicalRankings)
+
+export const mockPsychologicalRankings: PsychologicalProfile[] = [
+  {
+    id: 'pr1',
+    position: 1,
+    user: {
+      id: 'u3',
+      name: 'Mariana Souza',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=12',
+      team: 'Iron Ladies',
+    },
+    eqScore: 95,
+    resilienceScore: 92,
+    totalScore: 93.5,
+    trend: 'up',
+  },
+  {
+    id: 'pr2',
+    position: 2,
+    user: {
+      id: 'u6',
+      name: 'Pedro Santos',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=67',
+      team: 'Futsal Pro',
+    },
+    eqScore: 88,
+    resilienceScore: 94,
+    totalScore: 91,
+    trend: 'up',
+  },
+  {
+    id: 'pr3',
+    position: 3,
+    user: {
+      id: 'u1',
+      name: 'Alex Silva',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=1',
+      team: 'Red Wolves',
+    },
+    eqScore: 85,
+    resilienceScore: 90,
+    totalScore: 87.5,
+    trend: 'same',
+  },
+  {
+    id: 'pr4',
+    position: 4,
+    user: {
+      id: 'u4',
+      name: 'Carlos Eduardo',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=45',
+      team: 'Tactical FC',
+    },
+    eqScore: 90,
+    resilienceScore: 82,
+    totalScore: 86,
+    trend: 'down',
+  },
+  {
+    id: 'pr5',
+    position: 5,
+    user: {
+      id: 'u8',
+      name: 'Lucas Mendes',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=34',
+      team: 'Speed Runners',
+    },
+    eqScore: 80,
+    resilienceScore: 85,
+    totalScore: 82.5,
+    trend: 'up',
+  },
+]
+
+// ... (exporting other variables as they were)
 export const exploreCategories = [
   {
     id: 'sponsorship',

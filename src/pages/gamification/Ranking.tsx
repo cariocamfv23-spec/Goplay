@@ -33,10 +33,11 @@ import {
 } from '@/components/ui/tooltip'
 import ChallengesList from './ChallengesList'
 import ChallengeRanking from './ChallengeRanking'
+import EmotionalRanking from './EmotionalRanking'
 
 type TimeRange = 'daily' | 'weekly' | 'monthly' | 'all_time'
 type MetricType = 'points' | 'matches' | 'wins' | 'assists'
-type ViewMode = 'global' | 'challenges'
+type ViewMode = 'global' | 'challenges' | 'emotional'
 
 export default function Ranking() {
   const navigate = useNavigate()
@@ -88,9 +89,9 @@ export default function Ranking() {
 
   const handleModeChange = (mode: string) => {
     setViewMode(mode as ViewMode)
-    if (mode === 'global') {
+    if (mode === 'global' || mode === 'emotional') {
       setSelectedChallengeId(null)
-      setSearchParams({ tab: timeRange, mode: 'global' })
+      setSearchParams({ tab: timeRange, mode })
     } else {
       setSearchParams({ mode: 'challenges' })
     }
@@ -175,7 +176,7 @@ export default function Ranking() {
             onValueChange={handleModeChange}
             className="w-full"
           >
-            <TabsList className="grid w-full grid-cols-2 h-10 bg-transparent p-0 gap-1">
+            <TabsList className="grid w-full grid-cols-3 h-10 bg-transparent p-0 gap-1">
               <TabsTrigger
                 value="global"
                 className="text-sm font-medium h-full rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800 data-[state=active]:text-primary data-[state=active]:shadow-sm"
@@ -187,6 +188,12 @@ export default function Ranking() {
                 className="text-sm font-medium h-full rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800 data-[state=active]:text-primary data-[state=active]:shadow-sm"
               >
                 Desafios
+              </TabsTrigger>
+              <TabsTrigger
+                value="emotional"
+                className="text-sm font-medium h-full rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800 data-[state=active]:text-primary data-[state=active]:shadow-sm"
+              >
+                Emocional
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -283,6 +290,8 @@ export default function Ranking() {
           ) : (
             <ChallengesList onSelectChallenge={handleChallengeSelect} />
           )
+        ) : viewMode === 'emotional' ? (
+          <EmotionalRanking />
         ) : (
           /* Global Ranking List */
           <div className="space-y-3">
