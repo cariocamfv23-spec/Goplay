@@ -40,6 +40,7 @@ import {
   Shield,
   Award,
   Handshake,
+  FileSignature,
 } from 'lucide-react'
 
 // Types
@@ -615,6 +616,13 @@ export const exploreCategories = [
     icon: Handshake,
     bg: 'bg-gold/20 dark:bg-gold/10',
     color: 'text-gold dark:text-gold',
+  },
+  {
+    id: 'contracts',
+    label: 'Contratos',
+    icon: FileSignature,
+    bg: 'bg-rose-100 dark:bg-rose-900/20',
+    color: 'text-rose-600 dark:text-rose-400',
   },
   {
     id: 'scholarships',

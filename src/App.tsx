@@ -26,6 +26,13 @@ const Move = lazy(() => import('./pages/move/Move'))
 const Explore = lazy(() => import('./pages/explore/Explore'))
 const CheckIn = lazy(() => import('./pages/checkin/CheckIn'))
 
+// Contract Pages
+const LiveContractsDashboard = lazy(
+  () => import('./pages/contracts/LiveContractsDashboard'),
+)
+const CreateContract = lazy(() => import('./pages/contracts/CreateContract'))
+const ContractDetails = lazy(() => import('./pages/contracts/ContractDetails'))
+
 // Organizer Pages
 const ChampionshipsList = lazy(
   () => import('./pages/organizer/ChampionshipsList'),
@@ -196,6 +203,20 @@ const App = () => {
                     <Route path="/move/kids-map" element={<KidsZoneMap />} />
                     <Route path="/explore" element={<Explore />} />
                     <Route path="/check-in" element={<CheckIn />} />
+
+                    {/* Contracts */}
+                    <Route
+                      path="/contracts"
+                      element={<LiveContractsDashboard />}
+                    />
+                    <Route
+                      path="/contracts/create"
+                      element={<CreateContract />}
+                    />
+                    <Route
+                      path="/contracts/:id"
+                      element={<ContractDetails />}
+                    />
 
                     {/* Organizer Routes */}
                     <Route path="/organizer" element={<ChampionshipsList />} />

@@ -19,6 +19,7 @@ import {
   Activity,
   ChevronRight,
   TrendingUp,
+  FileSignature,
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -105,12 +106,13 @@ export default function Explore() {
     }
     const cat = exploreCategories.find((c) => c.id === id)
     if (cat) {
+      let path = `/explore/${cat.id}`
+      if (cat.id === 'international') path = '/explore/international'
+      if (cat.id === 'contracts') path = '/contracts' // Special route
+
       return {
         ...cat,
-        path:
-          cat.id === 'international'
-            ? '/explore/international'
-            : `/explore/${cat.id}`,
+        path,
       }
     }
     return null
@@ -130,7 +132,7 @@ export default function Explore() {
       title: 'Carreira Pro',
       icon: Briefcase,
       description: 'Oportunidades reais',
-      items: ['sponsorship', 'scholarships', 'agencies', 'talents'],
+      items: ['contracts', 'sponsorship', 'scholarships', 'agencies'],
       color: 'text-blue-500',
     },
     {
@@ -452,12 +454,12 @@ export default function Explore() {
                 <Button
                   variant="outline"
                   className="h-12 rounded-xl border-border/60 bg-card hover:bg-secondary/50 hover:border-primary/30 flex-shrink-0 gap-2 snap-start shadow-sm"
-                  onClick={() => navigate('/explore/international')}
+                  onClick={() => navigate('/contracts')}
                 >
-                  <div className="h-8 w-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-                    <Globe className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                  <div className="h-8 w-8 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
+                    <FileSignature className="h-4 w-4 text-rose-600 dark:text-rose-400" />
                   </div>
-                  <span className="font-medium text-xs">Mundial</span>
+                  <span className="font-medium text-xs">Contratos</span>
                 </Button>
 
                 <DigitalCard>
