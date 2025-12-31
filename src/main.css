@@ -245,6 +245,12 @@
     background-repeat: repeat;
   }
 
+  /* TEXTURE: PLASTIC (Cassette) */
+  .filter-texture-plastic {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+  }
+
   /* VHS */
   .filter-vhs-lines {
     background: linear-gradient(
@@ -298,9 +304,10 @@
 
   /* 90s */
   .filter-90s-pattern {
+    background-color: transparent;
     background-image:
-      radial-gradient(circle, #ff00ff 10%, transparent 10%),
-      radial-gradient(circle, #00ffff 10%, transparent 10%);
+      radial-gradient(#ff00ff 15%, transparent 16%),
+      radial-gradient(#00ffff 15%, transparent 16%);
     background-size: 20px 20px;
     background-position:
       0 0,
@@ -423,6 +430,26 @@
   100% {
     transform: translateX(0);
   }
+}
+
+@keyframes tracking {
+  0% {
+    top: -10%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    top: 110%;
+    opacity: 0;
+  }
+}
+.animate-tracking {
+  animation: tracking 5s linear infinite;
 }
 
 /* Athlete Aura Animations */

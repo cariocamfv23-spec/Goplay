@@ -22,28 +22,132 @@ export function NostalgiaFilter({
   const shouldRender = forceEnable || isEnabled
 
   useEffect(() => {
-    if (
-      activePreset === 'vhs' ||
-      activePreset === '90s' ||
-      activePreset === 'pele' ||
-      activePreset === 'digital'
-    ) {
+    if (shouldRender) {
       const timer = setInterval(() => setTime(new Date()), 1000)
       return () => clearInterval(timer)
     }
-  }, [activePreset])
+  }, [shouldRender])
 
   if (!shouldRender) return null
 
   // Helper to render the specific overlay based on preset
-  // IMPORTANT: We use backdrop-filter utilities to ensure the underlying image is affected visually
+  // IMPORTANT: All elements must have pointer-events-none to allow interaction with the app underneath
   const renderOverlay = () => {
     switch (activePreset) {
-      case 'grain':
+      case 'cassette':
         return (
           <>
-            <div className="absolute inset-0 pointer-events-none z-10 mix-blend-overlay opacity-30 filter-grain" />
-            <div className="absolute inset-0 pointer-events-none z-10 backdrop-grayscale backdrop-contrast-125 backdrop-brightness-90 opacity-50" />
+            {/* --- K7 TAPE AESTHETIC --- */}
+            {/* Physical Plastic Frame */}
+            <div className="absolute inset-0 z-30 pointer-events-none border-[12px] border-[#222] rounded-2xl shadow-[inset_0_0_20px_rgba(0,0,0,0.9)] box-border">
+              {/* Texture Layer on Frame */}
+              <div className="absolute inset-[-12px] z-30 border-[12px] border-transparent filter-texture-plastic opacity-20 pointer-events-none rounded-2xl" />
+
+              {/* Screws */}
+              <div className="absolute top-2 left-2 w-3 h-3 rounded-full bg-zinc-600 border border-zinc-800 shadow-inner z-40 flex items-center justify-center pointer-events-none">
+                <div className="w-full h-[1px] bg-zinc-800 rotate-45 transform" />
+                <div className="absolute w-full h-[1px] bg-zinc-800 -rotate-45 transform" />
+              </div>
+              <div className="absolute top-2 right-2 w-3 h-3 rounded-full bg-zinc-600 border border-zinc-800 shadow-inner z-40 flex items-center justify-center pointer-events-none">
+                <div className="w-full h-[1px] bg-zinc-800 rotate-45 transform" />
+                <div className="absolute w-full h-[1px] bg-zinc-800 -rotate-45 transform" />
+              </div>
+              <div className="absolute bottom-2 left-2 w-3 h-3 rounded-full bg-zinc-600 border border-zinc-800 shadow-inner z-40 flex items-center justify-center pointer-events-none">
+                <div className="w-full h-[1px] bg-zinc-800 rotate-45 transform" />
+                <div className="absolute w-full h-[1px] bg-zinc-800 -rotate-45 transform" />
+              </div>
+              <div className="absolute bottom-2 right-2 w-3 h-3 rounded-full bg-zinc-600 border border-zinc-800 shadow-inner z-40 flex items-center justify-center pointer-events-none">
+                <div className="w-full h-[1px] bg-zinc-800 rotate-45 transform" />
+                <div className="absolute w-full h-[1px] bg-zinc-800 -rotate-45 transform" />
+              </div>
+
+              {/* Sticker Label - Top Right Corner */}
+              <div className="absolute top-16 -right-1 z-40 bg-orange-600 px-3 py-1 shadow-md border-l border-t border-b border-white/20 transform rotate-90 origin-top-right rounded-sm">
+                <span className="font-handwriting font-black text-[10px] text-white uppercase tracking-widest whitespace-nowrap">
+                  GOPLAY MIX VOL.1
+                </span>
+              </div>
+
+              {/* Tape Window Outline (Simulated) */}
+              <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-48 h-8 rounded-full border border-white/5 bg-white/5 pointer-events-none backdrop-blur-[1px]" />
+            </div>
+
+            {/* Vintage Warm Grading */}
+            <div className="absolute inset-0 z-0 bg-amber-900/10 mix-blend-overlay pointer-events-none" />
+            <div className="absolute inset-0 z-0 backdrop-contrast-[0.9] backdrop-brightness-95 backdrop-sepia-[0.2] pointer-events-none" />
+          </>
+        )
+
+      case 'vhs':
+        return (
+          <>
+            {/* --- VHS CINEMATIC SKIN --- */}
+            {/* Cinematic Black Bars (Letterbox Effect simulated at edges) */}
+            <div className="absolute top-0 left-0 right-0 h-4 bg-black/90 z-20 pointer-events-none blur-sm" />
+            <div className="absolute bottom-0 left-0 right-0 h-4 bg-black/90 z-20 pointer-events-none blur-sm" />
+
+            {/* Tracking Line Animation */}
+            <div className="absolute left-0 right-0 h-1.5 bg-white/10 blur-md z-30 animate-tracking pointer-events-none mix-blend-screen" />
+
+            {/* Color Bleed / Chromatic Aberration */}
+            <div className="absolute inset-0 z-10 filter-vhs-color-shift opacity-40 pointer-events-none mix-blend-screen" />
+
+            {/* Scanlines */}
+            <div className="absolute inset-0 z-10 filter-vhs-lines opacity-20 pointer-events-none" />
+
+            {/* Static Noise */}
+            <div className="absolute inset-0 z-10 filter-grain opacity-10 mix-blend-overlay pointer-events-none" />
+
+            {/* CRT Flicker */}
+            <div className="absolute inset-0 z-20 filter-crt-flicker pointer-events-none" />
+
+            {/* Color Grading: Desaturated shadows, high contrast */}
+            <div className="absolute inset-0 z-0 backdrop-contrast-125 backdrop-saturate-[0.8] pointer-events-none" />
+
+            {/* OSD (On Screen Display) */}
+            <div className="absolute top-6 left-6 pointer-events-none z-40 font-mono text-white/70 text-2xl font-bold tracking-widest drop-shadow-[2px_2px_0_rgba(0,0,0,0.8)]">
+              PLAY
+            </div>
+            <div className="absolute bottom-6 left-6 pointer-events-none z-40 font-mono text-white/70 text-sm tracking-widest drop-shadow-[2px_2px_0_rgba(0,0,0,0.8)]">
+              {time.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+              <span className="ml-4 text-xs opacity-80">SP</span>
+            </div>
+            <div className="absolute bottom-6 right-6 pointer-events-none z-40 font-mono text-white/70 text-sm tracking-widest drop-shadow-[2px_2px_0_rgba(0,0,0,0.8)]">
+              {time.toLocaleDateString()}
+            </div>
+          </>
+        )
+
+      case '90s':
+        return (
+          <>
+            {/* --- 90s RETRO CRT DISPLAY --- */}
+            {/* CRT Bezel Frame (Graphic Art Style) */}
+            <div className="absolute inset-0 z-30 border-[14px] border-purple-900/10 pointer-events-none rounded-[2rem] box-border">
+              {/* Bezel Decoration Pattern */}
+              <div className="absolute inset-[-14px] z-30 border-[14px] border-transparent filter-90s-pattern opacity-40 pointer-events-none rounded-[2rem]" />
+            </div>
+
+            {/* Screen Curvature Vignette (Inner Shadow) */}
+            <div className="absolute inset-0 z-20 bg-[radial-gradient(circle_at_center,transparent_75%,rgba(0,0,0,0.4)_100%)] rounded-[1.5rem] pointer-events-none shadow-[inset_0_0_40px_rgba(0,0,0,0.3)]" />
+
+            {/* Scanlines (Crisp) */}
+            <div className="absolute inset-0 z-10 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.15)_50%)] bg-[length:100%_4px] pointer-events-none" />
+
+            {/* Geometric Pattern Overlay in Corners */}
+            <div className="absolute top-0 right-0 w-32 h-32 filter-90s-pattern opacity-20 pointer-events-none z-10 rounded-bl-[4rem]" />
+            <div className="absolute bottom-0 left-0 w-32 h-32 filter-90s-pattern opacity-20 pointer-events-none z-10 rounded-tr-[4rem]" />
+
+            {/* Color Grading: Pop / Saturated */}
+            <div className="absolute inset-0 z-0 backdrop-contrast-[1.1] backdrop-saturate-[1.3] backdrop-brightness-105 pointer-events-none" />
+
+            {/* Date Stamp (Camcorder style) */}
+            <div className="absolute bottom-6 right-6 pointer-events-none z-40 font-digital text-[#ff8e25] text-sm tracking-widest drop-shadow-[1px_1px_0_rgba(0,0,0,0.8)]">
+              {time.toLocaleDateString('pt-BR')}
+            </div>
           </>
         )
 
@@ -61,49 +165,11 @@ export function NostalgiaFilter({
           </>
         )
 
-      case 'vhs':
+      case 'grain':
         return (
           <>
-            {/* Scanlines */}
-            <div className="absolute inset-0 pointer-events-none z-10 filter-vhs-lines opacity-10" />
-            {/* Color Shift/Bleed */}
-            <div className="absolute inset-0 pointer-events-none z-10 bg-gradient-to-r from-red-500/5 to-blue-500/5 mix-blend-color-dodge animate-pulse" />
-            {/* Static Noise */}
-            <div className="absolute inset-0 pointer-events-none z-10 filter-grain opacity-20 mix-blend-screen" />
-            {/* CRT Flicker */}
-            <div className="absolute inset-0 pointer-events-none z-20 filter-crt-flicker" />
-            {/* Color Grading */}
-            <div className="absolute inset-0 pointer-events-none z-10 backdrop-contrast-125 backdrop-saturate-[0.8]" />
-
-            {/* OSD (On Screen Display) */}
-            <div className="absolute top-8 left-8 pointer-events-none z-30 font-mono text-white/80 text-xl tracking-widest uppercase drop-shadow-[2px_2px_0_rgba(0,0,0,0.5)]">
-              PLAY
-            </div>
-            <div className="absolute bottom-8 left-8 pointer-events-none z-30 font-mono text-white/80 text-lg tracking-widest drop-shadow-[2px_2px_0_rgba(0,0,0,0.5)]">
-              {time.toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
-              <span className="text-sm ml-2">{time.toLocaleDateString()}</span>
-            </div>
-            <div className="absolute bottom-8 right-8 pointer-events-none z-30 font-mono text-white/80 text-lg tracking-widest drop-shadow-[2px_2px_0_rgba(0,0,0,0.5)]">
-              SP
-            </div>
-          </>
-        )
-
-      case '90s':
-        return (
-          <>
-            {/* High Contrast & Saturation Boost via Backdrop */}
-            <div className="absolute inset-0 pointer-events-none z-10 mix-blend-soft-light bg-blue-500/10" />
-            <div className="absolute inset-0 pointer-events-none z-10 backdrop-contrast-[1.15] backdrop-saturate-[1.3] backdrop-brightness-105" />
-            {/* Geometric Pattern Overlay */}
-            <div className="absolute inset-0 pointer-events-none z-10 filter-90s-pattern" />
-            {/* Date Stamp */}
-            <div className="absolute bottom-4 right-4 pointer-events-none z-30 font-mono text-sm text-[#ff8e25] font-bold tracking-widest drop-shadow-[1px_1px_0_rgba(0,0,0,0.8)] font-digital">
-              {time.toLocaleDateString('pt-BR')}
-            </div>
+            <div className="absolute inset-0 pointer-events-none z-10 mix-blend-overlay opacity-30 filter-grain" />
+            <div className="absolute inset-0 pointer-events-none z-10 backdrop-grayscale backdrop-contrast-125 backdrop-brightness-90 opacity-50" />
           </>
         )
 
@@ -125,33 +191,28 @@ export function NostalgiaFilter({
       case 'polaroid':
         return (
           <>
-            {/* Polaroid Color Science: Creamy whites, muted blacks, green/blue tint in shadows */}
+            {/* Polaroid Color Science */}
             <div className="absolute inset-0 pointer-events-none z-10 bg-[#fff5e6] mix-blend-multiply opacity-20" />
             <div className="absolute inset-0 pointer-events-none z-10 bg-blue-900/10 mix-blend-screen" />
             <div className="absolute inset-0 pointer-events-none z-10 backdrop-contrast-[1.1] backdrop-brightness-110 backdrop-saturate-[0.9]" />
 
-            {/* Frame - Only applied if explicitly viewing media (not full app usually, but we can add a border vignette) */}
-            <div className="absolute inset-0 pointer-events-none z-20 border-[20px] border-white/90 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)]" />
-            <div className="absolute bottom-0 inset-x-0 h-24 bg-white/90 pointer-events-none z-20 flex items-center justify-center">
-              <span className="font-handwriting text-black/70 text-2xl rotate-[-2deg]">
-                #GoPlay
-              </span>
-            </div>
+            {/* White Frame Border */}
+            <div className="absolute inset-0 pointer-events-none z-20 border-[10px] border-white/90 shadow-[inset_0_0_15px_rgba(0,0,0,0.1)]" />
           </>
         )
 
       case 'pele':
         return (
           <>
-            {/* 80s Broadcast Look: Warm, Saturated, Bloom */}
+            {/* 80s Broadcast Look */}
             <div className="absolute inset-0 pointer-events-none z-10 bg-yellow-500/10 mix-blend-overlay" />
             <div className="absolute inset-0 pointer-events-none z-10 filter-broadcast-bloom" />
             <div className="absolute inset-0 pointer-events-none z-10 backdrop-saturate-[1.4] backdrop-contrast-[1.1] backdrop-brightness-105" />
 
-            {/* TV Scanlines (finer than VHS) */}
+            {/* TV Scanlines */}
             <div className="absolute inset-0 pointer-events-none z-20 filter-broadcast-scanlines opacity-20" />
 
-            {/* Vignette (TV Tube effect) */}
+            {/* Vignette */}
             <div className="absolute inset-0 pointer-events-none z-20 bg-[radial-gradient(circle_at_center,transparent_60%,rgba(0,0,0,0.3)_100%)]" />
 
             {/* Broadcast Overlay Logo */}
@@ -169,55 +230,18 @@ export function NostalgiaFilter({
       case 'ali':
         return (
           <>
-            {/* Vintage Cinematic B&W High Contrast */}
+            {/* Vintage Cinematic B&W */}
             <div className="absolute inset-0 pointer-events-none z-10 backdrop-grayscale backdrop-contrast-[1.4] backdrop-brightness-90" />
             <div className="absolute inset-0 pointer-events-none z-10 bg-neutral-900/10 mix-blend-multiply" />
 
             {/* Heavy Film Grain */}
             <div className="absolute inset-0 pointer-events-none z-10 filter-grain opacity-30 mix-blend-overlay" />
 
-            {/* Film Scratches & Artifacts */}
+            {/* Film Scratches */}
             <div className="absolute inset-0 pointer-events-none z-20 filter-film-scratches" />
 
-            {/* Heavy Vignette (Noir style) */}
+            {/* Heavy Vignette */}
             <div className="absolute inset-0 pointer-events-none z-20 bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.8)_100%)]" />
-          </>
-        )
-
-      case 'cassette':
-        return (
-          <>
-            {/* Cassette Plastic Texture Overlay */}
-            <div className="absolute inset-0 pointer-events-none z-10 bg-[#f0eee4] mix-blend-multiply opacity-10" />
-            <div className="absolute inset-0 pointer-events-none z-10 filter-grain opacity-5" />
-
-            {/* Cassette Border Frame */}
-            <div className="absolute inset-0 pointer-events-none z-30 border-[16px] border-[#333] rounded-lg shadow-[inset_0_0_20px_rgba(0,0,0,0.8)]" />
-
-            {/* Screws */}
-            <div className="absolute top-3 left-3 w-3 h-3 rounded-full bg-zinc-400 border border-zinc-600 shadow-inner z-40 flex items-center justify-center pointer-events-none">
-              <div className="w-full h-[1px] bg-zinc-700 rotate-45 transform" />
-              <div className="absolute w-full h-[1px] bg-zinc-700 -rotate-45 transform" />
-            </div>
-            <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-zinc-400 border border-zinc-600 shadow-inner z-40 flex items-center justify-center pointer-events-none">
-              <div className="w-full h-[1px] bg-zinc-700 rotate-45 transform" />
-              <div className="absolute w-full h-[1px] bg-zinc-700 -rotate-45 transform" />
-            </div>
-            <div className="absolute bottom-3 left-3 w-3 h-3 rounded-full bg-zinc-400 border border-zinc-600 shadow-inner z-40 flex items-center justify-center pointer-events-none">
-              <div className="w-full h-[1px] bg-zinc-700 rotate-45 transform" />
-              <div className="absolute w-full h-[1px] bg-zinc-700 -rotate-45 transform" />
-            </div>
-            <div className="absolute bottom-3 right-3 w-3 h-3 rounded-full bg-zinc-400 border border-zinc-600 shadow-inner z-40 flex items-center justify-center pointer-events-none">
-              <div className="w-full h-[1px] bg-zinc-700 rotate-45 transform" />
-              <div className="absolute w-full h-[1px] bg-zinc-700 -rotate-45 transform" />
-            </div>
-
-            {/* Label Side A */}
-            <div className="absolute top-2 left-1/2 -translate-x-1/2 z-40 bg-orange-500/90 px-3 py-0.5 rounded-sm shadow-sm pointer-events-none">
-              <span className="font-handwriting font-bold text-xs text-black uppercase tracking-widest">
-                SIDE A
-              </span>
-            </div>
           </>
         )
 
