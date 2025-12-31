@@ -1,35 +1,61 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { useSyncExternalStore } from 'react'
 
 export type NostalgiaPreset =
-  | 'grain'
-  | 'retro'
   | 'vhs'
   | '90s'
-  | 'analog'
-  | 'polaroid'
+  | 'cassette'
+  | 'retro'
   | 'pele'
   | 'ali'
-  | 'cassette'
   | 'digital'
+  | 'analog'
+  | 'polaroid'
+  | 'grain'
 
 interface NostalgiaState {
   isEnabled: boolean
   preset: NostalgiaPreset
-  toggle: (enabled: boolean) => void
-  setPreset: (preset: NostalgiaPreset) => void
+  intensity: number
 }
 
-export const useNostalgiaStore = create<NostalgiaState>()(
-  persist(
-    (set) => ({
-      isEnabled: false,
-      preset: 'retro',
-      toggle: (enabled) => set({ isEnabled: enabled }),
-      setPreset: (preset) => set({ preset }),
-    }),
-    {
-      name: 'goplay-nostalgia-storage',
-    },
-  ),
-)
+const initialState: NostalgiaState = {
+  isEnabled: false,
+  preset: 'vhs',
+  intensity: 1,
+}
+
+let state = { ...initialState }
+const listeners = new Set<() => void>()
+
+const store = {
+  getState: () => state,
+  subscribe: (listener: () => void) => {
+    listeners.add(listener)
+    return () => listeners.delete(listener)
+  },
+  setState: (newState: Partial<NostalgiaState>) => {
+    state = { ...state, ...newState }
+    listeners.forEach((listener) => listener())
+  },
+  toggle: () => {
+    store.setState({ isEnabled: !state.isEnabled })
+  },
+  setPreset: (preset: NostalgiaPreset) => {
+    store.setState({ preset })
+  },
+  setIntensity: (intensity: number) => {
+    store.setState({ intensity })
+  },
+}
+
+export const useNostalgiaStore = () => {
+  const state = useSyncExternalStore(store.subscribe, store.getState)
+  return {
+    ...state,
+    toggle: store.toggle,
+    setPreset: store.setPreset,
+    setIntensity: store.setIntensity,
+  }
+}
+
+export default useNostalgiaStore
