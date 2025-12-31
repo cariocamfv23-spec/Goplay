@@ -3,17 +3,23 @@ import { useNavigate } from 'react-router-dom'
 import { Logo } from '@/components/Logo'
 import { AppIcon } from '@/components/AppIcon'
 import { ArrowRight, Trophy, Users, Activity } from 'lucide-react'
+import { SportsWallpaper } from '@/components/SportsWallpaper'
 
 export default function Index() {
   const navigate = useNavigate()
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden transition-colors duration-300">
-      {/* Dynamic Background with improved performance */}
+      {/* Background Layers */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-background z-10" />
+
+        {/* Mandatory Illustrated Wallpaper (Nostalgia Mode) */}
+        {/* Rendered at z-1 to sit between base bg and gradient if possible, or managed via mix-blend inside component */}
+        <SportsWallpaper className="z-[1]" />
+
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-5 grayscale mix-blend-overlay"
+          className="absolute inset-0 bg-cover bg-center opacity-5 grayscale mix-blend-overlay z-0"
           style={{
             backgroundImage:
               "url('https://img.usecurling.com/p/1000/1000?q=stadium%20lights&color=black')",
@@ -21,8 +27,8 @@ export default function Index() {
         />
 
         {/* Animated ambient blobs */}
-        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-[hsl(var(--gold)/0.1)] rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:4000ms]" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:5000ms]" />
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-[hsl(var(--gold)/0.1)] rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:4000ms] z-10" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:5000ms] z-10" />
       </div>
 
       <div className="relative z-10 flex flex-col h-full w-full max-w-md mx-auto px-4 py-8 flex-1">
