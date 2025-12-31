@@ -8,6 +8,7 @@ import { WeatherAlertManager } from '@/components/WeatherAlertManager'
 import { Toaster } from '@/components/ui/toaster'
 import { cn } from '@/lib/utils'
 import { NostalgiaFilter } from '@/components/NostalgiaFilter'
+import { SportsWallpaper } from '@/components/SportsWallpaper'
 import { useNostalgiaStore } from '@/stores/useNostalgiaStore'
 import { useEffect } from 'react'
 
@@ -66,12 +67,16 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-background font-sans antialiased flex flex-col relative overflow-hidden transition-colors duration-500">
+      {/* Layer 2: Illustrated Sports Wallpaper (Background Layer) */}
+      <SportsWallpaper />
+
       {/* Global Alert Managers */}
       <RankingAlertManager />
       <SmartNotificationManager />
       <ScholarshipAlertManager />
       <WeatherAlertManager />
 
+      {/* Layer 1: Mandatory Graphic Frame (Foreground Overlay) */}
       {/* Global Nostalgia Filter Overlay */}
       {/* z-index is set high to cover everything but allow pointer events to pass through */}
       <div className="fixed inset-0 pointer-events-none z-[100] w-full h-full overflow-hidden">
@@ -84,7 +89,7 @@ export default function Layout() {
       {/* Content Area */}
       <main
         className={cn(
-          'flex-1 w-full pb-20 md:pb-0 transition-all duration-300',
+          'flex-1 w-full pb-20 md:pb-0 transition-all duration-300 z-10 relative',
         )}
       >
         <Outlet />
