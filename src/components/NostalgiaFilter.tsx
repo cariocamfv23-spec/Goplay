@@ -64,9 +64,9 @@ export function NostalgiaFilter({
               </div>
 
               {/* Writeable Area Label */}
-              <div className="absolute top-12 left-1/2 -translate-x-1/2 z-30 w-3/4 h-8 bg-white/90 transform rotate-[0.5deg] shadow-sm flex items-center justify-center">
-                <span className="font-handwriting text-blue-800 text-xs">
-                  Side A: Best Hits
+              <div className="absolute top-12 left-1/2 -translate-x-1/2 z-30 w-3/4 h-8 bg-white/90 transform rotate-[0.5deg] shadow-sm flex items-center justify-center border border-zinc-300">
+                <span className="font-handwriting text-blue-800 text-xs tracking-widest">
+                  Side A: Best Hits • {time.getFullYear()}
                 </span>
               </div>
 
@@ -85,10 +85,16 @@ export function NostalgiaFilter({
               </div>
 
               {/* Tape Window Outline (Simulated at bottom) */}
-              <div className="absolute bottom-16 left-1/2 -translate-x-1/2 w-64 h-12 rounded-full border-4 border-zinc-700 bg-black/40 pointer-events-none backdrop-blur-[2px] flex items-center justify-center shadow-inner">
-                {/* Spools */}
-                <div className="w-8 h-8 rounded-full border-2 border-white/20 mr-12 animate-spin [animation-duration:10s] linear"></div>
-                <div className="w-8 h-8 rounded-full border-2 border-white/20 ml-12 animate-spin [animation-duration:10s] linear"></div>
+              <div className="absolute bottom-16 left-1/2 -translate-x-1/2 w-64 h-12 rounded-full border-4 border-zinc-700 bg-black/40 pointer-events-none backdrop-blur-[2px] flex items-center justify-center shadow-inner overflow-hidden">
+                {/* Tape Spool Effect */}
+                <div className="absolute inset-0 bg-transparent flex items-center justify-between px-6">
+                  <div className="w-8 h-8 rounded-full border-2 border-white/20 animate-spin [animation-duration:8s] linear relative">
+                    <div className="absolute inset-0 border-t-2 border-white/40 rounded-full" />
+                  </div>
+                  <div className="w-8 h-8 rounded-full border-2 border-white/20 animate-spin [animation-duration:8s] linear relative">
+                    <div className="absolute inset-0 border-t-2 border-white/40 rounded-full" />
+                  </div>
+                </div>
               </div>
             </div>
 

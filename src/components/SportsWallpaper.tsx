@@ -160,15 +160,32 @@ export function SportsWallpaper() {
                   d="M12 2C9 2 7 6 7 12s2 10 5 10 5-6 5-10S15 2 12 2zm0 18c-1.5 0-3-3.5-3-8s1.5-8 3-8 3 3.5 3 8-1.5 8-3 8z"
                   transform="translate(140, 240) scale(1.2) rotate(-15)"
                 />
-                {/* Net */}
+                {/* Net (Stylized) */}
                 <path
                   d="M2 6h20v12H2V6zm2 2v8h16V8H4zm2 2h2v2H6v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zm-8 4h2v2H6v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z"
                   transform="translate(240, 250) scale(1.1)"
                 />
-                {/* Yoga Mat */}
+                {/* Tatami / Yoga Mat */}
                 <path
-                  d="M4 18h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2zm2-10h12v8H6V8z"
+                  d="M4 18h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2zm2-10h12v8H6V8z M8 10h8v4H8z"
                   transform="translate(340, 240) scale(1.3)"
+                />
+
+                {/* Row 4 - Fillers for density */}
+                {/* Sneaker/Shoe */}
+                <path
+                  d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 10v10h20v-7.5c0-4.14-3.36-7.5-7.5-7.5-1.1 0-2.14.23-3.09.64l-1.2-1.6C11.13 8.35 11.8 8 12.5 8z"
+                  transform="translate(90, 320) scale(1.0)"
+                />
+                {/* Water Bottle */}
+                <path
+                  d="M16 6v2h-2v14c0 1.1-.9 2-2 2H8c-1.1 0-2-.9-2-2V8H4V6h4V4c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2v2h4zm-6-2h4v2h-4V4z"
+                  transform="translate(200, 320) scale(1.0)"
+                />
+                {/* Stopwatch */}
+                <path
+                  d="M12 2c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"
+                  transform="translate(290, 320) scale(1.2)"
                 />
               </g>
             </pattern>
