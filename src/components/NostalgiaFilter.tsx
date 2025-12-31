@@ -36,13 +36,14 @@ export function NostalgiaFilter({
   if (!shouldRender) return null
 
   // Helper to render the specific overlay based on preset
+  // IMPORTANT: We use backdrop-filter utilities to ensure the underlying image is affected visually
   const renderOverlay = () => {
     switch (activePreset) {
       case 'grain':
         return (
           <>
             <div className="absolute inset-0 pointer-events-none z-10 mix-blend-overlay opacity-30 filter-grain" />
-            <div className="absolute inset-0 pointer-events-none z-10 grayscale contrast-125 brightness-90 opacity-50" />
+            <div className="absolute inset-0 pointer-events-none z-10 backdrop-grayscale backdrop-contrast-125 backdrop-brightness-90 opacity-50" />
           </>
         )
 
@@ -55,6 +56,8 @@ export function NostalgiaFilter({
             {/* Subtle Vignette */}
             <div className="absolute inset-0 pointer-events-none z-10 bg-[radial-gradient(circle_at_center,transparent_50%,rgba(0,0,0,0.4)_100%)]" />
             <div className="absolute inset-0 pointer-events-none z-10 filter-grain opacity-10" />
+            {/* Softening */}
+            <div className="absolute inset-0 pointer-events-none z-10 backdrop-sepia-[0.3]" />
           </>
         )
 
@@ -69,6 +72,8 @@ export function NostalgiaFilter({
             <div className="absolute inset-0 pointer-events-none z-10 filter-grain opacity-20 mix-blend-screen" />
             {/* CRT Flicker */}
             <div className="absolute inset-0 pointer-events-none z-20 filter-crt-flicker" />
+            {/* Color Grading */}
+            <div className="absolute inset-0 pointer-events-none z-10 backdrop-contrast-125 backdrop-saturate-[0.8]" />
 
             {/* OSD (On Screen Display) */}
             <div className="absolute top-8 left-8 pointer-events-none z-30 font-mono text-white/80 text-xl tracking-widest uppercase drop-shadow-[2px_2px_0_rgba(0,0,0,0.5)]">
@@ -90,9 +95,9 @@ export function NostalgiaFilter({
       case '90s':
         return (
           <>
-            {/* High Contrast & Saturation Boost */}
+            {/* High Contrast & Saturation Boost via Backdrop */}
             <div className="absolute inset-0 pointer-events-none z-10 mix-blend-soft-light bg-blue-500/10" />
-            <div className="absolute inset-0 pointer-events-none z-10 contrast-[1.15] saturate-[1.3] brightness-105" />
+            <div className="absolute inset-0 pointer-events-none z-10 backdrop-contrast-[1.15] backdrop-saturate-[1.3] backdrop-brightness-105" />
             {/* Geometric Pattern Overlay */}
             <div className="absolute inset-0 pointer-events-none z-10 filter-90s-pattern" />
             {/* Date Stamp */}
@@ -108,8 +113,8 @@ export function NostalgiaFilter({
             {/* Light Leaks */}
             <div className="absolute inset-0 pointer-events-none z-10 bg-gradient-to-tr from-orange-500/20 via-transparent to-purple-500/10 mix-blend-screen opacity-60" />
             <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-red-500/10 to-transparent mix-blend-screen" />
-            {/* Soft Focus */}
-            <div className="absolute inset-0 pointer-events-none z-10 backdrop-blur-[0.5px] brightness-105 contrast-[0.95]" />
+            {/* Soft Focus & Correction */}
+            <div className="absolute inset-0 pointer-events-none z-10 backdrop-blur-[0.5px] backdrop-brightness-105 backdrop-contrast-[0.95]" />
             {/* Film Grain */}
             <div className="absolute inset-0 pointer-events-none z-10 filter-grain opacity-20" />
             {/* Film Border Imitation (Vignette) */}
@@ -123,7 +128,7 @@ export function NostalgiaFilter({
             {/* Polaroid Color Science: Creamy whites, muted blacks, green/blue tint in shadows */}
             <div className="absolute inset-0 pointer-events-none z-10 bg-[#fff5e6] mix-blend-multiply opacity-20" />
             <div className="absolute inset-0 pointer-events-none z-10 bg-blue-900/10 mix-blend-screen" />
-            <div className="absolute inset-0 pointer-events-none z-10 contrast-[1.1] brightness-110 saturate-[0.9]" />
+            <div className="absolute inset-0 pointer-events-none z-10 backdrop-contrast-[1.1] backdrop-brightness-110 backdrop-saturate-[0.9]" />
 
             {/* Frame - Only applied if explicitly viewing media (not full app usually, but we can add a border vignette) */}
             <div className="absolute inset-0 pointer-events-none z-20 border-[20px] border-white/90 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)]" />
@@ -141,7 +146,7 @@ export function NostalgiaFilter({
             {/* 80s Broadcast Look: Warm, Saturated, Bloom */}
             <div className="absolute inset-0 pointer-events-none z-10 bg-yellow-500/10 mix-blend-overlay" />
             <div className="absolute inset-0 pointer-events-none z-10 filter-broadcast-bloom" />
-            <div className="absolute inset-0 pointer-events-none z-10 saturate-[1.4] contrast-[1.1] brightness-105" />
+            <div className="absolute inset-0 pointer-events-none z-10 backdrop-saturate-[1.4] backdrop-contrast-[1.1] backdrop-brightness-105" />
 
             {/* TV Scanlines (finer than VHS) */}
             <div className="absolute inset-0 pointer-events-none z-20 filter-broadcast-scanlines opacity-20" />
@@ -165,7 +170,7 @@ export function NostalgiaFilter({
         return (
           <>
             {/* Vintage Cinematic B&W High Contrast */}
-            <div className="absolute inset-0 pointer-events-none z-10 grayscale contrast-[1.4] brightness-90" />
+            <div className="absolute inset-0 pointer-events-none z-10 backdrop-grayscale backdrop-contrast-[1.4] backdrop-brightness-90" />
             <div className="absolute inset-0 pointer-events-none z-10 bg-neutral-900/10 mix-blend-multiply" />
 
             {/* Heavy Film Grain */}
@@ -221,7 +226,7 @@ export function NostalgiaFilter({
           <>
             {/* Green Tint & Contrast */}
             <div className="absolute inset-0 pointer-events-none z-10 bg-green-500/5 mix-blend-overlay" />
-            <div className="absolute inset-0 pointer-events-none z-10 contrast-[1.2] brightness-90 saturate-0 sepia-[0.3] hue-rotate-[50deg]" />
+            <div className="absolute inset-0 pointer-events-none z-10 backdrop-contrast-[1.2] backdrop-brightness-90 backdrop-saturate-0 backdrop-sepia-[0.3] backdrop-hue-rotate-[50deg]" />
 
             {/* Grid Background */}
             <div className="absolute inset-0 pointer-events-none z-10 filter-digital-grid opacity-20" />

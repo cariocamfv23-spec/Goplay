@@ -16,6 +16,8 @@ import {
   Film,
   Aperture,
   Terminal,
+  Trophy,
+  Swords,
 } from 'lucide-react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -154,6 +156,24 @@ export function TopBar() {
                 <DropdownMenuSeparator />
               </>
             )}
+
+            <DropdownMenuItem onClick={() => handleSelectPreset('pele')}>
+              <Trophy className="mr-2 h-4 w-4 text-yellow-500" />
+              <span>Futebol 80s (Pelé)</span>
+              {preset === 'pele' && isEnabled && (
+                <Check className="ml-auto h-4 w-4" />
+              )}
+            </DropdownMenuItem>
+
+            <DropdownMenuItem onClick={() => handleSelectPreset('ali')}>
+              <Swords className="mr-2 h-4 w-4 text-zinc-500" />
+              <span>Boxe Vintage (Ali)</span>
+              {preset === 'ali' && isEnabled && (
+                <Check className="ml-auto h-4 w-4" />
+              )}
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
 
             <DropdownMenuItem onClick={() => handleSelectPreset('cassette')}>
               <CassetteTape className="mr-2 h-4 w-4" />

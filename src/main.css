@@ -322,7 +322,8 @@
   }
 
   .filter-broadcast-bloom {
-    filter: blur(0.5px) contrast(1.2) saturate(1.4);
+    backdrop-filter: blur(0.5px) contrast(1.2) saturate(1.4);
+    -webkit-backdrop-filter: blur(0.5px) contrast(1.2) saturate(1.4);
   }
 
   /* Cinematic - Ali Style */
