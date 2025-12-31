@@ -10,6 +10,7 @@ import {
   MessageSquare,
   LogOut,
   CreditCard,
+  Sparkles,
 } from 'lucide-react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -31,12 +32,16 @@ import { useThemeStore } from '@/stores/useThemeStore'
 import { mockCurrentUser } from '@/lib/data'
 import { NotificationMenu } from '@/components/NotificationMenu'
 import { AthleteAura } from '@/components/AthleteAura'
+import { useNostalgiaStore } from '@/stores/useNostalgiaStore'
+import { cn } from '@/lib/utils'
+import { toast } from 'sonner'
 
 export function TopBar() {
   const navigate = useNavigate()
   const location = useLocation()
   const { setTheme, theme } = useTheme()
   const { color, setColor } = useThemeStore()
+  const { isEnabled, toggle, preset } = useNostalgiaStore()
 
   const isMarket = location.pathname.includes('/marketplace')
 
@@ -49,6 +54,19 @@ export function TopBar() {
     location.pathname !== '/jobs' &&
     location.pathname !== '/marketplace' &&
     location.pathname !== '/feed'
+
+  const handleNostalgiaToggle = () => {
+    const newState = !isEnabled
+    toggle(newState)
+    if (newState) {
+      toast.success('Modo Nostalgia Ativado', {
+        description: `Filtro ${preset.toUpperCase()} aplicado globalmente.`,
+        icon: <Sparkles className="w-4 h-4 text-gold" />,
+      })
+    } else {
+      toast.info('Modo Nostalgia Desativado')
+    }
+  }
 
   return (
     <div className="sticky top-0 z-40 w-full h-16 bg-background/80 backdrop-blur-xl border-b border-border/40 flex items-center justify-between px-4 transition-all shadow-sm">
@@ -84,6 +102,29 @@ export function TopBar() {
             <ShoppingCart className="h-5 w-5" />
           </Button>
         )}
+
+        {/* Premium Nostalgia Toggle */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className={cn(
+            'rounded-full transition-all duration-500 relative group',
+            isEnabled
+              ? 'bg-gold/10 text-gold hover:bg-gold/20'
+              : 'hover:bg-secondary/50 text-muted-foreground hover:text-gold',
+          )}
+          onClick={handleNostalgiaToggle}
+        >
+          <Sparkles
+            className={cn(
+              'h-5 w-5 transition-transform duration-500',
+              isEnabled ? 'rotate-12 scale-110' : 'group-hover:scale-110',
+            )}
+          />
+          {isEnabled && (
+            <span className="absolute inset-0 rounded-full animate-ping bg-gold/20 opacity-75 duration-1000" />
+          )}
+        </Button>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

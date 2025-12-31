@@ -7,6 +7,7 @@ import { ScholarshipAlertManager } from '@/components/ScholarshipAlertManager'
 import { WeatherAlertManager } from '@/components/WeatherAlertManager'
 import { Toaster } from '@/components/ui/toaster'
 import { cn } from '@/lib/utils'
+import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 
 export default function Layout() {
   const location = useLocation()
@@ -19,12 +20,18 @@ export default function Layout() {
     location.pathname !== '/messages'
 
   return (
-    <div className="min-h-screen bg-background font-sans antialiased flex flex-col relative">
+    <div className="min-h-screen bg-background font-sans antialiased flex flex-col relative overflow-hidden">
       {/* Global Alert Managers */}
       <RankingAlertManager />
       <SmartNotificationManager />
       <ScholarshipAlertManager />
       <WeatherAlertManager />
+
+      {/* Global Nostalgia Filter Overlay */}
+      {/* z-index is set high to cover everything but allow pointer events to pass through */}
+      <div className="fixed inset-0 pointer-events-none z-[100] w-full h-full">
+        <NostalgiaFilter />
+      </div>
 
       {/* Main Navigation */}
       <TopBar />

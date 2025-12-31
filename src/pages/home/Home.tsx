@@ -44,7 +44,7 @@ import { WeatherWidget } from '@/components/WeatherWidget'
 import { GoalCard } from '@/components/GoalCard'
 import { AiToolsRail } from '@/components/AiToolsRail'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { NostalgiaShowcase } from '@/components/NostalgiaShowcase'
+import { NostalgiaStudio } from '@/components/NostalgiaStudio'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -462,7 +462,7 @@ export default function Home() {
             value="nostalgia"
             className="h-[600px] animate-in slide-in-from-right-4 duration-300"
           >
-            <NostalgiaShowcase />
+            <NostalgiaStudio />
           </TabsContent>
         </Tabs>
       </div>
