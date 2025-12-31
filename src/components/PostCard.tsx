@@ -29,6 +29,7 @@ import { SoundWaveVisualizer } from './SoundWaveVisualizer'
 import { NarrationConfig } from '@/lib/data'
 import { useLikeInteraction } from '@/hooks/useLikeInteraction'
 import { PostDetailDialog } from '@/components/PostDetailDialog'
+import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 
 export interface SocialContext {
   type: 'like' | 'comment' | 'repost'
@@ -150,6 +151,7 @@ export function PostCard({ post }: PostProps) {
             className="relative rounded-xl overflow-hidden mb-3 group transform transition-all duration-300 hover:shadow-md cursor-pointer"
             onClick={openDetail}
           >
+            <NostalgiaFilter />
             <img
               src={post.media?.[0]}
               alt="Thumbnail"
@@ -230,6 +232,7 @@ export function PostCard({ post }: PostProps) {
                       className="aspect-square relative rounded-xl overflow-hidden bg-muted cursor-pointer"
                       onClick={openDetail}
                     >
+                      <NostalgiaFilter />
                       <img
                         src={url}
                         alt={`Slide ${index}`}
@@ -254,6 +257,7 @@ export function PostCard({ post }: PostProps) {
             onClick={openDetail}
           >
             <div className="aspect-[2/1] relative overflow-hidden">
+              <NostalgiaFilter />
               <img
                 src={post.media?.[0]}
                 alt="Article"
@@ -274,9 +278,10 @@ export function PostCard({ post }: PostProps) {
       default:
         return post.media && post.media.length > 0 ? (
           <div
-            className="rounded-xl overflow-hidden mb-3 cursor-pointer"
+            className="relative rounded-xl overflow-hidden mb-3 cursor-pointer"
             onClick={openDetail}
           >
+            <NostalgiaFilter />
             <img
               src={post.media[0]}
               alt="Post"

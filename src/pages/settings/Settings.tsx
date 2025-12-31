@@ -13,6 +13,10 @@ import {
   Thermometer,
   Zap,
   GraduationCap,
+  Camera,
+  Film,
+  Tv,
+  Image as ImageIcon,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Separator } from '@/components/ui/separator'
@@ -27,6 +31,8 @@ import { Switch } from '@/components/ui/switch'
 import { useWeatherStore } from '@/stores/useWeatherStore'
 import { useScholarshipStore } from '@/stores/useScholarshipStore'
 import { Label } from '@/components/ui/label'
+import { useNostalgiaStore, NostalgiaPreset } from '@/stores/useNostalgiaStore'
+import { cn } from '@/lib/utils'
 
 export default function Settings() {
   const navigate = useNavigate()
@@ -36,6 +42,25 @@ export default function Settings() {
     preferences: scholarshipPrefs,
     toggleNotifications: toggleScholarshipNotifs,
   } = useScholarshipStore()
+  const {
+    isEnabled: isNostalgiaEnabled,
+    preset: nostalgiaPreset,
+    toggle: toggleNostalgia,
+    setPreset: setNostalgiaPreset,
+  } = useNostalgiaStore()
+
+  const nostalgiaPresets: {
+    id: NostalgiaPreset
+    label: string
+    icon: any
+  }[] = [
+    { id: 'grain', label: 'Granulado', icon: Film },
+    { id: 'retro', label: 'Retro Tones', icon: Camera },
+    { id: 'vhs', label: 'VHS', icon: Tv },
+    { id: '90s', label: 'Anos 90', icon: Zap },
+    { id: 'analog', label: 'Analógico', icon: Camera },
+    { id: 'polaroid', label: 'Polaroid', icon: ImageIcon },
+  ]
 
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
@@ -85,6 +110,50 @@ export default function Settings() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          </div>
+        </div>
+
+        <Separator />
+
+        {/* Nostalgia Mode */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-bold text-muted-foreground uppercase px-2 flex items-center gap-2">
+            Modo Nostalgia <Badge variant="secondary">Novo</Badge>
+          </h3>
+
+          <div className="px-2 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label className="text-base">Ativar Filtros Retro</Label>
+                <p className="text-xs text-muted-foreground">
+                  Aplica visual nostálgico em fotos e vídeos.
+                </p>
+              </div>
+              <Switch
+                checked={isNostalgiaEnabled}
+                onCheckedChange={toggleNostalgia}
+              />
+            </div>
+
+            {isNostalgiaEnabled && (
+              <div className="grid grid-cols-2 gap-2 animate-fade-in">
+                {nostalgiaPresets.map((p) => (
+                  <Button
+                    key={p.id}
+                    variant={nostalgiaPreset === p.id ? 'default' : 'outline'}
+                    size="sm"
+                    className={cn(
+                      'justify-start h-10',
+                      nostalgiaPreset === p.id && 'border-primary',
+                    )}
+                    onClick={() => setNostalgiaPreset(p.id)}
+                  >
+                    <p.icon className="mr-2 h-4 w-4" />
+                    {p.label}
+                  </Button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
@@ -225,5 +294,20 @@ export default function Settings() {
         </Button>
       </div>
     </div>
+  )
+}
+
+function Badge({
+  className,
+  variant,
+  children,
+}: {
+  className?: string
+  variant?: 'default' | 'secondary' | 'destructive' | 'outline'
+  children: React.ReactNode
+}) {
+  const { badgeVariants } = require('@/components/ui/badge')
+  return (
+    <div className={cn(badgeVariants({ variant }), className)}>{children}</div>
   )
 }

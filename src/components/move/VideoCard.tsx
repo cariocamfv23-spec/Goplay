@@ -20,6 +20,7 @@ import {
   mockStatsHistory,
   mockTrainingSuggestions,
 } from '@/lib/data'
+import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 
 export interface VideoData {
   id: string
@@ -114,6 +115,9 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
 
   return (
     <div className="relative h-full w-full snap-start bg-black overflow-hidden">
+      {/* Nostalgia Filter Layer */}
+      <NostalgiaFilter className="z-10" />
+
       {/* Video Placeholder/Background */}
       <div
         className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
