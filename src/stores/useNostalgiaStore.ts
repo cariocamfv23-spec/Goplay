@@ -10,6 +10,8 @@ export type NostalgiaPreset =
   | 'polaroid'
   | 'pele'
   | 'ali'
+  | 'cassette'
+  | 'digital'
 
 interface NostalgiaState {
   isEnabled: boolean

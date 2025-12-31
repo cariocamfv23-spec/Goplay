@@ -25,7 +25,8 @@ export function NostalgiaFilter({
     if (
       activePreset === 'vhs' ||
       activePreset === '90s' ||
-      activePreset === 'pele'
+      activePreset === 'pele' ||
+      activePreset === 'digital'
     ) {
       const timer = setInterval(() => setTime(new Date()), 1000)
       return () => clearInterval(timer)
@@ -175,6 +176,68 @@ export function NostalgiaFilter({
 
             {/* Heavy Vignette (Noir style) */}
             <div className="absolute inset-0 pointer-events-none z-20 bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.8)_100%)]" />
+          </>
+        )
+
+      case 'cassette':
+        return (
+          <>
+            {/* Cassette Plastic Texture Overlay */}
+            <div className="absolute inset-0 pointer-events-none z-10 bg-[#f0eee4] mix-blend-multiply opacity-10" />
+            <div className="absolute inset-0 pointer-events-none z-10 filter-grain opacity-5" />
+
+            {/* Cassette Border Frame */}
+            <div className="absolute inset-0 pointer-events-none z-30 border-[16px] border-[#333] rounded-lg shadow-[inset_0_0_20px_rgba(0,0,0,0.8)]" />
+
+            {/* Screws */}
+            <div className="absolute top-3 left-3 w-3 h-3 rounded-full bg-zinc-400 border border-zinc-600 shadow-inner z-40 flex items-center justify-center pointer-events-none">
+              <div className="w-full h-[1px] bg-zinc-700 rotate-45 transform" />
+              <div className="absolute w-full h-[1px] bg-zinc-700 -rotate-45 transform" />
+            </div>
+            <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-zinc-400 border border-zinc-600 shadow-inner z-40 flex items-center justify-center pointer-events-none">
+              <div className="w-full h-[1px] bg-zinc-700 rotate-45 transform" />
+              <div className="absolute w-full h-[1px] bg-zinc-700 -rotate-45 transform" />
+            </div>
+            <div className="absolute bottom-3 left-3 w-3 h-3 rounded-full bg-zinc-400 border border-zinc-600 shadow-inner z-40 flex items-center justify-center pointer-events-none">
+              <div className="w-full h-[1px] bg-zinc-700 rotate-45 transform" />
+              <div className="absolute w-full h-[1px] bg-zinc-700 -rotate-45 transform" />
+            </div>
+            <div className="absolute bottom-3 right-3 w-3 h-3 rounded-full bg-zinc-400 border border-zinc-600 shadow-inner z-40 flex items-center justify-center pointer-events-none">
+              <div className="w-full h-[1px] bg-zinc-700 rotate-45 transform" />
+              <div className="absolute w-full h-[1px] bg-zinc-700 -rotate-45 transform" />
+            </div>
+
+            {/* Label Side A */}
+            <div className="absolute top-2 left-1/2 -translate-x-1/2 z-40 bg-orange-500/90 px-3 py-0.5 rounded-sm shadow-sm pointer-events-none">
+              <span className="font-handwriting font-bold text-xs text-black uppercase tracking-widest">
+                SIDE A
+              </span>
+            </div>
+          </>
+        )
+
+      case 'digital':
+        return (
+          <>
+            {/* Green Tint & Contrast */}
+            <div className="absolute inset-0 pointer-events-none z-10 bg-green-500/5 mix-blend-overlay" />
+            <div className="absolute inset-0 pointer-events-none z-10 contrast-[1.2] brightness-90 saturate-0 sepia-[0.3] hue-rotate-[50deg]" />
+
+            {/* Grid Background */}
+            <div className="absolute inset-0 pointer-events-none z-10 filter-digital-grid opacity-20" />
+
+            {/* Scanlines */}
+            <div className="absolute inset-0 pointer-events-none z-20 filter-digital-scanlines opacity-30" />
+
+            {/* System Status Overlay */}
+            <div className="absolute top-4 left-4 pointer-events-none z-30 font-digital text-green-500 text-xs uppercase tracking-wider drop-shadow-[0_0_5px_rgba(0,255,0,0.5)]">
+              SYSTEM_READY...
+              <br />
+              MEM: 640K OK
+            </div>
+            <div className="absolute bottom-4 right-4 pointer-events-none z-30 font-digital text-green-500 text-xs uppercase tracking-wider drop-shadow-[0_0_5px_rgba(0,255,0,0.5)] animate-pulse">
+              _CURSOR
+            </div>
           </>
         )
 

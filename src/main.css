@@ -164,6 +164,32 @@
     --radius: 0.2rem;
     font-family: 'Impact', 'Oswald', sans-serif; /* Bold Headline font */
   }
+
+  /* New User Story Themes */
+  .theme-nostalgia-digital {
+    --background: 120 10% 5%; /* Dark matrix bg */
+    --foreground: 120 100% 50%; /* Terminal Green */
+    --card: 120 10% 8%;
+    --card-foreground: 120 100% 50%;
+    --primary: 120 100% 50%;
+    --primary-foreground: 0 0% 0%;
+    --border: 120 50% 30%;
+    --ring: 120 100% 50%;
+    --radius: 0px;
+    font-family: 'Courier New', monospace;
+  }
+
+  .theme-nostalgia-cassette {
+    --background: 30 15% 90%; /* Paper-like off-white */
+    --foreground: 240 20% 25%; /* Inked blue/black */
+    --card: 30 15% 95%;
+    --card-foreground: 240 20% 25%;
+    --primary: 340 80% 50%; /* Pen red */
+    --primary-foreground: 0 0% 100%;
+    --border: 240 20% 80%;
+    --radius: 0.25rem;
+    font-family: 'Comic Sans MS', 'Brush Script MT', cursive;
+  }
 }
 
 @layer base {
@@ -198,6 +224,10 @@
 
   .font-handwriting {
     font-family: 'Brush Script MT', 'Comic Sans MS', cursive;
+  }
+
+  .font-digital {
+    font-family: 'Courier New', monospace;
   }
 
   /* NOSTALGIA FILTERS & EFFECTS */
@@ -243,6 +273,27 @@
     background: white;
     pointer-events: none;
     mix-blend-mode: overlay;
+  }
+
+  /* DIGITAL */
+  .filter-digital-grid {
+    background-image:
+      linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+  }
+
+  .filter-digital-scanlines {
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.2) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    background-size: 100% 3px;
+    pointer-events: none;
   }
 
   /* 90s */

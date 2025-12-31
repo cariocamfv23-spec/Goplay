@@ -14,6 +14,8 @@ import {
   Trophy,
   Swords,
   Loader2,
+  CassetteTape,
+  Terminal,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { NostalgiaFilter } from '@/components/NostalgiaFilter'
@@ -34,6 +36,22 @@ interface PresetOption {
 }
 
 const presets: PresetOption[] = [
+  {
+    id: 'cassette',
+    name: 'Fita K7',
+    description: 'Estilo Cassete',
+    icon: CassetteTape,
+    color: 'text-orange-600',
+    category: 'classic',
+  },
+  {
+    id: 'digital',
+    name: 'Retro Digital',
+    description: 'Interface PC Antiga',
+    icon: Terminal,
+    color: 'text-green-500',
+    category: 'classic',
+  },
   {
     id: 'pele',
     name: 'Futebol 80s',

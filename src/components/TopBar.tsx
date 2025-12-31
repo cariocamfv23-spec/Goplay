@@ -11,6 +11,11 @@ import {
   LogOut,
   CreditCard,
   Sparkles,
+  CassetteTape,
+  Tv,
+  Film,
+  Aperture,
+  Terminal,
 } from 'lucide-react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -32,7 +37,7 @@ import { useThemeStore } from '@/stores/useThemeStore'
 import { mockCurrentUser } from '@/lib/data'
 import { NotificationMenu } from '@/components/NotificationMenu'
 import { AthleteAura } from '@/components/AthleteAura'
-import { useNostalgiaStore } from '@/stores/useNostalgiaStore'
+import { useNostalgiaStore, NostalgiaPreset } from '@/stores/useNostalgiaStore'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 
@@ -41,7 +46,7 @@ export function TopBar() {
   const location = useLocation()
   const { setTheme, theme } = useTheme()
   const { color, setColor } = useThemeStore()
-  const { isEnabled, toggle, preset } = useNostalgiaStore()
+  const { isEnabled, toggle, preset, setPreset } = useNostalgiaStore()
 
   const isMarket = location.pathname.includes('/marketplace')
 
@@ -55,18 +60,22 @@ export function TopBar() {
     location.pathname !== '/marketplace' &&
     location.pathname !== '/feed'
 
-  const handleNostalgiaToggle = () => {
-    // If not enabled, enable it. If enabled, toggle it off.
-    const newState = !isEnabled
-    toggle(newState)
-    if (newState) {
-      toast.success('Modo Nostalgia Ativado', {
-        description: `Filtro ${preset.toUpperCase()} aplicado globalmente.`,
-        icon: <Sparkles className="w-4 h-4 text-gold" />,
-      })
-    } else {
-      toast.info('Modo Nostalgia Desativado')
+  const handleSelectPreset = (newPreset: NostalgiaPreset) => {
+    setPreset(newPreset)
+    if (!isEnabled) {
+      toggle(true)
     }
+    toast.success('Modo Nostalgia Aplicado', {
+      description: `Filtro ${newPreset.toUpperCase()} ativo.`,
+      icon: <Sparkles className="w-4 h-4 text-gold" />,
+    })
+  }
+
+  const handleDisable = () => {
+    toggle(false)
+    toast.info('Modo Nostalgia Desativado', {
+      description: 'Retornando ao estilo moderno.',
+    })
   }
 
   return (
@@ -104,29 +113,97 @@ export function TopBar() {
           </Button>
         )}
 
-        {/* Premium Nostalgia Toggle */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className={cn(
-            'rounded-full transition-all duration-500 relative group',
-            isEnabled
-              ? 'bg-gold/10 text-gold hover:bg-gold/20'
-              : 'hover:bg-secondary/50 text-muted-foreground hover:text-gold',
-          )}
-          onClick={handleNostalgiaToggle}
-          title="Modo Nostalgia"
-        >
-          <Sparkles
-            className={cn(
-              'h-5 w-5 transition-transform duration-500',
-              isEnabled ? 'rotate-12 scale-110' : 'group-hover:scale-110',
+        {/* Nostalgia Menu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                'rounded-full transition-all duration-500 relative group',
+                isEnabled
+                  ? 'bg-gold/10 text-gold hover:bg-gold/20'
+                  : 'hover:bg-secondary/50 text-muted-foreground hover:text-gold',
+              )}
+              title="Modo Nostalgia"
+            >
+              <Sparkles
+                className={cn(
+                  'h-5 w-5 transition-transform duration-500',
+                  isEnabled ? 'rotate-12 scale-110' : 'group-hover:scale-110',
+                )}
+              />
+              {isEnabled && (
+                <span className="absolute inset-0 rounded-full animate-ping bg-gold/20 opacity-75 duration-1000" />
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>Estúdio Nostalgia</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+
+            {isEnabled && (
+              <>
+                <DropdownMenuItem
+                  onClick={handleDisable}
+                  className="text-red-500 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950/30 font-medium"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Desativar Efeitos</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+              </>
             )}
-          />
-          {isEnabled && (
-            <span className="absolute inset-0 rounded-full animate-ping bg-gold/20 opacity-75 duration-1000" />
-          )}
-        </Button>
+
+            <DropdownMenuItem onClick={() => handleSelectPreset('cassette')}>
+              <CassetteTape className="mr-2 h-4 w-4" />
+              <span>Fita K7</span>
+              {preset === 'cassette' && isEnabled && (
+                <Check className="ml-auto h-4 w-4" />
+              )}
+            </DropdownMenuItem>
+
+            <DropdownMenuItem onClick={() => handleSelectPreset('vhs')}>
+              <Tv className="mr-2 h-4 w-4" />
+              <span>VHS Aesthetic</span>
+              {preset === 'vhs' && isEnabled && (
+                <Check className="ml-auto h-4 w-4" />
+              )}
+            </DropdownMenuItem>
+
+            <DropdownMenuItem onClick={() => handleSelectPreset('90s')}>
+              <Sparkles className="mr-2 h-4 w-4" />
+              <span>90s Pop</span>
+              {preset === '90s' && isEnabled && (
+                <Check className="ml-auto h-4 w-4" />
+              )}
+            </DropdownMenuItem>
+
+            <DropdownMenuItem onClick={() => handleSelectPreset('analog')}>
+              <Aperture className="mr-2 h-4 w-4" />
+              <span>Analógico</span>
+              {preset === 'analog' && isEnabled && (
+                <Check className="ml-auto h-4 w-4" />
+              )}
+            </DropdownMenuItem>
+
+            <DropdownMenuItem onClick={() => handleSelectPreset('digital')}>
+              <Terminal className="mr-2 h-4 w-4" />
+              <span>Retro Digital</span>
+              {preset === 'digital' && isEnabled && (
+                <Check className="ml-auto h-4 w-4" />
+              )}
+            </DropdownMenuItem>
+
+            <DropdownMenuItem onClick={() => handleSelectPreset('retro')}>
+              <Film className="mr-2 h-4 w-4" />
+              <span>Câmera Clássica</span>
+              {preset === 'retro' && isEnabled && (
+                <Check className="ml-auto h-4 w-4" />
+              )}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

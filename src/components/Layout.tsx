@@ -25,6 +25,8 @@ export default function Layout() {
       'theme-nostalgia-retro',
       'theme-nostalgia-pele',
       'theme-nostalgia-ali',
+      'theme-nostalgia-cassette',
+      'theme-nostalgia-digital',
     )
 
     if (isEnabled) {
@@ -38,6 +40,10 @@ export default function Layout() {
         root.classList.add('theme-nostalgia-pele')
       } else if (preset === 'ali') {
         root.classList.add('theme-nostalgia-ali')
+      } else if (preset === 'cassette') {
+        root.classList.add('theme-nostalgia-cassette')
+      } else if (preset === 'digital') {
+        root.classList.add('theme-nostalgia-digital')
       }
     }
 
@@ -48,6 +54,8 @@ export default function Layout() {
         'theme-nostalgia-retro',
         'theme-nostalgia-pele',
         'theme-nostalgia-ali',
+        'theme-nostalgia-cassette',
+        'theme-nostalgia-digital',
       )
     }
   }, [isEnabled, preset])
