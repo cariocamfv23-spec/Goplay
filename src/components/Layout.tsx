@@ -8,19 +8,48 @@ import { WeatherAlertManager } from '@/components/WeatherAlertManager'
 import { Toaster } from '@/components/ui/toaster'
 import { cn } from '@/lib/utils'
 import { NostalgiaFilter } from '@/components/NostalgiaFilter'
+import { useNostalgiaStore } from '@/stores/useNostalgiaStore'
+import { useEffect } from 'react'
 
 export default function Layout() {
   const location = useLocation()
+  const { isEnabled, preset } = useNostalgiaStore()
 
-  // Routes where we want a cleaner layout (e.g., Maps)
-  const isMapRoute =
-    location.pathname.includes('/map') || location.pathname.includes('/move')
+  // Apply Global Theme Classes to Body
+  useEffect(() => {
+    const root = document.body
+    // Remove all nostalgia classes
+    root.classList.remove(
+      'theme-nostalgia-vhs',
+      'theme-nostalgia-90s',
+      'theme-nostalgia-retro',
+    )
+
+    if (isEnabled) {
+      if (preset === 'vhs') {
+        root.classList.add('theme-nostalgia-vhs')
+      } else if (preset === '90s') {
+        root.classList.add('theme-nostalgia-90s')
+      } else if (preset === 'retro' || preset === 'analog') {
+        root.classList.add('theme-nostalgia-retro')
+      }
+    }
+
+    return () => {
+      root.classList.remove(
+        'theme-nostalgia-vhs',
+        'theme-nostalgia-90s',
+        'theme-nostalgia-retro',
+      )
+    }
+  }, [isEnabled, preset])
+
   const isMessageRoute =
     location.pathname.includes('/messages/') &&
     location.pathname !== '/messages'
 
   return (
-    <div className="min-h-screen bg-background font-sans antialiased flex flex-col relative overflow-hidden">
+    <div className="min-h-screen bg-background font-sans antialiased flex flex-col relative overflow-hidden transition-colors duration-500">
       {/* Global Alert Managers */}
       <RankingAlertManager />
       <SmartNotificationManager />
@@ -29,8 +58,8 @@ export default function Layout() {
 
       {/* Global Nostalgia Filter Overlay */}
       {/* z-index is set high to cover everything but allow pointer events to pass through */}
-      <div className="fixed inset-0 pointer-events-none z-[100] w-full h-full">
-        <NostalgiaFilter />
+      <div className="fixed inset-0 pointer-events-none z-[100] w-full h-full overflow-hidden">
+        <NostalgiaFilter forceEnable={isEnabled} />
       </div>
 
       {/* Main Navigation */}
@@ -40,7 +69,6 @@ export default function Layout() {
       <main
         className={cn(
           'flex-1 w-full pb-20 md:pb-0 transition-all duration-300',
-          // Add margin/padding adjustments if needed for desktop sidebar in future
         )}
       >
         <Outlet />

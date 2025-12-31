@@ -56,6 +56,7 @@ export function TopBar() {
     location.pathname !== '/feed'
 
   const handleNostalgiaToggle = () => {
+    // If not enabled, enable it. If enabled, toggle it off.
     const newState = !isEnabled
     toggle(newState)
     if (newState) {
@@ -114,6 +115,7 @@ export function TopBar() {
               : 'hover:bg-secondary/50 text-muted-foreground hover:text-gold',
           )}
           onClick={handleNostalgiaToggle}
+          title="Modo Nostalgia"
         >
           <Sparkles
             className={cn(

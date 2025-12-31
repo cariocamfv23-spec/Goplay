@@ -96,6 +96,45 @@
     --primary-foreground: 355.7 100% 97.3%;
     --ring: 346.8 77.2% 49.8%;
   }
+
+  /* NOSTALGIA THEMES - GLOBAL OVERRIDES */
+  .theme-nostalgia-vhs {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --primary: 142 70% 50%; /* Terminal Green */
+    --primary-foreground: 0 0% 0%;
+    --border: 0 0% 20%;
+    --ring: 142 70% 50%;
+    --radius: 0rem; /* Sharp edges for VHS */
+    font-family: 'Courier New', monospace;
+  }
+
+  .theme-nostalgia-90s {
+    --background: 280 50% 95%; /* Light Pastel Purple */
+    --foreground: 280 80% 20%;
+    --card: 0 0% 100%;
+    --card-foreground: 280 80% 20%;
+    --primary: 330 80% 60%; /* Hot Pink */
+    --primary-foreground: 0 0% 100%;
+    --border: 330 50% 80%;
+    --ring: 330 80% 60%;
+    --radius: 1rem;
+    font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+  }
+
+  .theme-nostalgia-retro {
+    --background: 35 30% 90%; /* Sepia Light */
+    --foreground: 25 30% 20%;
+    --card: 35 30% 85%;
+    --card-foreground: 25 30% 20%;
+    --primary: 25 60% 40%; /* Sepia Dark */
+    --primary-foreground: 35 30% 90%;
+    --border: 25 30% 70%;
+    --ring: 25 60% 40%;
+    font-family: 'Times New Roman', serif;
+  }
 }
 
 @layer base {
@@ -116,6 +155,9 @@
       0 4px 8px rgba(0, 0, 0, 0.12),
       0 2px 4px rgba(0, 0, 0, 0.08);
   }
+  .text-shadow-glow {
+    text-shadow: 0 0 10px currentColor;
+  }
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
@@ -129,63 +171,9 @@
     font-family: 'Brush Script MT', 'Comic Sans MS', cursive;
   }
 
-  /* Custom Retrospective Theme Utilities */
-  .retro-gradient-custom {
-    background-image: linear-gradient(
-      135deg,
-      var(--retro-bg-start),
-      var(--retro-bg-mid),
-      var(--retro-bg-end)
-    );
-  }
-  .retro-card-gradient-custom {
-    background-image: linear-gradient(
-      to right,
-      var(--retro-bg-start),
-      var(--retro-bg-mid),
-      var(--retro-bg-end)
-    );
-  }
-  .text-retro-custom {
-    color: var(--retro-text);
-  }
-  .bg-retro-custom {
-    background-color: var(--retro-accent);
-  }
-  .ring-retro-custom {
-    --tw-ring-color: var(--retro-accent);
-  }
-  .border-retro-custom {
-    border-color: var(--retro-accent);
-  }
+  /* NOSTALGIA FILTERS & EFFECTS */
 
-  /* Athlete Aura Animations */
-  .animate-aura-spin {
-    animation: aura-spin 10s linear infinite;
-  }
-  .animate-aura-pulse-slow {
-    animation: aura-pulse 4s ease-in-out infinite;
-  }
-  .animate-aura-pulse-fast {
-    animation: aura-pulse 2s ease-in-out infinite;
-  }
-  .animate-aura-pulse-intense {
-    animation: aura-pulse-intense 2s ease-in-out infinite;
-  }
-
-  /* Eco Humano Organic Waves */
-  .animate-blob-pulse {
-    animation: blob-pulse 8s ease-in-out infinite;
-  }
-  .animate-eco-ripple {
-    animation: eco-ripple 4s cubic-bezier(0, 0, 0.2, 1) infinite;
-  }
-  .animate-eco-ripple-delayed {
-    animation: eco-ripple 4s cubic-bezier(0, 0, 0.2, 1) infinite;
-    animation-delay: 2s;
-  }
-
-  /* Nostalgia Mode Utilities - High Fidelity */
+  /* GRAIN */
   .filter-grain {
     position: absolute;
     inset: 0;
@@ -194,46 +182,134 @@
     pointer-events: none;
     z-index: 10;
     opacity: 0.15;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
     background-repeat: repeat;
   }
 
+  /* VHS */
   .filter-vhs-lines {
     background: linear-gradient(
       to bottom,
       rgba(255, 255, 255, 0),
       rgba(255, 255, 255, 0) 50%,
-      rgba(0, 0, 0, 0.1) 50%,
-      rgba(0, 0, 0, 0.1)
+      rgba(0, 0, 0, 0.2) 50%,
+      rgba(0, 0, 0, 0.2)
     );
     background-size: 100% 4px;
-    animation: scanline 0.5s linear infinite;
+    animation: scanline 0.2s linear infinite;
     pointer-events: none;
-  }
-
-  .animate-scanline {
-    animation: scanline 8s linear infinite;
-  }
-
-  .mix-blend-overlay {
     mix-blend-mode: overlay;
   }
 
+  .filter-vhs-color-shift {
+    text-shadow:
+      -2px 0 #00ffff,
+      2px 0 #ff00ff;
+    animation: rgb-shift 3s infinite alternate;
+  }
+
+  .filter-crt-flicker {
+    animation: flicker 0.15s infinite;
+    opacity: 0.05;
+    background: white;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+
+  /* 90s */
+  .filter-90s-pattern {
+    background-image:
+      radial-gradient(circle, #ff00ff 10%, transparent 10%),
+      radial-gradient(circle, #00ffff 10%, transparent 10%);
+    background-size: 20px 20px;
+    background-position:
+      0 0,
+      10px 10px;
+    opacity: 0.05;
+  }
+
+  /* BLEND MODES */
+  .mix-blend-overlay {
+    mix-blend-mode: overlay;
+  }
   .mix-blend-screen {
     mix-blend-mode: screen;
   }
-
   .mix-blend-multiply {
     mix-blend-mode: multiply;
   }
-
   .mix-blend-color-dodge {
     mix-blend-mode: color-dodge;
   }
-
   .mix-blend-exclusion {
     mix-blend-mode: exclusion;
   }
+  .mix-blend-soft-light {
+    mix-blend-mode: soft-light;
+  }
+  .mix-blend-hard-light {
+    mix-blend-mode: hard-light;
+  }
+}
+
+@keyframes scanline {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 100%;
+  }
+}
+
+@keyframes rgb-shift {
+  0% {
+    text-shadow:
+      -1px 0 #00ffff,
+      1px 0 #ff00ff;
+  }
+  25% {
+    text-shadow:
+      -2px 1px #00ffff,
+      2px -1px #ff00ff;
+  }
+  50% {
+    text-shadow:
+      -1px -1px #00ffff,
+      1px 1px #ff00ff;
+  }
+  75% {
+    text-shadow:
+      -2px 0 #00ffff,
+      2px 0 #ff00ff;
+  }
+  100% {
+    text-shadow:
+      -1px 0 #00ffff,
+      1px 0 #ff00ff;
+  }
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 0.02;
+  }
+  50% {
+    opacity: 0.05;
+  }
+  100% {
+    opacity: 0.02;
+  }
+}
+
+/* Athlete Aura Animations */
+.animate-aura-spin {
+  animation: aura-spin 10s linear infinite;
+}
+.animate-aura-pulse-slow {
+  animation: aura-pulse 4s ease-in-out infinite;
+}
+.animate-aura-pulse-fast {
+  animation: aura-pulse 2s ease-in-out infinite;
 }
 
 @keyframes aura-spin {
@@ -254,61 +330,5 @@
   50% {
     opacity: 0.9;
     transform: scale(1.05);
-  }
-}
-
-@keyframes aura-pulse-intense {
-  0%,
-  100% {
-    opacity: 0.8;
-    transform: scale(1);
-    filter: brightness(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-    filter: brightness(1.3);
-  }
-}
-
-@keyframes blob-pulse {
-  0% {
-    transform: scale(1);
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-  }
-  33% {
-    transform: scale(1.05);
-    border-radius: 40% 60% 70% 30% / 50% 60% 30% 60%;
-  }
-  66% {
-    transform: scale(0.95);
-    border-radius: 70% 30% 50% 50% / 30% 50% 70% 50%;
-  }
-  100% {
-    transform: scale(1);
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-  }
-}
-
-@keyframes eco-ripple {
-  0% {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.5;
-  }
-  100% {
-    transform: scale(2.8);
-    opacity: 0;
-  }
-}
-
-@keyframes scanline {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 0 100%;
   }
 }
