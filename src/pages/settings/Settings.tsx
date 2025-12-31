@@ -33,6 +33,7 @@ import { useScholarshipStore } from '@/stores/useScholarshipStore'
 import { Label } from '@/components/ui/label'
 import { useNostalgiaStore, NostalgiaPreset } from '@/stores/useNostalgiaStore'
 import { cn } from '@/lib/utils'
+import { Badge } from '@/components/ui/badge'
 
 export default function Settings() {
   const navigate = useNavigate()
@@ -294,20 +295,5 @@ export default function Settings() {
         </Button>
       </div>
     </div>
-  )
-}
-
-function Badge({
-  className,
-  variant,
-  children,
-}: {
-  className?: string
-  variant?: 'default' | 'secondary' | 'destructive' | 'outline'
-  children: React.ReactNode
-}) {
-  const { badgeVariants } = require('@/components/ui/badge')
-  return (
-    <div className={cn(badgeVariants({ variant }), className)}>{children}</div>
   )
 }
