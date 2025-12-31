@@ -62,35 +62,31 @@
     --gold-foreground: 26 83% 14%;
   }
 
-  /* Theme: Blue */
+  /* Theme Overrides */
   .theme-blue {
     --primary: 221.2 83.2% 53.3%;
     --primary-foreground: 210 40% 98%;
     --ring: 221.2 83.2% 53.3%;
   }
 
-  /* Theme: Green */
   .theme-green {
     --primary: 142.1 76.2% 36.3%;
     --primary-foreground: 355.7 100% 97.3%;
     --ring: 142.1 76.2% 36.3%;
   }
 
-  /* Theme: Orange */
   .theme-orange {
     --primary: 24.6 95% 53.1%;
     --primary-foreground: 60 9.1% 97.8%;
     --ring: 24.6 95% 53.1%;
   }
 
-  /* Theme: Red */
   .theme-red {
     --primary: 0 72.2% 50.6%;
     --primary-foreground: 0 85.7% 97.3%;
     --ring: 0 72.2% 50.6%;
   }
 
-  /* Theme: Rose */
   .theme-rose {
     --primary: 346.8 77.2% 49.8%;
     --primary-foreground: 355.7 100% 97.3%;
@@ -103,20 +99,20 @@
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
-    --primary: 142 70% 50%; /* Terminal Green */
+    --primary: 142 70% 50%;
     --primary-foreground: 0 0% 0%;
     --border: 0 0% 20%;
     --ring: 142 70% 50%;
-    --radius: 0rem; /* Sharp edges for VHS */
+    --radius: 0rem;
     font-family: 'Courier New', monospace;
   }
 
   .theme-nostalgia-90s {
-    --background: 280 50% 95%; /* Light Pastel Purple */
+    --background: 280 50% 95%;
     --foreground: 280 80% 20%;
     --card: 0 0% 100%;
     --card-foreground: 280 80% 20%;
-    --primary: 330 80% 60%; /* Hot Pink */
+    --primary: 330 80% 60%;
     --primary-foreground: 0 0% 100%;
     --border: 330 50% 80%;
     --ring: 330 80% 60%;
@@ -125,50 +121,48 @@
   }
 
   .theme-nostalgia-retro {
-    --background: 35 30% 90%; /* Sepia Light */
+    --background: 35 30% 90%;
     --foreground: 25 30% 20%;
     --card: 35 30% 85%;
     --card-foreground: 25 30% 20%;
-    --primary: 25 60% 40%; /* Sepia Dark */
+    --primary: 25 60% 40%;
     --primary-foreground: 35 30% 90%;
     --border: 25 30% 70%;
     --ring: 25 60% 40%;
     font-family: 'Times New Roman', serif;
   }
 
-  /* New Iconic Themes */
   .theme-nostalgia-pele {
-    --background: 142 60% 25%; /* Pitch Green Dark */
-    --foreground: 48 96% 53%; /* Gold Text */
+    --background: 142 60% 25%;
+    --foreground: 48 96% 53%;
     --card: 142 60% 20%;
     --card-foreground: 0 0% 98%;
-    --primary: 48 96% 53%; /* Brazil Yellow/Gold */
+    --primary: 48 96% 53%;
     --primary-foreground: 142 76% 26%;
     --border: 48 96% 53%;
     --ring: 48 96% 53%;
     --radius: 0.5rem;
     --muted: 142 40% 30%;
-    font-family: 'Helvetica', 'Arial', sans-serif; /* Broadcast safe font */
+    font-family: 'Helvetica', 'Arial', sans-serif;
   }
 
   .theme-nostalgia-ali {
-    --background: 0 0% 5%; /* Deep Black */
-    --foreground: 0 0% 90%; /* Silver */
+    --background: 0 0% 5%;
+    --foreground: 0 0% 90%;
     --card: 0 0% 8%;
     --card-foreground: 0 0% 90%;
-    --primary: 0 0% 100%; /* Pure White */
+    --primary: 0 0% 100%;
     --primary-foreground: 0 0% 0%;
     --secondary: 0 0% 15%;
     --border: 0 0% 25%;
     --ring: 0 0% 100%;
     --radius: 0.2rem;
-    font-family: 'Impact', 'Oswald', sans-serif; /* Bold Headline font */
+    font-family: 'Impact', 'Oswald', sans-serif;
   }
 
-  /* New User Story Themes */
   .theme-nostalgia-digital {
-    --background: 120 10% 5%; /* Dark matrix bg */
-    --foreground: 120 100% 50%; /* Terminal Green */
+    --background: 120 10% 5%;
+    --foreground: 120 100% 50%;
     --card: 120 10% 8%;
     --card-foreground: 120 100% 50%;
     --primary: 120 100% 50%;
@@ -180,11 +174,11 @@
   }
 
   .theme-nostalgia-cassette {
-    --background: 30 15% 90%; /* Paper-like off-white */
-    --foreground: 240 20% 25%; /* Inked blue/black */
+    --background: 30 15% 90%;
+    --foreground: 240 20% 25%;
     --card: 30 15% 95%;
     --card-foreground: 240 20% 25%;
-    --primary: 340 80% 50%; /* Pen red */
+    --primary: 340 80% 50%;
     --primary-foreground: 0 0% 100%;
     --border: 240 20% 80%;
     --radius: 0.25rem;
@@ -232,26 +226,16 @@
 
   /* NOSTALGIA FILTERS & EFFECTS */
 
-  /* GRAIN */
   .filter-grain {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 10;
-    opacity: 0.15;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
     background-repeat: repeat;
   }
 
-  /* TEXTURE: PLASTIC (Cassette) */
   .filter-texture-plastic {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
     background-repeat: repeat;
   }
 
-  /* VHS */
   .filter-vhs-lines {
     background: linear-gradient(
       to bottom,
@@ -273,15 +257,6 @@
     animation: rgb-shift 3s infinite alternate;
   }
 
-  .filter-crt-flicker {
-    animation: flicker 0.15s infinite;
-    opacity: 0.05;
-    background: white;
-    pointer-events: none;
-    mix-blend-mode: overlay;
-  }
-
-  /* DIGITAL */
   .filter-digital-grid {
     background-image:
       linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
@@ -302,20 +277,6 @@
     pointer-events: none;
   }
 
-  /* 90s */
-  .filter-90s-pattern {
-    background-color: transparent;
-    background-image:
-      radial-gradient(#ff00ff 15%, transparent 16%),
-      radial-gradient(#00ffff 15%, transparent 16%);
-    background-size: 20px 20px;
-    background-position:
-      0 0,
-      10px 10px;
-    opacity: 0.05;
-  }
-
-  /* 80s Broadcast - Pelé Style */
   .filter-broadcast-scanlines {
     background: repeating-linear-gradient(
       0deg,
@@ -333,7 +294,6 @@
     -webkit-backdrop-filter: blur(0.5px) contrast(1.2) saturate(1.4);
   }
 
-  /* Cinematic - Ali Style */
   .filter-film-scratches {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.005' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
     opacity: 0.1;
@@ -350,18 +310,6 @@
   }
   .mix-blend-multiply {
     mix-blend-mode: multiply;
-  }
-  .mix-blend-color-dodge {
-    mix-blend-mode: color-dodge;
-  }
-  .mix-blend-exclusion {
-    mix-blend-mode: exclusion;
-  }
-  .mix-blend-soft-light {
-    mix-blend-mode: soft-light;
-  }
-  .mix-blend-hard-light {
-    mix-blend-mode: hard-light;
   }
 }
 
@@ -452,7 +400,6 @@
   animation: tracking 5s linear infinite;
 }
 
-/* Athlete Aura Animations */
 .animate-aura-spin {
   animation: aura-spin 10s linear infinite;
 }

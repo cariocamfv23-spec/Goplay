@@ -157,24 +157,6 @@ export function TopBar() {
               </>
             )}
 
-            <DropdownMenuItem onClick={() => handleSelectPreset('pele')}>
-              <Trophy className="mr-2 h-4 w-4 text-yellow-500" />
-              <span>Futebol 80s (Pelé)</span>
-              {preset === 'pele' && isEnabled && (
-                <Check className="ml-auto h-4 w-4" />
-              )}
-            </DropdownMenuItem>
-
-            <DropdownMenuItem onClick={() => handleSelectPreset('ali')}>
-              <Swords className="mr-2 h-4 w-4 text-zinc-500" />
-              <span>Boxe Vintage (Ali)</span>
-              {preset === 'ali' && isEnabled && (
-                <Check className="ml-auto h-4 w-4" />
-              )}
-            </DropdownMenuItem>
-
-            <DropdownMenuSeparator />
-
             <DropdownMenuItem onClick={() => handleSelectPreset('cassette')}>
               <CassetteTape className="mr-2 h-4 w-4" />
               <span>Fita K7</span>
@@ -199,10 +181,10 @@ export function TopBar() {
               )}
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={() => handleSelectPreset('analog')}>
-              <Aperture className="mr-2 h-4 w-4" />
-              <span>Analógico</span>
-              {preset === 'analog' && isEnabled && (
+            <DropdownMenuItem onClick={() => handleSelectPreset('retro')}>
+              <Film className="mr-2 h-4 w-4" />
+              <span>Câmera Clássica</span>
+              {preset === 'retro' && isEnabled && (
                 <Check className="ml-auto h-4 w-4" />
               )}
             </DropdownMenuItem>
@@ -215,10 +197,23 @@ export function TopBar() {
               )}
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={() => handleSelectPreset('retro')}>
-              <Film className="mr-2 h-4 w-4" />
-              <span>Câmera Clássica</span>
-              {preset === 'retro' && isEnabled && (
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel className="text-xs">
+              Temas Especiais
+            </DropdownMenuLabel>
+
+            <DropdownMenuItem onClick={() => handleSelectPreset('pele')}>
+              <Trophy className="mr-2 h-4 w-4 text-yellow-500" />
+              <span>Futebol 80s (Pelé)</span>
+              {preset === 'pele' && isEnabled && (
+                <Check className="ml-auto h-4 w-4" />
+              )}
+            </DropdownMenuItem>
+
+            <DropdownMenuItem onClick={() => handleSelectPreset('ali')}>
+              <Swords className="mr-2 h-4 w-4 text-zinc-500" />
+              <span>Boxe Vintage (Ali)</span>
+              {preset === 'ali' && isEnabled && (
                 <Check className="ml-auto h-4 w-4" />
               )}
             </DropdownMenuItem>

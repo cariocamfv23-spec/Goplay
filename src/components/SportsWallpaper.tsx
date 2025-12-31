@@ -18,22 +18,22 @@ export function SportsWallpaper() {
       case 'vhs':
         return {
           opacity: 0.08,
-          color: 'text-white', // VHS dark mode usually
-          bg: 'bg-zinc-900', // Dark background for VHS feel
+          color: 'text-white',
+          bg: 'bg-zinc-900',
           blendMode: 'mix-blend-overlay',
         }
       case '90s':
         return {
           opacity: 0.15,
           color: 'text-primary',
-          bg: 'bg-background', // Standard background
+          bg: 'bg-background',
           blendMode: 'mix-blend-normal',
         }
       case 'cassette':
         return {
           opacity: 0.1,
           color: 'text-zinc-600',
-          bg: 'bg-[#f0f0f0] dark:bg-[#202020]', // Paper-ish off-white
+          bg: 'bg-[#f0f0f0] dark:bg-[#202020]',
           blendMode: 'mix-blend-multiply dark:mix-blend-screen',
         }
       case 'retro':
@@ -66,7 +66,7 @@ export function SportsWallpaper() {
         }
       default:
         return {
-          opacity: 0.03, // Very subtle for other modes
+          opacity: 0.03,
           color: 'text-foreground',
           bg: 'bg-background',
           blendMode: 'mix-blend-normal',
@@ -76,7 +76,6 @@ export function SportsWallpaper() {
 
   const styles = getWallpaperStyles(preset)
 
-  // If nostalgia is disabled, we render nothing (or a default subtle pattern if desired, but user story implies it's for nostalgia mode)
   if (!isEnabled) return null
 
   return (
@@ -100,8 +99,8 @@ export function SportsWallpaper() {
               id="sports-wallpaper-pattern"
               x="0"
               y="0"
-              width="160"
-              height="160"
+              width="320"
+              height="320"
               patternUnits="userSpaceOnUse"
               patternTransform="rotate(15)"
             >
@@ -136,6 +135,44 @@ export function SportsWallpaper() {
                   d="M6 5v14h3v-2.25L15 19V5l-6 2.25V5H6z M18 5v14h3v-2.25l-1-1.75V9l1-1.75V5h-3z"
                   transform="translate(20, 130) scale(1.0)"
                   opacity="0.8"
+                />
+
+                {/* NEW ICONS to fulfill user story */}
+
+                {/* Tennis Racket */}
+                <path
+                  d="M19.78 3.57c-1.93-1.93-5.07-1.93-7 0l-1.66 1.66c-.19.19-.19.51 0 .7l.95.95c.19.19.51.19.7 0l1.66-1.66c1.54-1.54 4.05-1.54 5.59 0s1.54 4.05 0 5.59l-5.32 5.32-4.04-4.04 5.32-5.32c.19-.19.19-.51 0-.7l-.95-.95c-.19-.19-.51-.19-.7 0l-5.32 5.32c-.19.19-.19.51 0 .7l4.04 4.04c.19.19.51.19.7 0l5.32-5.32c1.94-1.94 1.94-5.08.01-7.01zM7.27 15.68L14.68 8.27l1.05 1.05-7.41 7.41zM5.5 17.5l-2.8 2.8c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l2.8-2.8"
+                  transform="translate(180, 20) scale(1.2)"
+                />
+
+                {/* Boxing Glove */}
+                <path
+                  d="M19 6c0-2.21-1.79-4-4-4h-2c-2.21 0-4 1.79-4 4v7c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V6z M12 17c-1.1 0-2 .9-2 2v2c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-2c0-1.1-.9-2-2-2h-2z"
+                  transform="translate(240, 60) scale(1.3)"
+                />
+
+                {/* Kimono (Martial Arts) */}
+                <path
+                  d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-7h3V5h4v5h3l-5 7z"
+                  transform="translate(180, 100) scale(1.1)"
+                />
+
+                {/* Surfboard */}
+                <path
+                  d="M12 2C9 2 7 6 7 12s2 10 5 10 5-6 5-10S15 2 12 2zm0 18c-1.5 0-3-3.5-3-8s1.5-8 3-8 3 3.5 3 8-1.5 8-3 8z"
+                  transform="translate(250, 150) scale(1.1)"
+                />
+
+                {/* Net (Tennis/Volleyball) */}
+                <path
+                  d="M2 6h20v12H2V6zm2 2v8h16V8H4zm2 2h2v2H6v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zm-8 4h2v2H6v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z"
+                  transform="translate(20, 220) scale(1.0)"
+                />
+
+                {/* Yoga Mat */}
+                <path
+                  d="M4 18h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2zm2-10h12v8H6V8z"
+                  transform="translate(100, 200) scale(1.2)"
                 />
               </g>
             </pattern>
