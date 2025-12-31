@@ -24,6 +24,7 @@ import {
   Scan,
   ShoppingBag,
   Ticket,
+  Sparkles,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -42,6 +43,8 @@ import { StoriesRail } from '@/components/StoriesRail'
 import { WeatherWidget } from '@/components/WeatherWidget'
 import { GoalCard } from '@/components/GoalCard'
 import { AiToolsRail } from '@/components/AiToolsRail'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { NostalgiaShowcase } from '@/components/NostalgiaShowcase'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -229,201 +232,239 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Search Bar & Scan */}
-        <div className="flex gap-2 mb-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar no Goplay..."
-              className="pl-9 bg-secondary border-none rounded-xl"
-              onClick={() => navigate('/explore')}
-              readOnly
-            />
-          </div>
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-xl border-dashed border-2 shrink-0"
-          >
-            <Scan className="h-5 w-5 text-muted-foreground" />
-          </Button>
-        </div>
-
-        {/* Stories Rail */}
-        <StoriesRail />
-
-        {/* Priority Shortcuts */}
-        <div className="grid grid-cols-5 gap-2 mb-6 mt-2">
-          {shortcuts.map((shortcut, idx) => (
-            <button
-              key={idx}
-              onClick={() => navigate(shortcut.path)}
-              className="flex flex-col items-center gap-1.5 group"
-            >
-              <div
-                className={cn(
-                  'w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-md group-hover:scale-105 group-active:scale-95',
-                  shortcut.bg,
-                  shortcut.color,
-                )}
+        <Tabs defaultValue="dashboard" className="w-full">
+          <div className="flex justify-center mb-6">
+            <TabsList className="grid w-full grid-cols-2 bg-secondary/30 border border-border/50 h-11 p-1">
+              <TabsTrigger
+                value="dashboard"
+                className="font-semibold text-xs h-full"
               >
-                <shortcut.icon className="w-5 h-5" />
-              </div>
-              <span className="text-[10px] font-medium text-muted-foreground group-hover:text-foreground transition-colors truncate w-full text-center">
-                {shortcut.label}
-              </span>
-            </button>
-          ))}
-        </div>
-
-        {/* Widgets Row (Weather & Goals) */}
-        <div className="grid grid-cols-2 gap-3 mb-6">
-          <WeatherWidget />
-          <GoalCard />
-        </div>
-
-        {/* Highlight Card - Next Activity */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between px-1 mb-2">
-            <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
-              Próxima Atividade
-            </h2>
-            <Button
-              variant="link"
-              size="sm"
-              className="h-auto p-0 text-xs"
-              onClick={() => navigate('/profile/passport')}
-            >
-              Ver agenda
-            </Button>
-          </div>
-          <Card
-            className="border-none shadow-lg bg-gradient-to-br from-primary/90 to-purple-900 text-white overflow-hidden relative cursor-pointer group hover:shadow-xl transition-all"
-            onClick={() => navigate('/profile/stats')}
-          >
-            {/* Decorative background elements */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
-
-            <CardHeader className="pb-2 relative z-10">
-              <div className="flex justify-between items-center">
-                <Badge className="bg-white/20 hover:bg-white/30 text-white border-none backdrop-blur-sm">
-                  Confirmado
-                </Badge>
-                <ArrowRight className="w-5 h-5 text-white/70 group-hover:translate-x-1 transition-transform" />
-              </div>
-              <CardTitle className="text-xl mt-2 flex items-center gap-2">
-                {nextMatch ? nextMatch.teamName : 'Sem jogos agendados'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="relative z-10">
-              {nextMatch ? (
-                <div className="flex items-center gap-4 text-sm text-white/90">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4" />
-                    <span>{nextMatch.time.split(',')[0]}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4" />
-                    <span className="truncate max-w-[120px]">
-                      {nextMatch.location}
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                <p className="text-sm text-white/80">
-                  Agende sua próxima partida e comece a pontuar.
-                </p>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* AI Suite Rail */}
-        <div className="mb-8">
-          <AiToolsRail />
-        </div>
-
-        {/* Main Dashboard Grid */}
-        <div className="space-y-6">
-          <div className="flex items-center justify-between px-1">
-            <h2 className="text-lg font-bold flex items-center gap-2">
-              <LayoutGrid className="w-5 h-5 text-primary" />
-              Dashboard
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {featureGroups.map((group, groupIdx) => (
-              <Card
-                key={groupIdx}
-                className="border-border/50 shadow-sm hover:shadow-md transition-all duration-300"
+                Dashboard
+              </TabsTrigger>
+              <TabsTrigger
+                value="nostalgia"
+                className="font-bold text-xs h-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-gold/10 data-[state=active]:text-foreground relative overflow-hidden group"
               >
-                <CardHeader className="pb-3">
-                  <div className="flex items-center gap-2 mb-1">
-                    <div
-                      className={cn('p-2 rounded-lg bg-secondary', group.color)}
-                    >
-                      <group.icon className="w-4 h-4" />
-                    </div>
-                    <CardTitle className="text-base font-bold">
-                      {group.title}
-                    </CardTitle>
-                  </div>
-                  <CardDescription className="text-xs">
-                    {group.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-3 gap-2">
-                    {group.items.map((item, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => navigate(item.path)}
-                        className="flex flex-col items-center gap-2 p-2 rounded-xl hover:bg-secondary/50 transition-colors group/item"
-                      >
-                        <div
-                          className={cn(
-                            'w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover/item:scale-110',
-                            item.bg,
-                            item.iconColor,
-                          )}
-                        >
-                          <item.icon className="w-5 h-5" />
-                        </div>
-                        <span className="text-[10px] font-medium text-center leading-tight">
-                          {item.label}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                  <Button
-                    variant="ghost"
-                    className="w-full mt-2 text-xs h-8 text-muted-foreground hover:text-primary"
-                    onClick={() => navigate('/explore')}
+                <span className="relative z-10 flex items-center gap-1.5 bg-clip-text text-transparent bg-gradient-to-r from-primary to-gold group-data-[state=active]:text-foreground">
+                  <Sparkles className="w-3.5 h-3.5 text-gold" />
+                  Modo Nostalgia
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-gold/5 opacity-0 group-data-[state=active]:opacity-100 transition-opacity" />
+              </TabsTrigger>
+            </TabsList>
+          </div>
+
+          <TabsContent
+            value="dashboard"
+            className="space-y-6 animate-in slide-in-from-left-4 duration-300"
+          >
+            {/* Search Bar & Scan */}
+            <div className="flex gap-2 mb-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar no Goplay..."
+                  className="pl-9 bg-secondary border-none rounded-xl"
+                  onClick={() => navigate('/explore')}
+                  readOnly
+                />
+              </div>
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-xl border-dashed border-2 shrink-0"
+              >
+                <Scan className="h-5 w-5 text-muted-foreground" />
+              </Button>
+            </div>
+
+            {/* Stories Rail */}
+            <StoriesRail />
+
+            {/* Priority Shortcuts */}
+            <div className="grid grid-cols-5 gap-2 mb-6 mt-2">
+              {shortcuts.map((shortcut, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => navigate(shortcut.path)}
+                  className="flex flex-col items-center gap-1.5 group"
+                >
+                  <div
+                    className={cn(
+                      'w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-md group-hover:scale-105 group-active:scale-95',
+                      shortcut.bg,
+                      shortcut.color,
+                    )}
                   >
-                    Ver categoria completa
-                    <ChevronRight className="w-3 h-3 ml-1" />
-                  </Button>
+                    <shortcut.icon className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-medium text-muted-foreground group-hover:text-foreground transition-colors truncate w-full text-center">
+                    {shortcut.label}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* Widgets Row (Weather & Goals) */}
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              <WeatherWidget />
+              <GoalCard />
+            </div>
+
+            {/* Highlight Card - Next Activity */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between px-1 mb-2">
+                <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
+                  Próxima Atividade
+                </h2>
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="h-auto p-0 text-xs"
+                  onClick={() => navigate('/profile/passport')}
+                >
+                  Ver agenda
+                </Button>
+              </div>
+              <Card
+                className="border-none shadow-lg bg-gradient-to-br from-primary/90 to-purple-900 text-white overflow-hidden relative cursor-pointer group hover:shadow-xl transition-all"
+                onClick={() => navigate('/profile/stats')}
+              >
+                {/* Decorative background elements */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
+
+                <CardHeader className="pb-2 relative z-10">
+                  <div className="flex justify-between items-center">
+                    <Badge className="bg-white/20 hover:bg-white/30 text-white border-none backdrop-blur-sm">
+                      Confirmado
+                    </Badge>
+                    <ArrowRight className="w-5 h-5 text-white/70 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                  <CardTitle className="text-xl mt-2 flex items-center gap-2">
+                    {nextMatch ? nextMatch.teamName : 'Sem jogos agendados'}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="relative z-10">
+                  {nextMatch ? (
+                    <div className="flex items-center gap-4 text-sm text-white/90">
+                      <div className="flex items-center gap-1.5">
+                        <Calendar className="w-4 h-4" />
+                        <span>{nextMatch.time.split(',')[0]}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <MapPin className="w-4 h-4" />
+                        <span className="truncate max-w-[120px]">
+                          {nextMatch.location}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-white/80">
+                      Agende sua próxima partida e comece a pontuar.
+                    </p>
+                  )}
                 </CardContent>
               </Card>
-            ))}
-          </div>
+            </div>
 
-          {/* Quick Access to Full Explore */}
-          <div className="pt-2">
-            <Button
-              variant="outline"
-              className="w-full h-12 rounded-xl border-dashed border-2 hover:bg-secondary/50 hover:border-primary/50 group"
-              onClick={() => navigate('/explore')}
-            >
-              <Search className="w-4 h-4 mr-2 group-hover:text-primary transition-colors" />
-              <span className="font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
-                Não encontrou o que procura? Explorar tudo
-              </span>
-            </Button>
-          </div>
-        </div>
+            {/* AI Suite Rail */}
+            <div className="mb-8">
+              <AiToolsRail />
+            </div>
+
+            {/* Main Dashboard Grid */}
+            <div className="space-y-6">
+              <div className="flex items-center justify-between px-1">
+                <h2 className="text-lg font-bold flex items-center gap-2">
+                  <LayoutGrid className="w-5 h-5 text-primary" />
+                  Dashboard
+                </h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {featureGroups.map((group, groupIdx) => (
+                  <Card
+                    key={groupIdx}
+                    className="border-border/50 shadow-sm hover:shadow-md transition-all duration-300"
+                  >
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center gap-2 mb-1">
+                        <div
+                          className={cn(
+                            'p-2 rounded-lg bg-secondary',
+                            group.color,
+                          )}
+                        >
+                          <group.icon className="w-4 h-4" />
+                        </div>
+                        <CardTitle className="text-base font-bold">
+                          {group.title}
+                        </CardTitle>
+                      </div>
+                      <CardDescription className="text-xs">
+                        {group.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-3 gap-2">
+                        {group.items.map((item, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => navigate(item.path)}
+                            className="flex flex-col items-center gap-2 p-2 rounded-xl hover:bg-secondary/50 transition-colors group/item"
+                          >
+                            <div
+                              className={cn(
+                                'w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover/item:scale-110',
+                                item.bg,
+                                item.iconColor,
+                              )}
+                            >
+                              <item.icon className="w-5 h-5" />
+                            </div>
+                            <span className="text-[10px] font-medium text-center leading-tight">
+                              {item.label}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                      <Button
+                        variant="ghost"
+                        className="w-full mt-2 text-xs h-8 text-muted-foreground hover:text-primary"
+                        onClick={() => navigate('/explore')}
+                      >
+                        Ver categoria completa
+                        <ChevronRight className="w-3 h-3 ml-1" />
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Quick Access to Full Explore */}
+              <div className="pt-2">
+                <Button
+                  variant="outline"
+                  className="w-full h-12 rounded-xl border-dashed border-2 hover:bg-secondary/50 hover:border-primary/50 group"
+                  onClick={() => navigate('/explore')}
+                >
+                  <Search className="w-4 h-4 mr-2 group-hover:text-primary transition-colors" />
+                  <span className="font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
+                    Não encontrou o que procura? Explorar tudo
+                  </span>
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent
+            value="nostalgia"
+            className="h-[600px] animate-in slide-in-from-right-4 duration-300"
+          >
+            <NostalgiaShowcase />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   )
