@@ -8,6 +8,8 @@ export type NostalgiaPreset =
   | '90s'
   | 'analog'
   | 'polaroid'
+  | 'pele'
+  | 'ali'
 
 interface NostalgiaState {
   isEnabled: boolean

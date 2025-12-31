@@ -22,7 +22,11 @@ export function NostalgiaFilter({
   const shouldRender = forceEnable || isEnabled
 
   useEffect(() => {
-    if (activePreset === 'vhs' || activePreset === '90s') {
+    if (
+      activePreset === 'vhs' ||
+      activePreset === '90s' ||
+      activePreset === 'pele'
+    ) {
       const timer = setInterval(() => setTime(new Date()), 1000)
       return () => clearInterval(timer)
     }
@@ -127,6 +131,50 @@ export function NostalgiaFilter({
                 #GoPlay
               </span>
             </div>
+          </>
+        )
+
+      case 'pele':
+        return (
+          <>
+            {/* 80s Broadcast Look: Warm, Saturated, Bloom */}
+            <div className="absolute inset-0 pointer-events-none z-10 bg-yellow-500/10 mix-blend-overlay" />
+            <div className="absolute inset-0 pointer-events-none z-10 filter-broadcast-bloom" />
+            <div className="absolute inset-0 pointer-events-none z-10 saturate-[1.4] contrast-[1.1] brightness-105" />
+
+            {/* TV Scanlines (finer than VHS) */}
+            <div className="absolute inset-0 pointer-events-none z-20 filter-broadcast-scanlines opacity-20" />
+
+            {/* Vignette (TV Tube effect) */}
+            <div className="absolute inset-0 pointer-events-none z-20 bg-[radial-gradient(circle_at_center,transparent_60%,rgba(0,0,0,0.3)_100%)]" />
+
+            {/* Broadcast Overlay Logo */}
+            <div className="absolute top-8 right-8 pointer-events-none z-30 flex flex-col items-end opacity-80">
+              <span className="text-yellow-400 font-black text-xl italic tracking-tighter drop-shadow-[2px_2px_0_rgba(0,0,0,0.8)]">
+                AO VIVO
+              </span>
+              <span className="text-white font-bold text-sm tracking-widest drop-shadow-md">
+                1982
+              </span>
+            </div>
+          </>
+        )
+
+      case 'ali':
+        return (
+          <>
+            {/* Vintage Cinematic B&W High Contrast */}
+            <div className="absolute inset-0 pointer-events-none z-10 grayscale contrast-[1.4] brightness-90" />
+            <div className="absolute inset-0 pointer-events-none z-10 bg-neutral-900/10 mix-blend-multiply" />
+
+            {/* Heavy Film Grain */}
+            <div className="absolute inset-0 pointer-events-none z-10 filter-grain opacity-30 mix-blend-overlay" />
+
+            {/* Film Scratches & Artifacts */}
+            <div className="absolute inset-0 pointer-events-none z-20 filter-film-scratches" />
+
+            {/* Heavy Vignette (Noir style) */}
+            <div className="absolute inset-0 pointer-events-none z-20 bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.8)_100%)]" />
           </>
         )
 

@@ -20,6 +20,8 @@ import {
   Eye,
   Check,
   Wand2,
+  Trophy,
+  Swords,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -30,9 +32,28 @@ interface ShowcaseItem {
   preset: NostalgiaPreset
   icon: React.ElementType
   imageQuery: string
+  premium?: boolean
 }
 
 const showcaseItems: ShowcaseItem[] = [
+  {
+    id: 'pele',
+    name: 'Futebol 80s',
+    description: 'A era de ouro do futebol com cores vibrantes de TV.',
+    preset: 'pele',
+    icon: Trophy,
+    imageQuery: 'soccer player vintage 80s',
+    premium: true,
+  },
+  {
+    id: 'ali',
+    name: 'Boxe Vintage',
+    description: 'Cinemático de alto contraste e granulação.',
+    preset: 'ali',
+    icon: Swords,
+    imageQuery: 'boxing match black and white',
+    premium: true,
+  },
   {
     id: 'retro',
     name: 'Tons Retrô',
@@ -161,9 +182,11 @@ export function NostalgiaShowcase({ className }: NostalgiaShowcaseProps) {
                               {item.name}
                             </h3>
                             <div className="flex items-center gap-2 mt-1">
-                              <span className="px-2 py-0.5 rounded-full bg-gold/20 text-gold text-[10px] font-bold uppercase border border-gold/20">
-                                Premium
-                              </span>
+                              {item.premium && (
+                                <span className="px-2 py-0.5 rounded-full bg-gold/20 text-gold text-[10px] font-bold uppercase border border-gold/20">
+                                  Iconic
+                                </span>
+                              )}
                               {isActive && (
                                 <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 text-[10px] font-bold uppercase border border-green-500/20">
                                   <Check className="w-3 h-3" />
