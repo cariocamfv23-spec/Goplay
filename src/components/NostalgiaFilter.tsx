@@ -62,10 +62,12 @@ export function NostalgiaFilter({
                   GOPLAY MIX VOL.1
                 </span>
               </div>
-              
+
               {/* Writeable Area Label */}
               <div className="absolute top-12 left-1/2 -translate-x-1/2 z-30 w-3/4 h-8 bg-white/90 transform rotate-[0.5deg] shadow-sm flex items-center justify-center">
-                 <span className="font-handwriting text-blue-800 text-xs">Side A: Best Hits</span>
+                <span className="font-handwriting text-blue-800 text-xs">
+                  Side A: Best Hits
+                </span>
               </div>
 
               {/* Bottom Section with Screws */}
@@ -84,9 +86,9 @@ export function NostalgiaFilter({
 
               {/* Tape Window Outline (Simulated at bottom) */}
               <div className="absolute bottom-16 left-1/2 -translate-x-1/2 w-64 h-12 rounded-full border-4 border-zinc-700 bg-black/40 pointer-events-none backdrop-blur-[2px] flex items-center justify-center shadow-inner">
-                 {/* Spools */}
-                 <div className="w-8 h-8 rounded-full border-2 border-white/20 mr-12 animate-spin duration-[10s] linear"></div>
-                 <div className="w-8 h-8 rounded-full border-2 border-white/20 ml-12 animate-spin duration-[10s] linear"></div>
+                {/* Spools */}
+                <div className="w-8 h-8 rounded-full border-2 border-white/20 mr-12 animate-spin [animation-duration:10s] linear"></div>
+                <div className="w-8 h-8 rounded-full border-2 border-white/20 ml-12 animate-spin [animation-duration:10s] linear"></div>
               </div>
             </div>
 
@@ -108,7 +110,10 @@ export function NostalgiaFilter({
 
             {/* Tracking Line Animation - More prominent */}
             <div className="absolute left-0 right-0 h-2 bg-white/20 blur-md z-30 animate-tracking pointer-events-none mix-blend-screen" />
-            <div className="absolute left-0 right-0 h-1 bottom-[10%] bg-white/10 blur-sm z-30 animate-tracking pointer-events-none mix-blend-overlay" style={{ animationDelay: '2s', animationDuration: '7s' }} />
+            <div
+              className="absolute left-0 right-0 h-1 bottom-[10%] bg-white/10 blur-sm z-30 animate-tracking pointer-events-none mix-blend-overlay"
+              style={{ animationDelay: '2s', animationDuration: '7s' }}
+            />
 
             {/* Color Bleed / Chromatic Aberration */}
             <div className="absolute inset-0 z-10 filter-vhs-color-shift opacity-50 pointer-events-none mix-blend-screen" />
@@ -164,11 +169,13 @@ export function NostalgiaFilter({
             <div className="absolute bottom-10 right-10 pointer-events-none z-40 font-digital text-[#ff8e25] text-lg tracking-widest drop-shadow-[2px_2px_0_rgba(0,0,0,0.8)] shadow-black">
               {time.toLocaleDateString('pt-BR')}
             </div>
-            
+
             {/* REC indicator */}
             <div className="absolute top-10 right-10 pointer-events-none z-40 flex items-center gap-2">
-               <div className="w-4 h-4 rounded-full bg-red-600 animate-pulse shadow-[0_0_10px_red]" />
-               <span className="font-digital text-red-600 text-lg font-bold tracking-wider">REC</span>
+              <div className="w-4 h-4 rounded-full bg-red-600 animate-pulse shadow-[0_0_10px_red]" />
+              <span className="font-digital text-red-600 text-lg font-bold tracking-wider">
+                REC
+              </span>
             </div>
           </>
         )
@@ -195,7 +202,7 @@ export function NostalgiaFilter({
               <br />
               MEM: 640K OK
               <br />
-              > EXEC GOPLAY.EXE
+              &gt; EXEC GOPLAY.EXE
             </div>
             <div className="absolute bottom-4 right-4 pointer-events-none z-30 font-digital text-green-500 text-xs uppercase tracking-wider drop-shadow-[0_0_5px_rgba(0,255,0,0.5)] animate-pulse">
               _CURSOR
@@ -250,7 +257,7 @@ export function NostalgiaFilter({
 
             {/* Heavy Vignette */}
             <div className="absolute inset-0 pointer-events-none z-20 bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.9)_100%)]" />
-            
+
             {/* Reel Marker */}
             <div className="absolute top-8 left-8 pointer-events-none z-30 font-mono text-white/50 text-xs">
               REEL 4 - SCENE 12
@@ -267,7 +274,9 @@ export function NostalgiaFilter({
           <>
             {activePreset === 'polaroid' && (
               <div className="absolute inset-0 z-30 border-[16px] border-b-[60px] border-white pointer-events-none shadow-[inset_0_0_20px_rgba(0,0,0,0.1)] flex items-end justify-center pb-4">
-                  <span className="font-handwriting text-black/60 text-xl rotate-1">Moments</span>
+                <span className="font-handwriting text-black/60 text-xl rotate-1">
+                  Moments
+                </span>
               </div>
             )}
 
