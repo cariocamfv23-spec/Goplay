@@ -125,6 +125,10 @@
     scrollbar-width: none;
   }
 
+  .font-handwriting {
+    font-family: 'Brush Script MT', 'Comic Sans MS', cursive;
+  }
+
   /* Custom Retrospective Theme Utilities */
   .retro-gradient-custom {
     background-image: linear-gradient(

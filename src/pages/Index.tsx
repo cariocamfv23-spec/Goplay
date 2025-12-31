@@ -2,10 +2,13 @@ import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import { Logo } from '@/components/Logo'
 import { AppIcon } from '@/components/AppIcon'
-import { ArrowRight, Trophy, Users, Activity } from 'lucide-react'
+import { ArrowRight, Trophy, Users, Activity, Sparkles } from 'lucide-react'
+import { useState } from 'react'
+import { NostalgiaShowcase } from '@/components/NostalgiaShowcase'
 
 export default function Index() {
   const navigate = useNavigate()
+  const [showNostalgia, setShowNostalgia] = useState(false)
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden transition-colors duration-300">
@@ -67,6 +70,28 @@ export default function Index() {
               </div>
             ))}
           </div>
+
+          {/* Nostalgia Discovery Button */}
+          <button
+            onClick={() => setShowNostalgia(true)}
+            className="group relative w-full flex items-center justify-between p-4 rounded-xl border border-gold/30 bg-gradient-to-r from-black/5 to-gold/5 hover:from-gold/10 hover:to-primary/10 transition-all duration-300 overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:animate-slide-in-right" />
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gold/20 rounded-lg">
+                <Sparkles className="w-5 h-5 text-gold" />
+              </div>
+              <div className="text-left">
+                <span className="block text-sm font-bold text-foreground">
+                  Novo: Modo Nostalgia
+                </span>
+                <span className="block text-[10px] text-muted-foreground">
+                  Transforme seu perfil com estilo retro
+                </span>
+              </div>
+            </div>
+            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+          </button>
         </div>
 
         {/* Footer Actions */}
@@ -104,6 +129,8 @@ export default function Index() {
           </div>
         </div>
       </div>
+
+      <NostalgiaShowcase open={showNostalgia} onOpenChange={setShowNostalgia} />
     </div>
   )
 }

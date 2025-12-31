@@ -1,22 +1,29 @@
-import { useNostalgiaStore } from '@/stores/useNostalgiaStore'
+import { useNostalgiaStore, NostalgiaPreset } from '@/stores/useNostalgiaStore'
 import { cn } from '@/lib/utils'
 
 interface NostalgiaFilterProps {
   className?: string
   intensity?: number
+  manualPreset?: NostalgiaPreset
+  forceEnable?: boolean
 }
 
 export function NostalgiaFilter({
   className,
   intensity = 1,
+  manualPreset,
+  forceEnable = false,
 }: NostalgiaFilterProps) {
-  const { isEnabled, preset } = useNostalgiaStore()
+  const { isEnabled, preset: storePreset } = useNostalgiaStore()
 
-  if (!isEnabled) return null
+  const activePreset = manualPreset || storePreset
+  const shouldRender = forceEnable || isEnabled
+
+  if (!shouldRender) return null
 
   // Helper to render the specific overlay based on preset
   const renderOverlay = () => {
-    switch (preset) {
+    switch (activePreset) {
       case 'grain':
         return (
           <div className="absolute inset-0 pointer-events-none z-10 mix-blend-overlay opacity-30 filter-grain animate-pulse" />
