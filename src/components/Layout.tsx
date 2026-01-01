@@ -28,6 +28,7 @@ export default function Layout() {
       'theme-nostalgia-ali',
       'theme-nostalgia-cassette',
       'theme-nostalgia-digital',
+      'theme-nostalgia-analog', // Added missing classes
     )
 
     if (isEnabled) {
@@ -35,7 +36,7 @@ export default function Layout() {
         root.classList.add('theme-nostalgia-vhs')
       } else if (preset === '90s') {
         root.classList.add('theme-nostalgia-90s')
-      } else if (preset === 'retro' || preset === 'analog') {
+      } else if (preset === 'retro') {
         root.classList.add('theme-nostalgia-retro')
       } else if (preset === 'pele') {
         root.classList.add('theme-nostalgia-pele')
@@ -45,6 +46,8 @@ export default function Layout() {
         root.classList.add('theme-nostalgia-cassette')
       } else if (preset === 'digital') {
         root.classList.add('theme-nostalgia-digital')
+      } else if (preset === 'analog') {
+        root.classList.add('theme-nostalgia-retro') // Reuse retro for analog
       }
     }
 
@@ -57,6 +60,7 @@ export default function Layout() {
         'theme-nostalgia-ali',
         'theme-nostalgia-cassette',
         'theme-nostalgia-digital',
+        'theme-nostalgia-analog',
       )
     }
   }, [isEnabled, preset])
