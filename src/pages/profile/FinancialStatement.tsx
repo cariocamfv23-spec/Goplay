@@ -11,7 +11,6 @@ import {
   ShoppingBag,
   UserPlus,
   Star,
-  CreditCard,
   Megaphone,
   Clock,
   CheckCircle2,
@@ -25,6 +24,20 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 
 export default function FinancialStatement() {
   const navigate = useNavigate()
+
+  // Defensive data handling for summary stats to prevent crashes on missing data
+  // We use type assertion to handle potentially missing properties in the mock data type definition
+  const summaryData = mockFinancialSummary as any
+
+  // Safely extract values with defaults to avoid undefined.toFixed() errors
+  const balance = Number(summaryData?.balance ?? 0)
+  const totalSpent = Number(
+    summaryData?.totalSpent ?? summaryData?.monthlySpending ?? 0,
+  )
+  const pointsBalance = Number(summaryData?.pointsBalance ?? 0)
+  const pointsEarned = Number(summaryData?.pointsEarned ?? 0)
+  const conversionRate = summaryData?.conversionRate ?? '1:1'
+  const marketplaceStatus = summaryData?.marketplaceStatus ?? 'Ativo'
 
   const getTransactionIcon = (type: string) => {
     switch (type) {
@@ -117,7 +130,7 @@ export default function FinancialStatement() {
                   Saldo disponível
                 </p>
                 <h2 className="text-3xl font-bold tracking-tight">
-                  R$ {mockFinancialSummary.balance.toFixed(2)}
+                  R$ {balance.toFixed(2)}
                 </h2>
               </div>
 
@@ -126,7 +139,7 @@ export default function FinancialStatement() {
                   Total gasto na plataforma
                 </span>
                 <span className="font-bold text-sm">
-                  R$ {mockFinancialSummary.totalSpent.toFixed(2)}
+                  R$ {totalSpent.toFixed(2)}
                 </span>
               </div>
             </CardContent>
@@ -152,28 +165,23 @@ export default function FinancialStatement() {
                   Pontos disponíveis para uso
                 </p>
                 <h2 className="text-3xl font-bold tracking-tight">
-                  {mockFinancialSummary.pointsBalance} pts
+                  {pointsBalance} pts
                 </h2>
               </div>
 
               <div className="space-y-2 pt-4 border-t border-white/10">
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-white/70">Total ganho em pontos</span>
-                  <span className="font-bold">
-                    {mockFinancialSummary.pointsEarned} pts
-                  </span>
+                  <span className="font-bold">{pointsEarned} pts</span>
                 </div>
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-white/70">Conversão de pontos</span>
-                  <span className="font-bold">
-                    {mockFinancialSummary.conversionRate}
-                  </span>
+                  <span className="font-bold">{conversionRate}</span>
                 </div>
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-white/70">Uso no Marketplace</span>
                   <span className="font-bold text-green-300 flex items-center gap-1">
-                    <CheckCircle2 className="h-3 w-3" />{' '}
-                    {mockFinancialSummary.marketplaceStatus}
+                    <CheckCircle2 className="h-3 w-3" /> {marketplaceStatus}
                   </span>
                 </div>
               </div>
@@ -200,7 +208,7 @@ export default function FinancialStatement() {
             <TabsContent value="all">
               <ScrollArea className="h-[400px] pr-4">
                 <div className="space-y-3">
-                  {mockFinancialHistory.map((transaction) => (
+                  {(mockFinancialHistory || []).map((transaction) => (
                     <TransactionItem
                       key={transaction.id}
                       transaction={transaction}
@@ -209,6 +217,12 @@ export default function FinancialStatement() {
                       getBadge={getStatusBadge}
                     />
                   ))}
+                  {(!mockFinancialHistory ||
+                    mockFinancialHistory.length === 0) && (
+                    <div className="text-center py-10 text-muted-foreground text-sm">
+                      Nenhuma movimentação encontrada.
+                    </div>
+                  )}
                 </div>
               </ScrollArea>
             </TabsContent>
@@ -216,7 +230,7 @@ export default function FinancialStatement() {
             <TabsContent value="money">
               <ScrollArea className="h-[400px] pr-4">
                 <div className="space-y-3">
-                  {mockFinancialHistory
+                  {(mockFinancialHistory || [])
                     .filter((t) => t.currency === 'BRL')
                     .map((transaction) => (
                       <TransactionItem
@@ -227,6 +241,13 @@ export default function FinancialStatement() {
                         getBadge={getStatusBadge}
                       />
                     ))}
+                  {(!mockFinancialHistory ||
+                    mockFinancialHistory.filter((t) => t.currency === 'BRL')
+                      .length === 0) && (
+                    <div className="text-center py-10 text-muted-foreground text-sm">
+                      Nenhuma movimentação em dinheiro.
+                    </div>
+                  )}
                 </div>
               </ScrollArea>
             </TabsContent>
@@ -234,7 +255,7 @@ export default function FinancialStatement() {
             <TabsContent value="points">
               <ScrollArea className="h-[400px] pr-4">
                 <div className="space-y-3">
-                  {mockFinancialHistory
+                  {(mockFinancialHistory || [])
                     .filter((t) => t.currency === 'PTS')
                     .map((transaction) => (
                       <TransactionItem
@@ -245,6 +266,13 @@ export default function FinancialStatement() {
                         getBadge={getStatusBadge}
                       />
                     ))}
+                  {(!mockFinancialHistory ||
+                    mockFinancialHistory.filter((t) => t.currency === 'PTS')
+                      .length === 0) && (
+                    <div className="text-center py-10 text-muted-foreground text-sm">
+                      Nenhuma movimentação em pontos.
+                    </div>
+                  )}
                 </div>
               </ScrollArea>
             </TabsContent>
@@ -266,43 +294,45 @@ function TransactionItem({
   getColor: (type: string, currency: 'BRL' | 'PTS') => string
   getBadge: (status: string) => React.ReactNode
 }) {
+  // Defensive check for transaction object
+  if (!transaction) return null
+
+  // Ensure safe values for rendering
+  const value = Number(transaction.value ?? 0)
+  const currency = transaction.currency ?? 'BRL'
+  const type = transaction.type ?? 'unknown'
+  const status = transaction.status ?? 'pending'
+  const description = transaction.description ?? 'Sem descrição'
+  const date = transaction.date ?? '-'
+
   return (
     <div className="flex items-center justify-between p-4 rounded-xl bg-card border border-border/50 shadow-sm hover:shadow-md transition-all duration-200 group">
       <div className="flex items-center gap-4">
         <div
           className={cn(
             'h-12 w-12 rounded-full flex items-center justify-center bg-muted group-hover:bg-background border border-transparent group-hover:border-border transition-colors',
-            getColor(transaction.type, transaction.currency),
+            getColor(type, currency),
           )}
         >
-          {getIcon(transaction.type)}
+          {getIcon(type)}
         </div>
         <div className="space-y-1">
-          <h4 className="font-bold text-sm leading-tight">
-            {transaction.description}
-          </h4>
+          <h4 className="font-bold text-sm leading-tight">{description}</h4>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">
-              {transaction.date}
-            </span>
-            {getBadge(transaction.status)}
+            <span className="text-xs text-muted-foreground">{date}</span>
+            {getBadge(status)}
           </div>
         </div>
       </div>
       <div className="text-right">
-        <span
-          className={cn(
-            'block font-bold',
-            getColor(transaction.type, transaction.currency),
-          )}
-        >
-          {transaction.value > 0 ? '+' : ''}
-          {transaction.currency === 'BRL'
-            ? `R$ ${Math.abs(transaction.value).toFixed(2)}`
-            : `${Math.abs(transaction.value)} pts`}
+        <span className={cn('block font-bold', getColor(type, currency))}>
+          {value > 0 ? '+' : ''}
+          {currency === 'BRL'
+            ? `R$ ${Math.abs(value).toFixed(2)}`
+            : `${Math.abs(value)} pts`}
         </span>
         <span className="text-[10px] uppercase text-muted-foreground font-medium tracking-wider">
-          {transaction.type}
+          {type}
         </span>
       </div>
     </div>
