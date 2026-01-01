@@ -16,6 +16,7 @@ export default function Index() {
 
         {/* Mandatory Illustrated Wallpaper (Nostalgia Mode) */}
         {/* Rendered at z-1 to sit between base bg and gradient if possible, or managed via mix-blend inside component */}
+        {/* Explicitly included on Home Page (/) as per user story */}
         <SportsWallpaper className="z-[1]" />
 
         <div

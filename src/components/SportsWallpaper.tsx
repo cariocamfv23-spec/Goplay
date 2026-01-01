@@ -1,6 +1,7 @@
 import { useNostalgiaStore, NostalgiaPreset } from '@/stores/useNostalgiaStore'
 import { cn } from '@/lib/utils'
 import { SportsPatternPaths } from '@/components/SportsPatternPaths'
+import { useLocation } from 'react-router-dom'
 
 interface SportsWallpaperProps {
   className?: string
@@ -8,88 +9,101 @@ interface SportsWallpaperProps {
 
 export function SportsWallpaper({ className }: SportsWallpaperProps) {
   const { isEnabled, preset } = useNostalgiaStore()
+  const location = useLocation()
+
+  // Exclusion Rule: Hide on "Nostalgia" menu/function pages (e.g. Retrospective)
+  // Also implicitly hidden on pages where this component is not mounted,
+  // but explicitly checking route here adds an extra safety layer.
+  if (location.pathname.includes('/retrospective')) {
+    return null
+  }
 
   if (!isEnabled) return null
 
   // Styles configuration based on preset to ensure consistency with user story
+  // Adapts visual style (colors and aesthetic) to match the selected "Modo Nostalgia"
   const getWallpaperStyles = (preset: NostalgiaPreset) => {
     switch (preset) {
       case 'vhs':
+        // VHS: Glitchy, dark, digital noise aesthetic
         return {
-          opacity: 0.06,
-          color: 'text-white',
+          opacity: 0.08,
+          color: 'text-green-500/50',
           bg: 'bg-zinc-900',
           blendMode: 'mix-blend-overlay',
+          animation: 'animate-pulse',
+        }
+      case 'cassette':
+        // Cassette: Plastic texture, high contrast, warm darks
+        return {
+          opacity: 0.1,
+          color: 'text-zinc-600 dark:text-zinc-400',
+          bg: 'bg-[#f4f4f4] dark:bg-[#1a1a1a]',
+          blendMode: 'mix-blend-multiply dark:mix-blend-screen',
+          animation: '',
         }
       case '90s':
+        // 90s: Pop colors, vibrant, playful
         return {
           opacity: 0.15,
           color: 'text-primary',
-          bg: 'bg-white dark:bg-zinc-950', // Cleaner base for 90s pop
+          bg: 'bg-white dark:bg-zinc-950',
           blendMode: 'mix-blend-normal',
-        }
-      case 'cassette':
-        return {
-          opacity: 0.08,
-          color: 'text-zinc-600 dark:text-zinc-400',
-          bg: 'bg-[#f4f4f4] dark:bg-[#1a1a1a]', // Plastic grey feel
-          blendMode: 'mix-blend-multiply dark:mix-blend-screen',
+          animation: '',
         }
       case 'retro':
+        // Retro: Sepia, classic camera
         return {
           opacity: 0.12,
           color: 'text-amber-900/60 dark:text-amber-100/40',
-          bg: 'bg-[#fdfbf7] dark:bg-[#1c1917]', // Cream/Sepia tone
+          bg: 'bg-[#fdfbf7] dark:bg-[#1c1917]',
           blendMode: 'mix-blend-multiply dark:mix-blend-overlay',
+          animation: '',
         }
       case 'pele':
+        // 80s Soccer: Green/Yellow/Gold aesthetics
         return {
-          opacity: 0.12,
+          opacity: 0.15,
           color: 'text-green-800 dark:text-yellow-400',
           bg: 'bg-yellow-50 dark:bg-green-950/40',
           blendMode: 'mix-blend-multiply dark:mix-blend-screen',
+          animation: '',
         }
       case 'ali':
+        // Vintage Boxing: Monochrome, high contrast
         return {
-          opacity: 0.08,
+          opacity: 0.1,
           color: 'text-black dark:text-white',
-          bg: 'bg-zinc-200 dark:bg-zinc-900', // Monochrome
+          bg: 'bg-zinc-200 dark:bg-zinc-900',
           blendMode: 'mix-blend-overlay',
+          animation: '',
         }
       case 'digital':
+        // Digital: Matrix/Terminal style
         return {
           opacity: 0.2,
           color: 'text-green-500',
           bg: 'bg-black',
           blendMode: 'mix-blend-screen',
+          animation: 'animate-pulse',
         }
       case 'analog':
+        // Analog: Warm, film grain
         return {
           opacity: 0.1,
           color: 'text-[#5c4a3d] dark:text-[#d6c4b0]',
-          bg: 'bg-[#e8e0d5] dark:bg-[#2a2622]', // Warm paper
+          bg: 'bg-[#e8e0d5] dark:bg-[#2a2622]',
           blendMode: 'mix-blend-multiply dark:mix-blend-soft-light',
-        }
-      case 'polaroid':
-        return {
-          opacity: 0.08,
-          color: 'text-[#2b2b2b] dark:text-[#e0e0e0]',
-          bg: 'bg-[#fafafa] dark:bg-[#121212]', // Clean photo paper
-          blendMode: 'mix-blend-multiply dark:mix-blend-overlay',
-        }
-      case 'grain':
-        return {
-          opacity: 0.12,
-          color: 'text-black dark:text-white',
-          bg: 'bg-zinc-400 dark:bg-zinc-800',
-          blendMode: 'mix-blend-overlay',
+          animation: '',
         }
       default:
+        // Fallback
         return {
-          opacity: 0.03,
+          opacity: 0.05,
           color: 'text-foreground',
           bg: 'bg-background',
           blendMode: 'mix-blend-normal',
+          animation: '',
         }
     }
   }
@@ -99,7 +113,7 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
   return (
     <div
       className={cn(
-        'fixed inset-0 z-0 pointer-events-none w-full h-full transition-all duration-700',
+        'fixed inset-0 z-0 pointer-events-none w-full h-full transition-all duration-700 overflow-hidden',
         styles.bg,
         className,
       )}
@@ -109,6 +123,7 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
           'absolute inset-0 w-full h-full transition-all duration-700',
           styles.color,
           styles.blendMode,
+          styles.animation,
         )}
         style={{ opacity: styles.opacity }}
       >
@@ -118,8 +133,8 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
               id="sports-wallpaper-pattern"
               x="0"
               y="0"
-              width="360"
-              height="360"
+              width="340"
+              height="340"
               patternUnits="userSpaceOnUse"
               patternTransform="rotate(12)"
             >
@@ -134,7 +149,7 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
         </svg>
       </div>
 
-      {/* Preset specific visual tweaks */}
+      {/* Preset specific visual overlays/tweaks for immersive experience */}
       {preset === 'vhs' && (
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/20 pointer-events-none mix-blend-overlay" />
       )}

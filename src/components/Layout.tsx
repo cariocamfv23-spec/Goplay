@@ -28,7 +28,7 @@ export default function Layout() {
       'theme-nostalgia-ali',
       'theme-nostalgia-cassette',
       'theme-nostalgia-digital',
-      'theme-nostalgia-analog', // Added missing classes
+      'theme-nostalgia-analog',
     )
 
     if (isEnabled) {
@@ -72,7 +72,8 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-background font-sans antialiased flex flex-col relative overflow-hidden transition-colors duration-500">
       {/* Layer 2: Illustrated Sports Wallpaper (Background Layer) */}
-      <SportsWallpaper />
+      {/* Visual Overlay Integration: Functions as decorative UI overlay sitting above base background but behind content */}
+      <SportsWallpaper className="z-0" />
 
       {/* Global Alert Managers */}
       <RankingAlertManager />
@@ -91,6 +92,7 @@ export default function Layout() {
       <TopBar />
 
       {/* Content Area */}
+      {/* Ensure main is z-10 to sit above the wallpaper (z-0) but below the filter (z-100) */}
       <main
         className={cn(
           'flex-1 w-full pb-20 md:pb-0 transition-all duration-300 z-10 relative',
