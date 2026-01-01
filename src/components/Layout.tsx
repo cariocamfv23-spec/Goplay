@@ -11,10 +11,18 @@ import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 import { SportsWallpaper } from '@/components/SportsWallpaper'
 import { useNostalgiaStore } from '@/stores/useNostalgiaStore'
 import { useEffect } from 'react'
+import { useInvisiblePresenceStore } from '@/stores/useInvisiblePresenceStore'
+import { InvisiblePresenceOverlay } from '@/components/InvisiblePresenceOverlay'
 
 export default function Layout() {
   const location = useLocation()
   const { isEnabled, preset } = useNostalgiaStore()
+  const { initializeSession } = useInvisiblePresenceStore()
+
+  // Initialize invisible presence logic (Silent Latent Trigger)
+  useEffect(() => {
+    initializeSession()
+  }, [initializeSession])
 
   // Apply Global Theme Classes to Body
   useEffect(() => {
@@ -81,6 +89,9 @@ export default function Layout() {
       <SmartNotificationManager />
       <ScholarshipAlertManager />
       <WeatherAlertManager />
+
+      {/* Invisible Presence Overlay - Z-200 to be above everything when active */}
+      <InvisiblePresenceOverlay />
 
       {/* Layer 1: Mandatory Graphic Frame (Foreground Overlay) */}
       {/* Global Nostalgia Filter Overlay */}
