@@ -4,12 +4,24 @@ import { Logo } from '@/components/Logo'
 import { AppIcon } from '@/components/AppIcon'
 import { ArrowRight, Trophy, Users, Activity } from 'lucide-react'
 import { SportsWallpaper } from '@/components/SportsWallpaper'
+import { useEffect } from 'react'
+import { useInvisiblePresenceStore } from '@/stores/useInvisiblePresenceStore'
+import { InvisiblePresenceOverlay } from '@/components/InvisiblePresenceOverlay'
 
 export default function Index() {
   const navigate = useNavigate()
+  const { initializeSession } = useInvisiblePresenceStore()
+
+  // Initialize invisible presence logic on landing page load
+  useEffect(() => {
+    initializeSession()
+  }, [initializeSession])
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden transition-colors duration-300">
+      {/* Invisible Presence Overlay - Overrides everything when active */}
+      <InvisiblePresenceOverlay />
+
       {/* Background Layers */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-background z-10" />

@@ -2,34 +2,24 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
 interface InvisiblePresenceState {
-  // Ephemeral state (not persisted to ensure zero footprint of events)
   isVisible: boolean
   message: string | null
+  recentOpens: number[] // Timestamp of opens in last 5 mins
+  lastTriggerTime: number // To prevent spamming
 
-  // Usage tracking (persisted to identify patterns)
-  totalSessions: number
-  lastSessionTime: number
-  dailySessions: number
-  lastDailyReset: number
-
-  // Actions
   initializeSession: () => void
   hide: () => void
 }
 
-const REFLECTIVE_MESSAGES = [
-  'O descanso também faz parte do treino.',
-  'Lembre-se do porquê você começou.',
-  'Respire fundo. O foco está no agora.',
-  'Seu corpo é seu templo. Cuide dele.',
-  'A vitória é construída no silêncio.',
-  'O equilíbrio é a chave da performance.',
-  'Desconecte-se para reconectar.',
-  'Acalme a mente, fortaleça o espírito.',
-  'Você é maior que seus resultados.',
-  'A jornada importa mais que o destino.',
-  'Escute o seu ritmo, não o barulho lá fora.',
-  'A constância vence a intensidade.',
+const MESSAGES = [
+  'Respect your rest as much as your training.',
+  'The goal is the path, not just the finish line.',
+  'Great performance starts with a quiet mind.',
+  'Disconnect to reconnect.',
+  'Silence is part of the strategy.',
+  'Recovery is where growth happens.',
+  'Listen to your rhythm, not the noise.',
+  'Calm mind, strong body.',
 ]
 
 export const useInvisiblePresenceStore = create<InvisiblePresenceState>()(
@@ -37,81 +27,72 @@ export const useInvisiblePresenceStore = create<InvisiblePresenceState>()(
     (set, get) => ({
       isVisible: false,
       message: null,
-      totalSessions: 0,
-      lastSessionTime: Date.now(),
-      dailySessions: 0,
-      lastDailyReset: Date.now(),
+      recentOpens: [],
+      lastTriggerTime: 0,
 
       initializeSession: () => {
         const now = Date.now()
         const state = get()
 
-        // Daily Reset Logic
-        let newDailySessions = state.dailySessions
-        const oneDay = 24 * 60 * 60 * 1000
-        if (now - state.lastDailyReset > oneDay) {
-          newDailySessions = 0
-          set({ lastDailyReset: now })
-        }
+        // 1. Prune old opens (older than 5 mins)
+        // 5 minutes = 5 * 60 * 1000 = 300000 ms
+        const fiveMinutesAgo = now - 5 * 60 * 1000
+        const activeOpens = state.recentOpens.filter((t) => t > fiveMinutesAgo)
 
-        // Increment stats
-        set({
-          totalSessions: state.totalSessions + 1,
-          lastSessionTime: now,
-          dailySessions: newDailySessions + 1,
-        })
+        // 2. Add current open
+        const updatedOpens = [...activeOpens, now]
+        set({ recentOpens: updatedOpens })
 
-        // Silent Latent Trigger Logic
+        // 3. Silent Latent Trigger Logic
         // We only trigger if the overlay is not already visible
-        if (get().isVisible) return
+        if (state.isVisible) return
 
-        const chance = Math.random()
         let shouldTrigger = false
         let selectedMessage = ''
+        const chance = Math.random() // 0.0 to 1.0
 
-        // 1. Overload Trigger: High daily usage (> 8 sessions)
-        // Probability: 10%
-        if (newDailySessions > 8 && chance < 0.1) {
-          shouldTrigger = true
-          selectedMessage =
-            'Desconecte-se para reconectar. O descanso recupera o foco.'
-        }
-        // 2. Pause/Return Trigger: User returns after > 48h
-        // Probability: 20%
-        else if (
-          now - state.lastSessionTime > 2 * oneDay &&
-          state.totalSessions > 5 &&
-          chance < 0.2
+        // Trigger 1: High Frequency (> 3 times in 5 mins)
+        // "more than 3 times" means 4 or more.
+        const isHighFreq = updatedOpens.length > 3
+
+        // Trigger 2: Late Night (11 PM - 4 AM)
+        const hour = new Date().getHours()
+        const isLateNight = hour >= 23 || hour < 4
+
+        // Rarity Logic: 10% chance when conditions are met
+        // We also check if we triggered recently (e.g., in the last 10 minutes) to avoid back-to-back
+        const tenMinutesAgo = now - 10 * 60 * 1000
+        const notRecentlyTriggered = state.lastTriggerTime < tenMinutesAgo
+
+        if (
+          (isHighFreq || isLateNight) &&
+          chance < 0.1 &&
+          notRecentlyTriggered
         ) {
           shouldTrigger = true
-          selectedMessage = 'Que bom que você voltou. Respire e siga seu ritmo.'
-        }
-        // 3. Balance Trigger: Purely random moment of reflection
-        // Probability: 2% (Rare)
-        else if (chance < 0.02) {
-          shouldTrigger = true
-          const randomIndex = Math.floor(
-            Math.random() * REFLECTIVE_MESSAGES.length,
-          )
-          selectedMessage = REFLECTIVE_MESSAGES[randomIndex]
+          // Select random message
+          selectedMessage =
+            MESSAGES[Math.floor(Math.random() * MESSAGES.length)]
         }
 
         if (shouldTrigger) {
-          set({ isVisible: true, message: selectedMessage })
+          set({
+            isVisible: true,
+            message: selectedMessage,
+            lastTriggerTime: now,
+          })
         }
       },
 
       hide: () => set({ isVisible: false, message: null }),
     }),
     {
-      name: 'goplay-invisible-presence',
+      name: 'goplay-invisible-presence-v2', // Storage name updated for new logic
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
-        // Privacy: Only persist usage patterns, NEVER the event history
-        totalSessions: state.totalSessions,
-        lastSessionTime: state.lastSessionTime,
-        dailySessions: state.dailySessions,
-        lastDailyReset: state.lastDailyReset,
+        // Privacy: Only persist usage patterns (timestamps), never the ephemeral state
+        recentOpens: state.recentOpens,
+        lastTriggerTime: state.lastTriggerTime,
       }),
     },
   ),
