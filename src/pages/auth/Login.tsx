@@ -19,6 +19,7 @@ import { SportsWallpaper } from '@/components/SportsWallpaper'
 export default function Login() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+  const [socialLoading, setSocialLoading] = useState<string | null>(null)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -35,6 +36,16 @@ export default function Login() {
       } else {
         toast.error('Preencha todos os campos')
       }
+    }, 1500)
+  }
+
+  const handleSocialLogin = (provider: string) => {
+    setSocialLoading(provider)
+    // Simulate API call
+    setTimeout(() => {
+      setSocialLoading(null)
+      toast.success(`Login com ${provider} realizado com sucesso!`)
+      navigate('/home')
     }, 1500)
   }
 
@@ -96,7 +107,11 @@ export default function Login() {
                   />
                 </div>
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={loading || !!socialLoading}
+              >
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -122,10 +137,58 @@ export default function Login() {
               </div>
             </div>
 
-            <Button variant="outline" className="w-full" type="button">
-              <Github className="mr-2 h-4 w-4" />
-              GitHub
-            </Button>
+            <div className="grid gap-2">
+              <Button
+                variant="outline"
+                className="w-full"
+                type="button"
+                onClick={() => handleSocialLogin('Google')}
+                disabled={loading || !!socialLoading}
+              >
+                {socialLoading === 'Google' ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <img
+                    src="https://img.usecurling.com/i?q=google&color=multicolor"
+                    alt="Google"
+                    className="mr-2 h-4 w-4"
+                  />
+                )}
+                Google
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full"
+                type="button"
+                onClick={() => handleSocialLogin('Apple')}
+                disabled={loading || !!socialLoading}
+              >
+                {socialLoading === 'Apple' ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <img
+                    src="https://img.usecurling.com/i?q=apple&color=black"
+                    alt="Apple"
+                    className="mr-2 h-4 w-4 dark:invert"
+                  />
+                )}
+                Apple
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full"
+                type="button"
+                onClick={() => handleSocialLogin('GitHub')}
+                disabled={loading || !!socialLoading}
+              >
+                {socialLoading === 'GitHub' ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Github className="mr-2 h-4 w-4" />
+                )}
+                GitHub
+              </Button>
+            </div>
           </CardContent>
           <CardFooter className="flex justify-center">
             <p className="text-sm text-muted-foreground">
