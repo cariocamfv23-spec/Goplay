@@ -1,9 +1,16 @@
 export const SportsPatternPaths = () => (
-  // Enhanced stroke width for visual clarity and sharpness
-  <g fill="currentColor" stroke="currentColor" strokeWidth="0.5">
+  // Updated for high-contrast doodle style (WhatsApp-like)
+  // Using fill="none" and stroke="currentColor" converts silhouettes to outlines
+  <g
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     {/* 
       Sports Pattern Layout - Grid with organic scattering
-      Icons: Balls, Rackets, Gloves, Kimonos, Cleats, Boards, Nets, Mats, Dumbbells
+      Icons converted to outline doodles for "WhatsApp-style" effect
     */}
 
     {/* ROW 1 */}
