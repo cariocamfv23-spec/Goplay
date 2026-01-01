@@ -12,12 +12,13 @@ export default function Index() {
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden transition-colors duration-300">
       {/* Background Layers */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-background z-10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-background z-10" />
 
-        {/* Mandatory Illustrated Wallpaper (Nostalgia Mode) */}
-        {/* Rendered at z-[1] to sit between base bg and gradient */}
+        {/* Global Pattern Application - Ensures visual consistency on Landing Page */}
+        {/* Rendered at z-[1] to sit between base bg and subtle gradient */}
         <SportsWallpaper className="z-[1]" />
 
+        {/* Texture Overlay */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-5 grayscale mix-blend-overlay z-0"
           style={{
@@ -27,8 +28,8 @@ export default function Index() {
         />
 
         {/* Animated ambient blobs */}
-        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-[hsl(var(--gold)/0.1)] rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:4000ms] z-10" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:5000ms] z-10" />
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-[hsl(var(--gold)/0.15)] rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:4000ms] z-10" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/15 rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:5000ms] z-10" />
       </div>
 
       <div className="relative z-10 flex flex-col h-full w-full max-w-md mx-auto px-4 py-8 flex-1">
@@ -50,7 +51,7 @@ export default function Index() {
                 levado a sério.
               </span>
             </h1>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-relaxed font-medium">
               Seu talento merece um palco do tamanho do mundo.
             </p>
           </div>
@@ -64,10 +65,10 @@ export default function Index() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-secondary/30 border border-border/50 backdrop-blur-sm hover:bg-secondary/50 transition-colors duration-300"
+                className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-secondary/60 border border-border/50 backdrop-blur-md hover:bg-secondary/80 transition-colors duration-300 shadow-sm"
               >
                 <item.icon className="w-5 h-5 text-gold" />
-                <span className="text-xs font-medium text-muted-foreground">
+                <span className="text-xs font-bold text-foreground/80">
                   {item.label}
                 </span>
               </div>
@@ -89,13 +90,13 @@ export default function Index() {
           <Button
             variant="outline"
             size="lg"
-            className="w-full h-14 text-base font-bold rounded-2xl border-2 hover:bg-accent hover:text-accent-foreground transition-all hover:scale-[1.02] active:scale-95"
+            className="w-full h-14 text-base font-bold rounded-2xl border-2 hover:bg-accent hover:text-accent-foreground transition-all hover:scale-[1.02] active:scale-95 bg-background/50 backdrop-blur-sm"
             onClick={() => navigate('/register')}
           >
             Criar conta
           </Button>
 
-          <div className="flex justify-center gap-4 pt-4 text-[10px] text-muted-foreground">
+          <div className="flex justify-center gap-4 pt-4 text-[10px] text-muted-foreground font-medium">
             <span className="cursor-pointer hover:text-primary transition-colors">
               Termos de Uso
             </span>

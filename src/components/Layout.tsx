@@ -72,7 +72,7 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-background font-sans antialiased flex flex-col relative overflow-hidden transition-colors duration-500">
       {/* Layer 2: Illustrated Sports Wallpaper (Background Layer) */}
-      {/* Visual Overlay Integration: Functions as decorative UI overlay sitting above base background but behind content */}
+      {/* Global Application: Now covers all routes within Layout with enhanced intensity */}
       <SportsWallpaper className="z-0" />
 
       {/* Global Alert Managers */}
@@ -83,7 +83,6 @@ export default function Layout() {
 
       {/* Layer 1: Mandatory Graphic Frame (Foreground Overlay) */}
       {/* Global Nostalgia Filter Overlay */}
-      {/* z-index is set high to cover everything but allow pointer events to pass through */}
       <div className="fixed inset-0 pointer-events-none z-[100] w-full h-full overflow-hidden">
         <NostalgiaFilter forceEnable={isEnabled} />
       </div>
@@ -92,8 +91,7 @@ export default function Layout() {
       <TopBar />
 
       {/* Content Area */}
-      {/* Ensure main is z-10 to sit above the wallpaper (z-0) but below the filter (z-100) */}
-      {/* Added bg-transparent to ensure wallpaper shows through if main had background */}
+      {/* Ensure main is z-10 to sit above the wallpaper (z-0) */}
       <main
         className={cn(
           'flex-1 w-full pb-20 md:pb-0 transition-all duration-300 z-10 relative bg-transparent',

@@ -1,7 +1,6 @@
 import { useNostalgiaStore, NostalgiaPreset } from '@/stores/useNostalgiaStore'
 import { cn } from '@/lib/utils'
 import { SportsPatternPaths } from '@/components/SportsPatternPaths'
-import { useLocation } from 'react-router-dom'
 
 interface SportsWallpaperProps {
   className?: string
@@ -9,26 +8,22 @@ interface SportsWallpaperProps {
 
 export function SportsWallpaper({ className }: SportsWallpaperProps) {
   const { isEnabled, preset } = useNostalgiaStore()
-  const location = useLocation()
-
-  // Exclusion Rule: Hide on "Nostalgia" menu/function pages (e.g. Retrospective)
-  if (location.pathname.includes('/retrospective')) {
-    return null
-  }
 
   // Determine styles based on state (Global vs Nostalgia)
   const getWallpaperStyles = (preset: NostalgiaPreset, enabled: boolean) => {
     // Standard Mode (Global Update): "WhatsApp-style" high visibility background
+    // ENHANCEMENT: Increased opacity and color intensity for premium feel
     if (!enabled) {
       return {
-        // High opacity (0.2) for high visibility as requested
-        opacity: 0.2,
-        // Using 'text-primary' ensures vibrant color based on theme (Purple/Gold)
-        // This fulfills "Enhanced Color Intensity"
+        // Significantly higher opacity for visibility as requested
+        opacity: 0.35,
+        // Using 'text-primary' with current theme provides the "intense" brand color
+        // It will be Purple (Default) or whatever theme color is active
         color: 'text-primary',
-        bg: 'bg-transparent', // Transparent to overlay on layout background
+        bg: 'bg-transparent', // Allows base theme background to shine through
         blendMode: 'mix-blend-normal',
         animation: '',
+        patternOpacity: 0.6, // Inner pattern stroke opacity
       }
     }
 
@@ -36,75 +31,84 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
     switch (preset) {
       case 'vhs':
         return {
-          opacity: 0.15,
+          opacity: 0.2,
           color: 'text-emerald-500', // Saturated Green
           bg: 'bg-zinc-900',
           blendMode: 'mix-blend-overlay',
           animation: 'animate-pulse',
+          patternOpacity: 0.5,
         }
       case 'cassette':
         return {
-          opacity: 0.18,
+          opacity: 0.25,
           color: 'text-zinc-700 dark:text-zinc-300', // Stronger contrast
           bg: 'bg-[#f4f4f4] dark:bg-[#1a1a1a]',
           blendMode: 'mix-blend-multiply dark:mix-blend-screen',
           animation: '',
+          patternOpacity: 0.7,
         }
       case '90s':
         return {
-          opacity: 0.22,
+          opacity: 0.3,
           color: 'text-pink-500', // Vibrant Pop Pink
           bg: 'bg-white dark:bg-zinc-950',
           blendMode: 'mix-blend-normal',
           animation: '',
+          patternOpacity: 0.8,
         }
       case 'retro':
         return {
-          opacity: 0.18,
+          opacity: 0.25,
           color: 'text-amber-800 dark:text-amber-100',
           bg: 'bg-[#fdfbf7] dark:bg-[#1c1917]',
           blendMode: 'mix-blend-multiply dark:mix-blend-overlay',
           animation: '',
+          patternOpacity: 0.6,
         }
       case 'pele':
         return {
-          opacity: 0.2,
+          opacity: 0.3,
           color: 'text-green-700 dark:text-yellow-400',
           bg: 'bg-yellow-50 dark:bg-green-900/40',
           blendMode: 'mix-blend-multiply dark:mix-blend-screen',
           animation: '',
+          patternOpacity: 0.7,
         }
       case 'ali':
         return {
-          opacity: 0.15,
+          opacity: 0.2,
           color: 'text-black dark:text-white', // Max contrast
           bg: 'bg-zinc-200 dark:bg-zinc-900',
           blendMode: 'mix-blend-overlay',
           animation: '',
+          patternOpacity: 0.5,
         }
       case 'digital':
         return {
-          opacity: 0.25,
+          opacity: 0.4,
           color: 'text-green-500',
           bg: 'bg-black',
           blendMode: 'mix-blend-screen',
           animation: 'animate-pulse',
+          patternOpacity: 0.9,
         }
       case 'analog':
         return {
-          opacity: 0.15,
+          opacity: 0.2,
           color: 'text-[#5c4a3d] dark:text-[#d6c4b0]',
           bg: 'bg-[#e8e0d5] dark:bg-[#2a2622]',
           blendMode: 'mix-blend-multiply dark:mix-blend-soft-light',
           animation: '',
+          patternOpacity: 0.6,
         }
       default:
         return {
-          opacity: 0.15,
+          opacity: 0.35,
           color: 'text-primary',
           bg: 'bg-background',
           blendMode: 'mix-blend-normal',
           animation: '',
+          patternOpacity: 0.6,
         }
     }
   }
@@ -139,7 +143,9 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
               patternUnits="userSpaceOnUse"
               patternTransform="rotate(12)"
             >
-              <SportsPatternPaths />
+              <g style={{ opacity: styles.patternOpacity }}>
+                <SportsPatternPaths />
+              </g>
             </pattern>
           </defs>
           <rect
