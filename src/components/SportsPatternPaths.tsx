@@ -1,5 +1,6 @@
 export const SportsPatternPaths = () => (
-  <g fill="currentColor">
+  // Enhanced stroke width for visual clarity and sharpness
+  <g fill="currentColor" stroke="currentColor" strokeWidth="0.5">
     {/* 
       Sports Pattern Layout - Grid with organic scattering
       Icons: Balls, Rackets, Gloves, Kimonos, Cleats, Boards, Nets, Mats, Dumbbells

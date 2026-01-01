@@ -12,95 +12,93 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
   const location = useLocation()
 
   // Exclusion Rule: Hide on "Nostalgia" menu/function pages (e.g. Retrospective)
-  // Also implicitly hidden on pages where this component is not mounted,
-  // but explicitly checking route here adds an extra safety layer.
   if (location.pathname.includes('/retrospective')) {
     return null
   }
 
-  if (!isEnabled) return null
+  // Determine styles based on state (Global vs Nostalgia)
+  const getWallpaperStyles = (preset: NostalgiaPreset, enabled: boolean) => {
+    // Standard Mode (Global Update): High visibility, vibrant, distinct brand identity
+    if (!enabled) {
+      return {
+        opacity: 0.08, // Increased for better visibility (was 0.05 or hidden)
+        color: 'text-violet-600 dark:text-violet-400', // Vibrant Brand Purple
+        bg: 'bg-background', // Clean base
+        blendMode: 'mix-blend-normal',
+        animation: '',
+      }
+    }
 
-  // Styles configuration based on preset to ensure consistency with user story
-  // Adapts visual style (colors and aesthetic) to match the selected "Modo Nostalgia"
-  const getWallpaperStyles = (preset: NostalgiaPreset) => {
+    // Nostalgia Modes: Enhanced for clarity and saturation
     switch (preset) {
       case 'vhs':
-        // VHS: Glitchy, dark, digital noise aesthetic
         return {
-          opacity: 0.08,
-          color: 'text-green-500/50',
+          opacity: 0.15, // Boosted from 0.08
+          color: 'text-emerald-500', // Saturated Green
           bg: 'bg-zinc-900',
           blendMode: 'mix-blend-overlay',
           animation: 'animate-pulse',
         }
       case 'cassette':
-        // Cassette: Plastic texture, high contrast, warm darks
         return {
-          opacity: 0.1,
-          color: 'text-zinc-600 dark:text-zinc-400',
+          opacity: 0.18, // Boosted from 0.1
+          color: 'text-zinc-700 dark:text-zinc-300', // Stronger contrast
           bg: 'bg-[#f4f4f4] dark:bg-[#1a1a1a]',
           blendMode: 'mix-blend-multiply dark:mix-blend-screen',
           animation: '',
         }
       case '90s':
-        // 90s: Pop colors, vibrant, playful
         return {
-          opacity: 0.15,
-          color: 'text-primary',
+          opacity: 0.22, // Boosted from 0.15
+          color: 'text-pink-500', // Vibrant Pop Pink
           bg: 'bg-white dark:bg-zinc-950',
           blendMode: 'mix-blend-normal',
           animation: '',
         }
       case 'retro':
-        // Retro: Sepia, classic camera
         return {
-          opacity: 0.12,
-          color: 'text-amber-900/60 dark:text-amber-100/40',
+          opacity: 0.18, // Boosted
+          color: 'text-amber-800 dark:text-amber-100',
           bg: 'bg-[#fdfbf7] dark:bg-[#1c1917]',
           blendMode: 'mix-blend-multiply dark:mix-blend-overlay',
           animation: '',
         }
       case 'pele':
-        // 80s Soccer: Green/Yellow/Gold aesthetics
         return {
-          opacity: 0.15,
-          color: 'text-green-800 dark:text-yellow-400',
-          bg: 'bg-yellow-50 dark:bg-green-950/40',
+          opacity: 0.2, // Boosted
+          color: 'text-green-700 dark:text-yellow-400',
+          bg: 'bg-yellow-50 dark:bg-green-900/40',
           blendMode: 'mix-blend-multiply dark:mix-blend-screen',
           animation: '',
         }
       case 'ali':
-        // Vintage Boxing: Monochrome, high contrast
         return {
-          opacity: 0.1,
-          color: 'text-black dark:text-white',
+          opacity: 0.15,
+          color: 'text-black dark:text-white', // Max contrast
           bg: 'bg-zinc-200 dark:bg-zinc-900',
           blendMode: 'mix-blend-overlay',
           animation: '',
         }
       case 'digital':
-        // Digital: Matrix/Terminal style
         return {
-          opacity: 0.2,
+          opacity: 0.25,
           color: 'text-green-500',
           bg: 'bg-black',
           blendMode: 'mix-blend-screen',
           animation: 'animate-pulse',
         }
       case 'analog':
-        // Analog: Warm, film grain
         return {
-          opacity: 0.1,
+          opacity: 0.15,
           color: 'text-[#5c4a3d] dark:text-[#d6c4b0]',
           bg: 'bg-[#e8e0d5] dark:bg-[#2a2622]',
           blendMode: 'mix-blend-multiply dark:mix-blend-soft-light',
           animation: '',
         }
       default:
-        // Fallback
         return {
-          opacity: 0.05,
-          color: 'text-foreground',
+          opacity: 0.1,
+          color: 'text-primary',
           bg: 'bg-background',
           blendMode: 'mix-blend-normal',
           animation: '',
@@ -108,7 +106,7 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
     }
   }
 
-  const styles = getWallpaperStyles(preset)
+  const styles = getWallpaperStyles(preset, isEnabled)
 
   return (
     <div
@@ -149,11 +147,10 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
         </svg>
       </div>
 
-      {/* Preset specific visual overlays/tweaks for immersive experience */}
-      {preset === 'vhs' && (
+      {isEnabled && preset === 'vhs' && (
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/20 pointer-events-none mix-blend-overlay" />
       )}
-      {preset === '90s' && (
+      {isEnabled && preset === '90s' && (
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.05)_100%)] pointer-events-none" />
       )}
     </div>
