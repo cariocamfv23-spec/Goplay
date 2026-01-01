@@ -73,6 +73,7 @@ export default function Layout() {
     <div className="min-h-screen bg-background font-sans antialiased flex flex-col relative overflow-hidden transition-colors duration-500">
       {/* Layer 2: Illustrated Sports Wallpaper (Background Layer) */}
       {/* Global Application: Now covers all routes within Layout with enhanced intensity */}
+      {/* Z-0 to sit behind content but ensure visibility */}
       <SportsWallpaper className="z-0" />
 
       {/* Global Alert Managers */}

@@ -12,27 +12,25 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
   // Determine styles based on state (Global vs Nostalgia)
   const getWallpaperStyles = (preset: NostalgiaPreset, enabled: boolean) => {
     // Standard Mode (Global Update): "WhatsApp-style" high visibility background
-    // ENHANCEMENT: Increased opacity and color intensity for premium feel
+    // ENHANCEMENT: Adjusted to be vibrant but readable.
+    // Using a pattern that is visible (opacity 0.07-0.12 depending on mode)
     if (!enabled) {
       return {
-        // Significantly higher opacity for visibility as requested
-        opacity: 0.35,
-        // Using 'text-primary' with current theme provides the "intense" brand color
-        // It will be Purple (Default) or whatever theme color is active
-        color: 'text-primary',
-        bg: 'bg-transparent', // Allows base theme background to shine through
+        opacity: 0.12, // Sufficiently visible without killing text contrast
+        color: 'text-primary', // Brand color (Purple/Theme)
+        bg: 'bg-background', // Solid background color
         blendMode: 'mix-blend-normal',
         animation: '',
-        patternOpacity: 0.6, // Inner pattern stroke opacity
+        patternOpacity: 1, // Full opacity within the layer, controlled by container opacity
       }
     }
 
-    // Nostalgia Modes: Enhanced for clarity and saturation
+    // Nostalgia Modes
     switch (preset) {
       case 'vhs':
         return {
           opacity: 0.2,
-          color: 'text-emerald-500', // Saturated Green
+          color: 'text-emerald-500',
           bg: 'bg-zinc-900',
           blendMode: 'mix-blend-overlay',
           animation: 'animate-pulse',
@@ -41,7 +39,7 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
       case 'cassette':
         return {
           opacity: 0.25,
-          color: 'text-zinc-700 dark:text-zinc-300', // Stronger contrast
+          color: 'text-zinc-700 dark:text-zinc-300',
           bg: 'bg-[#f4f4f4] dark:bg-[#1a1a1a]',
           blendMode: 'mix-blend-multiply dark:mix-blend-screen',
           animation: '',
@@ -50,7 +48,7 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
       case '90s':
         return {
           opacity: 0.3,
-          color: 'text-pink-500', // Vibrant Pop Pink
+          color: 'text-pink-500',
           bg: 'bg-white dark:bg-zinc-950',
           blendMode: 'mix-blend-normal',
           animation: '',
@@ -77,7 +75,7 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
       case 'ali':
         return {
           opacity: 0.2,
-          color: 'text-black dark:text-white', // Max contrast
+          color: 'text-black dark:text-white',
           bg: 'bg-zinc-200 dark:bg-zinc-900',
           blendMode: 'mix-blend-overlay',
           animation: '',
@@ -103,7 +101,7 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
         }
       default:
         return {
-          opacity: 0.35,
+          opacity: 0.15,
           color: 'text-primary',
           bg: 'bg-background',
           blendMode: 'mix-blend-normal',
@@ -118,7 +116,7 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
   return (
     <div
       className={cn(
-        'fixed inset-0 z-0 pointer-events-none w-full h-full transition-all duration-700 overflow-hidden',
+        'fixed inset-0 pointer-events-none w-full h-full transition-all duration-700 overflow-hidden',
         styles.bg,
         className,
       )}
