@@ -13,15 +13,15 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
   const getWallpaperStyles = (preset: NostalgiaPreset, enabled: boolean) => {
     // Standard Mode (Global Update): "WhatsApp-style" high visibility background
     // ENHANCEMENT: Adjusted to be vibrant but readable.
-    // Using a pattern that is visible (opacity 0.07-0.12 depending on mode)
     if (!enabled) {
       return {
-        opacity: 0.12, // Sufficiently visible without killing text contrast
-        color: 'text-primary', // Brand color (Purple/Theme)
+        // Increased opacity for better visibility (Intense Color Palette)
+        opacity: 0.18,
+        color: 'text-primary', // Uses the brand color for intensity
         bg: 'bg-background', // Solid background color
         blendMode: 'mix-blend-normal',
         animation: '',
-        patternOpacity: 1, // Full opacity within the layer, controlled by container opacity
+        patternOpacity: 1, // Full opacity within the layer
       }
     }
 
@@ -116,7 +116,7 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
   return (
     <div
       className={cn(
-        'fixed inset-0 pointer-events-none w-full h-full transition-all duration-700 overflow-hidden',
+        'fixed inset-0 pointer-events-none w-full h-full transition-all duration-700 overflow-hidden z-0',
         styles.bg,
         className,
       )}

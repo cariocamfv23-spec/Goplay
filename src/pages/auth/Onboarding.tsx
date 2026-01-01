@@ -1,32 +1,38 @@
-import { Button } from '@/components/ui/button'
-import { Logo } from '@/components/Logo'
-import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { ChevronRight } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Trophy, Users, Star, ArrowRight, Zap } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { SportsWallpaper } from '@/components/SportsWallpaper'
 
 const steps = [
   {
-    id: 1,
-    title: 'Seja bem-vindo!',
-    description: 'O Goplay é a plataforma definitiva para quem vive o esporte.',
-    image:
-      'https://img.usecurling.com/p/800/800?q=athlete%20celebrating&color=blue',
+    icon: Trophy,
+    title: 'Compita e Ganhe',
+    description:
+      'Participe de campeonatos, suba no ranking e ganhe prêmios exclusivos.',
+    color: 'text-gold',
   },
   {
-    id: 2,
+    icon: Users,
     title: 'Conecte-se',
-    description:
-      'Encontre parceiros, times, treinadores e lugares para praticar.',
-    image:
-      'https://img.usecurling.com/p/800/800?q=team%20high%20five&color=orange',
+    description: 'Encontre atletas, times e oportunidades perto de você.',
+    color: 'text-primary',
   },
   {
-    id: 3,
-    title: 'Evolua',
+    icon: Star,
+    title: 'Seja Descoberto',
     description:
-      'Acompanhe suas estatísticas e receba dicas de IA para melhorar.',
-    image:
-      'https://img.usecurling.com/p/800/800?q=data%20analysis%20sports&color=purple',
+      'Mostre seu talento para olheiros e patrocinadores de todo o mundo.',
+    color: 'text-emerald-500',
+  },
+  {
+    icon: Zap,
+    title: 'Evolua seu Jogo',
+    description:
+      'Acesse treinos, dicas e ferramentas profissionais para melhorar sua performance.',
+    color: 'text-orange-500',
   },
 ]
 
@@ -36,62 +42,89 @@ export default function Onboarding() {
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1)
+      setCurrentStep((curr) => curr + 1)
     } else {
       navigate('/profile-selection')
     }
   }
 
-  const step = steps[currentStep]
+  const handleSkip = () => {
+    navigate('/profile-selection')
+  }
+
+  const StepIcon = steps[currentStep].icon
 
   return (
-    <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src={step.image}
-          alt={step.title}
-          className="w-full h-full object-cover transition-opacity duration-700"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
-      </div>
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Global Background Pattern */}
+      <SportsWallpaper />
 
-      <div className="relative z-10 flex-1 flex flex-col p-6">
-        <div className="flex justify-end">
-          <Button
-            variant="ghost"
-            className="text-white/80 hover:text-white"
-            onClick={() => navigate('/profile-selection')}
-          >
-            Pular
-          </Button>
-        </div>
+      <div className="relative z-10 w-full max-w-md">
+        <Card className="border-border/50 shadow-2xl bg-background/95 backdrop-blur-xl overflow-hidden">
+          <CardContent className="p-8 flex flex-col items-center text-center space-y-8 min-h-[500px] justify-between">
+            <div className="w-full flex justify-end">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSkip}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Pular
+              </Button>
+            </div>
 
-        <div className="mt-auto space-y-6">
-          <div className="flex gap-2 mb-4">
-            {steps.map((_, i) => (
+            <div className="flex-1 flex flex-col items-center justify-center space-y-8 animate-in fade-in slide-in-from-right-8 duration-500 key={currentStep}">
               <div
-                key={i}
-                className={`h-1.5 rounded-full transition-all duration-300 ${i === currentStep ? 'w-8 bg-primary' : 'w-2 bg-muted/50'}`}
-              />
-            ))}
-          </div>
+                className={cn(
+                  'w-32 h-32 rounded-full bg-secondary/50 flex items-center justify-center relative',
+                  'before:absolute before:inset-0 before:bg-gradient-to-tr before:from-transparent before:to-white/20 before:rounded-full',
+                )}
+              >
+                <StepIcon
+                  className={cn(
+                    'w-16 h-16 drop-shadow-lg',
+                    steps[currentStep].color,
+                  )}
+                />
+                <div className="absolute inset-0 border-4 border-background/50 rounded-full animate-pulse opacity-50" />
+              </div>
 
-          <div className="space-y-2 animate-in slide-in-from-bottom-4 duration-500 key={currentStep}">
-            <h1 className="text-4xl font-bold tracking-tight">{step.title}</h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              {step.description}
-            </p>
-          </div>
+              <div className="space-y-4">
+                <h2 className="text-3xl font-bold tracking-tight">
+                  {steps[currentStep].title}
+                </h2>
+                <p className="text-muted-foreground text-lg leading-relaxed">
+                  {steps[currentStep].description}
+                </p>
+              </div>
+            </div>
 
-          <Button
-            className="w-full h-14 rounded-xl text-lg font-bold shadow-lg mt-8"
-            onClick={handleNext}
-          >
-            {currentStep === steps.length - 1 ? 'Começar' : 'Próximo'}
-            <ChevronRight className="ml-2 h-5 w-5" />
-          </Button>
-        </div>
+            <div className="w-full space-y-8">
+              <div className="flex justify-center gap-2">
+                {steps.map((_, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      'h-2 rounded-full transition-all duration-300',
+                      index === currentStep
+                        ? 'w-8 bg-primary'
+                        : 'w-2 bg-secondary',
+                    )}
+                  />
+                ))}
+              </div>
+
+              <Button
+                size="lg"
+                className="w-full h-12 text-base"
+                onClick={handleNext}
+              >
+                {currentStep === steps.length - 1 ? 'Começar Agora' : 'Próximo'}
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
