@@ -5,10 +5,8 @@ import {
   Filter,
   CreditCard,
   Map as MapIcon,
-  Globe,
   Radio,
   Play,
-  Baby,
   Sparkles,
   MapPin,
   Calendar,
@@ -21,7 +19,6 @@ import {
   TrendingUp,
   FileSignature,
   ScanEye,
-  ArrowRight,
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -190,9 +187,9 @@ export default function Explore() {
   ]
 
   return (
-    <div className="min-h-screen bg-background pb-20 animate-fade-in flex flex-col">
+    <div className="min-h-screen bg-transparent pb-20 animate-fade-in flex flex-col relative">
       {/* 1. Header & Search (Sticky) */}
-      <div className="sticky top-0 bg-background/95 backdrop-blur z-30 px-4 py-3 border-b border-border/50 shadow-sm">
+      <div className="sticky top-0 bg-background/80 backdrop-blur-xl z-30 px-4 py-3 border-b border-border/50 shadow-sm">
         <div className="flex items-center justify-between mb-3">
           <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
             Explorar
@@ -254,7 +251,7 @@ export default function Explore() {
                   'rounded-full h-8 px-3 text-xs font-medium shrink-0 border-border/40 transition-all active:scale-95',
                   activeSport === tribe.id
                     ? 'shadow-md ring-2 ring-primary/20'
-                    : 'bg-background hover:bg-secondary/80 hover:border-border',
+                    : 'bg-background/50 hover:bg-secondary/80 hover:border-border',
                 )}
                 onClick={() =>
                   setActiveSport(activeSport === tribe.id ? 'all' : tribe.id)
@@ -269,7 +266,7 @@ export default function Explore() {
       </div>
 
       {/* 2. Main Content */}
-      <div className="flex-1 p-4 space-y-8">
+      <div className="flex-1 p-4 space-y-8 z-10">
         {hasActiveSearch ? (
           // Search Results View (Preserved)
           <div className="space-y-6 animate-in slide-in-from-bottom-2 duration-500">
@@ -295,7 +292,7 @@ export default function Explore() {
                 {filteredResults.events.map((event) => (
                   <Card
                     key={event.id}
-                    className="flex border-none shadow-sm bg-card overflow-hidden cursor-pointer hover:shadow-md transition-all active:scale-[0.99] group"
+                    className="flex border-none shadow-sm bg-card/80 backdrop-blur-sm overflow-hidden cursor-pointer hover:shadow-md transition-all active:scale-[0.99] group"
                     onClick={() => navigate(`/events/${event.id}`)}
                   >
                     <div className="w-24 h-24 relative shrink-0 overflow-hidden">
@@ -339,7 +336,7 @@ export default function Explore() {
                 {filteredResults.venues.map((venue) => (
                   <Card
                     key={venue.id}
-                    className="border-none shadow-sm bg-card overflow-hidden cursor-pointer hover:shadow-md transition-all active:scale-[0.99] group"
+                    className="border-none shadow-sm bg-card/80 backdrop-blur-sm overflow-hidden cursor-pointer hover:shadow-md transition-all active:scale-[0.99] group"
                     onClick={() => navigate(`/venues/${venue.id}`)}
                   >
                     <div className="h-32 relative overflow-hidden">
@@ -460,7 +457,7 @@ export default function Explore() {
               <div className="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide snap-x">
                 <Button
                   variant="outline"
-                  className="h-12 rounded-xl border-border/60 bg-card hover:bg-secondary/50 hover:border-primary/30 flex-shrink-0 gap-2 snap-start shadow-sm"
+                  className="h-12 rounded-xl border-border/60 bg-card/80 backdrop-blur-md hover:bg-secondary/50 hover:border-primary/30 flex-shrink-0 gap-2 snap-start shadow-sm"
                   onClick={() => navigate('/explore/map-events')}
                 >
                   <div className="h-8 w-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
@@ -471,7 +468,7 @@ export default function Explore() {
 
                 <Button
                   variant="outline"
-                  className="h-12 rounded-xl border-border/60 bg-card hover:bg-secondary/50 hover:border-primary/30 flex-shrink-0 gap-2 snap-start shadow-sm"
+                  className="h-12 rounded-xl border-border/60 bg-card/80 backdrop-blur-md hover:bg-secondary/50 hover:border-primary/30 flex-shrink-0 gap-2 snap-start shadow-sm"
                   onClick={() => navigate('/ranking')}
                 >
                   <div className="h-8 w-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
@@ -482,7 +479,7 @@ export default function Explore() {
 
                 <Button
                   variant="outline"
-                  className="h-12 rounded-xl border-border/60 bg-card hover:bg-secondary/50 hover:border-primary/30 flex-shrink-0 gap-2 snap-start shadow-sm"
+                  className="h-12 rounded-xl border-border/60 bg-card/80 backdrop-blur-md hover:bg-secondary/50 hover:border-primary/30 flex-shrink-0 gap-2 snap-start shadow-sm"
                   onClick={() => navigate('/contracts')}
                 >
                   <div className="h-8 w-8 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
@@ -494,7 +491,7 @@ export default function Explore() {
                 <DigitalCard>
                   <Button
                     variant="outline"
-                    className="h-12 rounded-xl border-border/60 bg-card hover:bg-secondary/50 hover:border-primary/30 flex-shrink-0 gap-2 snap-start shadow-sm"
+                    className="h-12 rounded-xl border-border/60 bg-card/80 backdrop-blur-md hover:bg-secondary/50 hover:border-primary/30 flex-shrink-0 gap-2 snap-start shadow-sm"
                   >
                     <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
                       <CreditCard className="h-4 w-4 text-primary" />
@@ -505,38 +502,50 @@ export default function Explore() {
               </div>
             </div>
 
-            {/* VISUAL CATEGORY GALLERY (New) */}
+            {/* VISUAL CATEGORY GALLERY (GRID LAYOUT) */}
             <div className="pt-2">
-              <div className="flex items-center justify-between mb-3 px-1">
+              <div className="flex items-center justify-between mb-4 px-1">
                 <h2 className="text-lg font-bold">Navegue por Esporte</h2>
               </div>
-              <div className="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide snap-x">
+
+              {/* Responsive Category Grid */}
+              <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {tribes
                   .filter((t) => t.id !== 'all')
                   .map((tribe) => (
                     <div
                       key={tribe.id}
                       onClick={() => setActiveSport(tribe.id)}
-                      className="relative min-w-[140px] h-[200px] rounded-2xl overflow-hidden cursor-pointer group snap-start shadow-md bg-muted"
+                      className="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer shadow-md bg-muted transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
                     >
+                      {/* Image Layer */}
                       <img
                         src={tribe.image}
                         alt={tribe.label}
                         className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
+                        loading="lazy"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80" />
 
-                      <div className="absolute top-3 right-3 bg-white/10 backdrop-blur-md p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      {/* Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-90" />
+
+                      {/* Icon Badge (Top Right) */}
+                      <div className="absolute top-2 right-2 bg-white/10 backdrop-blur-md p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 border border-white/20">
                         <ChevronRight className="w-3 h-3 text-white" />
                       </div>
 
-                      <div className="absolute bottom-3 left-3 text-white">
-                        <div className="bg-primary/20 p-1.5 rounded-lg w-fit mb-2 backdrop-blur-sm">
-                          <tribe.icon className="w-4 h-4 text-primary-foreground" />
+                      {/* Content (Bottom) */}
+                      <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                        <div className="flex items-center gap-2 mb-1 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                          <div className="bg-primary/20 p-1.5 rounded-lg backdrop-blur-sm border border-white/10">
+                            <tribe.icon className="w-4 h-4 text-primary-foreground" />
+                          </div>
+                          <span className="font-bold text-sm tracking-wide leading-none">
+                            {tribe.label}
+                          </span>
                         </div>
-                        <span className="font-bold text-sm tracking-wide block">
-                          {tribe.label}
-                        </span>
+                        {/* Decorative line on hover */}
+                        <div className="h-0.5 bg-primary/80 w-0 group-hover:w-full transition-all duration-500 ease-out rounded-full mt-2" />
                       </div>
                     </div>
                   ))}
@@ -677,7 +686,7 @@ export default function Explore() {
                 {mockVenues.slice(0, 3).map((venue) => (
                   <Card
                     key={venue.id}
-                    className="flex border-none shadow-sm bg-card overflow-hidden cursor-pointer hover:bg-secondary/20 transition-all active:scale-[0.99]"
+                    className="flex border-none shadow-sm bg-card/80 backdrop-blur-sm overflow-hidden cursor-pointer hover:bg-secondary/20 transition-all active:scale-[0.99]"
                     onClick={() => navigate(`/venues/${venue.id}`)}
                   >
                     <div className="w-24 h-24 bg-muted relative shrink-0">

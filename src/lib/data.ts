@@ -628,21 +628,21 @@ export const tribes = [
     label: 'Futebol',
     icon: CircleDashed,
     image:
-      'https://img.usecurling.com/p/400/600?q=soccer%20match&color=green&dpr=2',
+      'https://img.usecurling.com/p/400/600?q=soccer%20match%20stadium&color=green&dpr=2',
   },
   {
     id: 'futsal',
     label: 'Futsal',
     icon: Trophy,
     image:
-      'https://img.usecurling.com/p/400/600?q=futsal%20court&color=blue&dpr=2',
+      'https://img.usecurling.com/p/400/600?q=futsal%20court%20action&color=blue&dpr=2',
   },
   {
     id: 'bike',
     label: 'Bike',
     icon: Bike,
     image:
-      'https://img.usecurling.com/p/400/600?q=mountain%20bike%20cyclist&color=orange&dpr=2',
+      'https://img.usecurling.com/p/400/600?q=cycling%20race&color=orange&dpr=2',
   },
   {
     id: 'running',
@@ -663,7 +663,7 @@ export const tribes = [
     label: 'Natação',
     icon: Waves,
     image:
-      'https://img.usecurling.com/p/400/600?q=swimmer%20underwater&color=cyan&dpr=2',
+      'https://img.usecurling.com/p/400/600?q=swimmer%20underwater%20pool&color=cyan&dpr=2',
   },
   {
     id: 'boxing',
@@ -684,7 +684,7 @@ export const tribes = [
     label: 'Lutas',
     icon: Swords,
     image:
-      'https://img.usecurling.com/p/400/600?q=judo%20fight&color=white&dpr=2',
+      'https://img.usecurling.com/p/400/600?q=mma%20fighter&color=white&dpr=2',
   },
   {
     id: 'basketball',
@@ -698,7 +698,7 @@ export const tribes = [
     label: 'Vôlei',
     icon: Users,
     image:
-      'https://img.usecurling.com/p/400/600?q=volleyball%20smash&color=yellow&dpr=2',
+      'https://img.usecurling.com/p/400/600?q=volleyball%20spike&color=yellow&dpr=2',
   },
   {
     id: 'tennis',
@@ -719,7 +719,7 @@ export const tribes = [
     label: 'Skate',
     icon: Zap,
     image:
-      'https://img.usecurling.com/p/400/600?q=skateboarder%20trick&color=gray&dpr=2',
+      'https://img.usecurling.com/p/400/600?q=skate%20park%20trick&color=gray&dpr=2',
   },
 ]
 
