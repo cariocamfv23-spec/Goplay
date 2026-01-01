@@ -509,7 +509,7 @@ export default function Explore() {
               </div>
 
               {/* Responsive Category Grid */}
-              <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {tribes
                   .filter((t) => t.id !== 'all')
                   .map((tribe) => (
