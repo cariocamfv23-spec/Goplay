@@ -328,11 +328,17 @@ function TransactionItem({
         <span className={cn('block font-bold', getColor(type, currency))}>
           {value > 0 ? '+' : ''}
           {currency === 'BRL'
-            ? `R$ ${Math.abs(value).toFixed(2)}`
+            ? `R$ ${Math.abs(value).toFixed(2).replace('.', ',')}`
             : `${Math.abs(value)} pts`}
         </span>
         <span className="text-[10px] uppercase text-muted-foreground font-medium tracking-wider">
-          {type}
+          {type === 'spend'
+            ? 'Gasto'
+            : type === 'gain'
+              ? 'Ganho'
+              : type === 'bonus'
+                ? 'Bônus'
+                : type}
         </span>
       </div>
     </div>

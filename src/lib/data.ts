@@ -2301,13 +2301,86 @@ export const mockChats = []
 export const mockPointsHistory = []
 
 export const mockFinancialSummary = {
-  balance: 1250.5,
-  pointsBalance: 3500,
-  monthlySpending: 450.0,
-  monthlyIncome: 3200.0,
+  balance: 1400.6,
+  pointsBalance: 5500,
+  monthlySpending: 579.9,
+  monthlyIncome: 3350.0,
 }
 
-export const mockFinancialHistory: FinancialTransaction[] = []
+export const mockFinancialHistory: FinancialTransaction[] = [
+  {
+    id: 't1',
+    date: 'Hoje, 14:30',
+    type: 'spend',
+    description: 'Chuteira Nike Mercurial',
+    value: -499.9,
+    currency: 'BRL',
+    status: 'confirmed',
+  },
+  {
+    id: 't2',
+    date: 'Ontem, 20:00',
+    type: 'gain',
+    description: 'Prêmio MVP da Rodada',
+    value: 150.0,
+    currency: 'BRL',
+    status: 'confirmed',
+  },
+  {
+    id: 't3',
+    date: '20 Out, 10:00',
+    type: 'payment',
+    description: 'Inscrição Campeonato Regional',
+    value: -80.0,
+    currency: 'BRL',
+    status: 'confirmed',
+  },
+  {
+    id: 't4',
+    date: '18 Out, 15:45',
+    type: 'bonus',
+    description: 'Bônus de Indicação',
+    value: 500,
+    currency: 'PTS',
+    status: 'confirmed',
+  },
+  {
+    id: 't5',
+    date: '15 Out, 09:00',
+    type: 'marketplace',
+    description: 'Venda: Camisa Oficial',
+    value: 120.0,
+    currency: 'BRL',
+    status: 'pending',
+  },
+  {
+    id: 't6',
+    date: '12 Out, 18:30',
+    type: 'marketing',
+    description: 'Campanha Red Bull',
+    value: 2000,
+    currency: 'PTS',
+    status: 'confirmed',
+  },
+  {
+    id: 't7',
+    date: '10 Out, 08:15',
+    type: 'spend',
+    description: 'Mensalidade Academia',
+    value: -120.0,
+    currency: 'BRL',
+    status: 'confirmed',
+  },
+  {
+    id: 't8',
+    date: '05 Out, 19:20',
+    type: 'spend',
+    description: 'Gatorade Pack (x12)',
+    value: -64.9,
+    currency: 'BRL',
+    status: 'confirmed',
+  },
+]
 export const mockTrainingEvents = []
 export const mockProfileViewers: ProfileViewer[] = []
 export const mockGoals: Goal[] = []
