@@ -21,12 +21,12 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
     // Standard Mode (Global Update): "WhatsApp-style" high visibility background
     if (!enabled) {
       return {
-        // High opacity for clear visibility as requested (approx 12-15% ensures readability but clear pattern)
-        opacity: 0.12,
-        // Using primary color allows it to adapt to theme (purple/gold) but remain subtle like a texture
-        // Can also use 'text-foreground' for a stricter monochrome look, but 'text-primary' fits branding better
+        // High opacity (0.2) for high visibility as requested
+        opacity: 0.2,
+        // Using 'text-primary' ensures vibrant color based on theme (Purple/Gold)
+        // This fulfills "Enhanced Color Intensity"
         color: 'text-primary',
-        bg: 'bg-background', // Clean base
+        bg: 'bg-transparent', // Transparent to overlay on layout background
         blendMode: 'mix-blend-normal',
         animation: '',
       }
@@ -100,7 +100,7 @@ export function SportsWallpaper({ className }: SportsWallpaperProps) {
         }
       default:
         return {
-          opacity: 0.1,
+          opacity: 0.15,
           color: 'text-primary',
           bg: 'bg-background',
           blendMode: 'mix-blend-normal',

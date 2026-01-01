@@ -15,8 +15,7 @@ export default function Index() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-background z-10" />
 
         {/* Mandatory Illustrated Wallpaper (Nostalgia Mode) */}
-        {/* Rendered at z-1 to sit between base bg and gradient if possible, or managed via mix-blend inside component */}
-        {/* Explicitly included on Home Page (/) as per user story */}
+        {/* Rendered at z-[1] to sit between base bg and gradient */}
         <SportsWallpaper className="z-[1]" />
 
         <div

@@ -93,9 +93,10 @@ export default function Layout() {
 
       {/* Content Area */}
       {/* Ensure main is z-10 to sit above the wallpaper (z-0) but below the filter (z-100) */}
+      {/* Added bg-transparent to ensure wallpaper shows through if main had background */}
       <main
         className={cn(
-          'flex-1 w-full pb-20 md:pb-0 transition-all duration-300 z-10 relative',
+          'flex-1 w-full pb-20 md:pb-0 transition-all duration-300 z-10 relative bg-transparent',
         )}
       >
         <Outlet />
