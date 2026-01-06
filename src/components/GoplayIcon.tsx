@@ -68,19 +68,21 @@ export const GoplayIcon = ({
           <stop offset="100%" stopColor="hsl(var(--gold))" />
         </linearGradient>
 
-        {/* Christmas Red Velvet Gradient */}
-        <linearGradient
+        {/* Christmas Red Velvet Gradient - High Fidelity */}
+        <radialGradient
           id="goplay-holiday-red"
-          x1="0%"
-          y1="0%"
-          x2="100%"
-          y2="100%"
+          cx="30%"
+          cy="30%"
+          r="80%"
+          fx="30%"
+          fy="30%"
         >
-          <stop offset="0%" stopColor="#ef4444" /> {/* Red 500 */}
-          <stop offset="100%" stopColor="#991b1b" /> {/* Red 800 */}
-        </linearGradient>
+          <stop offset="0%" stopColor="#ef4444" /> {/* Red 500 Highlight */}
+          <stop offset="60%" stopColor="#b91c1c" /> {/* Red 700 Body */}
+          <stop offset="100%" stopColor="#7f1d1d" /> {/* Red 900 Shadow */}
+        </radialGradient>
 
-        {/* Christmas Snow White Gradient */}
+        {/* Christmas Snow White Gradient - Fur Texture */}
         <linearGradient
           id="goplay-snow-white"
           x1="0%"
@@ -89,7 +91,8 @@ export const GoplayIcon = ({
           y2="100%"
         >
           <stop offset="0%" stopColor="#ffffff" />
-          <stop offset="100%" stopColor="#e5e7eb" /> {/* Gray 200 */}
+          <stop offset="70%" stopColor="#f3f4f6" /> {/* Gray 100 */}
+          <stop offset="100%" stopColor="#d1d5db" /> {/* Gray 300 Shadow */}
         </linearGradient>
 
         {/* Inner Glow/Shadow for 3D realism */}
@@ -146,20 +149,20 @@ export const GoplayIcon = ({
           <feComposite in="SourceGraphic" in2="blur" operator="over" />
         </filter>
 
-        {/* Soft Shadow for Hat */}
+        {/* Strong Shadow for Seasonal Elements (Hat) */}
         <filter id="hat-shadow" x="-50%" y="-50%" width="200%" height="200%">
           <feDropShadow
             dx="2"
-            dy="4"
-            stdDeviation="3"
+            dy="8"
+            stdDeviation="4"
             floodColor="black"
-            floodOpacity="0.3"
+            floodOpacity="0.5"
           />
         </filter>
       </defs>
 
       {/* The 'G' - Styled as a futuristic stadium/track ring */}
-      {/* Main Body */}
+      {/* Main Body - Preserving structural integrity */}
       <path
         d="M 430 150
            C 400 100 330 64 256 64
@@ -216,38 +219,51 @@ export const GoplayIcon = ({
           className="animate-in fade-in zoom-in duration-1000 slide-in-from-top-4"
           filter="url(#hat-shadow)"
         >
-          {/* Minimalist Santa Hat perched on top-left of G */}
-          {/* Hat Body - Tilted Triangle shape */}
+          {/* 
+             PREMIUM SANTA HAT 
+             Proportionally scaled to match the G icon size.
+             Positioned to "wear" on the top-left curve of the G.
+          */}
+
+          {/* Hat Body: Red Velvet Cone folded to the left */}
           <path
-            d="M 130 90
-               Q 160 85 190 95
-               L 160 30
-               Q 140 30 110 50
-               Z"
+            d="M 125 95 
+               L 195 105 
+               C 180 20, 90 10, 60 50 
+               C 50 70, 90 80, 125 95"
             fill="url(#goplay-holiday-red)"
-            stroke="#991b1b"
-            strokeWidth="1"
+            stroke="#7f1d1d"
+            strokeWidth="0.5"
           />
 
-          {/* Hat Band - Fluffy white trim */}
+          {/* Hat Band: Fluffy White Fur surrounding the G curve */}
           <path
-            d="M 125 90
-               Q 160 82 195 95
-               Q 195 105 160 100
-               Q 125 105 125 90
+            d="M 110 90
+               Q 155 78 210 105
+               Q 210 125 160 115
+               Q 115 120 110 90
                Z"
             fill="url(#goplay-snow-white)"
+            stroke="#d1d5db"
+            strokeWidth="0.5"
           />
 
-          {/* Pompom - Fluffy white ball at tip, drooping slightly */}
-          <circle cx="105" cy="55" r="12" fill="url(#goplay-snow-white)" />
+          {/* Pompom: Fluffy Ball at the tip of the fold */}
+          <circle
+            cx="65"
+            cy="55"
+            r="16"
+            fill="url(#goplay-snow-white)"
+            stroke="#d1d5db"
+            strokeWidth="0.5"
+          />
 
-          {/* Subtle Shine on Hat */}
+          {/* Subtle Shine on Hat Body for Plastic/3D Look */}
           <path
-            d="M 140 85 Q 155 80 165 85 L 150 45"
+            d="M 135 85 Q 160 50 170 90"
             stroke="white"
-            strokeWidth="2"
-            strokeOpacity="0.3"
+            strokeWidth="3"
+            strokeOpacity="0.2"
             fill="none"
             strokeLinecap="round"
           />
@@ -260,29 +276,28 @@ export const GoplayIcon = ({
           filter="url(#seasonal-glow)"
         >
           {/* Confetti & Streamers */}
-          {/* Streamer */}
           <path
             d="M 100 400 Q 150 350 120 300 Q 90 250 140 200"
             fill="none"
             stroke="#d946ef"
-            strokeWidth="4"
+            strokeWidth="5"
             strokeLinecap="round"
-            className="opacity-80"
+            className="opacity-90"
           />
           <path
             d="M 400 100 Q 350 150 380 200"
             fill="none"
             stroke="#0ea5e9"
-            strokeWidth="4"
+            strokeWidth="5"
             strokeLinecap="round"
-            className="opacity-80"
+            className="opacity-90"
           />
-          {/* Confetti Dots */}
-          <circle cx="180" cy="150" r="6" fill="#fbbf24" />
-          <circle cx="350" cy="350" r="5" fill="#d946ef" />
-          <circle cx="300" cy="80" r="4" fill="#22c55e" />
-          <circle cx="150" cy="380" r="5" fill="#0ea5e9" />
-          <circle cx="450" cy="200" r="4" fill="#fbbf24" />
+          {/* Confetti Dots - Increased size for visibility */}
+          <circle cx="180" cy="150" r="8" fill="#fbbf24" />
+          <circle cx="350" cy="350" r="6" fill="#d946ef" />
+          <circle cx="300" cy="80" r="5" fill="#22c55e" />
+          <circle cx="150" cy="380" r="6" fill="#0ea5e9" />
+          <circle cx="450" cy="200" r="5" fill="#fbbf24" />
         </g>
       )}
 
@@ -295,21 +310,27 @@ export const GoplayIcon = ({
           <path
             d="M 230 64 Q 210 10 230 0 Q 250 10 240 64"
             fill="white"
-            opacity="0.8"
+            opacity="0.9"
+            stroke="#f3f4f6"
+            strokeWidth="1"
           />
           <path
             d="M 280 64 Q 300 10 280 0 Q 260 10 270 64"
             fill="white"
-            opacity="0.8"
+            opacity="0.9"
+            stroke="#f3f4f6"
+            strokeWidth="1"
           />
           {/* Colored Egg accent near satellite */}
           <ellipse
             cx="480"
             cy="270"
-            rx="12"
-            ry="16"
+            rx="14"
+            ry="18"
             fill="#f472b6"
             transform="rotate(15 480 270)"
+            stroke="white"
+            strokeWidth="2"
           />
         </g>
       )}
@@ -329,26 +350,26 @@ export const GoplayIcon = ({
             strokeWidth="2"
           />
           <path
-            d="M 445 280 L 450 285 L 445 295 L 440 285 Z"
+            d="M 445 280 L 452 285 L 445 298 L 438 285 Z"
             fill="#16a34a"
-            opacity="0.8"
+            opacity="0.9"
           />
           {/* Brazilian/World Colors Streamer */}
           <path
             d="M 100 420 Q 256 500 412 420"
             fill="none"
             stroke="#fbbf24"
-            strokeWidth="6"
+            strokeWidth="8"
             strokeLinecap="round"
-            opacity="0.6"
+            opacity="0.7"
           />
           <path
-            d="M 100 430 Q 256 510 412 430"
+            d="M 100 435 Q 256 515 412 435"
             fill="none"
             stroke="#16a34a"
-            strokeWidth="6"
+            strokeWidth="8"
             strokeLinecap="round"
-            opacity="0.6"
+            opacity="0.7"
           />
         </g>
       )}
@@ -358,8 +379,8 @@ export const GoplayIcon = ({
           className="animate-in fade-in duration-1000"
           filter="url(#seasonal-glow)"
         >
-          {/* Fireworks Burst */}
-          <g transform="translate(100, 100)">
+          {/* Fireworks Burst - Enhanced visibility */}
+          <g transform="translate(100, 100) scale(1.5)">
             <path
               d="M 0 0 L 0 -20 M 0 0 L 15 -15 M 0 0 L 20 0 M 0 0 L 15 15 M 0 0 L 0 20 M 0 0 L -15 15 M 0 0 L -20 0 M 0 0 L -15 -15"
               stroke="#fbbf24"
@@ -368,7 +389,7 @@ export const GoplayIcon = ({
               className="animate-pulse"
             />
           </g>
-          <g transform="translate(400, 400) scale(0.8)">
+          <g transform="translate(400, 400) scale(1.2)">
             <path
               d="M 0 0 L 0 -20 M 0 0 L 15 -15 M 0 0 L 20 0 M 0 0 L 15 15 M 0 0 L 0 20 M 0 0 L -15 15 M 0 0 L -20 0 M 0 0 L -15 -15"
               stroke="#60a5fa"

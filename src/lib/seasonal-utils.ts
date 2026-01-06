@@ -12,11 +12,6 @@ export type SeasonalTheme =
   | null
 
 export function getSeasonalTheme(date: Date = new Date()): SeasonalTheme {
-  // Requirement: Currently forced for the Christmas example.
-  // To enable automatic cleanup in the future, set this to null.
-  const forcedTheme: SeasonalTheme = 'christmas'
-  if (forcedTheme) return forcedTheme
-
   const month = date.getMonth() // 0-11
   const day = date.getDate()
   const year = date.getFullYear()
