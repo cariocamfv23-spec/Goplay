@@ -31,16 +31,10 @@ export function SportSeparator3D({
   className,
   index = 0,
 }: SportSeparator3DProps) {
-  // If no sport is provided, return a placeholder or empty div
-  if (!sport)
-    return (
-      <div className="flex flex-col justify-center h-full pb-4 opacity-30 pointer-events-none select-none">
-        <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50" />
-      </div>
-    )
-
   // Memoize configuration to prevent recalculation on renders
-  const config = useMemo<SportConfig>(() => {
+  // Moved before the conditional return to comply with Rules of Hooks
+  const config = useMemo<SportConfig | null>(() => {
+    if (!sport) return null
     const s = sport.toLowerCase()
 
     if (s.includes('futebol') || s.includes('soccer')) {
@@ -100,6 +94,14 @@ export function SportSeparator3D({
     ]
     return animations[index % animations.length]
   }, [index])
+
+  // If no sport is provided, return a placeholder or empty div
+  if (!sport || !config)
+    return (
+      <div className="flex flex-col justify-center h-full pb-4 opacity-30 pointer-events-none select-none">
+        <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50" />
+      </div>
+    )
 
   return (
     <div
