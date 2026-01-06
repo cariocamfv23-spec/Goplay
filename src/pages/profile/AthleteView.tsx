@@ -28,6 +28,9 @@ import {
   Bot,
   Info,
   Waves,
+  ChevronRight,
+  Zap,
+  Store,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -46,6 +49,8 @@ import { getAuraConfig } from '@/lib/aura-utils'
 import { AuraLegend } from '@/components/AuraLegend'
 import { EcoHumanoWaves } from '@/components/EcoHumanoWaves'
 import { EcoLegend } from '@/components/EcoLegend'
+import { Separator } from '@/components/ui/separator'
+import { Badge } from '@/components/ui/badge'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -88,7 +93,7 @@ export default function AthleteView({
   }
 
   return (
-    <div className="pb-8 animate-fade-in relative">
+    <div className="min-h-screen bg-background pb-20 animate-fade-in relative">
       {/* Cinematic Profile Background Contextual Aura */}
       {auraConfig.type !== 'none' && (
         <div
@@ -112,6 +117,7 @@ export default function AthleteView({
         </div>
       )}
 
+      {/* Cover Image */}
       <div className="h-32 bg-muted relative overflow-hidden group z-10">
         <img
           src={user.cover}
@@ -148,8 +154,10 @@ export default function AthleteView({
               <Button
                 variant="outline"
                 size="sm"
+                className="bg-background/80 backdrop-blur-sm shadow-sm"
                 onClick={() => navigate('/settings')}
               >
+                <Edit2 className="h-4 w-4 mr-2" />
                 Editar Perfil
               </Button>
             ) : (
@@ -172,14 +180,18 @@ export default function AthleteView({
           </div>
         </div>
 
-        <div>
+        {/* Identity Section */}
+        <div className="mb-6">
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold flex items-center gap-2">
+            <h1 className="text-2xl font-bold flex items-center gap-2 tracking-tight">
               {user.name}
               {user.level && (
-                <span className="text-[10px] bg-gold text-black px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
+                <Badge
+                  variant="secondary"
+                  className="text-[10px] bg-gold text-black px-1.5 py-0 border-none font-bold uppercase tracking-wider"
+                >
                   LVL {user.level}
-                </span>
+                </Badge>
               )}
             </h1>
             {/* Aura Legend Trigger */}
@@ -190,7 +202,7 @@ export default function AthleteView({
             >
               <Info className="w-4 h-4" />
             </button>
-            {/* New Eco Legend Trigger */}
+            {/* Eco Legend Trigger */}
             <button
               onClick={() => setIsEcoLegendOpen(true)}
               className="text-muted-foreground hover:text-emerald-500 transition-colors"
@@ -200,13 +212,59 @@ export default function AthleteView({
             </button>
           </div>
 
-          <p className="text-sm text-muted-foreground mb-2">{user.role}</p>
-          <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
+          <p className="text-sm text-muted-foreground font-medium mb-1">
+            {user.role}
+          </p>
+          <div className="flex items-center gap-1 text-xs text-muted-foreground mb-4">
             <MapPin className="h-3 w-3" /> {user.location}
           </div>
 
-          {/* Athlete Music Section */}
-          <div className="mb-4">
+          {/* Social Stats Row */}
+          <div className="flex items-center justify-between bg-secondary/20 p-3 rounded-xl border border-border/50 mb-5">
+            <div className="flex flex-col items-center flex-1 border-r border-border/50">
+              <span className="font-bold text-lg leading-none">
+                {user.followers || 0}
+              </span>
+              <span className="text-muted-foreground text-[10px] uppercase tracking-wider mt-1">
+                Seguidores
+              </span>
+            </div>
+            <div className="flex flex-col items-center flex-1 border-r border-border/50">
+              <span className="font-bold text-lg leading-none">
+                {user.following || 0}
+              </span>
+              <span className="text-muted-foreground text-[10px] uppercase tracking-wider mt-1">
+                Seguindo
+              </span>
+            </div>
+            {user.stats && (
+              <>
+                <div className="flex flex-col items-center flex-1 border-r border-border/50">
+                  <span className="font-bold text-lg leading-none">
+                    {user.stats.matches || 0}
+                  </span>
+                  <span className="text-muted-foreground text-[10px] uppercase tracking-wider mt-1">
+                    Jogos
+                  </span>
+                </div>
+                <div className="flex flex-col items-center flex-1">
+                  <span className="font-bold text-lg leading-none text-gold">
+                    {user.stats.mvp || 0}
+                  </span>
+                  <span className="text-muted-foreground text-[10px] uppercase tracking-wider mt-1 text-gold/80">
+                    MVPs
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Bio & Music */}
+          <p className="text-sm leading-relaxed mb-4 text-foreground/90">
+            {user.bio}
+          </p>
+
+          <div className="mb-6">
             {user.favoriteSong ? (
               <div className="bg-secondary/30 rounded-lg p-2 flex items-center gap-3 border border-border/50">
                 <div className="h-10 w-10 bg-black rounded-md overflow-hidden relative shrink-0">
@@ -224,7 +282,7 @@ export default function AthleteView({
                   </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-0.5 flex items-center gap-1">
+                  <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider mb-0.5 flex items-center gap-1">
                     Música do Atleta
                   </p>
                   <div className="flex items-center gap-1">
@@ -252,43 +310,12 @@ export default function AthleteView({
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full border-dashed text-muted-foreground hover:text-primary mb-2"
+                  className="w-full border-dashed text-muted-foreground hover:text-primary"
                   onClick={() => setIsMusicSelectorOpen(true)}
                 >
                   <Music className="h-4 w-4 mr-2" /> Adicionar Música do Atleta
                 </Button>
               )
-            )}
-          </div>
-
-          <p className="text-sm leading-relaxed mb-4">{user.bio}</p>
-
-          <div className="flex gap-6 text-sm mb-6 border-b border-border/50 pb-4">
-            <div className="flex flex-col">
-              <span className="font-bold text-lg">{user.followers || 0}</span>
-              <span className="text-muted-foreground text-xs">Seguidores</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-lg">{user.following || 0}</span>
-              <span className="text-muted-foreground text-xs">Seguindo</span>
-            </div>
-            {user.stats && (
-              <>
-                <div className="flex flex-col">
-                  <span className="font-bold text-lg">
-                    {user.stats.matches || 0}
-                  </span>
-                  <span className="text-muted-foreground text-xs">Jogos</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-bold text-lg">
-                    {user.stats.mvp || 0}
-                  </span>
-                  <span className="text-muted-foreground text-xs text-gold">
-                    MVPs
-                  </span>
-                </div>
-              </>
             )}
           </div>
         </div>
@@ -387,7 +414,7 @@ export default function AthleteView({
 
         {isMe && (
           <Card
-            className="mb-6 bg-gradient-to-r from-primary/10 to-transparent border-primary/20 cursor-pointer hover:bg-primary/15 transition-colors shadow-sm"
+            className="mb-8 bg-gradient-to-r from-primary/10 to-transparent border-primary/20 cursor-pointer hover:bg-primary/15 transition-colors shadow-sm"
             onClick={() => navigate('/profile/views')}
           >
             <CardContent className="p-4 flex items-center justify-between">
@@ -421,99 +448,195 @@ export default function AthleteView({
           </Card>
         )}
 
-        {/* Action Buttons Grid */}
-        <div className="grid grid-cols-2 gap-3 mb-3">
-          <Button
-            className="bg-secondary text-foreground hover:bg-secondary/80 justify-start"
-            onClick={() => navigate('/profile/stats')}
-          >
-            <BarChart2 className="mr-2 h-4 w-4" /> Estatísticas
-          </Button>
-          <Button
-            className="bg-secondary text-foreground hover:bg-secondary/80 justify-start"
-            onClick={() => navigate('/ranking')}
-          >
-            <Trophy className="mr-2 h-4 w-4" /> Ranking
-          </Button>
-          {isMe && (
-            <Button
-              className="bg-secondary text-foreground hover:bg-secondary/80 justify-start"
-              onClick={() => navigate('/profile/passport')}
-            >
-              <IdCard className="mr-2 h-4 w-4" /> Passaporte
-            </Button>
-          )}
-          {isMe && (
-            <Button
-              className="bg-secondary text-foreground hover:bg-secondary/80 justify-start"
-              onClick={() => navigate('/profile/timeline')}
-            >
-              <History className="mr-2 h-4 w-4" /> Linha do Tempo
-            </Button>
-          )}
-          {isMe && (
-            <Button
-              className="bg-gradient-to-r from-red-600/10 to-red-900/10 text-red-600 dark:text-red-400 hover:from-red-600/20 border border-red-500/20 justify-start shadow-sm col-span-2 font-bold"
-              onClick={() => navigate('/ai/bot-da-verdade')}
-            >
-              <Bot className="mr-2 h-4 w-4" /> Bot da Verdade
-            </Button>
-          )}
-          {isMe && (
-            <Button
-              className="bg-secondary text-foreground hover:bg-secondary/80 justify-start col-span-2"
-              onClick={() => navigate('/profile/evolution')}
-            >
-              <TrendingUp className="mr-2 h-4 w-4 text-green-500" />
-              Modo Evolução
-            </Button>
-          )}
-          {isMe && (
-            <Button
-              className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 text-emerald-600 dark:text-emerald-400 hover:from-emerald-500/20 border border-emerald-500/20 justify-start shadow-sm col-span-2 font-bold"
-              onClick={() => navigate('/profile/referral')}
-            >
-              <Gift className="mr-2 h-4 w-4" /> Indicar Amigos (+200 pts)
-            </Button>
-          )}
-          {isMe && (
-            <Button
-              className="bg-gradient-to-r from-primary/20 to-cyan-500/20 text-foreground hover:from-primary/30 hover:to-cyan-500/30 border border-primary/10 justify-start shadow-sm col-span-2"
-              onClick={() => navigate('/ai/avatar')}
-            >
-              <Sparkles className="mr-2 h-4 w-4 text-primary" /> AI Avatar
-            </Button>
-          )}
-          {isMe && (
-            <Button
-              className="bg-secondary/30 text-primary hover:bg-secondary/50 border border-primary/20 justify-start w-full"
-              variant="outline"
-              onClick={() => navigate('/marketplace')}
-            >
-              <ShoppingBag className="mr-2 h-4 w-4" /> Loja Goplay
-            </Button>
-          )}
-          {isMe && (
-            <Button
-              className="bg-secondary/30 text-foreground hover:bg-secondary/50 border border-border/50 justify-start w-full"
-              variant="outline"
-              onClick={() => navigate('/marketplace/orders')}
-            >
-              <Package className="mr-2 h-4 w-4" /> Meus Pedidos
-            </Button>
-          )}
-        </div>
+        {/* Improved Menu Hierarchy */}
+        {isMe ? (
+          <div className="space-y-6 mb-8">
+            {/* Performance Section */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 px-1">
+                <Trophy className="h-4 w-4 text-gold" />
+                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                  Performance & Carreira
+                </h3>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <Button
+                  className="bg-secondary text-foreground hover:bg-secondary/80 justify-start h-auto py-3 px-4 shadow-sm"
+                  onClick={() => navigate('/profile/stats')}
+                >
+                  <BarChart2 className="mr-3 h-5 w-5 text-primary" />
+                  <div className="flex flex-col items-start">
+                    <span className="font-semibold text-sm">Estatísticas</span>
+                    <span className="text-[10px] text-muted-foreground font-normal">
+                      Ver números
+                    </span>
+                  </div>
+                </Button>
+                <Button
+                  className="bg-secondary text-foreground hover:bg-secondary/80 justify-start h-auto py-3 px-4 shadow-sm"
+                  onClick={() => navigate('/ranking')}
+                >
+                  <Trophy className="mr-3 h-5 w-5 text-gold" />
+                  <div className="flex flex-col items-start">
+                    <span className="font-semibold text-sm">Ranking</span>
+                    <span className="text-[10px] text-muted-foreground font-normal">
+                      Sua posição
+                    </span>
+                  </div>
+                </Button>
+                <Button
+                  className="bg-secondary text-foreground hover:bg-secondary/80 justify-start h-auto py-3 px-4 shadow-sm"
+                  onClick={() => navigate('/profile/passport')}
+                >
+                  <IdCard className="mr-3 h-5 w-5 text-blue-500" />
+                  <div className="flex flex-col items-start">
+                    <span className="font-semibold text-sm">Passaporte</span>
+                    <span className="text-[10px] text-muted-foreground font-normal">
+                      Dados oficiais
+                    </span>
+                  </div>
+                </Button>
+                <Button
+                  className="bg-secondary text-foreground hover:bg-secondary/80 justify-start h-auto py-3 px-4 shadow-sm"
+                  onClick={() => navigate('/profile/evolution')}
+                >
+                  <TrendingUp className="mr-3 h-5 w-5 text-green-500" />
+                  <div className="flex flex-col items-start">
+                    <span className="font-semibold text-sm">Modo Evolução</span>
+                    <span className="text-[10px] text-muted-foreground font-normal">
+                      Seu progresso
+                    </span>
+                  </div>
+                </Button>
+              </div>
+              <Button
+                variant="ghost"
+                className="w-full justify-between hover:bg-secondary/30 text-muted-foreground"
+                onClick={() => navigate('/profile/timeline')}
+              >
+                <span className="flex items-center">
+                  <History className="mr-3 h-4 w-4" />
+                  Linha do Tempo
+                </span>
+                <ChevronRight className="h-4 w-4 opacity-50" />
+              </Button>
+            </div>
 
-        {isMe && (
-          <Button
-            className="w-full mb-6 bg-secondary/30 text-primary hover:bg-secondary/50 border border-primary/20 justify-start"
-            variant="outline"
-            onClick={() => navigate('/profile/financial-statement')}
-          >
-            <FileText className="mr-2 h-4 w-4" /> Extrato Financeiro
-          </Button>
+            <Separator />
+
+            {/* AI & Tools Section */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 px-1">
+                <Zap className="h-4 w-4 text-purple-500" />
+                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                  Inteligência Artificial
+                </h3>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <Button
+                  className="bg-gradient-to-br from-red-600/10 to-red-900/10 text-red-600 dark:text-red-400 hover:from-red-600/20 border border-red-500/20 justify-start h-auto py-3 px-4 shadow-sm"
+                  onClick={() => navigate('/ai/bot-da-verdade')}
+                >
+                  <Bot className="mr-3 h-5 w-5" />
+                  <div className="flex flex-col items-start">
+                    <span className="font-bold text-sm">Bot da Verdade</span>
+                    <span className="text-[10px] opacity-80 font-normal">
+                      Análise direta
+                    </span>
+                  </div>
+                </Button>
+                <Button
+                  className="bg-gradient-to-br from-primary/20 to-cyan-500/20 text-foreground hover:from-primary/30 hover:to-cyan-500/30 border border-primary/10 justify-start h-auto py-3 px-4 shadow-sm"
+                  onClick={() => navigate('/ai/avatar')}
+                >
+                  <Sparkles className="mr-3 h-5 w-5 text-primary" />
+                  <div className="flex flex-col items-start">
+                    <span className="font-bold text-sm">AI Avatar</span>
+                    <span className="text-[10px] opacity-80 font-normal">
+                      Criar versão 3D
+                    </span>
+                  </div>
+                </Button>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Commerce & Rewards Section */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 px-1">
+                <Store className="h-4 w-4 text-emerald-500" />
+                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                  Loja & Benefícios
+                </h3>
+              </div>
+              <Button
+                className="w-full bg-gradient-to-r from-emerald-500/10 to-teal-500/10 text-emerald-600 dark:text-emerald-400 hover:from-emerald-500/20 border border-emerald-500/20 justify-between shadow-sm font-medium"
+                onClick={() => navigate('/profile/referral')}
+              >
+                <span className="flex items-center">
+                  <Gift className="mr-3 h-5 w-5" />
+                  Indicar Amigos
+                </span>
+                <Badge
+                  variant="secondary"
+                  className="bg-emerald-500/20 text-emerald-600 border-none"
+                >
+                  +200 pts
+                </Badge>
+              </Button>
+
+              <div className="grid grid-cols-2 gap-3">
+                <Button
+                  variant="outline"
+                  className="justify-start bg-secondary/20 hover:bg-secondary/40 border-border/50"
+                  onClick={() => navigate('/marketplace')}
+                >
+                  <ShoppingBag className="mr-2 h-4 w-4 text-muted-foreground" />
+                  Loja Goplay
+                </Button>
+                <Button
+                  variant="outline"
+                  className="justify-start bg-secondary/20 hover:bg-secondary/40 border-border/50"
+                  onClick={() => navigate('/marketplace/orders')}
+                >
+                  <Package className="mr-2 h-4 w-4 text-muted-foreground" />
+                  Meus Pedidos
+                </Button>
+              </div>
+
+              <Button
+                variant="ghost"
+                className="w-full justify-between hover:bg-secondary/30 text-muted-foreground"
+                onClick={() => navigate('/profile/financial-statement')}
+              >
+                <span className="flex items-center">
+                  <FileText className="mr-3 h-4 w-4" />
+                  Extrato Financeiro
+                </span>
+                <ChevronRight className="h-4 w-4 opacity-50" />
+              </Button>
+            </div>
+          </div>
+        ) : (
+          /* Public Actions for Visitor */
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            <Button
+              className="bg-secondary text-foreground hover:bg-secondary/80 justify-start shadow-sm"
+              onClick={() => navigate('/profile/stats')}
+            >
+              <BarChart2 className="mr-2 h-4 w-4" /> Estatísticas
+            </Button>
+            <Button
+              className="bg-secondary text-foreground hover:bg-secondary/80 justify-start shadow-sm"
+              onClick={() => navigate('/ranking')}
+            >
+              <Trophy className="mr-2 h-4 w-4" /> Ranking
+            </Button>
+          </div>
         )}
 
+        {/* Content Tabs */}
         <Tabs
           defaultValue="posts"
           className="w-full"
@@ -540,7 +663,10 @@ export default function AthleteView({
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="posts" className="mt-4">
+          <TabsContent
+            value="posts"
+            className="mt-4 animate-in slide-in-from-bottom-2 duration-500"
+          >
             <div className="grid grid-cols-3 gap-1">
               {userPosts.map((post) => (
                 <div
@@ -585,7 +711,10 @@ export default function AthleteView({
               ))}
             </div>
           </TabsContent>
-          <TabsContent value="media">
+          <TabsContent
+            value="media"
+            className="mt-4 animate-in slide-in-from-bottom-2 duration-500"
+          >
             <div className="grid grid-cols-3 gap-1">
               {userPosts
                 .filter((p) => p.type === 'video')
@@ -620,7 +749,10 @@ export default function AthleteView({
               )}
             </div>
           </TabsContent>
-          <TabsContent value="tagged">
+          <TabsContent
+            value="tagged"
+            className="mt-4 animate-in slide-in-from-bottom-2 duration-500"
+          >
             <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
               <Users className="h-10 w-10 mb-2 opacity-20" />
               <p>Nenhuma marcação</p>
