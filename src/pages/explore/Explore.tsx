@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Search, MapPin, Grid, ListFilter } from 'lucide-react'
+import { Search, MapPin, ListFilter, Briefcase } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -18,6 +18,30 @@ export default function Explore() {
   const [search, setSearch] = useState('')
   const navigate = useNavigate()
 
+  // Extend categories to include Jobs and ensure consistent ordering/content
+  const allCategories = [
+    ...exploreCategories,
+    {
+      id: 'jobs',
+      label: 'Vagas',
+      icon: Briefcase,
+      bg: 'bg-slate-100 dark:bg-slate-900/20',
+      color: 'text-slate-600 dark:text-slate-400',
+    },
+  ]
+
+  // Helper for category navigation to handle route exceptions
+  const getCategoryPath = (id: string) => {
+    switch (id) {
+      case 'contracts':
+        return '/contracts'
+      case 'jobs':
+        return '/explore/jobs'
+      default:
+        return `/explore/${id}`
+    }
+  }
+
   const filteredProfiles = mockProfiles.filter(
     (p) =>
       p.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -28,6 +52,13 @@ export default function Explore() {
     e.title.toLowerCase().includes(search.toLowerCase()),
   )
 
+  const filteredVenues = mockVenues.filter(
+    (v) =>
+      v.name.toLowerCase().includes(search.toLowerCase()) ||
+      v.type.toLowerCase().includes(search.toLowerCase()) ||
+      v.location.toLowerCase().includes(search.toLowerCase()),
+  )
+
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Search Header */}
@@ -36,7 +67,7 @@ export default function Explore() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Buscar atletas, eventos, locais..."
-            className="pl-9 h-11 bg-secondary border-none rounded-xl"
+            className="pl-9 h-11 bg-secondary border-none rounded-xl transition-all focus:ring-2 focus:ring-primary/20"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -44,14 +75,14 @@ export default function Explore() {
 
         {/* Quick Categories */}
         <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-          {exploreCategories.map((cat) => (
+          {allCategories.map((cat) => (
             <Badge
               key={cat.id}
               variant="outline"
-              className="whitespace-nowrap cursor-pointer hover:bg-secondary py-1.5 px-3 border-border/60"
-              onClick={() => navigate(`/explore/${cat.id}`)}
+              className="whitespace-nowrap cursor-pointer hover:bg-secondary py-1.5 px-3 border-border/60 gap-1.5 transition-colors"
+              onClick={() => navigate(getCategoryPath(cat.id))}
             >
-              <cat.icon className="w-3 h-3 mr-1.5" />
+              <cat.icon className="w-3 h-3" />
               {cat.label}
             </Badge>
           ))}
@@ -61,7 +92,7 @@ export default function Explore() {
       <div className="p-4 space-y-6">
         {/* Map Preview Banner */}
         <div
-          className="relative h-32 rounded-2xl overflow-hidden bg-zinc-900 cursor-pointer group border border-border/50"
+          className="relative h-32 rounded-2xl overflow-hidden bg-zinc-900 cursor-pointer group border border-border/50 shadow-md transition-transform active:scale-[0.98]"
           onClick={() => navigate('/explore/talent-map')}
         >
           <img
@@ -88,7 +119,7 @@ export default function Explore() {
               <TabsTrigger value="events">Eventos</TabsTrigger>
               <TabsTrigger value="venues">Locais</TabsTrigger>
             </TabsList>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" title="Filtrar">
               <ListFilter className="w-4 h-4" />
             </Button>
           </div>
@@ -104,7 +135,7 @@ export default function Explore() {
                   <TalentPreviewCard key={profile.id} profile={profile} />
                 ))
             ) : (
-              <div className="text-center py-10 text-muted-foreground">
+              <div className="text-center py-10 text-muted-foreground bg-secondary/30 rounded-xl border border-dashed border-border">
                 Nenhum talento encontrado.
               </div>
             )}
@@ -126,7 +157,7 @@ export default function Explore() {
                 <MapEventCard key={event.id} event={event} />
               ))
             ) : (
-              <div className="text-center py-10 text-muted-foreground">
+              <div className="text-center py-10 text-muted-foreground bg-secondary/30 rounded-xl border border-dashed border-border">
                 Nenhum evento encontrado.
               </div>
             )}
@@ -143,38 +174,49 @@ export default function Explore() {
             value="venues"
             className="space-y-4 mt-0 animate-in fade-in"
           >
-            {mockVenues.slice(0, 3).map((venue) => (
-              <div
-                key={venue.id}
-                className="flex items-start gap-3 p-3 rounded-xl border border-border/50 bg-card hover:bg-accent/5 transition-colors cursor-pointer"
-                onClick={() => navigate(`/venues/${venue.id}`)}
-              >
-                <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-muted">
-                  <img
-                    src={venue.image}
-                    alt={venue.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex justify-between items-start">
-                    <h4 className="font-bold truncate">{venue.name}</h4>
-                    <Badge variant="secondary" className="text-[10px]">
-                      {venue.rating}
-                    </Badge>
+            {filteredVenues.length > 0 ? (
+              filteredVenues.slice(0, 5).map((venue) => (
+                <div
+                  key={venue.id}
+                  className="flex items-start gap-3 p-3 rounded-xl border border-border/50 bg-card hover:bg-accent/5 transition-colors cursor-pointer shadow-sm active:scale-[0.99]"
+                  onClick={() => navigate(`/venues/${venue.id}`)}
+                >
+                  <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-muted">
+                    <img
+                      src={venue.image}
+                      alt={venue.name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  <p className="text-xs text-muted-foreground truncate">
-                    {venue.type} • {venue.distance}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1 truncate">
-                    {venue.address}
-                  </p>
-                  <p className="text-xs font-semibold text-primary mt-1">
-                    {venue.price}
-                  </p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start">
+                      <h4 className="font-bold truncate text-sm">
+                        {venue.name}
+                      </h4>
+                      <Badge
+                        variant="secondary"
+                        className="text-[10px] px-1.5 h-5"
+                      >
+                        {venue.rating}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {venue.type} • {venue.distance}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                      {venue.address}
+                    </p>
+                    <p className="text-xs font-semibold text-primary mt-1.5">
+                      {venue.price}
+                    </p>
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div className="text-center py-10 text-muted-foreground bg-secondary/30 rounded-xl border border-dashed border-border">
+                Nenhum local encontrado.
               </div>
-            ))}
+            )}
             <Button
               variant="outline"
               className="w-full"
