@@ -166,6 +166,7 @@ const App = () => {
 
   useEffect(() => {
     const root = window.document.documentElement
+    // Remove all possible theme classes
     root.classList.remove(
       'theme-blue',
       'theme-green',
@@ -173,6 +174,7 @@ const App = () => {
       'theme-red',
       'theme-rose',
     )
+    // Add the selected color theme class if not default
     if (color !== 'default') {
       root.classList.add(`theme-${color}`)
     }

@@ -14,7 +14,6 @@ import {
   CassetteTape,
   Tv,
   Film,
-  Aperture,
   Terminal,
   Trophy,
   Swords,
@@ -226,6 +225,7 @@ export function TopBar() {
               variant="ghost"
               size="icon"
               className="rounded-full hover:bg-secondary/50"
+              title="Aparência"
             >
               <Palette className="h-5 w-5" />
             </Button>
