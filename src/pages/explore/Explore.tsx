@@ -1,5 +1,12 @@
 import { useState } from 'react'
-import { Search, MapPin, ListFilter, Briefcase } from 'lucide-react'
+import {
+  Search,
+  MapPin,
+  ListFilter,
+  Briefcase,
+  Tv,
+  Paintbrush,
+} from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -13,14 +20,21 @@ import { TalentPreviewCard } from '@/components/TalentPreviewCard'
 import { MapEventCard } from '@/components/MapEventCard'
 import { useNavigate } from 'react-router-dom'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { cn } from '@/lib/utils'
 
 export default function Explore() {
   const [search, setSearch] = useState('')
   const navigate = useNavigate()
 
-  // Extend categories to include Jobs and ensure consistent ordering/content
-  const allCategories = [
-    ...exploreCategories,
+  // Restore menus: Live Games, Jobs, Flyer Creator
+  const extraCategories = [
+    {
+      id: 'live',
+      label: 'Jogos ao Vivo',
+      icon: Tv,
+      bg: 'bg-red-100 dark:bg-red-900/20',
+      color: 'text-red-600 dark:text-red-400',
+    },
     {
       id: 'jobs',
       label: 'Vagas',
@@ -28,15 +42,30 @@ export default function Explore() {
       bg: 'bg-slate-100 dark:bg-slate-900/20',
       color: 'text-slate-600 dark:text-slate-400',
     },
+    {
+      id: 'flyer',
+      label: 'Criar Flyer',
+      icon: Paintbrush,
+      bg: 'bg-purple-100 dark:bg-purple-900/20',
+      color: 'text-purple-600 dark:text-purple-400',
+    },
   ]
 
-  // Helper for category navigation to handle route exceptions
+  // Combine all categories for the main grid
+  const allCategories = [...extraCategories, ...exploreCategories]
+
   const getCategoryPath = (id: string) => {
     switch (id) {
       case 'contracts':
         return '/contracts'
       case 'jobs':
         return '/explore/jobs'
+      case 'live':
+        return '/explore/live'
+      case 'flyer':
+        return '/explore/flyer-creator'
+      case 'map-events':
+        return '/explore/map-events'
       default:
         return `/explore/${id}`
     }
@@ -72,24 +101,39 @@ export default function Explore() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-
-        {/* Quick Categories */}
-        <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-          {allCategories.map((cat) => (
-            <Badge
-              key={cat.id}
-              variant="outline"
-              className="whitespace-nowrap cursor-pointer hover:bg-secondary py-1.5 px-3 border-border/60 gap-1.5 transition-colors"
-              onClick={() => navigate(getCategoryPath(cat.id))}
-            >
-              <cat.icon className="w-3 h-3" />
-              {cat.label}
-            </Badge>
-          ))}
-        </div>
       </div>
 
       <div className="p-4 space-y-6">
+        {/* Categories Grid (Restored Menu) */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+              Menu Principal
+            </h2>
+          </div>
+          <div className="grid grid-cols-4 gap-y-4 gap-x-2">
+            {allCategories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => navigate(getCategoryPath(cat.id))}
+                className="flex flex-col items-center gap-2 group"
+              >
+                <div
+                  className={cn(
+                    'w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-active:scale-95 shadow-sm',
+                    cat.bg,
+                  )}
+                >
+                  <cat.icon className={cn('w-6 h-6', cat.color)} />
+                </div>
+                <span className="text-[10px] font-medium text-center leading-tight line-clamp-2 max-w-[60px] text-muted-foreground group-hover:text-foreground transition-colors">
+                  {cat.label}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Map Preview Banner */}
         <div
           className="relative h-32 rounded-2xl overflow-hidden bg-zinc-900 cursor-pointer group border border-border/50 shadow-md transition-transform active:scale-[0.98]"
@@ -112,6 +156,7 @@ export default function Explore() {
           </div>
         </div>
 
+        {/* Feed Tabs */}
         <Tabs defaultValue="talents" className="w-full">
           <div className="flex items-center justify-between mb-4">
             <TabsList>
