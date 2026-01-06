@@ -16,24 +16,51 @@ import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 
 interface TalentPreviewCardProps {
-  talent: ProfileData
-  isTopTalent: boolean
+  talent?: ProfileData | null
+  isTopTalent?: boolean
 }
 
 export function TalentPreviewCard({
   talent,
-  isTopTalent,
+  isTopTalent = false,
 }: TalentPreviewCardProps) {
   const navigate = useNavigate()
-  const isDiscovered = talent.isDiscovered
-  const eligibleForContract = (talent.rating || 0) >= 4.5
+
+  // Guard clause: Robustly handle undefined or null talent data to prevent crashes
+  if (!talent) {
+    return (
+      <Card className="overflow-hidden border-border/50 shadow-sm bg-background/95 h-[350px] flex items-center justify-center animate-in fade-in">
+        <div className="flex flex-col items-center gap-3 text-muted-foreground p-6 text-center opacity-60">
+          <Activity className="w-10 h-10 opacity-30" />
+          <div className="space-y-1">
+            <span className="block text-sm font-medium">
+              Informações Indisponíveis
+            </span>
+            <span className="block text-xs">
+              Não foi possível carregar este talento.
+            </span>
+          </div>
+        </div>
+      </Card>
+    )
+  }
+
+  // Safe property access using optional chaining
+  const isDiscovered = talent?.isDiscovered ?? false
+  const rating = talent?.rating ?? 0
+  const eligibleForContract = rating >= 4.5
+
+  // Safe fallback for critical UI elements
+  const avatarUrl =
+    talent.avatar || 'https://img.usecurling.com/ppl/medium?gender=male'
+  const talentName = talent.name || 'Usuário'
 
   return (
-    <Card className="overflow-hidden border-border/50 shadow-2xl bg-background/95 backdrop-blur-xl animate-in zoom-in-95 duration-200 ring-1 ring-white/10">
+    <Card className="overflow-hidden border-border/50 shadow-2xl bg-background/95 backdrop-blur-xl animate-in zoom-in-95 duration-200 ring-1 ring-white/10 group flex flex-col h-full">
       {/* Header Banner */}
       <div
         className={cn(
-          'h-16 relative overflow-hidden',
+          'h-16 relative overflow-hidden transition-colors duration-300 shrink-0',
           isDiscovered
             ? 'bg-gradient-to-r from-cyan-900 to-blue-900'
             : 'bg-gradient-to-r from-primary/20 to-secondary',
@@ -42,25 +69,25 @@ export function TalentPreviewCard({
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" />
 
         {isDiscovered ? (
-          <div className="absolute top-2 right-2 flex items-center gap-1 bg-cyan-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg shadow-cyan-500/20">
+          <div className="absolute top-2 right-2 flex items-center gap-1 bg-cyan-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg shadow-cyan-500/20 z-10">
             <Trophy className="w-3 h-3" />
             Talento Descoberto
           </div>
         ) : isTopTalent ? (
-          <div className="absolute top-2 right-2 flex items-center gap-1 bg-gold text-black text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+          <div className="absolute top-2 right-2 flex items-center gap-1 bg-gold text-black text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">
             <Trophy className="w-3 h-3" />
             Top Talent
           </div>
         ) : null}
       </div>
 
-      <CardContent className="pt-0 pb-4 px-4 relative">
+      <CardContent className="pt-0 pb-4 px-4 relative flex-1 flex flex-col">
         {/* Avatar Overlap */}
         <div className="relative -mt-10 mb-3 flex justify-between items-end">
           <div className="relative">
             <div
               className={cn(
-                'h-20 w-20 rounded-full border-4 border-background overflow-hidden shadow-lg',
+                'h-20 w-20 rounded-full border-4 border-background overflow-hidden shadow-lg transition-all duration-300 group-hover:scale-105 bg-muted',
                 isDiscovered
                   ? 'ring-2 ring-cyan-400'
                   : isTopTalent
@@ -69,9 +96,13 @@ export function TalentPreviewCard({
               )}
             >
               <img
-                src={talent.avatar}
-                alt={talent.name}
+                src={avatarUrl}
+                alt={talentName}
                 className="h-full w-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src =
+                    'https://img.usecurling.com/ppl/medium?gender=male'
+                }}
               />
             </div>
             {isDiscovered ? (
@@ -95,7 +126,7 @@ export function TalentPreviewCard({
                   isDiscovered ? 'text-cyan-500' : 'text-primary',
                 )}
               >
-                {talent.rating?.toFixed(1) || 'N/A'}
+                {rating.toFixed(1)}
               </span>
             </div>
           </div>
@@ -103,8 +134,8 @@ export function TalentPreviewCard({
 
         {/* Info */}
         <div className="space-y-1 mb-4">
-          <h3 className="font-bold text-lg leading-tight flex items-center gap-1">
-            {talent.name}
+          <h3 className="font-bold text-lg leading-tight flex items-center gap-1 line-clamp-1">
+            {talentName}
             {eligibleForContract && (
               <Badge
                 variant="outline"
@@ -115,11 +146,13 @@ export function TalentPreviewCard({
               </Badge>
             )}
           </h3>
-          <p className="text-sm text-muted-foreground flex items-center gap-1">
-            <Activity className="w-3 h-3" /> {talent.position} • {talent.sport}
+          <p className="text-sm text-muted-foreground flex items-center gap-1 line-clamp-1">
+            <Activity className="w-3 h-3 shrink-0" />
+            {talent.position || 'Posição N/A'} • {talent.sport || 'Esporte N/A'}
           </p>
-          <p className="text-xs text-muted-foreground flex items-center gap-1">
-            <MapPin className="w-3 h-3" /> {talent.location}
+          <p className="text-xs text-muted-foreground flex items-center gap-1 line-clamp-1">
+            <MapPin className="w-3 h-3 shrink-0" />
+            {talent.location || 'Localização N/A'}
           </p>
         </div>
 
@@ -129,14 +162,14 @@ export function TalentPreviewCard({
             <h4 className="text-[10px] uppercase font-bold text-cyan-400 mb-1 flex items-center gap-1">
               <Sparkles className="w-3 h-3" /> Motivo da Descoberta
             </h4>
-            <p className="text-xs text-cyan-100 leading-snug italic">
+            <p className="text-xs text-cyan-100 leading-snug italic line-clamp-2">
               "{talent.discoveryReason}"
             </p>
           </div>
         )}
 
         {/* Mini Stats Grid */}
-        <div className="grid grid-cols-3 gap-2 mb-4">
+        <div className="grid grid-cols-3 gap-2 mb-4 mt-auto">
           <div className="bg-secondary/50 rounded-lg p-2 text-center border border-border/50">
             <span className="block font-bold text-sm">
               {talent.stats?.matches || 0}
@@ -189,7 +222,10 @@ export function TalentPreviewCard({
               ? 'bg-cyan-600 hover:bg-cyan-700 shadow-[0_0_15px_rgba(8,145,178,0.4)]'
               : 'bg-primary hover:bg-primary/90',
           )}
-          onClick={() => navigate(`/profile/${talent.id}`)}
+          onClick={() => {
+            if (talent.id) navigate(`/profile/${talent.id}`)
+          }}
+          disabled={!talent.id}
         >
           Ver Perfil Completo <ArrowRight className="w-3.5 h-3.5" />
         </Button>
