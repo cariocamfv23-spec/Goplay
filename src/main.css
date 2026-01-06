@@ -4,185 +4,107 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
-    --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
-    --primary: 262.1 83.3% 57.8%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 262.1 83.3% 57.8%;
-    --radius: 0.5rem;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --gold: 48 96% 53%;
-    --gold-foreground: 26 83% 14%;
-  }
-
-  .dark {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
     --primary: 263.4 70% 50.4%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 215 27.9% 16.9%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
-    --accent: 215 27.9% 16.9%;
-    --accent-foreground: 210 20% 98%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 263.4 70% 50.4%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
     --gold: 48 96% 53%;
-    --gold-foreground: 26 83% 14%;
+    --gold-foreground: 24 9.8% 10%;
   }
 
-  /* Theme Overrides */
-  .theme-blue {
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --ring: 221.2 83.2% 53.3%;
-  }
-
-  .theme-green {
-    --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 355.7 100% 97.3%;
-    --ring: 142.1 76.2% 36.3%;
-  }
-
-  .theme-orange {
-    --primary: 24.6 95% 53.1%;
-    --primary-foreground: 60 9.1% 97.8%;
-    --ring: 24.6 95% 53.1%;
-  }
-
-  .theme-red {
-    --primary: 0 72.2% 50.6%;
-    --primary-foreground: 0 85.7% 97.3%;
-    --ring: 0 72.2% 50.6%;
-  }
-
-  .theme-rose {
-    --primary: 346.8 77.2% 49.8%;
-    --primary-foreground: 355.7 100% 97.3%;
-    --ring: 346.8 77.2% 49.8%;
-  }
-
-  /* NOSTALGIA THEMES - GLOBAL OVERRIDES */
-  .theme-nostalgia-vhs {
+  .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
-    --primary: 142 70% 50%;
-    --primary-foreground: 0 0% 0%;
-    --border: 0 0% 20%;
-    --ring: 142 70% 50%;
-    --radius: 0rem;
-    font-family: 'Courier New', monospace;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 263.4 70% 50.4%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+}
+
+@layer utilities {
+  .transform-style-3d {
+    transform-style: preserve-3d;
   }
 
-  .theme-nostalgia-90s {
-    --background: 280 50% 95%;
-    --foreground: 280 80% 20%;
-    --card: 0 0% 100%;
-    --card-foreground: 280 80% 20%;
-    --primary: 330 80% 60%;
-    --primary-foreground: 0 0% 100%;
-    --border: 330 50% 80%;
-    --ring: 330 80% 60%;
-    --radius: 1rem;
-    font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+  .filter-texture-plastic {
+    filter: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
-  .theme-nostalgia-retro {
-    --background: 35 30% 90%;
-    --foreground: 25 30% 20%;
-    --card: 35 30% 85%;
-    --card-foreground: 25 30% 20%;
-    --primary: 25 60% 40%;
-    --primary-foreground: 35 30% 90%;
-    --border: 25 30% 70%;
-    --ring: 25 60% 40%;
-    font-family: 'Times New Roman', serif;
+  .filter-vhs-color-shift {
+    text-shadow:
+      -2px 0 0 rgba(255, 0, 0, 0.4),
+      2px 0 0 rgba(0, 255, 255, 0.4);
   }
 
-  .theme-nostalgia-pele {
-    --background: 142 60% 25%;
-    --foreground: 48 96% 53%;
-    --card: 142 60% 20%;
-    --card-foreground: 0 0% 98%;
-    --primary: 48 96% 53%;
-    --primary-foreground: 142 76% 26%;
-    --border: 48 96% 53%;
-    --ring: 48 96% 53%;
-    --radius: 0.5rem;
-    --muted: 142 40% 30%;
-    font-family: 'Helvetica', 'Arial', sans-serif;
+  .filter-vhs-lines {
+    background:
+      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+      linear-gradient(
+        90deg,
+        rgba(255, 0, 0, 0.06),
+        rgba(0, 255, 0, 0.02),
+        rgba(0, 0, 255, 0.06)
+      );
+    background-size:
+      100% 2px,
+      3px 100%;
   }
 
-  .theme-nostalgia-ali {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 90%;
-    --card: 0 0% 8%;
-    --card-foreground: 0 0% 90%;
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 0 0% 15%;
-    --border: 0 0% 25%;
-    --ring: 0 0% 100%;
-    --radius: 0.2rem;
-    font-family: 'Impact', 'Oswald', sans-serif;
+  .filter-grain {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.4'/%3E%3C/svg%3E");
   }
 
-  .theme-nostalgia-digital {
-    --background: 120 10% 5%;
-    --foreground: 120 100% 50%;
-    --card: 120 10% 8%;
-    --card-foreground: 120 100% 50%;
-    --primary: 120 100% 50%;
-    --primary-foreground: 0 0% 0%;
-    --border: 120 50% 30%;
-    --ring: 120 100% 50%;
-    --radius: 0px;
-    font-family: 'Courier New', monospace;
+  .font-handwriting {
+    font-family: 'Courier New', Courier, monospace;
   }
 
-  .theme-nostalgia-cassette {
-    --background: 30 15% 90%;
-    --foreground: 240 20% 25%;
-    --card: 30 15% 95%;
-    --card-foreground: 240 20% 25%;
-    --primary: 340 80% 50%;
-    --primary-foreground: 0 0% 100%;
-    --border: 240 20% 80%;
-    --radius: 0.25rem;
-    font-family: 'Comic Sans MS', 'Brush Script MT', cursive;
+  .font-digital {
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  .mask-gradient {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
   }
 }
 
@@ -195,238 +117,25 @@
   }
 }
 
-@layer utilities {
-  .text-shadow {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  .text-shadow-lg {
-    text-shadow:
-      0 4px 8px rgba(0, 0, 0, 0.12),
-      0 2px 4px rgba(0, 0, 0, 0.08);
-  }
-  .text-shadow-glow {
-    text-shadow: 0 0 10px currentColor;
-  }
-
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .font-handwriting {
-    font-family: 'Brush Script MT', 'Comic Sans MS', cursive;
-  }
-
-  .font-digital {
-    font-family: 'Courier New', monospace;
-  }
-
-  /* NOSTALGIA FILTERS & EFFECTS */
-
-  .filter-grain {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-  }
-
-  .filter-texture-plastic {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-  }
-
-  .filter-vhs-lines {
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0),
-      rgba(255, 255, 255, 0) 50%,
-      rgba(0, 0, 0, 0.2) 50%,
-      rgba(0, 0, 0, 0.2)
-    );
-    background-size: 100% 4px;
-    animation: scanline 0.2s linear infinite;
-    pointer-events: none;
-    mix-blend-mode: overlay;
-  }
-
-  .filter-vhs-color-shift {
-    text-shadow:
-      -2px 0 #00ffff,
-      2px 0 #ff00ff;
-    animation: rgb-shift 3s infinite alternate;
-  }
-
-  .filter-digital-grid {
-    background-image:
-      linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
-    pointer-events: none;
-  }
-
-  .filter-digital-scanlines {
-    background: repeating-linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.2),
-      rgba(0, 0, 0, 0.2) 1px,
-      transparent 1px,
-      transparent 3px
-    );
-    background-size: 100% 3px;
-    pointer-events: none;
-  }
-
-  .filter-broadcast-scanlines {
-    background: repeating-linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.1),
-      rgba(0, 0, 0, 0.1) 1px,
-      transparent 1px,
-      transparent 2px
-    );
-    background-size: 100% 2px;
-    pointer-events: none;
-  }
-
-  .filter-broadcast-bloom {
-    backdrop-filter: blur(0.5px) contrast(1.2) saturate(1.4);
-    -webkit-backdrop-filter: blur(0.5px) contrast(1.2) saturate(1.4);
-  }
-
-  .filter-film-scratches {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.005' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
-    opacity: 0.1;
-    mix-blend-mode: screen;
-    animation: scratch-shift 2s steps(4) infinite;
-  }
-
-  /* BLEND MODES */
-  .mix-blend-overlay {
-    mix-blend-mode: overlay;
-  }
-  .mix-blend-screen {
-    mix-blend-mode: screen;
-  }
-  .mix-blend-multiply {
-    mix-blend-mode: multiply;
-  }
-}
-
-@keyframes scanline {
+@keyframes progress {
   0% {
-    background-position: 0 0;
+    width: 0%;
   }
   100% {
-    background-position: 0 100%;
-  }
-}
-
-@keyframes rgb-shift {
-  0% {
-    text-shadow:
-      -1px 0 #00ffff,
-      1px 0 #ff00ff;
-  }
-  25% {
-    text-shadow:
-      -2px 1px #00ffff,
-      2px -1px #ff00ff;
-  }
-  50% {
-    text-shadow:
-      -1px -1px #00ffff,
-      1px 1px #ff00ff;
-  }
-  75% {
-    text-shadow:
-      -2px 0 #00ffff,
-      2px 0 #ff00ff;
-  }
-  100% {
-    text-shadow:
-      -1px 0 #00ffff,
-      1px 0 #ff00ff;
-  }
-}
-
-@keyframes flicker {
-  0% {
-    opacity: 0.02;
-  }
-  50% {
-    opacity: 0.05;
-  }
-  100% {
-    opacity: 0.02;
-  }
-}
-
-@keyframes scratch-shift {
-  0% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(5px);
-  }
-  50% {
-    transform: translateX(-5px);
-  }
-  75% {
-    transform: translateX(2px);
-  }
-  100% {
-    transform: translateX(0);
+    width: 100%;
   }
 }
 
 @keyframes tracking {
   0% {
-    top: -10%;
+    top: 0;
     opacity: 0;
   }
   10% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 0.2;
+    opacity: 1;
   }
   100% {
-    top: 110%;
+    top: 100%;
     opacity: 0;
-  }
-}
-.animate-tracking {
-  animation: tracking 5s linear infinite;
-}
-
-.animate-aura-spin {
-  animation: aura-spin 10s linear infinite;
-}
-.animate-aura-pulse-slow {
-  animation: aura-pulse 4s ease-in-out infinite;
-}
-.animate-aura-pulse-fast {
-  animation: aura-pulse 2s ease-in-out infinite;
-}
-
-@keyframes aura-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes aura-pulse {
-  0%,
-  100% {
-    opacity: 0.6;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.9;
-    transform: scale(1.05);
   }
 }
