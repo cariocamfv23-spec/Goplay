@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   MapPin,
@@ -46,10 +47,13 @@ import { AiToolsRail } from '@/components/AiToolsRail'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { NostalgiaStudio } from '@/components/NostalgiaStudio'
 import { Replay3DHomeCard } from '@/components/Replay3DHomeCard'
+import { Replay3DWizardDialog } from '@/components/Replay3DWizardDialog'
+import { Replay3DIcon } from '@/components/icons/Replay3DIcon'
 
 export default function Home() {
   const navigate = useNavigate()
   const nextMatch = mockMatches[0]
+  const [wizardOpen, setWizardOpen] = useState(false)
 
   // Priority Shortcuts Configuration
   const shortcuts = [
@@ -87,6 +91,15 @@ export default function Home() {
       path: '/marketplace',
       color: 'text-purple-600',
       bg: 'bg-purple-500/10',
+    },
+    {
+      label: 'Replay 3D',
+      icon: Replay3DIcon,
+      path: '#',
+      action: () => setWizardOpen(true),
+      color: 'text-indigo-500',
+      bg: 'bg-indigo-500/10',
+      isNew: true,
     },
   ]
 
@@ -197,6 +210,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background pb-24 animate-in fade-in duration-500">
+      <Replay3DWizardDialog open={wizardOpen} onOpenChange={setWizardOpen} />
+
       {/* Welcome / Hero Section */}
       <div className="px-5 pt-6 pb-2">
         <div className="flex justify-between items-start mb-4">
@@ -282,25 +297,35 @@ export default function Home() {
             {/* Stories Rail */}
             <StoriesRail />
 
-            {/* NEW FEATURE: Replay 3D Card (High Priority) */}
-            <Replay3DHomeCard />
+            {/* Replay 3D Card (Promotional) */}
+            <Replay3DHomeCard onStart={() => setWizardOpen(true)} />
 
             {/* Priority Shortcuts */}
-            <div className="grid grid-cols-5 gap-2 mb-6 mt-2">
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-6 mt-2">
               {shortcuts.map((shortcut, idx) => (
                 <button
                   key={idx}
-                  onClick={() => navigate(shortcut.path)}
-                  className="flex flex-col items-center gap-1.5 group"
+                  onClick={() =>
+                    shortcut.action
+                      ? shortcut.action()
+                      : navigate(shortcut.path)
+                  }
+                  className="flex flex-col items-center gap-1.5 group relative p-1 rounded-xl hover:bg-secondary/30 transition-colors"
                 >
                   <div
                     className={cn(
-                      'w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-md group-hover:scale-105 group-active:scale-95',
+                      'w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-md group-hover:scale-105 group-active:scale-95 relative',
                       shortcut.bg,
                       shortcut.color,
                     )}
                   >
                     <shortcut.icon className="w-5 h-5" />
+                    {shortcut.isNew && (
+                      <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary border-2 border-background"></span>
+                      </span>
+                    )}
                   </div>
                   <span className="text-[10px] font-medium text-muted-foreground group-hover:text-foreground transition-colors truncate w-full text-center">
                     {shortcut.label}
