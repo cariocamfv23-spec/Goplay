@@ -1,6 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Box, Play, Sparkles, Layers } from 'lucide-react'
+import { Play, Layers } from 'lucide-react'
+import { Replay3DIcon } from '@/components/icons/Replay3DIcon'
 
 interface Replay3DHomeCardProps {
   onStart?: () => void
@@ -9,12 +10,7 @@ interface Replay3DHomeCardProps {
 export function Replay3DHomeCard({ onStart }: Replay3DHomeCardProps) {
   return (
     <div className="w-full mb-6">
-      <div className="flex items-center justify-between px-1 mb-2">
-        <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-          <Sparkles className="w-3.5 h-3.5 text-primary" />
-          Exclusivo
-        </h2>
-      </div>
+      {/* Removed "Exclusivo" header to remove test indicators */}
 
       <Card
         className="border-none shadow-xl bg-gradient-to-br from-indigo-950 via-slate-900 to-black text-white overflow-hidden relative cursor-pointer group hover:shadow-2xl transition-all border-l-4 border-l-primary"
@@ -29,7 +25,7 @@ export function Replay3DHomeCard({ onStart }: Replay3DHomeCardProps) {
           <div className="space-y-3 flex-1">
             <div className="flex items-center gap-2 mb-1">
               <div className="p-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-                <Box className="w-5 h-5 text-indigo-300" />
+                <Replay3DIcon className="w-5 h-5 text-indigo-300" />
               </div>
               <h3 className="text-xl font-bold tracking-tight text-white drop-shadow-md">
                 Goplay Replay 3D
