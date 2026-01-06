@@ -132,7 +132,7 @@ export default function Explore() {
               filteredProfiles
                 .slice(0, 5)
                 .map((profile) => (
-                  <TalentPreviewCard key={profile.id} profile={profile} />
+                  <TalentPreviewCard key={profile.id} talent={profile} />
                 ))
             ) : (
               <div className="text-center py-10 text-muted-foreground bg-secondary/30 rounded-xl border border-dashed border-border">

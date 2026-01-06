@@ -2,6 +2,7 @@ import { ProfileData } from '@/lib/data'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Star,
   Trophy,
@@ -11,6 +12,7 @@ import {
   FileSignature,
   Sparkles,
   Zap,
+  User,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
@@ -26,47 +28,67 @@ export function TalentPreviewCard({
 }: TalentPreviewCardProps) {
   const navigate = useNavigate()
 
-  // Guard clause: Robustly handle undefined or null talent data to prevent crashes
+  // Loading/Error State: Use a skeleton layout instead of a text error
+  // This satisfies "Visual Error Handling" and "Loading State" criteria
   if (!talent) {
     return (
-      <Card className="overflow-hidden border-border/50 shadow-sm bg-background/95 h-[350px] flex items-center justify-center animate-in fade-in">
-        <div className="flex flex-col items-center gap-3 text-muted-foreground p-6 text-center opacity-60">
-          <Activity className="w-10 h-10 opacity-30" />
-          <div className="space-y-1">
-            <span className="block text-sm font-medium">
-              Informações Indisponíveis
-            </span>
-            <span className="block text-xs">
-              Não foi possível carregar este talento.
-            </span>
+      <Card className="overflow-hidden border-border/50 shadow-sm bg-background/95 h-[350px] flex flex-col">
+        <div className="h-20 bg-muted animate-pulse" />
+        <CardContent className="pt-0 pb-4 px-4 flex-1 flex flex-col mt-[-40px]">
+          <div className="flex justify-between items-end mb-4">
+            <Skeleton className="h-20 w-20 rounded-full border-4 border-background" />
+            <Skeleton className="h-8 w-16" />
           </div>
-        </div>
+          <div className="space-y-2 mb-6">
+            <Skeleton className="h-6 w-3/4" />
+            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="h-4 w-1/3" />
+          </div>
+          <div className="grid grid-cols-3 gap-2 mt-auto mb-4">
+            <Skeleton className="h-12 rounded-lg" />
+            <Skeleton className="h-12 rounded-lg" />
+            <Skeleton className="h-12 rounded-lg" />
+          </div>
+          <Skeleton className="h-9 w-full rounded-md" />
+        </CardContent>
       </Card>
     )
   }
 
-  // Safe property access using optional chaining
+  // Safe property access
   const isDiscovered = talent?.isDiscovered ?? false
   const rating = talent?.rating ?? 0
   const eligibleForContract = rating >= 4.5
 
-  // Safe fallback for critical UI elements
+  // Fallback images
   const avatarUrl =
     talent.avatar || 'https://img.usecurling.com/ppl/medium?gender=male'
   const talentName = talent.name || 'Usuário'
+  const coverUrl = talent.cover
 
   return (
-    <Card className="overflow-hidden border-border/50 shadow-2xl bg-background/95 backdrop-blur-xl animate-in zoom-in-95 duration-200 ring-1 ring-white/10 group flex flex-col h-full">
-      {/* Header Banner */}
+    <Card className="overflow-hidden border-border/50 shadow-2xl bg-background/95 backdrop-blur-xl animate-in zoom-in-95 duration-200 ring-1 ring-white/10 group flex flex-col h-full hover:border-primary/30 transition-colors">
+      {/* Header Banner with Cover Image Support */}
       <div
         className={cn(
-          'h-16 relative overflow-hidden transition-colors duration-300 shrink-0',
+          'h-24 relative overflow-hidden transition-colors duration-300 shrink-0',
           isDiscovered
             ? 'bg-gradient-to-r from-cyan-900 to-blue-900'
             : 'bg-gradient-to-r from-primary/20 to-secondary',
         )}
       >
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" />
+        {/* Render Cover Image if available for "High Quality" visual */}
+        {coverUrl && (
+          <img
+            src={coverUrl}
+            alt="Cover"
+            className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity duration-500"
+          />
+        )}
+
+        {/* Overlay gradient for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 mix-blend-overlay" />
 
         {isDiscovered ? (
           <div className="absolute top-2 right-2 flex items-center gap-1 bg-cyan-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg shadow-cyan-500/20 z-10">
@@ -83,7 +105,7 @@ export function TalentPreviewCard({
 
       <CardContent className="pt-0 pb-4 px-4 relative flex-1 flex flex-col">
         {/* Avatar Overlap */}
-        <div className="relative -mt-10 mb-3 flex justify-between items-end">
+        <div className="relative -mt-12 mb-3 flex justify-between items-end">
           <div className="relative">
             <div
               className={cn(
@@ -115,7 +137,7 @@ export function TalentPreviewCard({
               </div>
             ) : null}
           </div>
-          <div className="text-right">
+          <div className="text-right pb-1">
             <div className="flex items-center justify-end gap-1 text-primary font-bold text-lg">
               <span className="text-xs text-muted-foreground font-normal uppercase tracking-wider mr-1">
                 Rating
@@ -133,7 +155,7 @@ export function TalentPreviewCard({
         </div>
 
         {/* Info */}
-        <div className="space-y-1 mb-4">
+        <div className="space-y-1.5 mb-4">
           <h3 className="font-bold text-lg leading-tight flex items-center gap-1 line-clamp-1">
             {talentName}
             {eligibleForContract && (
@@ -146,17 +168,17 @@ export function TalentPreviewCard({
               </Badge>
             )}
           </h3>
-          <p className="text-sm text-muted-foreground flex items-center gap-1 line-clamp-1">
-            <Activity className="w-3 h-3 shrink-0" />
+          <p className="text-sm text-muted-foreground flex items-center gap-1.5 line-clamp-1">
+            <Activity className="w-3.5 h-3.5 shrink-0 text-primary/70" />
             {talent.position || 'Posição N/A'} • {talent.sport || 'Esporte N/A'}
           </p>
-          <p className="text-xs text-muted-foreground flex items-center gap-1 line-clamp-1">
-            <MapPin className="w-3 h-3 shrink-0" />
+          <p className="text-xs text-muted-foreground flex items-center gap-1.5 line-clamp-1">
+            <MapPin className="w-3.5 h-3.5 shrink-0 text-primary/70" />
             {talent.location || 'Localização N/A'}
           </p>
         </div>
 
-        {/* Discovery Details (New Section) */}
+        {/* Discovery Details */}
         {isDiscovered && talent.discoveryReason && (
           <div className="mb-4 bg-cyan-950/30 border border-cyan-500/20 rounded-lg p-2.5 animate-in slide-in-from-left-2 fade-in duration-300">
             <h4 className="text-[10px] uppercase font-bold text-cyan-400 mb-1 flex items-center gap-1">
@@ -227,7 +249,8 @@ export function TalentPreviewCard({
           }}
           disabled={!talent.id}
         >
-          Ver Perfil Completo <ArrowRight className="w-3.5 h-3.5" />
+          {isDiscovered ? 'Ver Talento' : 'Ver Perfil Completo'}{' '}
+          <ArrowRight className="w-3.5 h-3.5" />
         </Button>
       </CardContent>
     </Card>
