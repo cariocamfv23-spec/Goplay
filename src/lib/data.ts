@@ -1698,9 +1698,10 @@ export const mockStories = [
       id: 'u3',
       name: 'Mariana',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=12',
+      sport: 'Cycling',
     },
     image:
-      'https://img.usecurling.com/p/400/800?q=gym%20selfie&color=purple&dpr=2',
+      'https://img.usecurling.com/p/400/800?q=cyclist%20road&color=orange&dpr=2',
     viewed: false,
   },
   {
@@ -1709,6 +1710,7 @@ export const mockStories = [
       id: 'u4',
       name: 'Carlos',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=45',
+      sport: 'Futebol',
     },
     image:
       'https://img.usecurling.com/p/400/800?q=soccer%20field%20sunset&color=orange&dpr=2',
@@ -1720,9 +1722,10 @@ export const mockStories = [
       id: 'u5',
       name: 'Beatriz',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=23',
+      sport: 'Boxe',
     },
     image:
-      'https://img.usecurling.com/p/400/800?q=healthy%20food%20bowl&color=green&dpr=2',
+      'https://img.usecurling.com/p/400/800?q=boxing%20training&color=red&dpr=2',
     viewed: true,
   },
   {
@@ -1731,9 +1734,10 @@ export const mockStories = [
       id: 'u10',
       name: 'Rafael',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=78',
+      sport: 'Jiu-Jitsu',
     },
     image:
-      'https://img.usecurling.com/p/400/800?q=tactical%20board%20soccer&color=blue&dpr=2',
+      'https://img.usecurling.com/p/400/800?q=bjj%20training&color=blue&dpr=2',
     viewed: true,
   },
 ]
