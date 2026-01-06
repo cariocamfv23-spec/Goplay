@@ -1,75 +1,18 @@
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import {
-  Plus,
-  CircleDashed,
-  Bike,
-  Hand,
-  Swords,
-  Trophy,
-  Activity,
-  Dumbbell,
-} from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { mockStories, mockCurrentUser } from '@/lib/data'
 import { cn } from '@/lib/utils'
 import React from 'react'
-
-const SportSeparator = ({ sport }: { sport?: string }) => {
-  if (!sport)
-    return (
-      <div className="flex flex-col justify-center h-full pb-4 opacity-30 text-muted-foreground select-none pointer-events-none">
-        <Activity className="w-3 h-3 animate-pulse-subtle" />
-      </div>
-    )
-
-  const normalizedSport = sport.toLowerCase()
-  let Icon = Trophy
-  let animClass = 'animate-float' // Default floating animation
-
-  if (
-    normalizedSport.includes('futebol') ||
-    normalizedSport.includes('soccer')
-  ) {
-    Icon = CircleDashed
-    animClass = 'animate-spin-slow' // Ball rolling/spinning slowly
-  } else if (
-    normalizedSport.includes('bike') ||
-    normalizedSport.includes('cycl')
-  ) {
-    Icon = Bike
-    animClass = 'animate-wiggle-subtle' // Bike balancing/wiggling
-  } else if (normalizedSport.includes('box')) {
-    Icon = Hand
-    animClass = 'animate-pulse-subtle' // Hand pulsing (impact readiness)
-  } else if (
-    normalizedSport.includes('lut') ||
-    normalizedSport.includes('jiu') ||
-    normalizedSport.includes('martial')
-  ) {
-    Icon = Swords
-    animClass = 'animate-wiggle-subtle' // Swords clashing/crossing
-  } else if (
-    normalizedSport.includes('gym') ||
-    normalizedSport.includes('crossfit')
-  ) {
-    Icon = Dumbbell
-    animClass = 'animate-float' // Weight floating (lifting)
-  }
-
-  return (
-    <div className="flex flex-col justify-center h-full pb-4 opacity-40 text-muted-foreground select-none pointer-events-none">
-      <Icon className={cn('w-3 h-3', animClass)} />
-    </div>
-  )
-}
+import { SportSeparator3D } from '@/components/SportSeparator3D'
 
 export function StoriesRail() {
   return (
     <div className="w-full py-4">
       <ScrollArea className="w-full whitespace-nowrap">
-        <div className="flex w-max items-center gap-3 px-1">
+        <div className="flex w-max items-center gap-2 px-1">
           {/* Add Story Button */}
-          <div className="flex flex-col items-center gap-1.5 cursor-pointer group">
+          <div className="flex flex-col items-center gap-1.5 cursor-pointer group pl-2">
             <div className="relative">
               <Avatar className="w-16 h-16 border-2 border-dashed border-muted-foreground/30 p-0.5 group-hover:border-primary transition-colors">
                 <AvatarImage
@@ -89,7 +32,11 @@ export function StoriesRail() {
 
           {/* Initial Separator based on the first story's sport */}
           {mockStories.length > 0 && (
-            <SportSeparator sport={mockStories[0].user.sport} />
+            <SportSeparator3D
+              sport={mockStories[0].user.sport}
+              index={0}
+              className="mx-1"
+            />
           )}
 
           {/* Stories List */}
@@ -116,10 +63,16 @@ export function StoriesRail() {
 
               {/* Separator for the next story in the sequence */}
               {index < mockStories.length - 1 && (
-                <SportSeparator sport={mockStories[index + 1].user.sport} />
+                <SportSeparator3D
+                  sport={mockStories[index + 1].user.sport}
+                  index={index + 1}
+                  className="mx-1"
+                />
               )}
             </React.Fragment>
           ))}
+          {/* Right padding for scroll */}
+          <div className="w-2" />
         </div>
         <ScrollBar orientation="horizontal" className="invisible" />
       </ScrollArea>

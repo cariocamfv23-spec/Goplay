@@ -115,14 +115,29 @@
   .animate-float {
     animation: float 4s ease-in-out infinite;
   }
+  .animate-float-slow {
+    animation: float 6s ease-in-out infinite;
+  }
+  .animate-float-reverse {
+    animation: float-reverse 5s ease-in-out infinite;
+  }
   .animate-spin-slow {
     animation: spin 8s linear infinite;
   }
   .animate-wiggle-subtle {
     animation: wiggle-subtle 4s ease-in-out infinite;
   }
+  .animate-wiggle-slow {
+    animation: wiggle-subtle 6s ease-in-out infinite;
+  }
   .animate-pulse-subtle {
     animation: pulse-subtle 3s ease-in-out infinite;
+  }
+  .animate-pulse-slow {
+    animation: pulse-subtle 5s ease-in-out infinite;
+  }
+  .animate-hover-3d {
+    animation: hover-3d 5s ease-in-out infinite;
   }
 
   @keyframes float {
@@ -132,6 +147,16 @@
     }
     50% {
       transform: translateY(-3px);
+    }
+  }
+
+  @keyframes float-reverse {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(3px);
     }
   }
 
@@ -151,7 +176,7 @@
       transform: scale(0.95);
     }
     50% {
-      transform: scale(1.1);
+      transform: scale(1.05);
     }
   }
 
@@ -161,6 +186,22 @@
     }
     to {
       transform: rotate(360deg);
+    }
+  }
+
+  @keyframes hover-3d {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-2px) rotate(2deg);
+    }
+    50% {
+      transform: translateY(0) rotate(0deg);
+    }
+    75% {
+      transform: translateY(2px) rotate(-2deg);
     }
   }
 }
