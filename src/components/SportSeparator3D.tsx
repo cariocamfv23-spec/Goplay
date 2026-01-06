@@ -7,23 +7,29 @@ interface SportSeparator3DProps {
   index?: number
 }
 
-// Colors available in the image service
-type ValidColor =
+// Colors available in the icon service for transparency
+type ValidIconColor =
+  | 'gradient'
+  | 'solid-black'
+  | 'multicolor'
+  | 'azure'
   | 'black'
   | 'blue'
+  | 'chartreuse'
+  | 'cyan'
   | 'gray'
   | 'green'
   | 'orange'
   | 'red'
+  | 'rose'
+  | 'spring-green'
+  | 'violet'
   | 'white'
   | 'yellow'
-  | 'purple'
-  | 'cyan'
-  | 'pink'
 
 interface SportConfig {
   query: string
-  color: ValidColor
+  color: ValidIconColor
 }
 
 export function SportSeparator3D({
@@ -32,19 +38,20 @@ export function SportSeparator3D({
   index = 0,
 }: SportSeparator3DProps) {
   // Memoize configuration to prevent recalculation on renders
-  // Moved before the conditional return to comply with Rules of Hooks
   const config = useMemo<SportConfig | null>(() => {
     if (!sport) return null
     const s = sport.toLowerCase()
 
+    // Using 'multicolor' to provide a premium, 3D-like appearance with full transparency
+    // Switching to /i endpoint ensures transparent backgrounds unlike /p which may return squares
     if (s.includes('futebol') || s.includes('soccer')) {
-      return { query: 'soccer ball 3d render', color: 'white' }
+      return { query: 'soccer-ball', color: 'multicolor' }
     }
     if (s.includes('bike') || s.includes('cycl')) {
-      return { query: 'bicycle helmet 3d render', color: 'orange' }
+      return { query: 'bicycle', color: 'multicolor' }
     }
     if (s.includes('box') || s.includes('fight')) {
-      return { query: 'boxing glove 3d render', color: 'red' }
+      return { query: 'boxing-glove', color: 'multicolor' }
     }
     if (
       s.includes('jiu') ||
@@ -52,35 +59,35 @@ export function SportSeparator3D({
       s.includes('bjj') ||
       s.includes('martial')
     ) {
-      return { query: 'black belt martial arts 3d', color: 'black' }
+      return { query: 'kimono', color: 'multicolor' }
     }
     if (s.includes('gym') || s.includes('crossfit') || s.includes('muscul')) {
-      return { query: 'dumbbell 3d render', color: 'purple' }
+      return { query: 'dumbbell', color: 'multicolor' }
     }
     if (s.includes('run') || s.includes('corri')) {
-      return { query: 'running shoe 3d render', color: 'green' }
+      return { query: 'running-shoe', color: 'multicolor' }
     }
     if (s.includes('tenis') || s.includes('tennis')) {
-      return { query: 'tennis ball 3d render', color: 'yellow' }
+      return { query: 'tennis-ball', color: 'multicolor' }
     }
     if (s.includes('basket') || s.includes('basquete')) {
-      return { query: 'basketball 3d render', color: 'orange' }
+      return { query: 'basketball', color: 'multicolor' }
     }
     if (s.includes('volei') || s.includes('volley')) {
-      return { query: 'volleyball 3d render', color: 'yellow' }
+      return { query: 'volleyball', color: 'multicolor' }
     }
     if (s.includes('swim') || s.includes('nata')) {
-      return { query: 'swimming goggles 3d render', color: 'cyan' }
+      return { query: 'swimming-goggles', color: 'multicolor' }
     }
     if (s.includes('skate')) {
-      return { query: 'skateboard 3d render', color: 'black' }
+      return { query: 'skateboard', color: 'multicolor' }
     }
     if (s.includes('surf')) {
-      return { query: 'surfboard 3d render', color: 'blue' }
+      return { query: 'surfboard', color: 'multicolor' }
     }
 
     // Default Fallback
-    return { query: 'gold trophy 3d render', color: 'yellow' }
+    return { query: 'trophy', color: 'multicolor' }
   }, [sport])
 
   // Memoize animation selection based on index to create variety
@@ -110,20 +117,19 @@ export function SportSeparator3D({
         className,
       )}
     >
-      {/* 3D Object Container - No Background, just the object */}
+      {/* 3D Object Container - Absolutely no background or borders */}
       <div
         className={cn(
           'relative w-7 h-7 flex items-center justify-center transition-transform will-change-transform',
           animationClass,
         )}
       >
-        {/* Removed Glow/Shadow Effect for clean floating look */}
-
-        {/* The 3D Render Image */}
+        {/* The 3D Render Image - Using /i endpoint for guaranteed transparency */}
+        {/* Added drop-shadow and scale for better visibility and depth without containers */}
         <img
-          src={`https://img.usecurling.com/p/64/64?q=${encodeURIComponent(config.query)}&color=${config.color}&dpr=2`}
+          src={`https://img.usecurling.com/i?q=${encodeURIComponent(config.query)}&color=${config.color}`}
           alt={sport}
-          className="w-full h-full object-contain drop-shadow-sm filter contrast-[1.1] saturate-[1.1]"
+          className="w-full h-full object-contain drop-shadow-md filter contrast-[1.1] saturate-[1.2] scale-110"
           loading="lazy"
         />
       </div>
