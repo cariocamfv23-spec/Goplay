@@ -46,9 +46,10 @@ export function Ghost3DViewer({
       {/* Container Layout based on Mode */}
       <div
         className={cn(
-          'absolute inset-0 transition-all duration-700 flex ease-[cubic-bezier(0.25,0.1,0.25,1)]',
+          'absolute inset-0 transition-all duration-700 flex',
           mode === 'split' ? 'flex-col md:flex-row' : 'flex-col',
         )}
+        style={{ transitionTimingFunction: 'cubic-bezier(0.25, 0.1, 0.25, 1)' }}
       >
         {/* ORIGINAL VIDEO LAYER */}
         <div
@@ -100,11 +101,12 @@ export function Ghost3DViewer({
           <div className="absolute inset-0 flex items-center justify-center transform-style-3d">
             <div
               className={cn(
-                'relative w-80 h-80 transform-style-3d transition-transform duration-[2000ms] ease-linear',
+                'relative w-80 h-80 transform-style-3d transition-transform ease-linear',
                 isPlaying
                   ? 'animate-[camera-orbit_20s_linear_infinite]'
                   : 'rotate-x-[25deg] rotate-y-[35deg]',
               )}
+              style={{ transitionDuration: '2000ms' }}
             >
               {/* Premium Floor: Grid + Reflection + Glow */}
               <div
@@ -187,9 +189,10 @@ export function Ghost3DViewer({
                 {/* Realistic 3D Asset: Sports Object */}
                 <div
                   className={cn(
-                    'absolute w-16 h-16 bottom-[-100px] left-16 transition-all duration-[2000ms] transform-style-3d',
+                    'absolute w-16 h-16 bottom-[-100px] left-16 transition-all transform-style-3d',
                     isPlaying && 'animate-[ball-orbit_3s_infinite_linear]',
                   )}
+                  style={{ transitionDuration: '2000ms' }}
                 >
                   {/* Sprite Billboard - Always facing camera simulation or rotating with logic */}
                   <img
