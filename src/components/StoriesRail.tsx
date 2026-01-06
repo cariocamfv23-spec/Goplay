@@ -17,34 +17,48 @@ import React from 'react'
 const SportSeparator = ({ sport }: { sport?: string }) => {
   if (!sport)
     return (
-      <div className="flex flex-col justify-center h-full pb-4 opacity-30 text-muted-foreground">
-        <Activity className="w-3 h-3" />
+      <div className="flex flex-col justify-center h-full pb-4 opacity-30 text-muted-foreground select-none pointer-events-none">
+        <Activity className="w-3 h-3 animate-pulse-subtle" />
       </div>
     )
 
   const normalizedSport = sport.toLowerCase()
   let Icon = Trophy
+  let animClass = 'animate-float' // Default floating animation
 
-  if (normalizedSport.includes('futebol') || normalizedSport.includes('soccer'))
+  if (
+    normalizedSport.includes('futebol') ||
+    normalizedSport.includes('soccer')
+  ) {
     Icon = CircleDashed
-  else if (normalizedSport.includes('bike') || normalizedSport.includes('cycl'))
+    animClass = 'animate-spin-slow' // Ball rolling/spinning slowly
+  } else if (
+    normalizedSport.includes('bike') ||
+    normalizedSport.includes('cycl')
+  ) {
     Icon = Bike
-  else if (normalizedSport.includes('box')) Icon = Hand
-  else if (
+    animClass = 'animate-wiggle-subtle' // Bike balancing/wiggling
+  } else if (normalizedSport.includes('box')) {
+    Icon = Hand
+    animClass = 'animate-pulse-subtle' // Hand pulsing (impact readiness)
+  } else if (
     normalizedSport.includes('lut') ||
     normalizedSport.includes('jiu') ||
     normalizedSport.includes('martial')
-  )
+  ) {
     Icon = Swords
-  else if (
+    animClass = 'animate-wiggle-subtle' // Swords clashing/crossing
+  } else if (
     normalizedSport.includes('gym') ||
     normalizedSport.includes('crossfit')
-  )
+  ) {
     Icon = Dumbbell
+    animClass = 'animate-float' // Weight floating (lifting)
+  }
 
   return (
-    <div className="flex flex-col justify-center h-full pb-4 opacity-40 text-muted-foreground">
-      <Icon className="w-3 h-3" />
+    <div className="flex flex-col justify-center h-full pb-4 opacity-40 text-muted-foreground select-none pointer-events-none">
+      <Icon className={cn('w-3 h-3', animClass)} />
     </div>
   )
 }
