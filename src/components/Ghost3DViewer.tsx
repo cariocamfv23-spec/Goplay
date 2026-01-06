@@ -67,7 +67,7 @@ export function Ghost3DViewer({
           <div className="absolute inset-0 flex items-center justify-center perspective-[1000px]">
             <div
               className={cn(
-                'relative w-64 h-64 transform-style-3d transition-transform duration-[2000ms] ease-in-out',
+                'relative w-64 h-64 transform-style-3d transition-transform duration-2000 ease-in-out',
                 isPlaying
                   ? 'animate-[camera-orbit_10s_linear_infinite]'
                   : 'rotate-x-[20deg] rotate-y-[30deg]',
