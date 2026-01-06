@@ -6,6 +6,7 @@ import { PassportCard } from '@/components/passport/PassportCard'
 import { CompetitionHistory } from '@/components/passport/CompetitionHistory'
 import { Certifications } from '@/components/passport/Certifications'
 import { GoalsTracker } from '@/components/passport/GoalsTracker'
+import { StrategicVisualPassport } from '@/components/passport/StrategicVisualPassport'
 import { EventLinkDialog } from '@/components/passport/EventLinkDialog'
 import { useState } from 'react'
 import { ShareDialog } from '@/components/ShareDialog'
@@ -42,11 +43,38 @@ export default function SportsPassport() {
 
       <div className="flex-1 p-4">
         <Tabs defaultValue="digital" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-6">
-            <TabsTrigger value="digital">ID Digital</TabsTrigger>
-            <TabsTrigger value="history">Histórico</TabsTrigger>
-            <TabsTrigger value="certs">Certif.</TabsTrigger>
-            <TabsTrigger value="goals">Metas</TabsTrigger>
+          {/* Updated grid-cols-5 to accommodate new tab */}
+          <TabsList className="grid w-full grid-cols-5 mb-6">
+            <TabsTrigger
+              value="digital"
+              className="px-1 text-[10px] sm:text-sm sm:px-3"
+            >
+              ID Digital
+            </TabsTrigger>
+            <TabsTrigger
+              value="history"
+              className="px-1 text-[10px] sm:text-sm sm:px-3"
+            >
+              Histórico
+            </TabsTrigger>
+            <TabsTrigger
+              value="certs"
+              className="px-1 text-[10px] sm:text-sm sm:px-3"
+            >
+              Certif.
+            </TabsTrigger>
+            <TabsTrigger
+              value="goals"
+              className="px-1 text-[10px] sm:text-sm sm:px-3"
+            >
+              Metas
+            </TabsTrigger>
+            <TabsTrigger
+              value="visual"
+              className="px-1 text-[10px] sm:text-sm sm:px-3"
+            >
+              Visual
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="digital" className="space-y-6 animate-fade-in">
@@ -96,6 +124,11 @@ export default function SportsPassport() {
 
           <TabsContent value="goals" className="animate-fade-in">
             <GoalsTracker />
+          </TabsContent>
+
+          {/* New Visual Tab Content */}
+          <TabsContent value="visual" className="animate-fade-in">
+            <StrategicVisualPassport />
           </TabsContent>
         </Tabs>
       </div>
