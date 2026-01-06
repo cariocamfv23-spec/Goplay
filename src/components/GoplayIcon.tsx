@@ -68,6 +68,30 @@ export const GoplayIcon = ({
           <stop offset="100%" stopColor="hsl(var(--gold))" />
         </linearGradient>
 
+        {/* Christmas Red Velvet Gradient */}
+        <linearGradient
+          id="goplay-holiday-red"
+          x1="0%"
+          y1="0%"
+          x2="100%"
+          y2="100%"
+        >
+          <stop offset="0%" stopColor="#ef4444" /> {/* Red 500 */}
+          <stop offset="100%" stopColor="#991b1b" /> {/* Red 800 */}
+        </linearGradient>
+
+        {/* Christmas Snow White Gradient */}
+        <linearGradient
+          id="goplay-snow-white"
+          x1="0%"
+          y1="0%"
+          x2="0%"
+          y2="100%"
+        >
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="100%" stopColor="#e5e7eb" /> {/* Gray 200 */}
+        </linearGradient>
+
         {/* Inner Glow/Shadow for 3D realism */}
         <filter id="goplay-bevel" filterUnits="userSpaceOnUse">
           <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur" />
@@ -120,6 +144,17 @@ export const GoplayIcon = ({
         <filter id="seasonal-glow" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="4" result="blur" />
           <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+
+        {/* Soft Shadow for Hat */}
+        <filter id="hat-shadow" x="-50%" y="-50%" width="200%" height="200%">
+          <feDropShadow
+            dx="2"
+            dy="4"
+            stdDeviation="3"
+            floodColor="black"
+            floodOpacity="0.3"
+          />
         </filter>
       </defs>
 
@@ -178,28 +213,44 @@ export const GoplayIcon = ({
       {/* --- SEASONAL MICRO-ELEMENTS --- */}
       {theme === 'christmas' && (
         <g
-          className="animate-in fade-in duration-1000"
-          filter="url(#seasonal-glow)"
+          className="animate-in fade-in zoom-in duration-1000 slide-in-from-top-4"
+          filter="url(#hat-shadow)"
         >
-          {/* Stylized Holly Berry at Top Left of G */}
-          <circle cx="120" cy="110" r="12" fill="#ef4444" />
-          <circle cx="105" cy="125" r="12" fill="#ef4444" />
-          <circle cx="135" cy="125" r="12" fill="#ef4444" />
-          {/* Leaves */}
+          {/* Minimalist Santa Hat perched on top-left of G */}
+          {/* Hat Body - Tilted Triangle shape */}
           <path
-            d="M 120 110 Q 150 80 180 100 Q 150 120 120 110"
-            fill="#22c55e"
-            opacity="0.9"
+            d="M 130 90
+               Q 160 85 190 95
+               L 160 30
+               Q 140 30 110 50
+               Z"
+            fill="url(#goplay-holiday-red)"
+            stroke="#991b1b"
+            strokeWidth="1"
           />
+
+          {/* Hat Band - Fluffy white trim */}
           <path
-            d="M 105 125 Q 70 150 90 180 Q 120 160 105 125"
-            fill="#22c55e"
-            opacity="0.9"
+            d="M 125 90
+               Q 160 82 195 95
+               Q 195 105 160 100
+               Q 125 105 125 90
+               Z"
+            fill="url(#goplay-snow-white)"
           />
-          {/* Subtle Snow Dust on Top Curve */}
-          <circle cx="256" cy="40" r="4" fill="white" opacity="0.8" />
-          <circle cx="280" cy="45" r="3" fill="white" opacity="0.6" />
-          <circle cx="230" cy="48" r="3" fill="white" opacity="0.6" />
+
+          {/* Pompom - Fluffy white ball at tip, drooping slightly */}
+          <circle cx="105" cy="55" r="12" fill="url(#goplay-snow-white)" />
+
+          {/* Subtle Shine on Hat */}
+          <path
+            d="M 140 85 Q 155 80 165 85 L 150 45"
+            stroke="white"
+            strokeWidth="2"
+            strokeOpacity="0.3"
+            fill="none"
+            strokeLinecap="round"
+          />
         </g>
       )}
 

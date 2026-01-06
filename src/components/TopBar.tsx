@@ -97,8 +97,8 @@ export function TopBar() {
           to="/home"
           className="flex items-center py-2 transition-opacity hover:opacity-80"
         >
-          {/* Logo component now handles Icon + Text internally */}
-          <Logo className="h-8 text-xl" />
+          {/* Main Logo in TopBar has seasonal elements enabled */}
+          <Logo className="h-8 text-xl" enableSeasonal={true} />
         </Link>
       </div>
 

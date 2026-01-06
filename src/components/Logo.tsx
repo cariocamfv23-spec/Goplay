@@ -8,6 +8,7 @@ interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'full' | 'icon' | 'text'
   iconClassName?: string
   textClassName?: string
+  enableSeasonal?: boolean
 }
 
 export const Logo = ({
@@ -15,6 +16,7 @@ export const Logo = ({
   variant = 'full',
   iconClassName,
   textClassName,
+  enableSeasonal = false,
   ...props
 }: LogoProps) => {
   const { logoUrl } = useBrandingStore()
@@ -51,7 +53,10 @@ export const Logo = ({
                 iconClassName,
               )}
             >
-              <GoplayIcon className="w-full h-full" />
+              <GoplayIcon
+                className="w-full h-full"
+                enableSeasonal={enableSeasonal}
+              />
             </div>
           ) : (
             <img
