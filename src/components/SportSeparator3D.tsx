@@ -110,16 +110,14 @@ export function SportSeparator3D({
         className,
       )}
     >
-      {/* 3D Object Container */}
+      {/* 3D Object Container - No Background, just the object */}
       <div
         className={cn(
           'relative w-7 h-7 flex items-center justify-center transition-transform will-change-transform',
           animationClass,
         )}
       >
-        {/* Glow/Shadow Effect for "Material" feel */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent rounded-full blur-[1px] opacity-50" />
-        <div className="absolute -bottom-1 w-5 h-1 bg-black/20 blur-sm rounded-[100%]" />
+        {/* Removed Glow/Shadow Effect for clean floating look */}
 
         {/* The 3D Render Image */}
         <img
