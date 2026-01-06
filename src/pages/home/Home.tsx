@@ -45,6 +45,7 @@ import { GoalCard } from '@/components/GoalCard'
 import { AiToolsRail } from '@/components/AiToolsRail'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { NostalgiaStudio } from '@/components/NostalgiaStudio'
+import { Replay3DHomeCard } from '@/components/Replay3DHomeCard'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -280,6 +281,9 @@ export default function Home() {
 
             {/* Stories Rail */}
             <StoriesRail />
+
+            {/* NEW FEATURE: Replay 3D Card (High Priority) */}
+            <Replay3DHomeCard />
 
             {/* Priority Shortcuts */}
             <div className="grid grid-cols-5 gap-2 mb-6 mt-2">

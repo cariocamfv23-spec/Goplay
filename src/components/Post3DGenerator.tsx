@@ -6,7 +6,6 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Check,
   ChevronLeft,
-  Loader2,
   Play,
   Pause,
   RotateCcw,
@@ -15,12 +14,12 @@ import {
   Video,
   Box,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
 interface Post3DGeneratorProps {
   videoFile: File
   onConfirm: (mode: GhostViewMode) => void
   onCancel: () => void
+  confirmLabel?: string
 }
 
 type GenerationStep = 'uploading' | 'analyzing' | 'reconstructing' | 'done'
@@ -29,6 +28,7 @@ export function Post3DGenerator({
   videoFile,
   onConfirm,
   onCancel,
+  confirmLabel = 'Usar este Replay',
 }: Post3DGeneratorProps) {
   const [step, setStep] = useState<GenerationStep>('uploading')
   const [progress, setProgress] = useState(0)
@@ -58,7 +58,7 @@ export function Post3DGenerator({
         else if (prev < 70) setStep('analyzing')
         else setStep('reconstructing')
 
-        return prev + 2 // Increment speed
+        return prev + 1.5 // Increment speed
       })
     }, 50)
     return () => clearInterval(timer)
@@ -92,9 +92,11 @@ export function Post3DGenerator({
         </div>
 
         <div className="w-full max-w-xs space-y-2 text-center">
-          <h3 className="font-bold text-lg">{getStepLabel()}</h3>
+          <h3 className="font-bold text-lg animate-pulse">{getStepLabel()}</h3>
           <Progress value={progress} className="h-2" />
-          <p className="text-xs text-muted-foreground">{progress}% concluído</p>
+          <p className="text-xs text-muted-foreground">
+            {Math.round(progress)}% concluído
+          </p>
         </div>
       </div>
     )
@@ -109,7 +111,7 @@ export function Post3DGenerator({
             Goplay Replay 3D
           </h3>
           <p className="text-xs text-muted-foreground">
-            Visualize e escolha o formato do seu replay.
+            Escolha o melhor ângulo para seu replay.
           </p>
         </div>
         <div className="flex gap-2">
@@ -180,10 +182,10 @@ export function Post3DGenerator({
           </Button>
           <Button
             onClick={() => onConfirm(viewMode)}
-            className="flex-1 bg-gradient-to-r from-primary to-indigo-600 hover:from-primary/90 hover:to-indigo-600/90 text-white shadow-lg"
+            className="flex-1 bg-gradient-to-r from-primary to-indigo-600 hover:from-primary/90 hover:to-indigo-600/90 text-white shadow-lg font-bold"
           >
             <Check className="w-4 h-4 mr-2" />
-            Usar este Replay
+            {confirmLabel}
           </Button>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { Video, Box, Layers, Play } from 'lucide-react'
+import { Video, Box } from 'lucide-react'
 
 export type GhostViewMode = 'original' | 'split' | 'ghost'
 
@@ -62,10 +62,10 @@ export function Ghost3DViewer({
           </div>
         </div>
 
-        {/* GHOST 3D LAYER */}
+        {/* GHOST 3D LAYER - LOW POLY AESTHETIC */}
         <div
           className={cn(
-            'relative transition-all duration-500 bg-[#0f0f1a] overflow-hidden',
+            'relative transition-all duration-500 bg-[#12121a] overflow-hidden',
             mode === 'original' ? 'w-0 h-0 opacity-0' : 'w-full h-full',
             mode === 'split' && 'h-1/2 md:h-full md:w-1/2',
           )}
@@ -80,33 +80,38 @@ export function Ghost3DViewer({
                   : 'rotate-x-[20deg] rotate-y-[30deg]',
               )}
             >
-              {/* Floor Grid - Tron Style */}
-              <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.3)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.3)_1px,transparent_1px)] bg-[size:40px_40px] transform rotate-x-90 translate-z-[-50px] w-[300%] h-[300%] -left-[100%] -top-[100%] opacity-40" />
+              {/* Floor Grid - Tron/Cyber Style */}
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.2)_2px,transparent_2px),linear-gradient(90deg,rgba(59,130,246,0.2)_2px,transparent_2px)] bg-[size:40px_40px] transform rotate-x-90 translate-z-[-50px] w-[300%] h-[300%] -left-[100%] -top-[100%] opacity-30" />
 
-              {/* Low Poly Character (Abstract Cubes) */}
+              {/* Ground Glow */}
+              <div className="absolute inset-0 bg-blue-500/5 blur-3xl transform rotate-x-90 translate-z-[-60px] w-[200%] h-[200%] -left-[50%] -top-[50%]" />
+
+              {/* Low Poly Character (Abstract Geometric Primitives) */}
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transform-style-3d">
-                {/* Torso */}
+                {/* Torso - Solid Block */}
                 <div
                   className={cn(
-                    'absolute w-12 h-16 bg-primary border border-primary-foreground/20 transform -translate-x-1/2 -translate-y-1/2 transition-transform shadow-[0_0_15px_hsl(var(--primary)/0.5)]',
+                    'absolute w-14 h-20 bg-blue-600 border border-blue-400/50 transform -translate-x-1/2 -translate-y-1/2 transition-transform shadow-[0_0_20px_rgba(37,99,235,0.4)]',
                     isPlaying && 'animate-[bounce_0.5s_infinite_alternate]',
                   )}
+                  style={{ transformStyle: 'preserve-3d' }}
                 >
-                  <div className="absolute inset-0 bg-white/10 transform translate-z-[5px]" />
+                  <div className="absolute inset-0 bg-white/10 transform translate-z-[10px]" />
+                  <div className="absolute inset-0 bg-black/20 transform translate-z-[-10px]" />
                 </div>
 
-                {/* Head */}
+                {/* Head - Cube */}
                 <div
                   className={cn(
-                    'absolute w-8 h-8 bg-indigo-300 border border-indigo-200 -top-12 left-1/2 transform -translate-x-1/2 transition-transform shadow-[0_0_10px_rgba(255,255,255,0.5)]',
+                    'absolute w-10 h-10 bg-indigo-400 border border-indigo-200 -top-14 left-1/2 transform -translate-x-1/2 transition-transform shadow-[0_0_15px_rgba(255,255,255,0.3)]',
                     isPlaying && 'animate-[head-bob_1s_infinite_ease-in-out]',
                   )}
                 />
 
-                {/* Arms (Simulated with simple divs) */}
+                {/* Arms - Rectangular Prisms */}
                 <div
                   className={cn(
-                    'absolute w-4 h-12 bg-indigo-500 -left-6 top-0 origin-top transition-transform',
+                    'absolute w-5 h-16 bg-blue-500 -left-8 top-0 origin-top transition-transform border border-blue-400/30',
                     isPlaying
                       ? 'animate-[arm-swing_0.8s_infinite_alternate]'
                       : 'rotate-12',
@@ -114,17 +119,17 @@ export function Ghost3DViewer({
                 />
                 <div
                   className={cn(
-                    'absolute w-4 h-12 bg-indigo-500 -right-6 top-0 origin-top transition-transform',
+                    'absolute w-5 h-16 bg-blue-500 -right-8 top-0 origin-top transition-transform border border-blue-400/30',
                     isPlaying
                       ? 'animate-[arm-swing_0.8s_infinite_alternate-reverse]'
                       : '-rotate-12',
                   )}
                 />
 
-                {/* Legs */}
+                {/* Legs - Rectangular Prisms */}
                 <div
                   className={cn(
-                    'absolute w-4 h-14 bg-indigo-600 left-1 top-16 origin-top transition-transform',
+                    'absolute w-6 h-20 bg-indigo-700 left-0 top-16 origin-top transition-transform border border-indigo-500/30',
                     isPlaying
                       ? 'animate-[leg-run_0.6s_infinite_alternate]'
                       : 'rotate-6',
@@ -132,48 +137,52 @@ export function Ghost3DViewer({
                 />
                 <div
                   className={cn(
-                    'absolute w-4 h-14 bg-indigo-600 right-1 top-16 origin-top transition-transform',
+                    'absolute w-6 h-20 bg-indigo-700 right-7 top-16 origin-top transition-transform border border-indigo-500/30',
                     isPlaying
                       ? 'animate-[leg-run_0.6s_infinite_alternate-reverse]'
                       : '-rotate-6',
                   )}
                 />
 
-                {/* Ball */}
+                {/* Ball - Low Poly Sphere (Cube with rotation) */}
                 <div
                   className={cn(
-                    'absolute w-6 h-6 bg-yellow-400 border border-yellow-200 rounded-sm bottom-[-60px] left-10 transition-all shadow-[0_0_20px_hsl(var(--gold))]',
+                    'absolute w-8 h-8 bg-yellow-400 border-2 border-yellow-200 bottom-[-70px] left-12 transition-all shadow-[0_0_25px_hsl(var(--gold))]',
                     isPlaying && 'animate-[ball-move_2s_infinite_linear]',
                   )}
-                />
+                >
+                  <div className="absolute inset-0 bg-white/20 rotate-45" />
+                </div>
               </div>
 
-              {/* Trajectory Line */}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none transform translate-z-[20px] opacity-80">
+              {/* Trajectory Line - Digital */}
+              <svg className="absolute inset-0 w-full h-full pointer-events-none transform translate-z-[20px] opacity-80 overflow-visible">
                 <path
                   d="M 20,100 Q 60,60 100,80 T 180,120"
                   fill="none"
                   stroke="hsl(var(--gold))"
-                  strokeWidth="3"
-                  strokeDasharray="4 4"
+                  strokeWidth="4"
+                  strokeDasharray="8 4"
+                  strokeLinecap="square"
                   className={cn(isPlaying && 'animate-pulse')}
+                  filter="drop-shadow(0 0 4px hsl(var(--gold)))"
                 />
               </svg>
             </div>
           </div>
 
-          <div className="absolute top-3 right-3 bg-primary/20 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-primary z-10 border border-primary/20 flex items-center gap-1.5">
+          <div className="absolute top-3 right-3 bg-indigo-600/30 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-indigo-300 z-10 border border-indigo-500/40 flex items-center gap-1.5">
             <Box className="w-3 h-3" />
-            3D REPLAY
+            LOW-POLY 3D
           </div>
 
-          {/* Retro UI Overlay */}
-          <div className="absolute bottom-4 left-4 text-[10px] font-mono text-indigo-300 opacity-60 pointer-events-none">
-            AI_TRACKING: ACTIVE
-            <br />
-            NODES: 24/24
-            <br />
-            LATENCY: 12ms
+          {/* HUD Overlay */}
+          <div className="absolute bottom-4 left-4 font-mono text-[9px] text-indigo-400/70 pointer-events-none tracking-wider">
+            <div className="flex flex-col gap-0.5">
+              <span>RENDER_MODE: LOW_POLY_V2</span>
+              <span>POLYGONS: 124</span>
+              <span>FRAME_TIME: 16ms</span>
+            </div>
           </div>
         </div>
       </div>
