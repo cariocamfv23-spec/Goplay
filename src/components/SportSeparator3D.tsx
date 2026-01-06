@@ -117,7 +117,7 @@ export function SportSeparator3D({
         className,
       )}
     >
-      {/* 3D Object Container - Absolutely no background or borders */}
+      {/* 3D Object Container - Layout footprint preserved (w-7 h-7) */}
       <div
         className={cn(
           'relative w-7 h-7 flex items-center justify-center transition-transform will-change-transform',
@@ -125,11 +125,12 @@ export function SportSeparator3D({
         )}
       >
         {/* The 3D Render Image - Using /i endpoint for guaranteed transparency */}
-        {/* Added drop-shadow and scale for better visibility and depth without containers */}
+        {/* Adjusted scale from 110 to 90 for refined, premium look without affecting layout */}
+        {/* Using object-contain ensures adaptive sizing within the container */}
         <img
           src={`https://img.usecurling.com/i?q=${encodeURIComponent(config.query)}&color=${config.color}`}
           alt={sport}
-          className="w-full h-full object-contain drop-shadow-md filter contrast-[1.1] saturate-[1.2] scale-110"
+          className="w-full h-full object-contain drop-shadow-sm filter contrast-[1.05] saturate-[1.15] scale-90"
           loading="lazy"
         />
       </div>
