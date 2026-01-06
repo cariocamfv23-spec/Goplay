@@ -10,7 +10,8 @@ export const PageLoader = () => {
       <div className="relative z-10 flex flex-col items-center gap-6">
         <div className="relative">
           <div className="w-24 h-24 rounded-3xl bg-background/50 flex items-center justify-center border border-border/50 shadow-xl backdrop-blur-sm z-20 relative animate-in fade-in zoom-in duration-700">
-            <AppIcon className="w-16 h-16" />
+            {/* Enable Seasonal Elements for Splash Screen */}
+            <AppIcon className="w-16 h-16" enableSeasonal={true} />
           </div>
           <div className="absolute -inset-4 bg-primary/20 rounded-full blur-xl animate-pulse delay-75 pointer-events-none z-10" />
         </div>

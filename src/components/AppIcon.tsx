@@ -5,11 +5,13 @@ import { GoplayIcon } from '@/components/GoplayIcon'
 
 interface AppIconProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   className?: string
+  enableSeasonal?: boolean
 }
 
 export const AppIcon = ({
   className,
   alt = 'Goplay App Icon',
+  enableSeasonal = false,
   ...props
 }: AppIconProps) => {
   const { iconUrl } = useBrandingStore()
@@ -27,7 +29,11 @@ export const AppIcon = ({
           className,
         )}
       >
-        <GoplayIcon className="w-full h-full" aria-label={alt} />
+        <GoplayIcon
+          className="w-full h-full"
+          aria-label={alt}
+          enableSeasonal={enableSeasonal}
+        />
       </div>
     )
   }

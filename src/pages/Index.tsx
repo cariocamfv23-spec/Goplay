@@ -51,7 +51,11 @@ export default function Index() {
           <div className="relative group cursor-default">
             <div className="absolute -inset-4 bg-gradient-to-tr from-primary/30 to-[hsl(var(--gold)/0.3)] rounded-full blur-xl opacity-70 animate-pulse group-hover:opacity-100 transition-opacity duration-500" />
             <div className="bg-background/80 backdrop-blur-xl p-6 rounded-3xl border border-border/10 shadow-2xl relative transform transition-transform group-hover:scale-105 duration-500">
-              <AppIcon className="w-20 h-20 drop-shadow-md" />
+              {/* Enable Seasonal Elements for Landing Page Main Icon */}
+              <AppIcon
+                className="w-20 h-20 drop-shadow-md"
+                enableSeasonal={true}
+              />
             </div>
           </div>
 
