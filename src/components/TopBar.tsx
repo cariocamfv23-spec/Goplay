@@ -97,8 +97,8 @@ export function TopBar() {
           to="/home"
           className="flex items-center py-2 transition-opacity hover:opacity-80"
         >
-          {/* Main Logo in TopBar has seasonal elements enabled */}
-          <Logo className="h-8 text-xl" enableSeasonal={true} />
+          {/* Main Logo in TopBar has seasonal elements DISABLED to prevent leaking into internal UI */}
+          <Logo className="h-8 text-xl" enableSeasonal={false} />
         </Link>
       </div>
 
