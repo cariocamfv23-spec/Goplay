@@ -51,7 +51,7 @@ export default function Explore() {
     },
   ]
 
-  // Combine all categories for the main grid
+  // Combine all categories for the main filtering logic
   const allCategories = [...extraCategories, ...exploreCategories]
 
   const getCategoryPath = (id: string) => {
@@ -70,6 +70,42 @@ export default function Explore() {
         return `/explore/${id}`
     }
   }
+
+  // Filter Categories into Three Tiers: Amateur, Professional, Scouts
+  const amateurIds = [
+    'events',
+    'venues',
+    'live',
+    'gyms',
+    'nutrition',
+    'clinics',
+    'flyer',
+    'photographers',
+    'kids',
+    'drivers',
+    'fuel',
+  ]
+  const proIds = [
+    'sponsorship',
+    'contracts',
+    'scholarships',
+    'agencies',
+    'international',
+    'jobs',
+  ]
+  const scoutIds = ['talents']
+
+  const amateurCategories = amateurIds
+    .map((id) => allCategories.find((c) => c.id === id))
+    .filter(Boolean) as typeof allCategories
+
+  const proCategories = proIds
+    .map((id) => allCategories.find((c) => c.id === id))
+    .filter(Boolean) as typeof allCategories
+
+  const scoutCategories = scoutIds
+    .map((id) => allCategories.find((c) => c.id === id))
+    .filter(Boolean) as typeof allCategories
 
   const filteredProfiles = mockProfiles.filter(
     (p) =>
@@ -103,16 +139,17 @@ export default function Explore() {
         </div>
       </div>
 
-      <div className="p-4 space-y-6">
-        {/* Categories Grid (Restored Menu) */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-              Menu Principal
+      <div className="p-4 space-y-8">
+        {/* Tier 1: Amateur Athletes */}
+        <section>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="h-1 w-1 rounded-full bg-primary" />
+            <h2 className="text-sm font-bold text-foreground tracking-tight uppercase">
+              Atletas Amadores
             </h2>
           </div>
-          <div className="grid grid-cols-4 gap-y-4 gap-x-2">
-            {allCategories.map((cat) => (
+          <div className="grid grid-cols-4 gap-y-6 gap-x-2">
+            {amateurCategories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => navigate(getCategoryPath(cat.id))}
@@ -132,33 +169,96 @@ export default function Explore() {
               </button>
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* Map Preview Banner */}
-        <div
-          className="relative h-32 rounded-2xl overflow-hidden bg-zinc-900 cursor-pointer group border border-border/50 shadow-md transition-transform active:scale-[0.98]"
-          onClick={() => navigate('/explore/talent-map')}
-        >
-          <img
-            src="https://img.usecurling.com/p/800/300?q=dark%20map&color=black"
-            alt="Map"
-            className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent" />
-          <div className="absolute inset-0 flex flex-col justify-center p-6">
-            <h3 className="text-xl font-bold flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-primary" />
-              Mapa de Talentos
-            </h3>
-            <p className="text-sm text-muted-foreground max-w-[200px]">
-              Descubra atletas e oportunidades perto de você.
-            </p>
+        {/* Tier 2: Professional Athletes */}
+        <section>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="h-1 w-1 rounded-full bg-gold" />
+            <h2 className="text-sm font-bold text-foreground tracking-tight uppercase">
+              Atletas Profissionais
+            </h2>
           </div>
-        </div>
+          <div className="grid grid-cols-4 gap-y-6 gap-x-2">
+            {proCategories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => navigate(getCategoryPath(cat.id))}
+                className="flex flex-col items-center gap-2 group"
+              >
+                <div
+                  className={cn(
+                    'w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-active:scale-95 shadow-sm',
+                    cat.bg,
+                  )}
+                >
+                  <cat.icon className={cn('w-6 h-6', cat.color)} />
+                </div>
+                <span className="text-[10px] font-medium text-center leading-tight line-clamp-2 max-w-[60px] text-muted-foreground group-hover:text-foreground transition-colors">
+                  {cat.label}
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* Tier 3: Scouts (Olheiros) */}
+        <section>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="h-1 w-1 rounded-full bg-indigo-500" />
+            <h2 className="text-sm font-bold text-foreground tracking-tight uppercase">
+              Olheiros
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-4 gap-y-6 gap-x-2 mb-6">
+            {scoutCategories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => navigate(getCategoryPath(cat.id))}
+                className="flex flex-col items-center gap-2 group"
+              >
+                <div
+                  className={cn(
+                    'w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-active:scale-95 shadow-sm',
+                    cat.bg,
+                  )}
+                >
+                  <cat.icon className={cn('w-6 h-6', cat.color)} />
+                </div>
+                <span className="text-[10px] font-medium text-center leading-tight line-clamp-2 max-w-[60px] text-muted-foreground group-hover:text-foreground transition-colors">
+                  {cat.label}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          {/* Map Preview Banner - Grouped with Scouts */}
+          <div
+            className="relative h-32 rounded-2xl overflow-hidden bg-zinc-900 cursor-pointer group border border-border/50 shadow-md transition-transform active:scale-[0.98]"
+            onClick={() => navigate('/explore/talent-map')}
+          >
+            <img
+              src="https://img.usecurling.com/p/800/300?q=dark%20map&color=black"
+              alt="Map"
+              className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent" />
+            <div className="absolute inset-0 flex flex-col justify-center p-6">
+              <h3 className="text-xl font-bold flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-primary" />
+                Mapa de Talentos
+              </h3>
+              <p className="text-sm text-muted-foreground max-w-[200px]">
+                Descubra atletas e oportunidades perto de você.
+              </p>
+            </div>
+          </div>
+        </section>
 
         {/* Feed Tabs */}
-        <Tabs defaultValue="talents" className="w-full">
-          <div className="flex items-center justify-between mb-4">
+        <Tabs defaultValue="talents" className="w-full pt-4 border-t">
+          <div className="flex items-center justify-between mb-4 mt-2">
             <TabsList>
               <TabsTrigger value="talents">Talentos</TabsTrigger>
               <TabsTrigger value="events">Eventos</TabsTrigger>
