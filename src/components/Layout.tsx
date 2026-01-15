@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 import { SportsWallpaper } from '@/components/SportsWallpaper'
 import { useNostalgiaStore } from '@/stores/useNostalgiaStore'
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useInvisiblePresenceStore } from '@/stores/useInvisiblePresenceStore'
 import { InvisiblePresenceOverlay } from '@/components/InvisiblePresenceOverlay'
 
@@ -18,11 +18,22 @@ export default function Layout() {
   const location = useLocation()
   const { isEnabled, preset } = useNostalgiaStore()
   const { initializeSession } = useInvisiblePresenceStore()
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const [scrollY, setScrollY] = useState(0)
 
   // Initialize invisible presence logic (Silent Latent Trigger)
   useEffect(() => {
     initializeSession()
   }, [initializeSession])
+
+  // Parallax Effect Handler
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // Apply Global Theme Classes to Body
   useEffect(() => {
@@ -78,11 +89,30 @@ export default function Layout() {
     location.pathname !== '/messages'
 
   return (
-    <div className="min-h-screen bg-background font-sans antialiased flex flex-col relative overflow-hidden transition-colors duration-500">
+    <div
+      ref={scrollContainerRef}
+      className="min-h-screen bg-background font-sans antialiased flex flex-col relative overflow-hidden transition-colors duration-500 perspective-2000"
+    >
+      {/* 3D Parallax Background Layer */}
+      <div
+        className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
+        style={{
+          transform: `translateY(${scrollY * 0.1}px)`,
+          transition: 'transform 0.1s linear',
+        }}
+      >
+        <div className="absolute top-[-20%] left-[-20%] w-[140%] h-[140%] opacity-[0.03] bg-[radial-gradient(circle_at_center,_var(--foreground)_1px,_transparent_1px)] bg-[length:40px_40px]" />
+      </div>
+
       {/* Layer 2: Illustrated Sports Wallpaper (Background Layer) */}
-      {/* Global Application: Now covers all routes within Layout with enhanced intensity */}
-      {/* Z-0 to sit behind content but ensure visibility. Fixed position handled in component. */}
-      <SportsWallpaper className="z-0" />
+      <div
+        className="fixed inset-0 pointer-events-none z-0"
+        style={{
+          transform: `translateY(${scrollY * 0.05}px)`, // Slight parallax for wallpaper
+        }}
+      >
+        <SportsWallpaper className="z-0" />
+      </div>
 
       {/* Global Alert Managers */}
       <RankingAlertManager />
@@ -94,19 +124,20 @@ export default function Layout() {
       <InvisiblePresenceOverlay />
 
       {/* Layer 1: Mandatory Graphic Frame (Foreground Overlay) */}
-      {/* Global Nostalgia Filter Overlay */}
       <div className="fixed inset-0 pointer-events-none z-[100] w-full h-full overflow-hidden">
         <NostalgiaFilter forceEnable={isEnabled} />
       </div>
 
       {/* Main Navigation */}
-      <TopBar />
+      <div className="z-50 relative depth-element translate-z-10">
+        <TopBar />
+      </div>
 
       {/* Content Area */}
       {/* Ensure main is z-10 to sit above the wallpaper (z-0) */}
       <main
         className={cn(
-          'flex-1 w-full pb-20 md:pb-0 transition-all duration-300 z-10 relative bg-transparent',
+          'flex-1 w-full pb-20 md:pb-0 transition-all duration-300 z-10 relative bg-transparent transform-style-3d',
         )}
       >
         <Outlet />
@@ -114,7 +145,7 @@ export default function Layout() {
 
       {/* Mobile Navigation */}
       {!isMessageRoute && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 depth-element translate-z-20">
           <BottomNav />
         </div>
       )}

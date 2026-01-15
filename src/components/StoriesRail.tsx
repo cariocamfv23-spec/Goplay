@@ -8,20 +8,20 @@ import { SportSeparator3D } from '@/components/SportSeparator3D'
 
 export function StoriesRail() {
   return (
-    <div className="w-full py-4">
+    <div className="w-full py-4 relative z-10">
       <ScrollArea className="w-full whitespace-nowrap">
         <div className="flex w-max items-center gap-2 px-1">
           {/* Add Story Button */}
-          <div className="flex flex-col items-center gap-1.5 cursor-pointer group pl-2">
+          <div className="flex flex-col items-center gap-1.5 cursor-pointer group pl-2 transition-transform hover:scale-105 active:scale-95 duration-200">
             <div className="relative">
-              <Avatar className="w-16 h-16 border-2 border-dashed border-muted-foreground/30 p-0.5 group-hover:border-primary transition-colors">
+              <Avatar className="w-16 h-16 border-2 border-dashed border-muted-foreground/30 p-0.5 group-hover:border-primary transition-colors shadow-sm">
                 <AvatarImage
                   src={mockCurrentUser.avatar}
                   className="rounded-full opacity-80"
                 />
                 <AvatarFallback>EU</AvatarFallback>
               </Avatar>
-              <div className="absolute bottom-0 right-0 bg-primary text-primary-foreground rounded-full p-1 border-2 border-background">
+              <div className="absolute bottom-0 right-0 bg-primary text-primary-foreground rounded-full p-1 border-2 border-background shadow-md">
                 <Plus className="w-3 h-3" />
               </div>
             </div>
@@ -42,10 +42,10 @@ export function StoriesRail() {
           {/* Stories List */}
           {mockStories.map((story, index) => (
             <React.Fragment key={story.id}>
-              <div className="flex flex-col items-center gap-1.5 cursor-pointer group">
+              <div className="flex flex-col items-center gap-1.5 cursor-pointer group hover:-translate-y-1 transition-transform duration-300">
                 <div
                   className={cn(
-                    'rounded-full p-[2px] transition-all duration-300 group-hover:scale-105',
+                    'rounded-full p-[2px] transition-all duration-300 group-hover:scale-105 shadow-sm group-hover:shadow-lg',
                     story.viewed
                       ? 'bg-muted'
                       : 'bg-gradient-to-tr from-primary via-purple-500 to-gold',

@@ -66,25 +66,25 @@ export function AthleteAura({
   return (
     <div
       className={cn(
-        'relative inline-flex items-center justify-center group',
+        'relative inline-flex items-center justify-center group transform-style-3d',
         className,
       )}
     >
       {/* Back Glow Layer - Cinematic Effect */}
       <div
         className={cn(
-          'absolute inset-0 rounded-full blur-xl transition-all duration-1000 opacity-60',
+          'absolute inset-0 rounded-full blur-xl transition-all duration-1000 opacity-60 translate-z-[-10px]',
           getAnimationClass(
             config.animation === 'spin' ? 'pulse' : config.animation,
           ),
         )}
         style={{
           background: config.glowColor,
-          transform: 'scale(1.25)',
+          transform: 'scale(1.25) translateZ(-15px)',
         }}
       />
 
-      {/* Rotating Ring Layer */}
+      {/* Rotating Ring Layer 1 (Outer) */}
       <div
         className={cn(
           'absolute inset-0 rounded-full',
@@ -99,21 +99,46 @@ export function AthleteAura({
           WebkitMaskImage: 'linear-gradient(black, black)',
           maskComposite: 'exclude',
           WebkitMaskComposite: 'xor',
+          transform: 'translateZ(-5px)',
         }}
       />
 
-      {/* Content Wrapper */}
-      <div className="relative z-10">{children}</div>
+      {/* Rotating Ring Layer 2 (Inner/Volumetric) */}
+      {config.intensity === 'high' && (
+        <div
+          className={cn(
+            'absolute inset-0 rounded-full opacity-50',
+            !disableAnimation && config.animation === 'spin'
+              ? 'animate-aura-spin'
+              : '',
+          )}
+          style={{
+            padding: ringPadding[size],
+            margin: '-2px',
+            background: `conic-gradient(from 180deg, ${config.colorEnd}, ${config.colorStart}, transparent, ${config.colorEnd})`,
+            maskImage: 'linear-gradient(black, black)',
+            WebkitMaskImage: 'linear-gradient(black, black)',
+            maskComposite: 'exclude',
+            WebkitMaskComposite: 'xor',
+            transform: 'translateZ(5px) scale(1.05)',
+            animationDirection: 'reverse',
+          }}
+        />
+      )}
 
-      {/* Optional Label Badge */}
+      {/* Content Wrapper */}
+      <div className="relative z-10 translate-z-10">{children}</div>
+
+      {/* Optional Label Badge - Floating above */}
       {showLabel && config.label && (
         <div
           className={cn(
-            'absolute -bottom-2 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-white shadow-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none',
+            'absolute -bottom-2 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-white shadow-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none transform-style-3d',
             'animate-in fade-in slide-in-from-top-1',
           )}
           style={{
             background: `linear-gradient(to right, ${config.colorStart}, ${config.colorEnd})`,
+            transform: 'translateX(-50%) translateZ(20px)',
           }}
         >
           <Icon />
@@ -125,11 +150,11 @@ export function AthleteAura({
       {!disableAnimation && config.intensity === 'high' && (
         <>
           <div
-            className="absolute -top-1 right-0 w-1.5 h-1.5 rounded-full bg-white animate-ping opacity-75"
+            className="absolute -top-1 right-0 w-1.5 h-1.5 rounded-full bg-white animate-ping opacity-75 translate-z-20"
             style={{ animationDuration: '3s' }}
           />
           <div
-            className="absolute bottom-1 -left-1 w-1 h-1 rounded-full bg-white animate-ping opacity-50"
+            className="absolute bottom-1 -left-1 w-1 h-1 rounded-full bg-white animate-ping opacity-50 translate-z-20"
             style={{ animationDuration: '2.2s' }}
           />
         </>

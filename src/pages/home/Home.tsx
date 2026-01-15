@@ -49,6 +49,7 @@ import { NostalgiaStudio } from '@/components/NostalgiaStudio'
 import { Replay3DHomeCard } from '@/components/Replay3DHomeCard'
 import { Replay3DWizardDialog } from '@/components/Replay3DWizardDialog'
 import { Replay3DIcon } from '@/components/icons/Replay3DIcon'
+import { DepthContainer } from '@/components/DepthContainer'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -232,14 +233,14 @@ export default function Home() {
             onClick={() => navigate('/profile/me')}
           >
             <div className="relative">
-              <Avatar className="h-12 w-12 border-2 border-primary/20 hover:border-primary transition-colors">
+              <Avatar className="h-12 w-12 border-2 border-primary/20 hover:border-primary transition-colors shadow-lg">
                 <AvatarImage src={mockCurrentUser.avatar} />
                 <AvatarFallback>
                   {mockCurrentUser.name.substring(0, 2)}
                 </AvatarFallback>
               </Avatar>
               <Badge
-                className="absolute -bottom-2 -right-1 bg-gradient-to-r from-gold to-amber-600 border-2 border-background px-1.5 py-0 text-[10px] font-bold"
+                className="absolute -bottom-2 -right-1 bg-gradient-to-r from-gold to-amber-600 border-2 border-background px-1.5 py-0 text-[10px] font-bold shadow-sm"
                 variant="secondary"
               >
                 Lv. {mockCurrentUser.level}
@@ -250,7 +251,7 @@ export default function Home() {
 
         <Tabs defaultValue="dashboard" className="w-full">
           <div className="flex justify-center mb-6">
-            <TabsList className="grid w-full grid-cols-2 bg-secondary/30 border border-border/50 h-11 p-1">
+            <TabsList className="grid w-full grid-cols-2 bg-secondary/30 border border-border/50 h-11 p-1 shadow-sm">
               <TabsTrigger
                 value="dashboard"
                 className="font-semibold text-xs h-full"
@@ -280,7 +281,7 @@ export default function Home() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Buscar no Goplay..."
-                  className="pl-9 bg-secondary border-none rounded-xl"
+                  className="pl-9 bg-secondary border-none rounded-xl shadow-inner"
                   onClick={() => navigate('/explore')}
                   readOnly
                 />
@@ -288,7 +289,7 @@ export default function Home() {
               <Button
                 variant="outline"
                 size="icon"
-                className="rounded-xl border-dashed border-2 shrink-0"
+                className="rounded-xl border-dashed border-2 shrink-0 hover:border-primary/50"
               >
                 <Scan className="h-5 w-5 text-muted-foreground" />
               </Button>
@@ -298,7 +299,9 @@ export default function Home() {
             <StoriesRail />
 
             {/* Replay 3D Card (Promotional) */}
-            <Replay3DHomeCard onStart={() => setWizardOpen(true)} />
+            <DepthContainer maxRotation={3}>
+              <Replay3DHomeCard onStart={() => setWizardOpen(true)} />
+            </DepthContainer>
 
             {/* Priority Shortcuts */}
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-6 mt-2">
@@ -314,7 +317,7 @@ export default function Home() {
                 >
                   <div
                     className={cn(
-                      'w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-md group-hover:scale-105 group-active:scale-95 relative',
+                      'w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-md group-hover:-translate-y-1 relative',
                       shortcut.bg,
                       shortcut.color,
                     )}
@@ -336,8 +339,12 @@ export default function Home() {
 
             {/* Widgets Row (Weather & Goals) */}
             <div className="grid grid-cols-2 gap-3 mb-6">
-              <WeatherWidget />
-              <GoalCard />
+              <DepthContainer maxRotation={4}>
+                <WeatherWidget />
+              </DepthContainer>
+              <DepthContainer maxRotation={4}>
+                <GoalCard />
+              </DepthContainer>
             </div>
 
             {/* Highlight Card - Next Activity */}
@@ -355,46 +362,48 @@ export default function Home() {
                   Ver agenda
                 </Button>
               </div>
-              <Card
-                className="border-none shadow-lg bg-gradient-to-br from-primary/90 to-purple-900 text-white overflow-hidden relative cursor-pointer group hover:shadow-xl transition-all"
-                onClick={() => navigate('/profile/stats')}
-              >
-                {/* Decorative background elements */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
+              <DepthContainer maxRotation={3}>
+                <Card
+                  className="border-none shadow-lg bg-gradient-to-br from-primary/90 to-purple-900 text-white overflow-hidden relative cursor-pointer group hover:shadow-xl transition-all h-full"
+                  onClick={() => navigate('/profile/stats')}
+                >
+                  {/* Decorative background elements */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
 
-                <CardHeader className="pb-2 relative z-10">
-                  <div className="flex justify-between items-center">
-                    <Badge className="bg-white/20 hover:bg-white/30 text-white border-none backdrop-blur-sm">
-                      Confirmado
-                    </Badge>
-                    <ArrowRight className="w-5 h-5 text-white/70 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                  <CardTitle className="text-xl mt-2 flex items-center gap-2">
-                    {nextMatch ? nextMatch.teamName : 'Sem jogos agendados'}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="relative z-10">
-                  {nextMatch ? (
-                    <div className="flex items-center gap-4 text-sm text-white/90">
-                      <div className="flex items-center gap-1.5">
-                        <Calendar className="w-4 h-4" />
-                        <span>{nextMatch.time.split(',')[0]}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <MapPin className="w-4 h-4" />
-                        <span className="truncate max-w-[120px]">
-                          {nextMatch.location}
-                        </span>
-                      </div>
+                  <CardHeader className="pb-2 relative z-10 translate-z-10">
+                    <div className="flex justify-between items-center">
+                      <Badge className="bg-white/20 hover:bg-white/30 text-white border-none backdrop-blur-sm shadow-md">
+                        Confirmado
+                      </Badge>
+                      <ArrowRight className="w-5 h-5 text-white/70 group-hover:translate-x-1 transition-transform" />
                     </div>
-                  ) : (
-                    <p className="text-sm text-white/80">
-                      Agende sua próxima partida e comece a pontuar.
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
+                    <CardTitle className="text-xl mt-2 flex items-center gap-2 drop-shadow-md">
+                      {nextMatch ? nextMatch.teamName : 'Sem jogos agendados'}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="relative z-10 translate-z-10">
+                    {nextMatch ? (
+                      <div className="flex items-center gap-4 text-sm text-white/90">
+                        <div className="flex items-center gap-1.5">
+                          <Calendar className="w-4 h-4" />
+                          <span>{nextMatch.time.split(',')[0]}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <MapPin className="w-4 h-4" />
+                          <span className="truncate max-w-[120px]">
+                            {nextMatch.location}
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-white/80">
+                        Agende sua próxima partida e comece a pontuar.
+                      </p>
+                    )}
+                  </CardContent>
+                </Card>
+              </DepthContainer>
             </div>
 
             {/* AI Suite Rail */}
@@ -413,61 +422,60 @@ export default function Home() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {featureGroups.map((group, groupIdx) => (
-                  <Card
-                    key={groupIdx}
-                    className="border-border/50 shadow-sm hover:shadow-md transition-all duration-300"
-                  >
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center gap-2 mb-1">
-                        <div
-                          className={cn(
-                            'p-2 rounded-lg bg-secondary',
-                            group.color,
-                          )}
-                        >
-                          <group.icon className="w-4 h-4" />
-                        </div>
-                        <CardTitle className="text-base font-bold">
-                          {group.title}
-                        </CardTitle>
-                      </div>
-                      <CardDescription className="text-xs">
-                        {group.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-3 gap-2">
-                        {group.items.map((item, idx) => (
-                          <button
-                            key={idx}
-                            onClick={() => navigate(item.path)}
-                            className="flex flex-col items-center gap-2 p-2 rounded-xl hover:bg-secondary/50 transition-colors group/item"
+                  <DepthContainer key={groupIdx} maxRotation={2}>
+                    <Card className="border-border/50 shadow-sm hover:shadow-md transition-all duration-300 h-full">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center gap-2 mb-1">
+                          <div
+                            className={cn(
+                              'p-2 rounded-lg bg-secondary shadow-inner',
+                              group.color,
+                            )}
                           >
-                            <div
-                              className={cn(
-                                'w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover/item:scale-110',
-                                item.bg,
-                                item.iconColor,
-                              )}
+                            <group.icon className="w-4 h-4" />
+                          </div>
+                          <CardTitle className="text-base font-bold">
+                            {group.title}
+                          </CardTitle>
+                        </div>
+                        <CardDescription className="text-xs">
+                          {group.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-3 gap-2">
+                          {group.items.map((item, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => navigate(item.path)}
+                              className="flex flex-col items-center gap-2 p-2 rounded-xl hover:bg-secondary/50 transition-colors group/item"
                             >
-                              <item.icon className="w-5 h-5" />
-                            </div>
-                            <span className="text-[10px] font-medium text-center leading-tight">
-                              {item.label}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                      <Button
-                        variant="ghost"
-                        className="w-full mt-2 text-xs h-8 text-muted-foreground hover:text-primary"
-                        onClick={() => navigate('/explore')}
-                      >
-                        Ver categoria completa
-                        <ChevronRight className="w-3 h-3 ml-1" />
-                      </Button>
-                    </CardContent>
-                  </Card>
+                              <div
+                                className={cn(
+                                  'w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover/item:scale-110 shadow-sm',
+                                  item.bg,
+                                  item.iconColor,
+                                )}
+                              >
+                                <item.icon className="w-5 h-5" />
+                              </div>
+                              <span className="text-[10px] font-medium text-center leading-tight">
+                                {item.label}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                        <Button
+                          variant="ghost"
+                          className="w-full mt-2 text-xs h-8 text-muted-foreground hover:text-primary"
+                          onClick={() => navigate('/explore')}
+                        >
+                          Ver categoria completa
+                          <ChevronRight className="w-3 h-3 ml-1" />
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </DepthContainer>
                 ))}
               </div>
 
@@ -475,7 +483,7 @@ export default function Home() {
               <div className="pt-2">
                 <Button
                   variant="outline"
-                  className="w-full h-12 rounded-xl border-dashed border-2 hover:bg-secondary/50 hover:border-primary/50 group"
+                  className="w-full h-12 rounded-xl border-dashed border-2 hover:bg-secondary/50 hover:border-primary/50 group shadow-sm hover:shadow-md transition-all"
                   onClick={() => navigate('/explore')}
                 >
                   <Search className="w-4 h-4 mr-2 group-hover:text-primary transition-colors" />

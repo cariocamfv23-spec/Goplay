@@ -30,6 +30,7 @@ import { NarrationConfig } from '@/lib/data'
 import { useLikeInteraction } from '@/hooks/useLikeInteraction'
 import { PostDetailDialog } from '@/components/PostDetailDialog'
 import { NostalgiaFilter } from '@/components/NostalgiaFilter'
+import { DepthContainer } from '@/components/DepthContainer'
 
 export interface SocialContext {
   type: 'like' | 'comment' | 'repost'
@@ -147,79 +148,81 @@ export function PostCard({ post }: PostProps) {
     switch (post.type) {
       case 'video':
         return (
-          <div
-            className="relative rounded-xl overflow-hidden mb-3 group transform transition-all duration-300 hover:shadow-md cursor-pointer"
-            onClick={openDetail}
+          <DepthContainer
+            className="relative rounded-xl overflow-hidden mb-3 group cursor-pointer"
+            maxRotation={5}
           >
-            <NostalgiaFilter />
-            <img
-              src={post.media?.[0]}
-              alt="Thumbnail"
-              loading="lazy"
-              className="w-full aspect-video object-cover transition-transform duration-500 group-hover:scale-105"
-            />
+            <div onClick={openDetail} className="w-full h-full">
+              <NostalgiaFilter />
+              <img
+                src={post.media?.[0]}
+                alt="Thumbnail"
+                loading="lazy"
+                className="w-full aspect-video object-cover transition-transform duration-500 group-hover:scale-105"
+              />
 
-            {post.narration && (
-              <div className="absolute top-2 left-2 z-20">
-                <Badge className="bg-gold/90 text-black border-none hover:bg-gold gap-1 pl-1">
-                  <Mic className="h-3 w-3" /> Narração{' '}
-                  {post.narration.style === 'varzea' ? 'Várzea' : 'AI'}
-                </Badge>
-              </div>
-            )}
+              {post.narration && (
+                <div className="absolute top-2 left-2 z-20 translate-z-20">
+                  <Badge className="bg-gold/90 text-black border-none hover:bg-gold gap-1 pl-1 shadow-lg">
+                    <Mic className="h-3 w-3" /> Narração{' '}
+                    {post.narration.style === 'varzea' ? 'Várzea' : 'AI'}
+                  </Badge>
+                </div>
+              )}
 
-            <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/40 transition-colors">
-              <div className="h-12 w-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/50 group-hover:scale-110 transition-transform">
-                <Play className="h-5 w-5 text-white fill-white ml-1" />
-              </div>
-            </div>
-
-            {post.narration && isPlayingNarration && (
-              <div className="absolute bottom-16 left-0 right-0 flex justify-center z-20">
-                <div className="bg-black/60 backdrop-blur-sm px-4 py-1 rounded-full border border-gold/30">
-                  <span className="text-white text-sm font-bold italic">
-                    "{post.narration.text}"
-                  </span>
+              <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/40 transition-colors">
+                <div className="h-12 w-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/50 group-hover:scale-110 transition-transform shadow-xl translate-z-30">
+                  <Play className="h-5 w-5 text-white fill-white ml-1" />
                 </div>
               </div>
-            )}
 
-            <div className="absolute top-2 right-2 px-2 py-0.5 bg-black/60 rounded text-xs text-white font-medium">
-              {post.videoDuration}
-            </div>
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-              <h4 className="text-white font-bold text-lg leading-tight mb-1">
-                {post.title}
-              </h4>
-              <div className="flex justify-between items-end">
-                <div className="flex gap-2">
-                  {post.hashtags?.map((tag) => (
-                    <span key={tag} className="text-white/80 text-xs">
-                      {tag}
+              {post.narration && isPlayingNarration && (
+                <div className="absolute bottom-16 left-0 right-0 flex justify-center z-20 translate-z-30">
+                  <div className="bg-black/60 backdrop-blur-sm px-4 py-1 rounded-full border border-gold/30">
+                    <span className="text-white text-sm font-bold italic">
+                      "{post.narration.text}"
                     </span>
-                  ))}
-                </div>
-                {post.narration && (
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      toggleNarration()
-                    }}
-                    className="cursor-pointer"
-                  >
-                    <SoundWaveVisualizer
-                      isPlaying={isPlayingNarration}
-                      className="h-6"
-                      barCount={5}
-                    />
                   </div>
-                )}
+                </div>
+              )}
+
+              <div className="absolute top-2 right-2 px-2 py-0.5 bg-black/60 rounded text-xs text-white font-medium translate-z-20">
+                {post.videoDuration}
               </div>
+              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                <h4 className="text-white font-bold text-lg leading-tight mb-1 translate-z-10">
+                  {post.title}
+                </h4>
+                <div className="flex justify-between items-end">
+                  <div className="flex gap-2">
+                    {post.hashtags?.map((tag) => (
+                      <span key={tag} className="text-white/80 text-xs">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  {post.narration && (
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        toggleNarration()
+                      }}
+                      className="cursor-pointer translate-z-20"
+                    >
+                      <SoundWaveVisualizer
+                        isPlaying={isPlayingNarration}
+                        className="h-6"
+                        barCount={5}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+              <Button className="absolute bottom-4 right-4 h-8 rounded-full px-4 text-xs bg-primary text-white border border-white/20 hover:bg-primary/90 shadow-lg translate-z-30">
+                MOVE
+              </Button>
             </div>
-            <Button className="absolute bottom-4 right-4 h-8 rounded-full px-4 text-xs bg-primary text-white border border-white/20 hover:bg-primary/90 shadow-lg">
-              MOVE
-            </Button>
-          </div>
+          </DepthContainer>
         )
       case 'carousel':
         return (
@@ -228,18 +231,20 @@ export function PostCard({ post }: PostProps) {
               <CarouselContent>
                 {post.media?.map((url, index) => (
                   <CarouselItem key={index}>
-                    <div
+                    <DepthContainer
                       className="aspect-square relative rounded-xl overflow-hidden bg-muted cursor-pointer"
-                      onClick={openDetail}
+                      maxRotation={3}
                     >
-                      <NostalgiaFilter />
-                      <img
-                        src={url}
-                        alt={`Slide ${index}`}
-                        loading="lazy"
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
+                      <div onClick={openDetail} className="w-full h-full">
+                        <NostalgiaFilter />
+                        <img
+                          src={url}
+                          alt={`Slide ${index}`}
+                          loading="lazy"
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+                    </DepthContainer>
                   </CarouselItem>
                 ))}
               </CarouselContent>
@@ -252,54 +257,58 @@ export function PostCard({ post }: PostProps) {
         )
       case 'article':
         return (
-          <div
+          <DepthContainer
             className="mb-3 border border-border rounded-xl overflow-hidden bg-secondary/20 hover:bg-secondary/30 transition-colors cursor-pointer"
-            onClick={openDetail}
+            maxRotation={2}
           >
-            <div className="aspect-[2/1] relative overflow-hidden">
-              <NostalgiaFilter />
-              <img
-                src={post.media?.[0]}
-                alt="Article"
-                loading="lazy"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-            <div className="p-3">
-              <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1 flex items-center gap-1">
-                {post.articleDomain} <ExternalLink className="h-3 w-3" />
+            <div onClick={openDetail} className="w-full h-full">
+              <div className="aspect-[2/1] relative overflow-hidden">
+                <NostalgiaFilter />
+                <img
+                  src={post.media?.[0]}
+                  alt="Article"
+                  loading="lazy"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
               </div>
-              <h4 className="font-bold text-sm leading-tight group-hover:text-primary transition-colors">
-                {post.articleTitle}
-              </h4>
+              <div className="p-3 translate-z-10">
+                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1 flex items-center gap-1">
+                  {post.articleDomain} <ExternalLink className="h-3 w-3" />
+                </div>
+                <h4 className="font-bold text-sm leading-tight group-hover:text-primary transition-colors">
+                  {post.articleTitle}
+                </h4>
+              </div>
             </div>
-          </div>
+          </DepthContainer>
         )
       default:
         return post.media && post.media.length > 0 ? (
-          <div
+          <DepthContainer
             className="relative rounded-xl overflow-hidden mb-3 cursor-pointer"
-            onClick={openDetail}
+            maxRotation={3}
           >
-            <NostalgiaFilter />
-            <img
-              src={post.media[0]}
-              alt="Post"
-              loading="lazy"
-              className="w-full h-auto object-cover max-h-[500px] hover:scale-105 transition-transform duration-500"
-            />
-          </div>
+            <div onClick={openDetail} className="w-full h-full">
+              <NostalgiaFilter />
+              <img
+                src={post.media[0]}
+                alt="Post"
+                loading="lazy"
+                className="w-full h-auto object-cover max-h-[500px] hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+          </DepthContainer>
         ) : null
     }
   }
 
   return (
     <>
-      <Card className="border-none shadow-sm rounded-2xl overflow-hidden bg-card mb-4 animate-fade-in hover:shadow-md transition-shadow duration-300">
+      <Card className="border-none shadow-sm rounded-2xl overflow-visible bg-card mb-4 animate-fade-in hover:shadow-md transition-shadow duration-300">
         {renderSocialContext()}
         <CardHeader className="flex flex-row items-center p-4 pb-2 space-y-0 gap-3">
           <Link to={`/profile/${post.user.id || 'me'}`}>
-            <Avatar className="h-10 w-10 border border-border cursor-pointer hover:border-primary transition-colors">
+            <Avatar className="h-10 w-10 border border-border cursor-pointer hover:border-primary transition-colors depth-element-hover">
               <AvatarImage src={post.user.avatar} />
               <AvatarFallback>{post.user.name.substring(0, 2)}</AvatarFallback>
             </Avatar>
