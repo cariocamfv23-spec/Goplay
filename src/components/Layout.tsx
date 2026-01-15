@@ -43,7 +43,7 @@ export default function Layout() {
       setScrollY(container.scrollTop)
     }
 
-    // Add listener to the scroll container instead of window
+    // Add listener to the scroll container
     container.addEventListener('scroll', handleScroll, { passive: true })
     return () => container.removeEventListener('scroll', handleScroll)
   }, [isDepthEnabled])
@@ -102,11 +102,8 @@ export default function Layout() {
     location.pathname !== '/messages'
 
   return (
-    <div
-      ref={scrollContainerRef}
-      className="h-screen bg-background font-sans antialiased flex flex-col relative overflow-y-auto overflow-x-hidden transition-colors duration-500 perspective-2000"
-    >
-      {/* 3D Parallax Background Layer */}
+    <div className="h-screen w-full bg-background font-sans antialiased flex flex-col relative overflow-hidden transition-colors duration-500 perspective-2000">
+      {/* 3D Parallax Background Layer - Fixed to Viewport (Absolute to Container) */}
       <div
         className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
         style={{
@@ -145,24 +142,30 @@ export default function Layout() {
         <NostalgiaFilter forceEnable={isEnabled} />
       </div>
 
-      {/* Main Navigation - Sticky to ensure visibility during scroll */}
-      <div className="sticky top-0 z-50 depth-element translate-z-10">
-        <TopBar />
+      {/* Scrollable Content Container */}
+      <div
+        ref={scrollContainerRef}
+        className="flex-1 w-full overflow-y-auto overflow-x-hidden relative z-10 scroll-smooth no-scrollbar"
+      >
+        {/* Main Navigation - Sticky to ensure visibility during scroll */}
+        <div className="sticky top-0 z-50 depth-element translate-z-10">
+          <TopBar />
+        </div>
+
+        {/* Content Area */}
+        {/* Ensure main is z-10 to sit above the wallpaper (z-0) */}
+        <main
+          className={cn(
+            'flex-1 w-full pb-24 md:pb-0 transition-all duration-300 relative bg-transparent transform-style-3d',
+          )}
+        >
+          <Outlet />
+        </main>
       </div>
 
-      {/* Content Area */}
-      {/* Ensure main is z-10 to sit above the wallpaper (z-0) */}
-      <main
-        className={cn(
-          'flex-1 w-full pb-20 md:pb-0 transition-all duration-300 z-10 relative bg-transparent transform-style-3d',
-        )}
-      >
-        <Outlet />
-      </main>
-
-      {/* Mobile Navigation - Fixed at bottom */}
+      {/* Mobile Navigation - Fixed at bottom of Outer Container - Outside of Scroll View */}
       {!isMessageRoute && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 depth-element translate-z-20">
+        <div className="md:hidden absolute bottom-0 left-0 right-0 z-50 depth-element translate-z-20">
           <BottomNav />
         </div>
       )}
