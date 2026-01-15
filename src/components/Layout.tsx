@@ -13,10 +13,13 @@ import { useNostalgiaStore } from '@/stores/useNostalgiaStore'
 import { useEffect, useRef, useState } from 'react'
 import { useInvisiblePresenceStore } from '@/stores/useInvisiblePresenceStore'
 import { InvisiblePresenceOverlay } from '@/components/InvisiblePresenceOverlay'
+import { useDepthStore } from '@/stores/useDepthStore'
 
 export default function Layout() {
   const location = useLocation()
   const { isEnabled, preset } = useNostalgiaStore()
+  const { isEnabled: isDepthEnabled, intensity: depthIntensity } =
+    useDepthStore()
   const { initializeSession } = useInvisiblePresenceStore()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [scrollY, setScrollY] = useState(0)
@@ -28,12 +31,17 @@ export default function Layout() {
 
   // Parallax Effect Handler
   useEffect(() => {
+    if (!isDepthEnabled) {
+      setScrollY(0)
+      return
+    }
+
     const handleScroll = () => {
       setScrollY(window.scrollY)
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isDepthEnabled])
 
   // Apply Global Theme Classes to Body
   useEffect(() => {
@@ -97,7 +105,9 @@ export default function Layout() {
       <div
         className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
         style={{
-          transform: `translateY(${scrollY * 0.1}px)`,
+          transform: isDepthEnabled
+            ? `translateY(${scrollY * 0.1 * depthIntensity}px)`
+            : 'none',
           transition: 'transform 0.1s linear',
         }}
       >
@@ -108,7 +118,9 @@ export default function Layout() {
       <div
         className="fixed inset-0 pointer-events-none z-0"
         style={{
-          transform: `translateY(${scrollY * 0.05}px)`, // Slight parallax for wallpaper
+          transform: isDepthEnabled
+            ? `translateY(${scrollY * 0.05 * depthIntensity}px)`
+            : 'none', // Slight parallax for wallpaper
         }}
       >
         <SportsWallpaper className="z-0" />

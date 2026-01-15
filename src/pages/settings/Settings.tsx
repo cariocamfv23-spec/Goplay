@@ -17,6 +17,7 @@ import {
   Film,
   Tv,
   Image as ImageIcon,
+  Layers,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Separator } from '@/components/ui/separator'
@@ -32,8 +33,10 @@ import { useWeatherStore } from '@/stores/useWeatherStore'
 import { useScholarshipStore } from '@/stores/useScholarshipStore'
 import { Label } from '@/components/ui/label'
 import { useNostalgiaStore, NostalgiaPreset } from '@/stores/useNostalgiaStore'
+import { useDepthStore } from '@/stores/useDepthStore'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
+import { Slider } from '@/components/ui/slider'
 
 export default function Settings() {
   const navigate = useNavigate()
@@ -49,6 +52,12 @@ export default function Settings() {
     toggle: toggleNostalgia,
     setPreset: setNostalgiaPreset,
   } = useNostalgiaStore()
+  const {
+    isEnabled: isDepthEnabled,
+    intensity: depthIntensity,
+    toggle: toggleDepth,
+    setIntensity: setDepthIntensity,
+  } = useDepthStore()
 
   const nostalgiaPresets: {
     id: NostalgiaPreset
@@ -111,6 +120,46 @@ export default function Settings() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          </div>
+        </div>
+
+        <Separator />
+
+        {/* 3D Depth Settings */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-bold text-muted-foreground uppercase px-2 flex items-center gap-2">
+            Efeitos Visuais
+          </h3>
+          <div className="px-2 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <Layers className="h-4 w-4 text-indigo-500" />
+                  <Label className="text-base">Profundidade 3D</Label>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Habilita camadas de profundidade e paralaxe.
+                </p>
+              </div>
+              <Switch checked={isDepthEnabled} onCheckedChange={toggleDepth} />
+            </div>
+
+            {isDepthEnabled && (
+              <div className="pt-2 space-y-3 animate-fade-in px-1">
+                <div className="flex justify-between text-xs text-muted-foreground font-medium">
+                  <span>Suave</span>
+                  <span>Intenso</span>
+                </div>
+                <Slider
+                  value={[depthIntensity]}
+                  min={0.5}
+                  max={2.0}
+                  step={0.1}
+                  onValueChange={(vals) => setDepthIntensity(vals[0])}
+                  className="py-2"
+                />
+              </div>
+            )}
           </div>
         </div>
 
