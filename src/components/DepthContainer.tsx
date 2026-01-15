@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
-import { use3DTilt } from '@/lib/depth-utils'
+import { useTilt3D } from '@/lib/depth-utils'
 
 interface DepthContainerProps {
   children: ReactNode
@@ -17,7 +17,7 @@ export function DepthContainer({
   maxRotation = 3,
   scale = 1.01,
 }: DepthContainerProps) {
-  const { style, onMouseMove, onMouseLeave } = use3DTilt(maxRotation, scale)
+  const { style, onMouseMove, onMouseLeave } = useTilt3D(maxRotation, scale)
 
   return (
     <div

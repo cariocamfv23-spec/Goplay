@@ -1,7 +1,7 @@
-import { useState, useCallback, MouseEvent } from 'react'
+import { useState, useCallback, MouseEvent, CSSProperties } from 'react'
 
-export function use3DTilt(maxRotation = 5, scale = 1.02) {
-  const [style, setStyle] = useState<React.CSSProperties>({
+export function useTilt3D(maxRotation = 5, scale = 1.02) {
+  const [style, setStyle] = useState<CSSProperties>({
     transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)',
     transition: 'transform 0.1s ease-out',
   })
