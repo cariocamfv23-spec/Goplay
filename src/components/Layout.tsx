@@ -29,18 +29,23 @@ export default function Layout() {
     initializeSession()
   }, [initializeSession])
 
-  // Parallax Effect Handler
+  // Parallax Effect Handler - Listens to the main container scroll
   useEffect(() => {
     if (!isDepthEnabled) {
       setScrollY(0)
       return
     }
 
+    const container = scrollContainerRef.current
+    if (!container) return
+
     const handleScroll = () => {
-      setScrollY(window.scrollY)
+      setScrollY(container.scrollTop)
     }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+
+    // Add listener to the scroll container instead of window
+    container.addEventListener('scroll', handleScroll, { passive: true })
+    return () => container.removeEventListener('scroll', handleScroll)
   }, [isDepthEnabled])
 
   // Apply Global Theme Classes to Body
@@ -99,7 +104,7 @@ export default function Layout() {
   return (
     <div
       ref={scrollContainerRef}
-      className="min-h-screen bg-background font-sans antialiased flex flex-col relative overflow-hidden transition-colors duration-500 perspective-2000"
+      className="h-screen bg-background font-sans antialiased flex flex-col relative overflow-y-auto overflow-x-hidden transition-colors duration-500 perspective-2000"
     >
       {/* 3D Parallax Background Layer */}
       <div
@@ -140,8 +145,8 @@ export default function Layout() {
         <NostalgiaFilter forceEnable={isEnabled} />
       </div>
 
-      {/* Main Navigation */}
-      <div className="z-50 relative depth-element translate-z-10">
+      {/* Main Navigation - Sticky to ensure visibility during scroll */}
+      <div className="sticky top-0 z-50 depth-element translate-z-10">
         <TopBar />
       </div>
 
@@ -155,7 +160,7 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation - Fixed at bottom */}
       {!isMessageRoute && (
         <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 depth-element translate-z-20">
           <BottomNav />
