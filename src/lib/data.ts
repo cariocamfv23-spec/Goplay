@@ -609,7 +609,7 @@ export interface PsychologicalProfile {
 export const navigationItems = [
   { icon: Home, label: 'Home', path: '/home' },
   { icon: LayoutList, label: 'Feed', path: '/feed' },
-  { icon: Zap, label: 'M9ve', path: '/move' },
+  { icon: Zap, label: 'Move', path: '/move' },
   { icon: Search, label: 'Explorar', path: '/explore' },
   { icon: ShoppingBag, label: 'Loja', path: '/marketplace' },
   { icon: User, label: 'Perfil', path: '/profile/me' },
