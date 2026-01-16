@@ -1,17 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import {
-  Heart,
-  MessageCircle,
-  Share2,
-  Play,
-  Zap,
-  Music,
-  Plus,
-} from 'lucide-react'
+import { MessageCircle, Share2, Play, Zap, Music, Plus } from 'lucide-react'
 import { AiAnalysisDrawer } from '@/components/AiAnalysisDrawer'
-import { cn } from '@/lib/utils'
 import { CommentsSheet } from '@/components/CommentsSheet'
 import { ShareDialog } from '@/components/ShareDialog'
 import { toast } from 'sonner'
@@ -21,6 +12,8 @@ import {
   mockTrainingSuggestions,
 } from '@/lib/data'
 import { NostalgiaFilter } from '@/components/NostalgiaFilter'
+import { SportsReactionButton } from '@/components/move/SportsReactionButton'
+import { useLikeInteraction } from '@/hooks/useLikeInteraction'
 
 export interface VideoData {
   id: string
@@ -51,12 +44,17 @@ interface VideoCardProps {
 
 export function VideoCard({ video, isActive }: VideoCardProps) {
   const [isPlaying, setIsPlaying] = useState(false)
-  const [isLiked, setIsLiked] = useState(false)
-  const [likesCount, setLikesCount] = useState(video.likes)
   const [showAnalysis, setShowAnalysis] = useState(false)
   const [showComments, setShowComments] = useState(false)
   const [showShare, setShowShare] = useState(false)
   const [isFollowing, setIsFollowing] = useState(video.user.isFollowing)
+
+  // Use the interaction hook for sound and state logic
+  const { isLiked, likeCount, handleLike } = useLikeInteraction(
+    { content: video.title, hashtags: [video.modality] },
+    video.likes,
+    false,
+  )
 
   useEffect(() => {
     if (isActive) {
@@ -68,11 +66,6 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying)
-  }
-
-  const handleLike = () => {
-    setIsLiked(!isLiked)
-    setLikesCount((prev) => (isLiked ? prev - 1 : prev + 1))
   }
 
   const handleFollow = (e: React.MouseEvent) => {
@@ -155,24 +148,13 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
           )}
         </div>
 
-        <div className="flex flex-col items-center gap-1">
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-12 w-12 rounded-full bg-transparent hover:bg-transparent text-white"
-            onClick={handleLike}
-          >
-            <Heart
-              className={cn(
-                'h-8 w-8 transition-all duration-300 drop-shadow-md',
-                isLiked ? 'fill-red-500 text-red-500 scale-110' : '',
-              )}
-            />
-          </Button>
-          <span className="text-white text-xs font-bold drop-shadow-md">
-            {likesCount}
-          </span>
-        </div>
+        {/* Sports Specific Emoji Reaction */}
+        <SportsReactionButton
+          modality={video.modality}
+          isLiked={isLiked}
+          likesCount={likeCount}
+          onLike={handleLike}
+        />
 
         <div className="flex flex-col items-center gap-1">
           <Button

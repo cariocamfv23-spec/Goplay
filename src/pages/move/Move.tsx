@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { tribes } from '@/lib/data'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
-import { Zap, MapPin, Baby, Map as MapIcon } from 'lucide-react'
+import { Zap, Map as MapIcon } from 'lucide-react'
 import { VideoCard, VideoData } from '@/components/move/VideoCard'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -65,24 +65,6 @@ const MOVE_VIDEOS: VideoData[] = [
     music: { title: 'Ousadia e Alegria', artist: 'Thiaguinho' },
     modality: 'futsal',
   },
-  {
-    id: 'futsal2',
-    thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=indoor%20soccer%20goal&color=blue',
-    title: 'Finalização de bico precisa',
-    description: 'Aquele chute seco que o goleiro nem vê.',
-    likes: 540,
-    comments: 18,
-    shares: 10,
-    user: {
-      id: 'u4',
-      name: 'Ricardinho',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=13',
-      isFollowing: false,
-    },
-    music: null,
-    modality: 'futsal',
-  },
   // Bike
   {
     id: 'bike1',
@@ -100,24 +82,6 @@ const MOVE_VIDEOS: VideoData[] = [
       isFollowing: true,
     },
     music: { title: 'Born to be Wild', artist: 'Steppenwolf' },
-    modality: 'bike',
-  },
-  {
-    id: 'bike2',
-    thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=road%20cycling%20sunset&color=orange',
-    title: 'Pedal de estrada ao pôr do sol',
-    description: '100km pra conta hoje. A vista compensa o esforço.',
-    likes: 980,
-    comments: 40,
-    shares: 25,
-    user: {
-      id: 'u6',
-      name: 'Cycling Life',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=15',
-      isFollowing: false,
-    },
-    music: null,
     modality: 'bike',
   },
   // Running
@@ -139,24 +103,6 @@ const MOVE_VIDEOS: VideoData[] = [
     music: { title: 'Eye of the Tiger', artist: 'Survivor' },
     modality: 'running',
   },
-  {
-    id: 'running2',
-    thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=sprinting%20track&color=red',
-    title: 'Tiros de velocidade na pista',
-    description: 'Treino de explosão. 10x 100m.',
-    likes: 670,
-    comments: 15,
-    shares: 8,
-    user: {
-      id: 'u8',
-      name: 'Speedster',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=17',
-      isFollowing: true,
-    },
-    music: null,
-    modality: 'running',
-  },
   // Crossfit
   {
     id: 'crossfit1',
@@ -174,24 +120,6 @@ const MOVE_VIDEOS: VideoData[] = [
       isFollowing: false,
     },
     music: { title: 'Till I Collapse', artist: 'Eminem' },
-    modality: 'crossfit',
-  },
-  {
-    id: 'crossfit2',
-    thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=weightlifting%20snatch&color=black',
-    title: 'Novo PR de Snatch! 🏋️‍♀️',
-    description: 'Técnica e força alinhadas. Muito feliz com o progresso.',
-    likes: 1200,
-    comments: 55,
-    shares: 40,
-    user: {
-      id: 'u10',
-      name: 'Mat Fraser',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=19',
-      isFollowing: true,
-    },
-    music: null,
     modality: 'crossfit',
   },
   // Swimming
@@ -213,24 +141,6 @@ const MOVE_VIDEOS: VideoData[] = [
     music: { title: 'Believer', artist: 'Imagine Dragons' },
     modality: 'swimming',
   },
-  {
-    id: 'swimming2',
-    thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=swimming%20butterfly&color=cyan',
-    title: 'Borboleta: o estilo mais difícil',
-    description: 'Exige muito cardio e coordenação.',
-    likes: 760,
-    comments: 25,
-    shares: 12,
-    user: {
-      id: 'u12',
-      name: 'Aqua Girl',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=21',
-      isFollowing: false,
-    },
-    music: null,
-    modality: 'swimming',
-  },
   // Boxing
   {
     id: 'boxing1',
@@ -248,24 +158,6 @@ const MOVE_VIDEOS: VideoData[] = [
       isFollowing: true,
     },
     music: { title: 'Gonna Fly Now', artist: 'Bill Conti' },
-    modality: 'boxing',
-  },
-  {
-    id: 'boxing2',
-    thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=punching%20bag%20training&color=red',
-    title: 'Saco de pancada',
-    description: 'Treino de potência e resistência.',
-    likes: 1100,
-    comments: 45,
-    shares: 20,
-    user: {
-      id: 'u14',
-      name: 'Iron Mike',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=23',
-      isFollowing: false,
-    },
-    music: null,
     modality: 'boxing',
   },
   // Climbing
@@ -287,24 +179,6 @@ const MOVE_VIDEOS: VideoData[] = [
     music: { title: 'Higher', artist: 'Creed' },
     modality: 'climbing',
   },
-  {
-    id: 'climbing2',
-    thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=bouldering%20indoor&color=gray',
-    title: 'Bouldering problem resolvido',
-    description: 'Aquele projeto que demorou semanas para sair.',
-    likes: 850,
-    comments: 30,
-    shares: 15,
-    user: {
-      id: 'u16',
-      name: 'Spider Woman',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=25',
-      isFollowing: false,
-    },
-    music: null,
-    modality: 'climbing',
-  },
   // Martial Arts
   {
     id: 'martial_arts1',
@@ -322,24 +196,6 @@ const MOVE_VIDEOS: VideoData[] = [
       isFollowing: true,
     },
     music: { title: 'Kung Fu Fighting', artist: 'Carl Douglas' },
-    modality: 'martial_arts',
-  },
-  {
-    id: 'martial_arts2',
-    thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=karate%20kick&color=white',
-    title: 'High kick training',
-    description: 'Flexibilidade e precisão.',
-    likes: 1300,
-    comments: 50,
-    shares: 40,
-    user: {
-      id: 'u18',
-      name: 'Dragon Lee',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=27',
-      isFollowing: false,
-    },
-    music: null,
     modality: 'martial_arts',
   },
 ]
@@ -373,7 +229,7 @@ export default function Move() {
   }
 
   return (
-    <div className="h-[calc(100vh-64px)] w-full bg-black relative">
+    <div className="h-full w-full bg-black relative">
       {/* Header / Tribes Filter Bar */}
       <div className="absolute top-4 left-0 right-0 z-30 flex flex-col items-center">
         {/* Standard "Following | For You" Tabs */}

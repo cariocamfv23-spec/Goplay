@@ -101,6 +101,8 @@ export default function Layout() {
     location.pathname.includes('/messages/') &&
     location.pathname !== '/messages'
 
+  const isMoveRoute = location.pathname === '/move'
+
   return (
     <div className="h-screen w-full bg-background font-sans antialiased flex flex-col relative overflow-hidden transition-colors duration-500 perspective-2000">
       {/* 3D Parallax Background Layer - Fixed to Viewport (Absolute to Container) */}
@@ -145,7 +147,11 @@ export default function Layout() {
       {/* Scrollable Content Container */}
       <div
         ref={scrollContainerRef}
-        className="flex-1 w-full overflow-y-auto overflow-x-hidden relative z-10 scroll-smooth no-scrollbar"
+        className={cn(
+          'flex-1 w-full relative z-10 scroll-smooth no-scrollbar',
+          // Disable vertical overflow on Move route to let the page handle snap scrolling
+          isMoveRoute ? 'overflow-hidden' : 'overflow-y-auto overflow-x-hidden',
+        )}
       >
         {/* Main Navigation - Sticky to ensure visibility during scroll */}
         <div className="sticky top-0 z-50 depth-element translate-z-10">
@@ -157,6 +163,8 @@ export default function Layout() {
         <main
           className={cn(
             'flex-1 w-full pb-24 md:pb-0 transition-all duration-300 relative bg-transparent transform-style-3d',
+            // On Move route, calculate height to fit remaining space (Total - TopBar)
+            isMoveRoute && 'h-[calc(100vh-64px)]',
           )}
         >
           <Outlet />
