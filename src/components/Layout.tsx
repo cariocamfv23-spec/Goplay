@@ -163,8 +163,8 @@ export default function Layout() {
         <main
           className={cn(
             'flex-1 w-full pb-24 md:pb-0 transition-all duration-300 relative bg-transparent transform-style-3d',
-            // On Move route, calculate height to fit remaining space (Total - TopBar)
-            isMoveRoute && 'h-[calc(100vh-64px)]',
+            // On Move route, remove padding to allow full immersive experience behind nav
+            isMoveRoute && 'h-[calc(100vh-64px)] pb-0',
           )}
         >
           <Outlet />

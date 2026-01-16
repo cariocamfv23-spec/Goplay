@@ -50,6 +50,7 @@ export function TopBar() {
   const { isEnabled, toggle, preset, setPreset } = useNostalgiaStore()
 
   const isMarket = location.pathname.includes('/marketplace')
+  const isMove = location.pathname === '/move'
 
   // Pages where we don't show the back button (Main tabs)
   const showBack =
@@ -80,7 +81,13 @@ export function TopBar() {
   }
 
   return (
-    <div className="sticky top-0 z-40 w-full h-16 bg-background/80 backdrop-blur-xl border-b border-border/40 flex items-center justify-between px-4 transition-all shadow-sm">
+    <div
+      className={cn(
+        'sticky top-0 z-40 w-full h-16 bg-background/80 backdrop-blur-xl border-b border-border/40 flex items-center justify-between px-4 transition-all shadow-sm',
+        isMove &&
+          'bg-black/90 border-white/10 text-white [&_*]:text-white/90 [&_.text-muted-foreground]:text-white/60',
+      )}
+    >
       <div className="flex items-center gap-3">
         {showBack && (
           <Button
@@ -125,6 +132,7 @@ export function TopBar() {
                 isEnabled
                   ? 'bg-gold/10 text-gold hover:bg-gold/20'
                   : 'hover:bg-secondary/50 text-muted-foreground hover:text-gold',
+                isMove && !isEnabled && 'text-white/70 hover:bg-white/10',
               )}
               title="Modo Nostalgia"
             >
@@ -224,7 +232,10 @@ export function TopBar() {
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-full hover:bg-secondary/50"
+              className={cn(
+                'rounded-full hover:bg-secondary/50',
+                isMove && 'hover:bg-white/10',
+              )}
               title="Aparência"
             >
               <Palette className="h-5 w-5" />
@@ -291,7 +302,10 @@ export function TopBar() {
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="relative h-10 w-10 rounded-full ml-1"
+              className={cn(
+                'relative h-10 w-10 rounded-full ml-1',
+                isMove && 'hover:bg-white/10',
+              )}
             >
               <AthleteAura
                 profile={mockCurrentUser}
