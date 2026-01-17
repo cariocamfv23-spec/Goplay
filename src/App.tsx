@@ -158,6 +158,9 @@ const Oracle = lazy(() => import('./pages/ai/Oracle'))
 const NftCreator = lazy(() => import('./pages/ai/NftCreator'))
 const BotDaVerdade = lazy(() => import('./pages/ai/BotDaVerdade'))
 
+// Time Shift Module
+const TimeShift = lazy(() => import('./pages/timeshift/TimeShift'))
+
 // Move Pages
 const KidsZoneMap = lazy(() => import('./pages/move/KidsZoneMap'))
 
@@ -201,6 +204,9 @@ const App = () => {
                     element={<ProfileSelection />}
                   />
                   <Route path="/retrospective" element={<Retrospective />} />
+
+                  {/* Independent Time Shift Module */}
+                  <Route path="/timeshift" element={<TimeShift />} />
 
                   <Route element={<Layout />}>
                     <Route path="/home" element={<Home />} />
