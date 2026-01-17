@@ -20,6 +20,9 @@ const ProfileSelection = lazy(() => import('./pages/auth/ProfileSelection'))
 // New Retrospective Page
 const Retrospective = lazy(() => import('./pages/retrospective/Retrospective'))
 
+// App Map
+const AppMap = lazy(() => import('./pages/AppMap'))
+
 const Home = lazy(() => import('./pages/home/Home'))
 const Feed = lazy(() => import('./pages/feed/Feed'))
 const Move = lazy(() => import('./pages/move/Move'))
@@ -215,6 +218,7 @@ const App = () => {
                     <Route path="/move/kids-map" element={<KidsZoneMap />} />
                     <Route path="/explore" element={<Explore />} />
                     <Route path="/check-in" element={<CheckIn />} />
+                    <Route path="/app-map" element={<AppMap />} />
 
                     {/* Contracts */}
                     <Route
