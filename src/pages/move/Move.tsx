@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react'
-import { tribes } from '@/lib/data'
+import { useState, useRef, useEffect } from 'react'
+import { tribes, mockCurrentUser } from '@/lib/data'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 import { Zap, Map as MapIcon } from 'lucide-react'
@@ -7,214 +7,221 @@ import { VideoCard, VideoData } from '@/components/move/VideoCard'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 
+// Enhanced Video Data with Specific Sports Highlights ("Lances de Esportes")
 const MOVE_VIDEOS: VideoData[] = [
-  // Futebol
+  // --- FUTEBOL (Priority for default user) ---
   {
-    id: 'futebol1',
+    id: 'fut_highlight_1',
     url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
     thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=soccer%20goal%20celebration&color=green',
-    title: 'Golaço de falta no ângulo! ⚽️',
+      'https://img.usecurling.com/p/600/1000?q=soccer%20free%20kick%20goal&color=green&dpr=2',
+    title: 'Cobrança de falta perfeita! 🎯',
     description:
-      'Treino de bolas paradas rendendo frutos. A dedicação compensa!',
-    likes: 1240,
-    comments: 45,
-    shares: 89,
+      'Aquele chute no ângulo que o goleiro nem viu a cor da bola. Técnica pura!',
+    likes: 3420,
+    comments: 145,
+    shares: 890,
     user: {
-      id: 'u1',
-      name: 'Lucas Paquetá',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=10',
+      id: 'u_pro_1',
+      name: 'Camisa 10',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=101',
       isFollowing: false,
     },
-    music: { title: 'Samba de Janeiro', artist: 'Bellini' },
+    music: { title: 'Gol de Placa', artist: 'Torcida' },
     modality: 'futebol',
   },
   {
-    id: 'futebol2',
+    id: 'fut_highlight_2',
     url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
     thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=soccer%20dribbling&color=green',
-    title: 'Dribles rápidos e controle de bola ⚡️',
-    description: 'Melhorando a agilidade e a condução em espaço curto.',
-    likes: 850,
-    comments: 22,
-    shares: 34,
+      'https://img.usecurling.com/p/600/1000?q=soccer%20dribbling%20skill&color=green&dpr=2',
+    title: 'Entortando a zaga 🔥',
+    description:
+      'Sequência de dribles rápidos em espaço curto. Controle de bola absurdo.',
+    likes: 2150,
+    comments: 88,
+    shares: 340,
     user: {
-      id: 'u2',
-      name: 'Gabigol',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=11',
+      id: 'u_pro_2',
+      name: 'Rei do Drible',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=102',
+      isFollowing: true,
+    },
+    music: { title: 'Ousadia', artist: 'Samba Ball' },
+    modality: 'futebol',
+  },
+  {
+    id: 'fut_highlight_3',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=goalkeeper%20save&color=green&dpr=2',
+    title: 'Defesa impossível! 🧤',
+    description:
+      'Reflexo em dia! Uma das defesas mais bonitas da rodada no campeonato amador.',
+    likes: 1800,
+    comments: 56,
+    shares: 120,
+    user: {
+      id: 'u_pro_3',
+      name: 'Paredão FC',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=103',
       isFollowing: true,
     },
     music: null,
     modality: 'futebol',
   },
-  // Futsal
   {
-    id: 'futsal1',
-    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-    thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=futsal%20skill&color=blue',
-    title: 'Falcão style na quadra 👑',
-    description: 'Tentando replicar os movimentos do rei.',
-    likes: 2100,
-    comments: 150,
-    shares: 500,
-    user: {
-      id: 'u3',
-      name: 'Falcão 12',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=12',
-      isFollowing: true,
-    },
-    music: { title: 'Ousadia e Alegria', artist: 'Thiaguinho' },
-    modality: 'futsal',
-  },
-  // Bike
-  {
-    id: 'bike1',
+    id: 'fut_highlight_4',
     url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
     thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=mountain%20bike%20trail&color=orange',
-    title: 'Trilha insana no fim de semana 🚵',
-    description: 'Muita lama, pedras e adrenalina. O MTB não para!',
-    likes: 1500,
-    comments: 60,
-    shares: 120,
+      'https://img.usecurling.com/p/600/1000?q=soccer%20team%20celebration&color=green&dpr=2',
+    title: 'Aquele gol no último minuto! 🏆',
+    description: 'A emoção de vencer o jogo nos acréscimos. Isso é futebol!',
+    likes: 5600,
+    comments: 320,
+    shares: 1200,
     user: {
-      id: 'u5',
-      name: 'Avancini',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=14',
-      isFollowing: true,
+      id: 'u_pro_4',
+      name: 'Várzea Raiz',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=104',
+      isFollowing: false,
     },
-    music: { title: 'Born to be Wild', artist: 'Steppenwolf' },
-    modality: 'bike',
+    music: { title: 'Champions', artist: 'Epic' },
+    modality: 'futebol',
   },
-  // Running
+
+  // --- FUTSAL ---
   {
-    id: 'running1',
+    id: 'futsal_1',
     url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
     thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=marathon%20runner&color=red',
-    title: 'Preparação para a Maratona 🏃💨',
-    description: 'Longão de 32km hoje. Ritmo forte do início ao fim.',
-    likes: 3200,
-    comments: 200,
-    shares: 150,
-    user: {
-      id: 'u7',
-      name: 'Kipchoge Fan',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=16',
-      isFollowing: false,
-    },
-    music: { title: 'Eye of the Tiger', artist: 'Survivor' },
-    modality: 'running',
-  },
-  // Crossfit
-  {
-    id: 'crossfit1',
-    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
-    thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=crossfit%20workout&color=black',
-    title: 'WOD from hell 🔥',
-    description: 'No pain no gain. 21-15-9 Thrusters e Pull-ups.',
-    likes: 890,
-    comments: 32,
-    shares: 15,
-    user: {
-      id: 'u9',
-      name: 'Sarah Fit',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=45',
-      isFollowing: false,
-    },
-    music: { title: 'Till I Collapse', artist: 'Eminem' },
-    modality: 'crossfit',
-  },
-  // Swimming
-  {
-    id: 'swimming1',
-    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-    thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=swimming%20pool%20underwater&color=cyan',
-    title: "Debaixo d'água 🌊",
-    description: 'Focando na técnica de virada olímpica.',
-    likes: 1800,
-    comments: 90,
-    shares: 200,
-    user: {
-      id: 'u11',
-      name: 'Phelps Shark',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=20',
-      isFollowing: true,
-    },
-    music: { title: 'Believer', artist: 'Imagine Dragons' },
-    modality: 'swimming',
-  },
-  // Boxing
-  {
-    id: 'boxing1',
-    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
-    thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=boxing%20gloves%20ring&color=red',
-    title: 'Sparring day 🥊',
-    description: 'Afiando os reflexos e a esquiva.',
-    likes: 2500,
-    comments: 110,
+      'https://img.usecurling.com/p/600/1000?q=futsal%20skill%20move&color=blue&dpr=2',
+    title: 'Pisada e giro 🌪️',
+    description: 'Fundamentos do futsal aplicados com perfeição na ala.',
+    likes: 1200,
+    comments: 45,
     shares: 80,
     user: {
-      id: 'u13',
-      name: 'Rocky',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=22',
-      isFollowing: true,
+      id: 'u_fut_1',
+      name: 'Falcão Fan',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=105',
+      isFollowing: false,
     },
-    music: { title: 'Gonna Fly Now', artist: 'Bill Conti' },
-    modality: 'boxing',
+    music: null,
+    modality: 'futsal',
   },
-  // Climbing
+
+  // --- BASKETBALL ---
   {
-    id: 'climbing1',
-    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=rock%20climbing%20mountain&color=gray',
-    title: 'Escalada em rocha natural 🧗',
-    description: 'Superando limites e o medo de altura.',
-    likes: 3100,
-    comments: 130,
-    shares: 300,
-    user: {
-      id: 'u15',
-      name: 'Alex Honnold',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=24',
-      isFollowing: true,
-    },
-    music: { title: 'Higher', artist: 'Creed' },
-    modality: 'climbing',
-  },
-  // Martial Arts
-  {
-    id: 'martial_arts1',
+    id: 'bball_1',
     url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
     thumbnail:
-      'https://img.usecurling.com/p/600/1000?q=judo%20throw&color=white',
-    title: 'Ippon perfeito! 🥋',
-    description: 'A técnica supera a força bruta.',
-    likes: 1900,
-    comments: 70,
-    shares: 90,
+      'https://img.usecurling.com/p/600/1000?q=basketball%20dunk&color=orange&dpr=2',
+    title: 'Dunk contest vibes 🏀',
+    description:
+      'Voando alto na quadra do parque. A altura do salto impressiona!',
+    likes: 2800,
+    comments: 110,
+    shares: 450,
     user: {
-      id: 'u17',
-      name: 'Sensei Tanaka',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=26',
+      id: 'u_bball_1',
+      name: 'Air Jordan Jr',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=106',
       isFollowing: true,
     },
-    music: { title: 'Kung Fu Fighting', artist: 'Carl Douglas' },
-    modality: 'martial_arts',
+    music: { title: 'Hip Hop Beat', artist: 'Street' },
+    modality: 'basketball',
+  },
+
+  // --- CROSSFIT ---
+  {
+    id: 'cf_1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=crossfit%20clean%20jerk&color=black&dpr=2',
+    title: 'Novo PR no Clean & Jerk 🏋️',
+    description: '100kg batidos! Técnica sólida e muita força explosiva.',
+    likes: 950,
+    comments: 34,
+    shares: 20,
+    user: {
+      id: 'u_cf_1',
+      name: 'Iron Cross',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=107',
+      isFollowing: true,
+    },
+    music: { title: 'Heavy Metal', artist: 'Gym' },
+    modality: 'crossfit',
+  },
+
+  // --- SURF ---
+  {
+    id: 'surf_1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=surfing%20tube&color=cyan&dpr=2',
+    title: 'Tubo perfeito em Itamambuca 🌊',
+    description: 'Swell entrou com tudo no fim de semana. Drop insano!',
+    likes: 3100,
+    comments: 150,
+    shares: 600,
+    user: {
+      id: 'u_surf_1',
+      name: 'Soul Surfer',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=108',
+      isFollowing: false,
+    },
+    music: { title: 'Reggae Vibes', artist: 'Beach' },
+    modality: 'surf',
+  },
+
+  // --- SKATE ---
+  {
+    id: 'skate_1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=skateboard%20kickflip&color=gray&dpr=2',
+    title: 'Kickflip na escadaria 🛹',
+    description: 'Depois de 15 tentativas, finalmente saiu limpo!',
+    likes: 4200,
+    comments: 200,
+    shares: 800,
+    user: {
+      id: 'u_skate_1',
+      name: 'Street King',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=109',
+      isFollowing: true,
+    },
+    music: { title: 'Punk Rock', artist: 'Sk8' },
+    modality: 'skate',
   },
 ]
 
 export default function Move() {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [activeTribe, setActiveTribe] = useState('all')
-  const containerRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
+
+  // Logic to determine initial tribe based on User Profile
+  // This satisfies the requirement to match "athlete profile" modality
+  const getInitialTribe = () => {
+    if (!mockCurrentUser?.sport) return 'all'
+
+    // Normalize sport name to match tribe IDs (e.g., 'Futebol' -> 'futebol')
+    const userSportId = mockCurrentUser.sport
+      .toLowerCase()
+      .replace('ê', 'e')
+      .replace('ç', 'c')
+      .replace('ã', 'a')
+
+    // Check if the user's sport exists in our tribes list
+    const tribeExists = tribes.some((t) => t.id === userSportId)
+
+    // If it exists, default to it. Otherwise, show all.
+    return tribeExists ? userSportId : 'all'
+  }
+
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [activeTribe, setActiveTribe] = useState(getInitialTribe())
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const container = e.currentTarget
@@ -237,6 +244,13 @@ export default function Move() {
       containerRef.current.scrollTop = 0
     }
   }
+
+  // Effect to ensure we start at the top when tribe changes
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = 0
+    }
+  }, [activeTribe])
 
   return (
     <div className="h-full w-full bg-black relative">
@@ -321,9 +335,16 @@ export default function Move() {
             </div>
             <h3 className="text-xl font-bold mb-2">Sem vídeos no momento</h3>
             <p className="text-zinc-400">
-              Não encontramos vídeos para esta modalidade. Tente selecionar
-              outra tribo!
+              Não encontramos lances para {activeTribe}. Tente selecionar outra
+              tribo ou volte mais tarde!
             </p>
+            <Button
+              variant="outline"
+              className="mt-6 border-white/20 text-white hover:bg-white/10"
+              onClick={() => handleTribeChange('all')}
+            >
+              Ver todos os esportes
+            </Button>
           </div>
         )}
       </div>
