@@ -1755,8 +1755,10 @@ export const mockPosts = [
     content:
       'Treino intenso hoje! Focando na preparação física para o campeonato estadual. 🏋️‍♀️🔥 #NoPainNoGain #Fitness',
     media: [
-      'https://img.usecurling.com/p/600/800?q=female%20athlete%20gym&color=purple',
+      'https://img.usecurling.com/p/600/800?q=female%20athlete%20gym&color=purple&dpr=2',
     ],
+    videoUrl:
+      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
     videoDuration: '0:45',
     title: 'Preparação Física 2024',
     hashtags: ['#Treino', '#Foco', '#Atleta'],
@@ -1780,9 +1782,9 @@ export const mockPosts = [
     content:
       'Alguns registros da nossa vitória de ontem! Orgulho desse time que nunca desiste. ⚽️🏆',
     media: [
-      'https://img.usecurling.com/p/600/600?q=soccer%20team%20celebration&color=blue',
-      'https://img.usecurling.com/p/600/600?q=soccer%20coach%20shouting&color=blue',
-      'https://img.usecurling.com/p/600/600?q=soccer%20trophy&color=gold',
+      'https://img.usecurling.com/p/600/600?q=soccer%20team%20celebration&color=blue&dpr=2',
+      'https://img.usecurling.com/p/600/600?q=soccer%20coach%20shouting&color=blue&dpr=2',
+      'https://img.usecurling.com/p/600/600?q=soccer%20trophy&color=gold&dpr=2',
     ],
     likes: 890,
     comments: 124,
@@ -1803,7 +1805,7 @@ export const mockPosts = [
     content:
       'Confira as novas regras para a temporada 2025 da Liga Nacional. Mudanças importantes na arbitragem de vídeo.',
     media: [
-      'https://img.usecurling.com/p/800/400?q=referee%20var%20monitor&color=black',
+      'https://img.usecurling.com/p/800/400?q=referee%20var%20monitor&color=black&dpr=2',
     ],
     articleTitle: 'Novas Regras VAR 2025: O que muda?',
     articleDomain: 'goplay.sports',

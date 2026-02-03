@@ -7,10 +7,8 @@ import {
   Share2,
   MoreHorizontal,
   Hand,
-  Play,
   HeartHandshake,
   ExternalLink,
-  Mic,
 } from 'lucide-react'
 import {
   Carousel,
@@ -25,12 +23,12 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import useSoundStore from '@/stores/useSoundStore'
-import { SoundWaveVisualizer } from './SoundWaveVisualizer'
-import { NarrationConfig } from '@/lib/data'
 import { useLikeInteraction } from '@/hooks/useLikeInteraction'
 import { PostDetailDialog } from '@/components/PostDetailDialog'
 import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 import { DepthContainer } from '@/components/DepthContainer'
+import { FeedVideoPlayer } from '@/components/FeedVideoPlayer'
+import { NarrationConfig } from '@/lib/data'
 
 export interface SocialContext {
   type: 'like' | 'comment' | 'repost'
@@ -52,6 +50,7 @@ interface PostProps {
     title?: string
     hashtags?: string[]
     videoDuration?: string
+    videoUrl?: string
     articleTitle?: string
     articleDomain?: string
     likes: number
@@ -80,9 +79,8 @@ export function PostCard({ post }: PostProps) {
 
   const [isCool, setIsCool] = useState(false)
   const [coolCount, setCoolCount] = useState(post.cools || 0)
-  const [isPlayingNarration, setIsPlayingNarration] = useState(false)
 
-  const { playSound, playNarration } = useSoundStore()
+  const { playSound } = useSoundStore()
 
   const handleCool = () => {
     setIsCool(!isCool)
@@ -90,18 +88,6 @@ export function PostCard({ post }: PostProps) {
     if (!isCool) {
       // @ts-expect-error - Sound category
       playSound('like_generic')
-    }
-  }
-
-  const toggleNarration = () => {
-    if (post.narration) {
-      if (!isPlayingNarration) {
-        playNarration(post.narration)
-        setIsPlayingNarration(true)
-        setTimeout(() => setIsPlayingNarration(false), 3000)
-      } else {
-        setIsPlayingNarration(false)
-      }
     }
   }
 
@@ -160,6 +146,26 @@ export function PostCard({ post }: PostProps) {
   const renderContent = () => {
     switch (post.type) {
       case 'video':
+        if (post.videoUrl) {
+          return (
+            <div className="relative mb-3 rounded-xl overflow-hidden shadow-sm">
+              <FeedVideoPlayer
+                url={post.videoUrl}
+                thumbnail={primaryImage}
+                onClick={openDetail}
+              />
+              {/* Optional: Add badge if narration exists */}
+              {post.narration && (
+                <div className="absolute top-2 left-2 z-30 pointer-events-none">
+                  <Badge className="bg-gold/90 text-black border-none shadow-md">
+                    Narração AI
+                  </Badge>
+                </div>
+              )}
+            </div>
+          )
+        }
+        // Fallback for video type without URL (legacy behavior)
         return (
           <DepthContainer
             className="relative rounded-xl overflow-hidden mb-3 group cursor-pointer"
@@ -174,70 +180,21 @@ export function PostCard({ post }: PostProps) {
                 onError={handleImageError}
                 className="w-full aspect-video object-cover transition-transform duration-500 group-hover:scale-105"
               />
-
-              {post.narration && (
-                <div className="absolute top-2 left-2 z-20 translate-z-20">
-                  <Badge className="bg-gold/90 text-black border-none hover:bg-gold gap-1 pl-1 shadow-lg">
-                    <Mic className="h-3 w-3" /> Narração{' '}
-                    {post.narration.style === 'varzea' ? 'Várzea' : 'AI'}
-                  </Badge>
-                </div>
-              )}
-
               <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/40 transition-colors">
                 <div className="h-12 w-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/50 group-hover:scale-110 transition-transform shadow-xl translate-z-30">
-                  <Play className="h-5 w-5 text-white fill-white ml-1" />
+                  <div
+                    className="h-5 w-5 bg-white ml-1"
+                    style={{ clipPath: 'polygon(0 0, 100% 50%, 0 100%)' }}
+                  />
                 </div>
               </div>
-
-              {post.narration && isPlayingNarration && (
-                <div className="absolute bottom-16 left-0 right-0 flex justify-center z-20 translate-z-30">
-                  <div className="bg-black/60 backdrop-blur-sm px-4 py-1 rounded-full border border-gold/30">
-                    <span className="text-white text-sm font-bold italic">
-                      "{post.narration.text}"
-                    </span>
-                  </div>
-                </div>
-              )}
-
               <div className="absolute top-2 right-2 px-2 py-0.5 bg-black/60 rounded text-xs text-white font-medium translate-z-20">
                 {post.videoDuration}
               </div>
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                <h4 className="text-white font-bold text-lg leading-tight mb-1 translate-z-10">
-                  {post.title}
-                </h4>
-                <div className="flex justify-between items-end">
-                  <div className="flex gap-2">
-                    {post.hashtags?.map((tag) => (
-                      <span key={tag} className="text-white/80 text-xs">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  {post.narration && (
-                    <div
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        toggleNarration()
-                      }}
-                      className="cursor-pointer translate-z-20"
-                    >
-                      <SoundWaveVisualizer
-                        isPlaying={isPlayingNarration}
-                        className="h-6"
-                        barCount={5}
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-              <Button className="absolute bottom-4 right-4 h-8 rounded-full px-4 text-xs bg-primary text-white border border-white/20 hover:bg-primary/90 shadow-lg translate-z-30">
-                MOVE
-              </Button>
             </div>
           </DepthContainer>
         )
+
       case 'carousel':
         return (
           <div className="mb-3">
