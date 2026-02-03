@@ -52,6 +52,8 @@ import { EcoLegend } from '@/components/EcoLegend'
 import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
 import { getSportCoverImage } from '@/lib/sport-utils'
+import { DepthContainer } from '@/components/DepthContainer'
+import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -682,48 +684,62 @@ export default function AthleteView({
           >
             <div className="grid grid-cols-3 gap-1">
               {userPosts.map((post) => (
-                <div
+                <DepthContainer
                   key={post.id}
-                  className="aspect-square bg-muted relative overflow-hidden cursor-pointer hover:opacity-90 group"
-                  onClick={() => handlePostClick(post)}
+                  className="aspect-square bg-muted relative overflow-hidden cursor-pointer group"
+                  maxRotation={5}
                 >
-                  {post.media && post.media.length > 0 ? (
-                    <img
-                      src={post.media[0]}
-                      alt={post.title || 'Post'}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none'
-                        e.currentTarget.nextElementSibling?.classList.remove(
-                          'hidden',
-                        )
-                      }}
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-secondary flex items-center justify-center">
+                  <div
+                    onClick={() => handlePostClick(post)}
+                    className="w-full h-full relative"
+                  >
+                    <NostalgiaFilter intensity={0.5} />
+
+                    {post.media && post.media.length > 0 ? (
+                      <img
+                        src={post.media[0]}
+                        alt={post.title || 'Post'}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none'
+                          e.currentTarget.nextElementSibling?.classList.remove(
+                            'hidden',
+                          )
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-secondary flex items-center justify-center">
+                        <ImageOff className="h-6 w-6 text-muted-foreground/50" />
+                      </div>
+                    )}
+
+                    {/* Fallback container hidden by default */}
+                    <div className="hidden absolute inset-0 bg-secondary flex items-center justify-center">
                       <ImageOff className="h-6 w-6 text-muted-foreground/50" />
                     </div>
-                  )}
 
-                  {/* Fallback container hidden by default */}
-                  <div className="hidden absolute inset-0 bg-secondary flex items-center justify-center">
-                    <ImageOff className="h-6 w-6 text-muted-foreground/50" />
+                    {/* Video Indicator */}
+                    {post.type === 'video' && (
+                      <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-full p-1.5 shadow-sm">
+                        <Video className="h-3 w-3 text-white" />
+                      </div>
+                    )}
+
+                    {/* Carousel Indicator */}
+                    {post.media && post.media.length > 1 && (
+                      <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-full p-1.5 shadow-sm">
+                        <Package className="h-3 w-3 text-white" />
+                      </div>
+                    )}
+
+                    {/* Overlay on hover */}
+                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
-
-                  {post.type === 'video' && (
-                    <div className="absolute top-1 right-1 bg-black/50 rounded-full p-1">
-                      <Video className="h-3 w-3 text-white" />
-                    </div>
-                  )}
-                  {post.media && post.media.length > 1 && (
-                    <div className="absolute top-1 right-1 bg-black/50 rounded-full p-1">
-                      <Package className="h-3 w-3 text-white" />
-                    </div>
-                  )}
-                </div>
+                </DepthContainer>
               ))}
             </div>
           </TabsContent>
+
           <TabsContent
             value="media"
             className="mt-4 animate-in slide-in-from-bottom-2 duration-500"
@@ -732,27 +748,42 @@ export default function AthleteView({
               {userPosts
                 .filter((p) => p.type === 'video')
                 .map((post) => (
-                  <div
+                  <DepthContainer
                     key={post.id}
-                    className="aspect-square bg-muted relative overflow-hidden cursor-pointer hover:opacity-90 group"
-                    onClick={() => handlePostClick(post)}
+                    className="aspect-[4/5] bg-muted relative overflow-hidden cursor-pointer group rounded-sm"
+                    maxRotation={5}
                   >
-                    <img
-                      src={post.media?.[0]}
-                      alt="Video Thumbnail"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src =
-                          'https://img.usecurling.com/p/300/300?q=abstract&color=black'
-                      }}
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
-                      <Play className="h-8 w-8 text-white fill-white opacity-80" />
+                    <div
+                      onClick={() => handlePostClick(post)}
+                      className="w-full h-full relative"
+                    >
+                      <img
+                        src={post.media?.[0]}
+                        alt="Video Thumbnail"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        onError={(e) => {
+                          e.currentTarget.src =
+                            'https://img.usecurling.com/p/300/300?q=abstract&color=black'
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
+
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/40 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                          <Play className="h-4 w-4 text-white fill-white ml-0.5" />
+                        </div>
+                      </div>
+
+                      <div className="absolute bottom-2 right-2 text-[10px] font-bold text-white bg-black/60 px-1.5 py-0.5 rounded backdrop-blur-sm">
+                        {post.videoDuration}
+                      </div>
+
+                      <div className="absolute bottom-2 left-2 flex items-center gap-1 text-white text-xs font-medium drop-shadow-md">
+                        <Play className="h-3 w-3 fill-white" />
+                        {post.totalViews || '1.2k'}
+                      </div>
                     </div>
-                    <div className="absolute bottom-1 right-1 text-[10px] text-white bg-black/60 px-1 rounded">
-                      {post.videoDuration}
-                    </div>
-                  </div>
+                  </DepthContainer>
                 ))}
               {userPosts.filter((p) => p.type === 'video').length === 0 && (
                 <div className="col-span-3 flex flex-col items-center justify-center py-10 text-muted-foreground">
@@ -762,6 +793,7 @@ export default function AthleteView({
               )}
             </div>
           </TabsContent>
+
           <TabsContent
             value="tagged"
             className="mt-4 animate-in slide-in-from-bottom-2 duration-500"
