@@ -11,6 +11,7 @@ const MOVE_VIDEOS: VideoData[] = [
   // Futebol
   {
     id: 'futebol1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
     thumbnail:
       'https://img.usecurling.com/p/600/1000?q=soccer%20goal%20celebration&color=green',
     title: 'Golaço de falta no ângulo! ⚽️',
@@ -30,6 +31,7 @@ const MOVE_VIDEOS: VideoData[] = [
   },
   {
     id: 'futebol2',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
     thumbnail:
       'https://img.usecurling.com/p/600/1000?q=soccer%20dribbling&color=green',
     title: 'Dribles rápidos e controle de bola ⚡️',
@@ -49,6 +51,7 @@ const MOVE_VIDEOS: VideoData[] = [
   // Futsal
   {
     id: 'futsal1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
     thumbnail:
       'https://img.usecurling.com/p/600/1000?q=futsal%20skill&color=blue',
     title: 'Falcão style na quadra 👑',
@@ -68,6 +71,7 @@ const MOVE_VIDEOS: VideoData[] = [
   // Bike
   {
     id: 'bike1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
     thumbnail:
       'https://img.usecurling.com/p/600/1000?q=mountain%20bike%20trail&color=orange',
     title: 'Trilha insana no fim de semana 🚵',
@@ -87,6 +91,7 @@ const MOVE_VIDEOS: VideoData[] = [
   // Running
   {
     id: 'running1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
     thumbnail:
       'https://img.usecurling.com/p/600/1000?q=marathon%20runner&color=red',
     title: 'Preparação para a Maratona 🏃💨',
@@ -106,6 +111,7 @@ const MOVE_VIDEOS: VideoData[] = [
   // Crossfit
   {
     id: 'crossfit1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
     thumbnail:
       'https://img.usecurling.com/p/600/1000?q=crossfit%20workout&color=black',
     title: 'WOD from hell 🔥',
@@ -125,6 +131,7 @@ const MOVE_VIDEOS: VideoData[] = [
   // Swimming
   {
     id: 'swimming1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
     thumbnail:
       'https://img.usecurling.com/p/600/1000?q=swimming%20pool%20underwater&color=cyan',
     title: "Debaixo d'água 🌊",
@@ -144,6 +151,7 @@ const MOVE_VIDEOS: VideoData[] = [
   // Boxing
   {
     id: 'boxing1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
     thumbnail:
       'https://img.usecurling.com/p/600/1000?q=boxing%20gloves%20ring&color=red',
     title: 'Sparring day 🥊',
@@ -163,6 +171,7 @@ const MOVE_VIDEOS: VideoData[] = [
   // Climbing
   {
     id: 'climbing1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
     thumbnail:
       'https://img.usecurling.com/p/600/1000?q=rock%20climbing%20mountain&color=gray',
     title: 'Escalada em rocha natural 🧗',
@@ -182,6 +191,7 @@ const MOVE_VIDEOS: VideoData[] = [
   // Martial Arts
   {
     id: 'martial_arts1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
     thumbnail:
       'https://img.usecurling.com/p/600/1000?q=judo%20throw&color=white',
     title: 'Ippon perfeito! 🥋',

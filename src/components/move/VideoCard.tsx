@@ -1,7 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { MessageCircle, Share2, Play, Zap, Music, Plus } from 'lucide-react'
+import {
+  MessageCircle,
+  Share2,
+  Play,
+  Zap,
+  Music,
+  Plus,
+  Volume2,
+  VolumeX,
+  Loader2,
+} from 'lucide-react'
 import { AiAnalysisDrawer } from '@/components/AiAnalysisDrawer'
 import { CommentsSheet } from '@/components/CommentsSheet'
 import { ShareDialog } from '@/components/ShareDialog'
@@ -14,10 +24,11 @@ import {
 import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 import { SportsReactionButton } from '@/components/move/SportsReactionButton'
 import { useLikeInteraction } from '@/hooks/useLikeInteraction'
+import { cn } from '@/lib/utils'
 
 export interface VideoData {
   id: string
-  url?: string
+  url: string
   thumbnail: string
   title: string
   description: string
@@ -43,29 +54,77 @@ interface VideoCardProps {
 }
 
 export function VideoCard({ video, isActive }: VideoCardProps) {
+  const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isMuted, setIsMuted] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
+  const [progress, setProgress] = useState(0)
+
   const [showAnalysis, setShowAnalysis] = useState(false)
   const [showComments, setShowComments] = useState(false)
   const [showShare, setShowShare] = useState(false)
   const [isFollowing, setIsFollowing] = useState(video.user.isFollowing)
 
-  // Use the interaction hook for sound and state logic
   const { isLiked, likeCount, handleLike } = useLikeInteraction(
     { content: video.title, hashtags: [video.modality] },
     video.likes,
     false,
   )
 
+  // Handle Active State Changes
   useEffect(() => {
     if (isActive) {
-      setIsPlaying(true)
+      const playPromise = videoRef.current?.play()
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true)
+          })
+          .catch((error) => {
+            console.error('Autoplay prevented:', error)
+            setIsPlaying(false)
+            // If failed (likely due to unmuted), try muted
+            if (!isMuted && videoRef.current) {
+              setIsMuted(true)
+              videoRef.current.muted = true
+              videoRef.current
+                .play()
+                .then(() => setIsPlaying(true))
+                .catch(() => {})
+            }
+          })
+      }
     } else {
+      videoRef.current?.pause()
       setIsPlaying(false)
+      if (videoRef.current) {
+        videoRef.current.currentTime = 0
+      }
     }
   }, [isActive])
 
+  // Sync mute state
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = isMuted
+    }
+  }, [isMuted])
+
   const togglePlay = () => {
-    setIsPlaying(!isPlaying)
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause()
+        setIsPlaying(false)
+      } else {
+        videoRef.current.play()
+        setIsPlaying(true)
+      }
+    }
+  }
+
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsMuted(!isMuted)
   }
 
   const handleFollow = (e: React.MouseEvent) => {
@@ -76,63 +135,78 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
     )
   }
 
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      const progress =
+        (videoRef.current.currentTime / videoRef.current.duration) * 100
+      setProgress(progress || 0)
+    }
+  }
+
+  const handleLoadStart = () => setIsLoading(true)
+  const handleCanPlay = () => setIsLoading(false)
+  const handleWaiting = () => setIsLoading(true)
+  const handlePlaying = () => {
+    setIsLoading(false)
+    setIsPlaying(true)
+  }
+
   const enrichedAiData = {
     ...mockAiAnalysis,
-    score: Math.floor(Math.random() * (98 - 75) + 75), // Random score for demo
+    score: Math.floor(Math.random() * (98 - 75) + 75),
     aiStats: [
       { label: 'Velocidade', value: 28, max: 35, unit: 'km/h' },
       { label: 'Força', value: 850, max: 1000, unit: 'N' },
       { label: 'Técnica', value: 92, max: 100, unit: 'pts' },
     ],
-    history:
-      mockStatsHistory.length > 0
-        ? mockStatsHistory
-        : [
-            { date: 'Jan', rating: 3.5, matches: 10 },
-            { date: 'Fev', rating: 3.8, matches: 12 },
-          ],
+    history: mockStatsHistory.length > 0 ? mockStatsHistory : [],
     suggestions:
-      mockTrainingSuggestions.length > 0
-        ? mockTrainingSuggestions
-        : [
-            {
-              id: '1',
-              title: 'Melhorar Postura',
-              description: 'Mantenha as costas retas durante o movimento.',
-              difficulty: 'Iniciante',
-              reason: 'Prevenção de lesão',
-              exercises: [{ name: 'Prancha', sets: 3, reps: 30 }],
-            },
-          ],
+      mockTrainingSuggestions.length > 0 ? mockTrainingSuggestions : [],
   }
 
   return (
-    <div className="relative h-full w-full snap-start bg-black overflow-hidden">
-      {/* Nostalgia Filter Layer */}
+    <div className="relative h-full w-full snap-start bg-black overflow-hidden flex items-center justify-center">
       <NostalgiaFilter className="z-10" />
 
-      {/* Video Placeholder/Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
-        style={{
-          backgroundImage: `url(${video.thumbnail})`,
-          transform: isPlaying ? 'scale(1.0)' : 'scale(1.05)',
-        }}
+      {/* Video Element */}
+      <video
+        ref={videoRef}
+        src={video.url}
+        poster={video.thumbnail}
+        className="absolute inset-0 w-full h-full object-cover bg-black"
+        loop
+        playsInline
+        muted={isMuted} // Controlled by state
         onClick={togglePlay}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/90" />
-      </div>
+        onTimeUpdate={handleTimeUpdate}
+        onLoadStart={handleLoadStart}
+        onCanPlay={handleCanPlay}
+        onWaiting={handleWaiting}
+        onPlaying={handlePlaying}
+      />
 
-      {/* Play/Pause Overlay */}
-      {!isPlaying && (
+      {/* Loading Overlay */}
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/20 z-10 pointer-events-none">
+          <Loader2 className="w-10 h-10 text-white animate-spin" />
+        </div>
+      )}
+
+      {/* Gradient Overlay for better text visibility */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80 pointer-events-none" />
+
+      {/* Play/Pause Center Icon Overlay */}
+      {!isPlaying && !isLoading && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-          <Play className="h-16 w-16 text-white/70 fill-white/70 animate-pulse" />
+          <div className="bg-black/40 rounded-full p-4 backdrop-blur-sm animate-in fade-in zoom-in duration-300">
+            <Play className="h-12 w-12 text-white fill-white ml-1" />
+          </div>
         </div>
       )}
 
       {/* Side Actions (Right) */}
       <div className="absolute right-2 bottom-24 flex flex-col items-center gap-6 z-20 pb-4">
-        {/* Profile Avatar with Follow Badge */}
+        {/* Profile Avatar */}
         <div className="relative mb-2">
           <Avatar className="h-12 w-12 border-2 border-white shadow-lg cursor-pointer transition-transform hover:scale-110">
             <AvatarImage src={video.user.avatar} />
@@ -148,7 +222,6 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
           )}
         </div>
 
-        {/* Sports Specific Emoji Reaction */}
         <SportsReactionButton
           modality={video.modality}
           isLiked={isLiked}
@@ -180,7 +253,7 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
             <Zap className="h-6 w-6 fill-current" />
           </Button>
           <span className="text-white text-xs font-bold drop-shadow-md">
-            AI Skip
+            AI
           </span>
         </div>
 
@@ -228,20 +301,46 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
                 </>
               )}
             </div>
+
+            {/* Mute Button */}
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-8 w-8 rounded-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-md border border-white/10"
+              onClick={toggleMute}
+            >
+              {isMuted ? (
+                <VolumeX className="h-4 w-4" />
+              ) : (
+                <Volume2 className="h-4 w-4" />
+              )}
+            </Button>
           </div>
         </div>
       </div>
 
+      {/* Progress Bar */}
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20 z-30">
+        <div
+          className="h-full bg-primary transition-all duration-100 ease-linear shadow-[0_0_10px_rgba(var(--primary),0.8)]"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
       {/* Rotating Disc (Bottom Right) */}
       <div className="absolute bottom-6 right-4 z-20 pointer-events-none">
-        <div className="w-10 h-10 rounded-full bg-black border-4 border-zinc-800 flex items-center justify-center animate-[spin_5s_linear_infinite]">
+        <div
+          className={cn(
+            'w-10 h-10 rounded-full bg-black border-4 border-zinc-800 flex items-center justify-center',
+            isPlaying ? 'animate-[spin_5s_linear_infinite]' : '',
+          )}
+        >
           <Avatar className="w-6 h-6">
             <AvatarImage src={video.user.avatar} />
           </Avatar>
         </div>
       </div>
 
-      {/* Drawers & Dialogs */}
       <AiAnalysisDrawer
         open={showAnalysis}
         onOpenChange={setShowAnalysis}
