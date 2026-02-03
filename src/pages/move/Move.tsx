@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 
 // Enhanced Video Data with Specific Sports Highlights ("Lances de Esportes")
 const MOVE_VIDEOS: VideoData[] = [
-  // --- FUTEBOL (Priority for default user) ---
+  // --- FUTEBOL (High Priority) ---
   {
     id: 'fut_highlight_1',
     url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
@@ -110,6 +110,25 @@ const MOVE_VIDEOS: VideoData[] = [
     music: null,
     modality: 'futsal',
   },
+  {
+    id: 'futsal_2',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=futsal%20goal%20indoor&color=blue&dpr=2',
+    title: 'Golaço de cavadinha! ⚽',
+    description: 'Muita frieza na frente do goleiro. Categoria máxima!',
+    likes: 980,
+    comments: 32,
+    shares: 150,
+    user: {
+      id: 'u_fut_2',
+      name: 'Magic Feet',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=106',
+      isFollowing: true,
+    },
+    music: { title: 'Skills', artist: 'Beat' },
+    modality: 'futsal',
+  },
 
   // --- BASKETBALL ---
   {
@@ -126,10 +145,29 @@ const MOVE_VIDEOS: VideoData[] = [
     user: {
       id: 'u_bball_1',
       name: 'Air Jordan Jr',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=106',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=107',
       isFollowing: true,
     },
     music: { title: 'Hip Hop Beat', artist: 'Street' },
+    modality: 'basketball',
+  },
+  {
+    id: 'bball_2',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=basketball%203%20point%20shot&color=orange&dpr=2',
+    title: 'Chuva de 3 pontos! 👌',
+    description: 'Mão quente no treino de hoje. Ninguém segura!',
+    likes: 1500,
+    comments: 67,
+    shares: 200,
+    user: {
+      id: 'u_bball_2',
+      name: 'Sniper 3pts',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=108',
+      isFollowing: false,
+    },
+    music: null,
     modality: 'basketball',
   },
 
@@ -147,7 +185,7 @@ const MOVE_VIDEOS: VideoData[] = [
     user: {
       id: 'u_cf_1',
       name: 'Iron Cross',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=107',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=109',
       isFollowing: true,
     },
     music: { title: 'Heavy Metal', artist: 'Gym' },
@@ -168,7 +206,7 @@ const MOVE_VIDEOS: VideoData[] = [
     user: {
       id: 'u_surf_1',
       name: 'Soul Surfer',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=108',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=110',
       isFollowing: false,
     },
     music: { title: 'Reggae Vibes', artist: 'Beach' },
@@ -189,11 +227,74 @@ const MOVE_VIDEOS: VideoData[] = [
     user: {
       id: 'u_skate_1',
       name: 'Street King',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=109',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=111',
       isFollowing: true,
     },
     music: { title: 'Punk Rock', artist: 'Sk8' },
     modality: 'skate',
+  },
+
+  // --- VOLLEYBALL ---
+  {
+    id: 'volley_1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=volleyball%20spike&color=yellow&dpr=2',
+    title: 'Cortada na diagonal! 🏐',
+    description: 'Ataque indefensável. O levantador deixou na pinta!',
+    likes: 1800,
+    comments: 90,
+    shares: 300,
+    user: {
+      id: 'u_volley_1',
+      name: 'Vôlei Show',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=112',
+      isFollowing: true,
+    },
+    music: null,
+    modality: 'volleyball',
+  },
+
+  // --- TENNIS ---
+  {
+    id: 'tennis_1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=tennis%20serve&color=green&dpr=2',
+    title: 'Ace no match point! 🎾',
+    description: 'Saque a 200km/h para fechar o jogo. Que momento!',
+    likes: 1300,
+    comments: 45,
+    shares: 100,
+    user: {
+      id: 'u_tennis_1',
+      name: 'Grand Slammer',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=113',
+      isFollowing: false,
+    },
+    music: null,
+    modality: 'tennis',
+  },
+
+  // --- FIGHTING ---
+  {
+    id: 'fight_1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+    thumbnail:
+      'https://img.usecurling.com/p/600/1000?q=boxing%20training%20punch&color=red&dpr=2',
+    title: 'Treino de velocidade 🥊',
+    description: 'Manopla pegando fogo hoje. Foco na esquiva e contra-ataque.',
+    likes: 2400,
+    comments: 120,
+    shares: 500,
+    user: {
+      id: 'u_fight_1',
+      name: 'Knockout King',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=114',
+      isFollowing: true,
+    },
+    music: { title: 'Eye of the Tiger', artist: 'Classic' },
+    modality: 'boxing',
   },
 ]
 
@@ -201,11 +302,10 @@ export default function Move() {
   const navigate = useNavigate()
 
   // Logic to determine initial tribe based on User Profile
-  // This satisfies the requirement to match "athlete profile" modality
   const getInitialTribe = () => {
     if (!mockCurrentUser?.sport) return 'all'
 
-    // Normalize sport name to match tribe IDs (e.g., 'Futebol' -> 'futebol')
+    // Normalize sport name to match tribe IDs
     const userSportId = mockCurrentUser.sport
       .toLowerCase()
       .replace('ê', 'e')
@@ -215,12 +315,12 @@ export default function Move() {
     // Check if the user's sport exists in our tribes list
     const tribeExists = tribes.some((t) => t.id === userSportId)
 
-    // If it exists, default to it. Otherwise, show all.
     return tribeExists ? userSportId : 'all'
   }
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [activeTribe, setActiveTribe] = useState(getInitialTribe())
+  const [feedType, setFeedType] = useState<'foryou' | 'following'>('foryou')
   const containerRef = useRef<HTMLDivElement>(null)
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -231,44 +331,82 @@ export default function Move() {
     }
   }
 
-  const filteredVideos =
-    activeTribe === 'all'
-      ? MOVE_VIDEOS
-      : MOVE_VIDEOS.filter((video) => video.modality === activeTribe)
+  // Improved Filtering Logic
+  const filteredVideos = MOVE_VIDEOS.filter((video) => {
+    // 1. Filter by Feed Type (Following vs For You)
+    if (feedType === 'following' && !video.user.isFollowing) {
+      return false
+    }
+
+    // 2. Filter by Tribe (if activeTribe is not 'all')
+    // Note: 'Following' feed also respects tribe filter for better UX, or we can disable tribe filter for 'Following'.
+    // Let's make 'Following' show ALL following content regardless of tribe for broad discovery of friends.
+    if (feedType === 'following') {
+      return true
+    }
+
+    // For 'For You', we respect the tribe filter strictly
+    if (activeTribe === 'all') return true
+    return video.modality === activeTribe
+  })
 
   const handleTribeChange = (tribeId: string) => {
     setActiveTribe(tribeId)
+    setFeedType('foryou') // Switch to For You when selecting a tribe to show results
     setActiveIndex(0)
-    // Reset scroll position
     if (containerRef.current) {
       containerRef.current.scrollTop = 0
     }
   }
 
-  // Effect to ensure we start at the top when tribe changes
+  const handleFeedTypeChange = (type: 'foryou' | 'following') => {
+    setFeedType(type)
+    setActiveIndex(0)
+    if (containerRef.current) {
+      containerRef.current.scrollTop = 0
+    }
+  }
+
+  // Effect to ensure we start at the top when filter changes
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.scrollTop = 0
     }
-  }, [activeTribe])
+  }, [activeTribe, feedType])
 
   return (
     <div className="h-full w-full bg-black relative">
       {/* Header / Tribes Filter Bar */}
       <div className="absolute top-4 left-0 right-0 z-30 flex flex-col items-center">
-        {/* Standard "Following | For You" Tabs */}
-        <div className="flex items-center justify-between w-full px-4 mb-2">
+        {/* Feed Type Toggles */}
+        <div className="flex items-center justify-between w-full px-4 mb-3">
           <div className="w-24"></div> {/* Spacer for centering */}
           <div className="flex items-center gap-4 text-white text-sm font-bold shadow-black drop-shadow-md">
-            <span className="opacity-60 hover:opacity-100 cursor-pointer transition-opacity">
+            <button
+              onClick={() => handleFeedTypeChange('following')}
+              className={cn(
+                'transition-all duration-300',
+                feedType === 'following'
+                  ? 'opacity-100 border-b-2 border-white pb-0.5 scale-105'
+                  : 'opacity-60 hover:opacity-100',
+              )}
+            >
               Seguindo
-            </span>
-            <span className="opacity-60">|</span>
-            <span className="opacity-100 border-b-2 border-white pb-0.5">
+            </button>
+            <span className="opacity-40">|</span>
+            <button
+              onClick={() => handleFeedTypeChange('foryou')}
+              className={cn(
+                'transition-all duration-300',
+                feedType === 'foryou'
+                  ? 'opacity-100 border-b-2 border-white pb-0.5 scale-105'
+                  : 'opacity-60 hover:opacity-100',
+              )}
+            >
               Para Você
-            </span>
+            </button>
           </div>
-          {/* Kids Map Integration - Enhanced Button */}
+          {/* Kids Map Integration */}
           <Button
             size="sm"
             onClick={() => navigate('/move/kids-map')}
@@ -280,40 +418,49 @@ export default function Move() {
           </Button>
         </div>
 
-        {/* Tribes Scroll */}
-        <ScrollArea className="w-full whitespace-nowrap px-4 mask-gradient">
-          <div className="flex w-max space-x-3 px-4 pb-2">
-            {tribes.map((tribe) => (
-              <button
-                key={tribe.id}
-                onClick={() => handleTribeChange(tribe.id)}
-                className={cn(
-                  'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 backdrop-blur-md border border-transparent',
-                  activeTribe === tribe.id
-                    ? 'bg-primary text-white border-primary/50 shadow-[0_0_10px_rgba(var(--primary),0.4)]'
-                    : 'bg-black/30 text-white hover:bg-black/50 border-white/10',
-                )}
-              >
-                {'image' in tribe && tribe.image ? (
-                  <img
-                    src={tribe.image as string}
-                    alt={tribe.label}
-                    className="h-3 w-3 object-contain"
-                  />
-                ) : (
-                  <tribe.icon
-                    className={cn(
-                      'h-3 w-3',
-                      activeTribe === tribe.id ? 'fill-current' : '',
-                    )}
-                  />
-                )}
-                {tribe.label}
-              </button>
-            ))}
-          </div>
-          <ScrollBar orientation="horizontal" className="hidden" />
-        </ScrollArea>
+        {/* Tribes Scroll - Only visible in For You mode or optionally in Following */}
+        <div
+          className={cn(
+            'w-full transition-all duration-300 overflow-hidden',
+            feedType === 'following'
+              ? 'max-h-0 opacity-0'
+              : 'max-h-16 opacity-100',
+          )}
+        >
+          <ScrollArea className="w-full whitespace-nowrap px-4 mask-gradient">
+            <div className="flex w-max space-x-3 px-4 pb-2">
+              {tribes.map((tribe) => (
+                <button
+                  key={tribe.id}
+                  onClick={() => handleTribeChange(tribe.id)}
+                  className={cn(
+                    'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 backdrop-blur-md border border-transparent',
+                    activeTribe === tribe.id
+                      ? 'bg-primary text-white border-primary/50 shadow-[0_0_10px_rgba(var(--primary),0.4)]'
+                      : 'bg-black/30 text-white hover:bg-black/50 border-white/10',
+                  )}
+                >
+                  {'image' in tribe && tribe.image ? (
+                    <img
+                      src={tribe.image as string}
+                      alt={tribe.label}
+                      className="h-3 w-3 object-contain"
+                    />
+                  ) : (
+                    <tribe.icon
+                      className={cn(
+                        'h-3 w-3',
+                        activeTribe === tribe.id ? 'fill-current' : '',
+                      )}
+                    />
+                  )}
+                  {tribe.label}
+                </button>
+              ))}
+            </div>
+            <ScrollBar orientation="horizontal" className="hidden" />
+          </ScrollArea>
+        </div>
       </div>
 
       {/* Video Feed Container */}
@@ -329,21 +476,32 @@ export default function Move() {
             </div>
           ))
         ) : (
-          <div className="h-full w-full flex flex-col items-center justify-center text-white p-6 text-center">
-            <div className="bg-zinc-800 p-4 rounded-full mb-4">
-              <Zap className="h-8 w-8 text-zinc-500" />
+          <div className="h-full w-full flex flex-col items-center justify-center text-white p-6 text-center bg-zinc-950">
+            <div className="bg-zinc-900 p-6 rounded-full mb-6 animate-pulse">
+              <Zap className="h-10 w-10 text-zinc-500" />
             </div>
-            <h3 className="text-xl font-bold mb-2">Sem vídeos no momento</h3>
-            <p className="text-zinc-400">
-              Não encontramos lances para {activeTribe}. Tente selecionar outra
-              tribo ou volte mais tarde!
+            <h3 className="text-2xl font-bold mb-3">
+              {feedType === 'following'
+                ? 'Nenhum vídeo novo'
+                : 'Sem vídeos no momento'}
+            </h3>
+            <p className="text-zinc-400 max-w-xs mx-auto leading-relaxed">
+              {feedType === 'following'
+                ? 'Siga mais atletas e times para ver os lances deles aqui.'
+                : `Não encontramos lances para ${activeTribe}. Tente selecionar outra tribo ou volte mais tarde!`}
             </p>
             <Button
               variant="outline"
-              className="mt-6 border-white/20 text-white hover:bg-white/10"
-              onClick={() => handleTribeChange('all')}
+              className="mt-8 border-white/20 text-white hover:bg-white/10 px-8"
+              onClick={() =>
+                feedType === 'following'
+                  ? handleFeedTypeChange('foryou')
+                  : handleTribeChange('all')
+              }
             >
-              Ver todos os esportes
+              {feedType === 'following'
+                ? 'Explorar Para Você'
+                : 'Ver todos os esportes'}
             </Button>
           </div>
         )}
