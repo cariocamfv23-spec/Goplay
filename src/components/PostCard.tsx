@@ -48,6 +48,7 @@ interface PostProps {
     user: { id?: string; name: string; avatar: string; type: string }
     content: string
     media?: string[]
+    image?: string
     title?: string
     hashtags?: string[]
     videoDuration?: string
@@ -69,6 +70,7 @@ interface PostProps {
 export function PostCard({ post }: PostProps) {
   const [showComments, setShowComments] = useState(false)
   const [showDetail, setShowDetail] = useState(false)
+  const [imgError, setImgError] = useState(false)
 
   const { isLiked, likeCount, handleLike } = useLikeInteraction(
     post,
@@ -106,6 +108,17 @@ export function PostCard({ post }: PostProps) {
   const openDetail = () => {
     setShowDetail(true)
   }
+
+  const handleImageError = () => {
+    setImgError(true)
+  }
+
+  // Determine the primary image to display.
+  // Prioritize `post.image` (if existing), then fall back to `post.media[0]`.
+  // If an error occurred or neither exist, show a fallback placeholder.
+  const primaryImage = imgError
+    ? 'https://img.usecurling.com/p/800/400?q=sports%20generic&color=gray'
+    : post.image || post.media?.[0]
 
   const renderSocialContext = () => {
     if (!post.socialContext) return null
@@ -155,9 +168,10 @@ export function PostCard({ post }: PostProps) {
             <div onClick={openDetail} className="w-full h-full">
               <NostalgiaFilter />
               <img
-                src={post.media?.[0]}
+                src={primaryImage}
                 alt="Thumbnail"
                 loading="lazy"
+                onError={handleImageError}
                 className="w-full aspect-video object-cover transition-transform duration-500 group-hover:scale-105"
               />
 
@@ -265,9 +279,10 @@ export function PostCard({ post }: PostProps) {
               <div className="aspect-[2/1] relative overflow-hidden">
                 <NostalgiaFilter />
                 <img
-                  src={post.media?.[0]}
+                  src={primaryImage}
                   alt="Article"
                   loading="lazy"
+                  onError={handleImageError}
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                 />
               </div>
@@ -283,22 +298,28 @@ export function PostCard({ post }: PostProps) {
           </DepthContainer>
         )
       default:
-        return post.media && post.media.length > 0 ? (
-          <DepthContainer
-            className="relative rounded-xl overflow-hidden mb-3 cursor-pointer"
-            maxRotation={3}
-          >
-            <div onClick={openDetail} className="w-full h-full">
-              <NostalgiaFilter />
-              <img
-                src={post.media[0]}
-                alt="Post"
-                loading="lazy"
-                className="w-full h-auto object-cover max-h-[500px] hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-          </DepthContainer>
-        ) : null
+        // Handle generic post (image or text only)
+        // If we have a valid image (either from 'image' prop or 'media' array)
+        if (primaryImage) {
+          return (
+            <DepthContainer
+              className="relative rounded-xl overflow-hidden mb-3 cursor-pointer"
+              maxRotation={3}
+            >
+              <div onClick={openDetail} className="w-full h-full">
+                <NostalgiaFilter />
+                <img
+                  src={primaryImage}
+                  alt="Post"
+                  loading="lazy"
+                  onError={handleImageError}
+                  className="w-full h-auto object-cover max-h-[500px] hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+            </DepthContainer>
+          )
+        }
+        return null
     }
   }
 
