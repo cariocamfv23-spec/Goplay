@@ -84,7 +84,8 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
             console.error('Autoplay prevented:', error)
             setIsPlaying(false)
             // If failed (likely due to unmuted), try muted
-            if (!isMuted && videoRef.current) {
+            // We check videoRef.current.muted directly to avoid adding isMuted to dependency array
+            if (videoRef.current && !videoRef.current.muted) {
               setIsMuted(true)
               videoRef.current.muted = true
               videoRef.current
