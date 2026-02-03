@@ -51,6 +51,7 @@ import { EcoHumanoWaves } from '@/components/EcoHumanoWaves'
 import { EcoLegend } from '@/components/EcoLegend'
 import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
+import { getSportCoverImage } from '@/lib/sport-utils'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -79,6 +80,10 @@ export default function AthleteView({
   // Filter posts based on user if needed. Currently showing all mockPosts for demo
   const userPosts = mockPosts
 
+  // Dynamic Sport Background Logic
+  // Prioritize the sport-specific cover if available, otherwise fallback to user.cover or generic
+  const coverImage = getSportCoverImage(user.sport)
+
   const handleMusicSelect = (track: MusicTrack) => {
     setUser({ ...user, favoriteSong: track })
     toast.success('Música do perfil atualizada!', {
@@ -98,7 +103,7 @@ export default function AthleteView({
       {auraConfig.type !== 'none' && (
         <div
           className="absolute inset-0 z-0 pointer-events-none overflow-hidden"
-          style={{ height: '500px' }}
+          style={{ height: '600px' }}
         >
           {/* Main Gradient */}
           <div
@@ -117,21 +122,29 @@ export default function AthleteView({
         </div>
       )}
 
-      {/* Cover Image */}
-      <div className="h-32 bg-muted relative overflow-hidden group z-10">
+      {/* High-Quality Sport Cover Image */}
+      <div className="h-64 bg-muted relative overflow-hidden group z-10">
         <img
-          src={user.cover}
-          alt="Cover"
-          className="w-full h-full object-cover opacity-80 transition-transform duration-1000 group-hover:scale-105"
+          src={coverImage}
+          alt={`Cover for ${user.sport || 'Athlete'}`}
+          className="w-full h-full object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105"
           onError={(e) => {
             e.currentTarget.src =
               'https://img.usecurling.com/p/800/400?q=abstract%20gradient&color=blue'
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
+        {/* Cinematic Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+
+        {/* Sport Badge on Cover */}
+        {user.sport && (
+          <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-white/10 shadow-lg">
+            {user.sport}
+          </div>
+        )}
       </div>
 
-      <div className="px-4 relative -mt-12 mb-4 z-10">
+      <div className="px-4 relative -mt-16 mb-4 z-10">
         <div className="flex justify-between items-end mb-4">
           <div className="relative">
             {/* Eco Humano Waves - Background Layer */}
@@ -142,19 +155,19 @@ export default function AthleteView({
 
             {/* Athlete Aura - Foreground Layer */}
             <AthleteAura profile={user} size="xl" showLabel className="-ml-1">
-              <Avatar className="h-24 w-24 border-4 border-background shadow-lg relative z-20">
-                <AvatarImage src={user.avatar} />
+              <Avatar className="h-28 w-28 border-4 border-background shadow-xl relative z-20">
+                <AvatarImage src={user.avatar} className="object-cover" />
                 <AvatarFallback>{user.name[0]}</AvatarFallback>
               </Avatar>
             </AthleteAura>
           </div>
 
-          <div className="flex gap-2 mb-2 items-center">
+          <div className="flex gap-2 mb-3 items-center">
             {isMe ? (
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-background/80 backdrop-blur-sm shadow-sm"
+                className="bg-background/80 backdrop-blur-sm shadow-sm hover:bg-background"
                 onClick={() => navigate('/settings')}
               >
                 <Edit2 className="h-4 w-4 mr-2" />
@@ -188,7 +201,7 @@ export default function AthleteView({
               {user.level && (
                 <Badge
                   variant="secondary"
-                  className="text-[10px] bg-gold text-black px-1.5 py-0 border-none font-bold uppercase tracking-wider"
+                  className="text-[10px] bg-gold text-black px-1.5 py-0 border-none font-bold uppercase tracking-wider shadow-sm"
                 >
                   LVL {user.level}
                 </Badge>
@@ -197,7 +210,7 @@ export default function AthleteView({
             {/* Aura Legend Trigger */}
             <button
               onClick={() => setIsAuraLegendOpen(true)}
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground hover:text-primary transition-colors p-1"
               aria-label="Legenda da Aura"
             >
               <Info className="w-4 h-4" />
@@ -205,7 +218,7 @@ export default function AthleteView({
             {/* Eco Legend Trigger */}
             <button
               onClick={() => setIsEcoLegendOpen(true)}
-              className="text-muted-foreground hover:text-emerald-500 transition-colors"
+              className="text-muted-foreground hover:text-emerald-500 transition-colors p-1"
               aria-label="Eco Humano"
             >
               <Waves className="w-4 h-4" />
@@ -213,14 +226,14 @@ export default function AthleteView({
           </div>
 
           <p className="text-sm text-muted-foreground font-medium mb-1">
-            {user.role}
+            {user.role} • {user.position}
           </p>
           <div className="flex items-center gap-1 text-xs text-muted-foreground mb-4">
             <MapPin className="h-3 w-3" /> {user.location}
           </div>
 
           {/* Social Stats Row */}
-          <div className="flex items-center justify-between bg-secondary/20 p-3 rounded-xl border border-border/50 mb-5">
+          <div className="flex items-center justify-between bg-secondary/20 p-3 rounded-xl border border-border/50 mb-5 backdrop-blur-sm">
             <div className="flex flex-col items-center flex-1 border-r border-border/50">
               <span className="font-bold text-lg leading-none">
                 {user.followers || 0}
@@ -266,7 +279,7 @@ export default function AthleteView({
 
           <div className="mb-6">
             {user.favoriteSong ? (
-              <div className="bg-secondary/30 rounded-lg p-2 flex items-center gap-3 border border-border/50">
+              <div className="bg-secondary/30 rounded-lg p-2 flex items-center gap-3 border border-border/50 hover:bg-secondary/40 transition-colors">
                 <div className="h-10 w-10 bg-black rounded-md overflow-hidden relative shrink-0">
                   <img
                     src={user.favoriteSong.cover}
