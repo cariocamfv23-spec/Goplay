@@ -1750,7 +1750,7 @@ export const mockPosts = [
     content:
       'Grande vitória de ontem! O trabalho duro compensa. ⚽🔥 #Futebol #Vitoria',
     media: [
-      'https://img.usecurling.com/p/600/600?q=soccer%20goal%20celebration&color=blue&dpr=2',
+      'https://img.usecurling.com/p/600/600?q=soccer%20goal%20celebration%20stadium&color=blue&dpr=2',
     ],
     videoUrl:
       'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',

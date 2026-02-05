@@ -203,6 +203,50 @@ const MOVE_VIDEOS: VideoData[] = [
     music: { title: 'Samba Beat', artist: 'Brasil' },
     modality: 'futsal',
   },
+
+  // --- BIKE / CYCLING ---
+  {
+    id: 'bike_1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+    thumbnail:
+      'https://img.usecurling.com/p/720/1280?q=road%20cycling%20mountain%20sprint&color=orange&dpr=2',
+    title: 'Sprint Final na Serra 🚴‍♂️💨',
+    description:
+      'Subida de 12% de inclinação e ainda sobrou perna pro sprint. Paisagem incrível!',
+    likes: 6500,
+    comments: 150,
+    shares: 200,
+    user: {
+      id: 'u_bike_1',
+      name: 'Pedal Forte',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=55',
+      isFollowing: false,
+    },
+    music: null,
+    modality: 'bike',
+  },
+
+  // --- TENNIS ---
+  {
+    id: 'tennis_1',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+    thumbnail:
+      'https://img.usecurling.com/p/720/1280?q=tennis%20serve%20action%20clay&color=green&dpr=2',
+    title: 'Ace no Match Point! 🎾🏆',
+    description:
+      'Saque a 210km/h para fechar o jogo. Concentração total e execução perfeita.',
+    likes: 14200,
+    comments: 320,
+    shares: 500,
+    user: {
+      id: 'u_tennis_1',
+      name: 'Ace Queen',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=33',
+      isFollowing: true,
+    },
+    music: { title: 'Match Point', artist: 'Tennis Courts' },
+    modality: 'tennis',
+  },
 ]
 
 export default function Move() {
