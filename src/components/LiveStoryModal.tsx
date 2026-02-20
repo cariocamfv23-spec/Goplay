@@ -5,6 +5,51 @@ import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useState, useEffect } from 'react'
 
+const commentsData = [
+  {
+    id: 1,
+    user: 'alex_silva',
+    text: 'Que jogada incrível! 🔥',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
+  },
+  {
+    id: 2,
+    user: 'mari.sports',
+    text: 'Vai timeeee!! Pra cima deles!',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=12',
+  },
+  {
+    id: 3,
+    user: 'carlos_edu',
+    text: 'O passe foi genial.',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=45',
+  },
+  {
+    id: 4,
+    user: 'lucas_mendes',
+    text: 'Alguém sabe quanto tá o placar?',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=34',
+  },
+  {
+    id: 5,
+    user: 'bia_lima',
+    text: 'Golaçoooo ⚽⚽⚽',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=23',
+  },
+  {
+    id: 6,
+    user: 'pedro_santos',
+    text: 'Defesa espetacular!!!',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=67',
+  },
+  {
+    id: 7,
+    user: 'julia_costa',
+    text: 'Tô acompanhando daqui de casa',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=120',
+  },
+]
+
 export function LiveStoryModal({
   open,
   onOpenChange,
@@ -12,62 +57,19 @@ export function LiveStoryModal({
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {
-  const comments = [
-    {
-      id: 1,
-      user: 'alex_silva',
-      text: 'Que jogada incrível! 🔥',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
-    },
-    {
-      id: 2,
-      user: 'mari.sports',
-      text: 'Vai timeeee!! Pra cima deles!',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=12',
-    },
-    {
-      id: 3,
-      user: 'carlos_edu',
-      text: 'O passe foi genial.',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=45',
-    },
-    {
-      id: 4,
-      user: 'lucas_mendes',
-      text: 'Alguém sabe quanto tá o placar?',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=34',
-    },
-    {
-      id: 5,
-      user: 'bia_lima',
-      text: 'Golaçoooo ⚽⚽⚽',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=23',
-    },
-    {
-      id: 6,
-      user: 'pedro_santos',
-      text: 'Defesa espetacular!!!',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=67',
-    },
-    {
-      id: 7,
-      user: 'julia_costa',
-      text: 'Tô acompanhando daqui de casa',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=120',
-    },
-  ]
-
-  const [visibleComments, setVisibleComments] = useState<typeof comments>([])
+  const [visibleComments, setVisibleComments] = useState<typeof commentsData>(
+    [],
+  )
 
   useEffect(() => {
     if (open) {
       let i = 0
-      setVisibleComments([comments[0]])
+      setVisibleComments([commentsData[0]])
       i++
 
       const interval = setInterval(() => {
-        if (i < comments.length) {
-          setVisibleComments((prev) => [...prev, comments[i]])
+        if (i < commentsData.length) {
+          setVisibleComments((prev) => [...prev, commentsData[i]])
           i++
         } else {
           clearInterval(interval)
