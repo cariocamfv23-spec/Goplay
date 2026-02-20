@@ -29,14 +29,12 @@ const Move = lazy(() => import('./pages/move/Move'))
 const Explore = lazy(() => import('./pages/explore/Explore'))
 const CheckIn = lazy(() => import('./pages/checkin/CheckIn'))
 
-// Contract Pages
+// Contracts & Organizer Pages
 const LiveContractsDashboard = lazy(
   () => import('./pages/contracts/LiveContractsDashboard'),
 )
 const CreateContract = lazy(() => import('./pages/contracts/CreateContract'))
 const ContractDetails = lazy(() => import('./pages/contracts/ContractDetails'))
-
-// Organizer Pages
 const ChampionshipsList = lazy(
   () => import('./pages/organizer/ChampionshipsList'),
 )
@@ -75,8 +73,6 @@ const PartnerGasStations = lazy(
 )
 const KidsFriendlyList = lazy(() => import('./pages/explore/KidsFriendlyList'))
 const FlyerCreator = lazy(() => import('./pages/explore/FlyerCreator'))
-
-// Sponsors
 const SponsorshipMatch = lazy(() => import('./pages/sponsors/SponsorshipMatch'))
 
 // Details
@@ -116,12 +112,10 @@ const EvolutionMode = lazy(() => import('./pages/profile/EvolutionMode'))
 const SportsPassport = lazy(() => import('./pages/profile/SportsPassport'))
 const ReferralProgram = lazy(() => import('./pages/profile/ReferralProgram'))
 
-// Messages
+// Messages & Marketplace
 const MessagesList = lazy(() => import('./pages/messages/MessagesList'))
 const ChatRoom = lazy(() => import('./pages/messages/ChatRoom'))
 const NewChat = lazy(() => import('./pages/messages/NewChat'))
-
-// Marketplace
 const Marketplace = lazy(() => import('./pages/marketplace/Marketplace'))
 const ProductDetails = lazy(() => import('./pages/marketplace/ProductDetails'))
 const Cart = lazy(() => import('./pages/marketplace/Cart'))
@@ -146,6 +140,7 @@ const NotFound = lazy(() => import('./pages/NotFound'))
 const Ranking = lazy(() => import('./pages/gamification/Ranking'))
 const Notifications = lazy(() => import('./pages/notifications/Notifications'))
 
+// AI
 const AiCoach = lazy(() => import('./pages/ai/AiCoach'))
 const MotionAnalysis = lazy(() => import('./pages/ai/MotionAnalysis'))
 const InjuryScanner = lazy(() => import('./pages/ai/InjuryScanner'))
@@ -161,18 +156,20 @@ const Oracle = lazy(() => import('./pages/ai/Oracle'))
 const NftCreator = lazy(() => import('./pages/ai/NftCreator'))
 const BotDaVerdade = lazy(() => import('./pages/ai/BotDaVerdade'))
 
-// Time Shift Module
+// Time Shift & Move Map
 const TimeShift = lazy(() => import('./pages/timeshift/TimeShift'))
-
-// Move Pages
 const KidsZoneMap = lazy(() => import('./pages/move/KidsZoneMap'))
+
+// Live Broadcast
+const CreateLiveBroadcast = lazy(
+  () => import('./pages/live/CreateLiveBroadcast'),
+)
 
 const App = () => {
   const { color } = useThemeStore()
 
   useEffect(() => {
     const root = window.document.documentElement
-    // Remove all possible theme classes
     root.classList.remove(
       'theme-blue',
       'theme-green',
@@ -180,7 +177,6 @@ const App = () => {
       'theme-red',
       'theme-rose',
     )
-    // Add the selected color theme class if not default
     if (color !== 'default') {
       root.classList.add(`theme-${color}`)
     }
@@ -207,9 +203,13 @@ const App = () => {
                     element={<ProfileSelection />}
                   />
                   <Route path="/retrospective" element={<Retrospective />} />
-
-                  {/* Independent Time Shift Module */}
                   <Route path="/timeshift" element={<TimeShift />} />
+
+                  {/* Live Broadcast Creation - Outside Layout for Full Screen */}
+                  <Route
+                    path="/live/broadcast"
+                    element={<CreateLiveBroadcast />}
+                  />
 
                   <Route element={<Layout />}>
                     <Route path="/home" element={<Home />} />
@@ -220,7 +220,6 @@ const App = () => {
                     <Route path="/check-in" element={<CheckIn />} />
                     <Route path="/app-map" element={<AppMap />} />
 
-                    {/* Contracts */}
                     <Route
                       path="/contracts"
                       element={<LiveContractsDashboard />}
@@ -234,7 +233,6 @@ const App = () => {
                       element={<ContractDetails />}
                     />
 
-                    {/* Organizer Routes */}
                     <Route path="/organizer" element={<ChampionshipsList />} />
                     <Route
                       path="/organizer/create"
@@ -245,7 +243,6 @@ const App = () => {
                       element={<ChampionshipDashboard />}
                     />
 
-                    {/* Explore Lists Routes */}
                     <Route
                       path="/explore/sponsorship"
                       element={<SponsorshipMatch />}
@@ -298,7 +295,6 @@ const App = () => {
                       element={<FlyerCreator />}
                     />
 
-                    {/* Detail Routes */}
                     <Route path="/events/:id" element={<EventDetails />} />
                     <Route path="/venues/:id" element={<VenueDetails />} />
                     <Route path="/gyms/:id" element={<GymDetails />} />
@@ -324,7 +320,6 @@ const App = () => {
                       element={<ScholarshipApplication />}
                     />
 
-                    {/* Profile & Stats */}
                     <Route path="/profile/:id" element={<Profile />} />
                     <Route path="/profile/stats" element={<StatsDetail />} />
                     <Route
@@ -354,15 +349,12 @@ const App = () => {
                       element={<TransactionHistory />}
                     />
 
-                    {/* Goals */}
                     <Route path="/goals" element={<GoalsDashboard />} />
 
-                    {/* Messages */}
                     <Route path="/messages" element={<MessagesList />} />
                     <Route path="/messages/:id" element={<ChatRoom />} />
                     <Route path="/messages/new" element={<NewChat />} />
 
-                    {/* Marketplace */}
                     <Route path="/marketplace" element={<Marketplace />} />
                     <Route
                       path="/marketplace/product/:id"
@@ -378,7 +370,6 @@ const App = () => {
                       element={<OrderDetails />}
                     />
 
-                    {/* Jobs */}
                     <Route path="/jobs" element={<JobsList />} />
                     <Route path="/jobs/:id" element={<JobDetails />} />
                     <Route
@@ -386,16 +377,10 @@ const App = () => {
                       element={<RecruiterDashboard />}
                     />
 
-                    {/* Gamification */}
                     <Route path="/ranking" element={<Ranking />} />
-
-                    {/* Notifications */}
                     <Route path="/notifications" element={<Notifications />} />
-
-                    {/* Settings */}
                     <Route path="/settings" element={<Settings />} />
 
-                    {/* AI Tools */}
                     <Route path="/ai/coach" element={<AiCoach />} />
                     <Route path="/ai/settings" element={<AiCoachSettings />} />
                     <Route
@@ -423,7 +408,6 @@ const App = () => {
                     />
                   </Route>
 
-                  {/* Services & Driver Routes */}
                   <Route
                     path="/ride/request/:driverId"
                     element={<RideRequest />}
