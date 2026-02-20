@@ -3,12 +3,16 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Plus } from 'lucide-react'
 import { mockStories, mockCurrentUser } from '@/lib/data'
 import { cn } from '@/lib/utils'
-import React from 'react'
+import React, { useState } from 'react'
 import { SportSeparator3D } from '@/components/SportSeparator3D'
+import { LiveStoryModal } from '@/components/LiveStoryModal'
 
 export function StoriesRail() {
+  const [liveStoryOpen, setLiveStoryOpen] = useState(false)
+
   return (
     <div className="w-full py-4 relative z-10">
+      <LiveStoryModal open={liveStoryOpen} onOpenChange={setLiveStoryOpen} />
       <ScrollArea className="w-full whitespace-nowrap">
         <div className="flex w-max items-center gap-2 px-1">
           {/* Add Story Button */}
@@ -27,6 +31,25 @@ export function StoriesRail() {
             </div>
             <span className="text-[10px] font-medium text-muted-foreground">
               Seu Story
+            </span>
+          </div>
+
+          {/* LIVE STORY */}
+          <div
+            className="flex flex-col items-center gap-1.5 cursor-pointer group hover:-translate-y-1 transition-transform duration-300 ml-1"
+            onClick={() => setLiveStoryOpen(true)}
+          >
+            <div className="relative rounded-full p-[2px] bg-red-500 group-hover:scale-105 shadow-sm group-hover:shadow-lg transition-all duration-300 ring-2 ring-background">
+              <Avatar className="w-16 h-16 border-2 border-background">
+                <AvatarImage src="https://img.usecurling.com/ppl/medium?gender=male&seed=999" />
+                <AvatarFallback>TV</AvatarFallback>
+              </Avatar>
+              <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-sm border border-background animate-pulse whitespace-nowrap shadow-sm">
+                AO VIVO
+              </div>
+            </div>
+            <span className="text-[10px] font-bold text-red-500 transition-colors truncate max-w-[64px] mt-1">
+              Goplay TV
             </span>
           </div>
 

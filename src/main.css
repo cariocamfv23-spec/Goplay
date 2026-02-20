@@ -337,6 +337,54 @@
       transform: scale(1.1);
     }
   }
+
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+  .animation-delay-500 {
+    animation-delay: 500ms;
+  }
+  .animation-delay-1000 {
+    animation-delay: 1000ms;
+  }
+  .animation-delay-1500 {
+    animation-delay: 1500ms;
+  }
+  .animation-delay-2000 {
+    animation-delay: 2000ms;
+  }
+
+  .mask-gradient-to-t {
+    mask-image: linear-gradient(to bottom, transparent, black 20%, black 100%);
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      black 20%,
+      black 100%
+    );
+  }
+
+  @keyframes float-up-fade {
+    0% {
+      transform: translateY(40px) scale(0.5);
+      opacity: 0;
+    }
+    20% {
+      transform: translateY(10px) scale(1.2);
+      opacity: 1;
+    }
+    80% {
+      transform: translateY(-60px) scale(1);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(-100px) scale(0.8);
+      opacity: 0;
+    }
+  }
+  .animate-float-up-fade {
+    animation: float-up-fade 3s ease-in-out infinite;
+  }
 }
 
 @layer base {
