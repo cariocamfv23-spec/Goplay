@@ -2,6 +2,10 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { mockFeedUsers } from '@/lib/data'
+import { useToast } from '@/hooks/use-toast'
 import {
   X,
   Radio,
@@ -18,6 +22,10 @@ import {
   Flame,
   Trophy,
   CheckCircle,
+  MonitorUp,
+  UserPlus,
+  BarChart2,
+  Plus,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useReplayStore } from '@/stores/useReplayStore'
@@ -25,6 +33,7 @@ import { useReplayStore } from '@/stores/useReplayStore'
 export default function CreateLiveBroadcast() {
   const navigate = useNavigate()
   const { addReplay } = useReplayStore()
+  const { toast } = useToast()
   const [status, setStatus] = useState<'preview' | 'live' | 'summary'>(
     'preview',
   )
@@ -41,6 +50,27 @@ export default function CreateLiveBroadcast() {
   const [hasAudio, setHasAudio] = useState(true)
   const streamRef = useRef<MediaStream | null>(null)
 
+  // Advanced Broadcast Features
+  const [isScreenSharing, setIsScreenSharing] = useState(false)
+  const screenStreamRef = useRef<MediaStream | null>(null)
+
+  const [coHost, setCoHost] = useState<{
+    id: string
+    name: string
+    avatar: string
+  } | null>(null)
+  const [inviteModalOpen, setInviteModalOpen] = useState(false)
+
+  const [pollModalOpen, setPollModalOpen] = useState(false)
+  const [pollQuestion, setPollQuestion] = useState('')
+  const [pollOptions, setPollOptions] = useState(['', ''])
+  const [activePoll, setActivePoll] = useState<{
+    question: string
+    options: { text: string; votes: number }[]
+    totalVotes: number
+    isActive: boolean
+  } | null>(null)
+
   // Floating reactions
   const [reactions, setReactions] = useState<
     { id: number; type: string; left: number }[]
@@ -55,7 +85,7 @@ export default function CreateLiveBroadcast() {
           audio: true,
         })
         streamRef.current = stream
-        if (videoRef.current) {
+        if (videoRef.current && !isScreenSharing) {
           videoRef.current.srcObject = stream
         }
       } catch (err) {
@@ -71,8 +101,11 @@ export default function CreateLiveBroadcast() {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((track) => track.stop())
       }
+      if (screenStreamRef.current) {
+        screenStreamRef.current.getTracks().forEach((track) => track.stop())
+      }
     }
-  }, [status])
+  }, [status, isScreenSharing])
 
   // Live simulation intervals
   useEffect(() => {
@@ -80,6 +113,7 @@ export default function CreateLiveBroadcast() {
     let viewersInterval: NodeJS.Timeout
     let commentsInterval: NodeJS.Timeout
     let reactionsInterval: NodeJS.Timeout
+    let pollInterval: NodeJS.Timeout
 
     if (status === 'live') {
       timerInterval = setInterval(() => {
@@ -88,7 +122,7 @@ export default function CreateLiveBroadcast() {
 
       viewersInterval = setInterval(() => {
         setViewers((prev) => {
-          const change = Math.floor(Math.random() * 11) - 3 // Emulate growth
+          const change = Math.floor(Math.random() * 11) - 3
           const newVal = Math.max(0, prev + change)
           setPeakViewers((p) => Math.max(p, newVal))
           return newVal
@@ -150,6 +184,23 @@ export default function CreateLiveBroadcast() {
           )
         }
       }, 800)
+
+      if (activePoll && activePoll.isActive) {
+        pollInterval = setInterval(() => {
+          setActivePoll((prev) => {
+            if (!prev || !prev.isActive) return prev
+            const newOptions = [...prev.options]
+            const randomOptIndex = Math.floor(Math.random() * newOptions.length)
+            newOptions[randomOptIndex].votes += Math.floor(Math.random() * 3)
+            const newTotal = newOptions.reduce((acc, opt) => acc + opt.votes, 0)
+            return {
+              ...prev,
+              options: newOptions,
+              totalVotes: newTotal,
+            }
+          })
+        }, 2500)
+      }
     }
 
     return () => {
@@ -157,8 +208,9 @@ export default function CreateLiveBroadcast() {
       clearInterval(viewersInterval)
       clearInterval(commentsInterval)
       clearInterval(reactionsInterval)
+      clearInterval(pollInterval)
     }
-  }, [status])
+  }, [status, activePoll?.isActive])
 
   const toggleVideo = () => {
     if (streamRef.current) {
@@ -182,6 +234,83 @@ export default function CreateLiveBroadcast() {
     } else {
       setHasAudio(!hasAudio)
     }
+  }
+
+  const toggleScreenShare = async () => {
+    if (isScreenSharing) {
+      if (screenStreamRef.current) {
+        screenStreamRef.current.getTracks().forEach((track) => track.stop())
+        screenStreamRef.current = null
+      }
+      setIsScreenSharing(false)
+      if (videoRef.current && streamRef.current) {
+        videoRef.current.srcObject = streamRef.current
+      }
+    } else {
+      try {
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: true,
+        })
+        screenStreamRef.current = stream
+        setIsScreenSharing(true)
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream
+        }
+
+        stream.getVideoTracks()[0].onended = () => {
+          setIsScreenSharing(false)
+          screenStreamRef.current = null
+          if (videoRef.current && streamRef.current) {
+            videoRef.current.srcObject = streamRef.current
+          }
+        }
+      } catch (err) {
+        console.error('Screen sharing failed', err)
+        toast({
+          title: 'Permissão negada',
+          description:
+            'Não foi possível compartilhar a tela. Usando simulação.',
+          variant: 'destructive',
+        })
+        setIsScreenSharing(true)
+      }
+    }
+  }
+
+  const handleInvite = (user: any) => {
+    setInviteModalOpen(false)
+    toast({
+      title: `Convite enviado para ${user.name}`,
+      description: 'Aguardando resposta...',
+    })
+
+    setTimeout(() => {
+      setCoHost(user)
+      toast({
+        title: `${user.name} entrou na transmissão!`,
+        className: 'bg-green-600 text-white border-none',
+      })
+    }, 4000)
+  }
+
+  const handleCreatePoll = () => {
+    const validOptions = pollOptions.filter((o) => o.trim() !== '')
+    if (!pollQuestion.trim() || validOptions.length < 2) return
+
+    setActivePoll({
+      question: pollQuestion,
+      options: validOptions.map((text) => ({ text, votes: 0 })),
+      totalVotes: 0,
+      isActive: true,
+    })
+    setPollModalOpen(false)
+    setPollQuestion('')
+    setPollOptions(['', ''])
+
+    toast({
+      title: 'Enquete iniciada!',
+      description: 'Seus espectadores já podem votar.',
+    })
   }
 
   const formatTime = (seconds: number) => {
@@ -263,27 +392,72 @@ export default function CreateLiveBroadcast() {
 
   return (
     <div className="fixed inset-0 bg-black z-50 overflow-hidden">
-      {/* Video Background */}
+      {/* Main Video Background */}
       <video
         ref={videoRef}
         autoPlay
         playsInline
         muted
         className={cn(
-          'absolute inset-0 w-full h-full object-cover transition-opacity duration-500',
-          !hasVideo && 'opacity-0',
+          'absolute object-cover transition-all duration-500 z-0',
+          !hasVideo && !isScreenSharing && 'opacity-0',
+          coHost
+            ? 'top-0 left-0 w-full h-1/2 md:w-1/2 md:h-full'
+            : 'inset-0 w-full h-full',
         )}
       />
-      {!hasVideo && (
-        <div className="absolute inset-0 flex items-center justify-center">
+      {!hasVideo && !isScreenSharing && (
+        <div className="absolute inset-0 flex items-center justify-center z-0">
           <div className="w-24 h-24 rounded-full bg-zinc-800 flex items-center justify-center">
             <CameraOff className="w-10 h-10 text-zinc-500" />
           </div>
         </div>
       )}
 
+      {/* Simulated Screen Share Background */}
+      {isScreenSharing && !screenStreamRef.current && (
+        <div
+          className={cn(
+            'absolute bg-zinc-900 flex flex-col items-center justify-center z-[1] border-2 border-primary/50',
+            coHost
+              ? 'top-0 left-0 w-full h-1/2 md:w-1/2 md:h-full'
+              : 'inset-0 w-full h-full',
+          )}
+        >
+          <MonitorUp className="w-20 h-20 text-white/30 mb-4 animate-pulse" />
+          <span className="text-white/80 text-xl font-bold">
+            Tela Compartilhada (Simulação)
+          </span>
+        </div>
+      )}
+
+      {/* Co-Host Video Panel */}
+      {coHost && (
+        <div className="absolute bottom-0 left-0 w-full h-1/2 md:top-0 md:left-1/2 md:w-1/2 md:h-full bg-zinc-900 border-t md:border-t-0 md:border-l border-white/20 flex flex-col z-[2] animate-in slide-in-from-bottom md:slide-in-from-right duration-500">
+          <img
+            src={coHost.avatar}
+            className="w-full h-full object-cover opacity-90"
+            alt={coHost.name}
+          />
+          <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full text-white text-sm font-bold shadow-sm flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+            {coHost.name}
+          </div>
+          <div className="absolute bottom-32 right-4 md:bottom-4 pointer-events-auto">
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => setCoHost(null)}
+              className="rounded-full shadow-lg font-bold"
+            >
+              Remover Co-host
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Gradient Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none z-[3]" />
 
       {/* Top Bar */}
       <div className="absolute top-0 left-0 right-0 p-4 pt-safe flex items-start justify-between z-10">
@@ -326,7 +500,7 @@ export default function CreateLiveBroadcast() {
           </>
         ) : (
           <>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 md:gap-3 max-w-[70%]">
               <div className="bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 animate-pulse shadow-sm">
                 <div className="w-1.5 h-1.5 bg-white rounded-full" />
                 AO VIVO
@@ -343,7 +517,7 @@ export default function CreateLiveBroadcast() {
             <Button
               size="sm"
               variant="destructive"
-              className="rounded-full font-bold shadow-lg"
+              className="rounded-full font-bold shadow-lg shrink-0"
               onClick={handleEndBroadcast}
             >
               Encerrar
@@ -351,6 +525,14 @@ export default function CreateLiveBroadcast() {
           </>
         )}
       </div>
+
+      {/* Top Bar Indicator for Screen Sharing */}
+      {isScreenSharing && status === 'live' && (
+        <div className="absolute top-16 left-1/2 -translate-x-1/2 z-20 bg-primary/90 text-white px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg animate-in slide-in-from-top-4">
+          <MonitorUp className="w-4 h-4" />
+          Compartilhando Tela
+        </div>
+      )}
 
       {/* Preview Center Content */}
       {status === 'preview' && (
@@ -377,7 +559,7 @@ export default function CreateLiveBroadcast() {
       {status === 'live' && (
         <>
           {/* Comments Area */}
-          <div className="absolute bottom-4 left-4 right-20 h-64 flex flex-col justify-end z-10 mask-gradient-to-t pointer-events-none">
+          <div className="absolute bottom-4 left-4 right-20 h-64 flex flex-col justify-end z-[4] mask-gradient-to-t pointer-events-none">
             <div className="flex flex-col gap-3 pb-2 pointer-events-auto">
               {comments.map((comment) => (
                 <div
@@ -402,7 +584,7 @@ export default function CreateLiveBroadcast() {
           </div>
 
           {/* Floating Reactions */}
-          <div className="absolute top-0 bottom-0 right-0 w-32 pointer-events-none z-0 overflow-hidden">
+          <div className="absolute top-0 bottom-0 right-0 w-32 pointer-events-none z-[4] overflow-hidden">
             {reactions.map((reaction) => (
               <div
                 key={reaction.id}
@@ -423,7 +605,51 @@ export default function CreateLiveBroadcast() {
           </div>
 
           {/* Action buttons bottom right */}
-          <div className="absolute bottom-6 right-4 flex flex-col gap-4 z-10">
+          <div className="absolute bottom-6 right-4 flex flex-col gap-4 z-[5]">
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                'rounded-full h-12 w-12 border shadow-lg transition-colors',
+                isScreenSharing
+                  ? 'bg-primary border-primary hover:bg-primary/90 text-primary-foreground'
+                  : 'bg-black/40 backdrop-blur-md text-white border-white/10 hover:bg-black/60',
+              )}
+              onClick={toggleScreenShare}
+            >
+              <MonitorUp className="w-5 h-5" />
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                'bg-black/40 backdrop-blur-md text-white rounded-full h-12 w-12 border shadow-lg transition-colors',
+                coHost
+                  ? 'border-primary text-primary hover:bg-black/60'
+                  : 'border-white/10 hover:bg-black/60',
+              )}
+              onClick={() => setInviteModalOpen(true)}
+              disabled={!!coHost}
+            >
+              <UserPlus className="w-5 h-5" />
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                'rounded-full h-12 w-12 border shadow-lg transition-colors',
+                activePoll
+                  ? 'bg-primary border-primary hover:bg-primary/90 text-primary-foreground'
+                  : 'bg-black/40 backdrop-blur-md text-white border-white/10 hover:bg-black/60',
+              )}
+              onClick={() => setPollModalOpen(true)}
+              disabled={!!activePoll?.isActive}
+            >
+              <BarChart2 className="w-5 h-5" />
+            </Button>
+
             <Button
               variant="ghost"
               size="icon"
@@ -436,6 +662,7 @@ export default function CreateLiveBroadcast() {
                 <MicOff className="w-5 h-5 text-red-400" />
               )}
             </Button>
+
             <Button
               variant="ghost"
               size="icon"
@@ -446,6 +673,183 @@ export default function CreateLiveBroadcast() {
             </Button>
           </div>
         </>
+      )}
+
+      {/* Poll Overlay Display */}
+      {activePoll && (
+        <div className="absolute top-24 left-4 right-4 md:left-auto md:right-24 md:w-80 bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl p-5 z-[5] pointer-events-auto shadow-2xl animate-in slide-in-from-top-4">
+          <div className="flex justify-between items-start mb-4">
+            <h4 className="text-white font-bold text-sm bg-primary/20 text-primary px-2.5 py-1 rounded-md flex items-center gap-1.5">
+              <BarChart2 className="w-4 h-4" />
+              {activePoll.isActive ? 'Enquete Ao Vivo' : 'Enquete Encerrada'}
+            </h4>
+            {!activePoll.isActive && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 text-white/50 hover:text-white"
+                onClick={() => setActivePoll(null)}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            )}
+          </div>
+          <p className="text-white font-medium mb-5 text-sm leading-snug">
+            {activePoll.question}
+          </p>
+          <div className="space-y-2.5">
+            {activePoll.options.map((opt, i) => {
+              const percent =
+                activePoll.totalVotes > 0
+                  ? Math.round((opt.votes / activePoll.totalVotes) * 100)
+                  : 0
+              return (
+                <div
+                  key={i}
+                  className="relative bg-white/5 rounded-xl overflow-hidden p-3 flex justify-between items-center"
+                >
+                  <div
+                    className="absolute top-0 bottom-0 left-0 bg-primary/40 transition-all duration-500 ease-out"
+                    style={{ width: `${percent}%` }}
+                  />
+                  <span className="relative z-10 text-white text-sm font-medium">
+                    {opt.text}
+                  </span>
+                  <span className="relative z-10 text-white/90 text-xs font-bold pl-2 shrink-0">
+                    {percent}%
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+          <div className="mt-5 flex justify-between items-center text-xs font-medium text-white/50">
+            <span>{activePoll.totalVotes} votos</span>
+            {activePoll.isActive && (
+              <Button
+                variant="destructive"
+                size="sm"
+                className="h-8 px-4 text-xs rounded-full font-bold"
+                onClick={() =>
+                  setActivePoll((prev) =>
+                    prev ? { ...prev, isActive: false } : null,
+                  )
+                }
+              >
+                Encerrar
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Invite Co-host Modal */}
+      {inviteModalOpen && (
+        <div className="absolute inset-0 bg-black/80 z-[60] flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-zinc-900 w-full max-w-sm rounded-2xl p-6 border border-white/10 shadow-2xl">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-bold text-white">Convidar Co-host</h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setInviteModalOpen(false)}
+                className="text-white hover:bg-white/10"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+            <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+              {mockFeedUsers.map((user) => (
+                <div
+                  key={user.id}
+                  className="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-white/5"
+                >
+                  <div className="flex items-center gap-3">
+                    <Avatar className="w-10 h-10 border border-white/10">
+                      <AvatarImage src={user.avatar} />
+                      <AvatarFallback>{user.name[0]}</AvatarFallback>
+                    </Avatar>
+                    <span className="text-white text-sm font-medium">
+                      {user.name}
+                    </span>
+                  </div>
+                  <Button
+                    size="sm"
+                    className="rounded-full font-bold px-4"
+                    onClick={() => handleInvite(user)}
+                  >
+                    Convidar
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Create Poll Modal */}
+      {pollModalOpen && (
+        <div className="absolute inset-0 bg-black/80 z-[60] flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-zinc-900 w-full max-w-sm rounded-2xl p-6 border border-white/10 shadow-2xl">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-bold text-white">Criar Enquete</h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setPollModalOpen(false)}
+                className="text-white hover:bg-white/10"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <Label className="text-white/80 mb-2 block">Pergunta</Label>
+                <Input
+                  className="bg-black/50 border-white/10 text-white placeholder:text-white/30 rounded-xl"
+                  value={pollQuestion}
+                  onChange={(e) => setPollQuestion(e.target.value)}
+                  placeholder="Ex: Quem vai ganhar hoje?"
+                />
+              </div>
+              <div className="space-y-3">
+                <Label className="text-white/80 block">Opções</Label>
+                {pollOptions.map((opt, i) => (
+                  <Input
+                    key={i}
+                    className="bg-black/50 border-white/10 text-white placeholder:text-white/30 rounded-xl"
+                    value={opt}
+                    onChange={(e) => {
+                      const newOpts = [...pollOptions]
+                      newOpts[i] = e.target.value
+                      setPollOptions(newOpts)
+                    }}
+                    placeholder={`Opção ${i + 1}`}
+                  />
+                ))}
+                {pollOptions.length < 4 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-primary w-full mt-2 hover:bg-primary/20 hover:text-primary rounded-xl"
+                    onClick={() => setPollOptions([...pollOptions, ''])}
+                  >
+                    <Plus className="w-4 h-4 mr-2" /> Adicionar Opção
+                  </Button>
+                )}
+              </div>
+              <Button
+                className="w-full rounded-xl font-bold h-12 mt-6"
+                disabled={
+                  !pollQuestion.trim() ||
+                  pollOptions.filter((o) => o.trim()).length < 2
+                }
+                onClick={handleCreatePoll}
+              >
+                Iniciar Enquete
+              </Button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

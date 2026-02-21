@@ -1,12 +1,23 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { mockLiveEvents } from '@/lib/data'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Send, Heart, Share2, MoreVertical, Eye } from 'lucide-react'
+import {
+  ArrowLeft,
+  Send,
+  Heart,
+  Share2,
+  MoreVertical,
+  Eye,
+  BarChart2,
+  CheckCircle2,
+  X,
+} from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 
 export default function LiveStream() {
   const { id } = useParams()
@@ -19,6 +30,69 @@ export default function LiveStream() {
     { id: 3, user: 'Pedro Santos', text: 'Juiz tá roubando', time: '2min' },
   ])
 
+  // Simulated advanced interactive states
+  const [poll, setPoll] = useState<{
+    id: string
+    question: string
+    options: { id: number; text: string; votes: number }[]
+    totalVotes: number
+    isActive: boolean
+  } | null>(null)
+  const [votedOptionId, setVotedOptionId] = useState<number | null>(null)
+  const [coHost, setCoHost] = useState<{
+    name: string
+    avatar: string
+  } | null>(null)
+
+  useEffect(() => {
+    // Simulate poll appearing after 4s
+    const pollTimer = setTimeout(() => {
+      setPoll({
+        id: 'poll-1',
+        question: 'Quem vai fazer o primeiro gol?',
+        options: [
+          { id: 1, text: 'Red Wolves', votes: 120 },
+          { id: 2, text: 'Blue Sharks', votes: 85 },
+        ],
+        totalVotes: 205,
+        isActive: true,
+      })
+    }, 4000)
+
+    // Simulate Co-host joining after 10s
+    const coHostTimer = setTimeout(() => {
+      setCoHost({
+        name: 'João Silva',
+        avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=1',
+      })
+    }, 10000)
+
+    return () => {
+      clearTimeout(pollTimer)
+      clearTimeout(coHostTimer)
+    }
+  }, [])
+
+  // Simulate incoming votes
+  useEffect(() => {
+    if (poll && poll.isActive) {
+      const interval = setInterval(() => {
+        setPoll((prev) => {
+          if (!prev || !prev.isActive) return prev
+          const newOpts = [...prev.options]
+          newOpts[0].votes += Math.floor(Math.random() * 3)
+          newOpts[1].votes += Math.floor(Math.random() * 3)
+          return {
+            ...prev,
+            options: newOpts,
+            totalVotes: newOpts[0].votes + newOpts[1].votes,
+          }
+        })
+      }, 2500)
+      return () => clearInterval(interval)
+    }
+  }, [poll?.isActive])
+
   const handleSendMessage = () => {
     if (!message.trim()) return
     setMessages([
@@ -26,6 +100,22 @@ export default function LiveStream() {
       ...messages,
     ])
     setMessage('')
+  }
+
+  const handleVote = (optId: number) => {
+    if (votedOptionId !== null || !poll?.isActive) return
+    setVotedOptionId(optId)
+    setPoll((prev) => {
+      if (!prev) return prev
+      const newOpts = prev.options.map((o) =>
+        o.id === optId ? { ...o, votes: o.votes + 1 } : o,
+      )
+      return {
+        ...prev,
+        options: newOpts,
+        totalVotes: prev.totalVotes + 1,
+      }
+    })
   }
 
   return (
@@ -58,27 +148,129 @@ export default function LiveStream() {
         </Button>
       </div>
 
-      {/* Video Area (Simulated) */}
-      <div className="relative w-full aspect-video bg-zinc-900 mt-0 flex items-center justify-center group overflow-hidden">
-        <img
-          src={event.image}
-          alt={event.title}
-          className="w-full h-full object-cover opacity-80"
-        />
-        <div className="absolute inset-0 flex items-center justify-center">
-          {/* Play Button Overlay */}
-          <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 animate-pulse">
-            <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[20px] border-l-white border-b-[10px] border-b-transparent ml-1"></div>
-          </div>
+      {/* Video Area */}
+      <div
+        className={cn(
+          'relative w-full bg-zinc-900 mt-0 flex flex-col md:flex-row items-center justify-center group overflow-hidden transition-all duration-500',
+          coHost ? 'aspect-[4/5] md:aspect-video' : 'aspect-video',
+        )}
+      >
+        {/* Main Streamer Feed */}
+        <div
+          className={cn(
+            'relative w-full h-full',
+            coHost ? 'h-1/2 md:w-1/2 md:h-full' : '',
+          )}
+        >
+          <img
+            src={event.image}
+            alt={event.title}
+            className="w-full h-full object-cover opacity-80"
+          />
+          {!coHost && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 animate-pulse">
+                <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[20px] border-l-white border-b-[10px] border-b-transparent ml-1"></div>
+              </div>
+            </div>
+          )}
         </div>
 
+        {/* Co-host Split Screen Feed */}
+        {coHost && (
+          <div className="relative w-full h-1/2 md:w-1/2 md:h-full bg-zinc-800 border-t md:border-t-0 md:border-l border-white/20 animate-in slide-in-from-bottom md:slide-in-from-right duration-500">
+            <img
+              src={coHost.avatar}
+              className="w-full h-full object-cover opacity-90"
+              alt={coHost.name}
+            />
+            <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full text-white text-xs font-bold flex items-center gap-2 shadow-sm">
+              <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
+              {coHost.name}
+            </div>
+          </div>
+        )}
+
         {/* Stream Info Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black/60 to-transparent">
-          <h1 className="text-lg font-bold leading-tight">{event.title}</h1>
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none">
+          <h1 className="text-lg font-bold leading-tight text-white">
+            {event.title}
+          </h1>
           <p className="text-sm text-gray-300">
             {event.championship} • {event.score}
           </p>
         </div>
+
+        {/* Live Poll Overlay */}
+        {poll && (
+          <div className="absolute top-16 right-4 left-4 md:left-auto md:w-80 bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl p-5 z-20 shadow-2xl animate-in slide-in-from-right fade-in duration-300">
+            <div className="flex justify-between items-start mb-4">
+              <h4 className="text-white font-bold text-sm bg-primary/20 text-primary px-2.5 py-1 rounded-md flex items-center gap-1.5">
+                <BarChart2 className="w-4 h-4" />
+                {poll.isActive ? 'Enquete Ao Vivo' : 'Enquete Encerrada'}
+              </h4>
+              {!poll.isActive && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6 text-white/50 hover:text-white"
+                  onClick={() => setPoll(null)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              )}
+            </div>
+            <p className="text-white font-medium mb-5 text-sm leading-snug">
+              {poll.question}
+            </p>
+            <div className="space-y-2.5">
+              {poll.options.map((opt) => {
+                const percent =
+                  poll.totalVotes > 0
+                    ? Math.round((opt.votes / poll.totalVotes) * 100)
+                    : 0
+                const isSelected = votedOptionId === opt.id
+
+                return (
+                  <button
+                    key={opt.id}
+                    onClick={() => handleVote(opt.id)}
+                    disabled={votedOptionId !== null || !poll.isActive}
+                    className={cn(
+                      'relative w-full text-left rounded-xl overflow-hidden p-3 flex justify-between items-center transition-all duration-200',
+                      votedOptionId !== null || !poll.isActive
+                        ? isSelected
+                          ? 'bg-primary/20 border border-primary/50'
+                          : 'bg-white/5 border border-transparent'
+                        : 'bg-white/10 hover:bg-white/20 border border-transparent cursor-pointer',
+                    )}
+                  >
+                    {(votedOptionId !== null || !poll.isActive) && (
+                      <div
+                        className="absolute top-0 bottom-0 left-0 bg-primary/30 transition-all duration-1000 ease-out"
+                        style={{ width: `${percent}%` }}
+                      />
+                    )}
+                    <span className="relative z-10 text-white text-sm font-medium flex items-center gap-2">
+                      {isSelected && (
+                        <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                      )}
+                      {opt.text}
+                    </span>
+                    {(votedOptionId !== null || !poll.isActive) && (
+                      <span className="relative z-10 text-white/90 text-xs font-bold shrink-0 pl-2">
+                        {percent}%
+                      </span>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+            <div className="mt-5 flex justify-between items-center text-xs font-medium text-white/50">
+              <span>{poll.totalVotes} votos computados</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Live Chat & Interaction Area */}
