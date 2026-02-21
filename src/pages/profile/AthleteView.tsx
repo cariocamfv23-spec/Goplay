@@ -5,7 +5,7 @@ import {
   MapPin,
   Grid,
   Video,
-  Radio,
+  PlayCircle,
   Trophy,
   BarChart2,
   Users,
@@ -32,6 +32,8 @@ import {
   ChevronRight,
   Zap,
   Store,
+  Calendar,
+  Clock,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -660,30 +662,30 @@ export default function AthleteView({
           className="w-full"
           onValueChange={setActiveTab}
         >
-          <TabsList className="w-full grid grid-cols-4 bg-transparent border-b rounded-none h-12 p-0">
+          <TabsList className="w-full flex overflow-x-auto bg-transparent border-b rounded-none h-12 p-0 scrollbar-hide justify-start">
             <TabsTrigger
               value="posts"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+              className="flex-1 min-w-max px-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
             >
-              <Grid className="h-5 w-5" />
+              <Grid className="h-4 w-4 mr-2" /> Posts
             </TabsTrigger>
             <TabsTrigger
               value="media"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+              className="flex-1 min-w-max px-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
             >
-              <Video className="h-5 w-5" />
+              <Video className="h-4 w-4 mr-2" /> Media
             </TabsTrigger>
             <TabsTrigger
               value="replays"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+              className="flex-1 min-w-max px-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
             >
-              <Radio className="h-5 w-5" />
+              <PlayCircle className="h-4 w-4 mr-2" /> Replays
             </TabsTrigger>
             <TabsTrigger
               value="tagged"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+              className="flex-1 min-w-max px-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
             >
-              <Users className="h-5 w-5" />
+              <Users className="h-4 w-4 mr-2" /> Marcados
             </TabsTrigger>
           </TabsList>
 
@@ -807,16 +809,16 @@ export default function AthleteView({
             value="replays"
             className="mt-4 animate-in slide-in-from-bottom-2 duration-500"
           >
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
               {replays.map((replay) => (
                 <DepthContainer
                   key={replay.id}
-                  className="aspect-[4/3] bg-muted relative overflow-hidden cursor-pointer group rounded-xl"
+                  className="aspect-[16/9] bg-muted relative overflow-hidden cursor-pointer group rounded-xl"
                   maxRotation={5}
                 >
                   <div
                     onClick={() => navigate(`/explore/replay/${replay.id}`)}
-                    className="w-full h-full relative"
+                    className="w-full h-full relative block"
                   >
                     <img
                       src={replay.image}
@@ -827,21 +829,21 @@ export default function AthleteView({
                     <div className="absolute top-2 left-2 flex flex-col gap-1">
                       <Badge
                         variant="secondary"
-                        className="bg-black/60 text-white border-0 text-[9px] px-1.5 py-0 backdrop-blur-sm"
+                        className="bg-black/60 text-white border-0 text-[10px] px-2 py-0.5 backdrop-blur-sm"
                       >
                         REPLAY
                       </Badge>
                     </div>
-                    <div className="absolute bottom-2 left-2 right-2 flex flex-col">
-                      <span className="text-white text-xs font-bold truncate">
+                    <div className="absolute bottom-3 left-3 right-3 flex flex-col">
+                      <span className="text-white text-sm font-bold truncate">
                         {replay.title}
                       </span>
-                      <div className="flex items-center justify-between mt-1">
-                        <span className="text-white/70 text-[10px]">
-                          {replay.date}
+                      <div className="flex items-center justify-between mt-1.5">
+                        <span className="text-white/70 text-xs flex items-center gap-1">
+                          <Calendar className="h-3 w-3" /> {replay.date}
                         </span>
-                        <span className="text-white/70 text-[10px] font-mono">
-                          {replay.duration}
+                        <span className="text-white/70 text-xs font-mono bg-black/40 px-1.5 py-0.5 rounded flex items-center gap-1">
+                          <Clock className="h-3 w-3" /> {replay.duration}
                         </span>
                       </div>
                     </div>
@@ -849,9 +851,12 @@ export default function AthleteView({
                 </DepthContainer>
               ))}
               {replays.length === 0 && (
-                <div className="col-span-2 flex flex-col items-center justify-center py-10 text-muted-foreground">
-                  <Radio className="h-10 w-10 mb-2 opacity-20" />
-                  <p>Nenhum replay salvo</p>
+                <div className="col-span-1 sm:col-span-2 md:col-span-3 flex flex-col items-center justify-center py-12 text-muted-foreground border-2 border-dashed rounded-xl border-border/50 bg-secondary/10">
+                  <PlayCircle className="h-12 w-12 mb-3 opacity-20" />
+                  <p className="font-medium">Nenhum replay disponível ainda</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    As transmissões ao vivo salvas aparecerão aqui.
+                  </p>
                 </div>
               )}
             </div>
