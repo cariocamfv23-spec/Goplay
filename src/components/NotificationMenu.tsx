@@ -123,7 +123,14 @@ export function NotificationMenu() {
                   onClick={() => handleItemClick(notification)}
                 >
                   {notification.type === 'live_stream' && notification.user ? (
-                    <Avatar className="mt-1 h-8 w-8 shrink-0 ring-2 ring-red-500 ring-offset-2 ring-offset-background animate-pulse">
+                    <Avatar
+                      className={cn(
+                        'mt-1 h-8 w-8 shrink-0 ring-2 ring-offset-2 ring-offset-background',
+                        notification.link?.includes('/replay/')
+                          ? 'ring-primary'
+                          : 'ring-red-500 animate-pulse',
+                      )}
+                    >
                       <AvatarImage src={notification.user.avatar} />
                       <AvatarFallback>
                         {notification.user.name.substring(0, 2).toUpperCase()}
@@ -146,7 +153,9 @@ export function NotificationMenu() {
                       className={cn(
                         'text-sm font-medium leading-none',
                         !notification.read && 'font-semibold',
-                        notification.type === 'live_stream' && 'text-red-500',
+                        notification.type === 'live_stream' &&
+                          !notification.link?.includes('/replay/') &&
+                          'text-red-500',
                       )}
                     >
                       {notification.title}
@@ -155,18 +164,33 @@ export function NotificationMenu() {
                       {notification.message}
                     </p>
 
-                    {notification.type === 'live_stream' && (
+                    {notification.type === 'live_stream' &&
+                    notification.link?.includes('/replay/') ? (
                       <div className="flex items-center gap-2 pt-1">
                         <Badge
-                          variant="destructive"
-                          className="h-4 text-[9px] px-1 uppercase animate-pulse border-0"
+                          variant="secondary"
+                          className="h-4 text-[9px] px-1 uppercase border-0 bg-secondary/50"
                         >
-                          LIVE
+                          REPLAY
                         </Badge>
                         <span className="text-[10px] text-primary font-bold">
-                          Assistir Agora
+                          Assistir Replay
                         </span>
                       </div>
+                    ) : (
+                      notification.type === 'live_stream' && (
+                        <div className="flex items-center gap-2 pt-1">
+                          <Badge
+                            variant="destructive"
+                            className="h-4 text-[9px] px-1 uppercase animate-pulse border-0"
+                          >
+                            LIVE
+                          </Badge>
+                          <span className="text-[10px] text-primary font-bold">
+                            Assistir Agora
+                          </span>
+                        </div>
+                      )
                     )}
 
                     <p className="text-[10px] text-muted-foreground pt-1">

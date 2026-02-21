@@ -327,6 +327,9 @@ export interface LiveEvent {
   image: string
   score?: string
   startTime?: string
+  videoUrl?: string
+  duration?: string
+  date?: string
 }
 
 export interface Scholarship {
@@ -1461,7 +1464,7 @@ export const mockTalents: ProfileData[] = [
     avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=105',
     cover:
       'https://img.usecurling.com/p/800/400?q=volleyball%20court&color=yellow',
-    bio: 'Levantadora com visão de jogo excepcional. Capitã da seleção estadual sub-17.',
+    bio: 'Levantadora com visão de jogo exceptional. Capitã da seleção estadual sub-17.',
     followers: '12.4k',
     stats: { matches: 45, wins: 38, mvp: 15 },
     totalViews: 28000,
@@ -2419,6 +2422,22 @@ export const mockNotifications: Notification[] = [
     priority: 'medium',
     link: '/events/e1',
   },
+  {
+    id: 'n4',
+    title: 'A live de João Silva terminou',
+    message: 'A transmissão que você perdeu já está disponível.',
+    time: 'Ontem',
+    read: false,
+    type: 'live_stream',
+    date: 'Anteriores',
+    priority: 'low',
+    link: '/explore/replay/rep1',
+    user: {
+      id: 'u1',
+      name: 'João Silva',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=1',
+    },
+  },
 ]
 export const mockNotificationsList = mockNotifications
 export const mockChats = []
@@ -2566,6 +2585,39 @@ export const mockLiveEvents: LiveEvent[] = [
     score: 'Red Wolves 2 x 1 Blue Sharks',
   },
 ]
+
+export const mockReplays: LiveEvent[] = [
+  {
+    id: 'rep1',
+    title: 'Final da Copa Regional - Amador',
+    championship: 'Liga Regional',
+    modality: 'futebol',
+    city: 'São Paulo',
+    status: 'ended',
+    viewers: '5.2k',
+    image: 'https://img.usecurling.com/p/800/400?q=soccer%20game%20stadium',
+    score: 'Red Wolves 2 x 1 Blue Sharks',
+    videoUrl:
+      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    duration: '1:45:20',
+    date: 'Ontem',
+  },
+  {
+    id: 'rep2',
+    title: 'Treino Aberto - Finalização',
+    championship: 'Amistoso',
+    modality: 'futebol',
+    city: 'Rio de Janeiro',
+    status: 'ended',
+    viewers: '2.1k',
+    image: 'https://img.usecurling.com/p/800/400?q=soccer%20training',
+    videoUrl:
+      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+    duration: '0:45:12',
+    date: 'Semana passada',
+  },
+]
+
 export const mockFuelTransactions = []
 export const mockNutrition: NutritionPartner[] = [
   {

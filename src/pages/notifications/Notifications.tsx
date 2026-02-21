@@ -144,13 +144,22 @@ export default function Notifications() {
                   >
                     {not.type === 'live_stream' && not.user ? (
                       <div className="relative shrink-0 mt-1">
-                        <Avatar className="h-10 w-10 ring-2 ring-red-500 ring-offset-2 ring-offset-background">
+                        <Avatar
+                          className={cn(
+                            'h-10 w-10 ring-2 ring-offset-2 ring-offset-background',
+                            not.link?.includes('/replay/')
+                              ? 'ring-primary'
+                              : 'ring-red-500',
+                          )}
+                        >
                           <AvatarImage src={not.user.avatar} />
                           <AvatarFallback>
                             {not.user.name.substring(0, 2).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="absolute -bottom-1 -right-1 h-3 w-3 bg-red-500 border-2 border-background rounded-full animate-pulse" />
+                        {!not.link?.includes('/replay/') && (
+                          <span className="absolute -bottom-1 -right-1 h-3 w-3 bg-red-500 border-2 border-background rounded-full animate-pulse" />
+                        )}
                       </div>
                     ) : (
                       <div
@@ -171,7 +180,9 @@ export default function Notifications() {
                             not.read ? 'text-foreground/80' : 'text-foreground',
                             not.priority === 'critical' &&
                               'text-red-600 dark:text-red-400',
-                            not.type === 'live_stream' && 'text-red-500',
+                            not.type === 'live_stream' &&
+                              !not.link?.includes('/replay/') &&
+                              'text-red-500',
                           )}
                         >
                           {not.title}
@@ -181,18 +192,33 @@ export default function Notifications() {
                         {not.message}
                       </p>
 
-                      {not.type === 'live_stream' && (
+                      {not.type === 'live_stream' &&
+                      not.link?.includes('/replay/') ? (
                         <div className="flex items-center gap-2 mt-2">
                           <Badge
-                            variant="destructive"
-                            className="h-5 text-[10px] px-1.5 animate-pulse border-0"
+                            variant="secondary"
+                            className="h-5 text-[10px] px-1.5 border-0 bg-secondary/50"
                           >
-                            LIVE
+                            REPLAY
                           </Badge>
                           <span className="text-xs text-primary font-bold">
-                            Assistir Agora
+                            Assistir Replay
                           </span>
                         </div>
+                      ) : (
+                        not.type === 'live_stream' && (
+                          <div className="flex items-center gap-2 mt-2">
+                            <Badge
+                              variant="destructive"
+                              className="h-5 text-[10px] px-1.5 animate-pulse border-0"
+                            >
+                              LIVE
+                            </Badge>
+                            <span className="text-xs text-primary font-bold">
+                              Assistir Agora
+                            </span>
+                          </div>
+                        )
                       )}
 
                       <div className="flex items-center gap-2 mt-2">

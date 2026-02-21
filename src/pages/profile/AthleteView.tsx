@@ -5,6 +5,7 @@ import {
   MapPin,
   Grid,
   Video,
+  Radio,
   Trophy,
   BarChart2,
   Users,
@@ -54,6 +55,7 @@ import { Badge } from '@/components/ui/badge'
 import { getSportCoverImage } from '@/lib/sport-utils'
 import { DepthContainer } from '@/components/DepthContainer'
 import { NostalgiaFilter } from '@/components/NostalgiaFilter'
+import { useReplayStore } from '@/stores/useReplayStore'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -76,6 +78,7 @@ export default function AthleteView({
   const [isDetailOpen, setIsDetailOpen] = useState(false)
 
   const { getTheme } = useRetrospectiveStore()
+  const { replays } = useReplayStore()
   const currentTheme = getTheme()
   const auraConfig = getAuraConfig(user)
 
@@ -657,7 +660,7 @@ export default function AthleteView({
           className="w-full"
           onValueChange={setActiveTab}
         >
-          <TabsList className="w-full grid grid-cols-3 bg-transparent border-b rounded-none h-12 p-0">
+          <TabsList className="w-full grid grid-cols-4 bg-transparent border-b rounded-none h-12 p-0">
             <TabsTrigger
               value="posts"
               className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
@@ -669,6 +672,12 @@ export default function AthleteView({
               className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
             >
               <Video className="h-5 w-5" />
+            </TabsTrigger>
+            <TabsTrigger
+              value="replays"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+            >
+              <Radio className="h-5 w-5" />
             </TabsTrigger>
             <TabsTrigger
               value="tagged"
@@ -789,6 +798,60 @@ export default function AthleteView({
                 <div className="col-span-3 flex flex-col items-center justify-center py-10 text-muted-foreground">
                   <Video className="h-10 w-10 mb-2 opacity-20" />
                   <p>Nenhum vídeo ainda</p>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent
+            value="replays"
+            className="mt-4 animate-in slide-in-from-bottom-2 duration-500"
+          >
+            <div className="grid grid-cols-2 gap-2">
+              {replays.map((replay) => (
+                <DepthContainer
+                  key={replay.id}
+                  className="aspect-[4/3] bg-muted relative overflow-hidden cursor-pointer group rounded-xl"
+                  maxRotation={5}
+                >
+                  <div
+                    onClick={() => navigate(`/explore/replay/${replay.id}`)}
+                    className="w-full h-full relative"
+                  >
+                    <img
+                      src={replay.image}
+                      alt={replay.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute top-2 left-2 flex flex-col gap-1">
+                      <Badge
+                        variant="secondary"
+                        className="bg-black/60 text-white border-0 text-[9px] px-1.5 py-0 backdrop-blur-sm"
+                      >
+                        REPLAY
+                      </Badge>
+                    </div>
+                    <div className="absolute bottom-2 left-2 right-2 flex flex-col">
+                      <span className="text-white text-xs font-bold truncate">
+                        {replay.title}
+                      </span>
+                      <div className="flex items-center justify-between mt-1">
+                        <span className="text-white/70 text-[10px]">
+                          {replay.date}
+                        </span>
+                        <span className="text-white/70 text-[10px] font-mono">
+                          {replay.duration}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </DepthContainer>
+              ))}
+              {replays.length === 0 && (
+                <div className="col-span-2 flex flex-col items-center justify-center py-10 text-muted-foreground">
+                  <Radio className="h-10 w-10 mb-2 opacity-20" />
+                  <p>Nenhum replay salvo</p>
                 </div>
               )}
             </div>

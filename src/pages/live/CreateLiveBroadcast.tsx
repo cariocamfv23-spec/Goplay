@@ -17,11 +17,14 @@ import {
   Heart,
   Flame,
   Trophy,
+  CheckCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useReplayStore } from '@/stores/useReplayStore'
 
 export default function CreateLiveBroadcast() {
   const navigate = useNavigate()
+  const { addReplay } = useReplayStore()
   const [status, setStatus] = useState<'preview' | 'live' | 'summary'>(
     'preview',
   )
@@ -57,7 +60,6 @@ export default function CreateLiveBroadcast() {
         }
       } catch (err) {
         console.error('Failed to get media devices', err)
-        // Handled gracefully via black screen fallback if no camera is detected
       }
     }
 
@@ -127,7 +129,7 @@ export default function CreateLiveBroadcast() {
                 avatar: `https://img.usecurling.com/ppl/thumbnail?gender=male&seed=${Math.floor(Math.random() * 100)}`,
               },
             ].slice(-20),
-          ) // keep max 20 latest comments
+          )
         }
       }, 2000)
 
@@ -142,10 +144,10 @@ export default function CreateLiveBroadcast() {
                 type: reactionTypes[
                   Math.floor(Math.random() * reactionTypes.length)
                 ],
-                left: 50 + Math.random() * 40, // random position mostly right side
+                left: 50 + Math.random() * 40,
               },
             ].filter((r) => Date.now() - r.id < 3000),
-          ) // remove after 3s
+          )
         }
       }, 800)
     }
@@ -190,6 +192,24 @@ export default function CreateLiveBroadcast() {
     return `${m}:${s}`
   }
 
+  const handleEndBroadcast = () => {
+    setStatus('summary')
+    addReplay({
+      id: `rep-${Date.now()}`,
+      title: 'Minha Transmissão Ao Vivo',
+      championship: 'Transmissão Pessoal',
+      modality: 'outros',
+      city: 'Local',
+      status: 'ended',
+      viewers: `${peakViewers}`,
+      image: 'https://img.usecurling.com/p/800/400?q=live%20stream%20recording',
+      videoUrl:
+        'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+      duration: formatTime(duration),
+      date: 'Hoje',
+    })
+  }
+
   if (status === 'summary') {
     return (
       <div className="fixed inset-0 bg-zinc-950 flex flex-col items-center justify-center p-6 text-white z-50">
@@ -199,7 +219,7 @@ export default function CreateLiveBroadcast() {
         <h1 className="text-3xl font-bold mb-2">Transmissão Encerrada</h1>
         <p className="text-zinc-400 mb-8">Aqui está o resumo da sua Live</p>
 
-        <div className="grid grid-cols-2 gap-4 w-full max-w-sm mb-12">
+        <div className="grid grid-cols-2 gap-4 w-full max-w-sm mb-6">
           <div className="bg-zinc-900 rounded-2xl p-4 flex flex-col items-center justify-center border border-white/5">
             <Users className="w-6 h-6 text-blue-400 mb-2" />
             <span className="text-3xl font-bold">{peakViewers}</span>
@@ -215,12 +235,20 @@ export default function CreateLiveBroadcast() {
           <div className="bg-zinc-900 rounded-2xl p-4 flex flex-col items-center justify-center border border-white/5 col-span-2">
             <Award className="w-6 h-6 text-yellow-400 mb-2" />
             <span className="text-3xl font-bold">
-              {(viewers * 1.5).toFixed(0)}
+              {(peakViewers * 1.5).toFixed(0)}
             </span>
             <span className="text-xs text-zinc-500 mt-1">
               Total de Contas Alcançadas
             </span>
           </div>
+        </div>
+
+        <div className="bg-emerald-500/10 text-emerald-400 px-4 py-3 rounded-xl mb-8 flex items-center gap-3 border border-emerald-500/20 w-full max-w-sm">
+          <CheckCircle className="w-6 h-6 shrink-0" />
+          <span className="text-sm font-medium leading-snug">
+            Transmissão salva nos seus replays. Seus seguidores já podem
+            assistir!
+          </span>
         </div>
 
         <Button
@@ -316,7 +344,7 @@ export default function CreateLiveBroadcast() {
               size="sm"
               variant="destructive"
               className="rounded-full font-bold shadow-lg"
-              onClick={() => setStatus('summary')}
+              onClick={handleEndBroadcast}
             >
               Encerrar
             </Button>
