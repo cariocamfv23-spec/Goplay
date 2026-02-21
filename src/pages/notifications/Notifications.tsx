@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   ArrowLeft,
   Bell,
@@ -41,8 +42,6 @@ export default function Notifications() {
       case 'level_up':
         return <Zap className="h-5 w-5 text-purple-500" />
       case 'ranking':
-        // Distinguish between up and down based on title context if needed,
-        // but broadly ranking uses TrendingUp. We can check if title contains "Caiu" or "Desceu"
         if (
           title.toLowerCase().includes('caiu') ||
           title.toLowerCase().includes('desceu')
@@ -69,7 +68,7 @@ export default function Notifications() {
     if (priority === 'critical')
       return 'border-l-4 border-l-red-500 bg-red-500/10 dark:bg-red-900/20'
     if (priority === 'high')
-      return 'border-l-4 border-l-green-500 bg-green-500/10 dark:bg-green-900/20' // Changed high to green for positive ranking
+      return 'border-l-4 border-l-green-500 bg-green-500/10 dark:bg-green-900/20'
     return 'hover:bg-secondary/30'
   }
 
@@ -82,7 +81,6 @@ export default function Notifications() {
     }
   }
 
-  // Group notifications by date
   const groupedNotifications = notifications.reduce(
     (acc, not) => {
       const date = not.date || 'Anteriores'
@@ -144,15 +142,28 @@ export default function Notifications() {
                     )}
                     onClick={() => handleNotificationClick(not)}
                   >
-                    <div
-                      className={cn(
-                        'h-10 w-10 rounded-full flex items-center justify-center shrink-0 border border-border/50',
-                        not.read ? 'bg-secondary/50' : 'bg-secondary',
-                      )}
-                    >
-                      {getIcon(not.type, not.title)}
-                    </div>
-                    <div className="flex-1 min-w-0">
+                    {not.type === 'live_stream' && not.user ? (
+                      <div className="relative shrink-0 mt-1">
+                        <Avatar className="h-10 w-10 ring-2 ring-red-500 ring-offset-2 ring-offset-background">
+                          <AvatarImage src={not.user.avatar} />
+                          <AvatarFallback>
+                            {not.user.name.substring(0, 2).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="absolute -bottom-1 -right-1 h-3 w-3 bg-red-500 border-2 border-background rounded-full animate-pulse" />
+                      </div>
+                    ) : (
+                      <div
+                        className={cn(
+                          'mt-1 h-10 w-10 rounded-full flex items-center justify-center shrink-0 border border-border/50',
+                          not.read ? 'bg-secondary/50' : 'bg-secondary',
+                        )}
+                      >
+                        {getIcon(not.type, not.title)}
+                      </div>
+                    )}
+
+                    <div className="flex-1 min-w-0 pr-4">
                       <div className="flex justify-between items-start gap-2 mb-1">
                         <h4
                           className={cn(
@@ -160,42 +171,60 @@ export default function Notifications() {
                             not.read ? 'text-foreground/80' : 'text-foreground',
                             not.priority === 'critical' &&
                               'text-red-600 dark:text-red-400',
+                            not.type === 'live_stream' && 'text-red-500',
                           )}
                         >
                           {not.title}
                         </h4>
-                        {!not.read && (
-                          <span className="h-2 w-2 rounded-full bg-primary shrink-0 animate-pulse mt-1" />
-                        )}
                       </div>
                       <p className="text-sm text-muted-foreground leading-snug line-clamp-2">
                         {not.message}
                       </p>
+
+                      {not.type === 'live_stream' && (
+                        <div className="flex items-center gap-2 mt-2">
+                          <Badge
+                            variant="destructive"
+                            className="h-5 text-[10px] px-1.5 animate-pulse border-0"
+                          >
+                            LIVE
+                          </Badge>
+                          <span className="text-xs text-primary font-bold">
+                            Assistir Agora
+                          </span>
+                        </div>
+                      )}
+
                       <div className="flex items-center gap-2 mt-2">
                         <span className="text-xs text-muted-foreground/70 font-medium">
                           {not.time}
                         </span>
-                        {not.priority && not.priority !== 'low' && (
-                          <Badge
-                            variant="outline"
-                            className={cn(
-                              'text-[10px] h-5 px-1.5 font-normal border-0',
-                              not.priority === 'critical'
-                                ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
+                        {not.priority &&
+                          not.priority !== 'low' &&
+                          not.type !== 'live_stream' && (
+                            <Badge
+                              variant="outline"
+                              className={cn(
+                                'text-[10px] h-5 px-1.5 font-normal border-0',
+                                not.priority === 'critical'
+                                  ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
+                                  : not.priority === 'high'
+                                    ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
+                                    : 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
+                              )}
+                            >
+                              {not.priority === 'critical'
+                                ? 'Urgente'
                                 : not.priority === 'high'
-                                  ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
-                                  : 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
-                            )}
-                          >
-                            {not.priority === 'critical'
-                              ? 'Urgente'
-                              : not.priority === 'high'
-                                ? 'Importante'
-                                : 'Info'}
-                          </Badge>
-                        )}
+                                  ? 'Importante'
+                                  : 'Info'}
+                            </Badge>
+                          )}
                       </div>
                     </div>
+                    {!not.read && (
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 h-2.5 w-2.5 rounded-full bg-primary" />
+                    )}
                   </div>
                 ))}
               </div>
@@ -208,7 +237,7 @@ export default function Notifications() {
             </div>
             <h3 className="text-lg font-bold mb-2">Tudo limpo por aqui!</h3>
             <p className="text-muted-foreground max-w-[250px]">
-              Você não tem novas notificações no momento.
+              Você não tem notificações no momento.
             </p>
           </div>
         )}

@@ -5,7 +5,9 @@ interface NotificationState {
   notifications: Notification[]
   unreadCount: number
   addNotification: (
-    notification: Omit<Notification, 'id' | 'read' | 'date'>,
+    notification: Omit<Notification, 'id' | 'read' | 'date' | 'time'> & {
+      time?: string
+    },
   ) => void
   markAsRead: (id: string) => void
   markAllAsRead: () => void
@@ -20,7 +22,8 @@ const useNotificationStore = create<NotificationState>((set) => ({
       const newNotification: Notification = {
         ...data,
         id: Math.random().toString(36).substr(2, 9),
-        date: 'Agora',
+        time: data.time || 'Agora',
+        date: 'Hoje',
         read: false,
       }
       return {

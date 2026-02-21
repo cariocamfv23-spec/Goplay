@@ -6,6 +6,8 @@ import {
 } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
 import {
   Bell,
   Trophy,
@@ -115,26 +117,36 @@ export function NotificationMenu() {
                 <button
                   key={notification.id}
                   className={cn(
-                    'flex items-start gap-3 p-4 text-left hover:bg-muted/50 transition-colors border-b last:border-0',
+                    'flex items-start gap-3 p-4 text-left hover:bg-muted/50 transition-colors border-b last:border-0 relative',
                     !notification.read && 'bg-muted/30',
                   )}
                   onClick={() => handleItemClick(notification)}
                 >
-                  <div
-                    className={cn(
-                      'mt-1 h-8 w-8 rounded-full flex items-center justify-center shrink-0 border',
-                      !notification.read
-                        ? 'bg-background border-primary/20'
-                        : 'bg-muted border-transparent',
-                    )}
-                  >
-                    {getIcon(notification.type, notification.title)}
-                  </div>
-                  <div className="flex-1 space-y-1">
+                  {notification.type === 'live_stream' && notification.user ? (
+                    <Avatar className="mt-1 h-8 w-8 shrink-0 ring-2 ring-red-500 ring-offset-2 ring-offset-background animate-pulse">
+                      <AvatarImage src={notification.user.avatar} />
+                      <AvatarFallback>
+                        {notification.user.name.substring(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  ) : (
+                    <div
+                      className={cn(
+                        'mt-1 h-8 w-8 rounded-full flex items-center justify-center shrink-0 border',
+                        !notification.read
+                          ? 'bg-background border-primary/20'
+                          : 'bg-muted border-transparent',
+                      )}
+                    >
+                      {getIcon(notification.type, notification.title)}
+                    </div>
+                  )}
+                  <div className="flex-1 space-y-1 pr-4">
                     <p
                       className={cn(
                         'text-sm font-medium leading-none',
                         !notification.read && 'font-semibold',
+                        notification.type === 'live_stream' && 'text-red-500',
                       )}
                     >
                       {notification.title}
@@ -142,12 +154,27 @@ export function NotificationMenu() {
                     <p className="text-xs text-muted-foreground line-clamp-2">
                       {notification.message}
                     </p>
+
+                    {notification.type === 'live_stream' && (
+                      <div className="flex items-center gap-2 pt-1">
+                        <Badge
+                          variant="destructive"
+                          className="h-4 text-[9px] px-1 uppercase animate-pulse border-0"
+                        >
+                          LIVE
+                        </Badge>
+                        <span className="text-[10px] text-primary font-bold">
+                          Assistir Agora
+                        </span>
+                      </div>
+                    )}
+
                     <p className="text-[10px] text-muted-foreground pt-1">
                       {notification.time}
                     </p>
                   </div>
                   {!notification.read && (
-                    <div className="h-2 w-2 rounded-full bg-primary mt-2" />
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full bg-primary" />
                   )}
                 </button>
               ))}
@@ -156,7 +183,7 @@ export function NotificationMenu() {
             <div className="flex flex-col items-center justify-center h-[200px] text-center p-4">
               <Bell className="h-8 w-8 text-muted-foreground/30 mb-2" />
               <p className="text-sm text-muted-foreground">
-                Nenhuma notificação por enquanto.
+                Você não tem notificações no momento.
               </p>
             </div>
           )}

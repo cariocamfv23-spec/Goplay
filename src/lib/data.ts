@@ -91,9 +91,15 @@ export interface Notification {
     | 'verification'
     | 'sponsorship_match'
     | 'kids_zone'
+    | 'live_stream'
   date?: string
   priority?: 'low' | 'medium' | 'high' | 'critical'
   link?: string
+  user?: {
+    id: string
+    name: string
+    avatar: string
+  }
 }
 
 export interface NarrationConfig {
@@ -2547,7 +2553,19 @@ export const mockInternationalRanking: InternationalRankingUser[] = [
   },
 ]
 export const mockOracle = {}
-export const mockLiveEvents: LiveEvent[] = []
+export const mockLiveEvents: LiveEvent[] = [
+  {
+    id: 'live1',
+    title: 'Final da Copa Regional - Amador',
+    championship: 'Liga Regional',
+    modality: 'futebol',
+    city: 'São Paulo',
+    status: 'live',
+    viewers: '1.2k',
+    image: 'https://img.usecurling.com/p/800/400?q=soccer%20game%20stadium',
+    score: 'Red Wolves 2 x 1 Blue Sharks',
+  },
+]
 export const mockFuelTransactions = []
 export const mockNutrition: NutritionPartner[] = [
   {

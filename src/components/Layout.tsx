@@ -5,6 +5,7 @@ import { RankingAlertManager } from '@/components/RankingAlertManager'
 import { SmartNotificationManager } from '@/components/SmartNotificationManager'
 import { ScholarshipAlertManager } from '@/components/ScholarshipAlertManager'
 import { WeatherAlertManager } from '@/components/WeatherAlertManager'
+import { LiveStreamManager } from '@/components/LiveStreamManager'
 import { Toaster } from '@/components/ui/toaster'
 import { cn } from '@/lib/utils'
 import { NostalgiaFilter } from '@/components/NostalgiaFilter'
@@ -135,6 +136,7 @@ export default function Layout() {
       <SmartNotificationManager />
       <ScholarshipAlertManager />
       <WeatherAlertManager />
+      <LiveStreamManager />
 
       {/* Invisible Presence Overlay - Z-200 to be above everything when active */}
       <InvisiblePresenceOverlay />
