@@ -271,15 +271,22 @@ export default function CreateLiveBroadcast() {
             videoRef.current.srcObject = streamRef.current
           }
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error('Screen sharing failed', err)
+        const errorMessage = err?.message || ''
+        const isPermissionPolicyDenied =
+          errorMessage.includes('disallowed by permissions policy') ||
+          errorMessage.includes('display-capture') ||
+          err?.name === 'NotAllowedError'
+
         toast({
           title: 'Permissão negada',
-          description:
-            'Não foi possível compartilhar a tela. Usando simulação.',
+          description: isPermissionPolicyDenied
+            ? 'Não foi possível iniciar o compartilhamento de tela devido a restrições de permissão do navegador.'
+            : 'Não foi possível compartilhar a tela. Verifique as permissões de captura de tela.',
           variant: 'destructive',
         })
-        setIsScreenSharing(true)
+        setIsScreenSharing(false)
       }
     }
   }
