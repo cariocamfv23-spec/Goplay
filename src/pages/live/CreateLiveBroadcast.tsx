@@ -255,6 +255,12 @@ export default function CreateLiveBroadcast() {
       }
     } else {
       try {
+        if (!navigator?.mediaDevices?.getDisplayMedia) {
+          throw new Error(
+            "Failed to execute 'getDisplayMedia' on 'MediaDevices': Access to the feature 'display-capture' is disallowed by permissions policy.",
+          )
+        }
+
         const stream = await navigator.mediaDevices.getDisplayMedia({
           video: true,
         })
@@ -277,16 +283,24 @@ export default function CreateLiveBroadcast() {
         const isPermissionPolicyDenied =
           errorMessage.includes('disallowed by permissions policy') ||
           errorMessage.includes('display-capture') ||
-          err?.name === 'NotAllowedError'
+          err?.name === 'NotAllowedError' ||
+          err?.name === 'NotFoundError'
 
         toast({
           title: 'Permissão negada',
-          description: isPermissionPolicyDenied
-            ? 'Não foi possível iniciar o compartilhamento de tela devido a restrições de permissão do navegador.'
-            : 'Não foi possível compartilhar a tela. Verifique as permissões de captura de tela.',
+          description:
+            'Não foi possível iniciar o compartilhamento de tela devido a restrições de permissão do navegador.',
           variant: 'destructive',
         })
+
         setIsScreenSharing(false)
+        if (screenStreamRef.current) {
+          screenStreamRef.current.getTracks().forEach((track) => track.stop())
+          screenStreamRef.current = null
+        }
+        if (videoRef.current && streamRef.current) {
+          videoRef.current.srcObject = streamRef.current
+        }
       }
     }
   }
