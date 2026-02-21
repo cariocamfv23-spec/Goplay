@@ -75,8 +75,8 @@ export default function LiveStream() {
 
   // Simulate incoming votes
   useEffect(() => {
-    if (poll && poll.isActive) {
-      const interval = setInterval(() => {
+    if (poll?.isActive) {
+      const timer = setTimeout(() => {
         setPoll((prev) => {
           if (!prev || !prev.isActive) return prev
           const newOpts = [...prev.options]
@@ -89,9 +89,9 @@ export default function LiveStream() {
           }
         })
       }, 2500)
-      return () => clearInterval(interval)
+      return () => clearTimeout(timer)
     }
-  }, [poll?.isActive])
+  }, [poll])
 
   const handleSendMessage = () => {
     if (!message.trim()) return

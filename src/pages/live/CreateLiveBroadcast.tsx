@@ -113,7 +113,6 @@ export default function CreateLiveBroadcast() {
     let viewersInterval: NodeJS.Timeout
     let commentsInterval: NodeJS.Timeout
     let reactionsInterval: NodeJS.Timeout
-    let pollInterval: NodeJS.Timeout
 
     if (status === 'live') {
       timerInterval = setInterval(() => {
@@ -184,23 +183,6 @@ export default function CreateLiveBroadcast() {
           )
         }
       }, 800)
-
-      if (activePoll && activePoll.isActive) {
-        pollInterval = setInterval(() => {
-          setActivePoll((prev) => {
-            if (!prev || !prev.isActive) return prev
-            const newOptions = [...prev.options]
-            const randomOptIndex = Math.floor(Math.random() * newOptions.length)
-            newOptions[randomOptIndex].votes += Math.floor(Math.random() * 3)
-            const newTotal = newOptions.reduce((acc, opt) => acc + opt.votes, 0)
-            return {
-              ...prev,
-              options: newOptions,
-              totalVotes: newTotal,
-            }
-          })
-        }, 2500)
-      }
     }
 
     return () => {
@@ -208,9 +190,34 @@ export default function CreateLiveBroadcast() {
       clearInterval(viewersInterval)
       clearInterval(commentsInterval)
       clearInterval(reactionsInterval)
-      clearInterval(pollInterval)
     }
-  }, [status, activePoll?.isActive])
+  }, [status])
+
+  // Poll simulation interval
+  useEffect(() => {
+    let pollTimeout: NodeJS.Timeout
+
+    if (status === 'live' && activePoll?.isActive) {
+      pollTimeout = setTimeout(() => {
+        setActivePoll((prev) => {
+          if (!prev || !prev.isActive) return prev
+          const newOptions = [...prev.options]
+          const randomOptIndex = Math.floor(Math.random() * newOptions.length)
+          newOptions[randomOptIndex].votes += Math.floor(Math.random() * 3)
+          const newTotal = newOptions.reduce((acc, opt) => acc + opt.votes, 0)
+          return {
+            ...prev,
+            options: newOptions,
+            totalVotes: newTotal,
+          }
+        })
+      }, 2500)
+    }
+
+    return () => {
+      if (pollTimeout) clearTimeout(pollTimeout)
+    }
+  }, [status, activePoll])
 
   const toggleVideo = () => {
     if (streamRef.current) {
