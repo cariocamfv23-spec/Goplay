@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { mockLiveEvents, LiveEvent } from '@/lib/data'
+import { mockLiveEvents } from '@/lib/data'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -10,10 +10,11 @@ import {
   ArrowLeft,
   MapPin,
   Trophy,
-  Filter,
   PlayCircle,
   Clock,
   Radio,
+  User,
+  X,
 } from 'lucide-react'
 import {
   Select,
@@ -24,23 +25,20 @@ import {
 } from '@/components/ui/select'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 
-const modalities: { id: LiveEvent['modality'] | 'all'; label: string }[] = [
+const modalities = [
   { id: 'all', label: 'Todos' },
-  { id: 'futebol', label: 'Futebol' },
-  { id: 'futsal', label: 'Futsal' },
-  { id: 'tênis', label: 'Tênis' },
-  { id: 'surf', label: 'Surf' },
-  { id: 'boxe', label: 'Boxe' },
-  { id: 'lutas', label: 'Lutas' },
-  { id: 'outros', label: 'Outros' },
+  { id: 'Football', label: 'Football' },
+  { id: 'Basketball', label: 'Basketball' },
+  { id: 'Volleyball', label: 'Volleyball' },
+  { id: 'MMA', label: 'MMA' },
+  { id: 'Tennis', label: 'Tennis' },
 ]
 
 export default function LiveEvents() {
   const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedModality, setSelectedModality] = useState<
-    LiveEvent['modality'] | 'all'
-  >('all')
+  const [athleteSearch, setAthleteSearch] = useState('')
+  const [selectedModality, setSelectedModality] = useState<string>('all')
   const [selectedCity, setSelectedCity] = useState<string>('all')
 
   // Get unique cities for filter
@@ -53,11 +51,30 @@ export default function LiveEvents() {
     const matchesModality =
       selectedModality === 'all' || event.modality === selectedModality
     const matchesCity = selectedCity === 'all' || event.city === selectedCity
-    return matchesSearch && matchesModality && matchesCity
+    const matchesAthlete =
+      athleteSearch === '' ||
+      event.athletes?.some((a) =>
+        a.toLowerCase().includes(athleteSearch.toLowerCase()),
+      )
+
+    return matchesSearch && matchesModality && matchesCity && matchesAthlete
   })
 
+  const hasActiveFilters =
+    searchTerm !== '' ||
+    athleteSearch !== '' ||
+    selectedModality !== 'all' ||
+    selectedCity !== 'all'
+
+  const handleClearFilters = () => {
+    setSearchTerm('')
+    setAthleteSearch('')
+    setSelectedModality('all')
+    setSelectedCity('all')
+  }
+
   return (
-    <div className="min-h-screen bg-background pb-20 animate-fade-in">
+    <div className="min-h-screen bg-background pb-20 animate-fade-in-up">
       {/* Header */}
       <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border/50">
         <div className="flex items-center gap-3 p-4">
@@ -93,15 +110,25 @@ export default function LiveEvents() {
           </div>
 
           <div className="flex gap-2">
+            <div className="relative flex-1">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Buscar por atleta..."
+                className="pl-9 bg-secondary border-none rounded-xl"
+                value={athleteSearch}
+                onChange={(e) => setAthleteSearch(e.target.value)}
+              />
+            </div>
+
             <Select value={selectedCity} onValueChange={setSelectedCity}>
-              <SelectTrigger className="w-[140px] bg-secondary border-none rounded-xl h-9 text-xs font-medium">
+              <SelectTrigger className="w-[140px] bg-secondary border-none rounded-xl h-10 text-xs font-medium">
                 <div className="flex items-center gap-2 truncate">
                   <MapPin className="h-3 w-3 text-muted-foreground" />
                   <SelectValue placeholder="Cidade" />
                 </div>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todas as Cidades</SelectItem>
+                <SelectItem value="all">Todas Cidades</SelectItem>
                 {cities.map((city) => (
                   <SelectItem key={city} value={city}>
                     {city}
@@ -109,7 +136,9 @@ export default function LiveEvents() {
                 ))}
               </SelectContent>
             </Select>
+          </div>
 
+          <div className="flex gap-2 items-center pt-1">
             <ScrollArea className="flex-1 whitespace-nowrap">
               <div className="flex gap-2">
                 {modalities.map((m) => (
@@ -131,6 +160,18 @@ export default function LiveEvents() {
               </div>
               <ScrollBar orientation="horizontal" className="invisible" />
             </ScrollArea>
+
+            {hasActiveFilters && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleClearFilters}
+                className="text-xs h-8 px-2 shrink-0 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-3 w-3 mr-1" />
+                Limpar
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -140,7 +181,9 @@ export default function LiveEvents() {
         {filteredEvents.length === 0 ? (
           <div className="text-center py-10 opacity-60">
             <Trophy className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
-            <p className="text-sm font-medium">Nenhum evento encontrado.</p>
+            <p className="text-sm font-medium">
+              No live broadcasts found for the selected filters.
+            </p>
           </div>
         ) : (
           filteredEvents.map((event) => (
@@ -185,7 +228,7 @@ export default function LiveEvents() {
                   )}
                 </div>
 
-                {/* Play Button Overlay (visible on hover or always subtle) */}
+                {/* Play Button Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="h-14 w-14 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center">
                     <PlayCircle className="h-10 w-10 text-white drop-shadow-md" />
@@ -202,6 +245,12 @@ export default function LiveEvents() {
                     {event.title}
                   </h3>
                   <p className="text-sm text-white/70">{event.championship}</p>
+
+                  {event.athletes && event.athletes.length > 0 && (
+                    <p className="text-xs text-white/60 mt-1 line-clamp-1">
+                      Com: {event.athletes.join(', ')}
+                    </p>
+                  )}
                 </div>
               </div>
 

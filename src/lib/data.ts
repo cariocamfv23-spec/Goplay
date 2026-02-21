@@ -3,12 +3,11 @@ import {
   Zap,
   Search,
   ShoppingBag,
-  MessageSquare,
+  User,
   Trophy,
   Briefcase,
   MapPin,
   Calendar,
-  User,
   Activity,
   Car,
   Camera,
@@ -36,9 +35,6 @@ import {
   Flag,
   CheckCircle,
   LayoutList,
-  Flame,
-  Shield,
-  Award,
   Handshake,
   FileSignature,
 } from 'lucide-react'
@@ -313,14 +309,7 @@ export interface LiveEvent {
   id: string
   title: string
   championship: string
-  modality:
-    | 'futebol'
-    | 'futsal'
-    | 'tênis'
-    | 'surf'
-    | 'boxe'
-    | 'lutas'
-    | 'outros'
+  modality: string
   city: string
   status: 'live' | 'upcoming' | 'ended'
   viewers: string
@@ -330,6 +319,7 @@ export interface LiveEvent {
   videoUrl?: string
   duration?: string
   date?: string
+  athletes?: string[]
 }
 
 export interface Scholarship {
@@ -2572,17 +2562,67 @@ export const mockInternationalRanking: InternationalRankingUser[] = [
   },
 ]
 export const mockOracle = {}
+
 export const mockLiveEvents: LiveEvent[] = [
   {
     id: 'live1',
     title: 'Final da Copa Regional - Amador',
     championship: 'Liga Regional',
-    modality: 'futebol',
+    modality: 'Football',
     city: 'São Paulo',
     status: 'live',
     viewers: '1.2k',
     image: 'https://img.usecurling.com/p/800/400?q=soccer%20game%20stadium',
     score: 'Red Wolves 2 x 1 Blue Sharks',
+    athletes: ['Alex Silva', 'Carlos Eduardo'],
+  },
+  {
+    id: 'live2',
+    title: 'Pro Basketball League',
+    championship: 'Nacional',
+    modality: 'Basketball',
+    city: 'Rio de Janeiro',
+    status: 'live',
+    viewers: '3.4k',
+    image: 'https://img.usecurling.com/p/800/400?q=basketball%20game',
+    score: 'Eagles 88 x 82 Lions',
+    athletes: ['LeBron Santos', 'Stephen Costa'],
+  },
+  {
+    id: 'live3',
+    title: 'Beach Volley Championship',
+    championship: 'Circuito Brasileiro',
+    modality: 'Volleyball',
+    city: 'Fortaleza',
+    status: 'live',
+    viewers: '800',
+    image: 'https://img.usecurling.com/p/800/400?q=beach%20volleyball',
+    score: 'Set 2: 15-12',
+    athletes: ['Bruna', 'Larissa'],
+  },
+  {
+    id: 'live4',
+    title: 'MMA Fight Night',
+    championship: 'Ultimate Combat',
+    modality: 'MMA',
+    city: 'Curitiba',
+    status: 'upcoming',
+    viewers: '0',
+    image: 'https://img.usecurling.com/p/800/400?q=mma%20fight',
+    startTime: '22:00',
+    athletes: ['Charles Oliveira', 'Jon Jones'],
+  },
+  {
+    id: 'live5',
+    title: 'Grand Slam Final',
+    championship: 'Open Tênis',
+    modality: 'Tennis',
+    city: 'São Paulo',
+    status: 'live',
+    viewers: '5.1k',
+    image: 'https://img.usecurling.com/p/800/400?q=tennis%20match',
+    score: '6-4, 3-6, 2-1',
+    athletes: ['Bia Haddad', 'Roger Federer'],
   },
 ]
 
@@ -2591,7 +2631,7 @@ export const mockReplays: LiveEvent[] = [
     id: 'rep1',
     title: 'Final da Copa Regional - Amador',
     championship: 'Liga Regional',
-    modality: 'futebol',
+    modality: 'Football',
     city: 'São Paulo',
     status: 'ended',
     viewers: '5.2k',
@@ -2606,7 +2646,7 @@ export const mockReplays: LiveEvent[] = [
     id: 'rep2',
     title: 'Treino Aberto - Finalização',
     championship: 'Amistoso',
-    modality: 'futebol',
+    modality: 'Football',
     city: 'Rio de Janeiro',
     status: 'ended',
     viewers: '2.1k',
