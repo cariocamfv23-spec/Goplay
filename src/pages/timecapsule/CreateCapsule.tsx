@@ -17,6 +17,12 @@ import { toast } from 'sonner'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
+const calculateOpenDate = (months: number) => {
+  const d = new Date()
+  d.setMonth(d.getMonth() + months)
+  return d.toISOString()
+}
+
 export default function CreateCapsule() {
   const navigate = useNavigate()
   const { addCapsule } = useTimeCapsuleStore()
@@ -32,12 +38,6 @@ export default function CreateCapsule() {
   const [sealProgress, setSealProgress] = useState(0)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
-
-  const calculateOpenDate = (months: number) => {
-    const d = new Date()
-    d.setMonth(d.getMonth() + months)
-    return d.toISOString()
-  }
 
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -71,11 +71,6 @@ export default function CreateCapsule() {
       return
     }
 
-    const finalOpenDate =
-      openPeriod === 'custom'
-        ? new Date(customDate).toISOString()
-        : calculateOpenDate(Number(openPeriod))
-
     setIsSealing(true)
   }
 
@@ -96,7 +91,7 @@ export default function CreateCapsule() {
 
   useEffect(() => {
     if (sealProgress >= 100) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         const finalOpenDate =
           openPeriod === 'custom'
             ? new Date(customDate).toISOString()
@@ -114,8 +109,19 @@ export default function CreateCapsule() {
         })
         navigate('/timecapsule')
       }, 500)
+      return () => clearTimeout(timer)
     }
-  }, [sealProgress])
+  }, [
+    sealProgress,
+    openPeriod,
+    customDate,
+    title,
+    description,
+    type,
+    content,
+    addCapsule,
+    navigate,
+  ])
 
   const today = new Date().toISOString().split('T')[0]
 
