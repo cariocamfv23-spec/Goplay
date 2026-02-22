@@ -9,6 +9,9 @@ import {
   Hand,
   HeartHandshake,
   ExternalLink,
+  Trophy,
+  ChevronRight,
+  Medal,
 } from 'lucide-react'
 import {
   Carousel,
@@ -20,7 +23,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { CommentsSheet } from './CommentsSheet'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import useSoundStore from '@/stores/useSoundStore'
 import { useLikeInteraction } from '@/hooks/useLikeInteraction'
@@ -63,6 +66,14 @@ interface PostProps {
     narration?: NarrationConfig
     liked?: boolean
     socialContext?: SocialContext
+    arenaResult?: {
+      challengeId: string
+      challengeTitle: string
+      rank: number
+      score: number
+      medal?: 'gold' | 'silver' | 'bronze'
+      banner?: string
+    }
   }
 }
 
@@ -70,6 +81,8 @@ export function PostCard({ post }: PostProps) {
   const [showComments, setShowComments] = useState(false)
   const [showDetail, setShowDetail] = useState(false)
   const [imgError, setImgError] = useState(false)
+
+  const navigate = useNavigate()
 
   const { isLiked, likeCount, handleLike } = useLikeInteraction(
     post,
@@ -99,9 +112,6 @@ export function PostCard({ post }: PostProps) {
     setImgError(true)
   }
 
-  // Determine the primary image to display.
-  // Prioritize `post.image` (if existing), then fall back to `post.media[0]`.
-  // If an error occurred or neither exist, show a fallback placeholder.
   const primaryImage = imgError
     ? 'https://img.usecurling.com/p/800/400?q=sports%20generic&color=gray'
     : post.image || post.media?.[0]
@@ -111,7 +121,6 @@ export function PostCard({ post }: PostProps) {
 
     const { type, user } = post.socialContext
 
-    // Icon mapping
     let icon = (
       <Heart className="w-3 h-3 text-muted-foreground fill-muted-foreground/30" />
     )
@@ -145,6 +154,71 @@ export function PostCard({ post }: PostProps) {
 
   const renderContent = () => {
     switch (post.type) {
+      case 'arena_result':
+        return (
+          <div
+            className="mb-3 rounded-xl overflow-hidden border border-gold/30 bg-gradient-to-br from-gold/5 via-background to-background cursor-pointer hover:border-gold/50 transition-colors shadow-sm"
+            onClick={() => navigate(`/arena/${post.arenaResult?.challengeId}`)}
+          >
+            {post.arenaResult?.banner && (
+              <div className="h-24 w-full relative">
+                <img
+                  src={post.arenaResult.banner}
+                  alt="Banner"
+                  className="w-full h-full object-cover opacity-80"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+                <div className="absolute bottom-2 left-3 flex items-center gap-2">
+                  <Trophy className="w-4 h-4 text-gold" />
+                  <span className="font-bold text-sm text-foreground drop-shadow-md">
+                    {post.arenaResult.challengeTitle}
+                  </span>
+                </div>
+              </div>
+            )}
+            <div className="p-4 pt-3 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex flex-col items-center justify-center bg-primary/10 rounded-lg p-2 min-w-[60px]">
+                  <span className="text-[10px] uppercase text-muted-foreground font-bold leading-none mb-1">
+                    Score
+                  </span>
+                  <span className="text-lg font-black text-primary leading-none">
+                    {post.arenaResult?.score?.toFixed(1) || '--'}
+                  </span>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-1.5">
+                    {post.arenaResult?.medal === 'gold' && (
+                      <Medal className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+                    )}
+                    {post.arenaResult?.medal === 'silver' && (
+                      <Medal className="w-5 h-5 text-slate-400 fill-slate-300" />
+                    )}
+                    {post.arenaResult?.medal === 'bronze' && (
+                      <Medal className="w-5 h-5 text-orange-700 fill-orange-400" />
+                    )}
+                    <span className="font-bold text-sm">
+                      {post.arenaResult?.rank}º Lugar
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
+                    Ranking Oficial
+                  </span>
+                </div>
+              </div>
+
+              <Button
+                variant="secondary"
+                size="sm"
+                className="h-8 text-xs font-bold bg-gold/20 text-gold hover:bg-gold/30 shrink-0"
+              >
+                Ver Desafio <ChevronRight className="w-3 h-3 ml-1" />
+              </Button>
+            </div>
+          </div>
+        )
+
       case 'video':
         if (post.videoUrl) {
           return (
@@ -154,7 +228,6 @@ export function PostCard({ post }: PostProps) {
                 thumbnail={primaryImage}
                 onClick={openDetail}
               />
-              {/* Optional: Add badge if narration exists */}
               {post.narration && (
                 <div className="absolute top-2 left-2 z-30 pointer-events-none">
                   <Badge className="bg-gold/90 text-black border-none shadow-md">
@@ -165,7 +238,6 @@ export function PostCard({ post }: PostProps) {
             </div>
           )
         }
-        // Fallback for video type without URL (legacy behavior)
         return (
           <DepthContainer
             className="relative rounded-xl overflow-hidden mb-3 group cursor-pointer"
@@ -255,8 +327,6 @@ export function PostCard({ post }: PostProps) {
           </DepthContainer>
         )
       default:
-        // Handle generic post (image or text only)
-        // If we have a valid image (either from 'image' prop or 'media' array)
         if (primaryImage) {
           return (
             <DepthContainer
@@ -329,7 +399,6 @@ export function PostCard({ post }: PostProps) {
 
           <div className="flex items-center justify-between pt-2 border-t border-border/50">
             <div className="flex items-center gap-1">
-              {/* Like (Curtir) */}
               <Button
                 variant="ghost"
                 size="sm"
@@ -350,7 +419,6 @@ export function PostCard({ post }: PostProps) {
                 <span className="text-[10px] font-medium">{likeCount}</span>
               </Button>
 
-              {/* Applaud (Aplaudir) */}
               <Button
                 variant="ghost"
                 size="sm"
@@ -360,7 +428,6 @@ export function PostCard({ post }: PostProps) {
                 <span className="text-[10px] font-medium">{post.applauds}</span>
               </Button>
 
-              {/* Cool (🤙) - New Reaction */}
               <Button
                 variant="ghost"
                 size="sm"
@@ -376,7 +443,6 @@ export function PostCard({ post }: PostProps) {
                 <span className="text-[10px] font-medium">{coolCount}</span>
               </Button>
 
-              {/* Support (Apoiar) */}
               <Button
                 variant="ghost"
                 size="sm"
@@ -386,7 +452,6 @@ export function PostCard({ post }: PostProps) {
                 <span className="text-[10px] font-medium">{post.supports}</span>
               </Button>
 
-              {/* Comment (Comentar) */}
               <Button
                 variant="ghost"
                 size="sm"
@@ -398,7 +463,6 @@ export function PostCard({ post }: PostProps) {
               </Button>
             </div>
 
-            {/* Share */}
             <Button
               variant="ghost"
               size="icon"

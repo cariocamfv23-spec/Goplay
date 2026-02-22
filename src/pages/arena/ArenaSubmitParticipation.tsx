@@ -6,30 +6,59 @@ import { ArrowLeft, Video, Zap, Activity } from 'lucide-react'
 import { toast } from 'sonner'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
+import { useFeedStore } from '@/stores/useFeedStore'
+import { mockCurrentUser } from '@/lib/data'
+import { cn } from '@/lib/utils'
 
 export default function ArenaSubmitParticipation() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { challenges, addParticipation } = useArenaStore()
+  const addPost = useFeedStore((state) => state.addPost)
   const challenge = challenges.find((c) => c.id === id)
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [autoPublish, setAutoPublish] = useState(false)
 
   if (!challenge) return null
 
   const handleSubmit = () => {
     setIsSubmitting(true)
-    // Simulate upload delay
+    // Simulate upload delay and evaluation
     setTimeout(() => {
       addParticipation({
         challengeId: challenge.id,
-        // Optional mock data
         videoUrl: 'https://video.mp4',
+        autoPublish,
+        status: 'evaluated', // Mocking instant evaluation for demo
+        finalScore: 92.5,
       })
+
+      if (autoPublish) {
+        addPost({
+          type: 'arena_result',
+          user: mockCurrentUser,
+          content: `Acabei de receber meu resultado no ${challenge.title}! Muito orgulho dessa conquista na Arena Goplay. 🔥`,
+          arenaResult: {
+            challengeId: challenge.id,
+            challengeTitle: challenge.title,
+            rank: 1,
+            score: 92.5,
+            medal: 'gold',
+            banner: challenge.banner,
+          },
+        })
+      }
+
       setIsSubmitting(false)
       setSuccess(true)
-      toast.success('Participação enviada!')
+      toast.success(
+        autoPublish
+          ? 'Participação enviada e publicada no feed!'
+          : 'Participação enviada com sucesso!',
+      )
     }, 2000)
   }
 
@@ -41,8 +70,8 @@ export default function ArenaSubmitParticipation() {
         </div>
         <h2 className="text-2xl font-black mb-2">Enviado com Sucesso!</h2>
         <p className="text-muted-foreground mb-8">
-          Seu vídeo está em <strong>Análise IA</strong>. Em breve a comunidade e
-          os profissionais também deixarão seus votos.
+          Sua participação foi processada.{' '}
+          {autoPublish && 'O resultado já está disponível no seu Feed.'}
         </p>
         <Button
           className="w-full max-w-xs h-12 font-bold"
@@ -101,6 +130,33 @@ export default function ArenaSubmitParticipation() {
             </p>
           </div>
         )}
+
+        <div
+          className={cn(
+            'space-y-3 p-4 rounded-xl border mt-6 transition-colors',
+            autoPublish
+              ? 'bg-primary/5 border-primary/30'
+              : 'bg-secondary/30 border-border/50',
+          )}
+        >
+          <div className="flex flex-row items-center justify-between gap-4">
+            <Label
+              className="font-bold text-sm leading-snug cursor-pointer flex-1"
+              onClick={() => setAutoPublish(!autoPublish)}
+            >
+              Publicar resultados automaticamente no Feed Inteligente
+            </Label>
+            <Switch
+              checked={autoPublish}
+              onCheckedChange={setAutoPublish}
+              className="data-[state=checked]:bg-primary"
+            />
+          </div>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Compartilhe sua nota e ranking final com seus seguidores assim que a
+            avaliação do desafio for concluída.
+          </p>
+        </div>
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-md border-t border-border/50">

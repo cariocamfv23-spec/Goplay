@@ -17,6 +17,8 @@ import { Separator } from '@/components/ui/separator'
 import { Post3DGenerator } from '@/components/Post3DGenerator'
 import { GhostViewMode } from '@/components/Ghost3DViewer'
 import { cn } from '@/lib/utils'
+import { useFeedStore } from '@/stores/useFeedStore'
+import { mockCurrentUser } from '@/lib/data'
 
 export function CreatePostFab() {
   const [isOpen, setIsOpen] = useState(false)
@@ -26,11 +28,20 @@ export function CreatePostFab() {
   const [show3DGenerator, setShow3DGenerator] = useState(false)
   const [generatedMode, setGeneratedMode] = useState<GhostViewMode | null>(null)
 
+  const addPost = useFeedStore((state) => state.addPost)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
 
   const handlePost = () => {
     if (!content.trim() && !videoFile) return
+
+    addPost({
+      type: videoFile ? 'video' : 'text',
+      user: mockCurrentUser,
+      content,
+      videoUrl: videoPreview,
+      videoDuration: videoFile ? '0:15' : undefined,
+    })
 
     toast.success('Publicação enviada!', {
       description: generatedMode
@@ -41,7 +52,6 @@ export function CreatePostFab() {
       ) : undefined,
     })
 
-    // Reset state
     setIsOpen(false)
     resetForm()
   }
@@ -103,7 +113,6 @@ export function CreatePostFab() {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md bg-card border-border max-h-[90vh] overflow-y-auto">
-        {/* If 3D Generator is active, show only that component */}
         {show3DGenerator && videoFile ? (
           <Post3DGenerator
             videoFile={videoFile}
@@ -127,7 +136,6 @@ export function CreatePostFab() {
                 />
               </div>
 
-              {/* Video Preview Area */}
               {videoPreview && (
                 <div className="relative rounded-xl overflow-hidden bg-black/5 border border-border group">
                   <video
@@ -160,7 +168,6 @@ export function CreatePostFab() {
                     <X className="w-3 h-3" />
                   </Button>
 
-                  {/* 3D Generation Trigger */}
                   {!generatedMode && (
                     <div className="absolute bottom-2 left-2 right-2">
                       <Button

@@ -33,6 +33,7 @@ export interface ArenaParticipation {
   status: 'submitted' | 'analyzing' | 'evaluated'
   createdAt: string
   athlete?: any
+  autoPublish?: boolean
 }
 
 interface ArenaState {
@@ -42,18 +43,7 @@ interface ArenaState {
     c: Omit<ArenaChallenge, 'id' | 'creatorId' | 'status' | 'banner'>,
   ) => void
   addParticipation: (
-    p: Omit<
-      ArenaParticipation,
-      | 'id'
-      | 'athleteId'
-      | 'status'
-      | 'createdAt'
-      | 'aiScore'
-      | 'communityScore'
-      | 'proScore'
-      | 'finalScore'
-      | 'athlete'
-    >,
+    p: Partial<ArenaParticipation> & { challengeId: string },
   ) => void
 }
 
@@ -163,13 +153,13 @@ export const useArenaStore = create<ArenaState>()(
         set((state) => ({
           participations: [
             {
-              ...data,
               id: Math.random().toString(36).substr(2, 9),
               athleteId: mockCurrentUser.id,
               status: 'submitted',
               createdAt: new Date().toISOString(),
               athlete: mockCurrentUser,
-            },
+              ...data,
+            } as ArenaParticipation,
             ...state.participations,
           ],
         })),

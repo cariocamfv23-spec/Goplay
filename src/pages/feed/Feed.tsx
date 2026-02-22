@@ -1,14 +1,16 @@
 import { PostCard } from '@/components/PostCard'
-import { mockPosts } from '@/lib/data'
 import { StoriesRail } from '@/components/StoriesRail'
 import { CreatePostFab } from '@/components/CreatePostFab'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useFeedStore } from '@/stores/useFeedStore'
 
 export default function Feed() {
-  const eventPosts = mockPosts.filter(
+  const { posts } = useFeedStore()
+
+  const eventPosts = posts.filter(
     (p) => p.type === 'article' || p.type === 'event',
   )
-  const socialPosts = mockPosts.filter(
+  const socialPosts = posts.filter(
     (p) => p.type !== 'article' && p.type !== 'event',
   )
 
@@ -35,7 +37,7 @@ export default function Feed() {
                 value="all"
                 className="space-y-6 m-0 animate-in fade-in slide-in-from-bottom-4 duration-500"
               >
-                {mockPosts.map((post) => (
+                {posts.map((post) => (
                   <PostCard key={post.id} post={post} />
                 ))}
               </TabsContent>
