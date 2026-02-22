@@ -533,10 +533,10 @@ export default function AthleteView({
 
               {/* Time Capsule Banner */}
               <Button
-                className="w-full bg-gradient-to-r from-primary/10 to-gold/10 text-primary hover:from-primary/20 border border-primary/20 justify-between shadow-sm font-medium mb-3 h-14"
+                className="w-full bg-gradient-to-r from-primary/10 to-gold/10 text-foreground hover:from-primary/20 border border-primary/20 justify-between shadow-sm font-bold mb-3 h-14"
                 onClick={() => navigate('/timecapsule')}
               >
-                <span className="flex items-center text-base">
+                <span className="flex items-center text-base text-foreground">
                   <Lock className="mr-3 h-5 w-5 text-gold" />
                   Goplay Time Capsule™
                 </span>

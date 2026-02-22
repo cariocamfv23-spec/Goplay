@@ -11,7 +11,6 @@ import {
   Calendar,
   LockOpen,
 } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -30,7 +29,7 @@ export default function CapsuleDetail() {
       <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
         <LockOpen className="w-16 h-16 text-muted-foreground/30 mb-4" />
         <h2 className="text-xl font-bold">Cápsula indisponível</h2>
-        <p className="text-muted-foreground mb-6">
+        <p className="text-muted-foreground mb-6 font-medium">
           Esta cápsula ainda não foi liberada ou não existe.
         </p>
         <Button onClick={() => navigate(-1)}>Voltar</Button>
@@ -59,7 +58,7 @@ export default function CapsuleDetail() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="font-bold text-lg text-primary leading-none">
+            <h1 className="font-bold text-lg text-foreground leading-none">
               Time Capsule Revelada
             </h1>
           </div>
@@ -68,13 +67,13 @@ export default function CapsuleDetail() {
 
       <div className="p-4 max-w-xl mx-auto space-y-8">
         <div className="text-center mt-4">
-          <Badge className="bg-gold/20 text-gold hover:bg-gold/30 border-none mb-3">
+          <Badge className="bg-gold/20 text-gold hover:bg-gold/30 border-none mb-3 font-bold">
             <LockOpen className="w-3 h-3 mr-1" /> Liberada Oficialmente
           </Badge>
           <h2 className="text-3xl font-black tracking-tight text-foreground">
             {capsule.title}
           </h2>
-          <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground mt-3">
+          <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground mt-3 font-medium">
             <span className="flex items-center gap-1">
               <Calendar className="w-4 h-4" /> Selada:{' '}
               {format(new Date(capsule.createdAt), 'dd MMM yyyy', {
@@ -105,7 +104,7 @@ export default function CapsuleDetail() {
               <div className="absolute -top-4 -left-4 text-8xl text-primary/10 font-serif">
                 "
               </div>
-              <p className="text-lg italic text-foreground/90 relative z-10 leading-relaxed text-center">
+              <p className="text-lg italic text-foreground/90 relative z-10 leading-relaxed text-center font-medium">
                 {capsule.content}
               </p>
               <div className="absolute -bottom-10 -right-4 text-8xl text-primary/10 font-serif">
@@ -172,20 +171,22 @@ export default function CapsuleDetail() {
               <div className="bg-primary/10 p-5 rounded-2xl border border-primary/30 text-center flex flex-col justify-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent" />
                 <div className="relative z-10">
-                  <p className="text-[10px] uppercase font-bold text-primary mb-3 tracking-wider flex items-center justify-center gap-1">
-                    <Star className="w-3 h-3 fill-primary" /> Hoje
+                  <p className="text-[10px] uppercase font-bold text-foreground mb-3 tracking-wider flex items-center justify-center gap-1">
+                    <Star className="w-3 h-3 text-foreground" /> Hoje
                   </p>
                   <div className="space-y-1">
-                    <p className="text-3xl font-black text-primary">
+                    <p className="text-3xl font-black text-foreground">
                       {mockCurrentUser.level || 15}
                     </p>
-                    <p className="text-xs text-primary/80 font-medium">Nível</p>
+                    <p className="text-xs text-muted-foreground font-medium">
+                      Nível
+                    </p>
                   </div>
                   <div className="mt-4 pt-4 border-t border-primary/20 space-y-1">
-                    <p className="text-xl font-bold text-primary">
+                    <p className="text-xl font-bold text-foreground">
                       {mockCurrentUser.points}
                     </p>
-                    <p className="text-xs text-primary/80 font-medium">
+                    <p className="text-xs text-muted-foreground font-medium">
                       Pontos Goplay
                     </p>
                   </div>
@@ -206,7 +207,7 @@ export default function CapsuleDetail() {
           </Button>
           <Button
             variant="outline"
-            className="w-full h-14 text-lg font-bold border-primary/50 text-primary hover:bg-primary/10"
+            className="w-full h-14 text-lg font-bold border-primary/50 text-foreground hover:bg-primary/10"
             onClick={handleHighlight}
           >
             <Star className="mr-2 h-5 w-5" />

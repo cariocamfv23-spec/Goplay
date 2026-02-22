@@ -350,7 +350,7 @@ export function TopBar() {
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => navigate('/timecapsule')}>
               <Lock className="mr-2 h-4 w-4 text-gold" />
-              <span className="font-bold text-gold">Time Capsule</span>
+              <span className="font-bold text-foreground">Time Capsule</span>
               <Badge
                 variant="secondary"
                 className="ml-auto text-[8px] bg-gold/20 text-gold border-none px-1 py-0 h-4"

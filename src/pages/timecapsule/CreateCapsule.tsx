@@ -170,8 +170,10 @@ export default function CreateCapsule() {
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div>
-          <h1 className="font-bold text-lg text-primary">Nova Time Capsule</h1>
-          <p className="text-xs text-muted-foreground">
+          <h1 className="font-bold text-lg text-foreground">
+            Nova Time Capsule
+          </h1>
+          <p className="text-xs text-muted-foreground font-medium">
             Registre sua promessa para o futuro
           </p>
         </div>
@@ -181,22 +183,24 @@ export default function CreateCapsule() {
         <Card className="bg-primary/5 border-primary/20 shadow-none">
           <CardContent className="p-4 space-y-4">
             <div className="space-y-2">
-              <Label>Título da meta</Label>
+              <Label className="text-foreground font-semibold">
+                Título da meta
+              </Label>
               <Input
                 placeholder="Ex: Ser convocado para a seleção"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="bg-background"
+                className="bg-background text-foreground font-medium placeholder:text-muted-foreground/70"
                 maxLength={60}
               />
             </div>
             <div className="space-y-2">
-              <Label>Descrição</Label>
+              <Label className="text-foreground font-semibold">Descrição</Label>
               <Input
                 placeholder="Resumo do objetivo..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="bg-background"
+                className="bg-background text-foreground font-medium placeholder:text-muted-foreground/70"
                 maxLength={100}
               />
             </div>
@@ -204,12 +208,14 @@ export default function CreateCapsule() {
         </Card>
 
         <div className="space-y-3">
-          <Label>Formato do Registro</Label>
+          <Label className="text-foreground font-semibold">
+            Formato do Registro
+          </Label>
           <div className="grid grid-cols-2 gap-3">
             <Button
               variant={type === 'text' ? 'default' : 'outline'}
               className={cn(
-                'h-12 border-2',
+                'h-12 border-2 font-bold',
                 type === 'text' && 'bg-primary border-primary text-white',
               )}
               onClick={() => setType('text')}
@@ -219,7 +225,7 @@ export default function CreateCapsule() {
             <Button
               variant={type === 'video' ? 'default' : 'outline'}
               className={cn(
-                'h-12 border-2',
+                'h-12 border-2 font-bold',
                 type === 'video' && 'bg-primary border-primary text-white',
               )}
               onClick={() => setType('video')}
@@ -232,13 +238,15 @@ export default function CreateCapsule() {
         {type === 'text' ? (
           <div className="space-y-2 animate-in fade-in">
             <div className="flex justify-between">
-              <Label>Sua Mensagem</Label>
+              <Label className="text-foreground font-semibold">
+                Sua Mensagem
+              </Label>
               <span
                 className={cn(
-                  'text-xs',
+                  'text-xs font-medium',
                   content.length >= 500
                     ? 'text-red-500 font-bold'
-                    : 'text-muted-foreground',
+                    : 'text-slate-500 dark:text-slate-400',
                 )}
               >
                 {content.length}/500
@@ -246,7 +254,7 @@ export default function CreateCapsule() {
             </div>
             <Textarea
               placeholder="Escreva sua promessa detalhada aqui..."
-              className="min-h-[150px] resize-none bg-background/50"
+              className="min-h-[150px] resize-none bg-background/50 text-foreground font-medium placeholder:text-muted-foreground/70"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               maxLength={500}
@@ -254,7 +262,9 @@ export default function CreateCapsule() {
           </div>
         ) : (
           <div className="space-y-2 animate-in fade-in">
-            <Label>Gravar/Anexar Vídeo (Máx. 2 minutos)</Label>
+            <Label className="text-foreground font-semibold">
+              Gravar/Anexar Vídeo (Máx. 2 minutos)
+            </Label>
             <div
               className={cn(
                 'border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors',
@@ -274,13 +284,13 @@ export default function CreateCapsule() {
               <Video
                 className={cn(
                   'w-10 h-10 mx-auto mb-3',
-                  videoFile ? 'text-primary' : 'text-muted-foreground/50',
+                  videoFile ? 'text-foreground' : 'text-muted-foreground/50',
                 )}
               />
               {videoFile ? (
                 <div>
-                  <p className="font-bold text-primary">{videoFile.name}</p>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="font-bold text-foreground">{videoFile.name}</p>
+                  <p className="text-xs text-muted-foreground mt-1 font-medium">
                     Toque para trocar
                   </p>
                 </div>
@@ -289,7 +299,7 @@ export default function CreateCapsule() {
                   <p className="font-semibold text-foreground">
                     Toque para selecionar
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-xs text-muted-foreground mt-1 font-medium">
                     MP4, MOV (Máx 50MB)
                   </p>
                 </div>
@@ -299,12 +309,12 @@ export default function CreateCapsule() {
         )}
 
         <div className="space-y-3 pt-2">
-          <Label className="flex items-center gap-2">
+          <Label className="flex items-center gap-2 text-foreground font-semibold">
             <Calendar className="w-4 h-4 text-gold" /> Quando você quer abrir?
           </Label>
           <Select value={openPeriod} onValueChange={setOpenPeriod}>
-            <SelectTrigger className="h-12 bg-background border-2 border-border/50 font-medium">
-              <SelectValue />
+            <SelectTrigger className="h-12 bg-background border-2 border-border/50 font-medium text-foreground">
+              <SelectValue placeholder="Selecione a data" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="6">Em 6 meses</SelectItem>
@@ -320,7 +330,7 @@ export default function CreateCapsule() {
             <div className="pt-2 animate-in slide-in-from-top-2">
               <Input
                 type="date"
-                className="h-12 bg-background"
+                className="h-12 bg-background text-foreground font-medium"
                 min={today}
                 value={customDate}
                 onChange={(e) => setCustomDate(e.target.value)}
@@ -337,7 +347,7 @@ export default function CreateCapsule() {
             <Lock className="w-5 h-5" />
             SELAR CÁPSULA
           </Button>
-          <p className="text-center text-xs text-muted-foreground mt-3">
+          <p className="text-center text-xs text-muted-foreground mt-3 font-medium">
             Aviso: Uma vez selada, o conteúdo não poderá ser editado ou apagado.
           </p>
         </div>

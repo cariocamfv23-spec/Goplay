@@ -15,7 +15,6 @@ import {
   Archive,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { formatDistanceToNow, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { cn } from '@/lib/utils'
@@ -67,7 +66,7 @@ export default function TimeCapsuleDashboard() {
                     ? 'bg-gold/20 text-gold'
                     : isWaiting
                       ? 'bg-orange-500/20 text-orange-500'
-                      : 'bg-primary/20 text-primary',
+                      : 'bg-primary/20 text-foreground',
                 )}
               >
                 {capsule.type === 'video' ? (
@@ -80,12 +79,12 @@ export default function TimeCapsuleDashboard() {
                 <h3
                   className={cn(
                     'font-bold text-base line-clamp-1',
-                    isReleased && 'text-gold',
+                    isReleased ? 'text-gold' : 'text-foreground',
                   )}
                 >
                   {capsule.title}
                 </h3>
-                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <p className="text-xs text-slate-600 dark:text-slate-300 flex items-center gap-1 font-medium">
                   <Calendar className="w-3 h-3" /> Criada em{' '}
                   {format(new Date(capsule.createdAt), 'dd/MM/yyyy', {
                     locale: ptBR,
@@ -106,7 +105,7 @@ export default function TimeCapsuleDashboard() {
             )}
           </div>
 
-          <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+          <p className="text-sm text-slate-700 dark:text-slate-200 line-clamp-2 mb-4 font-medium">
             {capsule.description}
           </p>
 
@@ -117,7 +116,7 @@ export default function TimeCapsuleDashboard() {
                 ? 'bg-gold/10 border-gold/20'
                 : isWaiting
                   ? 'bg-orange-500/10 border-orange-500/20'
-                  : 'bg-primary/10 border-primary/20',
+                  : 'bg-primary/10 border-primary/30',
             )}
           >
             <div className="flex items-center gap-2">
@@ -126,7 +125,7 @@ export default function TimeCapsuleDashboard() {
               ) : isWaiting ? (
                 <Hourglass className="w-4 h-4 text-orange-500 animate-pulse" />
               ) : (
-                <Lock className="w-4 h-4 text-primary" />
+                <Lock className="w-4 h-4 text-foreground" />
               )}
               <span
                 className={cn(
@@ -135,16 +134,16 @@ export default function TimeCapsuleDashboard() {
                     ? 'text-gold'
                     : isWaiting
                       ? 'text-orange-500'
-                      : 'text-primary',
+                      : 'text-foreground',
                 )}
               >
                 {isReleased ? 'Liberada' : isWaiting ? 'Quase lá' : 'Selada'}
               </span>
             </div>
 
-            <div className="text-xs font-medium bg-background/50 px-2 py-1 rounded shadow-sm">
+            <div className="text-xs font-bold bg-background/90 px-3 py-1.5 rounded shadow-sm border border-border/50 text-foreground">
               {isReleased ? (
-                <span className="text-foreground">
+                <span>
                   Aberta{' '}
                   {formatDistanceToNow(new Date(capsule.openAt), {
                     locale: ptBR,
@@ -152,7 +151,7 @@ export default function TimeCapsuleDashboard() {
                   })}
                 </span>
               ) : (
-                <span className="text-foreground">
+                <span>
                   Abre em{' '}
                   {formatDistanceToNow(new Date(capsule.openAt), {
                     locale: ptBR,
@@ -179,10 +178,10 @@ export default function TimeCapsuleDashboard() {
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <Lock className="w-8 h-8 text-gold mx-auto mb-2" />
-        <h1 className="text-2xl font-black text-primary uppercase tracking-tight">
+        <h1 className="text-2xl font-black text-foreground uppercase tracking-tight">
           Time Capsule™
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 font-medium">
           Suas metas guardadas no tempo
         </p>
       </div>
@@ -190,16 +189,25 @@ export default function TimeCapsuleDashboard() {
       <div className="flex-1 p-4 pb-24 z-10">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-6 bg-secondary/50">
-            <TabsTrigger value="sealed" className="text-xs">
+            <TabsTrigger
+              value="sealed"
+              className="text-xs font-bold data-[state=active]:text-foreground data-[state=active]:bg-background"
+            >
               <Lock className="w-3 h-3 mr-1" /> Seladas
             </TabsTrigger>
-            <TabsTrigger value="waiting" className="text-xs relative">
+            <TabsTrigger
+              value="waiting"
+              className="text-xs font-bold data-[state=active]:text-foreground data-[state=active]:bg-background relative"
+            >
               <Hourglass className="w-3 h-3 mr-1" /> Quase lá
               {waiting.length > 0 && (
                 <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
               )}
             </TabsTrigger>
-            <TabsTrigger value="released" className="text-xs relative">
+            <TabsTrigger
+              value="released"
+              className="text-xs font-bold data-[state=active]:text-foreground data-[state=active]:bg-background relative"
+            >
               <Unlock className="w-3 h-3 mr-1" /> Liberadas
               {released.length > 0 && (
                 <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-gold" />
