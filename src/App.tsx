@@ -173,6 +173,18 @@ const TimeCapsuleDashboard = lazy(
 const CreateCapsule = lazy(() => import('./pages/timecapsule/CreateCapsule'))
 const CapsuleDetail = lazy(() => import('./pages/timecapsule/CapsuleDetail'))
 
+// Reality Arena
+const ArenaDashboard = lazy(() => import('./pages/arena/ArenaDashboard'))
+const CreateArenaChallenge = lazy(
+  () => import('./pages/arena/CreateArenaChallenge'),
+)
+const ArenaChallengeDetails = lazy(
+  () => import('./pages/arena/ArenaChallengeDetails'),
+)
+const ArenaSubmitParticipation = lazy(
+  () => import('./pages/arena/ArenaSubmitParticipation'),
+)
+
 const App = () => {
   const { color } = useThemeStore()
 
@@ -227,6 +239,21 @@ const App = () => {
                     <Route path="/explore" element={<Explore />} />
                     <Route path="/check-in" element={<CheckIn />} />
                     <Route path="/app-map" element={<AppMap />} />
+
+                    {/* Reality Arena */}
+                    <Route path="/arena" element={<ArenaDashboard />} />
+                    <Route
+                      path="/arena/create"
+                      element={<CreateArenaChallenge />}
+                    />
+                    <Route
+                      path="/arena/:id"
+                      element={<ArenaChallengeDetails />}
+                    />
+                    <Route
+                      path="/arena/:id/participate"
+                      element={<ArenaSubmitParticipation />}
+                    />
 
                     <Route
                       path="/contracts"

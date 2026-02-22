@@ -19,6 +19,7 @@ import {
   Swords,
   Map,
   Lock,
+  Shield,
 } from 'lucide-react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -347,6 +348,10 @@ export function TopBar() {
             <DropdownMenuItem onClick={() => navigate('/wallet')}>
               <CreditCard className="mr-2 h-4 w-4" />
               <span>Carteira</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/arena')}>
+              <Shield className="mr-2 h-4 w-4 text-gold" />
+              <span className="font-bold text-foreground">Reality Arena</span>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => navigate('/timecapsule')}>
               <Lock className="mr-2 h-4 w-4 text-gold" />

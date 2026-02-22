@@ -35,6 +35,7 @@ import {
   Calendar,
   Clock,
   Lock,
+  Shield,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -480,7 +481,7 @@ export default function AthleteView({
                   Performance & Carreira
                 </h3>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3 mb-3">
                 <Button
                   className="bg-secondary text-foreground hover:bg-secondary/80 justify-start h-auto py-3 px-4 shadow-sm"
                   onClick={() => navigate('/profile/stats')}
@@ -530,6 +531,23 @@ export default function AthleteView({
                   </div>
                 </Button>
               </div>
+
+              {/* Reality Arena Banner */}
+              <Button
+                className="w-full bg-gradient-to-r from-primary/10 to-gold/10 text-foreground hover:from-primary/20 border border-primary/20 justify-between shadow-sm font-bold mb-3 h-14"
+                onClick={() => navigate('/arena')}
+              >
+                <span className="flex items-center text-base text-foreground">
+                  <Shield className="mr-3 h-5 w-5 text-gold" />
+                  Reality Arena™
+                </span>
+                <Badge
+                  variant="secondary"
+                  className="bg-gold/20 text-gold border-none"
+                >
+                  NOVO
+                </Badge>
+              </Button>
 
               {/* Time Capsule Banner */}
               <Button
