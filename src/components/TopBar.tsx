@@ -18,6 +18,7 @@ import {
   Trophy,
   Swords,
   Map,
+  Lock,
 } from 'lucide-react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -42,6 +43,7 @@ import { AthleteAura } from '@/components/AthleteAura'
 import { useNostalgiaStore, NostalgiaPreset } from '@/stores/useNostalgiaStore'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
+import { Badge } from '@/components/ui/badge'
 
 export function TopBar() {
   const navigate = useNavigate()
@@ -345,6 +347,16 @@ export function TopBar() {
             <DropdownMenuItem onClick={() => navigate('/wallet')}>
               <CreditCard className="mr-2 h-4 w-4" />
               <span>Carteira</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/timecapsule')}>
+              <Lock className="mr-2 h-4 w-4 text-gold" />
+              <span className="font-bold text-gold">Time Capsule</span>
+              <Badge
+                variant="secondary"
+                className="ml-auto text-[8px] bg-gold/20 text-gold border-none px-1 py-0 h-4"
+              >
+                PRO
+              </Badge>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => navigate('/app-map')}>
               <Map className="mr-2 h-4 w-4" />

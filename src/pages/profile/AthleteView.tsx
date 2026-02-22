@@ -34,6 +34,7 @@ import {
   Store,
   Calendar,
   Clock,
+  Lock,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -529,6 +530,24 @@ export default function AthleteView({
                   </div>
                 </Button>
               </div>
+
+              {/* Time Capsule Banner */}
+              <Button
+                className="w-full bg-gradient-to-r from-primary/10 to-gold/10 text-primary hover:from-primary/20 border border-primary/20 justify-between shadow-sm font-medium mb-3 h-14"
+                onClick={() => navigate('/timecapsule')}
+              >
+                <span className="flex items-center text-base">
+                  <Lock className="mr-3 h-5 w-5 text-gold" />
+                  Goplay Time Capsule™
+                </span>
+                <Badge
+                  variant="secondary"
+                  className="bg-gold/20 text-gold border-none"
+                >
+                  NOVO
+                </Badge>
+              </Button>
+
               <Button
                 variant="ghost"
                 className="w-full justify-between hover:bg-secondary/30 text-muted-foreground"

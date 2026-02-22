@@ -166,6 +166,13 @@ const CreateLiveBroadcast = lazy(
   () => import('./pages/live/CreateLiveBroadcast'),
 )
 
+// Time Capsule
+const TimeCapsuleDashboard = lazy(
+  () => import('./pages/timecapsule/TimeCapsuleDashboard'),
+)
+const CreateCapsule = lazy(() => import('./pages/timecapsule/CreateCapsule'))
+const CapsuleDetail = lazy(() => import('./pages/timecapsule/CapsuleDetail'))
+
 const App = () => {
   const { color } = useThemeStore()
 
@@ -410,6 +417,20 @@ const App = () => {
                     <Route
                       path="/ai/bot-da-verdade"
                       element={<BotDaVerdade />}
+                    />
+
+                    {/* Time Capsule Routes */}
+                    <Route
+                      path="/timecapsule"
+                      element={<TimeCapsuleDashboard />}
+                    />
+                    <Route
+                      path="/timecapsule/create"
+                      element={<CreateCapsule />}
+                    />
+                    <Route
+                      path="/timecapsule/:id"
+                      element={<CapsuleDetail />}
                     />
                   </Route>
 
