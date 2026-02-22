@@ -243,6 +243,10 @@
     animation: ping 3s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
 
+  .animate-shimmer {
+    animation: shimmer 3s linear infinite;
+  }
+
   /* 3D Glassmorphism Panel */
   .glass-panel-3d {
     @apply bg-white/10 dark:bg-black/20 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-xl;
@@ -346,6 +350,15 @@
       0 0 0 2em rgba(var(--primary), 0.3),
       0 0 0 3em rgba(var(--primary), 0.3),
       0 0 0 4em rgba(var(--primary), 0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
   }
 }
 

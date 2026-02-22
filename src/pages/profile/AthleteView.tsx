@@ -60,6 +60,7 @@ import { getSportCoverImage } from '@/lib/sport-utils'
 import { DepthContainer } from '@/components/DepthContainer'
 import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 import { useReplayStore } from '@/stores/useReplayStore'
+import { AchievementsTab } from '@/components/AchievementsTab'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -719,6 +720,12 @@ export default function AthleteView({
               <PlayCircle className="h-4 w-4 mr-2" /> Replays
             </TabsTrigger>
             <TabsTrigger
+              value="achievements"
+              className="flex-1 min-w-max px-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+            >
+              <Trophy className="h-4 w-4 mr-2" /> Conquistas
+            </TabsTrigger>
+            <TabsTrigger
               value="tagged"
               className="flex-1 min-w-max px-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
             >
@@ -897,6 +904,13 @@ export default function AthleteView({
                 </div>
               )}
             </div>
+          </TabsContent>
+
+          <TabsContent
+            value="achievements"
+            className="mt-4 animate-in slide-in-from-bottom-2 duration-500"
+          >
+            <AchievementsTab />
           </TabsContent>
 
           <TabsContent

@@ -15,6 +15,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useInvisiblePresenceStore } from '@/stores/useInvisiblePresenceStore'
 import { InvisiblePresenceOverlay } from '@/components/InvisiblePresenceOverlay'
 import { useDepthStore } from '@/stores/useDepthStore'
+import { AchievementOverlay } from '@/components/AchievementOverlay'
+import { useAchievementStore } from '@/stores/useAchievementStore'
 
 export default function Layout() {
   const location = useLocation()
@@ -22,8 +24,14 @@ export default function Layout() {
   const { isEnabled: isDepthEnabled, intensity: depthIntensity } =
     useDepthStore()
   const { initializeSession } = useInvisiblePresenceStore()
+  const { trackAction } = useAchievementStore()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [scrollY, setScrollY] = useState(0)
+
+  // Track daily login
+  useEffect(() => {
+    trackAction('daily_login')
+  }, [trackAction])
 
   // Initialize invisible presence logic (Silent Latent Trigger)
   useEffect(() => {
@@ -182,6 +190,7 @@ export default function Layout() {
 
       {/* Toast Container */}
       <Toaster />
+      <AchievementOverlay />
     </div>
   )
 }

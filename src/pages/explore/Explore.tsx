@@ -21,10 +21,12 @@ import { MapEventCard } from '@/components/MapEventCard'
 import { useNavigate } from 'react-router-dom'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
+import { useAchievementStore } from '@/stores/useAchievementStore'
 
 export default function Explore() {
   const [search, setSearch] = useState('')
   const navigate = useNavigate()
+  const { trackAction } = useAchievementStore()
 
   // Restore menus: Live Games, Jobs, Flyer Creator
   const extraCategories = [
@@ -152,7 +154,10 @@ export default function Explore() {
             {amateurCategories.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => navigate(getCategoryPath(cat.id))}
+                onClick={() => {
+                  trackAction('explore_category')
+                  navigate(getCategoryPath(cat.id))
+                }}
                 className="flex flex-col items-center gap-2 group"
               >
                 <div
@@ -183,7 +188,10 @@ export default function Explore() {
             {proCategories.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => navigate(getCategoryPath(cat.id))}
+                onClick={() => {
+                  trackAction('explore_category')
+                  navigate(getCategoryPath(cat.id))
+                }}
                 className="flex flex-col items-center gap-2 group"
               >
                 <div
@@ -215,7 +223,10 @@ export default function Explore() {
             {scoutCategories.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => navigate(getCategoryPath(cat.id))}
+                onClick={() => {
+                  trackAction('explore_category')
+                  navigate(getCategoryPath(cat.id))
+                }}
                 className="flex flex-col items-center gap-2 group"
               >
                 <div

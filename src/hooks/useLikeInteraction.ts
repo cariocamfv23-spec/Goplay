@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import useSoundStore from '@/stores/useSoundStore'
+import { useAchievementStore } from '@/stores/useAchievementStore'
 
 export interface LikeablePost {
   content?: string
@@ -14,6 +15,7 @@ export function useLikeInteraction(
   const [isLiked, setIsLiked] = useState(initialLiked)
   const [likeCount, setLikeCount] = useState(initialLikes)
   const { playSound } = useSoundStore()
+  const { trackAction } = useAchievementStore()
 
   const handleLike = () => {
     const newIsLiked = !isLiked
@@ -21,6 +23,8 @@ export function useLikeInteraction(
     setLikeCount(newIsLiked ? likeCount + 1 : likeCount - 1)
 
     if (newIsLiked) {
+      trackAction('like_post')
+
       let soundCategory = 'like_generic'
       const content = (post.content || '').toLowerCase()
       const hashtags = (post.hashtags || []).map((h: string) => h.toLowerCase())

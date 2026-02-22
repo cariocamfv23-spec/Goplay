@@ -18,6 +18,7 @@ import { Post3DGenerator } from '@/components/Post3DGenerator'
 import { GhostViewMode } from '@/components/Ghost3DViewer'
 import { cn } from '@/lib/utils'
 import { useFeedStore } from '@/stores/useFeedStore'
+import { useAchievementStore } from '@/stores/useAchievementStore'
 import { mockCurrentUser } from '@/lib/data'
 
 export function CreatePostFab() {
@@ -29,6 +30,7 @@ export function CreatePostFab() {
   const [generatedMode, setGeneratedMode] = useState<GhostViewMode | null>(null)
 
   const addPost = useFeedStore((state) => state.addPost)
+  const { trackAction } = useAchievementStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
 
@@ -42,6 +44,8 @@ export function CreatePostFab() {
       videoUrl: videoPreview,
       videoDuration: videoFile ? '0:15' : undefined,
     })
+
+    trackAction('create_post')
 
     toast.success('Publicação enviada!', {
       description: generatedMode
