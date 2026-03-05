@@ -83,12 +83,13 @@ export function useTranslation(texts: string[]) {
   const [translatedTexts, setTranslatedTexts] = useState<string[]>([])
   const [language, setLanguage] = useState('pt')
 
+  const textsJoined = texts.join(' ')
+
   useEffect(() => {
-    const combined = texts.join(' ')
-    setLanguage(detectLanguage(combined))
+    setLanguage(detectLanguage(textsJoined))
     setIsTranslated(false)
     setTranslatedTexts([])
-  }, [texts.join('')])
+  }, [textsJoined])
 
   const toggleTranslation = async (e?: React.MouseEvent) => {
     e?.stopPropagation()
