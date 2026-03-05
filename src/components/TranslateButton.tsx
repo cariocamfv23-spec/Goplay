@@ -22,20 +22,27 @@ export function TranslateButton({
       onClick={onClick}
       disabled={isLoading}
       className={cn(
-        'h-auto p-0 mt-1.5 text-xs font-semibold flex items-center gap-1.5 transition-colors active:scale-95',
+        'h-auto p-0 mt-1.5 text-xs font-semibold flex items-center gap-1.5 transition-all duration-300 active:scale-95 group',
         className,
       )}
     >
       {isLoading ? (
-        <Loader2 className="h-3 w-3 animate-spin" />
+        <Loader2 className="h-3.5 w-3.5 animate-spin" />
       ) : (
-        <Languages className="h-3 w-3" />
+        <Languages
+          className={cn(
+            'h-3.5 w-3.5 transition-transform duration-300',
+            isTranslated ? 'scale-105' : 'group-hover:scale-110',
+          )}
+        />
       )}
-      {isLoading
-        ? 'Traduzindo...'
-        : isTranslated
-          ? 'Ver original'
-          : 'Ver tradução'}
+      <span className="tracking-wide">
+        {isLoading
+          ? 'Traduzindo...'
+          : isTranslated
+            ? 'Ver original'
+            : 'Ver tradução'}
+      </span>
     </Button>
   )
 }

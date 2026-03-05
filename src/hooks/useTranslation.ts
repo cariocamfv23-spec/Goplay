@@ -41,6 +41,9 @@ const enWords = [
   'court',
   'football',
   'soccer',
+  'amazing',
+  'field',
+  'today',
 ]
 
 function detectLanguage(text: string) {
@@ -49,6 +52,7 @@ function detectLanguage(text: string) {
   const words = lowerText.match(/\b\w+\b/g) || []
   const enCount = words.filter((w) => enWords.includes(w)).length
 
+  // If we find 2 or more English keywords, consider it English
   if (enCount >= 2) return 'en'
   return 'pt'
 }
@@ -56,24 +60,31 @@ function detectLanguage(text: string) {
 function mockTranslateText(text: string): string {
   if (!text) return text
   let translated = text
-  translated = translated.replace(
-    /Great win yesterday! Hard work pays off./gi,
-    'Grande vitória de ontem! O trabalho duro compensa.',
-  )
-  translated = translated.replace(/Amazing skills/gi, 'Habilidades incríveis')
-  translated = translated.replace(/Unbelievable shot/gi, 'Chute inacreditável')
-  translated = translated.replace(
-    /Dunk Contest Winner/gi,
-    'Vencedor do Torneio de Enterradas',
-  )
-  translated = translated.replace(
-    /Jumped from the free throw line! Zero gravity confirmed on center court./gi,
-    'Saltou da linha de lance livre! Gravidade zero confirmada na quadra central.',
-  )
 
+  // High-fidelity mock translations for specific feed content
+  const translations: Record<string, string> = {
+    'Great win yesterday! Hard work pays off.':
+      'Grande vitória ontem! O trabalho duro compensa.',
+    'Amazing skills on the field today!':
+      'Habilidades incríveis em campo hoje!',
+    'Dunk Contest Winner': 'Vencedor do Torneio de Enterradas',
+    'Jumped from the free throw line! Zero gravity confirmed on center court.':
+      'Saltou da linha de lance livre! Gravidade zero confirmada na quadra central.',
+    'Match Highlights': 'Melhores Momentos',
+    'Training Session': 'Sessão de Treino',
+  }
+
+  for (const [en, pt] of Object.entries(translations)) {
+    // Escape regex characters and replace globally while ignoring case
+    const regex = new RegExp(en.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi')
+    translated = translated.replace(regex, pt)
+  }
+
+  // Fallback for unknown text to simulate translation behavior
   if (translated === text) {
     translated = `(Traduzido) ${text}`
   }
+
   return translated
 }
 
@@ -94,11 +105,13 @@ export function useTranslation(texts: string[]) {
   const toggleTranslation = async (e?: React.MouseEvent) => {
     e?.stopPropagation()
     e?.preventDefault()
+
     if (isTranslated) {
       setIsTranslated(false)
     } else {
       if (translatedTexts.length === 0) {
         setIsLoading(true)
+        // Simulate real API latency for better UX feel
         await new Promise((res) => setTimeout(res, 600))
         setTranslatedTexts(texts.map(mockTranslateText))
         setIsLoading(false)
