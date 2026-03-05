@@ -26,6 +26,8 @@ import { useState, useEffect } from 'react'
 import { mockComments } from '@/lib/data'
 import { SoundWaveVisualizer } from '@/components/SoundWaveVisualizer'
 import useSoundStore from '@/stores/useSoundStore'
+import { TranslateButton } from '@/components/TranslateButton'
+import { useTranslation } from '@/hooks/useTranslation'
 
 interface PostDetailDialogProps {
   post: any
@@ -38,19 +40,25 @@ export function PostDetailDialog({
   open,
   onOpenChange,
 }: PostDetailDialogProps) {
-  // Hooks must be called unconditionally.
-  // We use fallback values when post is null/undefined to satisfy hooks requirements.
   const safePost = post || {}
 
   const { isLiked, likeCount, handleLike, setIsLiked, setLikeCount } =
     useLikeInteraction(safePost, safePost.likes || 0, safePost.liked || false)
+
+  const {
+    language,
+    isTranslated,
+    isLoading,
+    toggleTranslation,
+    translatedTexts,
+  } = useTranslation([safePost.content || ''])
 
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const { playNarration } = useSoundStore()
   const [isPlayingNarration, setIsPlayingNarration] = useState(false)
 
-  // Sync state when post data changes (e.g. going from null to populated)
+  // Sync state when post data changes
   useEffect(() => {
     if (post) {
       setIsLiked(post.liked || false)
@@ -64,14 +72,12 @@ export function PostDetailDialog({
       if (post.type === 'video') {
         setIsPlaying(true)
       }
-      // Optional: Play a subtle open sound effect here
     } else {
       setIsPlaying(false)
       setIsPlayingNarration(false)
     }
   }, [open, post])
 
-  // Early return if no post (now safe as hooks are called above)
   if (!post) return null
 
   const toggleNarration = () => {
@@ -214,9 +220,21 @@ export function PostDetailDialog({
               {/* Caption */}
               <div>
                 <h2 className="font-bold text-lg mb-1">{post.title}</h2>
-                <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                  {post.content}
-                </p>
+                {post.content && (
+                  <div className="mb-2">
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                      {isTranslated ? translatedTexts[0] : post.content}
+                    </p>
+                    {language !== 'pt' && (
+                      <TranslateButton
+                        isTranslated={isTranslated}
+                        isLoading={isLoading}
+                        onClick={toggleTranslation}
+                        className="text-primary hover:text-primary/80 hover:bg-transparent"
+                      />
+                    )}
+                  </div>
+                )}
                 <div className="flex flex-wrap gap-1 mt-3">
                   {post.hashtags?.map((tag: string) => (
                     <span

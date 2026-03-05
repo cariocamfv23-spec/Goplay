@@ -60,7 +60,7 @@ const MOVE_VIDEOS: VideoData[] = [
       'https://img.usecurling.com/p/720/1280?q=basketball%20slam%20dunk%20action&color=orange&dpr=2',
     title: 'Dunk Contest Winner 🏀👑',
     description:
-      'Saltou da linha do lance livre! Gravidade zero confirmada na quadra central.',
+      'Jumped from the free throw line! Zero gravity confirmed on center court.',
     likes: 28500,
     comments: 1200,
     shares: 5600,

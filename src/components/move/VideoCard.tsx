@@ -25,6 +25,8 @@ import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 import { SportsReactionButton } from '@/components/move/SportsReactionButton'
 import { useLikeInteraction } from '@/hooks/useLikeInteraction'
 import { cn } from '@/lib/utils'
+import { TranslateButton } from '@/components/TranslateButton'
+import { useTranslation } from '@/hooks/useTranslation'
 
 export interface VideoData {
   id: string
@@ -71,6 +73,17 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
     false,
   )
 
+  const {
+    language,
+    isTranslated,
+    isLoading: isTranslating,
+    toggleTranslation,
+    translatedTexts,
+  } = useTranslation([video.title || '', video.description || ''])
+
+  const displayTitle = isTranslated ? translatedTexts[0] : video.title
+  const displayDesc = isTranslated ? translatedTexts[1] : video.description
+
   // Handle Active State Changes
   useEffect(() => {
     if (isActive) {
@@ -83,8 +96,6 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
           .catch((error) => {
             console.error('Autoplay prevented:', error)
             setIsPlaying(false)
-            // If failed (likely due to unmuted), try muted
-            // We check videoRef.current.muted directly to avoid adding isMuted to dependency array
             if (videoRef.current && !videoRef.current.muted) {
               setIsMuted(true)
               videoRef.current.muted = true
@@ -279,12 +290,20 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
           <h3 className="text-white font-bold text-base shadow-black drop-shadow-md mb-1">
             {video.user.name}
           </h3>
-          <p className="text-white/90 text-sm mb-3 line-clamp-2 drop-shadow-md leading-snug">
-            {video.title}{' '}
-            <span className="text-white/70 font-normal">
-              {video.description}
-            </span>
-          </p>
+          <div className="mb-3">
+            <p className="text-white/90 text-sm line-clamp-2 drop-shadow-md leading-snug">
+              {displayTitle}{' '}
+              <span className="text-white/70 font-normal">{displayDesc}</span>
+            </p>
+            {language !== 'pt' && (
+              <TranslateButton
+                isTranslated={isTranslated}
+                isLoading={isTranslating}
+                onClick={toggleTranslation}
+                className="text-gold hover:text-gold/80 hover:bg-transparent drop-shadow-md"
+              />
+            )}
+          </div>
 
           <div className="flex items-center gap-2">
             <div className="px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-xs text-white flex items-center gap-2 max-w-[90%] border border-white/10">

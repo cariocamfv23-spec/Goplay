@@ -32,6 +32,8 @@ import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 import { DepthContainer } from '@/components/DepthContainer'
 import { FeedVideoPlayer } from '@/components/FeedVideoPlayer'
 import { NarrationConfig } from '@/lib/data'
+import { TranslateButton } from '@/components/TranslateButton'
+import { useTranslation } from '@/hooks/useTranslation'
 
 export interface SocialContext {
   type: 'like' | 'comment' | 'repost'
@@ -89,6 +91,14 @@ export function PostCard({ post }: PostProps) {
     post.likes,
     post.liked,
   )
+
+  const {
+    language,
+    isTranslated,
+    isLoading,
+    toggleTranslation,
+    translatedTexts,
+  } = useTranslation([post.content || ''])
 
   const [isCool, setIsCool] = useState(false)
   const [coolCount, setCoolCount] = useState(post.cools || 0)
@@ -390,9 +400,19 @@ export function PostCard({ post }: PostProps) {
 
         <CardContent className="p-4 pt-1">
           {post.content && (
-            <p className="text-sm mb-3 leading-relaxed whitespace-pre-wrap">
-              {post.content}
-            </p>
+            <div className="mb-3">
+              <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                {isTranslated ? translatedTexts[0] : post.content}
+              </p>
+              {language !== 'pt' && (
+                <TranslateButton
+                  isTranslated={isTranslated}
+                  isLoading={isLoading}
+                  onClick={toggleTranslation}
+                  className="text-primary hover:text-primary/80 hover:bg-transparent"
+                />
+              )}
+            </div>
           )}
 
           {renderContent()}

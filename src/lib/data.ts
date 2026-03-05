@@ -1746,16 +1746,15 @@ export const mockPosts = [
     id: 101,
     type: 'video',
     user: mockUser,
-    content:
-      'Grande vitória de ontem! O trabalho duro compensa. ⚽🔥 #Futebol #Vitoria',
+    content: 'Great win yesterday! Hard work pays off. ⚽🔥 #Football #Win',
     media: [
       'https://img.usecurling.com/p/600/600?q=soccer%20goal%20celebration%20stadium&color=blue&dpr=2',
     ],
     videoUrl:
       'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
     videoDuration: '0:45',
-    title: 'Melhores Momentos - Final Regional',
-    hashtags: ['#Campeão', '#Futebol', '#Highlights'],
+    title: 'Match Highlights',
+    hashtags: ['#Champion', '#Football', '#Highlights'],
     likes: 1240,
     comments: 85,
     shares: 42,
@@ -1816,15 +1815,15 @@ export const mockPosts = [
     id: 105,
     type: 'video',
     user: mockUser,
-    content: 'Treino de finalização hoje. A calibragem tá em dia! 🎯',
+    content: 'Amazing skills on the field today! 🎯',
     media: [
       'https://img.usecurling.com/p/600/600?q=soccer%20kick%20training&color=green&dpr=2',
     ],
     videoUrl:
       'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
     videoDuration: '0:30',
-    title: 'Treino de Chutes',
-    hashtags: ['#Treino', '#Skills', '#Futebol'],
+    title: 'Training Session',
+    hashtags: ['#Training', '#Skills', '#Football'],
     likes: 980,
     comments: 55,
     shares: 22,
