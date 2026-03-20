@@ -2,15 +2,16 @@ import { useEffect } from 'react'
 import { usePassportStore } from '@/stores/usePassportStore'
 import useNotificationStore from '@/stores/useNotificationStore'
 import { useSmartNotificationState } from '@/stores/useSmartNotificationState'
-import { mockCurrentUser } from '@/lib/data'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
+import { Crown } from 'lucide-react'
 
 export function SmartNotificationManager() {
   const { competitions, goals, certifications, verifyCertification } =
     usePassportStore()
   const { addNotification } = useNotificationStore()
-  const { hasNotified, addNotifiedId } = useSmartNotificationState()
+  const { hasNotified, addNotifiedId, canNotifyVip, recordVipView } =
+    useSmartNotificationState()
   const navigate = useNavigate()
 
   // Helper to parse DD/MM/YYYY
@@ -19,20 +20,78 @@ export function SmartNotificationManager() {
     return new Date(Number(year), Number(month) - 1, Number(day))
   }
 
+  // VIP View Simulation (within 2 seconds of landing)
+  useEffect(() => {
+    const simulateVipView = () => {
+      const vipVisitors = [
+        {
+          id: 'u10',
+          name: 'Rafael Torres',
+          role: 'Scout',
+          avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=78',
+        },
+        {
+          id: 'u4',
+          name: 'Carlos Eduardo',
+          role: 'Coach',
+          avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=45',
+        },
+        {
+          id: 'a1',
+          name: 'GoGlobal Sports',
+          role: 'Sponsor',
+          avatar: 'https://img.usecurling.com/i?q=globe&color=blue',
+        },
+      ]
+
+      // Pick a random VIP
+      const vip = vipVisitors[Math.floor(Math.random() * vipVisitors.length)]
+      const now = Date.now()
+
+      if (canNotifyVip(vip.id, now)) {
+        recordVipView(vip.id, now)
+
+        const message = `${vip.role} is viewing your profile right now! Tap to see who it is.`
+
+        addNotification({
+          title: 'VIP Profile View!',
+          message,
+          type: 'system',
+          priority: 'critical',
+          link: `/profile/${vip.id}`,
+          user: {
+            id: vip.id,
+            name: vip.name,
+            avatar: vip.avatar,
+          },
+        })
+
+        toast('VIP Profile View!', {
+          description: message,
+          icon: <Crown className="h-5 w-5 text-yellow-500 fill-yellow-500" />,
+          action: {
+            label: 'Ver Perfil',
+            onClick: () => navigate(`/profile/${vip.id}`),
+          },
+          duration: 8000,
+        })
+      }
+    }
+
+    const timer = setTimeout(simulateVipView, 2000)
+    return () => clearTimeout(timer)
+  }, [canNotifyVip, recordVipView, addNotification, navigate])
+
   // Check for upcoming events
   useEffect(() => {
     const checkUpcomingEvents = () => {
       const today = new Date()
-      // Simulate checking for "tomorrow" or "today" for demonstration
-      // We'll also check if any mock competition has a future date relative to real time
 
       competitions.forEach((comp) => {
         const compDate = parseDate(comp.date)
         const diffTime = compDate.getTime() - today.getTime()
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
-        // Notify if event is within 3 days (or passed recently for demo purposes if we consider mock data valid)
-        // For strictly future events:
         if (diffDays >= 0 && diffDays <= 3) {
           const notificationId = `event-reminder-${comp.id}`
           if (!hasNotified(notificationId)) {
@@ -59,13 +118,12 @@ export function SmartNotificationManager() {
       const today = new Date()
 
       goals.forEach((goal) => {
-        if (goal.status === 'achieved') return // Don't notify for completed goals
+        if (goal.status === 'achieved') return
 
         const deadlineDate = parseDate(goal.targetDate)
         const diffTime = deadlineDate.getTime() - today.getTime()
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
-        // Notify if deadline is approaching (within 7 days)
         if (diffDays >= 0 && diffDays <= 7) {
           const notificationId = `goal-deadline-${goal.id}`
           if (!hasNotified(notificationId)) {
@@ -74,12 +132,11 @@ export function SmartNotificationManager() {
               message: `Atenção! Faltam ${diffDays} dias para atingir sua meta: "${goal.title}".`,
               type: 'goal_deadline',
               priority: 'medium',
-              link: '/profile/passport', // Direct to goals tab ideally
+              link: '/profile/passport',
             })
             addNotifiedId(notificationId)
           }
         } else if (diffDays < 0) {
-          // Expired
           const notificationId = `goal-expired-${goal.id}`
           if (!hasNotified(notificationId)) {
             addNotification({
@@ -101,8 +158,6 @@ export function SmartNotificationManager() {
 
   // Simulate Verification Update
   useEffect(() => {
-    // We will simulate that a pending certification gets verified automatically after a few seconds
-    // just to demonstrate the real-time notification capability.
     const simulateVerification = () => {
       const pendingCert = certifications.find((c) => !c.verified)
 
@@ -110,10 +165,8 @@ export function SmartNotificationManager() {
         const notificationId = `cert-verified-${pendingCert.id}`
 
         if (!hasNotified(notificationId)) {
-          // Perform the verification update in store
           verifyCertification(pendingCert.id)
 
-          // Notify user
           addNotification({
             title: 'Verificação Concluída',
             message: `Sua certificação "${pendingCert.name}" foi validada com sucesso!`,
@@ -123,7 +176,6 @@ export function SmartNotificationManager() {
           })
           addNotifiedId(notificationId)
 
-          // Also show a toast for immediate feedback
           toast.success('Documento Verificado!', {
             description: `${pendingCert.name} agora consta como oficial no seu passaporte.`,
             action: {
@@ -135,7 +187,6 @@ export function SmartNotificationManager() {
       }
     }
 
-    // Delay simulation to occur 10 seconds after mount/app load
     const timer = setTimeout(simulateVerification, 10000)
     return () => clearTimeout(timer)
   }, [

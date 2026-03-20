@@ -3,8 +3,11 @@ import { persist } from 'zustand/middleware'
 
 interface SmartNotificationState {
   notifiedIds: string[]
+  vipLastViewed: Record<string, number>
   addNotifiedId: (id: string) => void
   hasNotified: (id: string) => boolean
+  recordVipView: (id: string, timestamp: number) => void
+  canNotifyVip: (id: string, currentTimestamp: number) => boolean
   clearHistory: () => void
 }
 
@@ -12,6 +15,7 @@ export const useSmartNotificationState = create<SmartNotificationState>()(
   persist(
     (set, get) => ({
       notifiedIds: [],
+      vipLastViewed: {},
 
       addNotifiedId: (id) =>
         set((state) => {
@@ -21,7 +25,19 @@ export const useSmartNotificationState = create<SmartNotificationState>()(
 
       hasNotified: (id) => get().notifiedIds.includes(id),
 
-      clearHistory: () => set({ notifiedIds: [] }),
+      recordVipView: (id, timestamp) =>
+        set((state) => ({
+          vipLastViewed: { ...state.vipLastViewed, [id]: timestamp },
+        })),
+
+      canNotifyVip: (id, currentTimestamp) => {
+        const lastViewed = get().vipLastViewed[id]
+        if (!lastViewed) return true
+        // 30 minutes in milliseconds = 30 * 60 * 1000 = 1800000
+        return currentTimestamp - lastViewed > 1800000
+      },
+
+      clearHistory: () => set({ notifiedIds: [], vipLastViewed: {} }),
     }),
     {
       name: 'goplay-smart-notifications-storage',
