@@ -18,8 +18,6 @@ import {
   Tv,
   Image as ImageIcon,
   Layers,
-  Crown,
-  EyeOff,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Separator } from '@/components/ui/separator'
@@ -36,11 +34,9 @@ import { useScholarshipStore } from '@/stores/useScholarshipStore'
 import { Label } from '@/components/ui/label'
 import { useNostalgiaStore, NostalgiaPreset } from '@/stores/useNostalgiaStore'
 import { useDepthStore } from '@/stores/useDepthStore'
-import { usePrivacyStore } from '@/stores/usePrivacyStore'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Slider } from '@/components/ui/slider'
-import { PaymentDialog } from '@/components/PaymentDialog'
 
 export default function Settings() {
   const navigate = useNavigate()
@@ -62,8 +58,6 @@ export default function Settings() {
     toggle: toggleDepth,
     setIntensity: setDepthIntensity,
   } = useDepthStore()
-  const { isInvisibleMode, isPremium, toggleInvisibleMode, upgradeToPremium } =
-    usePrivacyStore()
 
   const nostalgiaPresets: {
     id: NostalgiaPreset
@@ -126,70 +120,6 @@ export default function Settings() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </div>
-        </div>
-
-        <Separator />
-
-        {/* Premium Privacy Section */}
-        <div className="space-y-4">
-          <h3 className="text-sm font-bold text-muted-foreground uppercase px-2 flex items-center gap-2">
-            Privacidade <Crown className="w-3.5 h-3.5 text-gold" />
-          </h3>
-          <div className="px-2 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2">
-                  <EyeOff className="h-4 w-4 text-primary" />
-                  <Label className="text-base font-bold text-foreground">
-                    Modo Invisível
-                  </Label>
-                  {!isPremium && (
-                    <Badge
-                      variant="secondary"
-                      className="bg-gold/20 text-gold hover:bg-gold/30 border-none text-[9px] px-1.5 py-0"
-                    >
-                      PRO
-                    </Badge>
-                  )}
-                </div>
-                <p className="text-xs text-muted-foreground max-w-[260px]">
-                  Navegue anonimamente sem disparar notificações de VIP ou
-                  aparecer em históricos de visitas.
-                </p>
-              </div>
-              <div
-                className={cn(
-                  'relative flex items-center justify-center h-6 w-11 rounded-full ring-2 transition-all',
-                  isInvisibleMode
-                    ? 'ring-gold/50 shadow-[0_0_10px_hsl(var(--gold)/0.2)]'
-                    : 'ring-transparent',
-                )}
-              >
-                {!isPremium && (
-                  <PaymentDialog
-                    title="Desbloquear Modo Invisível"
-                    price={19.9}
-                    pointsPrice={1000}
-                    onSuccess={() => {
-                      upgradeToPremium()
-                      toggleInvisibleMode(true)
-                    }}
-                  >
-                    <div className="absolute inset-0 z-10 cursor-pointer" />
-                  </PaymentDialog>
-                )}
-                <Switch
-                  checked={isInvisibleMode}
-                  onCheckedChange={(c) => {
-                    if (isPremium) toggleInvisibleMode(c)
-                  }}
-                  className={cn(
-                    isInvisibleMode && 'data-[state=checked]:bg-primary',
-                  )}
-                />
-              </div>
-            </div>
           </div>
         </div>
 
@@ -385,6 +315,7 @@ export default function Settings() {
           <Button
             variant="ghost"
             className="w-full justify-start h-12 gap-3 text-base font-normal"
+            onClick={() => navigate('/settings/privacy')}
           >
             <Lock className="h-5 w-5" /> Privacidade e Segurança
           </Button>

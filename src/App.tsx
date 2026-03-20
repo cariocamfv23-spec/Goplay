@@ -138,6 +138,7 @@ const DriverHistory = lazy(() => import('./pages/driver/DriverHistory'))
 const DriverSettings = lazy(() => import('./pages/driver/DriverSettings'))
 
 const Settings = lazy(() => import('./pages/settings/Settings'))
+const PrivacySettings = lazy(() => import('./pages/settings/Privacy'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const Ranking = lazy(() => import('./pages/gamification/Ranking'))
 const Notifications = lazy(() => import('./pages/notifications/Notifications'))
@@ -394,6 +395,10 @@ const App = () => {
                     <Route path="/ranking" element={<Ranking />} />
                     <Route path="/notifications" element={<Notifications />} />
                     <Route path="/settings" element={<Settings />} />
+                    <Route
+                      path="/settings/privacy"
+                      element={<PrivacySettings />}
+                    />
 
                     <Route path="/ai/coach" element={<AiCoach />} />
                     <Route path="/ai/settings" element={<AiCoachSettings />} />
