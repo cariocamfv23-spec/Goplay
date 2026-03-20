@@ -46,7 +46,6 @@ import { GoalCard } from '@/components/GoalCard'
 import { AiToolsRail } from '@/components/AiToolsRail'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { NostalgiaStudio } from '@/components/NostalgiaStudio'
-import { Replay3DHomeCard } from '@/components/Replay3DHomeCard'
 import { Replay3DWizardDialog } from '@/components/Replay3DWizardDialog'
 import { Replay3DIcon } from '@/components/icons/Replay3DIcon'
 import { DepthContainer } from '@/components/DepthContainer'
@@ -98,8 +97,8 @@ export default function Home() {
       icon: Replay3DIcon,
       path: '#',
       action: () => setWizardOpen(true),
-      color: 'text-indigo-500',
-      bg: 'bg-indigo-500/10',
+      color: 'text-primary',
+      bg: 'bg-gradient-to-tr from-primary/20 to-gold/20 border border-primary/20',
       isNew: true,
     },
   ]
@@ -297,11 +296,6 @@ export default function Home() {
 
             {/* Stories Rail */}
             <StoriesRail />
-
-            {/* Replay 3D Card (Promotional) */}
-            <DepthContainer maxRotation={3}>
-              <Replay3DHomeCard onStart={() => setWizardOpen(true)} />
-            </DepthContainer>
 
             {/* Priority Shortcuts */}
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-6 mt-2">
