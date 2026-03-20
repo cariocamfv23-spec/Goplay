@@ -171,26 +171,27 @@ export default function ProfileViews() {
       </div>
 
       <div className="p-4 space-y-6">
-        {/* Real-Time Live Radar (99 Taxi Style) */}
+        {/* Real-Time Live Radar (Premium Style) */}
         <Card className="border-none bg-gradient-to-b from-primary/10 via-background to-background overflow-hidden relative shadow-inner">
           <CardContent className="p-0 h-56 flex flex-col items-center justify-center relative">
             {/* Live Badges */}
-            <div className="absolute top-4 left-4 z-20 flex items-center gap-2 bg-background/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-border/50 shadow-sm">
+            <div className="absolute top-4 left-4 z-20 flex items-center gap-2 bg-background/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-gold/30 shadow-[0_0_15px_hsl(var(--gold)/0.15)]">
               <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-gold shadow-[0_0_8px_hsl(var(--gold))]" />
               </span>
-              <span className="text-xs font-bold font-mono text-green-500 tracking-wider">
-                {liveViewers.length} LIVE
+              <span className="text-xs font-black font-sans text-gold tracking-widest uppercase drop-shadow-sm">
+                {liveViewers.length} AO VIVO
               </span>
             </div>
 
             <div className="absolute top-4 right-4 z-20">
               <Badge
                 variant="secondary"
-                className="bg-black/80 text-primary border-primary/30 flex items-center gap-1 backdrop-blur-md"
+                className="bg-black/80 text-primary border-primary/30 flex items-center gap-1 backdrop-blur-md shadow-[0_0_10px_hsl(var(--primary)/0.2)]"
               >
-                <Radio className="w-3 h-3 animate-pulse" /> Radar Ativo
+                <Radio className="w-3 h-3 animate-pulse text-primary" /> Radar
+                Ativo
               </Badge>
             </div>
 
@@ -200,14 +201,15 @@ export default function ProfileViews() {
                 className="w-24 h-24 bg-primary/20 rounded-full absolute animate-ping"
                 style={{ animationDuration: '3s' }}
               />
-              <div className="w-40 h-40 border border-primary/20 rounded-full absolute" />
+              <div className="w-40 h-40 border border-primary/20 rounded-full absolute shadow-[0_0_20px_hsl(var(--primary)/0.1)]" />
               <div className="w-64 h-64 border border-primary/10 rounded-full absolute" />
               <div className="w-96 h-96 border border-primary/5 rounded-full absolute" />
             </div>
 
             {/* Center Target (The User) */}
-            <div className="z-10 bg-background/90 backdrop-blur-sm p-3 rounded-full ring-2 ring-primary/30 shadow-xl border border-primary/20">
-              <AppIcon className="w-8 h-8 opacity-90" />
+            <div className="z-10 bg-background/90 backdrop-blur-sm p-3 rounded-full ring-2 ring-primary/40 shadow-[0_0_20px_hsl(var(--primary)/0.3)] border border-primary/30 relative">
+              <div className="absolute -inset-1 bg-primary/20 rounded-full animate-pulse blur-sm" />
+              <AppIcon className="w-8 h-8 opacity-90 relative z-10" />
             </div>
 
             {/* Active Live Nodes */}
@@ -224,7 +226,7 @@ export default function ProfileViews() {
                   <div className="relative group flex flex-col items-center">
                     <Avatar
                       className={cn(
-                        'w-10 h-10 border-2 border-green-500 shadow-xl transition-all duration-300',
+                        'w-10 h-10 border-2 border-primary shadow-[0_0_15px_hsl(var(--primary)/0.4)] transition-all duration-300',
                         isBlurredRadar && 'blur-[3px] grayscale opacity-70',
                       )}
                     >
@@ -235,7 +237,7 @@ export default function ProfileViews() {
                         <User className="w-5 h-5 text-muted-foreground" />
                       </AvatarFallback>
                     </Avatar>
-                    <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-background rounded-full animate-pulse" />
+                    <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-gold border-2 border-background rounded-full animate-pulse shadow-[0_0_8px_hsl(var(--gold))]" />
                   </div>
                 </div>
               )
@@ -259,7 +261,7 @@ export default function ProfileViews() {
             </div>
           </div>
           <div className="bg-background px-3 py-1.5 rounded-full text-xs font-bold border border-border/50 shadow-sm flex items-center gap-1.5">
-            <span className="text-green-500">+{viewsThisWeek}</span> semana
+            <span className="text-primary">+{viewsThisWeek}</span> semana
           </div>
         </div>
 
@@ -278,8 +280,8 @@ export default function ProfileViews() {
                 >
                   {/* Section Headers */}
                   {isFirstLive && (
-                    <h3 className="font-bold text-sm text-green-500 uppercase tracking-wider mb-3 flex items-center gap-2">
-                      <Activity className="w-4 h-4 animate-pulse" />
+                    <h3 className="font-bold text-sm text-gold uppercase tracking-widest mb-3 flex items-center gap-2 drop-shadow-sm">
+                      <Activity className="w-4 h-4 animate-pulse text-gold" />
                       Assistindo Agora
                     </h3>
                   )}
@@ -293,25 +295,25 @@ export default function ProfileViews() {
                   {/* Viewer Card */}
                   <Card
                     className={cn(
-                      'border-none shadow-sm transition-all',
+                      'border-none shadow-sm transition-all relative overflow-hidden',
                       isBlurred &&
                         'blur-sm opacity-60 select-none pointer-events-none',
                       viewer.isLive &&
                         !isBlurred &&
-                        'ring-1 ring-green-500/30 bg-green-500/5',
+                        'ring-1 ring-gold/30 bg-gradient-to-r from-primary/5 to-transparent shadow-[0_0_15px_hsl(var(--primary)/0.05)]',
                     )}
                   >
-                    <CardContent className="p-4 flex items-center gap-4 relative overflow-hidden">
+                    <CardContent className="p-4 flex items-center gap-4 relative z-10">
                       {viewer.isLive && !isBlurred && (
-                        <div className="absolute top-0 right-0 w-16 h-16 bg-green-500/10 rounded-full blur-xl -mr-8 -mt-8" />
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
                       )}
 
-                      <div className="relative">
+                      <div className="relative z-10">
                         <Avatar
                           className={cn(
                             'h-12 w-12 border-2',
                             viewer.isLive && !isBlurred
-                              ? 'border-green-500'
+                              ? 'border-primary shadow-[0_0_10px_hsl(var(--primary)/0.3)]'
                               : 'border-border',
                           )}
                         >
@@ -323,24 +325,24 @@ export default function ProfileViews() {
                           </AvatarFallback>
                         </Avatar>
                         {viewer.isLive && !isBlurred && (
-                          <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 border-2 border-background rounded-full animate-pulse" />
+                          <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-gold border-2 border-background rounded-full animate-pulse shadow-[0_0_8px_hsl(var(--gold))]" />
                         )}
                       </div>
 
-                      <div className="flex-1 min-w-0">
+                      <div className="flex-1 min-w-0 z-10">
                         <div className="flex justify-between items-start">
                           <p className="font-bold truncate">
                             {isBlurred ? 'Visitante Premium' : viewer.name}
                           </p>
                           <span
                             className={cn(
-                              'text-xs font-bold whitespace-nowrap',
+                              'whitespace-nowrap',
                               viewer.isLive
-                                ? 'text-green-500'
-                                : 'text-muted-foreground',
+                                ? 'text-[10px] font-black tracking-widest uppercase rounded-full px-2 py-0.5 bg-gold/10 text-gold border border-gold/20 shadow-sm'
+                                : 'text-xs font-bold text-muted-foreground',
                             )}
                           >
-                            {viewer.date}
+                            {viewer.isLive ? 'Ao Vivo' : viewer.date}
                           </span>
                         </div>
                         <div className="flex items-center gap-2 mt-0.5">

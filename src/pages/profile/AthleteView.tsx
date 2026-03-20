@@ -427,25 +427,28 @@ export default function AthleteView({
             className="mb-8 bg-gradient-to-r from-primary/10 via-background to-background border-primary/20 cursor-pointer hover:bg-primary/15 transition-colors shadow-sm relative overflow-hidden"
             onClick={() => navigate('/profile/views')}
           >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 rounded-full blur-2xl -mr-10 -mt-10 animate-pulse pointer-events-none" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl -mr-10 -mt-10 animate-pulse pointer-events-none" />
             <CardContent className="p-4 flex items-center justify-between relative z-10">
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="absolute -inset-1 bg-green-500/20 rounded-full animate-pulse" />
-                  <div className="bg-primary/20 p-2.5 rounded-full ring-2 ring-primary/10 relative z-10">
+                  <div className="absolute -inset-1 bg-primary/30 rounded-full animate-pulse shadow-[0_0_15px_hsl(var(--primary)/0.5)]" />
+                  <div className="bg-primary/20 p-2.5 rounded-full ring-2 ring-primary/30 relative z-10">
                     <Eye className="h-5 w-5 text-primary" />
                   </div>
-                  <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-background z-20" />
+                  <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-gold rounded-full border-2 border-background z-20 shadow-[0_0_8px_hsl(var(--gold)/0.8)]" />
                 </div>
                 <div>
                   <p className="font-bold text-sm flex items-center gap-2">
                     Quem viu seu perfil
-                    <Badge
-                      variant="secondary"
-                      className="bg-green-500/10 text-green-600 border-none text-[9px] px-1.5 py-0 uppercase"
-                    >
-                      Ao vivo
-                    </Badge>
+                    <div className="relative inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-primary/30 to-primary/10 border border-primary/30 shadow-[0_0_8px_hsl(var(--primary)/0.3)]">
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-80" />
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-gold shadow-[0_0_4px_hsl(var(--gold))]" />
+                      </span>
+                      <span className="text-[9px] font-black text-gold tracking-widest uppercase drop-shadow-md">
+                        Ao Vivo
+                      </span>
+                    </div>
                   </p>
                   <p className="text-xs text-muted-foreground">
                     142 visualizações
@@ -455,13 +458,13 @@ export default function AthleteView({
               <div className="flex -space-x-2 pl-2">
                 {[1, 2].map((i) => (
                   <div key={i} className="relative">
-                    <Avatar className="h-8 w-8 border-2 border-green-500 shadow-sm relative z-10">
+                    <Avatar className="h-8 w-8 border-2 border-primary shadow-[0_0_10px_hsl(var(--primary)/0.3)] relative z-10">
                       <AvatarImage
                         src={`https://img.usecurling.com/ppl/thumbnail?gender=${i === 1 ? 'male' : 'female'}&seed=${i + 40}`}
                       />
                     </Avatar>
                     <div
-                      className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-30 z-0"
+                      className="absolute inset-0 bg-primary rounded-full animate-ping opacity-30 z-0"
                       style={{ animationDuration: '2s' }}
                     />
                   </div>
