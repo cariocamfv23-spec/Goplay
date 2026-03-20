@@ -143,7 +143,15 @@ export interface ProfileData {
   rating?: number
   followers?: string
   following?: string
-  type: 'athlete' | 'photographer' | 'driver' | 'club' | 'coach' | 'team'
+  type:
+    | 'athlete'
+    | 'photographer'
+    | 'driver'
+    | 'club'
+    | 'coach'
+    | 'team'
+    | 'scout'
+    | 'sponsor'
   categories?: string[]
   portfolio?: string[]
   packages?: { title: string; price: string; description: string }[]
@@ -182,6 +190,17 @@ export interface ProfileData {
   discoveryReason?: string
   engagement?: number
   coordinates?: { x: number; y: number }
+
+  // VIP Specific Fields
+  agency?: string
+  experience?: string
+  regionsCovered?: string[]
+  recentDiscoveries?: string[]
+  team?: string
+  license?: string
+  playstyle?: string
+  company?: string
+  focusCategories?: string[]
 }
 
 export interface FinancialTransaction {
@@ -1188,36 +1207,30 @@ export const mockMusicTracks: MusicTrack[] = [
   },
 ]
 
-export const mockUser = {
+export const mockUser: ProfileData = {
   id: 'u1',
   name: 'Alex Silva',
   username: '@alexsilva',
   avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=1',
   cover: 'https://img.usecurling.com/p/800/400?q=stadium&color=blue',
-  role: 'Atleta Amador',
-  points: 1250,
-  level: 15,
-  location: 'São Paulo, SP',
-  bio: 'Apaixonado por esportes e superação. Em busca do próximo nível.',
+  rating: 4.8,
   followers: '1.2k',
   following: '450',
   type: 'athlete',
+  location: 'São Paulo, SP',
+  bio: 'Apaixonado por esportes e superação. Em busca do próximo nível.',
   age: 24,
   sport: 'Futebol',
   position: 'Meia-Atacante',
   height: '1.78m',
   weight: '74kg',
-  stats: {
-    matches: 42,
-    wins: 28,
-    mvp: 5,
-  },
   favoriteSong: mockMusicTracks[2],
   referralCode: 'ALEX10',
   referralStats: {
     invited: 12,
     earned: 2400,
   },
+  ranking: 15, // Reusing field for mock level representation on AthleteView
 }
 
 export const mockCurrentUser = mockUser
@@ -1374,7 +1387,6 @@ export const mockTalents: ProfileData[] = [
     cover: 'https://img.usecurling.com/p/800/400?q=soccer%20field&color=green',
     bio: 'Atacante rápido e finalizador. Busco oportunidade em clubes profissionais.',
     followers: '5.4k',
-    stats: { matches: 50, wins: 35, mvp: 12 },
     favoriteSong: mockMusicTracks[0],
     totalViews: 15420,
     totalLikes: 3200,
@@ -1396,7 +1408,6 @@ export const mockTalents: ProfileData[] = [
     followers: '12.5k',
     rating: 4.9,
     sport: 'Futebol Society',
-    stats: { matches: 120, wins: 85, mvp: 0 },
     totalViews: 45000,
     totalLikes: 8900,
     ranking: 3,
@@ -1417,7 +1428,6 @@ export const mockTalents: ProfileData[] = [
     cover: 'https://img.usecurling.com/p/800/400?q=futsal%20indoor&color=blue',
     bio: 'Fixo com ótima marcação e saída de bola.',
     followers: '3.1k',
-    stats: { matches: 80, wins: 50, mvp: 8 },
     totalViews: 8200,
     totalLikes: 1500,
     ranking: 15,
@@ -1434,7 +1444,6 @@ export const mockTalents: ProfileData[] = [
     followers: '8.2k',
     rating: 4.7,
     sport: 'Futevôlei',
-    stats: { matches: 60, wins: 40, mvp: 0 },
     totalViews: 22000,
     totalLikes: 4100,
     ranking: 8,
@@ -1456,7 +1465,6 @@ export const mockTalents: ProfileData[] = [
       'https://img.usecurling.com/p/800/400?q=volleyball%20court&color=yellow',
     bio: 'Levantadora com visão de jogo exceptional. Capitã da seleção estadual sub-17.',
     followers: '12.4k',
-    stats: { matches: 45, wins: 38, mvp: 15 },
     totalViews: 28000,
     totalLikes: 5600,
     ranking: 5,
@@ -1479,7 +1487,6 @@ export const mockTalents: ProfileData[] = [
       'https://img.usecurling.com/p/800/400?q=soccer%20stadium%20night&color=blue',
     bio: 'Meia clássico, especialista em bolas paradas.',
     followers: '8.1k',
-    stats: { matches: 62, wins: 40, mvp: 9 },
     totalViews: 19500,
     totalLikes: 3400,
     ranking: 12,
@@ -1504,7 +1511,6 @@ export const mockTalents: ProfileData[] = [
     cover: 'https://img.usecurling.com/p/800/400?q=futsal%20goal&color=green',
     bio: 'Reflexos rápidos e ótima reposição de bola. Destaque da Copa SP.',
     followers: '6.2k',
-    stats: { matches: 55, wins: 35, mvp: 11 },
     totalViews: 14200,
     totalLikes: 2100,
     ranking: 9,
@@ -1526,7 +1532,6 @@ export const mockTalents: ProfileData[] = [
     cover: 'https://img.usecurling.com/p/800/400?q=skate%20park&color=gray',
     bio: 'Promessa do skate street nacional. Campeã paranaense amadora.',
     followers: '45.2k',
-    stats: { matches: 20, wins: 15, mvp: 15 },
     totalViews: 150000,
     totalLikes: 42000,
     ranking: 2,
@@ -1548,7 +1553,6 @@ export const mockTalents: ProfileData[] = [
     cover: 'https://img.usecurling.com/p/800/400?q=bjj%20mat&color=blue',
     bio: 'Faixa roxa, competidor nato. Focado no mundial.',
     followers: '3.5k',
-    stats: { matches: 85, wins: 70, mvp: 5 },
     totalViews: 9800,
     totalLikes: 1200,
     ranking: 25,
@@ -1575,7 +1579,6 @@ export const mockTalents: ProfileData[] = [
       'https://img.usecurling.com/p/800/400?q=beach%20volleyball&color=yellow',
     bio: 'Dominância no circuito de base nordestino. Pronta para o profissional.',
     followers: '15.2k',
-    stats: { matches: 58, wins: 45, mvp: 20 },
     totalViews: 32000,
     totalLikes: 6500,
     ranking: 4,
@@ -1600,7 +1603,6 @@ export const mockTalents: ProfileData[] = [
     cover: 'https://img.usecurling.com/p/800/400?q=futsal%20court&color=pink',
     bio: 'Dribles rápidos e visão de jogo.',
     followers: '5.1k',
-    stats: { matches: 40, wins: 28, mvp: 6 },
     totalViews: 11000,
     totalLikes: 2300,
     ranking: 18,
@@ -2233,11 +2235,61 @@ export const mockDrivers: ProfileData[] = [
     responseTime: '7 min',
   },
 ]
+
+export const mockVips: ProfileData[] = [
+  {
+    id: 'u10',
+    name: 'Rafael Torres',
+    username: '@rafael.scout',
+    type: 'scout',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=78',
+    cover:
+      'https://img.usecurling.com/p/800/400?q=soccer%20stadium%20empty&color=black',
+    bio: 'Olheiro oficial focado em talentos sul-americanos para o mercado europeu. Buscando sempre a próxima joia do futebol.',
+    location: 'São Paulo, SP',
+    rating: 4.9,
+    agency: 'NextGen Talents Europe',
+    experience: '12 anos de experiência',
+    regionsCovered: ['Brasil', 'Argentina', 'Uruguai', 'Colômbia'],
+    recentDiscoveries: ['Lucas "Paredão"', 'Gabriel Costa', 'João Silva'],
+  },
+  {
+    id: 'u4',
+    name: 'Carlos Eduardo',
+    username: '@carlosedu.coach',
+    type: 'coach',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=45',
+    cover: 'https://img.usecurling.com/p/800/400?q=tactics%20board&color=blue',
+    bio: 'Treinador focado no desenvolvimento tático e técnico de jovens promessas. Metodologia europeia aplicada ao talento brasileiro.',
+    location: 'Rio de Janeiro, RJ',
+    rating: 4.8,
+    team: 'Red Wolves FC U-20',
+    license: 'Licença UEFA Pro',
+    playstyle: 'Jogo de Posição, Transições Rápidas, Linha Alta',
+  },
+  {
+    id: 'a1',
+    name: 'GoGlobal Sports',
+    username: '@goglobal.sponsor',
+    type: 'sponsor',
+    avatar: 'https://img.usecurling.com/i?q=globe&color=blue',
+    cover:
+      'https://img.usecurling.com/p/800/400?q=handshake%20business&color=gold',
+    bio: 'Agência e patrocinadora oficial buscando conectar grandes marcas a talentos esportivos em ascensão no cenário mundial.',
+    location: 'Miami, USA',
+    rating: 5.0,
+    company: 'GoGlobal Sports Mkt',
+    focusCategories: ['Futebol', 'Basquete', 'E-Sports', 'Material Esportivo'],
+  },
+]
+
 export const mockProfiles: ProfileData[] = [
   ...mockTalents,
   ...mockPhotographers,
   ...mockDrivers,
+  ...mockVips,
 ]
+
 export const mockJobs = []
 export const mockProducts: Product[] = [
   {

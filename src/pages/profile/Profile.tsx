@@ -5,6 +5,8 @@ import PhotographerView from './PhotographerView'
 import DriverView from './DriverView'
 import ClubView from './ClubView'
 import CoachView from './CoachView'
+import ScoutView from './ScoutView'
+import SponsorView from './SponsorView'
 
 export default function Profile() {
   const { id } = useParams()
@@ -32,6 +34,10 @@ export default function Profile() {
         <ClubView profile={user as any} />
       ) : profileType === 'coach' ? (
         <CoachView profile={user as any} />
+      ) : profileType === 'scout' ? (
+        <ScoutView profile={user as any} />
+      ) : profileType === 'sponsor' ? (
+        <SponsorView profile={user as any} />
       ) : (
         <AthleteView user={user} isMe={isMe} />
       )}
