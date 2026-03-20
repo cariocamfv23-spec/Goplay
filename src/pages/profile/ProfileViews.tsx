@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Eye, Lock, User, Crown, Activity, Radio, MapPin } from 'lucide-react'
+import { ArrowLeft, Eye, User, Crown, Activity, Radio, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent } from '@/components/ui/card'
@@ -39,12 +39,12 @@ export default function ProfileViews() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setLiveViewers(current => {
+      setLiveViewers((current) => {
         // Randomly decide to add or remove to simulate real traffic
         const shouldRemove = current.length > 0 && Math.random() > 0.6
         const shouldAdd = current.length < 4 && Math.random() > 0.4
 
-        let next = [...current]
+        const next = [...current]
 
         if (shouldRemove) {
           const idx = Math.floor(Math.random() * next.length)
@@ -52,22 +52,25 @@ export default function ProfileViews() {
           next.splice(idx, 1)
           
           // Move to past viewers automatically
-          setPastViewers(prev => [{
-            id: `moved-${Date.now()}`,
-            name: removed.name,
-            type: removed.type,
-            avatar: removed.avatar,
-            date: 'Agora mesmo'
-          }, ...prev])
+          setPastViewers((prev) => [
+            {
+              id: `moved-${Date.now()}`,
+              name: removed.name,
+              type: removed.type,
+              avatar: removed.avatar,
+              date: 'Agora mesmo',
+            }, 
+            ...prev,
+          ])
         }
 
         if (shouldAdd) {
-          const available = LIVE_POOL.filter(p => !next.find(n => n.id === p.id))
+          const available = LIVE_POOL.filter((p) => !next.find((n) => n.id === p.id))
           if (available.length) {
             const picked = available[Math.floor(Math.random() * available.length)]
             next.push(picked)
             // Increment total views slightly when someone new joins
-            setTotalViews(prev => prev + 1)
+            setTotalViews((prev) => prev + 1)
           }
         }
 
@@ -79,8 +82,8 @@ export default function ProfileViews() {
 
   // Combine lists to easily manage the Paywall index limit (only show 1st item clearly)
   const allViewers = [
-    ...liveViewers.map(v => ({ ...v, isLive: true })),
-    ...pastViewers.map(v => ({ ...v, isLive: false }))
+    ...liveViewers.map((v) => ({ ...v, isLive: true })),
+    ...pastViewers.map((v) => ({ ...v, isLive: false })),
   ]
 
   return (
@@ -104,8 +107,8 @@ export default function ProfileViews() {
             {/* Live Badges */}
             <div className="absolute top-4 left-4 z-20 flex items-center gap-2 bg-background/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-border/50 shadow-sm">
               <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
               </span>
               <span className="text-xs font-bold font-mono text-green-500 tracking-wider">
                 {liveViewers.length} LIVE
@@ -203,7 +206,7 @@ export default function ProfileViews() {
                     className={cn(
                       'border-none shadow-sm transition-all',
                       isBlurred && 'blur-sm opacity-60 select-none pointer-events-none',
-                      viewer.isLive && !isBlurred && 'ring-1 ring-green-500/30 bg-green-500/5'
+                      viewer.isLive && !isBlurred && 'ring-1 ring-green-500/30 bg-green-500/5',
                     )}
                   >
                     <CardContent className="p-4 flex items-center gap-4 relative overflow-hidden">
@@ -214,7 +217,7 @@ export default function ProfileViews() {
                       <div className="relative">
                         <Avatar className={cn(
                           "h-12 w-12 border-2", 
-                          viewer.isLive && !isBlurred ? "border-green-500" : "border-border"
+                          viewer.isLive && !isBlurred ? "border-green-500" : "border-border",
                         )}>
                           <AvatarImage src={isBlurred ? undefined : viewer.avatar} />
                           <AvatarFallback>
@@ -233,7 +236,7 @@ export default function ProfileViews() {
                           </p>
                           <span className={cn(
                             "text-xs font-bold whitespace-nowrap",
-                            viewer.isLive ? "text-green-500" : "text-muted-foreground"
+                            viewer.isLive ? "text-green-500" : "text-muted-foreground",
                           )}>
                             {viewer.date}
                           </span>
@@ -243,7 +246,7 @@ export default function ProfileViews() {
                             {isBlurred ? 'Perfil Oculto' : viewer.type}
                           </p>
                           {!isBlurred && !viewer.isLive && (
-                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary/40"></span>
+                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary/40" />
                           )}
                         </div>
                       </div>

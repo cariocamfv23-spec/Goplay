@@ -1,4 +1,4 @@
-import { mockCurrentUser, mockPosts, MusicTrack } from '@/lib/data'
+import { mockCurrentUser, mockPosts, type MusicTrack } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -89,7 +89,6 @@ export default function AthleteView({
   const userPosts = mockPosts
 
   // Dynamic Sport Background Logic
-  // Prioritize the sport-specific cover if available, otherwise fallback to user.cover or generic
   const coverImage = getSportCoverImage(user.sport)
 
   const handleMusicSelect = (track: MusicTrack) => {
@@ -113,14 +112,12 @@ export default function AthleteView({
           className="absolute inset-0 z-0 pointer-events-none overflow-hidden"
           style={{ height: '600px' }}
         >
-          {/* Main Gradient */}
           <div
             className="absolute top-0 inset-x-0 h-full opacity-10 mix-blend-screen transition-colors duration-1000"
             style={{
               background: `radial-gradient(circle at 50% 30%, ${auraConfig.colorEnd}, transparent 70%)`,
             }}
           />
-          {/* Secondary Pulse */}
           <div
             className="absolute top-0 inset-x-0 h-full opacity-5 mix-blend-plus-lighter animate-pulse transition-colors duration-1000"
             style={{
@@ -141,10 +138,8 @@ export default function AthleteView({
               'https://img.usecurling.com/p/800/400?q=abstract%20gradient&color=blue'
           }}
         />
-        {/* Cinematic Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
 
-        {/* Sport Badge on Cover */}
         {user.sport && (
           <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-white/10 shadow-lg">
             {user.sport}
@@ -155,13 +150,10 @@ export default function AthleteView({
       <div className="px-4 relative -mt-16 mb-4 z-10">
         <div className="flex justify-between items-end mb-4">
           <div className="relative">
-            {/* Eco Humano Waves - Background Layer */}
             <EcoHumanoWaves
               profile={user}
               className="scale-150 opacity-80 -z-10"
             />
-
-            {/* Athlete Aura - Foreground Layer */}
             <AthleteAura profile={user} size="xl" showLabel className="-ml-1">
               <Avatar className="h-28 w-28 border-4 border-background shadow-xl relative z-20">
                 <AvatarImage src={user.avatar} className="object-cover" />
@@ -215,7 +207,6 @@ export default function AthleteView({
                 </Badge>
               )}
             </h1>
-            {/* Aura Legend Trigger */}
             <button
               onClick={() => setIsAuraLegendOpen(true)}
               className="text-muted-foreground hover:text-primary transition-colors p-1"
@@ -223,7 +214,6 @@ export default function AthleteView({
             >
               <Info className="w-4 h-4" />
             </button>
-            {/* Eco Legend Trigger */}
             <button
               onClick={() => setIsEcoLegendOpen(true)}
               className="text-muted-foreground hover:text-emerald-500 transition-colors p-1"
@@ -240,7 +230,6 @@ export default function AthleteView({
             <MapPin className="h-3 w-3" /> {user.location}
           </div>
 
-          {/* Social Stats Row */}
           <div className="flex items-center justify-between bg-secondary/20 p-3 rounded-xl border border-border/50 mb-5 backdrop-blur-sm">
             <div className="flex flex-col items-center flex-1 border-r border-border/50">
               <span className="font-bold text-lg leading-none">
@@ -280,7 +269,6 @@ export default function AthleteView({
             )}
           </div>
 
-          {/* Bio & Music */}
           <p className="text-sm leading-relaxed mb-4 text-foreground/90">
             {user.bio}
           </p>
@@ -483,7 +471,6 @@ export default function AthleteView({
         {/* Improved Menu Hierarchy */}
         {isMe ? (
           <div className="space-y-6 mb-8">
-            {/* Performance Section */}
             <div className="space-y-3">
               <div className="flex items-center gap-2 px-1">
                 <Trophy className="h-4 w-4 text-gold" />
@@ -542,7 +529,6 @@ export default function AthleteView({
                 </Button>
               </div>
 
-              {/* Time Capsule Banner */}
               <Button
                 className="w-full bg-gradient-to-r from-primary/10 to-gold/10 text-foreground hover:from-primary/20 border border-primary/20 justify-between shadow-sm font-bold mb-3 h-14"
                 onClick={() => navigate('/timecapsule')}
@@ -574,7 +560,6 @@ export default function AthleteView({
 
             <Separator />
 
-            {/* AI & Tools Section */}
             <div className="space-y-3">
               <div className="flex items-center gap-2 px-1">
                 <Zap className="h-4 w-4 text-purple-500" />
@@ -612,7 +597,6 @@ export default function AthleteView({
 
             <Separator />
 
-            {/* Commerce & Rewards Section */}
             <div className="space-y-3">
               <div className="flex items-center gap-2 px-1">
                 <Store className="h-4 w-4 text-emerald-500" />
@@ -669,7 +653,6 @@ export default function AthleteView({
             </div>
           </div>
         ) : (
-          /* Public Actions for Visitor */
           <div className="grid grid-cols-2 gap-3 mb-6">
             <Button
               className="bg-secondary text-foreground hover:bg-secondary/80 justify-start shadow-sm"
@@ -686,7 +669,6 @@ export default function AthleteView({
           </div>
         )}
 
-        {/* Content Tabs */}
         <Tabs
           defaultValue="posts"
           className="w-full"
@@ -754,26 +736,22 @@ export default function AthleteView({
                       </div>
                     )}
 
-                    {/* Fallback container hidden by default */}
                     <div className="hidden absolute inset-0 bg-secondary flex items-center justify-center">
                       <ImageOff className="h-6 w-6 text-muted-foreground/50" />
                     </div>
 
-                    {/* Video Indicator */}
                     {post.type === 'video' && (
                       <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-full p-1.5 shadow-sm">
                         <Video className="h-3 w-3 text-white" />
                       </div>
                     )}
 
-                    {/* Carousel Indicator */}
                     {post.media && post.media.length > 1 && (
                       <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-full p-1.5 shadow-sm">
                         <Package className="h-3 w-3 text-white" />
                       </div>
                     )}
 
-                    {/* Overlay on hover */}
                     <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                 </DepthContainer>
