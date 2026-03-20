@@ -37,7 +37,7 @@ import {
   Lock,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { MusicSelector } from '@/components/MusicSelector'
 import { toast } from 'sonner'
@@ -59,6 +59,7 @@ import { getSportCoverImage } from '@/lib/sport-utils'
 import { DepthContainer } from '@/components/DepthContainer'
 import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 import { useReplayStore } from '@/stores/useReplayStore'
+import { usePrivacyStore } from '@/stores/usePrivacyStore'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -82,8 +83,26 @@ export default function AthleteView({
 
   const { getTheme } = useRetrospectiveStore()
   const { replays } = useReplayStore()
+  const { isInvisibleMode } = usePrivacyStore()
   const currentTheme = getTheme()
   const auraConfig = getAuraConfig(user)
+
+  // Simulated Tracking Suppression Logic
+  useEffect(() => {
+    if (!isMe) {
+      if (isInvisibleMode) {
+        console.log(
+          `[Invisible Mode] Visit tracking suppressed for profile: ${user.id}`,
+        )
+        // The real-time tracker stops broadcasting the user's presence immediately
+      } else {
+        console.log(
+          `[Tracker] Broadcasting VIP presence to profile: ${user.id}`,
+        )
+        // API call to record visit goes here
+      }
+    }
+  }, [isMe, user.id, isInvisibleMode])
 
   // Filter posts based on user if needed. Currently showing all mockPosts for demo
   const userPosts = mockPosts
