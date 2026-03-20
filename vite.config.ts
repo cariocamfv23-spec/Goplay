@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   experimental: {
-    enableNativePlugin: true
+    enableNativePlugin: true,
   },
   build: {
     minify: mode !== 'development',
@@ -26,7 +26,9 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [react()],
   define: {
-    'process.env.NODE_ENV': JSON.stringify(mode ?? process.env.NODE_ENV ?? 'production'),
+    'process.env.NODE_ENV': JSON.stringify(
+      mode ?? process.env.NODE_ENV ?? 'production',
+    ),
   },
   resolve: {
     alias: {

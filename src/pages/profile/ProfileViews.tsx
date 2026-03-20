@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Eye, User, Crown, Activity, Radio, MapPin } from 'lucide-react'
+import {
+  ArrowLeft,
+  Eye,
+  User,
+  Crown,
+  Activity,
+  Radio,
+  MapPin,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent } from '@/components/ui/card'
@@ -11,25 +19,85 @@ import { Badge } from '@/components/ui/badge'
 
 // Mock Data Pools for Live Simulation
 const LIVE_POOL = [
-  { id: 'lv1', name: 'Scout Internacional', type: 'Recrutador', avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=11', pos: { top: '15%', left: '25%' } },
-  { id: 'lv2', name: 'Agência NextLevel', type: 'Agência', avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=22', pos: { top: '65%', left: '75%' } },
-  { id: 'lv3', name: 'Carlos "Olheiro"', type: 'Scout', avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=33', pos: { top: '75%', left: '20%' } },
-  { id: 'lv4', name: 'Red Wolves FC', type: 'Clube', avatar: 'https://img.usecurling.com/i?q=wolf&color=red', pos: { top: '25%', left: '80%' } },
-  { id: 'lv5', name: 'Visitante Anônimo', type: 'Atleta', avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=44', pos: { top: '50%', left: '10%' } },
-  { id: 'lv6', name: 'Marina Silva', type: 'Treinador', avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=55', pos: { top: '40%', left: '85%' } },
+  {
+    id: 'lv1',
+    name: 'Scout Internacional',
+    type: 'Recrutador',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=11',
+    pos: { top: '15%', left: '25%' },
+  },
+  {
+    id: 'lv2',
+    name: 'Agência NextLevel',
+    type: 'Agência',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=22',
+    pos: { top: '65%', left: '75%' },
+  },
+  {
+    id: 'lv3',
+    name: 'Carlos "Olheiro"',
+    type: 'Scout',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=33',
+    pos: { top: '75%', left: '20%' },
+  },
+  {
+    id: 'lv4',
+    name: 'Red Wolves FC',
+    type: 'Clube',
+    avatar: 'https://img.usecurling.com/i?q=wolf&color=red',
+    pos: { top: '25%', left: '80%' },
+  },
+  {
+    id: 'lv5',
+    name: 'Visitante Anônimo',
+    type: 'Atleta',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=44',
+    pos: { top: '50%', left: '10%' },
+  },
+  {
+    id: 'lv6',
+    name: 'Marina Silva',
+    type: 'Treinador',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=55',
+    pos: { top: '40%', left: '85%' },
+  },
 ]
 
 const INITIAL_PAST = [
-  { id: 'pv1', name: 'João Santos', type: 'Atleta', avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=101', date: 'Há 2 horas' },
-  { id: 'pv2', name: 'Futsal Pro Club', type: 'Clube', avatar: 'https://img.usecurling.com/i?q=soccer&color=blue', date: 'Há 5 horas' },
-  { id: 'pv3', name: 'Visitante Anônimo', type: 'Perfil Oculto', avatar: '', date: 'Ontem' },
-  { id: 'pv4', name: 'Ana Souza', type: 'Atleta', avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=102', date: 'Ontem' },
+  {
+    id: 'pv1',
+    name: 'João Santos',
+    type: 'Atleta',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=101',
+    date: 'Há 2 horas',
+  },
+  {
+    id: 'pv2',
+    name: 'Futsal Pro Club',
+    type: 'Clube',
+    avatar: 'https://img.usecurling.com/i?q=soccer&color=blue',
+    date: 'Há 5 horas',
+  },
+  {
+    id: 'pv3',
+    name: 'Visitante Anônimo',
+    type: 'Perfil Oculto',
+    avatar: '',
+    date: 'Ontem',
+  },
+  {
+    id: 'pv4',
+    name: 'Ana Souza',
+    type: 'Atleta',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=102',
+    date: 'Ontem',
+  },
 ]
 
 export default function ProfileViews() {
   const navigate = useNavigate()
   const [isUnlocked, setIsUnlocked] = useState(false)
-  
+
   // Real-time Simulation State
   const [liveViewers, setLiveViewers] = useState([LIVE_POOL[0], LIVE_POOL[1]])
   const [pastViewers, setPastViewers] = useState(INITIAL_PAST)
@@ -50,7 +118,7 @@ export default function ProfileViews() {
           const idx = Math.floor(Math.random() * next.length)
           const removed = next[idx]
           next.splice(idx, 1)
-          
+
           // Move to past viewers automatically
           setPastViewers((prev) => [
             {
@@ -59,15 +127,18 @@ export default function ProfileViews() {
               type: removed.type,
               avatar: removed.avatar,
               date: 'Agora mesmo',
-            }, 
+            },
             ...prev,
           ])
         }
 
         if (shouldAdd) {
-          const available = LIVE_POOL.filter((p) => !next.find((n) => n.id === p.id))
+          const available = LIVE_POOL.filter(
+            (p) => !next.find((n) => n.id === p.id),
+          )
           if (available.length) {
-            const picked = available[Math.floor(Math.random() * available.length)]
+            const picked =
+              available[Math.floor(Math.random() * available.length)]
             next.push(picked)
             // Increment total views slightly when someone new joins
             setTotalViews((prev) => prev + 1)
@@ -100,7 +171,6 @@ export default function ProfileViews() {
       </div>
 
       <div className="p-4 space-y-6">
-        
         {/* Real-Time Live Radar (99 Taxi Style) */}
         <Card className="border-none bg-gradient-to-b from-primary/10 via-background to-background overflow-hidden relative shadow-inner">
           <CardContent className="p-0 h-56 flex flex-col items-center justify-center relative">
@@ -116,14 +186,20 @@ export default function ProfileViews() {
             </div>
 
             <div className="absolute top-4 right-4 z-20">
-              <Badge variant="secondary" className="bg-black/80 text-primary border-primary/30 flex items-center gap-1 backdrop-blur-md">
+              <Badge
+                variant="secondary"
+                className="bg-black/80 text-primary border-primary/30 flex items-center gap-1 backdrop-blur-md"
+              >
                 <Radio className="w-3 h-3 animate-pulse" /> Radar Ativo
               </Badge>
             </div>
 
             {/* Radar Sonar Rings */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
-              <div className="w-24 h-24 bg-primary/20 rounded-full absolute animate-ping" style={{ animationDuration: '3s' }} />
+              <div
+                className="w-24 h-24 bg-primary/20 rounded-full absolute animate-ping"
+                style={{ animationDuration: '3s' }}
+              />
               <div className="w-40 h-40 border border-primary/20 rounded-full absolute" />
               <div className="w-64 h-64 border border-primary/10 rounded-full absolute" />
               <div className="w-96 h-96 border border-primary/5 rounded-full absolute" />
@@ -138,7 +214,7 @@ export default function ProfileViews() {
             {liveViewers.map((v, i) => {
               // Blur radar nodes if not unlocked (except maybe the first one to tease)
               const isBlurredRadar = !isUnlocked && i > 0
-              
+
               return (
                 <div
                   key={v.id}
@@ -146,12 +222,18 @@ export default function ProfileViews() {
                   style={v.pos}
                 >
                   <div className="relative group flex flex-col items-center">
-                    <Avatar className={cn(
-                      "w-10 h-10 border-2 border-green-500 shadow-xl transition-all duration-300",
-                      isBlurredRadar && "blur-[3px] grayscale opacity-70"
-                    )}>
-                      <AvatarImage src={isBlurredRadar ? undefined : v.avatar} />
-                      <AvatarFallback><User className="w-5 h-5 text-muted-foreground" /></AvatarFallback>
+                    <Avatar
+                      className={cn(
+                        'w-10 h-10 border-2 border-green-500 shadow-xl transition-all duration-300',
+                        isBlurredRadar && 'blur-[3px] grayscale opacity-70',
+                      )}
+                    >
+                      <AvatarImage
+                        src={isBlurredRadar ? undefined : v.avatar}
+                      />
+                      <AvatarFallback>
+                        <User className="w-5 h-5 text-muted-foreground" />
+                      </AvatarFallback>
                     </Avatar>
                     <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-background rounded-full animate-pulse" />
                   </div>
@@ -168,8 +250,12 @@ export default function ProfileViews() {
               <Eye className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground font-medium">Total de Visitas</p>
-              <h2 className="text-2xl font-black text-foreground">{totalViews}</h2>
+              <p className="text-sm text-muted-foreground font-medium">
+                Total de Visitas
+              </p>
+              <h2 className="text-2xl font-black text-foreground">
+                {totalViews}
+              </h2>
             </div>
           </div>
           <div className="bg-background px-3 py-1.5 rounded-full text-xs font-bold border border-border/50 shadow-sm flex items-center gap-1.5">
@@ -186,7 +272,10 @@ export default function ProfileViews() {
               const isFirstPast = !viewer.isLive && index === liveViewers.length
 
               return (
-                <div key={viewer.id} className="animate-in slide-in-from-bottom-2 fade-in duration-500">
+                <div
+                  key={viewer.id}
+                  className="animate-in slide-in-from-bottom-2 fade-in duration-500"
+                >
                   {/* Section Headers */}
                   {isFirstLive && (
                     <h3 className="font-bold text-sm text-green-500 uppercase tracking-wider mb-3 flex items-center gap-2">
@@ -205,21 +294,30 @@ export default function ProfileViews() {
                   <Card
                     className={cn(
                       'border-none shadow-sm transition-all',
-                      isBlurred && 'blur-sm opacity-60 select-none pointer-events-none',
-                      viewer.isLive && !isBlurred && 'ring-1 ring-green-500/30 bg-green-500/5',
+                      isBlurred &&
+                        'blur-sm opacity-60 select-none pointer-events-none',
+                      viewer.isLive &&
+                        !isBlurred &&
+                        'ring-1 ring-green-500/30 bg-green-500/5',
                     )}
                   >
                     <CardContent className="p-4 flex items-center gap-4 relative overflow-hidden">
                       {viewer.isLive && !isBlurred && (
                         <div className="absolute top-0 right-0 w-16 h-16 bg-green-500/10 rounded-full blur-xl -mr-8 -mt-8" />
                       )}
-                      
+
                       <div className="relative">
-                        <Avatar className={cn(
-                          "h-12 w-12 border-2", 
-                          viewer.isLive && !isBlurred ? "border-green-500" : "border-border",
-                        )}>
-                          <AvatarImage src={isBlurred ? undefined : viewer.avatar} />
+                        <Avatar
+                          className={cn(
+                            'h-12 w-12 border-2',
+                            viewer.isLive && !isBlurred
+                              ? 'border-green-500'
+                              : 'border-border',
+                          )}
+                        >
+                          <AvatarImage
+                            src={isBlurred ? undefined : viewer.avatar}
+                          />
                           <AvatarFallback>
                             <User className="h-6 w-6 text-muted-foreground" />
                           </AvatarFallback>
@@ -228,16 +326,20 @@ export default function ProfileViews() {
                           <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 border-2 border-background rounded-full animate-pulse" />
                         )}
                       </div>
-                      
+
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-start">
                           <p className="font-bold truncate">
                             {isBlurred ? 'Visitante Premium' : viewer.name}
                           </p>
-                          <span className={cn(
-                            "text-xs font-bold whitespace-nowrap",
-                            viewer.isLive ? "text-green-500" : "text-muted-foreground",
-                          )}>
+                          <span
+                            className={cn(
+                              'text-xs font-bold whitespace-nowrap',
+                              viewer.isLive
+                                ? 'text-green-500'
+                                : 'text-muted-foreground',
+                            )}
+                          >
                             {viewer.date}
                           </span>
                         </div>
@@ -273,7 +375,8 @@ export default function ProfileViews() {
                 Descubra quem está de olho
               </h3>
               <p className="text-muted-foreground text-sm mb-6 max-w-[280px] leading-relaxed">
-                Desbloqueie o Live Tracking e a lista completa para ver os scouts, recrutadores e atletas que visitam seu perfil.
+                Desbloqueie o Live Tracking e a lista completa para ver os
+                scouts, recrutadores e atletas que visitam seu perfil.
               </p>
 
               <PaymentDialog
@@ -296,7 +399,6 @@ export default function ProfileViews() {
             </div>
           )}
         </div>
-
       </div>
     </div>
   )

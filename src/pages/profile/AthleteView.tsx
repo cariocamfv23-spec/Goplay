@@ -440,7 +440,10 @@ export default function AthleteView({
                 <div>
                   <p className="font-bold text-sm flex items-center gap-2">
                     Quem viu seu perfil
-                    <Badge variant="secondary" className="bg-green-500/10 text-green-600 border-none text-[9px] px-1.5 py-0 uppercase">
+                    <Badge
+                      variant="secondary"
+                      className="bg-green-500/10 text-green-600 border-none text-[9px] px-1.5 py-0 uppercase"
+                    >
                       Ao vivo
                     </Badge>
                   </p>
@@ -457,7 +460,10 @@ export default function AthleteView({
                         src={`https://img.usecurling.com/ppl/thumbnail?gender=${i === 1 ? 'male' : 'female'}&seed=${i + 40}`}
                       />
                     </Avatar>
-                    <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-30 z-0" style={{ animationDuration: '2s' }} />
+                    <div
+                      className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-30 z-0"
+                      style={{ animationDuration: '2s' }}
+                    />
                   </div>
                 ))}
                 <div className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center text-[9px] border-2 border-background font-bold text-primary shadow-sm relative z-10">
