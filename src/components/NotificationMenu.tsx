@@ -24,6 +24,7 @@ import {
   Baby,
   Info,
   TrendingDown,
+  Crown,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -72,6 +73,9 @@ export function NotificationMenu() {
       case 'goal_deadline':
         return <Target className="h-4 w-4 text-red-500" />
       case 'verification':
+        if (title.toLowerCase().includes('vip')) {
+          return <Crown className="h-4 w-4 text-gold" />
+        }
         return <ShieldCheck className="h-4 w-4 text-blue-600" />
       case 'sponsorship_match':
         return <Handshake className="h-4 w-4 text-indigo-500" />
@@ -119,6 +123,9 @@ export function NotificationMenu() {
                   className={cn(
                     'flex items-start gap-3 p-4 text-left hover:bg-muted/50 transition-colors border-b last:border-0 relative',
                     !notification.read && 'bg-muted/30',
+                    notification.title.toLowerCase().includes('vip') &&
+                      !notification.read &&
+                      'bg-gold/5',
                   )}
                   onClick={() => handleItemClick(notification)}
                 >
@@ -143,6 +150,8 @@ export function NotificationMenu() {
                         !notification.read
                           ? 'bg-background border-primary/20'
                           : 'bg-muted border-transparent',
+                        notification.title.toLowerCase().includes('vip') &&
+                          'bg-gold/10 border-gold/30',
                       )}
                     >
                       {getIcon(notification.type, notification.title)}
@@ -153,6 +162,8 @@ export function NotificationMenu() {
                       className={cn(
                         'text-sm font-medium leading-none',
                         !notification.read && 'font-semibold',
+                        notification.title.toLowerCase().includes('vip') &&
+                          'text-gold',
                         notification.type === 'live_stream' &&
                           !notification.link?.includes('/replay/') &&
                           'text-red-500',
@@ -198,7 +209,14 @@ export function NotificationMenu() {
                     </p>
                   </div>
                   {!notification.read && (
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full bg-primary" />
+                    <div
+                      className={cn(
+                        'absolute right-4 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full',
+                        notification.title.toLowerCase().includes('vip')
+                          ? 'bg-gold'
+                          : 'bg-primary',
+                      )}
+                    />
                   )}
                 </button>
               ))}

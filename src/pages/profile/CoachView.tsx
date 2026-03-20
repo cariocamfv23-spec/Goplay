@@ -40,36 +40,21 @@ export default function CoachView({ profile }: { profile: ProfileData }) {
       </div>
 
       <div className="px-5 relative -mt-16 mb-6">
-        <div className="flex justify-between items-end mb-4">
-          <div className="relative">
-            <Avatar className="h-28 w-28 border-4 border-background shadow-xl">
-              <AvatarImage src={profile.avatar} />
-              <AvatarFallback>{profile.name[0]}</AvatarFallback>
-            </Avatar>
-            <div className="absolute -bottom-1 -right-1 bg-gradient-to-br from-gold to-yellow-600 rounded-full p-1.5 shadow-[0_0_15px_hsl(var(--gold)/0.5)] border-2 border-background">
-              <Crown className="w-4 h-4 text-black fill-black" />
-            </div>
-          </div>
-          <div className="flex gap-2 pb-1">
-            <Button className="bg-primary hover:bg-primary/90 text-white shadow-md shadow-primary/20 rounded-full px-5">
-              <UserPlus className="h-4 w-4 mr-2" /> Seguir
-            </Button>
-            <Button
-              size="icon"
-              variant="secondary"
-              className="rounded-full shadow-sm bg-secondary hover:bg-secondary/80"
-              onClick={() => navigate(`/messages/user-${profile.id}`)}
-            >
-              <MessageCircle className="h-5 w-5" />
-            </Button>
+        <div className="relative inline-block mb-3">
+          <Avatar className="h-28 w-28 border-4 border-background shadow-xl">
+            <AvatarImage src={profile.avatar} />
+            <AvatarFallback>{profile.name[0]}</AvatarFallback>
+          </Avatar>
+          <div className="absolute -bottom-1 -right-1 bg-gradient-to-br from-gold to-yellow-600 rounded-full p-1.5 shadow-[0_0_15px_hsl(var(--gold)/0.5)] border-2 border-background">
+            <Crown className="w-4 h-4 text-black fill-black" />
           </div>
         </div>
 
-        <div className="mt-2">
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+        <div className="mt-1">
+          <h1 className="text-2xl font-bold flex flex-wrap items-center gap-2">
             {profile.name}
             <Badge className="bg-gold/20 text-gold hover:bg-gold/30 border-none font-bold uppercase tracking-wider text-[10px]">
-              <Crown className="w-3 h-3 mr-1" /> VIP Verificado
+              <Crown className="w-3 h-3 mr-1" /> Profissional Verificado
             </Badge>
           </h1>
           <p className="text-primary font-bold text-sm flex items-center gap-1.5 mt-1">
@@ -88,6 +73,19 @@ export default function CoachView({ profile }: { profile: ProfileData }) {
               <Star className="h-4 w-4 fill-gold text-gold" />{' '}
               {profile.rating || '4.8'}
             </span>
+          </div>
+
+          <div className="flex gap-3 mt-6">
+            <Button className="flex-1 bg-gradient-to-r from-primary to-purple-600 hover:opacity-90 text-white shadow-lg shadow-primary/20 h-12 rounded-xl font-bold">
+              <UserPlus className="h-5 w-5 mr-2" /> Conectar
+            </Button>
+            <Button
+              variant="outline"
+              className="flex-1 shadow-sm h-12 rounded-xl font-bold border-2 border-primary/20 text-foreground hover:bg-primary/5"
+              onClick={() => navigate(`/messages/user-${profile.id}`)}
+            >
+              <MessageCircle className="h-5 w-5 mr-2 text-primary" /> Mensagem
+            </Button>
           </div>
         </div>
       </div>
@@ -112,7 +110,7 @@ export default function CoachView({ profile }: { profile: ProfileData }) {
             <div className="grid grid-cols-2 gap-4 pt-2 border-t border-border/50">
               <div className="flex flex-col gap-1">
                 <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider flex items-center gap-1">
-                  <Award className="w-3 h-3" /> Licença
+                  <Award className="w-3 h-3" /> Licenças
                 </span>
                 <Badge
                   variant="secondary"
@@ -151,7 +149,10 @@ export default function CoachView({ profile }: { profile: ProfileData }) {
           </div>
         </div>
 
-        <Button className="w-full mt-6 h-14 rounded-xl text-lg font-bold bg-gradient-to-r from-primary to-purple-700 shadow-lg shadow-primary/20">
+        <Button
+          variant="secondary"
+          className="w-full mt-6 h-14 rounded-xl text-lg font-bold shadow-sm"
+        >
           <Calendar className="mr-2 h-5 w-5" /> Agendar Mentoria
         </Button>
       </div>

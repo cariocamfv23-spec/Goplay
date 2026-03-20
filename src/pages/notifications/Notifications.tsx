@@ -17,6 +17,7 @@ import {
   Handshake,
   Baby,
   TrendingDown,
+  Crown,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -54,6 +55,9 @@ export default function Notifications() {
       case 'goal_deadline':
         return <Target className="h-5 w-5 text-red-500" />
       case 'verification':
+        if (title.toLowerCase().includes('vip')) {
+          return <Crown className="h-5 w-5 text-gold" />
+        }
         return <ShieldCheck className="h-5 w-5 text-blue-600" />
       case 'sponsorship_match':
         return <Handshake className="h-5 w-5 text-indigo-500" />
@@ -64,9 +68,11 @@ export default function Notifications() {
     }
   }
 
-  const getPriorityStyle = (priority?: string) => {
+  const getPriorityStyle = (priority?: string, title: string = '') => {
     if (priority === 'critical')
       return 'border-l-4 border-l-red-500 bg-red-500/10 dark:bg-red-900/20'
+    if (priority === 'high' && title.toLowerCase().includes('vip'))
+      return 'border-l-4 border-l-gold bg-gold/10 dark:bg-gold/10'
     if (priority === 'high')
       return 'border-l-4 border-l-green-500 bg-green-500/10 dark:bg-green-900/20'
     return 'hover:bg-secondary/30'
@@ -137,7 +143,7 @@ export default function Notifications() {
                       not.read
                         ? 'bg-card opacity-90'
                         : 'bg-card ring-1 ring-primary/20 shadow-md',
-                      getPriorityStyle(not.priority),
+                      getPriorityStyle(not.priority, not.title),
                       not.link && 'cursor-pointer active:scale-[0.98]',
                     )}
                     onClick={() => handleNotificationClick(not)}
@@ -166,6 +172,8 @@ export default function Notifications() {
                         className={cn(
                           'mt-1 h-10 w-10 rounded-full flex items-center justify-center shrink-0 border border-border/50',
                           not.read ? 'bg-secondary/50' : 'bg-secondary',
+                          not.title.toLowerCase().includes('vip') &&
+                            'bg-gold/10 border-gold/30',
                         )}
                       >
                         {getIcon(not.type, not.title)}
@@ -180,6 +188,8 @@ export default function Notifications() {
                             not.read ? 'text-foreground/80' : 'text-foreground',
                             not.priority === 'critical' &&
                               'text-red-600 dark:text-red-400',
+                            not.title.toLowerCase().includes('vip') &&
+                              'text-gold',
                             not.type === 'live_stream' &&
                               !not.link?.includes('/replay/') &&
                               'text-red-500',
@@ -234,16 +244,20 @@ export default function Notifications() {
                                 'text-[10px] h-5 px-1.5 font-normal border-0',
                                 not.priority === 'critical'
                                   ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
-                                  : not.priority === 'high'
-                                    ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
-                                    : 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
+                                  : not.title.toLowerCase().includes('vip')
+                                    ? 'bg-gold/20 text-gold border-gold/30'
+                                    : not.priority === 'high'
+                                      ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
+                                      : 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
                               )}
                             >
                               {not.priority === 'critical'
                                 ? 'Urgente'
-                                : not.priority === 'high'
-                                  ? 'Importante'
-                                  : 'Info'}
+                                : not.title.toLowerCase().includes('vip')
+                                  ? 'Destaque'
+                                  : not.priority === 'high'
+                                    ? 'Importante'
+                                    : 'Info'}
                             </Badge>
                           )}
                       </div>

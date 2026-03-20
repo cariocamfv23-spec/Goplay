@@ -2238,6 +2238,37 @@ export const mockDrivers: ProfileData[] = [
 
 export const mockVips: ProfileData[] = [
   {
+    id: 'scout1',
+    name: 'João Silva',
+    username: '@joaosilva.scout',
+    type: 'scout',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=150',
+    cover:
+      'https://img.usecurling.com/p/800/400?q=soccer%20stadium%20empty&color=gold',
+    bio: 'Scout oficial focado em captar novos talentos sul-americanos para as maiores ligas.',
+    location: 'São Paulo, SP',
+    rating: 4.9,
+    agency: 'Global Sports Agency',
+    experience: '15 anos de experiência',
+    regionsCovered: ['South America - U20', 'Brasil', 'Argentina'],
+    recentDiscoveries: ['Lucas "Paredão"', 'Gabriel Costa'],
+  },
+  {
+    id: 'coach1',
+    name: 'Carlos Ferreira',
+    username: '@carlos.coach',
+    type: 'coach',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=151',
+    cover:
+      'https://img.usecurling.com/p/800/400?q=tactics%20board&color=purple',
+    bio: 'Treinador de futebol profissional focado no desenvolvimento tático.',
+    location: 'Belo Horizonte, MG',
+    rating: 4.8,
+    team: 'Clube Atlético',
+    license: 'CBF Pro License',
+    playstyle: 'Posicional & Ofensivo',
+  },
+  {
     id: 'u10',
     name: 'Rafael Torres',
     username: '@rafael.scout',
@@ -2432,11 +2463,35 @@ export const mockProducts: Product[] = [
 ]
 export const mockNotifications: Notification[] = [
   {
+    id: 'n5',
+    title: 'Visitante VIP!',
+    message:
+      'Um Scout está visualizando seu perfil. João Silva (Global Sports Agency)',
+    time: '2 min',
+    read: false,
+    type: 'verification',
+    date: 'Hoje',
+    priority: 'high',
+    link: '/profile/scout1',
+  },
+  {
+    id: 'n6',
+    title: 'Visitante VIP!',
+    message:
+      'Um Treinador está visualizando seu perfil. Carlos Ferreira (Clube Atlético)',
+    time: '15 min',
+    read: false,
+    type: 'verification',
+    date: 'Hoje',
+    priority: 'high',
+    link: '/profile/coach1',
+  },
+  {
     id: 'n1',
     title: 'Match de Patrocínio!',
     message:
       'A Red Bull expressou interesse no seu perfil. Confira os detalhes.',
-    time: '2 min',
+    time: '20 min',
     read: false,
     type: 'sponsorship_match',
     date: 'Hoje',
