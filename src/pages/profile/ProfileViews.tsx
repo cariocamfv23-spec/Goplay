@@ -8,6 +8,7 @@ import {
   Activity,
   Radio,
   MapPin,
+  Ghost,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -16,6 +17,13 @@ import { PaymentDialog } from '@/components/PaymentDialog'
 import { cn } from '@/lib/utils'
 import { AppIcon } from '@/components/AppIcon'
 import { Badge } from '@/components/ui/badge'
+import { usePrivacyStore } from '@/stores/usePrivacyStore'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 // Mock Data Pools for Live Simulation
 const LIVE_POOL = [
@@ -97,6 +105,9 @@ const INITIAL_PAST = [
 export default function ProfileViews() {
   const navigate = useNavigate()
   const [isUnlocked, setIsUnlocked] = useState(false)
+
+  const { isInvisibleMode, isPremium, toggleInvisibleMode, upgradeToPremium } =
+    usePrivacyStore()
 
   // Real-time Simulation State
   const [liveViewers, setLiveViewers] = useState([LIVE_POOL[0], LIVE_POOL[1]])
@@ -256,13 +267,69 @@ export default function ProfileViews() {
           </CardContent>
         </Card>
 
-        {/* Global Counter */}
+        {/* Global Counter & Invisible Mode Toggle */}
         <div className="flex items-center justify-between bg-secondary/30 rounded-2xl p-4 border border-border/50">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-primary/10 rounded-xl">
-              <Eye className="w-6 h-6 text-primary" />
+          <div className="flex items-start gap-4">
+            <div className="flex flex-col items-center gap-3">
+              <div className="p-3 bg-primary/10 rounded-xl">
+                <Eye className="w-6 h-6 text-primary" />
+              </div>
+
+              <TooltipProvider delayDuration={300}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="inline-block">
+                      {isPremium ? (
+                        <button
+                          onClick={() => toggleInvisibleMode(!isInvisibleMode)}
+                          className={cn(
+                            'p-2 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 ring-2 ring-transparent relative group',
+                            isInvisibleMode
+                              ? 'bg-gold/10 text-gold shadow-[0_0_15px_hsl(var(--gold)/0.4)] ring-gold/30'
+                              : 'bg-muted/50 text-muted-foreground hover:bg-muted/80',
+                          )}
+                        >
+                          <Ghost
+                            className={cn(
+                              'w-5 h-5',
+                              isInvisibleMode && 'animate-pulse drop-shadow-md',
+                            )}
+                          />
+                        </button>
+                      ) : (
+                        <PaymentDialog
+                          title="Desbloquear Modo Invisível"
+                          price={19.9}
+                          pointsPrice={1000}
+                          onSuccess={() => {
+                            upgradeToPremium()
+                            toggleInvisibleMode(true)
+                          }}
+                        >
+                          <button className="p-2 rounded-full bg-muted/50 text-muted-foreground hover:bg-muted/80 transition-all duration-300 hover:scale-110 active:scale-95 relative group outline-none">
+                            <Ghost className="w-5 h-5 opacity-70" />
+                            <div className="absolute -bottom-1 -right-1 bg-background rounded-full p-0.5 shadow-sm border border-border/50 group-hover:bg-gold/10 transition-colors">
+                              <Crown className="w-2.5 h-2.5 text-gold fill-gold" />
+                            </div>
+                          </button>
+                        </PaymentDialog>
+                      )}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="right"
+                    sideOffset={10}
+                    className="text-xs font-bold border-border bg-background text-foreground shadow-xl"
+                  >
+                    {isInvisibleMode
+                      ? 'Modo Invisível Ativado'
+                      : 'Ativar Modo Invisível'}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
-            <div>
+
+            <div className="flex flex-col pt-1">
               <p className="text-sm text-muted-foreground font-medium">
                 Total de Visitas
               </p>
@@ -271,8 +338,18 @@ export default function ProfileViews() {
               </h2>
             </div>
           </div>
-          <div className="bg-background px-3 py-1.5 rounded-full text-xs font-bold border border-border/50 shadow-sm flex items-center gap-1.5">
-            <span className="text-primary">+{viewsThisWeek}</span> semana
+          <div className="flex flex-col items-end gap-2">
+            <div className="bg-background px-3 py-1.5 rounded-full text-xs font-bold border border-border/50 shadow-sm flex items-center gap-1.5">
+              <span className="text-primary">+{viewsThisWeek}</span> semana
+            </div>
+            {isInvisibleMode && (
+              <Badge
+                variant="outline"
+                className="text-[9px] text-gold border-gold/30 bg-gold/5 shadow-[0_0_10px_hsl(var(--gold)/0.1)] uppercase tracking-widest px-1.5 py-0"
+              >
+                Invisível
+              </Badge>
+            )}
           </div>
         </div>
 
