@@ -20,33 +20,30 @@ export function GhostEmojiIcon({
       {...props}
     >
       <path
-        d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z"
+        d="M12 2c-4.418 0-8 3.582-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10c0-4.418-3.582-8-8-8z"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <ellipse
+      <circle
         cx="9"
         cy="10"
-        rx="1.5"
-        ry="2"
+        r="1.5"
         fill={active ? 'hsl(var(--background))' : 'currentColor'}
         stroke="none"
       />
-      <ellipse
+      <circle
         cx="15"
         cy="10"
-        rx="1.5"
-        ry="2"
+        r="1.5"
         fill={active ? 'hsl(var(--background))' : 'currentColor'}
         stroke="none"
       />
-      <ellipse
-        cx="12"
-        cy="14"
-        rx="2"
-        ry="2.5"
-        fill={active ? 'hsl(var(--background))' : 'currentColor'}
-        stroke="none"
+      <path
+        d="M10 14c.5 1 3.5 1 4 0"
+        stroke={active ? 'hsl(var(--background))' : 'currentColor'}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        fill="none"
       />
     </svg>
   )

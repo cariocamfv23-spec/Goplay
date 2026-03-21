@@ -2,92 +2,25 @@ import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import { Logo } from '@/components/Logo'
 import { AppIcon } from '@/components/AppIcon'
-import { ArrowRight, Trophy, Users, Activity, Eye, Radio } from 'lucide-react'
+import { ArrowRight, Trophy, Users, Activity } from 'lucide-react'
 import { SportsWallpaper } from '@/components/SportsWallpaper'
 import { useEffect } from 'react'
 import { useInvisiblePresenceStore } from '@/stores/useInvisiblePresenceStore'
 import { InvisiblePresenceOverlay } from '@/components/InvisiblePresenceOverlay'
-import { usePrivacyStore } from '@/stores/usePrivacyStore'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
-import { GhostEmojiIcon } from '@/components/GhostEmojiIcon'
-import { cn } from '@/lib/utils'
 
 export default function Index() {
   const navigate = useNavigate()
   const { initializeSession } = useInvisiblePresenceStore()
-  const { isInvisibleMode, toggleInvisibleMode, isPremium, upgradeToPremium } =
-    usePrivacyStore()
 
   // Initialize invisible presence logic on landing page load
   useEffect(() => {
     initializeSession()
   }, [initializeSession])
 
-  const handleToggleInvisible = () => {
-    if (!isPremium) upgradeToPremium()
-    toggleInvisibleMode(!isInvisibleMode)
-  }
-
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden transition-colors duration-300">
       {/* Invisible Presence Overlay - Overrides everything when active */}
       <InvisiblePresenceOverlay />
-
-      {/* Profile Metrics Section - Floating Right */}
-      <div className="absolute top-6 right-4 md:top-8 md:right-8 flex flex-col gap-3 md:gap-4 z-50 animate-in fade-in slide-in-from-right-8 duration-700 delay-500">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-background/80 backdrop-blur-md border border-border/50 shadow-lg flex items-center justify-center cursor-default hover:bg-secondary/80 transition-colors group">
-              <Eye className="w-4 h-4 md:w-5 md:h-5 text-foreground/70 group-hover:text-foreground transition-colors" />
-            </div>
-          </TooltipTrigger>
-          <TooltipContent side="left" className="font-medium text-xs">
-            <p>Visualizações do Perfil</p>
-          </TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button
-              onClick={handleToggleInvisible}
-              className={cn(
-                'w-10 h-10 md:w-12 md:h-12 rounded-full backdrop-blur-md border shadow-lg flex items-center justify-center transition-all duration-300 active:scale-95 group',
-                isInvisibleMode
-                  ? 'bg-background border-gold/50 shadow-[0_0_15px_hsl(var(--gold)/0.3)]'
-                  : 'bg-background/80 border-border/50 hover:bg-secondary/80',
-              )}
-            >
-              <GhostEmojiIcon
-                active={isInvisibleMode}
-                className={cn(
-                  'w-4 h-4 md:w-5 md:h-5 transition-all duration-300',
-                  isInvisibleMode
-                    ? 'text-gold drop-shadow-[0_0_8px_hsl(var(--gold)/0.6)] scale-110'
-                    : 'text-primary opacity-80 group-hover:opacity-100',
-                )}
-              />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent side="left" className="font-medium text-xs">
-            <p>Modo Invisível: {isInvisibleMode ? 'Ativado' : 'Desativado'}</p>
-          </TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-background/80 backdrop-blur-md border border-border/50 shadow-lg flex items-center justify-center cursor-default hover:bg-secondary/80 transition-colors">
-              <Radio className="w-4 h-4 md:w-5 md:h-5 text-red-500 animate-pulse" />
-            </div>
-          </TooltipTrigger>
-          <TooltipContent side="left" className="font-medium text-xs">
-            <p>Status: Ao Vivo</p>
-          </TooltipContent>
-        </Tooltip>
-      </div>
 
       {/* Background Layers */}
       <div className="absolute inset-0 z-0">

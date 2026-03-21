@@ -8,7 +8,6 @@ import {
   Activity,
   Radio,
   MapPin,
-  Ghost,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -18,6 +17,7 @@ import { cn } from '@/lib/utils'
 import { AppIcon } from '@/components/AppIcon'
 import { Badge } from '@/components/ui/badge'
 import { usePrivacyStore } from '@/stores/usePrivacyStore'
+import { GhostEmojiIcon } from '@/components/GhostEmojiIcon'
 import {
   Tooltip,
   TooltipContent,
@@ -267,106 +267,125 @@ export default function ProfileViews() {
           </CardContent>
         </Card>
 
-        {/* Global Counter & Invisible Mode Toggle */}
-        <div className="flex items-center justify-between bg-secondary/30 rounded-2xl p-4 border border-border/50">
-          <div className="flex items-start gap-4">
-            <div className="flex flex-col items-center gap-3">
-              <div className="p-3 bg-primary/10 rounded-xl relative group cursor-default">
-                <div className="absolute inset-0 bg-primary/20 blur-md rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                <Eye className="w-6 h-6 text-primary relative z-10" />
-              </div>
-
-              <TooltipProvider delayDuration={200}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="inline-block relative">
-                      {isPremium ? (
-                        <button
-                          onClick={() => toggleInvisibleMode(!isInvisibleMode)}
-                          className={cn(
-                            'p-2.5 rounded-full transition-all duration-300 active:scale-95 ring-2 ring-transparent relative group flex items-center justify-center',
-                            isInvisibleMode
-                              ? 'bg-gold/15 text-gold shadow-[0_0_20px_hsl(var(--gold)/0.4)] ring-gold/40 hover:bg-gold/20 hover:scale-110'
-                              : 'bg-muted/60 text-muted-foreground hover:bg-primary/10 hover:text-primary hover:scale-110 hover:shadow-md',
-                          )}
-                          aria-label="Toggle Invisible Mode"
-                        >
-                          <Ghost
-                            className={cn(
-                              'w-5 h-5 transition-transform duration-300',
-                              isInvisibleMode
-                                ? 'animate-[pulse_2s_ease-in-out_infinite] drop-shadow-md scale-105'
-                                : 'group-hover:-translate-y-0.5 group-hover:rotate-6',
-                            )}
-                          />
-                        </button>
-                      ) : (
-                        <PaymentDialog
-                          title="Desbloquear Modo Invisível"
-                          price={19.9}
-                          pointsPrice={1000}
-                          onSuccess={() => {
-                            upgradeToPremium()
-                            toggleInvisibleMode(true)
-                          }}
-                        >
-                          <button
-                            className="p-2.5 rounded-full bg-muted/60 text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all duration-300 hover:scale-110 hover:shadow-md active:scale-95 relative group flex items-center justify-center outline-none"
-                            aria-label="Unlock Invisible Mode"
-                          >
-                            <Ghost className="w-5 h-5 opacity-70 group-hover:-translate-y-0.5 group-hover:rotate-6 transition-all duration-300" />
-                            <div className="absolute -bottom-1 -right-1 bg-background rounded-full p-0.5 shadow-sm border border-border group-hover:border-gold/50 transition-colors z-10">
-                              <Crown className="w-3 h-3 text-gold fill-gold" />
-                            </div>
-                          </button>
-                        </PaymentDialog>
-                      )}
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent
-                    side="right"
-                    sideOffset={15}
-                    className="text-xs font-bold border-border/50 bg-background/95 backdrop-blur-md text-foreground shadow-xl rounded-lg py-2 px-3 flex items-center gap-2"
-                  >
-                    {isInvisibleMode ? (
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-gold shadow-[0_0_5px_hsl(var(--gold))]"></span>
-                      </span>
-                    ) : (
-                      <span className="relative flex h-2 w-2 rounded-full bg-muted-foreground/50"></span>
-                    )}
-                    <span>
-                      {isInvisibleMode
-                        ? 'Modo Invisível: Ativado'
-                        : 'Modo Invisível: Desativado'}
-                    </span>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-
-            <div className="flex flex-col pt-1">
+        {/* Global Counter & Metrics Action Bar */}
+        <div className="flex flex-col gap-4 bg-secondary/30 rounded-2xl p-5 border border-border/50 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col">
               <p className="text-sm text-muted-foreground font-medium">
                 Total de Visitas
               </p>
-              <h2 className="text-2xl font-black text-foreground">
+              <h2 className="text-3xl font-black text-foreground">
                 {totalViews}
               </h2>
             </div>
-          </div>
-          <div className="flex flex-col items-end gap-2">
-            <div className="bg-background px-3 py-1.5 rounded-full text-xs font-bold border border-border/50 shadow-sm flex items-center gap-1.5">
-              <span className="text-primary">+{viewsThisWeek}</span> semana
+            <div className="flex flex-col items-end gap-2">
+              <div className="bg-background px-3 py-1.5 rounded-full text-xs font-bold border border-border/50 shadow-sm flex items-center gap-1.5">
+                <span className="text-primary">+{viewsThisWeek}</span> semana
+              </div>
+              {isInvisibleMode && (
+                <Badge
+                  variant="outline"
+                  className="text-[9px] text-gold border-gold/30 bg-gold/5 shadow-[0_0_10px_hsl(var(--gold)/0.1)] uppercase tracking-widest px-1.5 py-0"
+                >
+                  Invisível
+                </Badge>
+              )}
             </div>
-            {isInvisibleMode && (
-              <Badge
-                variant="outline"
-                className="text-[9px] text-gold border-gold/30 bg-gold/5 shadow-[0_0_10px_hsl(var(--gold)/0.1)] uppercase tracking-widest px-1.5 py-0"
-              >
-                Invisível
-              </Badge>
-            )}
+          </div>
+
+          <div className="h-px w-full bg-border/50 my-1" />
+
+          {/* Action Icons Horizontal Layout */}
+          <div className="flex items-center justify-center gap-6">
+            <TooltipProvider delayDuration={200}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="w-12 h-12 rounded-full bg-background/80 border border-border/50 shadow-sm flex items-center justify-center cursor-default hover:bg-secondary/80 transition-colors group">
+                    <Eye className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="font-medium text-xs">
+                  <p>Visualizações do Perfil</p>
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  {isPremium ? (
+                    <button
+                      onClick={() => toggleInvisibleMode(!isInvisibleMode)}
+                      className={cn(
+                        'w-12 h-12 rounded-full backdrop-blur-md border flex items-center justify-center transition-all duration-300 active:scale-95 group shadow-sm',
+                        isInvisibleMode
+                          ? 'bg-gold/10 border-gold/50 shadow-[0_0_15px_hsl(var(--gold)/0.3)]'
+                          : 'bg-background/80 border-border/50 hover:bg-secondary/80',
+                      )}
+                      aria-label="Toggle Invisible Mode"
+                    >
+                      <GhostEmojiIcon
+                        active={isInvisibleMode}
+                        className={cn(
+                          'w-5 h-5 transition-all duration-300',
+                          isInvisibleMode
+                            ? 'text-gold drop-shadow-[0_0_8px_hsl(var(--gold)/0.6)] scale-110'
+                            : 'text-primary opacity-90 group-hover:scale-110 group-hover:opacity-100',
+                        )}
+                      />
+                    </button>
+                  ) : (
+                    <PaymentDialog
+                      title="Desbloquear Modo Invisível"
+                      price={19.9}
+                      pointsPrice={1000}
+                      onSuccess={() => {
+                        upgradeToPremium()
+                        toggleInvisibleMode(true)
+                      }}
+                    >
+                      <button
+                        className="w-12 h-12 rounded-full bg-background/80 border border-border/50 hover:bg-secondary/80 flex items-center justify-center transition-all duration-300 group relative outline-none shadow-sm"
+                        aria-label="Unlock Invisible Mode"
+                      >
+                        <GhostEmojiIcon className="w-5 h-5 text-primary opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all duration-300" />
+                        <div className="absolute -bottom-1 -right-1 bg-background rounded-full p-0.5 shadow-sm border border-border group-hover:border-gold/50 transition-colors z-10">
+                          <Crown className="w-3 h-3 text-gold fill-gold" />
+                        </div>
+                      </button>
+                    </PaymentDialog>
+                  )}
+                </TooltipTrigger>
+                <TooltipContent
+                  side="bottom"
+                  sideOffset={8}
+                  className="text-xs font-bold border-border/50 bg-background/95 backdrop-blur-md text-foreground shadow-xl rounded-lg py-2 px-3 flex items-center gap-2"
+                >
+                  {isInvisibleMode ? (
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-gold shadow-[0_0_5px_hsl(var(--gold))]"></span>
+                    </span>
+                  ) : (
+                    <span className="relative flex h-2 w-2 rounded-full bg-muted-foreground/50"></span>
+                  )}
+                  <span>
+                    {isInvisibleMode
+                      ? 'Modo Invisível: Ativado'
+                      : 'Modo Invisível: Desativado'}
+                  </span>
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="w-12 h-12 rounded-full bg-background/80 border border-border/50 shadow-sm flex items-center justify-center cursor-default hover:bg-secondary/80 transition-colors group">
+                    <Radio className="w-5 h-5 text-red-500 animate-pulse group-hover:scale-110 transition-transform" />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="font-medium text-xs">
+                  <p>Status: Ao Vivo</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
 
