@@ -35,7 +35,6 @@ import {
   Calendar,
   Clock,
   Lock,
-  Ghost,
   Crown,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
@@ -63,6 +62,7 @@ import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 import { useReplayStore } from '@/stores/useReplayStore'
 import { usePrivacyStore } from '@/stores/usePrivacyStore'
 import { PaymentDialog } from '@/components/PaymentDialog'
+import { GhostEmojiIcon } from '@/components/GhostEmojiIcon'
 import {
   Tooltip,
   TooltipContent,
@@ -485,13 +485,14 @@ export default function AthleteView({
                                 'p-2 rounded-full transition-all duration-300 active:scale-95 ring-2 relative group flex items-center justify-center',
                                 isInvisibleMode
                                   ? 'bg-gold/15 text-gold shadow-[0_0_15px_hsl(var(--gold)/0.5)] ring-gold/40 hover:bg-gold/25 hover:scale-110'
-                                  : 'bg-primary/10 text-primary shadow-sm ring-transparent hover:bg-primary/20 hover:scale-110 border border-primary/20',
+                                  : 'bg-primary/5 text-primary shadow-sm ring-transparent hover:bg-primary/10 hover:scale-110 border border-primary/20',
                               )}
                               aria-label="Toggle Invisible Mode"
                             >
-                              <Ghost
+                              <GhostEmojiIcon
+                                active={isInvisibleMode}
                                 className={cn(
-                                  'w-4 h-4 transition-transform duration-300',
+                                  'w-5 h-5 transition-transform duration-300',
                                   isInvisibleMode
                                     ? 'animate-[pulse_2s_ease-in-out_infinite] drop-shadow-[0_0_5px_hsl(var(--gold))] scale-105'
                                     : 'group-hover:-translate-y-0.5 group-hover:rotate-6',
@@ -512,7 +513,7 @@ export default function AthleteView({
                                 className="p-2 rounded-full bg-primary/5 text-primary/60 hover:bg-primary/10 hover:text-primary transition-all duration-300 hover:scale-110 hover:shadow-sm active:scale-95 relative group flex items-center justify-center border border-primary/10 outline-none"
                                 aria-label="Unlock Invisible Mode"
                               >
-                                <Ghost className="w-4 h-4 opacity-70 group-hover:-translate-y-0.5 group-hover:rotate-6 transition-all duration-300" />
+                                <GhostEmojiIcon className="w-5 h-5 opacity-70 group-hover:-translate-y-0.5 group-hover:rotate-6 transition-all duration-300" />
                                 <div className="absolute -bottom-1 -right-1 bg-background rounded-full p-0.5 shadow-sm border border-border group-hover:border-gold/50 transition-colors z-10">
                                   <Crown className="w-2.5 h-2.5 text-gold fill-gold" />
                                 </div>
@@ -565,7 +566,8 @@ export default function AthleteView({
                       variant="outline"
                       className="mt-2 text-[10px] bg-gold/10 text-gold border-gold/30 px-1.5 py-0 shadow-sm"
                     >
-                      <Ghost className="w-3 h-3 mr-1" /> Navegação Oculta
+                      <GhostEmojiIcon active className="w-3 h-3 mr-1" />{' '}
+                      Navegação Oculta
                     </Badge>
                   )}
                 </div>

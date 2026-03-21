@@ -10,7 +10,6 @@ import { CartProvider } from '@/stores/useCartStore'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import Index from './pages/Index'
 import { useThemeStore } from '@/stores/useThemeStore'
-import { InvisibleModeIndicator } from '@/components/InvisibleModeIndicator'
 
 // Lazy load pages
 const Login = lazy(() => import('./pages/auth/Login'))
@@ -197,7 +196,6 @@ const App = () => {
       <HashRouter
         future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
       >
-        <InvisibleModeIndicator />
         <TooltipProvider>
           <Toaster />
           <Sonner />

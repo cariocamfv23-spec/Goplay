@@ -300,7 +300,7 @@ export default function ProfileViews() {
             <TooltipProvider delayDuration={200}>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className="w-12 h-12 rounded-full bg-background/80 border border-border/50 shadow-sm flex items-center justify-center cursor-default hover:bg-secondary/80 transition-colors group">
+                  <div className="w-12 h-12 rounded-full bg-primary/5 border border-primary/20 shadow-sm flex items-center justify-center cursor-default hover:bg-primary/10 transition-colors group">
                     <Eye className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
                   </div>
                 </TooltipTrigger>
@@ -317,8 +317,8 @@ export default function ProfileViews() {
                       className={cn(
                         'w-12 h-12 rounded-full backdrop-blur-md border flex items-center justify-center transition-all duration-300 active:scale-95 group shadow-sm',
                         isInvisibleMode
-                          ? 'bg-gold/10 border-gold/50 shadow-[0_0_15px_hsl(var(--gold)/0.3)]'
-                          : 'bg-background/80 border-border/50 hover:bg-secondary/80',
+                          ? 'bg-gold/10 border-gold/50 shadow-[0_0_15px_hsl(var(--gold)/0.3)] text-gold'
+                          : 'bg-primary/5 border-primary/20 hover:bg-primary/10 text-primary',
                       )}
                       aria-label="Toggle Invisible Mode"
                     >
@@ -327,8 +327,8 @@ export default function ProfileViews() {
                         className={cn(
                           'w-5 h-5 transition-all duration-300',
                           isInvisibleMode
-                            ? 'text-gold drop-shadow-[0_0_8px_hsl(var(--gold)/0.6)] scale-110'
-                            : 'text-primary opacity-90 group-hover:scale-110 group-hover:opacity-100',
+                            ? 'drop-shadow-[0_0_8px_hsl(var(--gold)/0.6)] scale-110'
+                            : 'opacity-90 group-hover:scale-110 group-hover:opacity-100',
                         )}
                       />
                     </button>
@@ -343,7 +343,7 @@ export default function ProfileViews() {
                       }}
                     >
                       <button
-                        className="w-12 h-12 rounded-full bg-background/80 border border-border/50 hover:bg-secondary/80 flex items-center justify-center transition-all duration-300 group relative outline-none shadow-sm"
+                        className="w-12 h-12 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 flex items-center justify-center transition-all duration-300 group relative outline-none shadow-sm"
                         aria-label="Unlock Invisible Mode"
                       >
                         <GhostEmojiIcon className="w-5 h-5 text-primary opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all duration-300" />
@@ -377,7 +377,7 @@ export default function ProfileViews() {
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className="w-12 h-12 rounded-full bg-background/80 border border-border/50 shadow-sm flex items-center justify-center cursor-default hover:bg-secondary/80 transition-colors group">
+                  <div className="w-12 h-12 rounded-full bg-red-500/5 border border-red-500/20 shadow-sm flex items-center justify-center cursor-default hover:bg-red-500/10 transition-colors group">
                     <Radio className="w-5 h-5 text-red-500 animate-pulse group-hover:scale-110 transition-transform" />
                   </div>
                 </TooltipTrigger>
