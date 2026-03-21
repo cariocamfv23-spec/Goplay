@@ -19,6 +19,7 @@ import {
   Swords,
   Map,
   Lock,
+  Eye,
 } from 'lucide-react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -44,6 +45,8 @@ import { useNostalgiaStore, NostalgiaPreset } from '@/stores/useNostalgiaStore'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
+import { Switch } from '@/components/ui/switch'
+import { usePrivacyStore } from '@/stores/usePrivacyStore'
 
 export function TopBar() {
   const navigate = useNavigate()
@@ -51,6 +54,7 @@ export function TopBar() {
   const { setTheme, theme } = useTheme()
   const { color, setColor } = useThemeStore()
   const { isEnabled, toggle, preset, setPreset } = useNostalgiaStore()
+  const { isPreviewLocked, setIsPreviewLocked } = usePrivacyStore()
 
   const isMarket = location.pathname.includes('/marketplace')
   const isMove = location.pathname === '/move'
@@ -336,6 +340,38 @@ export function TopBar() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+
+            {/* Profile Views Entry with Admin Toggle */}
+            <DropdownMenuItem
+              onSelect={(e) => {
+                const target = e.originalEvent.target as HTMLElement
+                if (target.closest('.admin-switch-container')) {
+                  e.preventDefault()
+                } else {
+                  navigate('/profile/views')
+                }
+              }}
+              className="justify-between group cursor-pointer"
+            >
+              <div className="flex items-center">
+                <Eye className="mr-2 h-4 w-4" />
+                <span>Views do Perfil</span>
+              </div>
+              <div
+                className="admin-switch-container flex items-center gap-1.5"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+                  Admin
+                </span>
+                <Switch
+                  checked={isPreviewLocked}
+                  onCheckedChange={setIsPreviewLocked}
+                  className="scale-[0.65] origin-right data-[state=checked]:bg-gold"
+                />
+              </div>
+            </DropdownMenuItem>
+
             <DropdownMenuItem onClick={() => navigate('/profile/me')}>
               <User className="mr-2 h-4 w-4" />
               <span>Meu Perfil</span>

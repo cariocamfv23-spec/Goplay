@@ -18,7 +18,6 @@ import { PaymentDialog } from '@/components/PaymentDialog'
 import { cn } from '@/lib/utils'
 import { AppIcon } from '@/components/AppIcon'
 import { Badge } from '@/components/ui/badge'
-import { Switch } from '@/components/ui/switch'
 import { usePrivacyStore } from '@/stores/usePrivacyStore'
 import { GhostEmojiIcon } from '@/components/GhostEmojiIcon'
 import {
@@ -136,20 +135,18 @@ const chartConfig = {
 export default function ProfileViews() {
   const navigate = useNavigate()
 
-  const { isInvisibleMode, isPremium, toggleInvisibleMode, upgradeToPremium } =
-    usePrivacyStore()
+  const {
+    isInvisibleMode,
+    isPremium,
+    toggleInvisibleMode,
+    upgradeToPremium,
+    isPreviewLocked,
+  } = usePrivacyStore()
 
   // Real-time Simulation State
   const [liveViewers, setLiveViewers] = useState([LIVE_POOL[0], LIVE_POOL[1]])
   const [pastViewers, setPastViewers] = useState(INITIAL_PAST)
   const [totalViews, setTotalViews] = useState(142)
-
-  // Admin Toggle State for Paywall Preview
-  const [isPreviewLocked, setIsPreviewLocked] = useState(!isPremium)
-
-  useEffect(() => {
-    setIsPreviewLocked(!isPremium)
-  }, [isPremium])
 
   const viewsThisWeek = 28
   const totalVisitsToday = DAILY_ENGAGEMENT_DATA.reduce(
@@ -436,18 +433,6 @@ export default function ProfileViews() {
             </h3>
 
             <div className="flex items-center gap-3">
-              {/* Admin Toggle */}
-              <div className="flex items-center gap-2 bg-secondary/30 px-2.5 py-1 rounded-full border border-border/50">
-                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
-                  Admin: Lock
-                </span>
-                <Switch
-                  checked={isPreviewLocked}
-                  onCheckedChange={setIsPreviewLocked}
-                  className="scale-75 data-[state=checked]:bg-gold"
-                />
-              </div>
-
               <Badge
                 variant="outline"
                 className={cn(
@@ -486,7 +471,6 @@ export default function ProfileViews() {
                   pointsPrice={1500}
                   onSuccess={() => {
                     upgradeToPremium()
-                    setIsPreviewLocked(false)
                   }}
                 >
                   <Button className="bg-gradient-to-r from-gold to-yellow-600 hover:from-yellow-500 hover:to-gold text-black font-bold w-full max-w-[240px] shadow-[0_4px_15px_hsl(var(--gold)/0.3)] hover:shadow-[0_6px_20px_hsl(var(--gold)/0.4)] transition-all duration-300 border border-yellow-400/50 group">
