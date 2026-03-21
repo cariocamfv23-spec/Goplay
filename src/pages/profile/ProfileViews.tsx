@@ -8,6 +8,8 @@ import {
   Activity,
   Radio,
   MapPin,
+  BarChart3,
+  Lock,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -24,6 +26,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell } from 'recharts'
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart'
 
 // Mock Data Pools for Live Simulation
 const LIVE_POOL = [
@@ -101,6 +110,27 @@ const INITIAL_PAST = [
     date: 'Ontem',
   },
 ]
+
+const DAILY_ENGAGEMENT_DATA = [
+  { time: '00h', views: 18, isPeak: false },
+  { time: '04h', views: 12, isPeak: false },
+  { time: '08h', views: 45, isPeak: false },
+  { time: '12h', views: 85, isPeak: false },
+  { time: '16h', views: 124, isPeak: false },
+  { time: '20h', views: 210, isPeak: true }, // Horário de pico
+  { time: '23h', views: 65, isPeak: false },
+]
+
+const chartConfig = {
+  views: {
+    label: 'Visitas',
+    color: 'hsl(var(--primary))',
+  },
+  peak: {
+    label: 'Pico',
+    color: 'hsl(var(--gold))',
+  },
+} satisfies ChartConfig
 
 export default function ProfileViews() {
   const navigate = useNavigate()
@@ -387,6 +417,138 @@ export default function ProfileViews() {
               </Tooltip>
             </TooltipProvider>
           </div>
+        </div>
+
+        {/* Daily Engagement Chart (Premium) */}
+        <div className="animate-in slide-in-from-bottom-2 fade-in duration-500 delay-100">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-bold text-sm text-foreground uppercase tracking-wider flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-primary" />
+              Engajamento Diário
+            </h3>
+            {isUnlocked && (
+              <Badge
+                variant="outline"
+                className="text-[9px] text-gold border-gold/30 uppercase tracking-widest bg-gold/5 shadow-[0_0_10px_hsl(var(--gold)/0.1)]"
+              >
+                Premium
+              </Badge>
+            )}
+          </div>
+
+          <Card className="border border-border/50 bg-secondary/10 shadow-sm relative overflow-hidden">
+            <CardContent
+              className={cn(
+                'p-4 pt-6 transition-all duration-500',
+                !isUnlocked &&
+                  'blur-[4px] opacity-40 select-none pointer-events-none grayscale-[0.5]',
+              )}
+            >
+              <ChartContainer config={chartConfig} className="h-[180px] w-full">
+                <BarChart
+                  data={DAILY_ENGAGEMENT_DATA}
+                  margin={{ top: 0, right: 0, left: -25, bottom: 0 }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    stroke="hsl(var(--border))"
+                    opacity={0.4}
+                  />
+                  <XAxis
+                    dataKey="time"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={10}
+                    className="text-[10px] font-medium fill-muted-foreground"
+                  />
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={10}
+                    tickCount={4}
+                    className="text-[10px] font-medium fill-muted-foreground"
+                  />
+                  <ChartTooltip
+                    cursor={{ fill: 'hsl(var(--muted)/0.4)' }}
+                    content={
+                      <ChartTooltipContent
+                        hideLabel
+                        formatter={(value, _name, props) => {
+                          const isPeak = props.payload.isPeak
+                          return (
+                            <div className="flex items-center gap-2">
+                              <div
+                                className={cn(
+                                  'w-2 h-2 rounded-full',
+                                  isPeak
+                                    ? 'bg-gold shadow-[0_0_5px_hsl(var(--gold))]'
+                                    : 'bg-primary',
+                                )}
+                              />
+                              <span className="font-medium text-foreground">
+                                {value} visitas
+                              </span>
+                              {isPeak && (
+                                <span className="text-[10px] text-gold font-bold uppercase ml-1">
+                                  Pico
+                                </span>
+                              )}
+                            </div>
+                          )
+                        }}
+                      />
+                    }
+                  />
+                  <Bar dataKey="views" radius={[4, 4, 0, 0]} maxBarSize={40}>
+                    {DAILY_ENGAGEMENT_DATA.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={
+                          entry.isPeak
+                            ? 'hsl(var(--gold))'
+                            : 'hsl(var(--primary))'
+                        }
+                        className={cn(
+                          'transition-all duration-300',
+                          entry.isPeak &&
+                            'drop-shadow-[0_-2px_8px_hsl(var(--gold)/0.4)]',
+                        )}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ChartContainer>
+            </CardContent>
+
+            {!isUnlocked && (
+              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-background/50 backdrop-blur-[2px]">
+                <div className="w-12 h-12 bg-background rounded-full flex items-center justify-center mb-3 shadow-lg border border-border/50">
+                  <Lock className="w-5 h-5 text-muted-foreground" />
+                </div>
+                <p className="text-sm font-bold text-foreground mb-1">
+                  Gráfico de Engajamento
+                </p>
+                <p className="text-xs text-muted-foreground max-w-[200px] text-center mb-4">
+                  Descubra os horários de pico e otimize sua visibilidade.
+                </p>
+                <PaymentDialog
+                  title="Desbloquear Radar & Views"
+                  price={9.9}
+                  pointsPrice={500}
+                  onSuccess={() => setIsUnlocked(true)}
+                >
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 text-xs border-primary/50 text-primary hover:bg-primary/10"
+                  >
+                    Desbloquear com Premium
+                  </Button>
+                </PaymentDialog>
+              </div>
+            )}
+          </Card>
         </div>
 
         {/* Dynamic Lists Area */}
