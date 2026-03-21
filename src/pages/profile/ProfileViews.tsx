@@ -9,6 +9,7 @@ import {
   Radio,
   MapPin,
   BarChart3,
+  Lock,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -17,6 +18,7 @@ import { PaymentDialog } from '@/components/PaymentDialog'
 import { cn } from '@/lib/utils'
 import { AppIcon } from '@/components/AppIcon'
 import { Badge } from '@/components/ui/badge'
+import { Switch } from '@/components/ui/switch'
 import { usePrivacyStore } from '@/stores/usePrivacyStore'
 import { GhostEmojiIcon } from '@/components/GhostEmojiIcon'
 import {
@@ -141,6 +143,13 @@ export default function ProfileViews() {
   const [liveViewers, setLiveViewers] = useState([LIVE_POOL[0], LIVE_POOL[1]])
   const [pastViewers, setPastViewers] = useState(INITIAL_PAST)
   const [totalViews, setTotalViews] = useState(142)
+
+  // Admin Toggle State for Paywall Preview
+  const [isPreviewLocked, setIsPreviewLocked] = useState(!isPremium)
+
+  useEffect(() => {
+    setIsPreviewLocked(!isPremium)
+  }, [isPremium])
 
   const viewsThisWeek = 28
   const totalVisitsToday = DAILY_ENGAGEMENT_DATA.reduce(
@@ -418,23 +427,84 @@ export default function ProfileViews() {
           </div>
         </div>
 
-        {/* Daily Engagement Dashboard (Fully Unlocked) */}
+        {/* Daily Engagement Dashboard */}
         <div className="animate-in slide-in-from-bottom-2 fade-in duration-500 delay-100">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-bold text-sm text-foreground uppercase tracking-wider flex items-center gap-2">
               <BarChart3 className="w-4 h-4 text-primary" />
               Engajamento Diário
             </h3>
-            <Badge
-              variant="outline"
-              className="text-[9px] text-gold border-gold/30 uppercase tracking-widest bg-gold/5 shadow-[0_0_10px_hsl(var(--gold)/0.1)]"
-            >
-              Premium
-            </Badge>
+
+            <div className="flex items-center gap-3">
+              {/* Admin Toggle */}
+              <div className="flex items-center gap-2 bg-secondary/30 px-2.5 py-1 rounded-full border border-border/50">
+                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+                  Admin: Lock
+                </span>
+                <Switch
+                  checked={isPreviewLocked}
+                  onCheckedChange={setIsPreviewLocked}
+                  className="scale-75 data-[state=checked]:bg-gold"
+                />
+              </div>
+
+              <Badge
+                variant="outline"
+                className={cn(
+                  'text-[9px] uppercase tracking-widest',
+                  !isPreviewLocked
+                    ? 'text-gold border-gold/30 bg-gold/5 shadow-[0_0_10px_hsl(var(--gold)/0.1)]'
+                    : 'text-muted-foreground border-border/50 bg-secondary/50',
+                )}
+              >
+                {!isPreviewLocked ? 'Premium' : 'Básico'}
+              </Badge>
+            </div>
           </div>
 
-          <Card className="border border-border/50 bg-secondary/10 shadow-sm relative overflow-hidden">
-            <CardContent className="p-4 pt-6 transition-all duration-500">
+          <Card className="border border-border/50 bg-secondary/10 shadow-sm relative overflow-hidden group/chart-card">
+            {/* Locked State Overlay */}
+            {isPreviewLocked && (
+              <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-background/70 backdrop-blur-[6px] p-6 text-center animate-in fade-in zoom-in-95 duration-300">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-gold/20 to-primary/20 flex items-center justify-center mb-4 border border-gold/30 shadow-[0_0_20px_hsl(var(--gold)/0.15)] relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gold/20 animate-pulse blur-md" />
+                  <Lock className="w-8 h-8 text-gold drop-shadow-md relative z-10" />
+                </div>
+                <h4 className="text-xl font-black text-foreground mb-2 drop-shadow-sm flex items-center gap-2">
+                  Métricas Premium{' '}
+                  <Crown className="w-5 h-5 text-gold fill-gold" />
+                </h4>
+                <p className="text-sm text-muted-foreground mb-6 max-w-[280px] leading-relaxed">
+                  Desbloqueie o gráfico de engajamento diário, identifique
+                  horários de pico e saiba exatamente como maximizar seu
+                  alcance.
+                </p>
+
+                <PaymentDialog
+                  title="Métricas de Engajamento Premium"
+                  price={29.9}
+                  pointsPrice={1500}
+                  onSuccess={() => {
+                    upgradeToPremium()
+                    setIsPreviewLocked(false)
+                  }}
+                >
+                  <Button className="bg-gradient-to-r from-gold to-yellow-600 hover:from-yellow-500 hover:to-gold text-black font-bold w-full max-w-[240px] shadow-[0_4px_15px_hsl(var(--gold)/0.3)] hover:shadow-[0_6px_20px_hsl(var(--gold)/0.4)] transition-all duration-300 border border-yellow-400/50 group">
+                    <Lock className="w-4 h-4 mr-2 group-hover:hidden" />
+                    <Crown className="w-4 h-4 mr-2 hidden group-hover:block text-black fill-black" />
+                    Desbloquear R$ 29,90
+                  </Button>
+                </PaymentDialog>
+              </div>
+            )}
+
+            <CardContent
+              className={cn(
+                'p-4 pt-6 transition-all duration-500',
+                isPreviewLocked &&
+                  'opacity-30 grayscale-[0.8] blur-[4px] pointer-events-none select-none',
+              )}
+            >
               {/* Detailed Statistics Section */}
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="flex flex-col bg-secondary/20 p-3 rounded-xl border border-border/50 shadow-sm relative overflow-hidden">
