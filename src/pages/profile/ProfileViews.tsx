@@ -271,28 +271,32 @@ export default function ProfileViews() {
         <div className="flex items-center justify-between bg-secondary/30 rounded-2xl p-4 border border-border/50">
           <div className="flex items-start gap-4">
             <div className="flex flex-col items-center gap-3">
-              <div className="p-3 bg-primary/10 rounded-xl">
-                <Eye className="w-6 h-6 text-primary" />
+              <div className="p-3 bg-primary/10 rounded-xl relative group cursor-default">
+                <div className="absolute inset-0 bg-primary/20 blur-md rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Eye className="w-6 h-6 text-primary relative z-10" />
               </div>
 
-              <TooltipProvider delayDuration={300}>
+              <TooltipProvider delayDuration={200}>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="inline-block">
+                    <div className="inline-block relative">
                       {isPremium ? (
                         <button
                           onClick={() => toggleInvisibleMode(!isInvisibleMode)}
                           className={cn(
-                            'p-2 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 ring-2 ring-transparent relative group',
+                            'p-2.5 rounded-full transition-all duration-300 active:scale-95 ring-2 ring-transparent relative group flex items-center justify-center',
                             isInvisibleMode
-                              ? 'bg-gold/10 text-gold shadow-[0_0_15px_hsl(var(--gold)/0.4)] ring-gold/30'
-                              : 'bg-muted/50 text-muted-foreground hover:bg-muted/80',
+                              ? 'bg-gold/15 text-gold shadow-[0_0_20px_hsl(var(--gold)/0.4)] ring-gold/40 hover:bg-gold/20 hover:scale-110'
+                              : 'bg-muted/60 text-muted-foreground hover:bg-primary/10 hover:text-primary hover:scale-110 hover:shadow-md',
                           )}
+                          aria-label="Toggle Invisible Mode"
                         >
                           <Ghost
                             className={cn(
-                              'w-5 h-5',
-                              isInvisibleMode && 'animate-pulse drop-shadow-md',
+                              'w-5 h-5 transition-transform duration-300',
+                              isInvisibleMode
+                                ? 'animate-[pulse_2s_ease-in-out_infinite] drop-shadow-md scale-105'
+                                : 'group-hover:-translate-y-0.5 group-hover:rotate-6',
                             )}
                           />
                         </button>
@@ -306,10 +310,13 @@ export default function ProfileViews() {
                             toggleInvisibleMode(true)
                           }}
                         >
-                          <button className="p-2 rounded-full bg-muted/50 text-muted-foreground hover:bg-muted/80 transition-all duration-300 hover:scale-110 active:scale-95 relative group outline-none">
-                            <Ghost className="w-5 h-5 opacity-70" />
-                            <div className="absolute -bottom-1 -right-1 bg-background rounded-full p-0.5 shadow-sm border border-border/50 group-hover:bg-gold/10 transition-colors">
-                              <Crown className="w-2.5 h-2.5 text-gold fill-gold" />
+                          <button
+                            className="p-2.5 rounded-full bg-muted/60 text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all duration-300 hover:scale-110 hover:shadow-md active:scale-95 relative group flex items-center justify-center outline-none"
+                            aria-label="Unlock Invisible Mode"
+                          >
+                            <Ghost className="w-5 h-5 opacity-70 group-hover:-translate-y-0.5 group-hover:rotate-6 transition-all duration-300" />
+                            <div className="absolute -bottom-1 -right-1 bg-background rounded-full p-0.5 shadow-sm border border-border group-hover:border-gold/50 transition-colors z-10">
+                              <Crown className="w-3 h-3 text-gold fill-gold" />
                             </div>
                           </button>
                         </PaymentDialog>
@@ -318,12 +325,22 @@ export default function ProfileViews() {
                   </TooltipTrigger>
                   <TooltipContent
                     side="right"
-                    sideOffset={10}
-                    className="text-xs font-bold border-border bg-background text-foreground shadow-xl"
+                    sideOffset={15}
+                    className="text-xs font-bold border-border/50 bg-background/95 backdrop-blur-md text-foreground shadow-xl rounded-lg py-2 px-3 flex items-center gap-2"
                   >
-                    {isInvisibleMode
-                      ? 'Modo Invisível Ativado'
-                      : 'Ativar Modo Invisível'}
+                    {isInvisibleMode ? (
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-gold shadow-[0_0_5px_hsl(var(--gold))]"></span>
+                      </span>
+                    ) : (
+                      <span className="relative flex h-2 w-2 rounded-full bg-muted-foreground/50"></span>
+                    )}
+                    <span>
+                      {isInvisibleMode
+                        ? 'Modo Invisível: Ativado'
+                        : 'Modo Invisível: Desativado'}
+                    </span>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
