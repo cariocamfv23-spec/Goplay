@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { WeatherCondition } from '@/lib/data'
+import useSoundStore from './useSoundStore'
 
 export interface WeatherAlert {
   id: string
@@ -86,10 +87,12 @@ export const useWeatherStore = create<WeatherState>()(
           },
         })),
 
-      addAlert: (alert) =>
+      addAlert: (alert) => {
         set((state) => ({
           activeAlerts: [alert, ...state.activeAlerts],
-        })),
+        }))
+        useSoundStore.getState().playTone('weather')
+      },
 
       dismissAlert: (id) =>
         set((state) => ({
@@ -99,18 +102,13 @@ export const useWeatherStore = create<WeatherState>()(
       clearAlerts: () => set({ activeAlerts: [] }),
 
       checkWeather: () => {
-        // Simulation of fetching weather alerts based on location
-        // In a real app, this would call an API
         const { preferences, activeAlerts } = get()
 
         if (!preferences.enabled) return
 
-        // Randomly select an alert scenario for demonstration
-        // Using a pseudo-random pick based on time to keep it stable-ish during short sessions or just random
         const randomAlert =
           SAMPLE_ALERTS[Math.floor(Math.random() * SAMPLE_ALERTS.length)]
 
-        // Check if user has preferences enabled for this type
         let shouldShow = true
         if (randomAlert.type === 'storm' && !preferences.storm)
           shouldShow = false
@@ -120,7 +118,6 @@ export const useWeatherStore = create<WeatherState>()(
           shouldShow = false
 
         if (shouldShow) {
-          // Avoid duplicate alerts of same type
           const hasExisting = activeAlerts.some(
             (a) => a.type === randomAlert.type && a.active,
           )
@@ -136,6 +133,7 @@ export const useWeatherStore = create<WeatherState>()(
               active: true,
             }
             set({ activeAlerts: [newAlert, ...activeAlerts] })
+            useSoundStore.getState().playTone('weather')
           }
         }
       },
@@ -144,10 +142,6 @@ export const useWeatherStore = create<WeatherState>()(
       name: 'goplay-weather-storage',
       partialize: (state) => ({
         preferences: state.preferences,
-        // We generally don't persist activeAlerts across sessions for "app launch" logic simulation,
-        // but for a real app we might. Here we simulate "fresh" alerts on launch by NOT persisting alerts,
-        // or we can persist and clear old ones.
-        // Let's NOT persist activeAlerts to force a new check/demo on reload.
         activeAlerts: [],
         currentLocation: state.currentLocation,
       }),

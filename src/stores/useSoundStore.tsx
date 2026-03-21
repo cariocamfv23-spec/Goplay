@@ -10,6 +10,7 @@ interface SoundSettings {
   volume: number
   silentInMatches: boolean
   activePack: SoundPack
+  notificationSoundsEnabled: boolean
 }
 
 interface SoundStore extends SoundSettings {
@@ -17,8 +18,11 @@ interface SoundStore extends SoundSettings {
   setVolume: (volume: number) => void
   setSilentInMatches: (enabled: boolean) => void
   setActivePack: (pack: SoundPack) => void
+  setNotificationSoundsEnabled: (enabled: boolean) => void
   playSound: (category: SoundCategory, context?: string) => void
   playNarration: (config: NarrationConfig) => void
+  playTone: (type: 'weather' | 'engagement' | 'system') => void
+  initAudio: () => void
   isPlayingNarration: boolean
 }
 
@@ -37,6 +41,14 @@ type SoundCategory =
   | 'notification_points'
   | 'notification_store'
 
+let audioCtx: AudioContext | null = null
+const getAudioCtx = () => {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)()
+  }
+  return audioCtx
+}
+
 const useSoundStore = create<SoundStore>()(
   persist(
     (set, get) => ({
@@ -44,12 +56,84 @@ const useSoundStore = create<SoundStore>()(
       volume: 0.8,
       silentInMatches: false,
       activePack: 'varzea',
+      notificationSoundsEnabled: true,
       isPlayingNarration: false,
 
       setMasterEnabled: (enabled) => set({ masterEnabled: enabled }),
       setVolume: (volume) => set({ volume }),
       setSilentInMatches: (enabled) => set({ silentInMatches: enabled }),
       setActivePack: (pack) => set({ activePack: pack }),
+      setNotificationSoundsEnabled: (enabled) =>
+        set({ notificationSoundsEnabled: enabled }),
+
+      initAudio: () => {
+        try {
+          const ctx = getAudioCtx()
+          if (ctx.state === 'suspended') {
+            ctx.resume().catch(() => {})
+          }
+        } catch (e) {
+          console.warn('AudioContext init error:', e)
+        }
+      },
+
+      playTone: (type) => {
+        const { masterEnabled, notificationSoundsEnabled, volume } = get()
+        if (!masterEnabled || !notificationSoundsEnabled) return
+
+        try {
+          const ctx = getAudioCtx()
+          if (ctx.state === 'suspended') {
+            ctx.resume().catch(() => {})
+          }
+
+          const t = ctx.currentTime
+
+          const playOsc = (
+            freq: number,
+            oscType: OscillatorType,
+            startTime: number,
+            duration: number,
+            vol = 0.5,
+          ) => {
+            const osc = ctx.createOscillator()
+            const gain = ctx.createGain()
+
+            osc.type = oscType
+            osc.frequency.setValueAtTime(freq, startTime)
+
+            osc.connect(gain)
+            gain.connect(ctx.destination)
+
+            const adjVol = vol * volume
+            gain.gain.setValueAtTime(0, startTime)
+            gain.gain.linearRampToValueAtTime(adjVol, startTime + 0.02)
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration)
+
+            osc.start(startTime)
+            osc.stop(startTime + duration)
+          }
+
+          if (type === 'engagement') {
+            // Subtle, professional "ping" or "chime" sound
+            playOsc(1046.5, 'sine', t, 0.6, 0.3)
+            playOsc(1318.51, 'sine', t + 0.05, 0.8, 0.2)
+          } else if (type === 'system') {
+            // Neutral informative sound
+            playOsc(880, 'triangle', t, 0.3, 0.2)
+            playOsc(880, 'triangle', t + 0.15, 0.3, 0.2)
+          } else if (type === 'weather') {
+            // Distinct, attention-grabbing alert sound for Civil Defense
+            for (let i = 0; i < 3; i++) {
+              const time = t + i * 0.3
+              playOsc(880, 'square', time, 0.15, 0.15)
+              playOsc(932.33, 'square', time + 0.15, 0.15, 0.15)
+            }
+          }
+        } catch (e) {
+          console.warn('AudioContext error:', e)
+        }
+      },
 
       playSound: (category, context) => {
         const { masterEnabled, volume } = get()

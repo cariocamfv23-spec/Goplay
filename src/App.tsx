@@ -10,6 +10,7 @@ import { CartProvider } from '@/stores/useCartStore'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import Index from './pages/Index'
 import { useThemeStore } from '@/stores/useThemeStore'
+import useSoundStore from '@/stores/useSoundStore'
 
 // Lazy load pages
 const Login = lazy(() => import('./pages/auth/Login'))
@@ -190,6 +191,18 @@ const App = () => {
       root.classList.add(`theme-${color}`)
     }
   }, [color])
+
+  useEffect(() => {
+    const handleInteraction = () => {
+      useSoundStore.getState().initAudio()
+    }
+    document.addEventListener('click', handleInteraction, { once: true })
+    document.addEventListener('touchstart', handleInteraction, { once: true })
+    return () => {
+      document.removeEventListener('click', handleInteraction)
+      document.removeEventListener('touchstart', handleInteraction)
+    }
+  }, [])
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>

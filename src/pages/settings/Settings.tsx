@@ -37,6 +37,7 @@ import { useDepthStore } from '@/stores/useDepthStore'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Slider } from '@/components/ui/slider'
+import useSoundStore from '@/stores/useSoundStore'
 
 export default function Settings() {
   const navigate = useNavigate()
@@ -58,6 +59,8 @@ export default function Settings() {
     toggle: toggleDepth,
     setIntensity: setDepthIntensity,
   } = useDepthStore()
+  const { notificationSoundsEnabled, setNotificationSoundsEnabled } =
+    useSoundStore()
 
   const nostalgiaPresets: {
     id: NostalgiaPreset
@@ -204,6 +207,32 @@ export default function Settings() {
                 ))}
               </div>
             )}
+          </div>
+        </div>
+
+        <Separator />
+
+        {/* Sound Settings */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-bold text-muted-foreground uppercase px-2 flex items-center gap-2">
+            Sons e Alertas
+          </h3>
+          <div className="px-2 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <Bell className="h-4 w-4 text-primary" />
+                  <Label className="text-base">Sons de Notificação</Label>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Alertas sonoros para mensagens e avisos.
+                </p>
+              </div>
+              <Switch
+                checked={notificationSoundsEnabled}
+                onCheckedChange={setNotificationSoundsEnabled}
+              />
+            </div>
           </div>
         </div>
 

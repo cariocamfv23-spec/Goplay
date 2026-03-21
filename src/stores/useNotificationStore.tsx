@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { Notification, mockNotificationsList } from '@/lib/data'
+import useSoundStore from './useSoundStore'
 
 interface NotificationState {
   notifications: Notification[]
@@ -26,6 +27,20 @@ const useNotificationStore = create<NotificationState>((set) => ({
         date: 'Hoje',
         read: false,
       }
+
+      if (data.type === 'weather') {
+        useSoundStore.getState().playTone('weather')
+      } else if (
+        data.type === 'system' ||
+        data.type === 'verification' ||
+        data.priority === 'critical' ||
+        data.priority === 'high'
+      ) {
+        useSoundStore.getState().playTone('system')
+      } else {
+        useSoundStore.getState().playTone('engagement')
+      }
+
       return {
         notifications: [newNotification, ...state.notifications],
         unreadCount: state.unreadCount + 1,
