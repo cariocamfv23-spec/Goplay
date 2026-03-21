@@ -9,7 +9,6 @@ import {
   Radio,
   MapPin,
   BarChart3,
-  Lock,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -134,7 +133,6 @@ const chartConfig = {
 
 export default function ProfileViews() {
   const navigate = useNavigate()
-  const [isUnlocked, setIsUnlocked] = useState(false)
 
   const { isInvisibleMode, isPremium, toggleInvisibleMode, upgradeToPremium } =
     usePrivacyStore()
@@ -145,6 +143,11 @@ export default function ProfileViews() {
   const [totalViews, setTotalViews] = useState(142)
 
   const viewsThisWeek = 28
+  const totalVisitsToday = DAILY_ENGAGEMENT_DATA.reduce(
+    (acc, curr) => acc + curr.views,
+    0,
+  )
+  const peakHour = DAILY_ENGAGEMENT_DATA.find((d) => d.isPeak)?.time || '20h'
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -208,7 +211,7 @@ export default function ProfileViews() {
       </div>
 
       <div className="p-4 space-y-6">
-        {/* Real-Time Live Radar (Premium Style) */}
+        {/* Real-Time Live Radar */}
         <Card className="border-none bg-gradient-to-b from-primary/10 via-background to-background overflow-hidden relative shadow-inner">
           <CardContent className="p-0 h-56 flex flex-col items-center justify-center relative">
             <div className="absolute top-4 left-4 z-20 flex items-center gap-2 bg-background/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-gold/30 shadow-[0_0_15px_hsl(var(--gold)/0.15)]">
@@ -246,8 +249,7 @@ export default function ProfileViews() {
               <AppIcon className="w-8 h-8 opacity-90 relative z-10" />
             </div>
 
-            {liveViewers.map((v, i) => {
-              const isBlurredRadar = !isUnlocked && i > 0
+            {liveViewers.map((v) => {
               const isVipRadar = ['Scout', 'Coach', 'Sponsor'].includes(v.type)
 
               return (
@@ -256,7 +258,7 @@ export default function ProfileViews() {
                   className="absolute z-20 animate-in zoom-in duration-500 fade-in cursor-pointer hover:scale-110 transition-transform"
                   style={v.pos}
                   onClick={() => {
-                    if (!isBlurredRadar) navigate(`/profile/${v.id}`)
+                    navigate(`/profile/${v.id}`)
                   }}
                 >
                   <div className="relative group flex flex-col items-center">
@@ -266,12 +268,9 @@ export default function ProfileViews() {
                         isVipRadar
                           ? 'border-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.6)]'
                           : 'border-primary shadow-[0_0_15px_hsl(var(--primary)/0.4)]',
-                        isBlurredRadar && 'blur-[3px] grayscale opacity-70',
                       )}
                     >
-                      <AvatarImage
-                        src={isBlurredRadar ? undefined : v.avatar}
-                      />
+                      <AvatarImage src={v.avatar} />
                       <AvatarFallback>
                         <User className="w-5 h-5 text-muted-foreground" />
                       </AvatarFallback>
@@ -285,7 +284,7 @@ export default function ProfileViews() {
                       )}
                     />
 
-                    {isVipRadar && !isBlurredRadar && (
+                    {isVipRadar && (
                       <div className="absolute -top-2 bg-gradient-to-r from-purple-600 to-yellow-500 rounded-full p-0.5 shadow-md">
                         <Crown className="w-3 h-3 text-white fill-white" />
                       </div>
@@ -419,31 +418,49 @@ export default function ProfileViews() {
           </div>
         </div>
 
-        {/* Daily Engagement Chart (Premium) */}
+        {/* Daily Engagement Dashboard (Fully Unlocked) */}
         <div className="animate-in slide-in-from-bottom-2 fade-in duration-500 delay-100">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-bold text-sm text-foreground uppercase tracking-wider flex items-center gap-2">
               <BarChart3 className="w-4 h-4 text-primary" />
               Engajamento Diário
             </h3>
-            {isUnlocked && (
-              <Badge
-                variant="outline"
-                className="text-[9px] text-gold border-gold/30 uppercase tracking-widest bg-gold/5 shadow-[0_0_10px_hsl(var(--gold)/0.1)]"
-              >
-                Premium
-              </Badge>
-            )}
+            <Badge
+              variant="outline"
+              className="text-[9px] text-gold border-gold/30 uppercase tracking-widest bg-gold/5 shadow-[0_0_10px_hsl(var(--gold)/0.1)]"
+            >
+              Premium
+            </Badge>
           </div>
 
           <Card className="border border-border/50 bg-secondary/10 shadow-sm relative overflow-hidden">
-            <CardContent
-              className={cn(
-                'p-4 pt-6 transition-all duration-500',
-                !isUnlocked &&
-                  'blur-[4px] opacity-40 select-none pointer-events-none grayscale-[0.5]',
-              )}
-            >
+            <CardContent className="p-4 pt-6 transition-all duration-500">
+              {/* Detailed Statistics Section */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="flex flex-col bg-secondary/20 p-3 rounded-xl border border-border/50 shadow-sm relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
+                  <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mb-1">
+                    Total Visitas Hoje
+                  </span>
+                  <span className="text-2xl font-black text-foreground">
+                    {totalVisitsToday}
+                  </span>
+                </div>
+                <div className="flex flex-col bg-secondary/20 p-3 rounded-xl border border-border/50 shadow-sm relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-gold" />
+                  <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mb-1">
+                    Horário de Pico
+                  </span>
+                  <span className="text-2xl font-black text-gold">
+                    {peakHour.replace('h', ':00')}{' '}
+                    <span className="text-xs font-medium text-muted-foreground">
+                      - {(parseInt(peakHour) + 1).toString().padStart(2, '0')}
+                      :00
+                    </span>
+                  </span>
+                </div>
+              </div>
+
               <ChartContainer config={chartConfig} className="h-[180px] w-full">
                 <BarChart
                   data={DAILY_ENGAGEMENT_DATA}
@@ -520,42 +537,13 @@ export default function ProfileViews() {
                 </BarChart>
               </ChartContainer>
             </CardContent>
-
-            {!isUnlocked && (
-              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-background/50 backdrop-blur-[2px]">
-                <div className="w-12 h-12 bg-background rounded-full flex items-center justify-center mb-3 shadow-lg border border-border/50">
-                  <Lock className="w-5 h-5 text-muted-foreground" />
-                </div>
-                <p className="text-sm font-bold text-foreground mb-1">
-                  Gráfico de Engajamento
-                </p>
-                <p className="text-xs text-muted-foreground max-w-[200px] text-center mb-4">
-                  Descubra os horários de pico e otimize sua visibilidade.
-                </p>
-                <PaymentDialog
-                  title="Desbloquear Radar & Views"
-                  price={9.9}
-                  pointsPrice={500}
-                  onSuccess={() => setIsUnlocked(true)}
-                >
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-8 text-xs border-primary/50 text-primary hover:bg-primary/10"
-                  >
-                    Desbloquear com Premium
-                  </Button>
-                </PaymentDialog>
-              </div>
-            )}
           </Card>
         </div>
 
-        {/* Dynamic Lists Area */}
+        {/* Dynamic Lists Area (Fully Unlocked) */}
         <div className="relative pb-10">
           <div className="space-y-4">
             {allViewers.map((viewer, index) => {
-              const isBlurred = !isUnlocked && index > 0
               const isFirstLive = viewer.isLive && index === 0
               const isFirstPast = !viewer.isLive && index === liveViewers.length
               const isVip = ['Scout', 'Coach', 'Sponsor'].includes(viewer.type)
@@ -580,26 +568,22 @@ export default function ProfileViews() {
 
                   <Card
                     className={cn(
-                      'border-none shadow-sm transition-all relative overflow-hidden',
-                      isBlurred &&
-                        'blur-sm opacity-60 select-none pointer-events-none',
+                      'border-none shadow-sm transition-all relative overflow-hidden cursor-pointer hover:scale-[1.02]',
                       viewer.isLive &&
-                        !isBlurred &&
                         !isVip &&
                         'ring-1 ring-gold/30 bg-gradient-to-r from-primary/5 to-transparent shadow-[0_0_15px_hsl(var(--primary)/0.05)]',
                       isVip &&
-                        !isBlurred &&
-                        'ring-2 ring-purple-500/50 bg-gradient-to-r from-purple-500/10 to-gold/10 shadow-[0_0_20px_rgba(168,85,247,0.2)] cursor-pointer hover:scale-[1.02]',
+                        'ring-2 ring-purple-500/50 bg-gradient-to-r from-purple-500/10 to-gold/10 shadow-[0_0_20px_rgba(168,85,247,0.2)]',
                     )}
                     onClick={() => {
-                      if (isVip && !isBlurred) navigate(`/profile/${viewer.id}`)
+                      navigate(`/profile/${viewer.id}`)
                     }}
                   >
                     <CardContent className="p-4 flex items-center gap-4 relative z-10">
-                      {viewer.isLive && !isBlurred && !isVip && (
+                      {viewer.isLive && !isVip && (
                         <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
                       )}
-                      {isVip && !isBlurred && (
+                      {isVip && (
                         <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
                       )}
 
@@ -607,23 +591,21 @@ export default function ProfileViews() {
                         <Avatar
                           className={cn(
                             'h-12 w-12 border-2',
-                            viewer.isLive && !isBlurred && !isVip
+                            viewer.isLive && !isVip
                               ? 'border-primary shadow-[0_0_10px_hsl(var(--primary)/0.3)]'
                               : '',
-                            isVip && !isBlurred
+                            isVip
                               ? 'border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.4)]'
                               : '',
                             !viewer.isLive && !isVip ? 'border-border' : '',
                           )}
                         >
-                          <AvatarImage
-                            src={isBlurred ? undefined : viewer.avatar}
-                          />
+                          <AvatarImage src={viewer.avatar} />
                           <AvatarFallback>
                             <User className="h-6 w-6 text-muted-foreground" />
                           </AvatarFallback>
                         </Avatar>
-                        {viewer.isLive && !isBlurred && (
+                        {viewer.isLive && (
                           <div
                             className={cn(
                               'absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 border-2 border-background rounded-full animate-pulse',
@@ -638,8 +620,8 @@ export default function ProfileViews() {
                       <div className="flex-1 min-w-0 z-10">
                         <div className="flex justify-between items-start">
                           <p className="font-bold truncate flex items-center gap-1.5 text-foreground">
-                            {isBlurred ? 'Visitante Premium' : viewer.name}
-                            {isVip && !isBlurred && (
+                            {viewer.name}
+                            {isVip && (
                               <Badge
                                 variant="secondary"
                                 className="bg-gradient-to-r from-purple-600 to-yellow-600 text-white border-none text-[9px] px-1.5 py-0 uppercase tracking-widest gap-0.5 shadow-sm"
@@ -665,14 +647,14 @@ export default function ProfileViews() {
                           <p
                             className={cn(
                               'text-xs font-medium',
-                              isVip && !isBlurred
+                              isVip
                                 ? 'text-purple-600/80 dark:text-purple-400/80'
                                 : 'text-muted-foreground',
                             )}
                           >
-                            {isBlurred ? 'Perfil Oculto' : viewer.type}
+                            {viewer.type}
                           </p>
-                          {!isBlurred && !viewer.isLive && (
+                          {!viewer.isLive && (
                             <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary/40" />
                           )}
                         </div>
@@ -683,45 +665,6 @@ export default function ProfileViews() {
               )
             })}
           </div>
-
-          {!isUnlocked && (
-            <div className="absolute inset-x-0 bottom-0 top-32 bg-gradient-to-b from-transparent via-background/95 to-background flex flex-col items-center justify-end pb-8 pt-20 px-4 text-center z-10">
-              <div className="w-16 h-16 bg-gradient-to-br from-gold to-yellow-600 rounded-full flex items-center justify-center mb-4 shadow-lg animate-pulse ring-4 ring-gold/20">
-                <Crown className="w-8 h-8 text-white fill-white" />
-              </div>
-              <div className="flex items-center gap-2 mb-2">
-                <AppIcon className="w-5 h-5" />
-                <span className="font-bold text-primary tracking-tight">
-                  Goplay Premium
-                </span>
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-foreground">
-                Descubra quem está de olho
-              </h3>
-              <p className="text-muted-foreground text-sm mb-6 max-w-[280px] leading-relaxed">
-                Desbloqueie o Live Tracking e a lista completa para ver os
-                scouts, recrutadores e atletas que visitam seu perfil.
-              </p>
-
-              <PaymentDialog
-                title="Desbloquear Radar & Views"
-                price={9.9}
-                pointsPrice={500}
-                onSuccess={() => setIsUnlocked(true)}
-              >
-                <Button
-                  size="lg"
-                  className="w-full bg-gradient-to-r from-primary to-primary/90 hover:to-primary text-white font-bold h-12 rounded-xl shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95"
-                >
-                  Desbloquear Tudo
-                </Button>
-              </PaymentDialog>
-
-              <p className="text-xs text-muted-foreground mt-4 font-medium">
-                Ou use seus <span className="text-gold">Goplay Points</span>
-              </p>
-            </div>
-          )}
         </div>
       </div>
     </div>
