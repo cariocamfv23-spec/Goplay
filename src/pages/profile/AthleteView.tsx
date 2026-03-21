@@ -35,6 +35,8 @@ import {
   Calendar,
   Clock,
   Lock,
+  Ghost,
+  Crown,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
@@ -60,6 +62,13 @@ import { DepthContainer } from '@/components/DepthContainer'
 import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 import { useReplayStore } from '@/stores/useReplayStore'
 import { usePrivacyStore } from '@/stores/usePrivacyStore'
+import { PaymentDialog } from '@/components/PaymentDialog'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -83,7 +92,8 @@ export default function AthleteView({
 
   const { getTheme } = useRetrospectiveStore()
   const { replays } = useReplayStore()
-  const { isInvisibleMode } = usePrivacyStore()
+  const { isInvisibleMode, isPremium, toggleInvisibleMode, upgradeToPremium } =
+    usePrivacyStore()
   const currentTheme = getTheme()
   const auraConfig = getAuraConfig(user)
 
@@ -448,15 +458,93 @@ export default function AthleteView({
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl -mr-10 -mt-10 animate-pulse pointer-events-none" />
             <CardContent className="p-4 flex items-center justify-between relative z-10">
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <div className="absolute -inset-1 bg-primary/30 rounded-full animate-pulse shadow-[0_0_15px_hsl(var(--primary)/0.5)]" />
-                  <div className="bg-primary/20 p-2.5 rounded-full ring-2 ring-primary/30 relative z-10">
-                    <Eye className="h-5 w-5 text-primary" />
+              <div className="flex items-start gap-3">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="relative">
+                    <div className="absolute -inset-1 bg-primary/30 rounded-full animate-pulse shadow-[0_0_15px_hsl(var(--primary)/0.5)]" />
+                    <div className="bg-primary/20 p-2.5 rounded-full ring-2 ring-primary/30 relative z-10">
+                      <Eye className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-gold rounded-full border-2 border-background z-20 shadow-[0_0_8px_hsl(var(--gold)/0.8)]" />
                   </div>
-                  <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-gold rounded-full border-2 border-background z-20 shadow-[0_0_8px_hsl(var(--gold)/0.8)]" />
+
+                  {/* Invisible Mode Toggle */}
+                  <TooltipProvider delayDuration={200}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div
+                          className="inline-block relative z-20"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {isPremium ? (
+                            <button
+                              onClick={() =>
+                                toggleInvisibleMode(!isInvisibleMode)
+                              }
+                              className={cn(
+                                'p-2 rounded-full transition-all duration-300 active:scale-95 ring-2 relative group flex items-center justify-center',
+                                isInvisibleMode
+                                  ? 'bg-gold/15 text-gold shadow-[0_0_15px_hsl(var(--gold)/0.5)] ring-gold/40 hover:bg-gold/25 hover:scale-110'
+                                  : 'bg-primary/10 text-primary shadow-sm ring-transparent hover:bg-primary/20 hover:scale-110 border border-primary/20',
+                              )}
+                              aria-label="Toggle Invisible Mode"
+                            >
+                              <Ghost
+                                className={cn(
+                                  'w-4 h-4 transition-transform duration-300',
+                                  isInvisibleMode
+                                    ? 'animate-[pulse_2s_ease-in-out_infinite] drop-shadow-[0_0_5px_hsl(var(--gold))] scale-105'
+                                    : 'group-hover:-translate-y-0.5 group-hover:rotate-6',
+                                )}
+                              />
+                            </button>
+                          ) : (
+                            <PaymentDialog
+                              title="Desbloquear Modo Invisível"
+                              price={19.9}
+                              pointsPrice={1000}
+                              onSuccess={() => {
+                                upgradeToPremium()
+                                toggleInvisibleMode(true)
+                              }}
+                            >
+                              <button
+                                className="p-2 rounded-full bg-primary/5 text-primary/60 hover:bg-primary/10 hover:text-primary transition-all duration-300 hover:scale-110 hover:shadow-sm active:scale-95 relative group flex items-center justify-center border border-primary/10 outline-none"
+                                aria-label="Unlock Invisible Mode"
+                              >
+                                <Ghost className="w-4 h-4 opacity-70 group-hover:-translate-y-0.5 group-hover:rotate-6 transition-all duration-300" />
+                                <div className="absolute -bottom-1 -right-1 bg-background rounded-full p-0.5 shadow-sm border border-border group-hover:border-gold/50 transition-colors z-10">
+                                  <Crown className="w-2.5 h-2.5 text-gold fill-gold" />
+                                </div>
+                              </button>
+                            </PaymentDialog>
+                          )}
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        side="right"
+                        sideOffset={15}
+                        className="text-xs font-bold border-border/50 bg-background/95 backdrop-blur-md text-foreground shadow-xl rounded-lg py-2 px-3 flex items-center gap-2 z-[100]"
+                      >
+                        {isInvisibleMode ? (
+                          <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-gold shadow-[0_0_5px_hsl(var(--gold))]"></span>
+                          </span>
+                        ) : (
+                          <span className="relative flex h-2 w-2 rounded-full bg-muted-foreground/50"></span>
+                        )}
+                        <span>
+                          {isInvisibleMode
+                            ? 'Modo Invisível: Ativado'
+                            : 'Modo Invisível: Desativado'}
+                        </span>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
-                <div>
+
+                <div className="mt-1">
                   <p className="font-bold text-sm flex items-center gap-2">
                     Quem viu seu perfil
                     <div className="relative inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-primary/30 to-primary/10 border border-primary/30 shadow-[0_0_8px_hsl(var(--primary)/0.3)]">
@@ -469,11 +557,20 @@ export default function AthleteView({
                       </span>
                     </div>
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground mt-1">
                     142 visualizações
                   </p>
+                  {isInvisibleMode && (
+                    <Badge
+                      variant="outline"
+                      className="mt-2 text-[10px] bg-gold/10 text-gold border-gold/30 px-1.5 py-0 shadow-sm"
+                    >
+                      <Ghost className="w-3 h-3 mr-1" /> Navegação Oculta
+                    </Badge>
+                  )}
                 </div>
               </div>
+
               <div className="flex -space-x-2 pl-2">
                 {[1, 2].map((i) => (
                   <div key={i} className="relative">
