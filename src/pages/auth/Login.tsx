@@ -35,17 +35,11 @@ export default function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
-  const [isChecking, setIsChecking] = useState(true)
 
   // Redirect to home if already authenticated, preventing the display of the guest UI
   useEffect(() => {
-    if (hasHydrated) {
-      if (isAuthenticated) {
-        navigate('/home', { replace: true })
-      } else {
-        const timer = setTimeout(() => setIsChecking(false), 300)
-        return () => clearTimeout(timer)
-      }
+    if (hasHydrated && isAuthenticated) {
+      navigate('/home', { replace: true })
     }
   }, [hasHydrated, isAuthenticated, navigate])
 
@@ -115,8 +109,13 @@ export default function Login() {
     }, 2000)
   }
 
-  if (!hasHydrated || isChecking) {
+  if (!hasHydrated) {
     return <PageLoader />
+  }
+
+  // Prevent flashing the login page if the user is already authenticated
+  if (isAuthenticated) {
+    return null
   }
 
   return (

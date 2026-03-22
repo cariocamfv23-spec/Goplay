@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Logo } from '@/components/Logo'
 import { AppIcon } from '@/components/AppIcon'
 import { ArrowRight, Trophy, Users, Activity } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useInvisiblePresenceStore } from '@/stores/useInvisiblePresenceStore'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { PageLoader } from '@/components/PageLoader'
@@ -12,7 +12,6 @@ export default function Index() {
   const navigate = useNavigate()
   const { initializeSession } = useInvisiblePresenceStore()
   const { isAuthenticated, hasHydrated } = useAuthStore()
-  const [isChecking, setIsChecking] = useState(true)
 
   // Initialize invisible presence logic on landing page load
   useEffect(() => {
@@ -21,18 +20,18 @@ export default function Index() {
 
   // Session-Based Redirection with state validation
   useEffect(() => {
-    if (hasHydrated) {
-      if (isAuthenticated) {
-        navigate('/home', { replace: true })
-      } else {
-        const timer = setTimeout(() => setIsChecking(false), 300)
-        return () => clearTimeout(timer)
-      }
+    if (hasHydrated && isAuthenticated) {
+      navigate('/home', { replace: true })
     }
   }, [hasHydrated, isAuthenticated, navigate])
 
-  if (!hasHydrated || isChecking) {
+  if (!hasHydrated) {
     return <PageLoader />
+  }
+
+  // Prevent flashing the landing page if the user is already authenticated
+  if (isAuthenticated) {
+    return null
   }
 
   return (

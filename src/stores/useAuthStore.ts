@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, createJSONStorage } from 'zustand/middleware'
 
 interface AuthState {
   isAuthenticated: boolean
@@ -20,6 +20,9 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'goplay-auth-storage',
+      // Using sessionStorage strictly enforces session-based authentication
+      // preventing auto-login on new browser sessions/tabs to ensure the landing page is shown
+      storage: createJSONStorage(() => sessionStorage),
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true)
       },
