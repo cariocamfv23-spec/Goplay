@@ -56,9 +56,7 @@ export default function Login() {
     }
   }, [])
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-
+  const handleLogin = () => {
     if (!username.trim() || !password.trim()) {
       toast.error('Preencha todos os campos para continuar')
       return
@@ -153,7 +151,7 @@ export default function Login() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="username">Usuário</Label>
                 <div className="relative">
@@ -210,9 +208,10 @@ export default function Login() {
               </div>
 
               <Button
-                type="submit"
+                type="button"
                 className="w-full font-bold"
                 disabled={loading || !!socialLoading || biometricLoading}
+                onClick={handleLogin}
               >
                 {loading ? (
                   <>

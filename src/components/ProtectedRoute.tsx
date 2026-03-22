@@ -11,8 +11,8 @@ export function ProtectedRoute() {
   }
 
   if (!isAuthenticated) {
-    // Redirect unauthenticated users strictly to the opening screen
-    return <Navigate to="/" state={{ from: location }} replace />
+    // Redirect unauthenticated users strictly to the login screen
+    return <Navigate to="/login" state={{ from: location }} replace />
   }
 
   return <Outlet />
