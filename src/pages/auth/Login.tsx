@@ -23,9 +23,11 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { SportsWallpaper } from '@/components/SportsWallpaper'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 export default function Login() {
   const navigate = useNavigate()
+  const { login } = useAuthStore()
   const [loading, setLoading] = useState(false)
   const [socialLoading, setSocialLoading] = useState<string | null>(null)
   const [biometricLoading, setBiometricLoading] = useState(false)
@@ -63,6 +65,7 @@ export default function Login() {
           localStorage.removeItem('goplay_password')
           localStorage.removeItem('goplay_remember')
         }
+        login()
         toast.success('Login realizado com sucesso!')
         navigate('/home')
       } else {
@@ -75,6 +78,7 @@ export default function Login() {
     setSocialLoading(provider)
     setTimeout(() => {
       setSocialLoading(null)
+      login()
       toast.success(`Login com ${provider} realizado com sucesso!`)
       navigate('/home')
     }, 1500)
@@ -89,6 +93,7 @@ export default function Login() {
 
     setTimeout(() => {
       setBiometricLoading(false)
+      login()
       toast.success('Identidade confirmada', {
         description: 'Acesso seguro liberado via biometria.',
       })

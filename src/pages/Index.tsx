@@ -3,10 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { Logo } from '@/components/Logo'
 import { AppIcon } from '@/components/AppIcon'
 import { ArrowRight, Trophy, Users, Activity } from 'lucide-react'
-import { SportsWallpaper } from '@/components/SportsWallpaper'
 import { useEffect } from 'react'
 import { useInvisiblePresenceStore } from '@/stores/useInvisiblePresenceStore'
-import { InvisiblePresenceOverlay } from '@/components/InvisiblePresenceOverlay'
 
 export default function Index() {
   const navigate = useNavigate()
@@ -18,28 +16,10 @@ export default function Index() {
   }, [initializeSession])
 
   return (
-    <div className="min-h-screen flex flex-col bg-background relative overflow-hidden transition-colors duration-300">
-      {/* Invisible Presence Overlay - Overrides everything when active */}
-      <InvisiblePresenceOverlay />
-
-      {/* Background Layers */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-background z-10" />
-
-        {/* Global Pattern Application - Ensures visual consistency on Landing Page */}
-        {/* Rendered at z-[1] to sit between base bg and subtle gradient */}
-        <SportsWallpaper className="z-[1]" />
-
-        {/* Texture Overlay */}
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-5 grayscale mix-blend-overlay z-0"
-          style={{
-            backgroundImage:
-              "url('https://img.usecurling.com/p/1000/1000?q=stadium%20lights&color=black')",
-          }}
-        />
-
-        {/* Animated ambient blobs */}
+    <div className="flex flex-col h-full bg-transparent relative overflow-hidden transition-colors duration-300">
+      {/* Subtle additional background effects specifically for Index */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background/50 to-background/50 z-10" />
         <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-[hsl(var(--gold)/0.15)] rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:4000ms] z-10" />
         <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/15 rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:5000ms] z-10" />
       </div>

@@ -47,6 +47,7 @@ import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
 import { usePrivacyStore } from '@/stores/usePrivacyStore'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 export function TopBar() {
   const navigate = useNavigate()
@@ -55,12 +56,14 @@ export function TopBar() {
   const { color, setColor } = useThemeStore()
   const { isEnabled, toggle, preset, setPreset } = useNostalgiaStore()
   const { isPreviewLocked, setIsPreviewLocked } = usePrivacyStore()
+  const { logout } = useAuthStore()
 
   const isMarket = location.pathname.includes('/marketplace')
   const isMove = location.pathname === '/move'
 
-  // Pages where we don't show the back button (Main tabs)
+  // Pages where we don't show the back button (Main tabs and Landing Page)
   const showBack =
+    location.pathname !== '/' &&
     location.pathname !== '/home' &&
     location.pathname !== '/move' &&
     location.pathname !== '/explore' &&
@@ -87,6 +90,11 @@ export function TopBar() {
     })
   }
 
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
+
   return (
     <div
       className={cn(
@@ -108,7 +116,7 @@ export function TopBar() {
         )}
 
         <Link
-          to="/home"
+          to={location.pathname === '/' ? '/' : '/home'}
           className="flex items-center py-2 transition-opacity hover:opacity-80"
         >
           {/* Main Logo in TopBar has seasonal elements DISABLED to prevent leaking into internal UI */}
@@ -403,7 +411,7 @@ export function TopBar() {
               <span>Configurações</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate('/login')}>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Sair</span>
             </DropdownMenuItem>
