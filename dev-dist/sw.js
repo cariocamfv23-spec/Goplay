@@ -1,7 +1,7 @@
-const CACHE_NAME = 'goplay-pwa-cache-v1'
+const CACHE_NAME = 'goplay-pwa-cache-v2'
 
 // Essential assets to cache immediately
-const PRECACHE_ASSETS = ['/', '/index.html', '/manifest.json']
+const PRECACHE_ASSETS = ['/', '/index.html', '/manifest.json', '/favicon.svg']
 
 self.addEventListener('install', (event) => {
   // Force the waiting service worker to become the active service worker.

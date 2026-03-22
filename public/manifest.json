@@ -1,9 +1,9 @@
 {
-  "name": "Goplay App",
-  "short_name": "Goplay",
+  "name": "GoPlay",
+  "short_name": "GoPlay",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#09090b",
   "theme_color": "#6d28d9",
   "icons": [
     {
@@ -15,6 +15,12 @@
       "src": "/favicon.svg",
       "sizes": "512x512",
       "type": "image/svg+xml"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
     }
   ]
 }
