@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useInvisiblePresenceStore } from '@/stores/useInvisiblePresenceStore'
 import { InvisiblePresenceOverlay } from '@/components/InvisiblePresenceOverlay'
 import { useDepthStore } from '@/stores/useDepthStore'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 export default function Layout() {
   const location = useLocation()
@@ -22,6 +23,7 @@ export default function Layout() {
   const { isEnabled: isDepthEnabled, intensity: depthIntensity } =
     useDepthStore()
   const { initializeSession } = useInvisiblePresenceStore()
+  const { isAuthenticated } = useAuthStore()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [scrollY, setScrollY] = useState(0)
 
@@ -98,11 +100,15 @@ export default function Layout() {
     }
   }, [isEnabled, preset])
 
+  const isLandingPage = location.pathname === '/'
   const isMessageRoute =
     location.pathname.includes('/messages/') &&
     location.pathname !== '/messages'
 
   const isMoveRoute = location.pathname === '/move'
+
+  const showTopBar = isAuthenticated && !isLandingPage
+  const showBottomNav = isAuthenticated && !isLandingPage && !isMessageRoute
 
   return (
     <div className="h-screen w-full bg-background font-sans antialiased flex flex-col relative overflow-hidden transition-colors duration-500 perspective-2000">
@@ -132,11 +138,15 @@ export default function Layout() {
       </div>
 
       {/* Global Alert Managers */}
-      <RankingAlertManager />
-      <SmartNotificationManager />
-      <ScholarshipAlertManager />
-      <WeatherAlertManager />
-      <LiveStreamManager />
+      {isAuthenticated && (
+        <>
+          <RankingAlertManager />
+          <SmartNotificationManager />
+          <ScholarshipAlertManager />
+          <WeatherAlertManager />
+          <LiveStreamManager />
+        </>
+      )}
 
       {/* Invisible Presence Overlay - Z-200 to be above everything when active */}
       <InvisiblePresenceOverlay />
@@ -156,15 +166,18 @@ export default function Layout() {
         )}
       >
         {/* Main Navigation - Sticky to ensure visibility during scroll */}
-        <div className="sticky top-0 z-50 depth-element translate-z-10">
-          <TopBar />
-        </div>
+        {showTopBar && (
+          <div className="sticky top-0 z-50 depth-element translate-z-10">
+            <TopBar />
+          </div>
+        )}
 
         {/* Content Area */}
         {/* Ensure main is z-10 to sit above the wallpaper (z-0) */}
         <main
           className={cn(
-            'flex-1 w-full pb-24 md:pb-0 transition-all duration-300 relative bg-transparent transform-style-3d',
+            'flex-1 w-full transition-all duration-300 relative bg-transparent transform-style-3d flex flex-col',
+            showBottomNav ? 'pb-24 md:pb-0' : 'pb-0',
             // On Move route, remove padding to allow full immersive experience behind nav
             isMoveRoute && 'h-[calc(100vh-64px)] pb-0',
           )}
@@ -174,7 +187,7 @@ export default function Layout() {
       </div>
 
       {/* Mobile Navigation - Fixed at bottom of Outer Container - Outside of Scroll View */}
-      {!isMessageRoute && (
+      {showBottomNav && (
         <div className="md:hidden absolute bottom-0 left-0 right-0 z-50 depth-element translate-z-20">
           <BottomNav />
         </div>
