@@ -15,7 +15,7 @@ import {
 import { Logo } from '@/components/Logo'
 import {
   Loader2,
-  Mail,
+  User,
   Lock,
   ArrowRight,
   Github,
@@ -24,32 +24,39 @@ import {
 import { toast } from 'sonner'
 import { SportsWallpaper } from '@/components/SportsWallpaper'
 import { useAuthStore } from '@/stores/useAuthStore'
+import { PageLoader } from '@/components/PageLoader'
 
 export default function Login() {
   const navigate = useNavigate()
-  const { login, isAuthenticated } = useAuthStore()
+  const { login, isAuthenticated, hasHydrated } = useAuthStore()
   const [loading, setLoading] = useState(false)
   const [socialLoading, setSocialLoading] = useState<string | null>(null)
   const [biometricLoading, setBiometricLoading] = useState(false)
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
+  const [isChecking, setIsChecking] = useState(true)
 
   // Redirect to home if already authenticated, preventing the display of the guest UI
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/home', { replace: true })
+    if (hasHydrated) {
+      if (isAuthenticated) {
+        navigate('/home', { replace: true })
+      } else {
+        const timer = setTimeout(() => setIsChecking(false), 300)
+        return () => clearTimeout(timer)
+      }
     }
-  }, [isAuthenticated, navigate])
+  }, [hasHydrated, isAuthenticated, navigate])
 
   // Load saved credentials on mount
   useEffect(() => {
-    const savedEmail = localStorage.getItem('goplay_email')
+    const savedUsername = localStorage.getItem('goplay_username')
     const savedPassword = localStorage.getItem('goplay_password')
     const savedRemember = localStorage.getItem('goplay_remember') === 'true'
 
-    if (savedRemember && savedEmail) {
-      setEmail(savedEmail)
+    if (savedRemember && savedUsername) {
+      setUsername(savedUsername)
       setRememberMe(true)
       if (savedPassword) setPassword(savedPassword)
     }
@@ -62,13 +69,13 @@ export default function Login() {
     // Simulate API call and Persistence Logic
     setTimeout(() => {
       setLoading(false)
-      if (email && password) {
+      if (username && password) {
         if (rememberMe) {
-          localStorage.setItem('goplay_email', email)
+          localStorage.setItem('goplay_username', username)
           localStorage.setItem('goplay_password', password)
           localStorage.setItem('goplay_remember', 'true')
         } else {
-          localStorage.removeItem('goplay_email')
+          localStorage.removeItem('goplay_username')
           localStorage.removeItem('goplay_password')
           localStorage.removeItem('goplay_remember')
         }
@@ -108,6 +115,10 @@ export default function Login() {
     }, 2000)
   }
 
+  if (!hasHydrated || isChecking) {
+    return <PageLoader />
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       <SportsWallpaper />
@@ -129,16 +140,16 @@ export default function Login() {
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="username">Usuário</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    id="email"
-                    placeholder="seu@email.com"
-                    type="email"
+                    id="username"
+                    placeholder="Seu usuário"
+                    type="text"
                     className="pl-9"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     required
                   />
                 </div>

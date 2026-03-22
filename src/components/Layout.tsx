@@ -23,7 +23,7 @@ export default function Layout() {
   const { isEnabled: isDepthEnabled, intensity: depthIntensity } =
     useDepthStore()
   const { initializeSession } = useInvisiblePresenceStore()
-  const { isAuthenticated } = useAuthStore()
+  const { isAuthenticated, hasHydrated } = useAuthStore()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [scrollY, setScrollY] = useState(0)
 
@@ -107,9 +107,10 @@ export default function Layout() {
 
   const isMoveRoute = location.pathname === '/move'
 
-  // Conditional Layout Rendering based strictly on authentication state
-  const showTopBar = isAuthenticated && !isLandingPage
-  const showBottomNav = isAuthenticated && !isLandingPage && !isMessageRoute
+  // Conditional Layout Rendering based strictly on hydration and authentication state
+  const showTopBar = hasHydrated && isAuthenticated && !isLandingPage
+  const showBottomNav =
+    hasHydrated && isAuthenticated && !isLandingPage && !isMessageRoute
 
   return (
     <div className="h-screen w-full bg-background font-sans antialiased flex flex-col relative overflow-hidden transition-colors duration-500 perspective-2000">
@@ -139,7 +140,7 @@ export default function Layout() {
       </div>
 
       {/* Global Alert Managers */}
-      {isAuthenticated && (
+      {hasHydrated && isAuthenticated && (
         <>
           <RankingAlertManager />
           <SmartNotificationManager />

@@ -3,26 +3,37 @@ import { useNavigate } from 'react-router-dom'
 import { Logo } from '@/components/Logo'
 import { AppIcon } from '@/components/AppIcon'
 import { ArrowRight, Trophy, Users, Activity } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useInvisiblePresenceStore } from '@/stores/useInvisiblePresenceStore'
 import { useAuthStore } from '@/stores/useAuthStore'
+import { PageLoader } from '@/components/PageLoader'
 
 export default function Index() {
   const navigate = useNavigate()
   const { initializeSession } = useInvisiblePresenceStore()
-  const { isAuthenticated } = useAuthStore()
+  const { isAuthenticated, hasHydrated } = useAuthStore()
+  const [isChecking, setIsChecking] = useState(true)
 
   // Initialize invisible presence logic on landing page load
   useEffect(() => {
     initializeSession()
   }, [initializeSession])
 
-  // Redirect to home if user is already authenticated to prevent skipping the logged-in session
+  // Session-Based Redirection with state validation
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/home', { replace: true })
+    if (hasHydrated) {
+      if (isAuthenticated) {
+        navigate('/home', { replace: true })
+      } else {
+        const timer = setTimeout(() => setIsChecking(false), 300)
+        return () => clearTimeout(timer)
+      }
     }
-  }, [isAuthenticated, navigate])
+  }, [hasHydrated, isAuthenticated, navigate])
+
+  if (!hasHydrated || isChecking) {
+    return <PageLoader />
+  }
 
   return (
     <div className="flex flex-col h-full bg-transparent relative overflow-hidden transition-colors duration-300">
