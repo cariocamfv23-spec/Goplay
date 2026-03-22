@@ -1,16 +1,29 @@
-<!-- HTML template for the frontend react app: https://developer.mozilla.org/en-US/docs/Web/HTML -->
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Um incrível projeto do Skip</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>GoPlay</title>
     <meta
       name="description"
-      content="Projeto gerado usando Skip (https://goskip.dev)"
+      content="O seu esporte, levado a sério. Seu talento merece um palco do tamanho do mundo."
     />
-    <meta name="author" content="Skip (https://goskip.dev)" />
+    <meta name="author" content="Goplay" />
     <meta property="og:image" content="/og-image.png" />
+
+    <!-- PWA Configuration -->
+    <meta name="theme-color" content="#7c3aed" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="GoPlay" />
+    <link rel="apple-touch-icon" href="/icon-192x192.png" />
+    <link rel="manifest" href="/manifest.json" />
     <script type="module" crossorigin src="/assets/index-D9lGzB06.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-tEeaaceT.css">
   </head>
@@ -18,5 +31,23 @@
   <body>
     <div id="root"></div>
     <script src="https://goskip.dev/skip.js"></script>
+    <script>
+      // Register Service Worker for PWA Offline Support
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {
+              console.log(
+                'ServiceWorker registration successful with scope: ',
+                registration.scope,
+              )
+            })
+            .catch((error) => {
+              console.log('ServiceWorker registration failed: ', error)
+            })
+        })
+      }
+    </script>
   </body>
 </html>
