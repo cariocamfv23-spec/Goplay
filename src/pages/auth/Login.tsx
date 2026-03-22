@@ -58,27 +58,43 @@ export default function Login() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!username.trim() || !password.trim()) {
+      toast.error('Preencha todos os campos para continuar')
+      return
+    }
+
     setLoading(true)
 
-    // Simulate API call and Persistence Logic
+    // Simulate API call and validation logic
     setTimeout(() => {
       setLoading(false)
-      if (username && password) {
-        if (rememberMe) {
-          localStorage.setItem('goplay_username', username)
-          localStorage.setItem('goplay_password', password)
-          localStorage.setItem('goplay_remember', 'true')
-        } else {
-          localStorage.removeItem('goplay_username')
-          localStorage.removeItem('goplay_password')
-          localStorage.removeItem('goplay_remember')
-        }
-        login()
-        toast.success('Login realizado com sucesso!')
-        navigate('/home')
-      } else {
-        toast.error('Preencha todos os campos')
+
+      // Simulate authentication failure conditions
+      if (password.length < 6) {
+        toast.error('A senha deve ter pelo menos 6 caracteres.')
+        return
       }
+
+      if (username.toLowerCase() === 'admin' && password !== 'admin123') {
+        toast.error('Credenciais inválidas. Verifique seu usuário e senha.')
+        return
+      }
+
+      // Success path
+      if (rememberMe) {
+        localStorage.setItem('goplay_username', username)
+        localStorage.setItem('goplay_password', password)
+        localStorage.setItem('goplay_remember', 'true')
+      } else {
+        localStorage.removeItem('goplay_username')
+        localStorage.removeItem('goplay_password')
+        localStorage.removeItem('goplay_remember')
+      }
+
+      login()
+      toast.success('Login realizado com sucesso!')
+      navigate('/home')
     }, 1500)
   }
 
