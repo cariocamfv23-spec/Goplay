@@ -6,17 +6,25 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <meta name="theme-color" content="#7c3aed" />
     <title>GoPlay - O seu esporte, levado a sério</title>
     <meta
       name="description"
-      content="Seu talento merece um palco do tamanho do mundo. O seu esporte, levado a sério."
+      content="Seu talento merece um palco do tamanho do mundo."
     />
     <meta name="author" content="GoPlay" />
     <meta property="og:image" content="/og-image.png" />
 
-    <!-- PWA Manifest and Icons -->
+    <!-- Base URL for SPA Routing -->
+    <base href="/" />
+
+    <!-- PWA / Mobile Web App configuration -->
     <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#09090b" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
     <link rel="apple-touch-icon" href="/icon-192x192.png" />
     <script type="module" crossorigin src="/assets/index-DmXJF90o.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-DAfhW-XS.css">
@@ -25,19 +33,21 @@
   <body>
     <div id="root"></div>
     <script src="https://goskip.dev/skip.js"></script>
-
-    <!-- PWA Service Worker Registration -->
     <script>
+      // Register Service Worker for PWA installation and caching
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker
-            .register('/sw.js')
-            .then((registration) => {
-              console.log('SW registered with scope:', registration.scope)
-            })
-            .catch((err) => {
-              console.log('SW registration failed:', err)
-            })
+          navigator.serviceWorker.register('/sw.js').then(
+            (registration) => {
+              console.log(
+                'ServiceWorker registration successful with scope: ',
+                registration.scope,
+              )
+            },
+            (err) => {
+              console.log('ServiceWorker registration failed: ', err)
+            },
+          )
         })
       }
     </script>

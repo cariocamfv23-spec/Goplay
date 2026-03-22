@@ -1,18 +1,54 @@
-<!-- HTML template for the frontend react app: https://developer.mozilla.org/en-US/docs/Web/HTML -->
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Um incrível projeto do Skip</title>
-    <meta name="description" content="Projeto gerado usando Skip (https://goskip.dev)" />
-    <meta name="author" content="Skip (https://goskip.dev)" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>GoPlay - O seu esporte, levado a sério</title>
+    <meta
+      name="description"
+      content="Seu talento merece um palco do tamanho do mundo."
+    />
+    <meta name="author" content="GoPlay" />
     <meta property="og:image" content="/og-image.png" />
+
+    <!-- Base URL for SPA Routing -->
+    <base href="/" />
+
+    <!-- PWA / Mobile Web App configuration -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#09090b" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <link rel="apple-touch-icon" href="/icon-192x192.png" />
   </head>
 
   <body>
     <div id="root"></div>
     <script src="https://goskip.dev/skip.js"></script>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Register Service Worker for PWA installation and caching
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').then(
+            (registration) => {
+              console.log(
+                'ServiceWorker registration successful with scope: ',
+                registration.scope,
+              )
+            },
+            (err) => {
+              console.log('ServiceWorker registration failed: ', err)
+            },
+          )
+        })
+      }
+    </script>
   </body>
 </html>
