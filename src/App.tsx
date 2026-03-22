@@ -19,7 +19,7 @@ const Register = lazy(() => import('./pages/auth/Register'))
 const Onboarding = lazy(() => import('./pages/auth/Onboarding'))
 const ProfileSelection = lazy(() => import('./pages/auth/ProfileSelection'))
 
-// New Retrospective Page
+// Retrospective Page
 const Retrospective = lazy(() => import('./pages/retrospective/Retrospective'))
 
 // App Map
