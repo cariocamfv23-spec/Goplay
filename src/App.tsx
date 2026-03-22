@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
@@ -207,7 +207,7 @@ const App = () => {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <HashRouter
+      <BrowserRouter
         future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
       >
         <TooltipProvider>
@@ -514,7 +514,7 @@ const App = () => {
             </CartProvider>
           </BrandingProvider>
         </TooltipProvider>
-      </HashRouter>
+      </BrowserRouter>
     </ThemeProvider>
   )
 }

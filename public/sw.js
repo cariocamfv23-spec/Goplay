@@ -76,7 +76,7 @@ self.addEventListener('fetch', (event) => {
         })
         .catch((error) => {
           console.log('Fetch failed, returning offline fallback', error)
-          // For navigation requests, fallback to index.html to allow HashRouter to handle it
+          // For navigation requests, fallback to index.html to allow BrowserRouter to handle it
           if (event.request.mode === 'navigate') {
             return caches.match('/index.html')
           }
