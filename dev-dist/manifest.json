@@ -2,7 +2,7 @@
   "name": "GoPlay",
   "short_name": "GoPlay",
   "description": "O seu esporte, levado a sério. Seu talento merece um palco do tamanho do mundo.",
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#09090b",
   "theme_color": "#7c3aed",
