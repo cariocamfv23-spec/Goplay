@@ -107,6 +107,7 @@ export default function Layout() {
 
   const isMoveRoute = location.pathname === '/move'
 
+  // Conditional Layout Rendering based strictly on authentication state
   const showTopBar = isAuthenticated && !isLandingPage
   const showBottomNav = isAuthenticated && !isLandingPage && !isMessageRoute
 

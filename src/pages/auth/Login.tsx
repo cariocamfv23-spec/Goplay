@@ -27,13 +27,20 @@ import { useAuthStore } from '@/stores/useAuthStore'
 
 export default function Login() {
   const navigate = useNavigate()
-  const { login } = useAuthStore()
+  const { login, isAuthenticated } = useAuthStore()
   const [loading, setLoading] = useState(false)
   const [socialLoading, setSocialLoading] = useState<string | null>(null)
   const [biometricLoading, setBiometricLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
+
+  // Redirect to home if already authenticated, preventing the display of the guest UI
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/home', { replace: true })
+    }
+  }, [isAuthenticated, navigate])
 
   // Load saved credentials on mount
   useEffect(() => {

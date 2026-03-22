@@ -225,8 +225,6 @@ const App = () => {
                     path="/profile-selection"
                     element={<ProfileSelection />}
                   />
-                  <Route path="/retrospective" element={<Retrospective />} />
-                  <Route path="/timeshift" element={<TimeShift />} />
 
                   {/* Protected Full-Screen Routes */}
                   <Route element={<ProtectedRoute />}>
@@ -234,11 +232,13 @@ const App = () => {
                       path="/live/broadcast"
                       element={<CreateLiveBroadcast />}
                     />
+                    <Route path="/retrospective" element={<Retrospective />} />
+                    <Route path="/timeshift" element={<TimeShift />} />
                   </Route>
 
                   {/* Layout Routes */}
                   <Route element={<Layout />}>
-                    {/* The Landing Page is Public and fully visible with TopBar (including Admin Lock) */}
+                    {/* The Landing Page is Public */}
                     <Route path="/" element={<Index />} />
 
                     {/* All Inner Layout Pages are Protected */}

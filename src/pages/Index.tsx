@@ -17,7 +17,7 @@ export default function Index() {
     initializeSession()
   }, [initializeSession])
 
-  // Redirect to home if user is already authenticated
+  // Redirect to home if user is already authenticated to prevent skipping the logged-in session
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/home', { replace: true })
