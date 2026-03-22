@@ -1,15 +1,17 @@
 {
   "short_name": "Goplay",
-  "name": "Goplay App - Esporte Levado a Sério",
+  "name": "Goplay App",
+  "description": "O seu esporte, levado a sério.",
   "icons": [
     {
       "src": "/og-image.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "sizes": "512x512"
     }
   ],
   "start_url": "/",
+  "background_color": "#000000",
   "display": "standalone",
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff"
+  "theme_color": "#7c3aed",
+  "orientation": "portrait"
 }
