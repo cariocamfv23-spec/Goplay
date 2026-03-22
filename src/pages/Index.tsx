@@ -92,15 +92,6 @@ export default function Index() {
             <ArrowRight className="w-5 h-5 ml-2 opacity-80 group-hover:translate-x-1 transition-transform" />
           </Button>
 
-          <Button
-            variant="outline"
-            size="lg"
-            className="w-full h-14 text-base font-bold rounded-2xl border-2 hover:bg-accent hover:text-accent-foreground transition-all hover:scale-[1.02] active:scale-95 bg-background/50 backdrop-blur-sm"
-            onClick={() => navigate('/register')}
-          >
-            Criar conta
-          </Button>
-
           <div className="flex justify-center gap-4 pt-4 text-[10px] text-muted-foreground font-medium">
             <span className="cursor-pointer hover:text-primary transition-colors">
               Termos de Uso
