@@ -6,8 +6,8 @@ export function ProtectedRoute() {
   const location = useLocation()
 
   if (!isAuthenticated) {
-    // Redirect to login page instead of throwing 403 Forbidden
-    return <Navigate to="/login" state={{ from: location }} replace />
+    // Redirect to the entry page (Index) instead of throwing 403 Forbidden or redirecting to /login
+    return <Navigate to="/" state={{ from: location }} replace />
   }
 
   return <Outlet />
