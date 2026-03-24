@@ -11,6 +11,13 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { toast } from 'sonner'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export default function FoodSport() {
   const [activeCategory, setActiveCategory] = useState('Todos')
@@ -18,6 +25,9 @@ export default function FoodSport() {
 
   const [newPostContent, setNewPostContent] = useState('')
   const [newPostImage, setNewPostImage] = useState<string | null>(null)
+  const [newPostCategory, setNewPostCategory] = useState<string>(
+    'Alimentação saudável',
+  )
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,11 +52,8 @@ export default function FoodSport() {
         type: 'Atleta',
         avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99',
       },
-      template: 'Alimentação do dia',
-      categories: [
-        'Todos',
-        activeCategory !== 'Todos' ? activeCategory : 'Alimentação saudável',
-      ],
+      template: newPostCategory,
+      categories: ['Todos', newPostCategory],
       content: newPostContent,
       image: newPostImage || undefined,
       hashtags: [],
@@ -76,11 +83,8 @@ export default function FoodSport() {
         type: 'Atleta',
         avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99',
       },
-      template: data.template || 'Alimentação do dia',
-      categories: [
-        'Todos',
-        activeCategory !== 'Todos' ? activeCategory : 'Alimentação saudável',
-      ],
+      template: data.template || 'Alimentação saudável',
+      categories: ['Todos', data.template || 'Alimentação saudável'],
       content: data.content,
       image: data.image,
       hashtags: [],
@@ -163,6 +167,30 @@ export default function FoodSport() {
                   <AvatarFallback>VC</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 space-y-3">
+                  <div className="flex items-center">
+                    <Select
+                      value={newPostCategory}
+                      onValueChange={setNewPostCategory}
+                    >
+                      <SelectTrigger className="w-fit h-7 text-xs border-none bg-secondary/30 rounded-full px-3 gap-2">
+                        <SelectValue placeholder="Categoria" />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-[200px]">
+                        {foodCategories
+                          .filter((c) => c !== 'Todos')
+                          .map((cat) => (
+                            <SelectItem
+                              key={cat}
+                              value={cat}
+                              className="text-xs"
+                            >
+                              {cat}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
                   <Textarea
                     placeholder="Compartilhe sua refeição..."
                     className="min-h-[80px] resize-none border-none bg-secondary/30 focus-visible:ring-1 focus-visible:ring-orange-500 rounded-xl"

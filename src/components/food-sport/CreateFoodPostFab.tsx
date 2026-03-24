@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { foodCategories } from '@/pages/food-sport/mockData'
 
 interface CreateFoodPostFabProps {
   onPost?: (postData: any) => void
@@ -26,7 +27,7 @@ interface CreateFoodPostFabProps {
 export function CreateFoodPostFab({ onPost }: CreateFoodPostFabProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [content, setContent] = useState('')
-  const [template, setTemplate] = useState('')
+  const [template, setTemplate] = useState('Alimentação saudável')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handlePost = () => {
@@ -50,7 +51,7 @@ export function CreateFoodPostFab({ onPost }: CreateFoodPostFabProps) {
 
     setIsOpen(false)
     setContent('')
-    setTemplate('')
+    setTemplate('Alimentação saudável')
   }
 
   return (
@@ -77,24 +78,19 @@ export function CreateFoodPostFab({ onPost }: CreateFoodPostFabProps) {
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label>Categoria / Template</Label>
+            <Label>Categoria</Label>
             <Select value={template} onValueChange={setTemplate}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecione o tipo de post" />
+                <SelectValue placeholder="Selecione a categoria" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Alimentação do dia">
-                  Alimentação do dia
-                </SelectItem>
-                <SelectItem value="Pré treino">Pré treino</SelectItem>
-                <SelectItem value="Pós treino">Pós treino</SelectItem>
-                <SelectItem value="Rotina alimentar">
-                  Rotina alimentar
-                </SelectItem>
-                <SelectItem value="Receita Fit">Receita Fit</SelectItem>
-                <SelectItem value="Dica de Nutrição">
-                  Dica de Nutrição
-                </SelectItem>
+              <SelectContent className="max-h-[200px]">
+                {foodCategories
+                  .filter((c) => c !== 'Todos')
+                  .map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
           </div>

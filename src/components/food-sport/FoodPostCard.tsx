@@ -102,49 +102,50 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          {post.user.id !== 'me' && (
+          {post.user.id !== 'me' ? (
+            <>
+              <Button
+                variant={isFollowing ? 'secondary' : 'outline'}
+                size="sm"
+                className={cn(
+                  'h-7 text-xs rounded-full px-4 transition-all duration-300',
+                  !isFollowing &&
+                    'text-primary border-primary/50 hover:bg-primary hover:text-white',
+                )}
+                onClick={handleFollow}
+              >
+                {isFollowing ? 'Seguindo' : 'Seguir'}
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                  >
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40 rounded-xl">
+                  <DropdownMenuItem
+                    onClick={() => toast.success('Link copiado!')}
+                  >
+                    Copiar Link
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          ) : (
             <Button
-              variant={isFollowing ? 'secondary' : 'outline'}
-              size="sm"
-              className={cn(
-                'h-7 text-xs rounded-full px-4 transition-all duration-300',
-                !isFollowing &&
-                  'text-primary border-primary/50 hover:bg-primary hover:text-white',
-              )}
-              onClick={handleFollow}
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors rounded-full"
+              onClick={() => setShowDeleteDialog(true)}
+              title="Excluir publicação"
             >
-              {isFollowing ? 'Seguindo' : 'Seguir'}
+              <Trash2 className="h-4 w-4" />
             </Button>
           )}
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-muted-foreground hover:text-foreground"
-              >
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40 rounded-xl">
-              {post.user.id === 'me' ? (
-                <DropdownMenuItem
-                  className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
-                  onClick={() => setShowDeleteDialog(true)}
-                >
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Excluir
-                </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem
-                  onClick={() => toast.success('Link copiado!')}
-                >
-                  Copiar Link
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </CardHeader>
 
