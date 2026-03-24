@@ -44,17 +44,35 @@ interface FoodPostProps {
   onDelete?: (id: number) => void
 }
 
-// Specifically requested thematic emojis
-const FOOD_EMOJIS = ['🍅', '🍎', '🥕', '🥦', '🍇']
+// Expanded Food Emoji Library for Food Sport specifically
+const FOOD_EMOJIS = [
+  '🍅',
+  '🍎',
+  '🥕',
+  '🥦',
+  '🍇',
+  '🥑',
+  '🍳',
+  '🍗',
+  '🥩',
+  '🍠',
+  '🥗',
+  '🍌',
+  '🍍',
+  '🍤',
+]
 
 export function FoodPostCard({ post, onDelete }: FoodPostProps) {
-  // Initialize mock reactions based on standard likes to keep the UI realistic
+  // Distribute initial mock reactions across the new variety to make the feed vibrant
   const initialReactions = useMemo(() => {
     const counts: Record<string, number> = {}
     if (post.likes > 0) {
-      counts['🍎'] = Math.floor(post.likes * 0.4)
-      counts['🥦'] = Math.floor(post.likes * 0.3)
-      counts['🍅'] = post.likes - (counts['🍎'] + counts['🥦'])
+      counts['🍎'] = Math.floor(post.likes * 0.3)
+      counts['🥦'] = Math.floor(post.likes * 0.2)
+      counts['🥩'] = Math.floor(post.likes * 0.2)
+      counts['🥑'] = Math.floor(post.likes * 0.15)
+      counts['🍅'] =
+        post.likes - (counts['🍎'] + counts['🥦'] + counts['🥩'] + counts['🥑'])
     }
     return counts
   }, [post.likes])
@@ -291,10 +309,10 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
                   <PopoverContent
                     side="top"
                     align="start"
-                    className="w-auto p-2 rounded-full shadow-xl border border-orange-500/20 bg-background/95 backdrop-blur-md"
+                    className="w-[280px] sm:w-[340px] p-3 rounded-3xl shadow-xl border border-orange-500/20 bg-background/95 backdrop-blur-md"
                     sideOffset={10}
                   >
-                    <div className="flex items-center gap-1.5">
+                    <div className="grid grid-cols-5 sm:grid-cols-7 gap-2 place-items-center">
                       {FOOD_EMOJIS.map((emoji) => (
                         <button
                           key={emoji}
