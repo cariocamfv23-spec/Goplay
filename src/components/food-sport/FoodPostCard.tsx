@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
-  Heart,
   MessageCircle,
   Share2,
   Bookmark,
@@ -12,6 +11,7 @@ import {
   UtensilsCrossed,
   MoreHorizontal,
   Trash2,
+  ChevronUp,
 } from 'lucide-react'
 import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
@@ -44,7 +44,8 @@ interface FoodPostProps {
   onDelete?: (id: number) => void
 }
 
-const FOOD_EMOJIS = ['🍅', '🍎', '🥕', '🥦', '🍇', '🥑', '🥩', '🍌']
+// Specifically requested thematic emojis
+const FOOD_EMOJIS = ['🍅', '🍎', '🥕', '🥦', '🍇']
 
 export function FoodPostCard({ post, onDelete }: FoodPostProps) {
   // Initialize mock reactions based on standard likes to keep the UI realistic
@@ -74,21 +75,21 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
     setReactions((prev) => {
       const newReactions = { ...prev }
 
-      // Remove old reaction if it exists
-      if (userReaction) {
-        newReactions[userReaction] = Math.max(
-          0,
-          (newReactions[userReaction] || 1) - 1,
-        )
-      }
-
-      // Add new reaction if it's different from the current one
-      if (userReaction !== emoji) {
+      if (userReaction === emoji) {
+        // Toggling off the same reaction
+        newReactions[emoji] = Math.max(0, (newReactions[emoji] || 1) - 1)
+        setUserReaction(null)
+      } else {
+        // Remove old reaction if it exists
+        if (userReaction) {
+          newReactions[userReaction] = Math.max(
+            0,
+            (newReactions[userReaction] || 1) - 1,
+          )
+        }
+        // Add new reaction
         newReactions[emoji] = (newReactions[emoji] || 0) + 1
         setUserReaction(emoji)
-      } else {
-        // Toggling off the same reaction
-        setUserReaction(null)
       }
 
       return newReactions
@@ -249,58 +250,76 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
         )}
 
         <div className="p-4 bg-secondary/5">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Popover open={isReactionOpen} onOpenChange={setIsReactionOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-1.5">
+              {/* Futuristic Thematic Reaction Pill */}
+              <div className="group relative flex items-center bg-secondary/20 rounded-full p-0.5 border border-border/30 shadow-sm transition-all hover:bg-secondary/40">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleReact(userReaction || '🍎')}
+                  className={cn(
+                    'h-8 w-8 rounded-full transition-all duration-300 z-10',
+                    userReaction
+                      ? 'bg-orange-500/20 scale-105 shadow-sm ring-1 ring-orange-500/40'
+                      : 'hover:bg-orange-500/10 hover:scale-105',
+                  )}
+                >
+                  <span
                     className={cn(
-                      'h-8 w-8 rounded-full transition-all duration-300',
-                      userReaction
-                        ? 'bg-orange-500/15 hover:bg-orange-500/25 scale-105 shadow-sm ring-1 ring-orange-500/30'
-                        : 'text-muted-foreground hover:text-orange-500 hover:bg-orange-500/10 hover:scale-105',
+                      'text-[18px] leading-none transform transition-all duration-300',
+                      !userReaction &&
+                        'opacity-50 grayscale scale-90 group-hover:scale-100 group-hover:grayscale-0',
+                      userReaction &&
+                        'scale-110 animate-in zoom-in duration-300',
                     )}
                   >
-                    {userReaction ? (
-                      <span className="text-[18px] leading-none transform -translate-y-[1px]">
-                        {userReaction}
-                      </span>
-                    ) : (
-                      <Heart className="h-5 w-5" />
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent
-                  side="top"
-                  align="start"
-                  className="w-auto p-1.5 rounded-full shadow-lg border border-border/50 bg-background/95 backdrop-blur-md"
-                  sideOffset={10}
-                >
-                  <div className="flex items-center gap-1">
-                    {FOOD_EMOJIS.map((emoji) => (
-                      <button
-                        key={emoji}
-                        className={cn(
-                          'h-9 w-9 text-xl flex items-center justify-center rounded-full hover:bg-secondary/80 transition-all hover:scale-125 focus:outline-none',
-                          userReaction === emoji &&
-                            'bg-secondary scale-110 shadow-inner ring-1 ring-border',
-                        )}
-                        onClick={() => handleReact(emoji)}
-                        title={`Reagir com ${emoji}`}
-                      >
-                        {emoji}
-                      </button>
-                    ))}
-                  </div>
-                </PopoverContent>
-              </Popover>
+                    {userReaction || '🍎'}
+                  </span>
+                </Button>
+
+                <Popover open={isReactionOpen} onOpenChange={setIsReactionOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-6 rounded-r-full -ml-1 text-muted-foreground hover:text-foreground opacity-60 hover:opacity-100 transition-opacity"
+                    >
+                      <ChevronUp className="h-3 w-3" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    side="top"
+                    align="start"
+                    className="w-auto p-2 rounded-full shadow-xl border border-orange-500/20 bg-background/95 backdrop-blur-md"
+                    sideOffset={10}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      {FOOD_EMOJIS.map((emoji) => (
+                        <button
+                          key={emoji}
+                          className={cn(
+                            'h-10 w-10 text-2xl flex items-center justify-center rounded-full hover:bg-orange-500/10 transition-all duration-300 hover:scale-125 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500',
+                            userReaction === emoji &&
+                              'bg-orange-500/20 scale-110 shadow-inner ring-1 ring-orange-500/50',
+                          )}
+                          onClick={() => handleReact(emoji)}
+                          title={`Reagir com ${emoji}`}
+                        >
+                          <span className="transform transition-transform duration-300">
+                            {emoji}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
 
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 rounded-full text-muted-foreground hover:text-blue-400"
+                className="h-8 w-8 rounded-full text-muted-foreground hover:text-blue-400 ml-1"
                 onClick={handleComment}
               >
                 <MessageCircle className="h-5 w-5" />
@@ -356,7 +375,7 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
                   {topEmojis.map((emoji, i) => (
                     <div
                       key={i}
-                      className="text-[10px] bg-card rounded-full border border-background shadow-sm h-[22px] w-[22px] flex items-center justify-center relative ring-1 ring-border/50"
+                      className="text-[10px] bg-card rounded-full border border-background shadow-sm h-[22px] w-[22px] flex items-center justify-center relative ring-1 ring-border/50 animate-in zoom-in"
                       style={{ zIndex: 3 - i }}
                     >
                       <span className="leading-none transform scale-[0.85]">
@@ -378,7 +397,7 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
 
             {post.comments > 0 && (
               <div
-                className="text-xs text-muted-foreground cursor-pointer hover:underline w-fit"
+                className="text-xs text-muted-foreground cursor-pointer hover:underline w-fit mt-1"
                 onClick={handleComment}
               >
                 Ver todos os {post.comments} comentários
