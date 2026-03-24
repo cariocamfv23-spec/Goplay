@@ -31,6 +31,9 @@ const Move = lazy(() => import('./pages/move/Move'))
 const Explore = lazy(() => import('./pages/explore/Explore'))
 const CheckIn = lazy(() => import('./pages/checkin/CheckIn'))
 
+// Food Sport
+const FoodSport = lazy(() => import('./pages/food-sport/FoodSport'))
+
 // Contracts & Organizer Pages
 const LiveContractsDashboard = lazy(
   () => import('./pages/contracts/LiveContractsDashboard'),
@@ -250,6 +253,7 @@ const App = () => {
                       <Route path="/explore" element={<Explore />} />
                       <Route path="/check-in" element={<CheckIn />} />
                       <Route path="/app-map" element={<AppMap />} />
+                      <Route path="/food-sport" element={<FoodSport />} />
 
                       <Route
                         path="/contracts"
