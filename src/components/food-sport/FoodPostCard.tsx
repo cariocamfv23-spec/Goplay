@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   MessageCircle,
   Share2,
@@ -44,35 +45,37 @@ interface FoodPostProps {
   onDelete?: (id: number) => void
 }
 
-// Expanded Food Emoji Library for Food Sport specifically
-const FOOD_EMOJIS = [
-  '🍅',
-  '🍎',
-  '🥕',
-  '🥦',
-  '🍇',
-  '🥑',
-  '🍳',
-  '🍗',
-  '🥩',
-  '🍠',
-  '🥗',
-  '🍌',
-  '🍍',
-  '🍤',
+// Comprehensive Food Emoji Library organized by categories
+const FOOD_EMOJI_CATEGORIES = [
+  {
+    name: 'Proteínas & Carnes',
+    emojis: ['🥩', '🍗', '🍖', '🥓', '🥚', '🍳', '🍤', '🐟'],
+  },
+  {
+    name: 'Vegetais',
+    emojis: ['🥦', '🥕', '🍅', '🫑', '🌽', '🥑', '🥬', '🥒', '🥔', '🫛'],
+  },
+  {
+    name: 'Frutas',
+    emojis: ['🍎', '🍌', '🍉', '🍇', '🍓', '🫐', '🍍', '🥭', '🍊'],
+  },
+  {
+    name: 'Grãos & Outros',
+    emojis: ['🍞', '🥣', '🥗', '🥘', '🥜', '🫘'],
+  },
 ]
 
 export function FoodPostCard({ post, onDelete }: FoodPostProps) {
-  // Distribute initial mock reactions across the new variety to make the feed vibrant
+  // Distribute initial mock reactions across a variety of the new emojis
   const initialReactions = useMemo(() => {
     const counts: Record<string, number> = {}
     if (post.likes > 0) {
-      counts['🍎'] = Math.floor(post.likes * 0.3)
+      counts['🥩'] = Math.floor(post.likes * 0.25)
       counts['🥦'] = Math.floor(post.likes * 0.2)
-      counts['🥩'] = Math.floor(post.likes * 0.2)
+      counts['🍓'] = Math.floor(post.likes * 0.2)
       counts['🥑'] = Math.floor(post.likes * 0.15)
-      counts['🍅'] =
-        post.likes - (counts['🍎'] + counts['🥦'] + counts['🥩'] + counts['🥑'])
+      counts['🍳'] =
+        post.likes - (counts['🥩'] + counts['🥦'] + counts['🍓'] + counts['🥑'])
     }
     return counts
   }, [post.likes])
@@ -80,7 +83,7 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
   const [reactions, setReactions] =
     useState<Record<string, number>>(initialReactions)
   const [userReaction, setUserReaction] = useState<string | null>(
-    post.liked ? '🍎' : null,
+    post.liked ? '🥩' : null,
   )
   const [isReactionOpen, setIsReactionOpen] = useState(false)
 
@@ -275,7 +278,7 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => handleReact(userReaction || '🍎')}
+                  onClick={() => handleReact(userReaction || '🥩')}
                   className={cn(
                     'h-8 w-8 rounded-full transition-all duration-300 z-10',
                     userReaction
@@ -292,7 +295,7 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
                         'scale-110 animate-in zoom-in duration-300',
                     )}
                   >
-                    {userReaction || '🍎'}
+                    {userReaction || '🥩'}
                   </span>
                 </Button>
 
@@ -309,27 +312,38 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
                   <PopoverContent
                     side="top"
                     align="start"
-                    className="w-[280px] sm:w-[340px] p-3 rounded-3xl shadow-xl border border-orange-500/20 bg-background/95 backdrop-blur-md"
+                    className="w-[300px] sm:w-[360px] p-0 rounded-3xl shadow-xl border border-orange-500/20 bg-background/95 backdrop-blur-md overflow-hidden"
                     sideOffset={10}
                   >
-                    <div className="grid grid-cols-5 sm:grid-cols-7 gap-2 place-items-center">
-                      {FOOD_EMOJIS.map((emoji) => (
-                        <button
-                          key={emoji}
-                          className={cn(
-                            'h-10 w-10 text-2xl flex items-center justify-center rounded-full hover:bg-orange-500/10 transition-all duration-300 hover:scale-125 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500',
-                            userReaction === emoji &&
-                              'bg-orange-500/20 scale-110 shadow-inner ring-1 ring-orange-500/50',
-                          )}
-                          onClick={() => handleReact(emoji)}
-                          title={`Reagir com ${emoji}`}
-                        >
-                          <span className="transform transition-transform duration-300">
-                            {emoji}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
+                    <ScrollArea className="h-[300px] w-full p-3">
+                      <div className="flex flex-col gap-5">
+                        {FOOD_EMOJI_CATEGORIES.map((category) => (
+                          <div key={category.name} className="space-y-2">
+                            <h4 className="text-xs font-semibold text-muted-foreground px-2 uppercase tracking-wider">
+                              {category.name}
+                            </h4>
+                            <div className="grid grid-cols-6 sm:grid-cols-7 gap-2 place-items-center">
+                              {category.emojis.map((emoji) => (
+                                <button
+                                  key={emoji}
+                                  className={cn(
+                                    'h-10 w-10 text-2xl flex items-center justify-center rounded-full hover:bg-orange-500/10 transition-all duration-300 hover:scale-125 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500',
+                                    userReaction === emoji &&
+                                      'bg-orange-500/20 scale-110 shadow-inner ring-1 ring-orange-500/50',
+                                  )}
+                                  onClick={() => handleReact(emoji)}
+                                  title={`Reagir com ${emoji}`}
+                                >
+                                  <span className="transform transition-transform duration-300">
+                                    {emoji}
+                                  </span>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
                   </PopoverContent>
                 </Popover>
               </div>
