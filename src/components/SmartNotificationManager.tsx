@@ -4,7 +4,8 @@ import useNotificationStore from '@/stores/useNotificationStore'
 import { useSmartNotificationState } from '@/stores/useSmartNotificationState'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
-import { Crown } from 'lucide-react'
+import { Crown, Eye, Handshake } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export function SmartNotificationManager() {
   const { competitions, goals, certifications, verifyCertification } =
@@ -20,7 +21,7 @@ export function SmartNotificationManager() {
     return new Date(Number(year), Number(month) - 1, Number(day))
   }
 
-  // VIP View Simulation (within 2 seconds of landing)
+  // VIP Profile View Simulation (within 2 seconds of landing on Home)
   useEffect(() => {
     const simulateVipView = () => {
       const vipVisitors = [
@@ -29,12 +30,6 @@ export function SmartNotificationManager() {
           name: 'Rafael Torres',
           role: 'Scout',
           avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=78',
-        },
-        {
-          id: 'u4',
-          name: 'Carlos Eduardo',
-          role: 'Coach',
-          avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=45',
         },
         {
           id: 'a1',
@@ -51,13 +46,28 @@ export function SmartNotificationManager() {
       if (canNotifyVip(vip.id, now)) {
         recordVipView(vip.id, now)
 
-        const message = `${vip.role} is viewing your profile right now! Tap to see who it is.`
+        const isScout = vip.role === 'Scout'
+        const isSponsor = vip.role === 'Sponsor'
+
+        const title = isScout
+          ? 'Alerta de Scout'
+          : isSponsor
+            ? 'Oportunidade VIP'
+            : 'Visitante VIP!'
+
+        const message = isScout
+          ? 'Um Scout visualizou seu Perfil VIP'
+          : isSponsor
+            ? 'Um Sponsor demonstrou interesse no seu Perfil VIP'
+            : `${vip.name} está visualizando seu perfil.`
+
+        const NotificationIcon = isScout ? Eye : isSponsor ? Handshake : Crown
 
         addNotification({
-          title: 'VIP Profile View!',
+          title,
           message,
-          type: 'system',
-          priority: 'critical',
+          type: 'verification',
+          priority: 'high',
           link: `/profile/${vip.id}`,
           user: {
             id: vip.id,
@@ -66,15 +76,43 @@ export function SmartNotificationManager() {
           },
         })
 
-        toast('VIP Profile View!', {
-          description: message,
-          icon: <Crown className="h-5 w-5 text-yellow-500 fill-yellow-500" />,
-          action: {
-            label: 'Ver Perfil',
-            onClick: () => navigate(`/profile/${vip.id}`),
-          },
-          duration: 8000,
-        })
+        // Custom Futuristic UI Feedback for VIP View
+        toast.custom(
+          (t) => (
+            <div className="flex w-full items-center gap-3 rounded-2xl border-2 border-primary/30 bg-background/95 p-3 shadow-2xl backdrop-blur-xl animate-in slide-in-from-top-4 duration-300">
+              <div
+                className={cn(
+                  'flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-opacity-20',
+                  isScout
+                    ? 'bg-blue-500/20 text-blue-500'
+                    : isSponsor
+                      ? 'bg-emerald-500/20 text-emerald-500'
+                      : 'bg-gold/20 text-gold',
+                )}
+              >
+                <NotificationIcon className="h-6 w-6" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-foreground truncate">
+                  {title}
+                </p>
+                <p className="text-xs text-muted-foreground line-clamp-2 leading-tight">
+                  {message}
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  toast.dismiss(t)
+                  navigate(`/profile/${vip.id}`)
+                }}
+                className="shrink-0 rounded-xl bg-primary px-3 py-2 text-xs font-bold text-primary-foreground transition-all hover:scale-105 active:scale-95 shadow-md shadow-primary/20"
+              >
+                Ver Perfil
+              </button>
+            </div>
+          ),
+          { duration: 6000, position: 'top-center' },
+        )
       }
     }
 

@@ -33,8 +33,8 @@ export const useSmartNotificationState = create<SmartNotificationState>()(
       canNotifyVip: (id, currentTimestamp) => {
         const lastViewed = get().vipLastViewed[id]
         if (!lastViewed) return true
-        // 30 minutes in milliseconds = 30 * 60 * 1000 = 1800000
-        return currentTimestamp - lastViewed > 1800000
+        // 2 minutes in milliseconds for demo purposes (120000)
+        return currentTimestamp - lastViewed > 120000
       },
 
       clearHistory: () => set({ notifiedIds: [], vipLastViewed: {} }),

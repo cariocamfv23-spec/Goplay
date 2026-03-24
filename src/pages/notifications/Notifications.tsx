@@ -18,6 +18,7 @@ import {
   Baby,
   TrendingDown,
   Crown,
+  Eye,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -28,7 +29,14 @@ export default function Notifications() {
   const { notifications, markAsRead, markAllAsRead, unreadCount } =
     useNotificationStore()
 
-  const getIcon = (type: string, title: string = '') => {
+  const isVipAlert = (title: string, message: string = '') => {
+    const text = (title + ' ' + message).toLowerCase()
+    return (
+      text.includes('vip') || text.includes('scout') || text.includes('sponsor')
+    )
+  }
+
+  const getIcon = (type: string, title: string = '', message: string = '') => {
     switch (type) {
       case 'challenge':
         return <Trophy className="h-5 w-5 text-gold" />
@@ -55,7 +63,11 @@ export default function Notifications() {
       case 'goal_deadline':
         return <Target className="h-5 w-5 text-red-500" />
       case 'verification':
-        if (title.toLowerCase().includes('vip')) {
+        if (title.toLowerCase().includes('scout'))
+          return <Eye className="h-5 w-5 text-blue-500" />
+        if (title.toLowerCase().includes('sponsor'))
+          return <Handshake className="h-5 w-5 text-emerald-500" />
+        if (isVipAlert(title, message)) {
           return <Crown className="h-5 w-5 text-gold" />
         }
         return <ShieldCheck className="h-5 w-5 text-blue-600" />
@@ -68,13 +80,25 @@ export default function Notifications() {
     }
   }
 
-  const getPriorityStyle = (priority?: string, title: string = '') => {
+  const getPriorityStyle = (
+    priority?: string,
+    title: string = '',
+    message: string = '',
+  ) => {
     if (priority === 'critical')
       return 'border-l-4 border-l-red-500 bg-red-500/10 dark:bg-red-900/20'
-    if (priority === 'high' && title.toLowerCase().includes('vip'))
+
+    if (isVipAlert(title, message)) {
+      if (title.toLowerCase().includes('scout'))
+        return 'border-l-4 border-l-blue-500 bg-blue-500/10 dark:bg-blue-900/20'
+      if (title.toLowerCase().includes('sponsor'))
+        return 'border-l-4 border-l-emerald-500 bg-emerald-500/10 dark:bg-emerald-900/20'
       return 'border-l-4 border-l-gold bg-gold/10 dark:bg-gold/10'
+    }
+
     if (priority === 'high')
       return 'border-l-4 border-l-green-500 bg-green-500/10 dark:bg-green-900/20'
+
     return 'hover:bg-secondary/30'
   }
 
@@ -143,7 +167,7 @@ export default function Notifications() {
                       not.read
                         ? 'bg-card opacity-90'
                         : 'bg-card ring-1 ring-primary/20 shadow-md',
-                      getPriorityStyle(not.priority, not.title),
+                      getPriorityStyle(not.priority, not.title, not.message),
                       not.link && 'cursor-pointer active:scale-[0.98]',
                     )}
                     onClick={() => handleNotificationClick(not)}
@@ -172,11 +196,15 @@ export default function Notifications() {
                         className={cn(
                           'mt-1 h-10 w-10 rounded-full flex items-center justify-center shrink-0 border border-border/50',
                           not.read ? 'bg-secondary/50' : 'bg-secondary',
-                          not.title.toLowerCase().includes('vip') &&
+                          isVipAlert(not.title, not.message) &&
                             'bg-gold/10 border-gold/30',
+                          not.title.toLowerCase().includes('scout') &&
+                            'bg-blue-500/10 border-blue-500/30',
+                          not.title.toLowerCase().includes('sponsor') &&
+                            'bg-emerald-500/10 border-emerald-500/30',
                         )}
                       >
-                        {getIcon(not.type, not.title)}
+                        {getIcon(not.type, not.title, not.message)}
                       </div>
                     )}
 
@@ -188,8 +216,11 @@ export default function Notifications() {
                             not.read ? 'text-foreground/80' : 'text-foreground',
                             not.priority === 'critical' &&
                               'text-red-600 dark:text-red-400',
-                            not.title.toLowerCase().includes('vip') &&
-                              'text-gold',
+                            isVipAlert(not.title, not.message) && 'text-gold',
+                            not.title.toLowerCase().includes('scout') &&
+                              'text-blue-600 dark:text-blue-400',
+                            not.title.toLowerCase().includes('sponsor') &&
+                              'text-emerald-600 dark:text-emerald-400',
                             not.type === 'live_stream' &&
                               !not.link?.includes('/replay/') &&
                               'text-red-500',
@@ -244,7 +275,7 @@ export default function Notifications() {
                                 'text-[10px] h-5 px-1.5 font-normal border-0',
                                 not.priority === 'critical'
                                   ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
-                                  : not.title.toLowerCase().includes('vip')
+                                  : isVipAlert(not.title, not.message)
                                     ? 'bg-gold/20 text-gold border-gold/30'
                                     : not.priority === 'high'
                                       ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
@@ -253,8 +284,8 @@ export default function Notifications() {
                             >
                               {not.priority === 'critical'
                                 ? 'Urgente'
-                                : not.title.toLowerCase().includes('vip')
-                                  ? 'Destaque'
+                                : isVipAlert(not.title, not.message)
+                                  ? 'VIP'
                                   : not.priority === 'high'
                                     ? 'Importante'
                                     : 'Info'}

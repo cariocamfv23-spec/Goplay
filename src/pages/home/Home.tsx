@@ -49,6 +49,7 @@ import { NostalgiaStudio } from '@/components/NostalgiaStudio'
 import { Replay3DWizardDialog } from '@/components/Replay3DWizardDialog'
 import { Replay3DIcon } from '@/components/icons/Replay3DIcon'
 import { DepthContainer } from '@/components/DepthContainer'
+import { SmartNotificationManager } from '@/components/SmartNotificationManager'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -210,6 +211,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background pb-24 animate-in fade-in duration-500">
+      <SmartNotificationManager />
       <Replay3DWizardDialog open={wizardOpen} onOpenChange={setWizardOpen} />
 
       {/* Welcome / Hero Section */}
