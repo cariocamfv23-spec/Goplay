@@ -66,6 +66,13 @@ export const mockFoodPosts = [
       avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=23',
     },
     template: 'Receita',
+    categories: [
+      'Receita',
+      'Pré treino',
+      'Saudável',
+      'Proteína',
+      'Alimentação saudável',
+    ],
     content:
       'Mingau de aveia super cremoso para começar o dia com muita energia! 💪✨\n\n- 3 colheres de aveia\n- 1 scoop de whey de baunilha\n- Canela a gosto\n- Frutas vermelhas para decorar\n\nRápido, prático e focado na hipertrofia.',
     image:
@@ -90,6 +97,7 @@ export const mockFoodPosts = [
       avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=1',
     },
     template: 'Pós treino',
+    categories: ['Pós treino', 'Proteína', 'Hipertrofia', 'Nutrição esportiva'],
     content:
       'Recuperação é tudo! O clássico frango, arroz e brócolis depois de 2 horas de treino intenso. Nutrição é a base da performance. 🥦🍗',
     image:
@@ -114,6 +122,7 @@ export const mockFoodPosts = [
       avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=56',
     },
     template: 'Rotina alimentar',
+    categories: ['Fitness', 'Low carb', 'Alimentação saudável', 'Saudável'],
     content:
       'Preparando as marmitas da semana. Organização é o segredo para não furar a dieta! 🥗🍱',
     image:
@@ -129,5 +138,130 @@ export const mockFoodPosts = [
     time: 'Ontem',
     liked: true,
     saved: true,
+  },
+  {
+    id: 204,
+    type: 'image',
+    user: {
+      id: 'u12',
+      name: 'Camila Vegan',
+      type: 'Atleta',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=88',
+    },
+    template: 'Vegano',
+    categories: ['Vegano', 'Saudável', 'Proteína', 'Alimentação saudável'],
+    content:
+      'Tofu mexido com cúrcuma e espinafre! 🌿💪\nProteína 100% vegetal para o pós-treino. Quem disse que vegano não ganha massa?',
+    image:
+      'https://img.usecurling.com/p/800/800?q=scrambled%20tofu&color=yellow&dpr=2',
+    hashtags: ['#Vegano', '#PlantBased', '#ProteinaVegetal'],
+    likes: 432,
+    comments: 45,
+    shares: 12,
+    saves: 89,
+    favorites: 34,
+    time: '5h',
+    liked: false,
+    saved: true,
+  },
+  {
+    id: 205,
+    type: 'image',
+    user: {
+      id: 'u15',
+      name: 'Dr. Roberto',
+      type: 'Nutricionista',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=45',
+    },
+    template: 'Emagrecimento',
+    categories: ['Emagrecimento', 'Low carb', 'Nutrição esportiva'],
+    content:
+      'Déficit calórico não precisa ser sinônimo de fome! 🥗\nPrato volumoso com mix de folhas, tomate cereja, pepino e filé de peixe grelhado. Alta saciedade e baixo teor calórico.',
+    image:
+      'https://img.usecurling.com/p/800/800?q=grilled%20fish%20salad&color=green&dpr=2',
+    hashtags: ['#Emagrecimento', '#Nutricao', '#FocoNaDieta'],
+    likes: 1205,
+    comments: 112,
+    shares: 88,
+    saves: 450,
+    favorites: 120,
+    time: '8h',
+    liked: true,
+    saved: false,
+  },
+  {
+    id: 206,
+    type: 'image',
+    user: {
+      id: 'u18',
+      name: 'Lucas Treino',
+      type: 'Personal Trainer',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=67',
+    },
+    template: 'Energia',
+    categories: ['Energia', 'Pré treino', 'Fitness'],
+    content:
+      'O combustível perfeito para o treino de pernas de hoje! 🍌☕\nBanana amassada com mel, aveia e aquele café expresso duplo para acordar.',
+    image:
+      'https://img.usecurling.com/p/800/800?q=banana%20oats%20coffee&color=orange&dpr=2',
+    hashtags: ['#PreTreino', '#Energia', '#LegDay'],
+    likes: 890,
+    comments: 34,
+    shares: 15,
+    saves: 76,
+    favorites: 45,
+    time: '12h',
+    liked: false,
+    saved: false,
+  },
+  {
+    id: 207,
+    type: 'image',
+    user: {
+      id: 'u22',
+      name: 'Marina Fit',
+      type: 'Atleta',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=91',
+    },
+    template: 'Receita Fit',
+    categories: ['Fitness', 'Saudável', 'Alimentação saudável', 'Low carb'],
+    content:
+      'Panqueca de banana com apenas 2 ingredientes! 🥞✨\n\n1 banana amassada e 2 ovos. Misture tudo e coloque na frigideira. Simples, rápido e perfeito para matar a vontade de doce sem sair do foco.',
+    image:
+      'https://img.usecurling.com/p/800/800?q=banana%20pancake&color=yellow&dpr=2',
+    hashtags: ['#ReceitaFit', '#Fitness', '#SemAcucar'],
+    likes: 2150,
+    comments: 140,
+    shares: 320,
+    saves: 890,
+    favorites: 210,
+    time: '1 dia',
+    liked: true,
+    saved: true,
+  },
+  {
+    id: 208,
+    type: 'image',
+    user: {
+      id: 'u31',
+      name: 'Ricardo Nutri',
+      type: 'Nutricionista',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=14',
+    },
+    template: 'Hipertrofia',
+    categories: ['Hipertrofia', 'Proteína', 'Nutrição esportiva', 'Pós treino'],
+    content:
+      'Refeição sólida pós-treino visando síntese proteica máxima! 🥩🥔\n200g de patinho moído, 150g de purê de batata e legumes no vapor. Básico que funciona!',
+    image:
+      'https://img.usecurling.com/p/800/800?q=ground%20beef%20potato&color=red&dpr=2',
+    hashtags: ['#Hipertrofia', '#Bodybuilding', '#Proteina'],
+    likes: 1540,
+    comments: 98,
+    shares: 45,
+    saves: 210,
+    favorites: 130,
+    time: '2 dias',
+    liked: false,
+    saved: false,
   },
 ]

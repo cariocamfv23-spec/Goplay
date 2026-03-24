@@ -19,7 +19,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-export function CreateFoodPostFab() {
+interface CreateFoodPostFabProps {
+  onPost?: (postData: any) => void
+}
+
+export function CreateFoodPostFab({ onPost }: CreateFoodPostFabProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [content, setContent] = useState('')
   const [template, setTemplate] = useState('')
@@ -31,10 +35,18 @@ export function CreateFoodPostFab() {
       return
     }
 
-    toast.success('Publicação Food Sport enviada!', {
-      description: 'Sua receita/dica já está no feed.',
-      icon: <Utensils className="w-4 h-4 text-orange-500" />,
-    })
+    if (onPost) {
+      onPost({
+        content,
+        template,
+        image: 'https://img.usecurling.com/p/800/800?q=food&color=orange&dpr=2',
+      })
+    } else {
+      toast.success('Publicação Food Sport enviada!', {
+        description: 'Sua receita/dica já está no feed.',
+        icon: <Utensils className="w-4 h-4 text-orange-500" />,
+      })
+    }
 
     setIsOpen(false)
     setContent('')

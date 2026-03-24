@@ -14,6 +14,7 @@ import {
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
+import { toast } from 'sonner'
 
 interface FoodPostProps {
   post: any
@@ -29,6 +30,25 @@ export function FoodPostCard({ post }: FoodPostProps) {
   const handleLike = () => {
     setIsLiked(!isLiked)
     setLikes(isLiked ? likes - 1 : likes + 1)
+  }
+
+  const handleComment = () => {
+    toast.success('Comentários abertos', {
+      description: 'Esta função abrirá a aba de comentários em breve.',
+    })
+  }
+
+  const handleShare = () => {
+    toast.success('Opções de compartilhamento', {
+      description: 'Link copiado para a área de transferência!',
+    })
+  }
+
+  const handleFollow = () => {
+    setIsFollowing(!isFollowing)
+    if (!isFollowing) {
+      toast.success(`Você agora segue ${post.user.name}`)
+    }
   }
 
   return (
@@ -69,7 +89,7 @@ export function FoodPostCard({ post }: FoodPostProps) {
             !isFollowing &&
               'text-primary border-primary/50 hover:bg-primary hover:text-white',
           )}
-          onClick={() => setIsFollowing(!isFollowing)}
+          onClick={handleFollow}
         >
           {isFollowing ? 'Seguindo' : 'Seguir'}
         </Button>
@@ -77,7 +97,7 @@ export function FoodPostCard({ post }: FoodPostProps) {
 
       <CardContent className="p-0">
         {post.template && (
-          <div className="px-4 pb-2">
+          <div className="px-4 pb-2 flex flex-wrap gap-2">
             <Badge className="bg-orange-500/10 text-orange-600 hover:bg-orange-500/20 border-none rounded-md px-2 py-0.5 text-xs font-bold flex w-fit items-center gap-1.5 shadow-sm">
               <UtensilsCrossed className="w-3 h-3" />
               {post.template}
@@ -89,7 +109,7 @@ export function FoodPostCard({ post }: FoodPostProps) {
           <p className="text-sm leading-relaxed whitespace-pre-wrap">
             {post.content}
           </p>
-          {post.hashtags && (
+          {post.hashtags && post.hashtags.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-2">
               {post.hashtags.map((tag: string) => (
                 <span
@@ -103,20 +123,22 @@ export function FoodPostCard({ post }: FoodPostProps) {
           )}
         </div>
 
-        <div className="relative aspect-square w-full bg-zinc-900 group cursor-pointer overflow-hidden">
-          <img
-            src={post.image}
-            alt="Food post content"
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-          {post.type === 'video' && (
-            <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-              <div className="h-12 w-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/50 shadow-xl group-hover:scale-110 transition-transform">
-                <Play className="h-5 w-5 text-white ml-1 fill-white" />
+        {post.image && (
+          <div className="relative aspect-square w-full bg-zinc-900 group cursor-pointer overflow-hidden">
+            <img
+              src={post.image}
+              alt="Food post content"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            {post.type === 'video' && (
+              <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                <div className="h-12 w-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/50 shadow-xl group-hover:scale-110 transition-transform">
+                  <Play className="h-5 w-5 text-white ml-1 fill-white" />
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
 
         <div className="p-4 bg-secondary/5">
           <div className="flex items-center justify-between mb-1">
@@ -141,6 +163,7 @@ export function FoodPostCard({ post }: FoodPostProps) {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 rounded-full text-muted-foreground hover:text-blue-400"
+                onClick={handleComment}
               >
                 <MessageCircle className="h-5 w-5" />
               </Button>
@@ -149,6 +172,7 @@ export function FoodPostCard({ post }: FoodPostProps) {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 rounded-full text-muted-foreground hover:text-green-400"
+                onClick={handleShare}
               >
                 <Share2 className="h-5 w-5" />
               </Button>
@@ -191,9 +215,14 @@ export function FoodPostCard({ post }: FoodPostProps) {
             <span className="text-xs font-bold">
               {likes.toLocaleString()} curtidas
             </span>
-            <div className="text-xs text-muted-foreground mt-0.5 cursor-pointer hover:underline">
-              Ver todos os {post.comments} comentários
-            </div>
+            {post.comments > 0 && (
+              <div
+                className="text-xs text-muted-foreground mt-0.5 cursor-pointer hover:underline"
+                onClick={handleComment}
+              >
+                Ver todos os {post.comments} comentários
+              </div>
+            )}
           </div>
         </div>
       </CardContent>
