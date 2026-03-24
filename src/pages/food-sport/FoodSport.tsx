@@ -97,6 +97,10 @@ export default function FoodSport() {
     toast.success('Refeição compartilhada com sucesso!')
   }
 
+  const handleDeletePost = (id: number) => {
+    setPosts(posts.filter((post) => post.id !== id))
+  }
+
   const filteredPosts = posts.filter(
     (post) =>
       activeCategory === 'Todos' ||
@@ -217,7 +221,11 @@ export default function FoodSport() {
           </Card>
 
           {filteredPosts.map((post) => (
-            <FoodPostCard key={post.id} post={post} />
+            <FoodPostCard
+              key={post.id}
+              post={post}
+              onDelete={handleDeletePost}
+            />
           ))}
 
           {filteredPosts.length === 0 && (

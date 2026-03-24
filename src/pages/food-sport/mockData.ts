@@ -60,10 +60,10 @@ export const mockFoodPosts = [
     id: 201,
     type: 'image',
     user: {
-      id: 'u5',
-      name: 'Beatriz Lima',
-      type: 'Nutricionista',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=23',
+      id: 'me',
+      name: 'Você',
+      type: 'Atleta',
+      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99',
     },
     template: 'Receita',
     categories: [

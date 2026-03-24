@@ -10,22 +10,42 @@ import {
   Star,
   Play,
   UtensilsCrossed,
+  MoreHorizontal,
+  Trash2,
 } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 interface FoodPostProps {
   post: any
+  onDelete?: (id: number) => void
 }
 
-export function FoodPostCard({ post }: FoodPostProps) {
+export function FoodPostCard({ post, onDelete }: FoodPostProps) {
   const [isLiked, setIsLiked] = useState(post.liked)
   const [likes, setLikes] = useState(post.likes)
   const [isSaved, setIsSaved] = useState(post.saved)
   const [isFavorite, setIsFavorite] = useState(false)
   const [isFollowing, setIsFollowing] = useState(false)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   const handleLike = () => {
     setIsLiked(!isLiked)
@@ -81,18 +101,51 @@ export function FoodPostCard({ post }: FoodPostProps) {
           </div>
         </div>
 
-        <Button
-          variant={isFollowing ? 'secondary' : 'outline'}
-          size="sm"
-          className={cn(
-            'h-7 text-xs rounded-full px-4 transition-all duration-300',
-            !isFollowing &&
-              'text-primary border-primary/50 hover:bg-primary hover:text-white',
+        <div className="flex items-center gap-2">
+          {post.user.id !== 'me' && (
+            <Button
+              variant={isFollowing ? 'secondary' : 'outline'}
+              size="sm"
+              className={cn(
+                'h-7 text-xs rounded-full px-4 transition-all duration-300',
+                !isFollowing &&
+                  'text-primary border-primary/50 hover:bg-primary hover:text-white',
+              )}
+              onClick={handleFollow}
+            >
+              {isFollowing ? 'Seguindo' : 'Seguir'}
+            </Button>
           )}
-          onClick={handleFollow}
-        >
-          {isFollowing ? 'Seguindo' : 'Seguir'}
-        </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground hover:text-foreground"
+              >
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-40 rounded-xl">
+              {post.user.id === 'me' ? (
+                <DropdownMenuItem
+                  className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
+                  onClick={() => setShowDeleteDialog(true)}
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Excluir
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem
+                  onClick={() => toast.success('Link copiado!')}
+                >
+                  Copiar Link
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </CardHeader>
 
       <CardContent className="p-0">
@@ -226,6 +279,37 @@ export function FoodPostCard({ post }: FoodPostProps) {
           </div>
         </div>
       </CardContent>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent className="rounded-2xl max-w-sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir publicação?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir esta publicação? Essa ação não pode
+              ser desfeita e a publicação será removida permanentemente do feed.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-full">
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full"
+              onClick={() => {
+                if (onDelete) {
+                  onDelete(post.id)
+                  toast.success('Publicação excluída', {
+                    description: 'A publicação foi removida do Food Sport.',
+                  })
+                }
+                setShowDeleteDialog(false)
+              }}
+            >
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   )
 }
