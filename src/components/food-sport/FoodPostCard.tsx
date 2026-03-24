@@ -13,7 +13,7 @@ import {
   MoreHorizontal,
   Trash2,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -33,23 +33,67 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 
 interface FoodPostProps {
   post: any
   onDelete?: (id: number) => void
 }
 
+const FOOD_EMOJIS = ['🍅', '🍎', '🥕', '🥦', '🍇', '🥑', '🥩', '🍌']
+
 export function FoodPostCard({ post, onDelete }: FoodPostProps) {
-  const [isLiked, setIsLiked] = useState(post.liked)
-  const [likes, setLikes] = useState(post.likes)
+  // Initialize mock reactions based on standard likes to keep the UI realistic
+  const initialReactions = useMemo(() => {
+    const counts: Record<string, number> = {}
+    if (post.likes > 0) {
+      counts['🍎'] = Math.floor(post.likes * 0.4)
+      counts['🥦'] = Math.floor(post.likes * 0.3)
+      counts['🍅'] = post.likes - (counts['🍎'] + counts['🥦'])
+    }
+    return counts
+  }, [post.likes])
+
+  const [reactions, setReactions] =
+    useState<Record<string, number>>(initialReactions)
+  const [userReaction, setUserReaction] = useState<string | null>(
+    post.liked ? '🍎' : null,
+  )
+  const [isReactionOpen, setIsReactionOpen] = useState(false)
+
   const [isSaved, setIsSaved] = useState(post.saved)
   const [isFavorite, setIsFavorite] = useState(false)
   const [isFollowing, setIsFollowing] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
-  const handleLike = () => {
-    setIsLiked(!isLiked)
-    setLikes(isLiked ? likes - 1 : likes + 1)
+  const handleReact = (emoji: string) => {
+    setReactions((prev) => {
+      const newReactions = { ...prev }
+
+      // Remove old reaction if it exists
+      if (userReaction) {
+        newReactions[userReaction] = Math.max(
+          0,
+          (newReactions[userReaction] || 1) - 1,
+        )
+      }
+
+      // Add new reaction if it's different from the current one
+      if (userReaction !== emoji) {
+        newReactions[emoji] = (newReactions[emoji] || 0) + 1
+        setUserReaction(emoji)
+      } else {
+        // Toggling off the same reaction
+        setUserReaction(null)
+      }
+
+      return newReactions
+    })
+    setIsReactionOpen(false)
   }
 
   const handleComment = () => {
@@ -70,6 +114,16 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
       toast.success(`Você agora segue ${post.user.name}`)
     }
   }
+
+  const totalReactions = Object.values(reactions).reduce(
+    (sum, count) => sum + count,
+    0,
+  )
+  const topEmojis = Object.entries(reactions)
+    .filter(([_, count]) => count > 0)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([emoji]) => emoji)
 
   return (
     <Card className="border-none shadow-sm rounded-2xl overflow-hidden bg-card mb-4 animate-fade-in hover:shadow-md transition-shadow duration-300">
@@ -195,23 +249,53 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
         )}
 
         <div className="p-4 bg-secondary/5">
-          <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                className={cn(
-                  'h-8 w-8 rounded-full transition-colors',
-                  isLiked
-                    ? 'text-red-500'
-                    : 'text-muted-foreground hover:text-red-400',
-                )}
-                onClick={handleLike}
-              >
-                <Heart
-                  className={cn('h-5 w-5', isLiked && 'fill-current scale-110')}
-                />
-              </Button>
+              <Popover open={isReactionOpen} onOpenChange={setIsReactionOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={cn(
+                      'h-8 w-8 rounded-full transition-all duration-300',
+                      userReaction
+                        ? 'bg-orange-500/15 hover:bg-orange-500/25 scale-105 shadow-sm ring-1 ring-orange-500/30'
+                        : 'text-muted-foreground hover:text-orange-500 hover:bg-orange-500/10 hover:scale-105',
+                    )}
+                  >
+                    {userReaction ? (
+                      <span className="text-[18px] leading-none transform -translate-y-[1px]">
+                        {userReaction}
+                      </span>
+                    ) : (
+                      <Heart className="h-5 w-5" />
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  side="top"
+                  align="start"
+                  className="w-auto p-1.5 rounded-full shadow-lg border border-border/50 bg-background/95 backdrop-blur-md"
+                  sideOffset={10}
+                >
+                  <div className="flex items-center gap-1">
+                    {FOOD_EMOJIS.map((emoji) => (
+                      <button
+                        key={emoji}
+                        className={cn(
+                          'h-9 w-9 text-xl flex items-center justify-center rounded-full hover:bg-secondary/80 transition-all hover:scale-125 focus:outline-none',
+                          userReaction === emoji &&
+                            'bg-secondary scale-110 shadow-inner ring-1 ring-border',
+                        )}
+                        onClick={() => handleReact(emoji)}
+                        title={`Reagir com ${emoji}`}
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
 
               <Button
                 variant="ghost"
@@ -265,13 +349,36 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
             </div>
           </div>
 
-          <div className="px-1">
-            <span className="text-xs font-bold">
-              {likes.toLocaleString()} curtidas
-            </span>
+          <div className="px-1 flex flex-col gap-1.5">
+            {totalReactions > 0 ? (
+              <div className="flex items-center gap-2">
+                <div className="flex -space-x-1.5">
+                  {topEmojis.map((emoji, i) => (
+                    <div
+                      key={i}
+                      className="text-[10px] bg-card rounded-full border border-background shadow-sm h-[22px] w-[22px] flex items-center justify-center relative ring-1 ring-border/50"
+                      style={{ zIndex: 3 - i }}
+                    >
+                      <span className="leading-none transform scale-[0.85]">
+                        {emoji}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <span className="text-xs font-bold text-foreground">
+                  {totalReactions.toLocaleString()}{' '}
+                  {totalReactions === 1 ? 'reação' : 'reações'}
+                </span>
+              </div>
+            ) : (
+              <span className="text-xs font-medium text-muted-foreground">
+                Seja o primeiro a reagir
+              </span>
+            )}
+
             {post.comments > 0 && (
               <div
-                className="text-xs text-muted-foreground mt-0.5 cursor-pointer hover:underline"
+                className="text-xs text-muted-foreground cursor-pointer hover:underline w-fit"
                 onClick={handleComment}
               >
                 Ver todos os {post.comments} comentários
