@@ -7,6 +7,7 @@ import ClubView from './ClubView'
 import CoachView from './CoachView'
 import ScoutView from './ScoutView'
 import SponsorView from './SponsorView'
+import { BirthdayCelebration } from './BirthdayCelebration'
 
 export default function Profile() {
   const { id } = useParams()
@@ -26,6 +27,8 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-background pb-20">
+      <BirthdayCelebration user={user} isMe={isMe} />
+
       {profileType === 'photographer' ? (
         <PhotographerView profile={user as any} />
       ) : profileType === 'driver' ? (

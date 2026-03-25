@@ -173,6 +173,7 @@ export interface ProfileData {
   distance?: string
   responseTime?: string
   age?: number
+  birthDate?: string // Format: YYYY-MM-DD
   sport?: string
   position?: string
   height?: string
@@ -1207,6 +1208,9 @@ export const mockMusicTracks: MusicTrack[] = [
   },
 ]
 
+const _now = new Date()
+const _todayStr = `${_now.getFullYear()}-${String(_now.getMonth() + 1).padStart(2, '0')}-${String(_now.getDate()).padStart(2, '0')}`
+
 export const mockUser: ProfileData = {
   id: 'u1',
   name: 'Alex Silva',
@@ -1220,6 +1224,7 @@ export const mockUser: ProfileData = {
   location: 'São Paulo, SP',
   bio: 'Apaixonado por esportes e superação. Em busca do próximo nível.',
   age: 24,
+  birthDate: _todayStr, // Setting dynamically so the Birthday event triggers natively
   sport: 'Futebol',
   position: 'Meia-Atacante',
   height: '1.78m',
