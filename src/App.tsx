@@ -12,6 +12,8 @@ import { useThemeStore } from '@/stores/useThemeStore'
 import useSoundStore from '@/stores/useSoundStore'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { FlashbackModal } from '@/components/FlashbackModal'
+import { MemoryNotificationManager } from '@/components/MemoryNotificationManager'
+import { SmartNotificationManager } from '@/components/SmartNotificationManager'
 import Index from './pages/Index'
 
 // Lazy load pages
@@ -219,6 +221,8 @@ const App = () => {
           <Toaster />
           <Sonner />
           <FlashbackModal />
+          <MemoryNotificationManager />
+          <SmartNotificationManager />
           <BrandingProvider>
             <CartProvider>
               <Suspense fallback={<PageLoader />}>

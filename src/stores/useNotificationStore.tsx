@@ -77,6 +77,24 @@ const useNotificationStore = create<NotificationState>()(
     }),
     {
       name: 'goplay-notifications-storage',
+      merge: (persistedState: any, currentState) => {
+        const persisted = persistedState?.notifications || []
+        const currentMocks = currentState.notifications || []
+
+        // Smart Persistence Logic: Merge without overwriting unread memory notifications.
+        // Prevents over-filtering when loading the application.
+        const existingIds = new Set(persisted.map((n: any) => n.id))
+        const newMocks = currentMocks.filter((n: any) => !existingIds.has(n.id))
+
+        const mergedNotifications = [...persisted, ...newMocks]
+
+        return {
+          ...currentState,
+          ...persistedState,
+          notifications: mergedNotifications,
+          unreadCount: mergedNotifications.filter((n: any) => !n.read).length,
+        }
+      },
     },
   ),
 )

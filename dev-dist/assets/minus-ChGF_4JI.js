@@ -1,0 +1,8 @@
+import { Br as createLucideIcon } from "./index-B51WKH09.js";
+var Minus = createLucideIcon("minus", [["path", {
+	d: "M5 12h14",
+	key: "1ays0h"
+}]]);
+export { Minus as t };
+
+//# sourceMappingURL=minus-ChGF_4JI.js.map
