@@ -2,18 +2,16 @@ import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import { Logo } from '@/components/Logo'
 import { AppIcon } from '@/components/AppIcon'
-import { ArrowRight, Trophy, Users, Activity, History } from 'lucide-react'
+import { ArrowRight, Trophy, Users, Activity } from 'lucide-react'
 import { useEffect } from 'react'
 import { useInvisiblePresenceStore } from '@/stores/useInvisiblePresenceStore'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { PageLoader } from '@/components/PageLoader'
-import { useMemorySimulation } from '@/hooks/useMemorySimulation'
 
 export default function Index() {
   const navigate = useNavigate()
   const { initializeSession } = useInvisiblePresenceStore()
   const { isAuthenticated, hasHydrated } = useAuthStore()
-  const { simulateMemory } = useMemorySimulation()
 
   // Initialize invisible presence logic on landing page load
   useEffect(() => {
@@ -102,17 +100,6 @@ export default function Index() {
           >
             Entrar no Goplay
             <ArrowRight className="w-5 h-5 ml-2 opacity-80 group-hover:translate-x-1 transition-transform" />
-          </Button>
-
-          {/* Admin Simulation Button for Testing */}
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full h-10 mt-2 border-purple-500/30 text-purple-500 hover:bg-purple-500/10 hover:text-purple-600 bg-background/50 backdrop-blur-sm shadow-sm"
-            onClick={simulateMemory}
-          >
-            <History className="w-4 h-4 mr-2" />
-            Simular Memória (Admin Test)
           </Button>
 
           <div className="flex justify-center gap-4 pt-4 text-[10px] text-muted-foreground font-medium">
