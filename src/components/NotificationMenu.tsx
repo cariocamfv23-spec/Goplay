@@ -48,8 +48,10 @@ export function NotificationMenu() {
     }
     setOpen(false)
 
-    if (notification.type === 'time_travel') {
-      const memoryId = notification.link?.replace('modal:', '') || 'today'
+    if (notification.type === 'time_travel' || notification.type === 'memory') {
+      const memoryId =
+        notification.link?.replace('modal:', '')?.replace('/memory/', '') ||
+        'today'
       openFlashback(memoryId)
       return
     }
@@ -148,7 +150,8 @@ export function NotificationMenu() {
                     notification.title.toLowerCase().includes('vip') &&
                       !notification.read &&
                       'bg-gold/5',
-                    notification.type === 'time_travel' &&
+                    (notification.type === 'time_travel' ||
+                      notification.type === 'memory') &&
                       !notification.read &&
                       'bg-purple-500/5',
                   )}
@@ -265,7 +268,8 @@ export function NotificationMenu() {
                         'absolute right-4 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full',
                         notification.title.toLowerCase().includes('vip')
                           ? 'bg-gold'
-                          : notification.type === 'time_travel'
+                          : notification.type === 'time_travel' ||
+                              notification.type === 'memory'
                             ? 'bg-purple-500'
                             : 'bg-primary',
                       )}

@@ -1,15 +1,15 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { History } from 'lucide-react'
 import useNotificationStore from '@/stores/useNotificationStore'
 import { useMemoryNotificationState } from '@/stores/useMemoryNotificationState'
 import { mockDailyMemories } from '@/lib/data'
+import { useFlashbackStore } from '@/stores/useFlashbackStore'
 
 export function MemoryNotificationManager() {
   const { addNotification } = useNotificationStore()
   const { lastNotifiedDate, setLastNotifiedDate } = useMemoryNotificationState()
-  const navigate = useNavigate()
+  const { openFlashback } = useFlashbackStore()
 
   useEffect(() => {
     const todayStr = new Date().toDateString()
@@ -20,12 +20,12 @@ export function MemoryNotificationManager() {
       if (todayMemory && todayMemory.items.length > 0) {
         const yearsAgo = todayMemory.items[0].yearsAgo
 
-        addNotification({
+        const notifId = addNotification({
           title: 'Goplay Memory ⏳',
           message: `Revisite um momento especial! Veja o que você postou neste dia há ${yearsAgo} ano(s).`,
-          type: 'memory',
+          type: 'time_travel',
           priority: 'high',
-          link: `/memory/${todayMemory.id}`,
+          link: `modal:${todayMemory.id}`,
         })
 
         setLastNotifiedDate(todayStr)
@@ -47,7 +47,8 @@ export function MemoryNotificationManager() {
               <button
                 onClick={() => {
                   toast.dismiss(t)
-                  navigate(`/memory/${todayMemory.id}`)
+                  useNotificationStore.getState().markAsRead(notifId)
+                  openFlashback(todayMemory.id)
                 }}
                 className="shrink-0 rounded-xl bg-purple-500 px-3 py-2 text-xs font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-md shadow-purple-500/20"
               >
@@ -59,7 +60,7 @@ export function MemoryNotificationManager() {
         )
       }
     }
-  }, [addNotification, lastNotifiedDate, setLastNotifiedDate, navigate])
+  }, [addNotification, lastNotifiedDate, setLastNotifiedDate, openFlashback])
 
   return null
 }
