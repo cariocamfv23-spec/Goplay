@@ -91,6 +91,7 @@ export interface Notification {
     | 'comment'
     | 'thread_comment'
     | 'system_update'
+    | 'memory'
   date?: string
   priority?: 'low' | 'medium' | 'high' | 'critical'
   link?: string
@@ -3058,3 +3059,51 @@ export const mockKidZones: KidZone[] = [
     image: 'https://img.usecurling.com/p/400/300?q=nursery%20room&color=pink',
   },
 ]
+
+export interface MemoryItem {
+  id: string
+  type: 'image' | 'video' | 'story'
+  url: string
+  date: string
+  yearsAgo: number
+  caption?: string
+}
+
+export interface DailyMemory {
+  id: string
+  dateFormatted: string
+  items: MemoryItem[]
+}
+
+export const mockDailyMemories: Record<string, DailyMemory> = {
+  today: {
+    id: 'today',
+    dateFormatted: 'Hoje',
+    items: [
+      {
+        id: 'm1',
+        type: 'image',
+        url: 'https://img.usecurling.com/p/800/1200?q=soccer%20goal%20celebration&color=blue&dpr=2',
+        date: 'Neste mesmo dia, 2023',
+        yearsAgo: 1,
+        caption: 'O gol do título! Que momento inesquecível. 🏆⚽',
+      },
+      {
+        id: 'm2',
+        type: 'story',
+        url: 'https://img.usecurling.com/p/800/1600?q=locker%20room%20celebration&color=purple&dpr=2',
+        date: 'Neste mesmo dia, 2022',
+        yearsAgo: 2,
+        caption: 'Comemoração no vestiário!',
+      },
+      {
+        id: 'm3',
+        type: 'video',
+        url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+        date: 'Neste mesmo dia, 2021',
+        yearsAgo: 3,
+        caption: 'Aquele treino que rendeu! Saudade dessa época.',
+      },
+    ],
+  },
+}

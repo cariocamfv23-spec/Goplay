@@ -6,6 +6,7 @@ import { SmartNotificationManager } from '@/components/SmartNotificationManager'
 import { ScholarshipAlertManager } from '@/components/ScholarshipAlertManager'
 import { WeatherAlertManager } from '@/components/WeatherAlertManager'
 import { LiveStreamManager } from '@/components/LiveStreamManager'
+import { MemoryNotificationManager } from '@/components/MemoryNotificationManager'
 import { Toaster } from '@/components/ui/toaster'
 import { cn } from '@/lib/utils'
 import { NostalgiaFilter } from '@/components/NostalgiaFilter'
@@ -147,6 +148,7 @@ export default function Layout() {
           <ScholarshipAlertManager />
           <WeatherAlertManager />
           <LiveStreamManager />
+          <MemoryNotificationManager />
         </>
       )}
 

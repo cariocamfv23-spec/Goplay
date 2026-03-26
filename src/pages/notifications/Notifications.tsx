@@ -22,6 +22,7 @@ import {
   MessageCircle,
   MessageSquare,
   Megaphone,
+  History,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -84,6 +85,8 @@ export default function Notifications() {
         return <MessageSquare className="h-5 w-5 text-blue-500" />
       case 'system_update':
         return <Megaphone className="h-5 w-5 text-primary" />
+      case 'memory':
+        return <History className="h-5 w-5 text-purple-500" />
       default:
         return <Bell className="h-5 w-5 text-primary" />
     }
@@ -93,7 +96,11 @@ export default function Notifications() {
     priority?: string,
     title: string = '',
     message: string = '',
+    type?: string,
   ) => {
+    if (type === 'memory')
+      return 'border-l-4 border-l-purple-500 bg-purple-500/10 dark:bg-purple-900/20'
+
     if (priority === 'critical')
       return 'border-l-4 border-l-red-500 bg-red-500/10 dark:bg-red-900/20'
 
@@ -176,7 +183,12 @@ export default function Notifications() {
                       not.read
                         ? 'bg-card opacity-90'
                         : 'bg-card ring-1 ring-primary/20 shadow-md',
-                      getPriorityStyle(not.priority, not.title, not.message),
+                      getPriorityStyle(
+                        not.priority,
+                        not.title,
+                        not.message,
+                        not.type,
+                      ),
                       not.link && 'cursor-pointer active:scale-[0.98]',
                     )}
                     onClick={() => handleNotificationClick(not)}
@@ -226,6 +238,8 @@ export default function Notifications() {
                             'bg-emerald-500/10 border-emerald-500/30',
                           not.type === 'system_update' &&
                             'bg-primary/10 border-primary/30',
+                          not.type === 'memory' &&
+                            'bg-purple-500/10 border-purple-500/30',
                         )}
                       >
                         {getIcon(not.type, not.title, not.message)}
@@ -248,6 +262,8 @@ export default function Notifications() {
                             not.type === 'live_stream' &&
                               !not.link?.includes('/replay/') &&
                               'text-red-500',
+                            not.type === 'memory' &&
+                              'text-purple-600 dark:text-purple-400',
                           )}
                         >
                           {not.title}
@@ -297,22 +313,26 @@ export default function Notifications() {
                               variant="outline"
                               className={cn(
                                 'text-[10px] h-5 px-1.5 font-normal border-0',
-                                not.priority === 'critical'
-                                  ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
-                                  : isVipAlert(not.title, not.message)
-                                    ? 'bg-gold/20 text-gold border-gold/30'
-                                    : not.priority === 'high'
-                                      ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
-                                      : 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
+                                not.type === 'memory'
+                                  ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300'
+                                  : not.priority === 'critical'
+                                    ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
+                                    : isVipAlert(not.title, not.message)
+                                      ? 'bg-gold/20 text-gold border-gold/30'
+                                      : not.priority === 'high'
+                                        ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
+                                        : 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
                               )}
                             >
-                              {not.priority === 'critical'
-                                ? 'Urgente'
-                                : isVipAlert(not.title, not.message)
-                                  ? 'VIP'
-                                  : not.priority === 'high'
-                                    ? 'Importante'
-                                    : 'Info'}
+                              {not.type === 'memory'
+                                ? 'Flashback'
+                                : not.priority === 'critical'
+                                  ? 'Urgente'
+                                  : isVipAlert(not.title, not.message)
+                                    ? 'VIP'
+                                    : not.priority === 'high'
+                                      ? 'Importante'
+                                      : 'Info'}
                             </Badge>
                           )}
                       </div>

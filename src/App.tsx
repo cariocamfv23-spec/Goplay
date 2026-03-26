@@ -19,8 +19,9 @@ const Register = lazy(() => import('./pages/auth/Register'))
 const Onboarding = lazy(() => import('./pages/auth/Onboarding'))
 const ProfileSelection = lazy(() => import('./pages/auth/ProfileSelection'))
 
-// Retrospective Page
+// Retrospective & Memory Pages
 const Retrospective = lazy(() => import('./pages/retrospective/Retrospective'))
+const MemoryViewer = lazy(() => import('./pages/memory/MemoryViewer'))
 
 // App Map
 const AppMap = lazy(() => import('./pages/AppMap'))
@@ -236,6 +237,7 @@ const App = () => {
                       element={<CreateLiveBroadcast />}
                     />
                     <Route path="/retrospective" element={<Retrospective />} />
+                    <Route path="/memory/:id" element={<MemoryViewer />} />
                     <Route path="/timeshift" element={<TimeShift />} />
                   </Route>
 
