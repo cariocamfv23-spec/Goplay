@@ -25,6 +25,9 @@ import {
   Info,
   TrendingDown,
   Crown,
+  MessageCircle,
+  MessageSquare,
+  Megaphone,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -81,6 +84,12 @@ export function NotificationMenu() {
         return <Handshake className="h-4 w-4 text-indigo-500" />
       case 'kids_zone':
         return <Baby className="h-4 w-4 text-pink-500" />
+      case 'comment':
+        return <MessageCircle className="h-4 w-4 text-blue-500" />
+      case 'thread_comment':
+        return <MessageSquare className="h-4 w-4 text-blue-500" />
+      case 'system_update':
+        return <Megaphone className="h-4 w-4 text-primary" />
       default:
         return <Info className="h-4 w-4 text-primary" />
     }
@@ -129,20 +138,38 @@ export function NotificationMenu() {
                   )}
                   onClick={() => handleItemClick(notification)}
                 >
-                  {notification.type === 'live_stream' && notification.user ? (
-                    <Avatar
-                      className={cn(
-                        'mt-1 h-8 w-8 shrink-0 ring-2 ring-offset-2 ring-offset-background',
-                        notification.link?.includes('/replay/')
-                          ? 'ring-primary'
-                          : 'ring-red-500 animate-pulse',
+                  {notification.user ? (
+                    <div className="relative shrink-0 mt-1">
+                      <Avatar
+                        className={cn(
+                          'h-8 w-8 ring-2 ring-offset-2 ring-offset-background',
+                          notification.type === 'live_stream'
+                            ? notification.link?.includes('/replay/')
+                              ? 'ring-primary'
+                              : 'ring-red-500 animate-pulse'
+                            : 'ring-transparent border border-border',
+                        )}
+                      >
+                        <AvatarImage src={notification.user.avatar} />
+                        <AvatarFallback>
+                          {notification.user.name.substring(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      {notification.type === 'live_stream' &&
+                        !notification.link?.includes('/replay/') && (
+                          <span className="absolute -bottom-1 -right-1 h-2.5 w-2.5 bg-red-500 border-2 border-background rounded-full animate-pulse" />
+                        )}
+                      {notification.type === 'comment' && (
+                        <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-blue-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
+                          <MessageCircle className="h-2 w-2 text-white" />
+                        </div>
                       )}
-                    >
-                      <AvatarImage src={notification.user.avatar} />
-                      <AvatarFallback>
-                        {notification.user.name.substring(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
+                      {notification.type === 'thread_comment' && (
+                        <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-blue-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
+                          <MessageSquare className="h-2 w-2 text-white" />
+                        </div>
+                      )}
+                    </div>
                   ) : (
                     <div
                       className={cn(
@@ -152,6 +179,8 @@ export function NotificationMenu() {
                           : 'bg-muted border-transparent',
                         notification.title.toLowerCase().includes('vip') &&
                           'bg-gold/10 border-gold/30',
+                        notification.type === 'system_update' &&
+                          'bg-primary/10 border-primary/30',
                       )}
                     >
                       {getIcon(notification.type, notification.title)}

@@ -88,6 +88,9 @@ export interface Notification {
     | 'sponsorship_match'
     | 'kids_zone'
     | 'live_stream'
+    | 'comment'
+    | 'thread_comment'
+    | 'system_update'
   date?: string
   priority?: 'low' | 'medium' | 'high' | 'critical'
   link?: string
@@ -2467,6 +2470,49 @@ export const mockProducts: Product[] = [
   },
 ]
 export const mockNotifications: Notification[] = [
+  {
+    id: 'n7',
+    title: 'Goplay Updates',
+    message:
+      'Bem-vindo ao novo sistema de notificações centralizado do Goplay! Fique por dentro de todas as interações e novidades da plataforma.',
+    time: 'Agora mesmo',
+    read: false,
+    type: 'system_update',
+    date: 'Hoje',
+    priority: 'high',
+    link: '/feed',
+  },
+  {
+    id: 'n8',
+    title: 'Novo Comentário',
+    message: 'Mariana Souza comentou na sua publicação.',
+    time: '10 min',
+    read: false,
+    type: 'comment',
+    date: 'Hoje',
+    link: '/feed',
+    user: {
+      id: 'u3',
+      name: 'Mariana Souza',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=12',
+    },
+  },
+  {
+    id: 'n9',
+    title: 'Nova Interação',
+    message:
+      'Pedro Santos também comentou em uma publicação que você está seguindo.',
+    time: '1 hora',
+    read: true,
+    type: 'thread_comment',
+    date: 'Hoje',
+    link: '/feed',
+    user: {
+      id: 'u6',
+      name: 'Pedro Santos',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=67',
+    },
+  },
   {
     id: 'n5',
     title: 'Visitante VIP!',

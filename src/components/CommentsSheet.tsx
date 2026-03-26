@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Send, Heart } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
+import useNotificationStore from '@/stores/useNotificationStore'
 
 interface Comment {
   id: string
@@ -76,6 +77,7 @@ const MOCK_COMMENTS: Comment[] = [
 export function CommentsSheet({ open, onOpenChange }: CommentsSheetProps) {
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS)
   const [newComment, setNewComment] = useState('')
+  const { addNotification } = useNotificationStore()
 
   const handleSend = () => {
     if (!newComment.trim()) return
@@ -93,6 +95,23 @@ export function CommentsSheet({ open, onOpenChange }: CommentsSheetProps) {
 
     setComments([comment, ...comments])
     setNewComment('')
+
+    // Simulate network interaction notification (e.g. another user comments in the thread)
+    setTimeout(() => {
+      addNotification({
+        title: 'Nova Interação',
+        message:
+          'João Silva também comentou em uma publicação que você interagiu.',
+        type: 'thread_comment',
+        priority: 'medium',
+        link: '/feed',
+        user: {
+          id: 'u1',
+          name: 'João Silva',
+          avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
+        },
+      })
+    }, 3000)
   }
 
   const toggleLike = (id: string) => {

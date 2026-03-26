@@ -19,6 +19,9 @@ import {
   TrendingDown,
   Crown,
   Eye,
+  MessageCircle,
+  MessageSquare,
+  Megaphone,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -75,6 +78,12 @@ export default function Notifications() {
         return <Handshake className="h-5 w-5 text-indigo-500" />
       case 'kids_zone':
         return <Baby className="h-5 w-5 text-pink-500" />
+      case 'comment':
+        return <MessageCircle className="h-5 w-5 text-blue-500" />
+      case 'thread_comment':
+        return <MessageSquare className="h-5 w-5 text-blue-500" />
+      case 'system_update':
+        return <Megaphone className="h-5 w-5 text-primary" />
       default:
         return <Bell className="h-5 w-5 text-primary" />
     }
@@ -172,14 +181,16 @@ export default function Notifications() {
                     )}
                     onClick={() => handleNotificationClick(not)}
                   >
-                    {not.type === 'live_stream' && not.user ? (
+                    {not.user ? (
                       <div className="relative shrink-0 mt-1">
                         <Avatar
                           className={cn(
                             'h-10 w-10 ring-2 ring-offset-2 ring-offset-background',
-                            not.link?.includes('/replay/')
-                              ? 'ring-primary'
-                              : 'ring-red-500',
+                            not.type === 'live_stream'
+                              ? not.link?.includes('/replay/')
+                                ? 'ring-primary'
+                                : 'ring-red-500'
+                              : 'ring-transparent border border-border',
                           )}
                         >
                           <AvatarImage src={not.user.avatar} />
@@ -187,8 +198,19 @@ export default function Notifications() {
                             {not.user.name.substring(0, 2).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
-                        {!not.link?.includes('/replay/') && (
-                          <span className="absolute -bottom-1 -right-1 h-3 w-3 bg-red-500 border-2 border-background rounded-full animate-pulse" />
+                        {not.type === 'live_stream' &&
+                          !not.link?.includes('/replay/') && (
+                            <span className="absolute -bottom-1 -right-1 h-3 w-3 bg-red-500 border-2 border-background rounded-full animate-pulse" />
+                          )}
+                        {not.type === 'comment' && (
+                          <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-blue-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
+                            <MessageCircle className="h-2 w-2 text-white" />
+                          </div>
+                        )}
+                        {not.type === 'thread_comment' && (
+                          <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-blue-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
+                            <MessageSquare className="h-2 w-2 text-white" />
+                          </div>
                         )}
                       </div>
                     ) : (
@@ -202,6 +224,8 @@ export default function Notifications() {
                             'bg-blue-500/10 border-blue-500/30',
                           not.title.toLowerCase().includes('sponsor') &&
                             'bg-emerald-500/10 border-emerald-500/30',
+                          not.type === 'system_update' &&
+                            'bg-primary/10 border-primary/30',
                         )}
                       >
                         {getIcon(not.type, not.title, not.message)}
