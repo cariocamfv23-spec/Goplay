@@ -33,6 +33,9 @@ const Move = lazy(() => import('./pages/move/Move'))
 const Explore = lazy(() => import('./pages/explore/Explore'))
 const CheckIn = lazy(() => import('./pages/checkin/CheckIn'))
 
+// Arena Go
+const ArenaGo = lazy(() => import('./pages/arena/ArenaGo'))
+
 // Food Sport
 const FoodSport = lazy(() => import('./pages/food-sport/FoodSport'))
 
@@ -257,6 +260,7 @@ const App = () => {
                       <Route path="/explore" element={<Explore />} />
                       <Route path="/check-in" element={<CheckIn />} />
                       <Route path="/app-map" element={<AppMap />} />
+                      <Route path="/arena" element={<ArenaGo />} />
                       <Route path="/food-sport" element={<FoodSport />} />
 
                       <Route
