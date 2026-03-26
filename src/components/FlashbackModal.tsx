@@ -1,14 +1,23 @@
 import { useEffect, useState } from 'react'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { useFlashbackStore } from '@/stores/useFlashbackStore'
+import useNotificationStore from '@/stores/useNotificationStore'
 import { mockDailyMemories, mockUser } from '@/lib/data'
 import { History, X, Sparkles } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 
 export function FlashbackModal() {
-  const { isOpen, memoryId, closeFlashback } = useFlashbackStore()
+  const { isOpen, memoryId, notificationId, closeFlashback } =
+    useFlashbackStore()
+  const markAsRead = useNotificationStore((state) => state.markAsRead)
   const [currentIndex, setCurrentIndex] = useState(0)
+
+  useEffect(() => {
+    if (isOpen && notificationId) {
+      markAsRead(notificationId)
+    }
+  }, [isOpen, notificationId, markAsRead])
 
   const memoryData = memoryId ? mockDailyMemories[memoryId] : null
 

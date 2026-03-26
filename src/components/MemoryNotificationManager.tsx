@@ -47,8 +47,7 @@ export function MemoryNotificationManager() {
               <button
                 onClick={() => {
                   toast.dismiss(t)
-                  useNotificationStore.getState().markAsRead(notifId)
-                  openFlashback(todayMemory.id)
+                  openFlashback(todayMemory.id, notifId)
                 }}
                 className="shrink-0 rounded-xl bg-purple-500 px-3 py-2 text-xs font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-md shadow-purple-500/20"
               >

@@ -70,7 +70,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import useNotificationStore from '@/stores/useNotificationStore'
+import { useMemorySimulation } from '@/hooks/useMemorySimulation'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -96,7 +96,7 @@ export default function AthleteView({
   const { replays } = useReplayStore()
   const { isInvisibleMode, isPremium, toggleInvisibleMode, upgradeToPremium } =
     usePrivacyStore()
-  const { addNotification } = useNotificationStore()
+  const { simulateMemory } = useMemorySimulation()
 
   const currentTheme = getTheme()
   const auraConfig = getAuraConfig(user)
@@ -130,20 +130,6 @@ export default function AthleteView({
   const handlePostClick = (post: any) => {
     setSelectedPost(post)
     setIsDetailOpen(true)
-  }
-
-  const handleSimulateMemory = () => {
-    addNotification({
-      title: 'Viagem no Tempo ⏳',
-      message: 'Relembre este momento de 1 ano atrás!',
-      type: 'time_travel',
-      priority: 'high',
-      link: 'modal:today',
-    })
-    toast.success('Notificação simulada enviada!', {
-      description: 'Verifique a central de notificações.',
-      icon: <History className="w-4 h-4 text-purple-500" />,
-    })
   }
 
   return (
@@ -1035,7 +1021,7 @@ export default function AthleteView({
               <Button
                 variant="outline"
                 className="w-full bg-background border-purple-500/30 text-purple-600 hover:bg-purple-500/10 hover:text-purple-600 font-medium"
-                onClick={handleSimulateMemory}
+                onClick={simulateMemory}
               >
                 <History className="h-4 w-4 mr-2" /> Simular Memória (Viagem no
                 Tempo)

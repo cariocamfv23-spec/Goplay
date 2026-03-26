@@ -42,18 +42,23 @@ export function NotificationMenu() {
   const { openFlashback } = useFlashbackStore()
   const [open, setOpen] = useState(false)
 
+  const hasUnreadMemory = notifications.some(
+    (n) => !n.read && (n.type === 'time_travel' || n.type === 'memory'),
+  )
+
   const handleItemClick = (notification: any) => {
-    if (!notification.read) {
-      markAsRead(notification.id)
-    }
     setOpen(false)
 
     if (notification.type === 'time_travel' || notification.type === 'memory') {
       const memoryId =
         notification.link?.replace('modal:', '')?.replace('/memory/', '') ||
         'today'
-      openFlashback(memoryId)
+      openFlashback(memoryId, notification.id)
       return
+    }
+
+    if (!notification.read) {
+      markAsRead(notification.id)
     }
 
     if (notification.link) {
@@ -120,7 +125,14 @@ export function NotificationMenu() {
         >
           <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
-            <span className="absolute top-2 right-2 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-background animate-pulse" />
+            <span
+              className={cn(
+                'absolute top-2 right-2 h-2.5 w-2.5 rounded-full border-2 border-background animate-pulse',
+                hasUnreadMemory
+                  ? 'bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.8)]'
+                  : 'bg-red-500',
+              )}
+            />
           )}
         </Button>
       </PopoverTrigger>
