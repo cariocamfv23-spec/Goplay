@@ -36,6 +36,7 @@ import {
   Clock,
   Lock,
   Crown,
+  Wand2,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
@@ -69,6 +70,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import useNotificationStore from '@/stores/useNotificationStore'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -94,6 +96,8 @@ export default function AthleteView({
   const { replays } = useReplayStore()
   const { isInvisibleMode, isPremium, toggleInvisibleMode, upgradeToPremium } =
     usePrivacyStore()
+  const { addNotification } = useNotificationStore()
+
   const currentTheme = getTheme()
   const auraConfig = getAuraConfig(user)
 
@@ -104,20 +108,15 @@ export default function AthleteView({
         console.log(
           `[Invisible Mode] Visit tracking suppressed for profile: ${user.id}`,
         )
-        // The real-time tracker stops broadcasting the user's presence immediately
       } else {
         console.log(
           `[Tracker] Broadcasting VIP presence to profile: ${user.id}`,
         )
-        // API call to record visit goes here
       }
     }
   }, [isMe, user.id, isInvisibleMode])
 
-  // Filter posts based on user if needed. Currently showing all mockPosts for demo
   const userPosts = mockPosts
-
-  // Dynamic Sport Background Logic
   const coverImage = getSportCoverImage(user.sport)
 
   const handleMusicSelect = (track: MusicTrack) => {
@@ -131,6 +130,20 @@ export default function AthleteView({
   const handlePostClick = (post: any) => {
     setSelectedPost(post)
     setIsDetailOpen(true)
+  }
+
+  const handleSimulateMemory = () => {
+    addNotification({
+      title: 'Viagem no Tempo ⏳',
+      message: 'Relembre este momento de 1 ano atrás!',
+      type: 'time_travel',
+      priority: 'high',
+      link: 'modal:today',
+    })
+    toast.success('Notificação simulada enviada!', {
+      description: 'Verifique a central de notificações.',
+      icon: <History className="w-4 h-4 text-purple-500" />,
+    })
   }
 
   return (
@@ -1008,6 +1021,29 @@ export default function AthleteView({
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Admin Demo Tools */}
+      {isMe && (
+        <div className="px-4 mt-8 mb-4">
+          <Card className="border-dashed border-primary/30 bg-primary/5 shadow-none">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-2">
+                  <Wand2 className="h-4 w-4" /> Admin Demo Tools
+                </h3>
+              </div>
+              <Button
+                variant="outline"
+                className="w-full bg-background border-purple-500/30 text-purple-600 hover:bg-purple-500/10 hover:text-purple-600 font-medium"
+                onClick={handleSimulateMemory}
+              >
+                <History className="h-4 w-4 mr-2" /> Simular Memória (Viagem no
+                Tempo)
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       <MusicSelector
         open={isMusicSelectorOpen}

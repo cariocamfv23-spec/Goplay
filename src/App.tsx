@@ -11,6 +11,7 @@ import { ThemeProvider } from '@/components/ThemeProvider'
 import { useThemeStore } from '@/stores/useThemeStore'
 import useSoundStore from '@/stores/useSoundStore'
 import { ProtectedRoute } from './components/ProtectedRoute'
+import { FlashbackModal } from '@/components/FlashbackModal'
 import Index from './pages/Index'
 
 // Lazy load pages
@@ -217,6 +218,7 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
+          <FlashbackModal />
           <BrandingProvider>
             <CartProvider>
               <Suspense fallback={<PageLoader />}>

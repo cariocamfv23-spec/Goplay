@@ -92,6 +92,7 @@ export interface Notification {
     | 'thread_comment'
     | 'system_update'
     | 'memory'
+    | 'time_travel'
   date?: string
   priority?: 'low' | 'medium' | 'high' | 'critical'
   link?: string

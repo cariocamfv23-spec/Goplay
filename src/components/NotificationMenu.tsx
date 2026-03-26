@@ -28,15 +28,18 @@ import {
   MessageCircle,
   MessageSquare,
   Megaphone,
+  History,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
+import { useFlashbackStore } from '@/stores/useFlashbackStore'
 import { cn } from '@/lib/utils'
 
 export function NotificationMenu() {
   const navigate = useNavigate()
   const { notifications, unreadCount, markAsRead, markAllAsRead } =
     useNotificationStore()
+  const { openFlashback } = useFlashbackStore()
   const [open, setOpen] = useState(false)
 
   const handleItemClick = (notification: any) => {
@@ -44,6 +47,13 @@ export function NotificationMenu() {
       markAsRead(notification.id)
     }
     setOpen(false)
+
+    if (notification.type === 'time_travel') {
+      const memoryId = notification.link?.replace('modal:', '') || 'today'
+      openFlashback(memoryId)
+      return
+    }
+
     if (notification.link) {
       navigate(notification.link)
     }
@@ -90,6 +100,9 @@ export function NotificationMenu() {
         return <MessageSquare className="h-4 w-4 text-blue-500" />
       case 'system_update':
         return <Megaphone className="h-4 w-4 text-primary" />
+      case 'memory':
+      case 'time_travel':
+        return <History className="h-4 w-4 text-purple-500" />
       default:
         return <Info className="h-4 w-4 text-primary" />
     }
@@ -135,6 +148,9 @@ export function NotificationMenu() {
                     notification.title.toLowerCase().includes('vip') &&
                       !notification.read &&
                       'bg-gold/5',
+                    notification.type === 'time_travel' &&
+                      !notification.read &&
+                      'bg-purple-500/5',
                   )}
                   onClick={() => handleItemClick(notification)}
                 >
@@ -181,6 +197,9 @@ export function NotificationMenu() {
                           'bg-gold/10 border-gold/30',
                         notification.type === 'system_update' &&
                           'bg-primary/10 border-primary/30',
+                        (notification.type === 'time_travel' ||
+                          notification.type === 'memory') &&
+                          'bg-purple-500/10 border-purple-500/30',
                       )}
                     >
                       {getIcon(notification.type, notification.title)}
@@ -196,6 +215,9 @@ export function NotificationMenu() {
                         notification.type === 'live_stream' &&
                           !notification.link?.includes('/replay/') &&
                           'text-red-500',
+                        (notification.type === 'time_travel' ||
+                          notification.type === 'memory') &&
+                          'text-purple-600 dark:text-purple-400',
                       )}
                     >
                       {notification.title}
@@ -243,7 +265,9 @@ export function NotificationMenu() {
                         'absolute right-4 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full',
                         notification.title.toLowerCase().includes('vip')
                           ? 'bg-gold'
-                          : 'bg-primary',
+                          : notification.type === 'time_travel'
+                            ? 'bg-purple-500'
+                            : 'bg-primary',
                       )}
                     />
                   )}

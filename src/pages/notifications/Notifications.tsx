@@ -26,12 +26,14 @@ import {
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
+import { useFlashbackStore } from '@/stores/useFlashbackStore'
 import { cn } from '@/lib/utils'
 
 export default function Notifications() {
   const navigate = useNavigate()
   const { notifications, markAsRead, markAllAsRead, unreadCount } =
     useNotificationStore()
+  const { openFlashback } = useFlashbackStore()
 
   const isVipAlert = (title: string, message: string = '') => {
     const text = (title + ' ' + message).toLowerCase()
@@ -86,6 +88,7 @@ export default function Notifications() {
       case 'system_update':
         return <Megaphone className="h-5 w-5 text-primary" />
       case 'memory':
+      case 'time_travel':
         return <History className="h-5 w-5 text-purple-500" />
       default:
         return <Bell className="h-5 w-5 text-primary" />
@@ -98,7 +101,7 @@ export default function Notifications() {
     message: string = '',
     type?: string,
   ) => {
-    if (type === 'memory')
+    if (type === 'memory' || type === 'time_travel')
       return 'border-l-4 border-l-purple-500 bg-purple-500/10 dark:bg-purple-900/20'
 
     if (priority === 'critical')
@@ -122,6 +125,13 @@ export default function Notifications() {
     if (!not.read) {
       markAsRead(not.id)
     }
+
+    if (not.type === 'time_travel') {
+      const memoryId = not.link?.replace('modal:', '') || 'today'
+      openFlashback(memoryId)
+      return
+    }
+
     if (not.link) {
       navigate(not.link)
     }
@@ -189,7 +199,8 @@ export default function Notifications() {
                         not.message,
                         not.type,
                       ),
-                      not.link && 'cursor-pointer active:scale-[0.98]',
+                      (not.link || not.type === 'time_travel') &&
+                        'cursor-pointer active:scale-[0.98]',
                     )}
                     onClick={() => handleNotificationClick(not)}
                   >
@@ -238,7 +249,8 @@ export default function Notifications() {
                             'bg-emerald-500/10 border-emerald-500/30',
                           not.type === 'system_update' &&
                             'bg-primary/10 border-primary/30',
-                          not.type === 'memory' &&
+                          (not.type === 'memory' ||
+                            not.type === 'time_travel') &&
                             'bg-purple-500/10 border-purple-500/30',
                         )}
                       >
@@ -262,7 +274,8 @@ export default function Notifications() {
                             not.type === 'live_stream' &&
                               !not.link?.includes('/replay/') &&
                               'text-red-500',
-                            not.type === 'memory' &&
+                            (not.type === 'memory' ||
+                              not.type === 'time_travel') &&
                               'text-purple-600 dark:text-purple-400',
                           )}
                         >
@@ -313,7 +326,8 @@ export default function Notifications() {
                               variant="outline"
                               className={cn(
                                 'text-[10px] h-5 px-1.5 font-normal border-0',
-                                not.type === 'memory'
+                                not.type === 'memory' ||
+                                  not.type === 'time_travel'
                                   ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300'
                                   : not.priority === 'critical'
                                     ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
@@ -324,7 +338,8 @@ export default function Notifications() {
                                         : 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
                               )}
                             >
-                              {not.type === 'memory'
+                              {not.type === 'memory' ||
+                              not.type === 'time_travel'
                                 ? 'Flashback'
                                 : not.priority === 'critical'
                                   ? 'Urgente'
