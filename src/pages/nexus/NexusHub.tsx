@@ -1,12 +1,12 @@
 import { useState, useMemo } from 'react'
-import { Orbit, Users, Lock, Globe } from 'lucide-react'
+import { Orbit } from 'lucide-react'
 import { CreateTribeDialog } from '@/components/nexus/CreateTribeDialog'
 import { useNexusStore } from '@/stores/useNexusStore'
 import { mockUser } from '@/lib/data'
-import { useNavigate } from 'react-router-dom'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
+import { TribeCard } from '@/components/nexus/TribeCard'
+import { NexusRankingTab } from './tabs/NexusRankingTab'
 
 const CATEGORIES = [
   'Todos',
@@ -22,17 +22,41 @@ const CATEGORIES = [
 
 export default function NexusHub() {
   const { tribes } = useNexusStore()
-  const navigate = useNavigate()
   const [activeFilter, setActiveFilter] = useState('Todos')
+  const [mainTab, setMainTab] = useState('explore')
 
-  const filteredTribes = useMemo(() => {
+  const exploreTribes = useMemo(() => {
     if (activeFilter === 'Todos') return tribes
     return tribes.filter((t) => t.category === activeFilter)
   }, [tribes, activeFilter])
 
+  const myTribes = useMemo(() => {
+    return tribes.filter((t) => t.members.includes(mockUser.id))
+  }, [tribes])
+
+  const renderEmptyState = (message: string) => (
+    <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-card/50 backdrop-blur-xl rounded-3xl border border-border/50 shadow-sm mt-8 animate-fade-in-up">
+      <Orbit className="w-16 h-16 text-primary/30 mb-5 animate-float" />
+      <h3 className="text-xl font-black text-foreground mb-2">
+        Nenhuma tribo encontrada
+      </h3>
+      <p className="text-muted-foreground text-sm max-w-md leading-relaxed">
+        {message}
+      </p>
+      {mainTab === 'explore' && activeFilter !== 'Todos' && (
+        <Button
+          onClick={() => setActiveFilter('Todos')}
+          variant="outline"
+          className="mt-8 rounded-full h-11 px-6 font-bold"
+        >
+          Limpar Filtros
+        </Button>
+      )}
+    </div>
+  )
+
   return (
     <div className="min-h-screen bg-background pb-24 relative overflow-hidden">
-      {/* Background Ambient Glow */}
       <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-primary/10 via-primary/5 to-transparent pointer-events-none" />
 
       <div className="relative z-10 p-4 pt-6 space-y-6 max-w-5xl mx-auto">
@@ -43,140 +67,84 @@ export default function NexusHub() {
               Nexus
             </h1>
             <p className="text-sm text-muted-foreground font-medium mt-1">
-              Descubra e conecte-se com sua tribo ideal.
+              Descubra, conecte-se e compita com sua tribo ideal.
             </p>
           </div>
           <CreateTribeDialog />
         </div>
 
-        {/* Categories Filter */}
-        <Tabs
-          value={activeFilter}
-          onValueChange={setActiveFilter}
-          className="w-full"
-        >
-          <div className="overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 no-scrollbar">
-            <TabsList className="w-max bg-secondary/50 p-1 rounded-xl h-auto">
-              {CATEGORIES.map((cat) => (
-                <TabsTrigger
-                  key={cat}
-                  value={cat}
-                  className="rounded-lg px-4 py-2 text-sm font-medium data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all"
-                >
-                  {cat}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </div>
-        </Tabs>
-
-        {filteredTribes.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-card/50 backdrop-blur-xl rounded-3xl border border-border/50 shadow-sm mt-8 animate-fade-in-up">
-            <Orbit className="w-16 h-16 text-primary/30 mb-5 animate-float" />
-            <h3 className="text-xl font-black text-foreground mb-2">
-              Nenhuma tribo encontrada
-            </h3>
-            <p className="text-muted-foreground text-sm max-w-md leading-relaxed">
-              Não encontramos nenhuma comunidade para a categoria{' '}
-              <strong className="text-primary">"{activeFilter}"</strong>. Seja o
-              primeiro a criar um espaço para este esporte!
-            </p>
-            <Button
-              onClick={() => setActiveFilter('Todos')}
-              variant="outline"
-              className="mt-8 rounded-full h-11 px-6 font-bold"
+        <Tabs value={mainTab} onValueChange={setMainTab} className="w-full">
+          <TabsList className="w-full h-auto bg-secondary/50 rounded-2xl p-1.5 flex mb-6 shadow-inner">
+            <TabsTrigger
+              value="explore"
+              className="flex-1 rounded-xl font-bold py-2.5 data-[state=active]:shadow-md"
             >
-              Limpar Filtros
-            </Button>
-          </div>
-        )}
+              Explorar
+            </TabsTrigger>
+            <TabsTrigger
+              value="my-tribes"
+              className="flex-1 rounded-xl font-bold py-2.5 data-[state=active]:shadow-md"
+            >
+              Minhas Tribos
+            </TabsTrigger>
+            <TabsTrigger
+              value="ranking"
+              className="flex-1 rounded-xl font-bold py-2.5 data-[state=active]:shadow-md data-[state=active]:text-yellow-600 dark:data-[state=active]:text-yellow-500"
+            >
+              Ranking
+            </TabsTrigger>
+          </TabsList>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredTribes.map((tribe) => {
-            const isMember = tribe.members.includes(mockUser.id)
-            const isRequested = tribe.pendingRequests.includes(mockUser.id)
-
-            return (
-              <div
-                key={tribe.id}
-                onClick={() => navigate(`/nexus/${tribe.id}`)}
-                className="group relative flex flex-col bg-card/60 backdrop-blur-xl rounded-3xl overflow-hidden border border-border/50 shadow-sm hover:shadow-[0_8px_30px_rgba(168,85,247,0.15)] hover:border-primary/40 transition-all duration-300 cursor-pointer transform hover:-translate-y-1 animate-fade-in"
-              >
-                <div className="h-32 w-full relative">
-                  <img
-                    src={tribe.cover}
-                    alt={tribe.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-                  <div className="absolute top-3 right-3 flex flex-col gap-2 items-end">
-                    {tribe.isPrivate ? (
-                      <Badge
-                        variant="secondary"
-                        className="bg-black/60 text-white backdrop-blur-md border border-white/10 gap-1.5 py-1"
-                      >
-                        <Lock className="w-3 h-3" /> Privado
-                      </Badge>
-                    ) : (
-                      <Badge
-                        variant="secondary"
-                        className="bg-black/60 text-white backdrop-blur-md border border-white/10 gap-1.5 py-1"
-                      >
-                        <Globe className="w-3 h-3" /> Público
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-
-                <div className="px-5 pb-5 pt-0 relative flex-1 flex flex-col">
-                  <div className="absolute -top-10 left-5 p-1 bg-card rounded-2xl shadow-lg border border-border/50">
-                    <img
-                      src={tribe.icon}
-                      alt={`${tribe.name} icon`}
-                      className="w-16 h-16 rounded-xl object-cover bg-secondary"
-                    />
-                  </div>
-
-                  <div className="mt-10 flex items-center justify-between">
-                    <Badge
-                      variant="outline"
-                      className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-colors font-bold px-3 py-0.5"
-                    >
-                      {tribe.category}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground flex items-center gap-1.5 font-medium">
-                      <Users className="w-3.5 h-3.5" /> {tribe.members.length}
-                    </span>
-                  </div>
-
-                  <h3 className="font-black text-xl mt-3 leading-tight group-hover:text-primary transition-colors line-clamp-1">
-                    {tribe.name}
-                  </h3>
-
-                  <p className="text-sm text-muted-foreground mt-2 line-clamp-2 leading-relaxed flex-1 font-medium">
-                    {tribe.description}
-                  </p>
-
-                  <div className="mt-5">
-                    {isMember ? (
-                      <div className="w-full py-2.5 text-center text-xs font-bold text-primary bg-primary/10 rounded-xl border border-primary/20 shadow-inner">
-                        VOCÊ É MEMBRO
-                      </div>
-                    ) : isRequested ? (
-                      <div className="w-full py-2.5 text-center text-xs font-bold text-orange-500 bg-orange-500/10 rounded-xl border border-orange-500/20 shadow-inner">
-                        SOLICITAÇÃO PENDENTE
-                      </div>
-                    ) : (
-                      <div className="w-full py-2.5 text-center text-xs font-bold text-muted-foreground bg-secondary/50 rounded-xl border border-border group-hover:bg-secondary group-hover:text-foreground transition-all">
-                        VER DETALHES
-                      </div>
-                    )}
-                  </div>
-                </div>
+          <TabsContent value="explore" className="space-y-6 m-0 outline-none">
+            <div className="overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 no-scrollbar">
+              <div className="w-max flex bg-secondary/30 p-1 rounded-xl h-auto border border-border/50">
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveFilter(cat)}
+                    className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                      activeFilter === cat
+                        ? 'bg-background text-primary shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
               </div>
-            )
-          })}
-        </div>
+            </div>
+
+            {exploreTribes.length === 0 ? (
+              renderEmptyState(
+                `Não encontramos nenhuma comunidade para a categoria "${activeFilter}". Seja o primeiro a criar um espaço para este esporte!`,
+              )
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+                {exploreTribes.map((tribe) => (
+                  <TribeCard key={tribe.id} tribe={tribe} />
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="my-tribes" className="m-0 outline-none">
+            {myTribes.length === 0 ? (
+              renderEmptyState(
+                'Você ainda não faz parte de nenhuma tribo. Explore as opções e junte-se a uma comunidade!',
+              )
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+                {myTribes.map((tribe) => (
+                  <TribeCard key={tribe.id} tribe={tribe} />
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="ranking" className="m-0 outline-none">
+            <NexusRankingTab />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   )
