@@ -276,8 +276,8 @@ export function SmartNotificationManager() {
 
         if (!hasNotified(notificationId)) {
           addNotification({
-            title: 'Nova sugestão de amizade!',
-            message: `${friend.name.split(' ')[0]} está a ${distance.toFixed(1)}km e também gosta de ${shared.slice(0, 2).join(' e ')}.`,
+            title: friend.name,
+            message: `Tem interesses semelhantes aos seus! Gosta de ${shared.slice(0, 2).join(' e ')}.`,
             type: 'friend_suggestion',
             priority: 'medium',
             link: `/profile/${friend.id}`,
@@ -298,11 +298,10 @@ export function SmartNotificationManager() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-bold text-foreground truncate">
-                    Match de Interesses!
+                    {friend.name}
                   </p>
                   <p className="text-xs text-muted-foreground line-clamp-2 leading-tight">
-                    {friend.name.split(' ')[0]} está por perto e compartilha
-                    interesses com você.
+                    Tem interesses semelhantes aos seus!
                   </p>
                 </div>
                 <button

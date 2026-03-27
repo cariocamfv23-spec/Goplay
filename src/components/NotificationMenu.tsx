@@ -190,14 +190,16 @@ export function NotificationMenu() {
                     >
                       <Avatar
                         className={cn(
-                          'h-8 w-8 ring-2 ring-offset-2 ring-offset-background',
+                          'ring-2 ring-offset-2 ring-offset-background',
+                          notification.type === 'friend_suggestion'
+                            ? 'h-10 w-10 ring-pink-500'
+                            : 'h-8 w-8',
                           notification.type === 'live_stream'
                             ? notification.link?.includes('/replay/')
                               ? 'ring-primary'
                               : 'ring-red-500 animate-pulse'
-                            : notification.type === 'friend_suggestion'
-                              ? 'ring-pink-500'
-                              : 'ring-transparent border border-border',
+                            : notification.type !== 'friend_suggestion' &&
+                                'ring-transparent border border-border',
                         )}
                       >
                         <AvatarImage
@@ -234,7 +236,7 @@ export function NotificationMenu() {
                       )}
                       {notification.type === 'friend_suggestion' && (
                         <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-pink-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
-                          <UserPlus className="h-2 w-2 text-white" />
+                          <UserPlus className="h-2.5 w-2.5 text-white" />
                         </div>
                       )}
                     </div>
@@ -274,6 +276,11 @@ export function NotificationMenu() {
                     >
                       {notification.title}
                     </p>
+                    {notification.type === 'friend_suggestion' && (
+                      <p className="text-[10px] font-semibold text-pink-500 uppercase tracking-wider mb-0.5">
+                        Sugestão de Amizade
+                      </p>
+                    )}
                     <p className="text-xs text-muted-foreground line-clamp-2">
                       {notification.message}
                     </p>

@@ -248,14 +248,16 @@ export default function Notifications() {
                       >
                         <Avatar
                           className={cn(
-                            'h-10 w-10 ring-2 ring-offset-2 ring-offset-background',
+                            'ring-2 ring-offset-2 ring-offset-background',
+                            not.type === 'friend_suggestion'
+                              ? 'h-14 w-14 ring-pink-500'
+                              : 'h-10 w-10',
                             not.type === 'live_stream'
                               ? not.link?.includes('/replay/')
                                 ? 'ring-primary'
                                 : 'ring-red-500'
-                              : not.type === 'friend_suggestion'
-                                ? 'ring-pink-500'
-                                : 'ring-transparent border border-border',
+                              : not.type !== 'friend_suggestion' &&
+                                  'ring-transparent border border-border',
                           )}
                         >
                           <AvatarImage
@@ -287,8 +289,8 @@ export default function Notifications() {
                           </div>
                         )}
                         {not.type === 'friend_suggestion' && (
-                          <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-pink-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
-                            <UserPlus className="h-2 w-2 text-white" />
+                          <div className="absolute bottom-0 -right-1 h-5 w-5 bg-pink-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
+                            <UserPlus className="h-3 w-3 text-white" />
                           </div>
                         )}
                       </div>
@@ -341,13 +343,16 @@ export default function Notifications() {
                             (not.type === 'memory' ||
                               not.type === 'time_travel') &&
                               'text-purple-600 dark:text-purple-400',
-                            not.type === 'friend_suggestion' &&
-                              'text-pink-600 dark:text-pink-400',
                           )}
                         >
                           {not.title}
                         </h4>
                       </div>
+                      {not.type === 'friend_suggestion' && (
+                        <p className="text-xs font-semibold text-pink-500 mb-0.5 uppercase tracking-wider">
+                          Sugestão de Amizade
+                        </p>
+                      )}
                       <p className="text-sm text-muted-foreground leading-snug line-clamp-2">
                         {not.message}
                       </p>
@@ -381,45 +386,59 @@ export default function Notifications() {
                         )
                       )}
 
-                      <div className="flex items-center gap-2 mt-2">
-                        <span className="text-xs text-muted-foreground/70 font-medium">
-                          {not.time}
-                        </span>
-                        {not.priority &&
-                          not.priority !== 'low' &&
-                          not.type !== 'live_stream' && (
-                            <Badge
-                              variant="outline"
-                              className={cn(
-                                'text-[10px] h-5 px-1.5 font-normal border-0',
-                                not.type === 'memory' ||
-                                  not.type === 'time_travel'
-                                  ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300'
+                      {not.type === 'friend_suggestion' ? (
+                        <div className="mt-3 flex items-center gap-2">
+                          <Button
+                            size="sm"
+                            className="h-8 rounded-full flex-1 bg-pink-500 hover:bg-pink-600 text-xs text-white border-0 shadow-sm shadow-pink-500/20"
+                          >
+                            Ver Perfil
+                          </Button>
+                          <span className="text-xs text-muted-foreground/70 font-medium ml-2">
+                            {not.time}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-xs text-muted-foreground/70 font-medium">
+                            {not.time}
+                          </span>
+                          {not.priority &&
+                            not.priority !== 'low' &&
+                            not.type !== 'live_stream' && (
+                              <Badge
+                                variant="outline"
+                                className={cn(
+                                  'text-[10px] h-5 px-1.5 font-normal border-0',
+                                  not.type === 'memory' ||
+                                    not.type === 'time_travel'
+                                    ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300'
+                                    : not.priority === 'critical'
+                                      ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
+                                      : isVipAlert(not.title, not.message)
+                                        ? 'bg-gold/20 text-gold border-gold/30'
+                                        : not.priority === 'high'
+                                          ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
+                                          : 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
+                                )}
+                              >
+                                {not.type === 'memory' ||
+                                not.type === 'time_travel'
+                                  ? 'Flashback'
                                   : not.priority === 'critical'
-                                    ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
+                                    ? 'Urgente'
                                     : isVipAlert(not.title, not.message)
-                                      ? 'bg-gold/20 text-gold border-gold/30'
+                                      ? 'VIP'
                                       : not.priority === 'high'
-                                        ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
-                                        : 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
-                              )}
-                            >
-                              {not.type === 'memory' ||
-                              not.type === 'time_travel'
-                                ? 'Flashback'
-                                : not.priority === 'critical'
-                                  ? 'Urgente'
-                                  : isVipAlert(not.title, not.message)
-                                    ? 'VIP'
-                                    : not.priority === 'high'
-                                      ? 'Importante'
-                                      : 'Info'}
-                            </Badge>
-                          )}
-                      </div>
+                                        ? 'Importante'
+                                        : 'Info'}
+                              </Badge>
+                            )}
+                        </div>
+                      )}
                     </div>
                     {!not.read && (
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 h-2.5 w-2.5 rounded-full bg-primary" />
+                      <div className="absolute right-4 top-4 h-2.5 w-2.5 rounded-full bg-primary" />
                     )}
                   </div>
                 ))}
