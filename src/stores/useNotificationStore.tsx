@@ -1,7 +1,16 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { Notification, mockNotificationsList } from '@/lib/data'
+import {
+  Notification as BaseNotification,
+  mockNotificationsList,
+} from '@/lib/data'
 import useSoundStore from './useSoundStore'
+
+export type Notification = BaseNotification & {
+  avatarUrl?: string
+  imageUrl?: string
+  suggestedUserId?: string
+}
 
 interface NotificationState {
   notifications: Notification[]
@@ -15,11 +24,28 @@ interface NotificationState {
   markAllAsRead: () => void
 }
 
+// Enhance mock notifications with avatarUrl for friend suggestions
+const enhancedMockNotifications: Notification[] = mockNotificationsList.map(
+  (not) => {
+    if (not.type === 'friend_suggestion') {
+      return {
+        ...not,
+        avatarUrl:
+          (not as any).avatarUrl ||
+          (not as any).imageUrl ||
+          not.user?.avatar ||
+          `https://img.usecurling.com/ppl/thumbnail?seed=${not.id}`,
+      }
+    }
+    return not
+  },
+)
+
 const useNotificationStore = create<NotificationState>()(
   persist(
     (set, get) => ({
-      notifications: mockNotificationsList,
-      unreadCount: mockNotificationsList.filter((n) => !n.read).length,
+      notifications: enhancedMockNotifications,
+      unreadCount: enhancedMockNotifications.filter((n) => !n.read).length,
 
       addNotification: (data) => {
         const id = Math.random().toString(36).substring(2, 9)

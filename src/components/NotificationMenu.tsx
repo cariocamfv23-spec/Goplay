@@ -29,6 +29,7 @@ import {
   MessageSquare,
   Megaphone,
   History,
+  UserPlus,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -63,6 +64,10 @@ export function NotificationMenu() {
 
     if (notification.link) {
       navigate(notification.link)
+    } else if (notification.type === 'friend_suggestion') {
+      const profileId =
+        notification.suggestedUserId || notification.id || 'new-friend'
+      navigate(`/profile/${profileId}`)
     }
   }
 
@@ -158,7 +163,10 @@ export function NotificationMenu() {
                 <button
                   key={notification.id}
                   className={cn(
-                    'flex items-start gap-3 p-4 text-left hover:bg-muted/50 transition-colors border-b last:border-0 relative',
+                    'flex gap-3 p-4 text-left hover:bg-muted/50 transition-colors border-b last:border-0 relative',
+                    notification.type === 'friend_suggestion'
+                      ? 'items-center'
+                      : 'items-start',
                     !notification.read && 'bg-muted/30',
                     notification.title.toLowerCase().includes('vip') &&
                       !notification.read &&
@@ -170,8 +178,16 @@ export function NotificationMenu() {
                   )}
                   onClick={() => handleItemClick(notification)}
                 >
-                  {notification.user ? (
-                    <div className="relative shrink-0 mt-1">
+                  {notification.user ||
+                  notification.imageUrl ||
+                  notification.avatarUrl ||
+                  notification.type === 'friend_suggestion' ? (
+                    <div
+                      className={cn(
+                        'relative shrink-0',
+                        notification.type !== 'friend_suggestion' && 'mt-1',
+                      )}
+                    >
                       <Avatar
                         className={cn(
                           'h-8 w-8 ring-2 ring-offset-2 ring-offset-background',
@@ -179,12 +195,27 @@ export function NotificationMenu() {
                             ? notification.link?.includes('/replay/')
                               ? 'ring-primary'
                               : 'ring-red-500 animate-pulse'
-                            : 'ring-transparent border border-border',
+                            : notification.type === 'friend_suggestion'
+                              ? 'ring-pink-500'
+                              : 'ring-transparent border border-border',
                         )}
                       >
-                        <AvatarImage src={notification.user.avatar} />
+                        <AvatarImage
+                          src={
+                            notification.user?.avatar ||
+                            notification.avatarUrl ||
+                            notification.imageUrl ||
+                            `https://img.usecurling.com/ppl/thumbnail?seed=${notification.id}`
+                          }
+                        />
                         <AvatarFallback>
-                          {notification.user.name.substring(0, 2).toUpperCase()}
+                          {(
+                            notification.user?.name ||
+                            notification.title ||
+                            'U'
+                          )
+                            .substring(0, 2)
+                            .toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       {notification.type === 'live_stream' &&
@@ -199,6 +230,11 @@ export function NotificationMenu() {
                       {notification.type === 'thread_comment' && (
                         <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-blue-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
                           <MessageSquare className="h-2 w-2 text-white" />
+                        </div>
+                      )}
+                      {notification.type === 'friend_suggestion' && (
+                        <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-pink-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
+                          <UserPlus className="h-2 w-2 text-white" />
                         </div>
                       )}
                     </div>

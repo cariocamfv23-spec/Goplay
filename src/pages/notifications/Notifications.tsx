@@ -157,6 +157,9 @@ export default function Notifications() {
 
     if (not.link) {
       navigate(not.link)
+    } else if (not.type === 'friend_suggestion') {
+      const profileId = not.suggestedUserId || not.id || 'new-friend'
+      navigate(`/profile/${profileId}`)
     }
   }
 
@@ -215,6 +218,7 @@ export default function Notifications() {
                     key={not.id}
                     className={cn(
                       'p-4 rounded-xl flex gap-4 transition-all relative overflow-hidden border border-border/30 shadow-sm',
+                      not.type === 'friend_suggestion' && 'items-center',
                       not.read
                         ? 'bg-card opacity-90'
                         : 'bg-card ring-1 ring-primary/20 shadow-md',
@@ -226,13 +230,22 @@ export default function Notifications() {
                       ),
                       (not.link ||
                         not.type === 'time_travel' ||
-                        not.type === 'memory') &&
+                        not.type === 'memory' ||
+                        not.type === 'friend_suggestion') &&
                         'cursor-pointer active:scale-[0.98]',
                     )}
                     onClick={() => handleNotificationClick(not)}
                   >
-                    {not.user ? (
-                      <div className="relative shrink-0 mt-1">
+                    {not.user ||
+                    not.imageUrl ||
+                    not.avatarUrl ||
+                    not.type === 'friend_suggestion' ? (
+                      <div
+                        className={cn(
+                          'relative shrink-0',
+                          not.type !== 'friend_suggestion' && 'mt-1',
+                        )}
+                      >
                         <Avatar
                           className={cn(
                             'h-10 w-10 ring-2 ring-offset-2 ring-offset-background',
@@ -240,12 +253,23 @@ export default function Notifications() {
                               ? not.link?.includes('/replay/')
                                 ? 'ring-primary'
                                 : 'ring-red-500'
-                              : 'ring-transparent border border-border',
+                              : not.type === 'friend_suggestion'
+                                ? 'ring-pink-500'
+                                : 'ring-transparent border border-border',
                           )}
                         >
-                          <AvatarImage src={not.user.avatar} />
+                          <AvatarImage
+                            src={
+                              not.user?.avatar ||
+                              not.avatarUrl ||
+                              not.imageUrl ||
+                              `https://img.usecurling.com/ppl/thumbnail?seed=${not.id}`
+                            }
+                          />
                           <AvatarFallback>
-                            {not.user.name.substring(0, 2).toUpperCase()}
+                            {(not.user?.name || not.title || 'U')
+                              .substring(0, 2)
+                              .toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         {not.type === 'live_stream' &&
@@ -260,6 +284,11 @@ export default function Notifications() {
                         {not.type === 'thread_comment' && (
                           <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-blue-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
                             <MessageSquare className="h-2 w-2 text-white" />
+                          </div>
+                        )}
+                        {not.type === 'friend_suggestion' && (
+                          <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-pink-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
+                            <UserPlus className="h-2 w-2 text-white" />
                           </div>
                         )}
                       </div>
