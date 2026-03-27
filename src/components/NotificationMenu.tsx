@@ -33,8 +33,6 @@ import {
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
 import { useFlashbackStore } from '@/stores/useFlashbackStore'
-import { usePrivacyStore } from '@/stores/usePrivacyStore'
-import { useMemorySimulation } from '@/hooks/useMemorySimulation'
 import { cn } from '@/lib/utils'
 
 export function NotificationMenu() {
@@ -42,8 +40,6 @@ export function NotificationMenu() {
   const { notifications, unreadCount, markAsRead, markAllAsRead } =
     useNotificationStore()
   const { openFlashback } = useFlashbackStore()
-  const { isPreviewLocked } = usePrivacyStore()
-  const { simulateMemory } = useMemorySimulation()
   const [open, setOpen] = useState(false)
 
   const hasUnreadMemory = notifications.some(
@@ -154,22 +150,6 @@ export function NotificationMenu() {
             </Button>
           )}
         </div>
-
-        {!isPreviewLocked && (
-          <div className="p-2 border-b bg-muted/20">
-            <Button
-              onClick={() => {
-                simulateMemory()
-                setOpen(false)
-              }}
-              size="sm"
-              className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white shadow-sm"
-            >
-              <History className="w-3 h-3 mr-2" />
-              Simular Memoria Adm
-            </Button>
-          </div>
-        )}
 
         <ScrollArea className="h-[300px]">
           {notifications.length > 0 ? (

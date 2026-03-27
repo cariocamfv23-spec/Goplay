@@ -27,20 +27,12 @@ import {
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
 import { useFlashbackStore } from '@/stores/useFlashbackStore'
-import { usePrivacyStore } from '@/stores/usePrivacyStore'
-import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 
 export default function Notifications() {
   const navigate = useNavigate()
-  const { isPreviewLocked } = usePrivacyStore()
-  const {
-    notifications,
-    markAsRead,
-    markAllAsRead,
-    unreadCount,
-    addNotification,
-  } = useNotificationStore()
+  const { notifications, markAsRead, markAllAsRead, unreadCount } =
+    useNotificationStore()
   const { openFlashback } = useFlashbackStore()
 
   const isVipAlert = (title: string, message: string = '') => {
@@ -191,53 +183,6 @@ export default function Notifications() {
           <h1 className="text-xl font-bold">Notificações</h1>
         </div>
         <div className="flex items-center gap-2">
-          {!isPreviewLocked && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-purple-500/50 text-purple-500 hover:bg-purple-500/10 text-xs h-8 px-2"
-              onClick={() => {
-                const nid = addNotification({
-                  title: 'Memória Goplay ⏳',
-                  message: `Revisite um momento especial! Veja o que você postou neste dia há 1 ano(s).`,
-                  type: 'time_travel',
-                  priority: 'high',
-                  link: `modal:today`,
-                })
-                toast.custom(
-                  (t) => (
-                    <div className="flex w-full items-center gap-3 rounded-2xl border-2 border-purple-500/30 bg-background/95 p-3 shadow-2xl backdrop-blur-xl animate-in slide-in-from-top-4 duration-300">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-purple-500/20 text-purple-500">
-                        <History className="h-6 w-6" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-foreground truncate">
-                          Lembrança Desbloqueada!
-                        </p>
-                        <p className="text-xs text-muted-foreground line-clamp-2 leading-tight">
-                          Você tem um Flashback esperando por você.
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => {
-                          toast.dismiss(t)
-                          useNotificationStore.getState().markAsRead(nid)
-                          openFlashback('today')
-                        }}
-                        className="shrink-0 rounded-xl bg-purple-500 px-3 py-2 text-xs font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-md shadow-purple-500/20"
-                      >
-                        Ver Memória
-                      </button>
-                    </div>
-                  ),
-                  { duration: 6000, position: 'top-center' },
-                )
-              }}
-            >
-              <History className="w-3 h-3 mr-1" />
-              Simular Memória
-            </Button>
-          )}
           {unreadCount > 0 && (
             <Button
               variant="ghost"
