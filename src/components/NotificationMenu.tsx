@@ -261,7 +261,7 @@ export function NotificationMenu() {
                             variant="destructive"
                             className="h-4 text-[9px] px-1 uppercase animate-pulse border-0"
                           >
-                            LIVE
+                            AO VIVO
                           </Badge>
                           <span className="text-[10px] text-primary font-bold">
                             Assistir Agora

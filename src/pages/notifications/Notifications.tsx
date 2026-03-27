@@ -366,7 +366,7 @@ export default function Notifications() {
                               variant="destructive"
                               className="h-5 text-[10px] px-1.5 animate-pulse border-0"
                             >
-                              LIVE
+                              AO VIVO
                             </Badge>
                             <span className="text-xs text-primary font-bold">
                               Assistir Agora
