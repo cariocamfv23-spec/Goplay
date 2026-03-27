@@ -1,26 +1,35 @@
+<!-- HTML template for the frontend react app: https://developer.mozilla.org/en-US/docs/Web/HTML -->
 <!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
-    <title>GoPlay</title>
+    <title>GoPlay App</title>
     <meta
       name="description"
       content="Sua plataforma imersiva de atividades e notificações motivacionais."
     />
     <meta name="author" content="GoPlay" />
-    <meta property="og:image" content="/og-image.png" />
-
-    <!-- PWA Meta Tags -->
-    <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#7c3aed" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="GoPlay" />
-    <link rel="apple-touch-icon" href="/og-image.png" />
+
+    <meta property="og:title" content="GoPlay App" />
+    <meta
+      property="og:description"
+      content="Sua plataforma imersiva de atividades e notificações motivacionais."
+    />
+    <meta
+      property="og:image"
+      content="https://img.usecurling.com/p/512/512?q=purple%20letter%20g%20logo&color=purple"
+    />
+
+    <link
+      rel="apple-touch-icon"
+      href="https://img.usecurling.com/p/192/192?q=purple%20letter%20g%20logo&color=purple"
+    />
+    <link rel="manifest" href="/manifest.json" />
     <script type="module" crossorigin src="/assets/index-BZQsESE3.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-BBPBye4M.css">
   </head>
@@ -28,22 +37,5 @@
   <body>
     <div id="root"></div>
     <script src="https://goskip.dev/skip.js"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').then(
-            (registration) => {
-              console.log(
-                'ServiceWorker registration successful com escopo: ',
-                registration.scope,
-              )
-            },
-            (err) => {
-              console.log('ServiceWorker registration falhou: ', err)
-            },
-          )
-        })
-      }
-    </script>
   </body>
 </html>

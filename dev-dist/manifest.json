@@ -1,33 +1,30 @@
 {
   "short_name": "GoPlay",
-  "name": "GoPlay",
-  "description": "Sua plataforma imersiva de atividades e notificações motivacionais.",
+  "name": "GoPlay App",
+  "description": "Sua plataforma imersiva de atividades esportivas e gamificação.",
   "icons": [
     {
-      "src": "/og-image.png",
+      "src": "https://img.usecurling.com/p/192/192?q=purple%20letter%20g%20logo&color=purple",
       "type": "image/png",
-      "sizes": "64x64"
+      "sizes": "192x192",
+      "purpose": "any"
     },
     {
-      "src": "/og-image.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "/og-image.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    },
-    {
-      "src": "/og-image.png",
+      "src": "https://img.usecurling.com/p/512/512?q=purple%20letter%20g%20logo&color=purple",
       "type": "image/png",
       "sizes": "512x512",
-      "purpose": "maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "https://img.usecurling.com/p/512/512?q=purple%20letter%20g%20logo%20maskable&color=purple",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
   "start_url": "/",
-  "background_color": "#ffffff",
-  "display": "standalone",
+  "background_color": "#1a0b2e",
   "theme_color": "#7c3aed",
+  "display": "standalone",
   "orientation": "portrait"
 }
