@@ -17,6 +17,7 @@ import { useInvisiblePresenceStore } from '@/stores/useInvisiblePresenceStore'
 import { InvisiblePresenceOverlay } from '@/components/InvisiblePresenceOverlay'
 import { useDepthStore } from '@/stores/useDepthStore'
 import { useAuthStore } from '@/stores/useAuthStore'
+import { WifiOff } from 'lucide-react'
 
 export default function Layout() {
   const location = useLocation()
@@ -27,6 +28,20 @@ export default function Layout() {
   const { isAuthenticated, hasHydrated } = useAuthStore()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [scrollY, setScrollY] = useState(0)
+  const [isOffline, setIsOffline] = useState(!navigator.onLine)
+
+  useEffect(() => {
+    const handleOffline = () => setIsOffline(true)
+    const handleOnline = () => setIsOffline(false)
+
+    window.addEventListener('offline', handleOffline)
+    window.addEventListener('online', handleOnline)
+
+    return () => {
+      window.removeEventListener('offline', handleOffline)
+      window.removeEventListener('online', handleOnline)
+    }
+  }, [])
 
   // Initialize invisible presence logic (Silent Latent Trigger)
   useEffect(() => {
@@ -115,6 +130,13 @@ export default function Layout() {
 
   return (
     <div className="h-screen w-full bg-background font-sans antialiased flex flex-col relative overflow-hidden transition-colors duration-500 perspective-2000">
+      {isOffline && (
+        <div className="fixed top-0 left-0 right-0 z-[1000] bg-destructive text-destructive-foreground text-[11px] sm:text-xs font-semibold tracking-tight text-center py-1.5 flex items-center justify-center gap-2 animate-in slide-in-from-top-4 shadow-md backdrop-blur-md bg-destructive/90">
+          <WifiOff className="w-3.5 h-3.5 flex-shrink-0" />
+          <span>Você está offline. Algumas funções podem estar limitadas.</span>
+        </div>
+      )}
+
       {/* 3D Parallax Background Layer - Fixed to Viewport (Absolute to Container) */}
       <div
         className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
@@ -171,7 +193,12 @@ export default function Layout() {
       >
         {/* Main Navigation - Sticky to ensure visibility during scroll */}
         {showTopBar && (
-          <div className="sticky top-0 z-50 depth-element translate-z-10">
+          <div
+            className={cn(
+              'sticky z-50 depth-element translate-z-10',
+              isOffline ? 'top-7' : 'top-0',
+            )}
+          >
             <TopBar />
           </div>
         )}
@@ -182,6 +209,7 @@ export default function Layout() {
           className={cn(
             'flex-1 w-full transition-all duration-300 relative bg-transparent transform-style-3d flex flex-col',
             showBottomNav ? 'pb-24 md:pb-0' : 'pb-0',
+            !showTopBar && isOffline ? 'pt-7' : 'pt-0',
             // On Move route, remove padding to allow full immersive experience behind nav
             isMoveRoute && 'h-[calc(100vh-64px)] pb-0',
           )}

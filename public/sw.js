@@ -1,10 +1,9 @@
-const CACHE_NAME = 'goplay-pwa-cache-v2'
+const CACHE_NAME = 'goplay-pwa-cache-v3'
 
-// Essential assets to cache immediately
-const PRECACHE_ASSETS = ['/', '/index.html', '/manifest.json', '/favicon.svg']
+// Ativos essenciais para realizar cache de imediato
+const PRECACHE_ASSETS = ['/', '/index.html', '/manifest.json', '/og-image.png']
 
 self.addEventListener('install', (event) => {
-  // Force the waiting service worker to become the active service worker.
   self.skipWaiting()
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_ASSETS)),
@@ -12,7 +11,7 @@ self.addEventListener('install', (event) => {
 })
 
 self.addEventListener('activate', (event) => {
-  // Clean up old caches
+  // Limpar caches antigos
   event.waitUntil(
     caches
       .keys()
@@ -28,7 +27,7 @@ self.addEventListener('activate', (event) => {
 })
 
 self.addEventListener('fetch', (event) => {
-  // Only process HTTP and HTTPS GET requests
+  // Processar apenas requisições HTTP/HTTPS via GET
   if (event.request.method !== 'GET' || !event.request.url.startsWith('http')) {
     return
   }
@@ -36,8 +35,7 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        // Stale-While-Revalidate: Return cache immediately, but fetch in background to update cache
-        // We avoid doing this for the main HTML to not conflict with router navigation unpredictably
+        // Stale-While-Revalidate: Retornar o cache imediatamente e atualizar no background
         if (!event.request.url.includes('/index.html')) {
           fetch(event.request)
             .then((networkResponse) => {
@@ -48,16 +46,15 @@ self.addEventListener('fetch', (event) => {
               }
             })
             .catch(() => {
-              // Silently fail if offline during background sync
+              // Silenciosamente ignora a falha estando offline
             })
         }
         return cachedResponse
       }
 
-      // If not in cache, fetch from network
+      // Se não estiver em cache, buscar via internet
       return fetch(event.request)
         .then((networkResponse) => {
-          // Check if valid response. Opaque responses (CORS) are also cached for images.
           if (
             !networkResponse ||
             (networkResponse.status !== 200 &&
@@ -66,7 +63,7 @@ self.addEventListener('fetch', (event) => {
             return networkResponse
           }
 
-          // Clone and cache the new resource
+          // Clonar e guardar o novo recurso acessado
           const responseToCache = networkResponse.clone()
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, responseToCache)
@@ -76,8 +73,11 @@ self.addEventListener('fetch', (event) => {
         })
         .catch((error) => {
           console.log('Fetch failed, returning offline fallback', error)
-          // For navigation requests, fallback to index.html to allow BrowserRouter to handle it
-          if (event.request.mode === 'navigate') {
+          // Em requisições de navegação offline, retornar o index.html
+          if (
+            event.request.mode === 'navigate' ||
+            event.request.headers.get('accept').includes('text/html')
+          ) {
             return caches.match('/index.html')
           }
           throw error
