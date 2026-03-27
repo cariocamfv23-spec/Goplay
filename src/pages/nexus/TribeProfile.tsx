@@ -3,10 +3,18 @@ import { useNexusStore } from '@/stores/useNexusStore'
 import { mockUser } from '@/lib/data'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
-import { Users, Lock, Globe, ArrowLeft, Shield } from 'lucide-react'
+import {
+  Users,
+  Lock,
+  Globe,
+  ArrowLeft,
+  Shield,
+  MessageSquare,
+} from 'lucide-react'
 import { TribeFeedTab } from './tabs/TribeFeedTab'
 import { TribeEventsTab } from './tabs/TribeEventsTab'
 import { TribeAdminTab } from './tabs/TribeAdminTab'
+import { TribeChatTab } from './tabs/TribeChatTab'
 import { Badge } from '@/components/ui/badge'
 
 export default function TribeProfile() {
@@ -115,29 +123,35 @@ export default function TribeProfile() {
         </div>
 
         <Tabs defaultValue="feed" className="mt-8">
-          <TabsList className="w-full h-auto bg-secondary/50 rounded-xl p-1 grid grid-cols-3 sm:flex sm:flex-wrap gap-1">
+          <TabsList className="w-full h-auto bg-secondary/50 rounded-xl p-1 flex flex-wrap gap-1 justify-start sm:justify-center">
             <TabsTrigger
               value="feed"
-              className="rounded-lg data-[state=active]:shadow-sm text-xs sm:text-sm py-2 sm:px-6"
+              className="flex-1 sm:flex-none rounded-lg data-[state=active]:shadow-sm text-xs sm:text-sm py-2 px-3 sm:px-6"
             >
               Feed
             </TabsTrigger>
             <TabsTrigger
+              value="chat"
+              className="flex-1 sm:flex-none rounded-lg data-[state=active]:shadow-sm text-xs sm:text-sm py-2 px-3 sm:px-6 gap-1.5"
+            >
+              <MessageSquare className="w-3.5 h-3.5" /> Chat
+            </TabsTrigger>
+            <TabsTrigger
               value="events"
-              className="rounded-lg data-[state=active]:shadow-sm text-xs sm:text-sm py-2 sm:px-6"
+              className="flex-1 sm:flex-none rounded-lg data-[state=active]:shadow-sm text-xs sm:text-sm py-2 px-3 sm:px-6"
             >
               Eventos
             </TabsTrigger>
             <TabsTrigger
               value="members"
-              className="rounded-lg data-[state=active]:shadow-sm text-xs sm:text-sm py-2 sm:px-6"
+              className="flex-1 sm:flex-none rounded-lg data-[state=active]:shadow-sm text-xs sm:text-sm py-2 px-3 sm:px-6"
             >
               Membros
             </TabsTrigger>
             {isCreator && (
               <TabsTrigger
                 value="admin"
-                className="col-span-3 sm:col-auto rounded-lg data-[state=active]:shadow-sm text-xs sm:text-sm py-2 sm:px-6 gap-1.5 text-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
+                className="flex-1 sm:flex-none rounded-lg data-[state=active]:shadow-sm text-xs sm:text-sm py-2 px-3 sm:px-6 gap-1.5 text-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
               >
                 <Shield className="w-4 h-4" /> Admin
               </TabsTrigger>
@@ -146,6 +160,9 @@ export default function TribeProfile() {
 
           <TabsContent value="feed" className="mt-6">
             <TribeFeedTab />
+          </TabsContent>
+          <TabsContent value="chat" className="mt-6">
+            <TribeChatTab tribe={tribe} />
           </TabsContent>
           <TabsContent value="events" className="mt-6">
             <TribeEventsTab tribe={tribe} />
