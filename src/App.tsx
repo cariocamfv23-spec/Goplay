@@ -33,6 +33,10 @@ const Move = lazy(() => import('./pages/move/Move'))
 const Explore = lazy(() => import('./pages/explore/Explore'))
 const CheckIn = lazy(() => import('./pages/checkin/CheckIn'))
 
+// Nexus
+const NexusHub = lazy(() => import('./pages/nexus/NexusHub'))
+const TribeProfile = lazy(() => import('./pages/nexus/TribeProfile'))
+
 // Arena Go
 const ArenaGo = lazy(() => import('./pages/arena/ArenaGo'))
 
@@ -260,6 +264,11 @@ const App = () => {
                       <Route path="/explore" element={<Explore />} />
                       <Route path="/check-in" element={<CheckIn />} />
                       <Route path="/app-map" element={<AppMap />} />
+
+                      {/* Nexus Routes */}
+                      <Route path="/nexus" element={<NexusHub />} />
+                      <Route path="/nexus/:id" element={<TribeProfile />} />
+
                       <Route path="/arena" element={<ArenaGo />} />
                       <Route path="/food-sport" element={<FoodSport />} />
 

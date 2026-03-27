@@ -1,23 +1,27 @@
 import { Link, useLocation } from 'react-router-dom'
 import { navigationItems } from '@/lib/data'
 import { cn } from '@/lib/utils'
-import { Utensils, Flame } from 'lucide-react'
+import { Utensils, Flame, Orbit } from 'lucide-react'
 
 export function BottomNav() {
   const location = useLocation()
 
-  // Dynamically add Food Sport and Arena to navigation without touching data.ts
+  // Dynamically add Nexus, Food Sport and Arena to navigation without touching data.ts
   const extendedNavItems = [
-    ...navigationItems.slice(0, 4),
+    ...navigationItems.slice(0, 3),
+    { icon: Orbit, label: 'Nexus', path: '/nexus' },
+    ...navigationItems.slice(3, 4), // Explore
     { icon: Flame, label: 'Arena Go', path: '/arena', highlight: true },
-    ...navigationItems.slice(4),
+    ...navigationItems.slice(4), // Loja, Perfil
     { icon: Utensils, label: 'Food', path: '/food-sport' },
   ]
 
   return (
     <div className="w-full min-h-16 h-auto bg-background/95 backdrop-blur-md border-t border-border/40 flex items-center justify-around px-1 z-40 pb-safe pt-2 transition-all shadow-[0_-5px_20px_-10px_rgba(0,0,0,0.1)] overflow-x-auto no-scrollbar">
       {extendedNavItems.map((item) => {
-        const isActive = location.pathname.startsWith(item.path)
+        const isActive =
+          (location.pathname.startsWith(item.path) && item.path !== '/') ||
+          (location.pathname === '/' && item.path === '/')
         const isHighlight = 'highlight' in item && item.highlight
 
         return (
