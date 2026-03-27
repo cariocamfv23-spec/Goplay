@@ -93,7 +93,7 @@ export interface Notification {
     | 'system_update'
     | 'memory'
     | 'time_travel'
-  date?: string
+    | 'friend_suggestion'  date?: string
   priority?: 'low' | 'medium' | 'high' | 'critical'
   link?: string
   user?: {
@@ -196,6 +196,8 @@ export interface ProfileData {
   discoveryReason?: string
   engagement?: number
   coordinates?: { x: number; y: number }
+  interests?: string[]
+  distanceValue?: number
 
   // VIP Specific Fields
   agency?: string
@@ -1241,6 +1243,7 @@ export const mockUser: ProfileData = {
     earned: 2400,
   },
   ranking: 15, // Reusing field for mock level representation on AthleteView
+  interests: ['Futebol', 'Tecnologia', 'Música', 'Games', 'Padel'],
 }
 
 export const mockCurrentUser = mockUser
@@ -1405,6 +1408,8 @@ export const mockTalents: ProfileData[] = [
     discoveryReason: 'Artilheiro da Copa Goplay SP',
     engagement: 95,
     coordinates: { x: 75, y: 75 }, // Southeast
+    interests: ['Futebol', 'Tecnologia', 'Games'],
+    distanceValue: 2.5,
   },
   {
     id: 't2',
@@ -1441,6 +1446,9 @@ export const mockTalents: ProfileData[] = [
     totalViews: 8200,
     totalLikes: 1500,
     ranking: 15,
+    isDiscovered: true,
+    interests: ['Padel', 'Tecnologia', 'Gastronomia'],
+    distanceValue: 4.2,
   },
   {
     id: 't4',

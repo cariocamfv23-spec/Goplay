@@ -5,6 +5,7 @@ import {
   ArrowLeft,
   Bell,
   Calendar,
+  UserPlus,
   Heart,
   Trophy,
   CloudLightning,
@@ -100,6 +101,8 @@ export default function Notifications() {
       case 'memory':
       case 'time_travel':
         return <History className="h-5 w-5 text-purple-500" />
+      case 'friend_suggestion':
+        return <UserPlus className="h-5 w-5 text-pink-500" />
       default:
         return <Bell className="h-5 w-5 text-primary" />
     }
@@ -111,6 +114,9 @@ export default function Notifications() {
     message: string = '',
     type?: string,
   ) => {
+    if (type === 'friend_suggestion')
+      return 'border-l-4 border-l-pink-500 bg-pink-500/10 dark:bg-pink-900/20'
+
     if (type === 'memory' || type === 'time_travel')
       return 'border-l-4 border-l-purple-500 bg-purple-500/10 dark:bg-purple-900/20'
 
@@ -275,6 +281,8 @@ export default function Notifications() {
                           (not.type === 'memory' ||
                             not.type === 'time_travel') &&
                             'bg-purple-500/10 border-purple-500/30',
+                          not.type === 'friend_suggestion' &&
+                            'bg-pink-500/10 border-pink-500/30',
                         )}
                       >
                         {getIcon(not.type, not.title, not.message)}
@@ -304,6 +312,8 @@ export default function Notifications() {
                             (not.type === 'memory' ||
                               not.type === 'time_travel') &&
                               'text-purple-600 dark:text-purple-400',
+                            not.type === 'friend_suggestion' &&
+                              'text-pink-600 dark:text-pink-400',
                           )}
                         >
                           {not.title}

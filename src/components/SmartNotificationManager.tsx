@@ -2,10 +2,12 @@ import { useEffect } from 'react'
 import { usePassportStore } from '@/stores/usePassportStore'
 import useNotificationStore from '@/stores/useNotificationStore'
 import { useSmartNotificationState } from '@/stores/useSmartNotificationState'
+import { usePrivacyStore } from '@/stores/usePrivacyStore'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
-import { Crown, Eye, Handshake } from 'lucide-react'
+import { Crown, Eye, Handshake, UserPlus } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { mockCurrentUser, mockProfiles } from '@/lib/data'
 
 export function SmartNotificationManager() {
   const { competitions, goals, certifications, verifyCertification } =
@@ -13,6 +15,7 @@ export function SmartNotificationManager() {
   const { addNotification } = useNotificationStore()
   const { hasNotified, addNotifiedId, canNotifyVip, recordVipView } =
     useSmartNotificationState()
+  const { isInvisibleMode } = usePrivacyStore()
   const navigate = useNavigate()
 
   // Helper to parse DD/MM/YYYY
@@ -235,6 +238,94 @@ export function SmartNotificationManager() {
     addNotifiedId,
     navigate,
   ])
+
+  // Simulate Friendship Suggestion (Proximity + Interests)
+  useEffect(() => {
+    const checkFriendshipSuggestions = () => {
+      if (isInvisibleMode) return
+
+      const myInterests = mockCurrentUser.interests || []
+      if (myInterests.length === 0) return
+
+      // Find users within 5km sharing at least 2 interests
+      const suggestions = mockProfiles.filter((p) => {
+        if (p.id === mockCurrentUser.id) return false
+        if (!p.isDiscovered) return false
+
+        const distance = p.distanceValue || Math.random() * 10
+        if (distance > 5) return false
+
+        const theirInterests = p.interests || []
+        const sharedInterests = theirInterests.filter((i) =>
+          myInterests.includes(i),
+        )
+
+        return sharedInterests.length >= 2
+      })
+
+      if (suggestions.length > 0) {
+        // Pick a random suggestion to avoid always showing the same one if multiple match
+        const friend =
+          suggestions[Math.floor(Math.random() * suggestions.length)]
+        const distance = friend.distanceValue || Math.random() * 4 + 1
+        const shared = (friend.interests || []).filter((i) =>
+          myInterests.includes(i),
+        )
+
+        const notificationId = `friend-suggestion-${friend.id}`
+
+        if (!hasNotified(notificationId)) {
+          addNotification({
+            title: 'Nova sugestão de amizade!',
+            message: `${friend.name.split(' ')[0]} está a ${distance.toFixed(1)}km e também gosta de ${shared.slice(0, 2).join(' e ')}.`,
+            type: 'friend_suggestion',
+            priority: 'medium',
+            link: `/profile/${friend.id}`,
+            user: {
+              id: friend.id,
+              name: friend.name,
+              avatar: friend.avatar,
+            },
+          })
+          addNotifiedId(notificationId)
+
+          // Glassmorphism Toast for Friendship Suggestion
+          toast.custom(
+            (t) => (
+              <div className="flex w-full items-center gap-3 rounded-2xl border-2 border-pink-500/30 bg-background/95 p-3 shadow-2xl backdrop-blur-xl animate-in slide-in-from-top-4 duration-300">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-pink-500/20 text-pink-500">
+                  <UserPlus className="h-6 w-6" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-foreground truncate">
+                    Match de Interesses!
+                  </p>
+                  <p className="text-xs text-muted-foreground line-clamp-2 leading-tight">
+                    {friend.name.split(' ')[0]} está por perto e compartilha
+                    interesses com você.
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    toast.dismiss(t)
+                    navigate(`/profile/${friend.id}`)
+                  }}
+                  className="shrink-0 rounded-xl bg-pink-500 px-3 py-2 text-xs font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-md shadow-pink-500/20"
+                >
+                  Ver Perfil
+                </button>
+              </div>
+            ),
+            { duration: 6000, position: 'top-center' },
+          )
+        }
+      }
+    }
+
+    // Delay slightly to not conflict with VIP notification
+    const timer = setTimeout(checkFriendshipSuggestions, 6000)
+    return () => clearTimeout(timer)
+  }, [isInvisibleMode, addNotification, hasNotified, addNotifiedId, navigate])
 
   return null
 }
