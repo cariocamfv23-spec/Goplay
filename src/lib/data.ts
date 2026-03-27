@@ -2474,7 +2474,7 @@ export const mockProducts: Product[] = [
 export const mockNotifications: Notification[] = [
   {
     id: 'n7',
-    title: 'Goplay Updates',
+    title: 'Atualizações Goplay',
     message:
       'Bem-vindo ao novo sistema de notificações centralizado do Goplay! Fique por dentro de todas as interações e novidades da plataforma.',
     time: 'Agora mesmo',
@@ -2519,7 +2519,7 @@ export const mockNotifications: Notification[] = [
     id: 'n5',
     title: 'Visitante VIP!',
     message:
-      'Um Scout está visualizando seu perfil. João Silva (Global Sports Agency)',
+      'Um Olheiro está visualizando seu perfil. João Silva (Global Sports Agency)',
     time: '2 min',
     read: false,
     type: 'verification',
@@ -2738,7 +2738,7 @@ export const mockLiveEvents: LiveEvent[] = [
   },
   {
     id: 'live2',
-    title: 'Pro Basketball League',
+    title: 'Liga Profissional de Basquete',
     championship: 'Nacional',
     modality: 'Basquete',
     city: 'Rio de Janeiro',
@@ -2750,7 +2750,7 @@ export const mockLiveEvents: LiveEvent[] = [
   },
   {
     id: 'live3',
-    title: 'Beach Volley Championship',
+    title: 'Campeonato de Vôlei de Praia',
     championship: 'Circuito Brasileiro',
     modality: 'Vôlei',
     city: 'Fortaleza',
@@ -2762,7 +2762,7 @@ export const mockLiveEvents: LiveEvent[] = [
   },
   {
     id: 'live4',
-    title: 'MMA Fight Night',
+    title: 'Noite de Lutas MMA',
     championship: 'Ultimate Combat',
     modality: 'MMA',
     city: 'Curitiba',
@@ -2774,7 +2774,7 @@ export const mockLiveEvents: LiveEvent[] = [
   },
   {
     id: 'live5',
-    title: 'Grand Slam Final',
+    title: 'Final de Grand Slam',
     championship: 'Open Tênis',
     modality: 'Tênis',
     city: 'São Paulo',

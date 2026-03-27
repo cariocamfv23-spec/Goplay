@@ -50,15 +50,15 @@ export function SmartNotificationManager() {
         const isSponsor = vip.role === 'Sponsor'
 
         const title = isScout
-          ? 'Alerta de Scout'
+          ? 'Alerta de Olheiro'
           : isSponsor
             ? 'Oportunidade VIP'
             : 'Visitante VIP!'
 
         const message = isScout
-          ? 'Um Scout visualizou seu Perfil VIP'
+          ? 'Um Olheiro visualizou seu Perfil VIP'
           : isSponsor
-            ? 'Um Sponsor demonstrou interesse no seu Perfil VIP'
+            ? 'Um Patrocinador demonstrou interesse no seu Perfil VIP'
             : `${vip.name} está visualizando seu perfil.`
 
         const NotificationIcon = isScout ? Eye : isSponsor ? Handshake : Crown

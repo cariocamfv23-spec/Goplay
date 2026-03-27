@@ -1,7 +1,23 @@
+import { useState, useEffect } from 'react'
 import { Logo } from '@/components/Logo'
 import { AppIcon } from '@/components/AppIcon'
 
+const phrases = [
+  'A grandeza exige tempo...',
+  'Preparando o seu palco...',
+  'O suor de hoje é a vitória de amanhã...',
+  'Entrando em campo...',
+  'Ajustando os detalhes finais...',
+  'O seu esporte, levado a sério...',
+]
+
 export const PageLoader = () => {
+  const [phrase, setPhrase] = useState('')
+
+  useEffect(() => {
+    setPhrase(phrases[Math.floor(Math.random() * phrases.length)])
+  }, [])
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background animate-in fade-in duration-700 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
@@ -25,6 +41,14 @@ export const PageLoader = () => {
           <div className="w-2 h-2 rounded-full bg-primary animate-bounce [animation-delay:-0.15s]"></div>
           <div className="w-2 h-2 rounded-full bg-primary animate-bounce"></div>
         </div>
+
+        {phrase && (
+          <div className="mt-6 animate-in slide-in-from-bottom-4 fade-in duration-1000 delay-500">
+            <p className="text-sm font-medium text-muted-foreground text-center animate-pulse px-6">
+              {phrase}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )

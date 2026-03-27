@@ -17,7 +17,7 @@ export function MemoryNotificationManager() {
         const yearsAgo = todayMemory.items[0].yearsAgo
 
         addNotification({
-          title: 'Goplay Memory ⏳',
+          title: 'Memória Goplay ⏳',
           message: `Revisite um momento especial! Veja o que você postou neste dia há ${yearsAgo} ano(s).`,
           type: 'time_travel',
           priority: 'high',

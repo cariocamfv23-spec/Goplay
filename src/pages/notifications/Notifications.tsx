@@ -46,7 +46,11 @@ export default function Notifications() {
   const isVipAlert = (title: string, message: string = '') => {
     const text = (title + ' ' + message).toLowerCase()
     return (
-      text.includes('vip') || text.includes('scout') || text.includes('sponsor')
+      text.includes('vip') ||
+      text.includes('scout') ||
+      text.includes('sponsor') ||
+      text.includes('olheiro') ||
+      text.includes('patrocinador')
     )
   }
 
@@ -77,9 +81,15 @@ export default function Notifications() {
       case 'goal_deadline':
         return <Target className="h-5 w-5 text-red-500" />
       case 'verification':
-        if (title.toLowerCase().includes('scout'))
+        if (
+          title.toLowerCase().includes('scout') ||
+          title.toLowerCase().includes('olheiro')
+        )
           return <Eye className="h-5 w-5 text-blue-500" />
-        if (title.toLowerCase().includes('sponsor'))
+        if (
+          title.toLowerCase().includes('sponsor') ||
+          title.toLowerCase().includes('patrocinador')
+        )
           return <Handshake className="h-5 w-5 text-emerald-500" />
         if (isVipAlert(title, message)) {
           return <Crown className="h-5 w-5 text-gold" />
@@ -116,9 +126,15 @@ export default function Notifications() {
       return 'border-l-4 border-l-red-500 bg-red-500/10 dark:bg-red-900/20'
 
     if (isVipAlert(title, message)) {
-      if (title.toLowerCase().includes('scout'))
+      if (
+        title.toLowerCase().includes('scout') ||
+        title.toLowerCase().includes('olheiro')
+      )
         return 'border-l-4 border-l-blue-500 bg-blue-500/10 dark:bg-blue-900/20'
-      if (title.toLowerCase().includes('sponsor'))
+      if (
+        title.toLowerCase().includes('sponsor') ||
+        title.toLowerCase().includes('patrocinador')
+      )
         return 'border-l-4 border-l-emerald-500 bg-emerald-500/10 dark:bg-emerald-900/20'
       return 'border-l-4 border-l-gold bg-gold/10 dark:bg-gold/10'
     }
@@ -182,7 +198,7 @@ export default function Notifications() {
               className="border-purple-500/50 text-purple-500 hover:bg-purple-500/10 text-xs h-8 px-2"
               onClick={() => {
                 const nid = addNotification({
-                  title: 'Goplay Memory ⏳',
+                  title: 'Memória Goplay ⏳',
                   message: `Revisite um momento especial! Veja o que você postou neste dia há 1 ano(s).`,
                   type: 'time_travel',
                   priority: 'high',
@@ -240,7 +256,7 @@ export default function Notifications() {
           Object.entries(groupedNotifications).map(([date, items]) => (
             <div key={date} className="space-y-3">
               <h3 className="text-sm font-semibold text-muted-foreground px-1 uppercase tracking-wide">
-                {date}
+                {date === 'Anteriores' ? 'Anteriores' : date}
               </h3>
               <div className="space-y-2">
                 {items.map((not) => (
@@ -303,9 +319,11 @@ export default function Notifications() {
                           not.read ? 'bg-secondary/50' : 'bg-secondary',
                           isVipAlert(not.title, not.message) &&
                             'bg-gold/10 border-gold/30',
-                          not.title.toLowerCase().includes('scout') &&
+                          (not.title.toLowerCase().includes('scout') ||
+                            not.title.toLowerCase().includes('olheiro')) &&
                             'bg-blue-500/10 border-blue-500/30',
-                          not.title.toLowerCase().includes('sponsor') &&
+                          (not.title.toLowerCase().includes('sponsor') ||
+                            not.title.toLowerCase().includes('patrocinador')) &&
                             'bg-emerald-500/10 border-emerald-500/30',
                           not.type === 'system_update' &&
                             'bg-primary/10 border-primary/30',
@@ -327,9 +345,13 @@ export default function Notifications() {
                             not.priority === 'critical' &&
                               'text-red-600 dark:text-red-400',
                             isVipAlert(not.title, not.message) && 'text-gold',
-                            not.title.toLowerCase().includes('scout') &&
+                            (not.title.toLowerCase().includes('scout') ||
+                              not.title.toLowerCase().includes('olheiro')) &&
                               'text-blue-600 dark:text-blue-400',
-                            not.title.toLowerCase().includes('sponsor') &&
+                            (not.title.toLowerCase().includes('sponsor') ||
+                              not.title
+                                .toLowerCase()
+                                .includes('patrocinador')) &&
                               'text-emerald-600 dark:text-emerald-400',
                             not.type === 'live_stream' &&
                               !not.link?.includes('/replay/') &&

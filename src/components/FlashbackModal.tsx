@@ -35,7 +35,7 @@ export function FlashbackModal() {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && closeFlashback()}>
       <DialogContent className="sm:max-w-md p-0 overflow-hidden bg-background/40 backdrop-blur-3xl border-white/20 shadow-[0_0_50px_rgba(168,85,247,0.2)] rounded-3xl w-[95vw] border-2 z-[200]">
-        <DialogTitle className="sr-only">Flashback Memory</DialogTitle>
+        <DialogTitle className="sr-only">Memória Flashback</DialogTitle>
 
         <div className="relative w-full aspect-[9/16] max-h-[80vh] flex flex-col bg-black/60">
           {/* Background Blur */}
@@ -145,7 +145,7 @@ export function FlashbackModal() {
                       ? 'bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.8)] scale-y-110'
                       : 'bg-white/20 hover:bg-white/40'
                   }`}
-                  aria-label={`Go to slide ${idx + 1}`}
+                  aria-label={`Ir para o slide ${idx + 1}`}
                 />
               ))}
             </div>

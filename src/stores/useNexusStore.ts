@@ -40,73 +40,99 @@ export const useNexusStore = create<NexusState>()(
       tribes: initialTribes,
       createTribe: (data) =>
         set((state) => {
-          const newTribe: Tribe = {
-            ...data,
-            id: `t${Date.now()}`,
-            members: [data.creatorId],
-            pendingRequests: [],
-            events: [],
+          try {
+            const newTribe: Tribe = {
+              ...data,
+              id: `t${Date.now()}`,
+              members: [data.creatorId],
+              pendingRequests: [],
+              events: [],
+            }
+            toast.success('Tribo criada com sucesso!')
+            return { tribes: [...state.tribes, newTribe] }
+          } catch (error) {
+            toast.error(
+              'Erro ao criar a tribo. Verifique os dados e tente novamente.',
+            )
+            return state
           }
-          toast.success('Tribo criada com sucesso!')
-          return { tribes: [...state.tribes, newTribe] }
         }),
       joinTribe: (tribeId, userId) =>
         set((state) => {
-          return {
-            tribes: state.tribes.map((t) => {
-              if (t.id === tribeId) {
-                if (t.isPrivate) {
-                  if (!t.pendingRequests.includes(userId)) {
-                    toast.success('Solicitação enviada ao administrador.')
-                    return {
-                      ...t,
-                      pendingRequests: [...t.pendingRequests, userId],
+          try {
+            return {
+              tribes: state.tribes.map((t) => {
+                if (t.id === tribeId) {
+                  if (t.isPrivate) {
+                    if (!t.pendingRequests.includes(userId)) {
+                      toast.success('Solicitação enviada ao administrador.')
+                      return {
+                        ...t,
+                        pendingRequests: [...t.pendingRequests, userId],
+                      }
+                    } else {
+                      toast.info('Sua solicitação já está pendente.')
+                    }
+                  } else {
+                    if (!t.members.includes(userId)) {
+                      toast.success('Bem-vindo à tribo!')
+                      return { ...t, members: [...t.members, userId] }
+                    } else {
+                      toast.info('Você já é membro desta tribo.')
                     }
                   }
-                } else {
-                  if (!t.members.includes(userId)) {
-                    toast.success('Bem-vindo à tribo!')
-                    return { ...t, members: [...t.members, userId] }
-                  }
                 }
-              }
-              return t
-            }),
+                return t
+              }),
+            }
+          } catch (error) {
+            toast.error('Erro ao entrar na tribo. Tente novamente mais tarde.')
+            return state
           }
         }),
       approveRequest: (tribeId, userId) =>
         set((state) => {
-          return {
-            tribes: state.tribes.map((t) => {
-              if (t.id === tribeId) {
-                toast.success('Membro aprovado!')
-                return {
-                  ...t,
-                  pendingRequests: t.pendingRequests.filter(
-                    (id) => id !== userId,
-                  ),
-                  members: [...t.members, userId],
+          try {
+            return {
+              tribes: state.tribes.map((t) => {
+                if (t.id === tribeId) {
+                  toast.success('Membro aprovado!')
+                  return {
+                    ...t,
+                    pendingRequests: t.pendingRequests.filter(
+                      (id) => id !== userId,
+                    ),
+                    members: [...t.members, userId],
+                  }
                 }
-              }
-              return t
-            }),
+                return t
+              }),
+            }
+          } catch (error) {
+            toast.error('Erro ao aprovar o membro.')
+            return state
           }
         }),
       declineRequest: (tribeId, userId) =>
         set((state) => {
-          return {
-            tribes: state.tribes.map((t) => {
-              if (t.id === tribeId) {
-                toast.info('Solicitação recusada.')
-                return {
-                  ...t,
-                  pendingRequests: t.pendingRequests.filter(
-                    (id) => id !== userId,
-                  ),
+          try {
+            return {
+              tribes: state.tribes.map((t) => {
+                if (t.id === tribeId) {
+                  toast.info('Solicitação recusada.')
+                  return {
+                    ...t,
+                    pendingRequests: t.pendingRequests.filter(
+                      (id) => id !== userId,
+                    ),
+                  }
                 }
-              }
-              return t
-            }),
+                return t
+              }),
+            }
+          } catch (error) {
+            toast.error('Erro ao recusar a solicitação.')
+            return state
           }
         }),
     }),
