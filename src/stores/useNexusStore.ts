@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { mockUser } from '@/lib/data'
 import { toast } from 'sonner'
+import { initialTribes } from '@/lib/mockNexusData'
 
 export interface NexusEvent {
   id: string
@@ -33,68 +33,6 @@ interface NexusState {
   approveRequest: (tribeId: string, userId: string) => void
   declineRequest: (tribeId: string, userId: string) => void
 }
-
-const initialTribes: Tribe[] = [
-  {
-    id: 't1',
-    name: 'Varzeanos Raiz',
-    category: 'Futebol',
-    description:
-      'A tribo oficial da várzea. Aqui o futebol respira em cada esquina.',
-    icon: 'https://img.usecurling.com/i?q=soccer%20ball&color=green',
-    cover:
-      'https://img.usecurling.com/p/800/400?q=muddy%20soccer%20field&color=green',
-    isPrivate: false,
-    creatorId: 'u3',
-    members: ['u3', 'u4', mockUser.id],
-    pendingRequests: [],
-    events: [
-      {
-        id: 'e1',
-        title: 'Racha de Domingo',
-        date: 'Domingo, 09:00',
-        location: 'Campo do Botafogo',
-      },
-    ],
-  },
-  {
-    id: 't2',
-    name: 'Elite Runners',
-    category: 'Corrida',
-    description:
-      'Foco na alta performance. Corridas diárias, desafios e planilhas compartilhadas.',
-    icon: 'https://img.usecurling.com/i?q=running%20shoe&color=orange',
-    cover:
-      'https://img.usecurling.com/p/800/400?q=running%20track&color=orange',
-    isPrivate: true,
-    creatorId: mockUser.id,
-    members: [mockUser.id, 'u5'],
-    pendingRequests: ['u6', 'u7'],
-    events: [],
-  },
-  {
-    id: 't3',
-    name: 'GG E-Sports Hub',
-    category: 'E-Sports',
-    description:
-      'Encontre seu duo, forme times e participe de campeonatos internos.',
-    icon: 'https://img.usecurling.com/i?q=gamepad&color=purple',
-    cover:
-      'https://img.usecurling.com/p/800/400?q=cyberpunk%20gaming%20setup&color=purple',
-    isPrivate: false,
-    creatorId: 'u8',
-    members: ['u8', 'u9'],
-    pendingRequests: [],
-    events: [
-      {
-        id: 'e2',
-        title: 'Torneio 2v2',
-        date: 'Sábado, 20:00',
-        location: 'Discord Oficial',
-      },
-    ],
-  },
-]
 
 export const useNexusStore = create<NexusState>()(
   persist(

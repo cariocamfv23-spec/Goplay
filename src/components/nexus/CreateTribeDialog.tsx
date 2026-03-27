@@ -79,10 +79,13 @@ export function CreateTribeDialog() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="Futebol">Futebol</SelectItem>
+                <SelectItem value="Skate">Skate</SelectItem>
+                <SelectItem value="Bike">Bike</SelectItem>
+                <SelectItem value="Basquete">Basquete</SelectItem>
+                <SelectItem value="Surf">Surf</SelectItem>
+                <SelectItem value="Tênis">Tênis</SelectItem>
                 <SelectItem value="Corrida">Corrida</SelectItem>
                 <SelectItem value="E-Sports">E-Sports</SelectItem>
-                <SelectItem value="Basquete">Basquete</SelectItem>
-                <SelectItem value="Fitness">Fitness</SelectItem>
               </SelectContent>
             </Select>
           </div>

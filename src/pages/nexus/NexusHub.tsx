@@ -1,20 +1,41 @@
+import { useState, useMemo } from 'react'
 import { Orbit, Users, Lock, Globe } from 'lucide-react'
 import { CreateTribeDialog } from '@/components/nexus/CreateTribeDialog'
 import { useNexusStore } from '@/stores/useNexusStore'
 import { mockUser } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '@/components/ui/badge'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Button } from '@/components/ui/button'
+
+const CATEGORIES = [
+  'Todos',
+  'Futebol',
+  'Skate',
+  'Bike',
+  'Basquete',
+  'Surf',
+  'Tênis',
+  'Corrida',
+  'E-Sports',
+]
 
 export default function NexusHub() {
   const { tribes } = useNexusStore()
   const navigate = useNavigate()
+  const [activeFilter, setActiveFilter] = useState('Todos')
+
+  const filteredTribes = useMemo(() => {
+    if (activeFilter === 'Todos') return tribes
+    return tribes.filter((t) => t.category === activeFilter)
+  }, [tribes, activeFilter])
 
   return (
     <div className="min-h-screen bg-background pb-24 relative overflow-hidden">
       {/* Background Ambient Glow */}
       <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-primary/10 via-primary/5 to-transparent pointer-events-none" />
 
-      <div className="relative z-10 p-4 pt-6 space-y-8 max-w-5xl mx-auto">
+      <div className="relative z-10 p-4 pt-6 space-y-6 max-w-5xl mx-auto">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-black tracking-tight flex items-center gap-2 text-foreground drop-shadow-sm">
@@ -28,8 +49,50 @@ export default function NexusHub() {
           <CreateTribeDialog />
         </div>
 
+        {/* Categories Filter */}
+        <Tabs
+          value={activeFilter}
+          onValueChange={setActiveFilter}
+          className="w-full"
+        >
+          <div className="overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 no-scrollbar">
+            <TabsList className="w-max bg-secondary/50 p-1 rounded-xl h-auto">
+              {CATEGORIES.map((cat) => (
+                <TabsTrigger
+                  key={cat}
+                  value={cat}
+                  className="rounded-lg px-4 py-2 text-sm font-medium data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all"
+                >
+                  {cat}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
+        </Tabs>
+
+        {filteredTribes.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-card/50 backdrop-blur-xl rounded-3xl border border-border/50 shadow-sm mt-8 animate-fade-in-up">
+            <Orbit className="w-16 h-16 text-primary/30 mb-5 animate-float" />
+            <h3 className="text-xl font-black text-foreground mb-2">
+              Nenhuma tribo encontrada
+            </h3>
+            <p className="text-muted-foreground text-sm max-w-md leading-relaxed">
+              Não encontramos nenhuma comunidade para a categoria{' '}
+              <strong className="text-primary">"{activeFilter}"</strong>. Seja o
+              primeiro a criar um espaço para este esporte!
+            </p>
+            <Button
+              onClick={() => setActiveFilter('Todos')}
+              variant="outline"
+              className="mt-8 rounded-full h-11 px-6 font-bold"
+            >
+              Limpar Filtros
+            </Button>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tribes.map((tribe) => {
+          {filteredTribes.map((tribe) => {
             const isMember = tribe.members.includes(mockUser.id)
             const isRequested = tribe.pendingRequests.includes(mockUser.id)
 
@@ -37,7 +100,7 @@ export default function NexusHub() {
               <div
                 key={tribe.id}
                 onClick={() => navigate(`/nexus/${tribe.id}`)}
-                className="group relative flex flex-col bg-card/60 backdrop-blur-xl rounded-3xl overflow-hidden border border-border/50 shadow-sm hover:shadow-[0_8px_30px_rgba(168,85,247,0.15)] hover:border-primary/40 transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
+                className="group relative flex flex-col bg-card/60 backdrop-blur-xl rounded-3xl overflow-hidden border border-border/50 shadow-sm hover:shadow-[0_8px_30px_rgba(168,85,247,0.15)] hover:border-primary/40 transition-all duration-300 cursor-pointer transform hover:-translate-y-1 animate-fade-in"
               >
                 <div className="h-32 w-full relative">
                   <img
@@ -46,18 +109,18 @@ export default function NexusHub() {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-                  <div className="absolute top-3 right-3">
+                  <div className="absolute top-3 right-3 flex flex-col gap-2 items-end">
                     {tribe.isPrivate ? (
                       <Badge
                         variant="secondary"
-                        className="bg-black/40 text-white backdrop-blur-md border border-white/10 gap-1.5 py-1"
+                        className="bg-black/60 text-white backdrop-blur-md border border-white/10 gap-1.5 py-1"
                       >
                         <Lock className="w-3 h-3" /> Privado
                       </Badge>
                     ) : (
                       <Badge
                         variant="secondary"
-                        className="bg-black/40 text-white backdrop-blur-md border border-white/10 gap-1.5 py-1"
+                        className="bg-black/60 text-white backdrop-blur-md border border-white/10 gap-1.5 py-1"
                       >
                         <Globe className="w-3 h-3" /> Público
                       </Badge>
@@ -77,7 +140,7 @@ export default function NexusHub() {
                   <div className="mt-10 flex items-center justify-between">
                     <Badge
                       variant="outline"
-                      className="bg-primary/5 text-primary border-primary/20 hover:bg-primary/10 transition-colors"
+                      className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-colors font-bold px-3 py-0.5"
                     >
                       {tribe.category}
                     </Badge>
@@ -86,25 +149,25 @@ export default function NexusHub() {
                     </span>
                   </div>
 
-                  <h3 className="font-bold text-lg mt-3 leading-tight group-hover:text-primary transition-colors line-clamp-1">
+                  <h3 className="font-black text-xl mt-3 leading-tight group-hover:text-primary transition-colors line-clamp-1">
                     {tribe.name}
                   </h3>
 
-                  <p className="text-sm text-muted-foreground mt-2 line-clamp-2 leading-relaxed flex-1">
+                  <p className="text-sm text-muted-foreground mt-2 line-clamp-2 leading-relaxed flex-1 font-medium">
                     {tribe.description}
                   </p>
 
                   <div className="mt-5">
                     {isMember ? (
-                      <div className="w-full py-2.5 text-center text-xs font-bold text-primary bg-primary/10 rounded-xl border border-primary/20">
+                      <div className="w-full py-2.5 text-center text-xs font-bold text-primary bg-primary/10 rounded-xl border border-primary/20 shadow-inner">
                         VOCÊ É MEMBRO
                       </div>
                     ) : isRequested ? (
-                      <div className="w-full py-2.5 text-center text-xs font-bold text-orange-500 bg-orange-500/10 rounded-xl border border-orange-500/20">
+                      <div className="w-full py-2.5 text-center text-xs font-bold text-orange-500 bg-orange-500/10 rounded-xl border border-orange-500/20 shadow-inner">
                         SOLICITAÇÃO PENDENTE
                       </div>
                     ) : (
-                      <div className="w-full py-2.5 text-center text-xs font-bold text-muted-foreground bg-secondary/50 rounded-xl border border-border group-hover:bg-secondary transition-colors">
+                      <div className="w-full py-2.5 text-center text-xs font-bold text-muted-foreground bg-secondary/50 rounded-xl border border-border group-hover:bg-secondary group-hover:text-foreground transition-all">
                         VER DETALHES
                       </div>
                     )}
