@@ -1,25 +1,33 @@
 import { useEffect } from 'react'
-import { useWeatherStore } from '@/stores/useWeatherStore'
-import { WeatherAlertBanner } from './WeatherAlertBanner'
-import { WeatherAlertDialog } from './WeatherAlertDialog'
+import { toast } from 'sonner'
+import useNotificationStore from '@/stores/useNotificationStore'
 
 export function WeatherAlertManager() {
-  const { checkWeather } = useWeatherStore()
+  const { addNotification, notifications } = useNotificationStore()
 
   useEffect(() => {
-    // Automatically check for weather alerts when the component mounts (app launch/navigation)
-    // We use a small delay to simulate network request and ensure smooth UI loading
-    const timer = setTimeout(() => {
-      checkWeather()
-    }, 1000)
+    const hasAlreadyNotified = notifications.some(
+      (n) => n.type === 'weather' && n.title === 'Alerta da Defesa Civil',
+    )
 
-    return () => clearTimeout(timer)
-  }, [checkWeather])
+    if (!hasAlreadyNotified) {
+      const timer = setTimeout(() => {
+        addNotification({
+          title: 'Alerta da Defesa Civil',
+          message:
+            'Atenção: Previsão de chuva forte na sua região. Partidas ao ar livre podem ser suspensas.',
+          type: 'weather',
+          priority: 'critical',
+        })
+        toast.warning('Alerta Climático Regional', {
+          description:
+            'Previsão de chuvas fortes. Cuidado com eventos ao ar livre.',
+        })
+      }, 35000)
 
-  return (
-    <>
-      <WeatherAlertDialog />
-      <WeatherAlertBanner />
-    </>
-  )
+      return () => clearTimeout(timer)
+    }
+  }, [addNotification, notifications])
+
+  return null
 }

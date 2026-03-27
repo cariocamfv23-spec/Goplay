@@ -1,24 +1,34 @@
 import { useEffect } from 'react'
-import { useScholarshipStore } from '@/stores/useScholarshipStore'
-import { mockScholarships } from '@/lib/data'
+import { toast } from 'sonner'
+import useNotificationStore from '@/stores/useNotificationStore'
 
 export function ScholarshipAlertManager() {
-  const { checkMatchAndNotify } = useScholarshipStore()
+  const { addNotification, notifications } = useNotificationStore()
 
   useEffect(() => {
-    // Simulate checking for new scholarships shortly after app launch
-    const timer = setTimeout(() => {
-      // For demonstration, we'll pick the first scholarship from our mock list
-      // which happens to be "University of Florida" (Futebol), matching our mock user "Alex Silva" (Futebol)
-      const newScholarship = mockScholarships[0]
+    const hasAlreadyNotified = notifications.some(
+      (n) => n.type === 'scholarship' && n.title === 'Nova Bolsa de Estudos',
+    )
 
-      if (newScholarship) {
-        checkMatchAndNotify(newScholarship)
-      }
-    }, 5000) // 5 seconds delay to simulate "new arrival"
+    if (!hasAlreadyNotified) {
+      const timer = setTimeout(() => {
+        addNotification({
+          title: 'Nova Bolsa de Estudos',
+          message:
+            'Uma universidade internacional está buscando atletas com as suas habilidades.',
+          type: 'scholarship',
+          priority: 'high',
+          link: '/explore/scholarships',
+        })
+        toast.info('Match de Bolsa Encontrado!', {
+          description:
+            'Uma nova oportunidade acadêmica internacional compatível com seu perfil.',
+        })
+      }, 20000)
 
-    return () => clearTimeout(timer)
-  }, [checkMatchAndNotify])
+      return () => clearTimeout(timer)
+    }
+  }, [addNotification, notifications])
 
   return null
 }

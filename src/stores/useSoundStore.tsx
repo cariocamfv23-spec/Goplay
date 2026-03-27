@@ -161,7 +161,7 @@ const useSoundStore = create<SoundStore>()(
               break
             }
             case 'like_basketball':
-              textToSpeak = 'Splash!'
+              textToSpeak = 'Cesta perfeita!'
               rate = 1.5
               break
             case 'like_volleyball':
@@ -186,16 +186,16 @@ const useSoundStore = create<SoundStore>()(
               textToSpeak = 'Convocado!'
               break
             case 'notification_checkin':
-              textToSpeak = 'Check-in aprovado!'
+              textToSpeak = 'Presença confirmada!'
               break
             case 'notification_uber': {
-              const uberSounds = ['Hoje é só chegar!', 'Uber do brabo tá pago!']
+              const uberSounds = ['Hoje é só chegar!', 'Transporte garantido!']
               textToSpeak =
                 uberSounds[Math.floor(Math.random() * uberSounds.length)]
               break
             }
             case 'notification_points':
-              textToSpeak = 'Goplay!'
+              textToSpeak = 'Pontos Goplay!'
               pitch = 1.5
               rate = 2
               break
