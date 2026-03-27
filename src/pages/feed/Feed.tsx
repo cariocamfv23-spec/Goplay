@@ -3,15 +3,8 @@ import { mockPosts } from '@/lib/data'
 import { StoriesRail } from '@/components/StoriesRail'
 import { CreatePostFab } from '@/components/CreatePostFab'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { usePrivacyStore } from '@/stores/usePrivacyStore'
-import { useMemorySimulation } from '@/hooks/useMemorySimulation'
-import { History } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 
 export default function Feed() {
-  const { isPreviewLocked } = usePrivacyStore()
-  const { simulateMemory } = useMemorySimulation()
-
   const eventPosts = mockPosts.filter(
     (p) => p.type === 'article' || p.type === 'event',
   )
@@ -24,16 +17,6 @@ export default function Feed() {
       <div className="sticky top-16 z-20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40">
         <StoriesRail />
         <div className="px-4 py-2">
-          {!isPreviewLocked && (
-            <Button
-              onClick={simulateMemory}
-              className="w-full mb-4 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white shadow-lg shadow-purple-500/20 animate-in fade-in slide-in-from-top-2"
-            >
-              <History className="w-4 h-4 mr-2" />
-              Simular Memória (Admin)
-            </Button>
-          )}
-
           <Tabs defaultValue="all" className="w-full">
             <TabsList className="w-full grid grid-cols-3 h-9">
               <TabsTrigger value="all" className="text-xs">
