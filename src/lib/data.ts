@@ -93,7 +93,8 @@ export interface Notification {
     | 'system_update'
     | 'memory'
     | 'time_travel'
-    | 'friend_suggestion'  date?: string
+    | 'friend_suggestion'
+  date?: string
   priority?: 'low' | 'medium' | 'high' | 'critical'
   link?: string
   user?: {
