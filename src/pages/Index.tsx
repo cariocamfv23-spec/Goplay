@@ -7,6 +7,7 @@ import { useEffect } from 'react'
 import { useInvisiblePresenceStore } from '@/stores/useInvisiblePresenceStore'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { PageLoader } from '@/components/PageLoader'
+import { SportsWallpaper } from '@/components/SportsWallpaper'
 
 export default function Index() {
   const navigate = useNavigate()
@@ -18,27 +19,39 @@ export default function Index() {
     initializeSession()
   }, [initializeSession])
 
-  // Session-Based Redirection with state validation
+  // Splash screen auto-redirect logic
   useEffect(() => {
-    if (hasHydrated && isAuthenticated) {
-      navigate('/home', { replace: true })
-    }
+    if (!hasHydrated) return
+
+    const timer = setTimeout(() => {
+      if (isAuthenticated) {
+        navigate('/home', { replace: true })
+      } else {
+        navigate('/login')
+      }
+    }, 5000)
+
+    return () => clearTimeout(timer)
   }, [hasHydrated, isAuthenticated, navigate])
+
+  const handleAction = () => {
+    if (isAuthenticated) {
+      navigate('/home', { replace: true })
+    } else {
+      navigate('/login')
+    }
+  }
 
   if (!hasHydrated) {
     return <PageLoader />
   }
 
-  // Prevent flashing the landing page if the user is already authenticated
-  if (isAuthenticated) {
-    return null
-  }
-
   return (
-    <div className="flex flex-col h-full bg-transparent relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen flex flex-col bg-transparent relative overflow-hidden transition-colors duration-300">
+      <SportsWallpaper />
       {/* Subtle additional background effects specifically for Index */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background/50 to-background/50 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background/50 to-background/80 z-10" />
         <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-[hsl(var(--gold)/0.15)] rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:4000ms] z-10" />
         <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/15 rounded-full blur-[100px] pointer-events-none animate-pulse [animation-duration:5000ms] z-10" />
       </div>
@@ -96,7 +109,7 @@ export default function Index() {
           <Button
             size="lg"
             className="w-full h-14 text-base font-bold rounded-2xl bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95 group"
-            onClick={() => navigate('/login')}
+            onClick={handleAction}
           >
             Entrar no Goplay
             <ArrowRight className="w-5 h-5 ml-2 opacity-80 group-hover:translate-x-1 transition-transform" />

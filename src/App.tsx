@@ -231,6 +231,7 @@ const App = () => {
               <Suspense fallback={<PageLoader />}>
                 <Routes>
                   {/* Public Authentication and Setup Routes */}
+                  <Route path="/" element={<Index />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/onboarding" element={<Onboarding />} />
@@ -252,9 +253,6 @@ const App = () => {
 
                   {/* Layout Routes */}
                   <Route element={<Layout />}>
-                    {/* The Landing Page is Public */}
-                    <Route path="/" element={<Index />} />
-
                     {/* All Inner Layout Pages are Protected */}
                     <Route element={<ProtectedRoute />}>
                       <Route path="/home" element={<Home />} />
