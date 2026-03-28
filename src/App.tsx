@@ -1,3 +1,57 @@
+import brandIcon from '@/assets/1002177479-ed844.jpg'
+
+if (typeof document !== 'undefined') {
+  const version = '?v=2'
+  const iconUrl = brandIcon + version
+
+  // Cleanup old generic icons to prevent accidental references
+  document
+    .querySelectorAll(
+      'link[rel="icon"], link[rel="apple-touch-icon"], link[rel="manifest"]',
+    )
+    .forEach((el) => el.remove())
+
+  const addLink = (rel: string, href: string) => {
+    const link = document.createElement('link')
+    link.rel = rel
+    link.href = href
+    document.head.appendChild(link)
+  }
+
+  // HTML Head Update for Favicon and iOS Home Screen
+  addLink('icon', iconUrl)
+  addLink('apple-touch-icon', iconUrl)
+
+  // Dynamic Manifest generation with official assets
+  const manifest = {
+    short_name: 'GoPlay',
+    name: 'GoPlay App',
+    icons: [
+      {
+        src: iconUrl,
+        sizes: '192x192',
+        type: 'image/jpeg',
+        purpose: 'any maskable',
+      },
+      {
+        src: iconUrl,
+        sizes: '512x512',
+        type: 'image/jpeg',
+        purpose: 'any maskable',
+      },
+    ],
+    start_url: '/',
+    display: 'standalone',
+    theme_color: '#8b5cf6',
+    background_color: '#ffffff',
+  }
+
+  const manifestUrl =
+    'data:application/manifest+json;charset=utf-8,' +
+    encodeURIComponent(JSON.stringify(manifest))
+  addLink('manifest', manifestUrl)
+}
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
