@@ -1,25 +1,19 @@
 {
   "short_name": "GoPlay",
-  "name": "GoPlay",
+  "name": "GoPlay App",
   "description": "Sua plataforma imersiva de atividades esportivas e gamificação.",
   "icons": [
     {
-      "src": "/icon-192.png?v=3",
+      "src": "https://img.usecurling.com/p/192/192?q=purple%20letter%20g%20logo&color=purple",
       "type": "image/png",
       "sizes": "192x192",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png?v=3",
+      "src": "https://img.usecurling.com/p/512/512?q=purple%20letter%20g%20logo&color=purple",
       "type": "image/png",
       "sizes": "512x512",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-512.png?v=3",
-      "type": "image/png",
-      "sizes": "512x512",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ],
   "start_url": "/",
