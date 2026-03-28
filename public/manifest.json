@@ -4,13 +4,13 @@
   "description": "Sua plataforma imersiva de atividades esportivas e gamificação.",
   "icons": [
     {
-      "src": "https://img.usecurling.com/p/192/192?q=purple%20letter%20g%20logo&color=purple",
+      "src": "/icon-192x192.png",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any maskable"
     },
     {
-      "src": "https://img.usecurling.com/p/512/512?q=purple%20letter%20g%20logo&color=purple",
+      "src": "/icon-512x512.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "any maskable"
