@@ -12,10 +12,21 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { Switch } from '@/components/ui/switch'
 
+interface PWAState {
+  isInstalled: boolean
+  autoUpdate: boolean
+  notifications: boolean
+}
+
 export default function PWASettings() {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(true)
-  const [pwaState, setPwaState] = useState<any>(null)
+  const [hasError, setHasError] = useState(false)
+  const [pwaState, setPwaState] = useState<PWAState>({
+    isInstalled: false,
+    autoUpdate: true,
+    notifications: false,
+  })
 
   useEffect(() => {
     let isMounted = true
@@ -26,9 +37,11 @@ export default function PWASettings() {
         if (!isMounted) return
 
         try {
-          const isStandalone = window.matchMedia
-            ? window.matchMedia('(display-mode: standalone)').matches
-            : false
+          const isStandalone =
+            typeof window !== 'undefined' && window.matchMedia
+              ? window.matchMedia('(display-mode: standalone)').matches
+              : false
+
           setPwaState({
             isInstalled: isStandalone,
             autoUpdate: true,
@@ -36,6 +49,7 @@ export default function PWASettings() {
           })
         } catch (error) {
           console.error('Error loading PWA settings', error)
+          setHasError(true)
           setPwaState({
             isInstalled: false,
             autoUpdate: false,
@@ -47,17 +61,43 @@ export default function PWASettings() {
       }, 600)
     }
 
-    loadSettings()
+    // Event loop management: Ensure it doesn't block the main thread initially
+    setTimeout(loadSettings, 0)
 
     return () => {
       isMounted = false
     }
   }, [])
 
+  if (hasError) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4 p-4 text-center">
+        <div className="h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center mb-2">
+          <Smartphone className="h-6 w-6 text-destructive" />
+        </div>
+        <h2 className="text-xl font-bold">Erro de Carregamento</h2>
+        <p className="text-sm text-muted-foreground max-w-xs">
+          Ocorreu um problema ao acessar o status do PWA.
+        </p>
+        <Button
+          onClick={() => window.location.reload()}
+          variant="outline"
+          className="mt-4"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
+          Tentar Novamente
+        </Button>
+      </div>
+    )
+  }
+
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="text-sm text-muted-foreground animate-pulse">
+          Carregando configurações...
+        </p>
       </div>
     )
   }
@@ -128,7 +168,7 @@ export default function PWASettings() {
               <Switch
                 checked={autoUpdate}
                 onCheckedChange={(v) =>
-                  setPwaState((prev: any) => ({ ...prev, autoUpdate: v }))
+                  setPwaState((prev) => ({ ...prev, autoUpdate: v }))
                 }
               />
             </div>
@@ -143,7 +183,7 @@ export default function PWASettings() {
               <Switch
                 checked={notifications}
                 onCheckedChange={(v) =>
-                  setPwaState((prev: any) => ({ ...prev, notifications: v }))
+                  setPwaState((prev) => ({ ...prev, notifications: v }))
                 }
               />
             </div>

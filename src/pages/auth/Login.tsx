@@ -92,7 +92,8 @@ export default function Login() {
         localStorage.removeItem('goplay_remember')
       }
 
-      // Non-blocking state update and navigation
+      // Non-blocking state update and navigation to prevent UI freezing
+      // Event loop management: executing after auth callback completes
       setTimeout(() => {
         login()
         toast.success('Login realizado com sucesso!')
@@ -105,7 +106,7 @@ export default function Login() {
     setSocialLoading(provider)
     setTimeout(() => {
       setSocialLoading(null)
-      // Non-blocking state update and navigation
+      // Non-blocking state update and navigation to prevent UI freezing
       setTimeout(() => {
         login()
         toast.success(`Login com ${provider} realizado com sucesso!`)
@@ -123,7 +124,7 @@ export default function Login() {
 
     setTimeout(() => {
       setBiometricLoading(false)
-      // Non-blocking state update and navigation
+      // Non-blocking state update and navigation to prevent UI freezing
       setTimeout(() => {
         login()
         toast.success('Identidade confirmada', {
