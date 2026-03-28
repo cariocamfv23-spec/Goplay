@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   ArrowLeft,
@@ -18,15 +18,55 @@ interface PWAState {
   notifications: boolean
 }
 
-export default function PWASettings() {
+class PWASettingsErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('PWA Settings Error:', error, errorInfo)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4 p-4 text-center">
+          <div className="h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center mb-2">
+            <Smartphone className="h-6 w-6 text-destructive" />
+          </div>
+          <h2 className="text-xl font-bold">Erro de Carregamento</h2>
+          <p className="text-sm text-muted-foreground max-w-xs">
+            Ocorreu um problema ao acessar o status do PWA.
+          </p>
+          <Button
+            onClick={() => window.location.reload()}
+            variant="outline"
+            className="mt-4"
+          >
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Tentar Novamente
+          </Button>
+        </div>
+      )
+    }
+
+    return this.props.children
+  }
+}
+
+function PWASettingsContent() {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
-  const [pwaState, setPwaState] = useState<PWAState>({
-    isInstalled: false,
-    autoUpdate: true,
-    notifications: false,
-  })
+  const [pwaState, setPwaState] = useState<PWAState | null>(null)
 
   useEffect(() => {
     let isMounted = true
@@ -91,7 +131,7 @@ export default function PWASettings() {
     )
   }
 
-  if (isLoading) {
+  if (isLoading || !pwaState) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -168,7 +208,9 @@ export default function PWASettings() {
               <Switch
                 checked={autoUpdate}
                 onCheckedChange={(v) =>
-                  setPwaState((prev) => ({ ...prev, autoUpdate: v }))
+                  setPwaState((prev) =>
+                    prev ? { ...prev, autoUpdate: v } : null,
+                  )
                 }
               />
             </div>
@@ -183,7 +225,9 @@ export default function PWASettings() {
               <Switch
                 checked={notifications}
                 onCheckedChange={(v) =>
-                  setPwaState((prev) => ({ ...prev, notifications: v }))
+                  setPwaState((prev) =>
+                    prev ? { ...prev, notifications: v } : null,
+                  )
                 }
               />
             </div>
@@ -217,5 +261,13 @@ export default function PWASettings() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function PWASettings() {
+  return (
+    <PWASettingsErrorBoundary>
+      <PWASettingsContent />
+    </PWASettingsErrorBoundary>
   )
 }

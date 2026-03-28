@@ -66,38 +66,40 @@ export default function Login() {
 
     setLoading(true)
 
-    // Simulate API call and validation logic
+    // Simulate API call and validation logic without blocking
     setTimeout(() => {
-      setLoading(false)
-
-      // Simulate authentication failure conditions
-      if (password.length < 6) {
-        toast.error('A senha deve ter pelo menos 6 caracteres.')
-        return
-      }
-
-      if (username.toLowerCase() === 'admin' && password !== 'admin123') {
-        toast.error('Credenciais inválidas. Verifique seu usuário e senha.')
-        return
-      }
-
-      // Success path
-      if (rememberMe) {
-        localStorage.setItem('goplay_username', username)
-        localStorage.setItem('goplay_password', password)
-        localStorage.setItem('goplay_remember', 'true')
-      } else {
-        localStorage.removeItem('goplay_username')
-        localStorage.removeItem('goplay_password')
-        localStorage.removeItem('goplay_remember')
-      }
-
-      // Non-blocking state update and navigation to prevent UI freezing
-      // Event loop management: executing after auth callback completes
+      // Execute the response handler logic in a non-blocking way
       setTimeout(() => {
-        login()
-        toast.success('Login realizado com sucesso!')
-        navigate('/home', { replace: true })
+        setLoading(false)
+
+        // Simulate authentication failure conditions
+        if (password.length < 6) {
+          toast.error('A senha deve ter pelo menos 6 caracteres.')
+          return
+        }
+
+        if (username.toLowerCase() === 'admin' && password !== 'admin123') {
+          toast.error('Credenciais inválidas. Verifique seu usuário e senha.')
+          return
+        }
+
+        // Success path
+        if (rememberMe) {
+          localStorage.setItem('goplay_username', username)
+          localStorage.setItem('goplay_password', password)
+          localStorage.setItem('goplay_remember', 'true')
+        } else {
+          localStorage.removeItem('goplay_username')
+          localStorage.removeItem('goplay_password')
+          localStorage.removeItem('goplay_remember')
+        }
+
+        // Non-blocking state update and navigation to prevent UI freezing
+        setTimeout(() => {
+          login()
+          toast.success('Login realizado com sucesso!')
+          navigate('/home', { replace: true })
+        }, 0)
       }, 0)
     }, 1500)
   }
@@ -105,9 +107,9 @@ export default function Login() {
   const handleSocialLogin = (provider: string) => {
     setSocialLoading(provider)
     setTimeout(() => {
-      setSocialLoading(null)
       // Non-blocking state update and navigation to prevent UI freezing
       setTimeout(() => {
+        setSocialLoading(null)
         login()
         toast.success(`Login com ${provider} realizado com sucesso!`)
         navigate('/home', { replace: true })
@@ -123,9 +125,9 @@ export default function Login() {
     })
 
     setTimeout(() => {
-      setBiometricLoading(false)
       // Non-blocking state update and navigation to prevent UI freezing
       setTimeout(() => {
+        setBiometricLoading(false)
         login()
         toast.success('Identidade confirmada', {
           description: 'Acesso seguro liberado via biometria.',
