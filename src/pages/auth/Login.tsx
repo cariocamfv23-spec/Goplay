@@ -39,7 +39,9 @@ export default function Login() {
   // Redirect to home if already authenticated, preventing the display of the guest UI
   useEffect(() => {
     if (hasHydrated && isAuthenticated) {
-      navigate('/home', { replace: true })
+      setTimeout(() => {
+        navigate('/home', { replace: true })
+      }, 0)
     }
   }, [hasHydrated, isAuthenticated, navigate])
 
@@ -90,10 +92,11 @@ export default function Login() {
         localStorage.removeItem('goplay_remember')
       }
 
-      login()
+      // Non-blocking state update and navigation
       setTimeout(() => {
+        login()
         toast.success('Login realizado com sucesso!')
-        navigate('/home')
+        navigate('/home', { replace: true })
       }, 0)
     }, 1500)
   }
@@ -102,10 +105,11 @@ export default function Login() {
     setSocialLoading(provider)
     setTimeout(() => {
       setSocialLoading(null)
-      login()
+      // Non-blocking state update and navigation
       setTimeout(() => {
+        login()
         toast.success(`Login com ${provider} realizado com sucesso!`)
-        navigate('/home')
+        navigate('/home', { replace: true })
       }, 0)
     }, 1500)
   }
@@ -119,12 +123,13 @@ export default function Login() {
 
     setTimeout(() => {
       setBiometricLoading(false)
-      login()
+      // Non-blocking state update and navigation
       setTimeout(() => {
+        login()
         toast.success('Identidade confirmada', {
           description: 'Acesso seguro liberado via biometria.',
         })
-        navigate('/home')
+        navigate('/home', { replace: true })
       }, 0)
     }, 2000)
   }

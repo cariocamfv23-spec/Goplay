@@ -18,30 +18,40 @@ export default function PWASettings() {
   const [pwaState, setPwaState] = useState<any>(null)
 
   useEffect(() => {
+    let isMounted = true
+
     // Simulate fetching PWA settings safely with fallback
     const loadSettings = () => {
-      try {
-        setTimeout(() => {
+      setTimeout(() => {
+        if (!isMounted) return
+
+        try {
+          const isStandalone = window.matchMedia
+            ? window.matchMedia('(display-mode: standalone)').matches
+            : false
           setPwaState({
-            isInstalled: window.matchMedia('(display-mode: standalone)')
-              .matches,
+            isInstalled: isStandalone,
             autoUpdate: true,
             notifications: false,
           })
+        } catch (error) {
+          console.error('Error loading PWA settings', error)
+          setPwaState({
+            isInstalled: false,
+            autoUpdate: false,
+            notifications: false,
+          })
+        } finally {
           setIsLoading(false)
-        }, 600)
-      } catch (error) {
-        console.error('Error loading PWA settings', error)
-        setPwaState({
-          isInstalled: false,
-          autoUpdate: false,
-          notifications: false,
-        })
-        setIsLoading(false)
-      }
+        }
+      }, 600)
     }
 
     loadSettings()
+
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   if (isLoading) {
@@ -53,9 +63,9 @@ export default function PWASettings() {
   }
 
   // Safe fallback to prevent undefined errors
-  const isInstalled = pwaState?.isInstalled ?? false
-  const autoUpdate = pwaState?.autoUpdate ?? false
-  const notifications = pwaState?.notifications ?? false
+  const isInstalled = Boolean(pwaState?.isInstalled)
+  const autoUpdate = Boolean(pwaState?.autoUpdate)
+  const notifications = Boolean(pwaState?.notifications)
 
   const handleClearCache = () => {
     toast.success('Cache do aplicativo limpo com sucesso!', {
