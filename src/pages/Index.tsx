@@ -19,21 +19,6 @@ export default function Index() {
     initializeSession()
   }, [initializeSession])
 
-  // Splash screen auto-redirect logic
-  useEffect(() => {
-    if (!hasHydrated) return
-
-    const timer = setTimeout(() => {
-      if (isAuthenticated) {
-        navigate('/home', { replace: true })
-      } else {
-        navigate('/login')
-      }
-    }, 5000)
-
-    return () => clearTimeout(timer)
-  }, [hasHydrated, isAuthenticated, navigate])
-
   const handleAction = () => {
     if (isAuthenticated) {
       navigate('/home', { replace: true })
