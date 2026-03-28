@@ -78,8 +78,11 @@ function PWASettingsContent() {
 
         try {
           const isStandalone =
-            typeof window !== 'undefined' && window.matchMedia
-              ? window.matchMedia('(display-mode: standalone)').matches
+            typeof window !== 'undefined'
+              ? (window.matchMedia &&
+                  window.matchMedia('(display-mode: standalone)').matches) ||
+                ('standalone' in window.navigator &&
+                  (window.navigator as any).standalone === true)
               : false
 
           setPwaState({
