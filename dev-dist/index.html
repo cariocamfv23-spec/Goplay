@@ -22,20 +22,26 @@
     />
     <meta
       property="og:image"
-      content="https://img.usecurling.com/p/512/512?q=purple%20letter%20g%20logo&color=purple"
+      content="https://img.usecurling.com/p/512/512?q=purple%20letter%20g%20logo&color=purple&v=2"
     />
 
     <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="https://img.usecurling.com/p/192/192?q=purple%20letter%20g%20logo&color=purple&v=2"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="https://img.usecurling.com/p/512/512?q=purple%20letter%20g%20logo&color=purple&v=2"
+    />
+    <link
       rel="apple-touch-icon"
-      href="https://img.usecurling.com/p/192/192?q=purple%20letter%20g%20logo&color=purple"
+      href="https://img.usecurling.com/p/512/512?q=purple%20letter%20g%20logo&color=purple&v=2"
     />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
-    <meta name="apple-mobile-web-app-title" content="GoPlay App" />
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="manifest" href="/manifest.json?v=2" />
     <script type="module" crossorigin src="/assets/index-CJ2Qsi3b.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-Gg93HQXl.css">
   </head>
@@ -43,22 +49,5 @@
   <body>
     <div id="root"></div>
     <script src="https://goskip.dev/skip.js"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').then(
-            (registration) => {
-              console.log(
-                'ServiceWorker registration successful with scope: ',
-                registration.scope,
-              )
-            },
-            (err) => {
-              console.log('ServiceWorker registration failed: ', err)
-            },
-          )
-        })
-      }
-    </script>
   </body>
 </html>
