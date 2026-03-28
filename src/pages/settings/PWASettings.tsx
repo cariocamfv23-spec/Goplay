@@ -143,9 +143,9 @@ function PWASettingsContent() {
   }
 
   // Safe fallback to prevent undefined errors
-  const isInstalled = Boolean(pwaState?.isInstalled)
-  const autoUpdate = Boolean(pwaState?.autoUpdate)
-  const notifications = Boolean(pwaState?.notifications)
+  const isInstalled = Boolean(pwaState?.isInstalled ?? false)
+  const autoUpdate = Boolean(pwaState?.autoUpdate ?? false)
+  const notifications = Boolean(pwaState?.notifications ?? false)
 
   const handleClearCache = () => {
     toast.success('Cache do aplicativo limpo com sucesso!', {
@@ -209,7 +209,13 @@ function PWASettingsContent() {
                 checked={autoUpdate}
                 onCheckedChange={(v) =>
                   setPwaState((prev) =>
-                    prev ? { ...prev, autoUpdate: v } : null,
+                    prev
+                      ? { ...prev, autoUpdate: v }
+                      : {
+                          isInstalled: false,
+                          notifications: false,
+                          autoUpdate: v,
+                        },
                   )
                 }
               />
@@ -226,7 +232,13 @@ function PWASettingsContent() {
                 checked={notifications}
                 onCheckedChange={(v) =>
                   setPwaState((prev) =>
-                    prev ? { ...prev, notifications: v } : null,
+                    prev
+                      ? { ...prev, notifications: v }
+                      : {
+                          isInstalled: false,
+                          autoUpdate: false,
+                          notifications: v,
+                        },
                   )
                 }
               />
