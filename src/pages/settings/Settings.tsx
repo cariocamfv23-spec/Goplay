@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   ArrowLeft,
@@ -18,6 +19,8 @@ import {
   Tv,
   Image as ImageIcon,
   Layers,
+  Smartphone,
+  Loader2,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Separator } from '@/components/ui/separator'
@@ -42,11 +45,32 @@ import useSoundStore from '@/stores/useSoundStore'
 export default function Settings() {
   const navigate = useNavigate()
   const { setTheme, theme } = useTheme()
-  const { preferences, toggleAll, toggleType } = useWeatherStore()
-  const {
-    preferences: scholarshipPrefs,
-    toggleNotifications: toggleScholarshipNotifs,
-  } = useScholarshipStore()
+
+  const [isLoading, setIsLoading] = useState(true)
+  const weatherStore = useWeatherStore()
+  const scholarshipStore = useScholarshipStore()
+
+  const preferences = weatherStore?.preferences || {
+    enabled: false,
+    storm: false,
+    heavyRain: false,
+    intenseCold: false,
+  }
+  const toggleAll = weatherStore?.toggleAll || (() => {})
+  const toggleType = weatherStore?.toggleType || (() => {})
+
+  const scholarshipPrefs = scholarshipStore?.preferences || {
+    notifications: false,
+  }
+  const toggleScholarshipNotifs =
+    scholarshipStore?.toggleNotifications || (() => {})
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [])
   const {
     isEnabled: isNostalgiaEnabled,
     preset: nostalgiaPreset,
@@ -74,6 +98,14 @@ export default function Settings() {
     { id: 'analog', label: 'Analógico', icon: Camera },
     { id: 'polaroid', label: 'Polaroid', icon: ImageIcon },
   ]
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
@@ -321,6 +353,21 @@ export default function Settings() {
               </div>
             )}
           </div>
+        </div>
+
+        <Separator />
+
+        <div className="space-y-1">
+          <h3 className="text-sm font-bold text-muted-foreground uppercase px-2">
+            Sistema
+          </h3>
+          <Button
+            variant="ghost"
+            className="w-full justify-start h-12 gap-3 text-base font-normal"
+            onClick={() => navigate('/settings/pwa')}
+          >
+            <Smartphone className="h-5 w-5" /> Configurações do PWA
+          </Button>
         </div>
 
         <Separator />

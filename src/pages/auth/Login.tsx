@@ -91,8 +91,10 @@ export default function Login() {
       }
 
       login()
-      toast.success('Login realizado com sucesso!')
-      navigate('/home')
+      setTimeout(() => {
+        toast.success('Login realizado com sucesso!')
+        navigate('/home')
+      }, 0)
     }, 1500)
   }
 
@@ -101,8 +103,10 @@ export default function Login() {
     setTimeout(() => {
       setSocialLoading(null)
       login()
-      toast.success(`Login com ${provider} realizado com sucesso!`)
-      navigate('/home')
+      setTimeout(() => {
+        toast.success(`Login com ${provider} realizado com sucesso!`)
+        navigate('/home')
+      }, 0)
     }, 1500)
   }
 
@@ -116,10 +120,12 @@ export default function Login() {
     setTimeout(() => {
       setBiometricLoading(false)
       login()
-      toast.success('Identidade confirmada', {
-        description: 'Acesso seguro liberado via biometria.',
-      })
-      navigate('/home')
+      setTimeout(() => {
+        toast.success('Identidade confirmada', {
+          description: 'Acesso seguro liberado via biometria.',
+        })
+        navigate('/home')
+      }, 0)
     }, 2000)
   }
 

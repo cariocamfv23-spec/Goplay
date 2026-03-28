@@ -152,6 +152,7 @@ const DriverSettings = lazy(() => import('./pages/driver/DriverSettings'))
 
 const Settings = lazy(() => import('./pages/settings/Settings'))
 const PrivacySettings = lazy(() => import('./pages/settings/Privacy'))
+const PWASettings = lazy(() => import('./pages/settings/PWASettings'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const Ranking = lazy(() => import('./pages/gamification/Ranking'))
 const Notifications = lazy(() => import('./pages/notifications/Notifications'))
@@ -459,6 +460,7 @@ const App = () => {
                         path="/settings/privacy"
                         element={<PrivacySettings />}
                       />
+                      <Route path="/settings/pwa" element={<PWASettings />} />
 
                       <Route path="/ai/coach" element={<AiCoach />} />
                       <Route
