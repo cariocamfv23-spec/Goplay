@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { Switch } from '@/components/ui/switch'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface PWAState {
   isInstalled: boolean
@@ -136,11 +137,43 @@ function PWASettingsContent() {
 
   if (isLoading || !pwaState) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <p className="text-sm text-muted-foreground animate-pulse">
-          Carregando configurações...
-        </p>
+      <div className="min-h-screen bg-background pb-20">
+        <div className="sticky top-0 bg-background z-20 p-4 border-b border-border/50 flex items-center gap-4">
+          <Button variant="ghost" size="icon" disabled>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-xl font-bold">Configurações do PWA</h1>
+        </div>
+
+        <div className="p-4 space-y-6">
+          <div className="flex flex-col items-center justify-center p-6 space-y-4 bg-muted/30 rounded-2xl border border-border/50">
+            <Skeleton className="h-16 w-16 rounded-full" />
+            <Skeleton className="h-6 w-48" />
+            <Skeleton className="h-4 w-64" />
+            <Skeleton className="h-10 w-full max-w-[200px] mt-2" />
+          </div>
+
+          <div className="space-y-4">
+            <Skeleton className="h-4 w-32 px-2" />
+            <div className="bg-card rounded-xl border border-border/50 overflow-hidden space-y-2 p-4">
+              <div className="flex justify-between items-center">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-40" />
+                  <Skeleton className="h-3 w-56" />
+                </div>
+                <Skeleton className="h-6 w-10 rounded-full" />
+              </div>
+              <Skeleton className="h-[1px] w-full my-4" />
+              <div className="flex justify-between items-center">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-3 w-48" />
+                </div>
+                <Skeleton className="h-6 w-10 rounded-full" />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }

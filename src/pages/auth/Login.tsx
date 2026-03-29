@@ -64,7 +64,7 @@ export default function Login() {
       return
     }
 
-    setLoading(true)
+    setTimeout(() => setLoading(true), 0)
 
     // Simulate API call and validation logic without blocking
     setTimeout(() => {
@@ -105,7 +105,7 @@ export default function Login() {
   }
 
   const handleSocialLogin = (provider: string) => {
-    setSocialLoading(provider)
+    setTimeout(() => setSocialLoading(provider), 0)
     setTimeout(() => {
       // Non-blocking state update and navigation to prevent UI freezing
       setTimeout(() => {
@@ -118,7 +118,7 @@ export default function Login() {
   }
 
   const handleBiometricLogin = () => {
-    setBiometricLoading(true)
+    setTimeout(() => setBiometricLoading(true), 0)
     toast.info('Aproxime o dedo do sensor', {
       icon: <Fingerprint className="h-4 w-4 animate-pulse text-primary" />,
       duration: 2000,
