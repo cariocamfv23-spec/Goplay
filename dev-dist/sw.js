@@ -1,7 +1,12 @@
-const CACHE_NAME = 'goplay-pwa-cache-v3'
+const CACHE_NAME = 'goplay-pwa-cache-v4'
 
 // Ativos essenciais para realizar cache de imediato
-const PRECACHE_ASSETS = ['/', '/index.html', '/manifest.json', '/og-image.png']
+const PRECACHE_ASSETS = [
+  '/',
+  '/index.html',
+  '/manifest.json?v=1',
+  '/og-image.png',
+]
 
 self.addEventListener('install', (event) => {
   self.skipWaiting()
