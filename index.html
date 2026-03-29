@@ -25,35 +25,16 @@
       content="https://img.usecurling.com/p/512/512?q=purple%20letter%20g%20logo&color=purple"
     />
 
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
+    <link
+      rel="apple-touch-icon"
+      href="https://img.usecurling.com/p/192/192?q=purple%20letter%20g%20logo&color=purple"
     />
-    <link rel="apple-touch-icon" href="/icon-512x512.png?v=12" />
-    <link rel="manifest" href="/manifest.json?v=12" />
+    <link rel="manifest" href="/manifest.json" />
   </head>
 
   <body>
     <div id="root"></div>
     <script src="https://goskip.dev/skip.js"></script>
     <script type="module" src="/src/main.tsx"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').then(
-            (registration) => {
-              console.log(
-                'ServiceWorker registration successful with scope: ',
-                registration.scope,
-              )
-            },
-            (err) => {
-              console.log('ServiceWorker registration failed: ', err)
-            },
-          )
-        })
-      }
-    </script>
   </body>
 </html>
