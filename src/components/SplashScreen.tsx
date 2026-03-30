@@ -17,7 +17,7 @@ export function SplashScreen() {
     const hideTimer = setTimeout(() => {
       setIsVisible(false)
       document.body.style.overflow = ''
-    }, 2300) // 500ms duration for fade out
+    }, 2100) // 300ms duration for fade out
 
     return () => {
       clearTimeout(fadeOutTimer)
@@ -31,7 +31,7 @@ export function SplashScreen() {
   return (
     <div
       className={cn(
-        'fixed inset-0 z-[9999] flex flex-col items-center justify-center transition-opacity duration-500',
+        'fixed inset-0 z-[9999] flex flex-col items-center justify-center transition-opacity duration-300',
         // Force background color matching manifest initially
         'bg-[#ffffff] dark:bg-background',
         isFadingOut ? 'opacity-0 pointer-events-none' : 'opacity-100',
@@ -39,17 +39,13 @@ export function SplashScreen() {
     >
       <div className="relative flex flex-col items-center justify-center">
         {/* Glow effect */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 md:w-48 md:h-48 bg-primary/30 blur-[60px] rounded-full animate-aura-pulse-slow" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] md:w-[320px] md:h-[320px] bg-primary/30 blur-[60px] rounded-full animate-aura-pulse-slow" />
 
         <img
           src="https://img.usecurling.com/p/512/512?q=goplay%20logo&color=purple"
           alt="GoPlay Logo"
-          className="relative z-10 w-32 h-32 md:w-40 md:h-40 object-cover rounded-[2rem] shadow-2xl animate-float"
+          className="relative z-10 w-[200px] h-[200px] max-w-[200px] object-cover rounded-[2.5rem] shadow-2xl animate-float"
         />
-
-        <h1 className="relative z-10 mt-8 text-4xl md:text-5xl font-black tracking-tighter text-zinc-900 dark:text-zinc-50">
-          Go<span className="text-[#6d28d9]">Play</span>
-        </h1>
 
         {/* Loading Dots */}
         <div className="relative z-10 mt-12 flex items-center justify-center space-x-2">
