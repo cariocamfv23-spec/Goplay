@@ -18,6 +18,7 @@ import { useThemeStore } from '@/stores/useThemeStore'
 import useSoundStore from '@/stores/useSoundStore'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { FlashbackModal } from '@/components/FlashbackModal'
+import { SplashScreen } from '@/components/SplashScreen'
 import Index from './pages/Index'
 
 // Lazy load pages
@@ -226,6 +227,7 @@ const App = () => {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <SplashScreen />
       <BrowserRouter
         future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
       >
