@@ -4,19 +4,13 @@
   "description": "Sua plataforma imersiva de atividades esportivas e gamificação.",
   "icons": [
     {
-      "src": "https://img.usecurling.com/p/64/64?q=goplay%20logo&color=purple&v=3",
-      "type": "image/png",
-      "sizes": "64x64",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "https://img.usecurling.com/p/192/192?q=goplay%20logo&color=purple&v=3",
+      "src": "https://img.usecurling.com/p/192/192?q=purple%20letter%20g%20logo&color=purple",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any maskable"
     },
     {
-      "src": "https://img.usecurling.com/p/512/512?q=goplay%20logo&color=purple&v=3",
+      "src": "https://img.usecurling.com/p/512/512?q=purple%20letter%20g%20logo&color=purple",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "any maskable"
@@ -25,7 +19,7 @@
   "start_url": "/",
   "scope": "/",
   "background_color": "#ffffff",
-  "theme_color": "#6d28d9",
+  "theme_color": "#7c3aed",
   "display": "standalone",
   "orientation": "portrait"
 }

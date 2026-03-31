@@ -42,9 +42,9 @@ export function SplashScreen() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] md:w-[320px] md:h-[320px] bg-primary/30 blur-[60px] rounded-full animate-aura-pulse-slow" />
 
         <img
-          src="https://img.usecurling.com/p/512/512?q=goplay%20logo&color=purple&v=3"
+          src="https://img.usecurling.com/p/512/512?q=purple%20letter%20g%20logo&color=purple"
           alt="GoPlay Logo"
-          className="relative z-10 w-[200px] h-[200px] max-w-[200px] object-contain rounded-[2.5rem] shadow-2xl animate-float"
+          className="relative z-10 w-[200px] h-[200px] max-w-[200px] object-cover rounded-[2.5rem] shadow-2xl animate-float"
         />
 
         {/* Loading Dots */}

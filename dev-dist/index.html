@@ -22,38 +22,32 @@
     />
     <meta
       property="og:image"
-      content="https://img.usecurling.com/p/512/512?q=goplay%20logo&color=purple&v=3"
+      content="https://img.usecurling.com/p/512/512?q=purple%20letter%20g%20logo&color=purple"
     />
 
     <link
-      rel="icon"
-      type="image/png"
-      sizes="64x64"
-      href="https://img.usecurling.com/p/64/64?q=goplay%20logo&color=purple&v=3"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="192x192"
-      href="https://img.usecurling.com/p/192/192?q=goplay%20logo&color=purple&v=3"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="512x512"
-      href="https://img.usecurling.com/p/512/512?q=goplay%20logo&color=purple&v=3"
-    />
-    <link
       rel="apple-touch-icon"
-      href="https://img.usecurling.com/p/192/192?q=goplay%20logo&color=purple&v=3"
+      href="https://img.usecurling.com/p/192/192?q=purple%20letter%20g%20logo&color=purple"
     />
-    <link rel="manifest" href="/manifest.json?v=3" />
-    <script type="module" crossorigin src="/assets/index-CcX5o6Se.js"></script>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="GoPlay" />
+    <link rel="manifest" href="/manifest.json" />
+    <script type="module" crossorigin src="/assets/index-DVDRZSZo.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-Cypr2F8q.css">
   </head>
 
   <body>
     <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch((err) => {
+            console.log('ServiceWorker registration failed: ', err)
+          })
+        })
+      }
+    </script>
     <script src="https://goskip.dev/skip.js"></script>
   </body>
 </html>
