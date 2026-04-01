@@ -40,6 +40,7 @@ export const Logo = ({
     <div
       className={cn(
         'flex items-center gap-2 select-none pointer-events-none',
+        !className?.includes('h-') && 'h-10',
         className,
       )}
       {...props}
@@ -49,7 +50,7 @@ export const Logo = ({
           {isDefault ? (
             <div
               className={cn(
-                'h-10 w-10 aspect-square filter drop-shadow-sm',
+                'h-full aspect-square filter drop-shadow-sm',
                 iconClassName,
               )}
             >

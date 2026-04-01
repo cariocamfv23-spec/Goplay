@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
+import { GoplayIcon } from '@/components/GoplayIcon'
 
 export function SplashScreen() {
   const [isVisible, setIsVisible] = useState(true)
@@ -49,11 +50,9 @@ export function SplashScreen() {
         </div>
 
         <div className="animate-in zoom-in-90 fade-in duration-1000 delay-150 fill-mode-both">
-          <img
-            src="https://img.usecurling.com/p/512/512?q=purple%20letter%20g%20logo&color=purple"
-            alt="GoPlay Logo"
-            className="relative z-10 w-[180px] h-[180px] max-w-[180px] object-cover rounded-[2.5rem] shadow-[0_0_50px_rgba(109,40,217,0.6)] animate-float"
-          />
+          <div className="relative z-10 w-[160px] h-[160px] md:w-[180px] md:h-[180px] flex items-center justify-center animate-float drop-shadow-[0_0_40px_rgba(109,40,217,0.8)]">
+            <GoplayIcon className="w-full h-full" enableSeasonal={false} />
+          </div>
         </div>
 
         {/* Loading Dots */}
