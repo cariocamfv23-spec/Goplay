@@ -1,7 +1,11 @@
-// Removing dynamic manifest generation to rely on the static manifest.json
-// This ensures standard PWA behavior and uses the correct 512x512 PNG icon
+// Re-enabling dynamic manifest and favicon generation to support seasonal branding
+import { updateDynamicPWA } from '@/lib/dynamic-pwa'
+import { getSeasonalTheme } from '@/lib/seasonal-utils'
+
 if (typeof document !== 'undefined') {
   // Safe space for future document-level logic
+  const currentTheme = getSeasonalTheme()
+  updateDynamicPWA(currentTheme)
 }
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
