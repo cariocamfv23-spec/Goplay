@@ -14,9 +14,9 @@ type BrandingState = {
   resetBranding: () => void
 }
 
-// Set 'default' as the identifier for the internal SVG logo
-export const defaultIcon = 'default'
-export const defaultLogo = 'default'
+// Set '/icon.svg?v=5' as the identifier for the internal SVG logo
+export const defaultIcon = '/icon.svg?v=5'
+export const defaultLogo = '/icon.svg?v=5'
 
 const BrandingContext = createContext<BrandingState | undefined>(undefined)
 
@@ -51,7 +51,7 @@ export const BrandingProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const preloadImage = (url: string) => {
-      if (url === 'default') return
+      if (url === 'default' || url.includes('/icon.svg')) return
       const img = new Image()
       img.src = url
     }
@@ -69,7 +69,6 @@ export const BrandingProvider = ({ children }: { children: ReactNode }) => {
   }, [iconUrl])
 
   const updateFavicon = (url: string) => {
-    // We don't update favicon for the SVG default yet as it requires a URL
     if (url === 'default') return
 
     let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement
