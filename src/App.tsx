@@ -1,13 +1,3 @@
-// Re-enabling dynamic manifest and favicon generation to support seasonal branding
-import { updateDynamicPWA } from '@/lib/dynamic-pwa'
-import { getSeasonalTheme } from '@/lib/seasonal-utils'
-
-if (typeof document !== 'undefined') {
-  // Safe space for future document-level logic
-  const currentTheme = getSeasonalTheme()
-  updateDynamicPWA(currentTheme)
-}
-
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
