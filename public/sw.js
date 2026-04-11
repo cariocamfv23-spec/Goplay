@@ -1,5 +1,3 @@
-const CACHE_NAME = 'goplay-cache-v1'
-
 self.addEventListener('install', (event) => {
   self.skipWaiting()
 })
@@ -9,6 +7,14 @@ self.addEventListener('activate', (event) => {
 })
 
 self.addEventListener('fetch', (event) => {
-  // Minimal fetch handler required by browsers to trigger the "Add to Home Screen" prompt
-  // In a full implementation, you would implement proper caching strategies here
+  if (event.request.method !== 'GET') return
+
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      return new Response('Offline mode not fully implemented', {
+        status: 503,
+        statusText: 'Service Unavailable',
+      })
+    }),
+  )
 })
