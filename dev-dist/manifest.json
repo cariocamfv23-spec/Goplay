@@ -4,13 +4,13 @@
   "description": "Sua plataforma imersiva de atividades esportivas e gamificação.",
   "icons": [
     {
-      "src": "https://img.usecurling.com/p/192/192?q=goplay%20logo&color=purple&v=3",
+      "src": "/src/assets/goplay-icon-aabb9.png",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any maskable"
     },
     {
-      "src": "https://img.usecurling.com/p/512/512?q=goplay%20logo&color=purple&v=3",
+      "src": "/src/assets/goplay-icon-aabb9.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "any maskable"
