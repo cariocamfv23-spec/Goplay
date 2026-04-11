@@ -4,13 +4,13 @@
   "description": "Sua plataforma imersiva de atividades esportivas e gamificação.",
   "icons": [
     {
-      "src": "/goplay-icon-d27f0.png?v=2",
+      "src": "/goplay-icon-d27f0.png?v=4",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any maskable"
     },
     {
-      "src": "/goplay-icon-d27f0.png?v=2",
+      "src": "/goplay-icon-d27f0.png?v=4",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "any maskable"
@@ -18,7 +18,7 @@
   ],
   "start_url": "/",
   "scope": "/",
-  "background_color": "#ffffff",
+  "background_color": "#000000",
   "theme_color": "#7c3aed",
   "display": "standalone",
   "orientation": "portrait"
