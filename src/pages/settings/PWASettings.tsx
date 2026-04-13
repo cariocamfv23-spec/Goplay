@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { Switch } from '@/components/ui/switch'
 import { Skeleton } from '@/components/ui/skeleton'
+import goplayIcon from '@/assets/goplay-icon-0e955.png'
 
 interface PWAState {
   isInstalled: boolean
@@ -193,9 +194,26 @@ function PWASettingsContent() {
     toast.info('Verificando atualizações...', {
       description: 'O aplicativo será reiniciado se houver uma nova versão.',
     })
-    setTimeout(() => {
-      window.location.reload()
-    }, 1500)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready.then((registration) => {
+        registration.update().then(() => {
+          setTimeout(() => {
+            window.location.reload()
+          }, 1500)
+        })
+      })
+    } else {
+      setTimeout(() => {
+        window.location.reload()
+      }, 1500)
+    }
+  }
+
+  const handleInstallApp = async () => {
+    toast.success('Pronto para instalar', {
+      description:
+        'Siga as instruções do navegador para adicionar à tela inicial.',
+    })
   }
 
   return (
@@ -209,8 +227,12 @@ function PWASettingsContent() {
 
       <div className="p-4 space-y-6">
         <div className="flex flex-col items-center justify-center p-6 text-center space-y-4 bg-muted/30 rounded-2xl border border-border/50">
-          <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center">
-            <Smartphone className="h-8 w-8 text-primary" />
+          <div className="h-20 w-20 bg-primary/10 rounded-3xl flex items-center justify-center overflow-hidden shadow-lg border border-primary/20">
+            <img
+              src={goplayIcon}
+              alt="GoPlay App Logo"
+              className="h-14 w-14 object-contain drop-shadow-md"
+            />
           </div>
           <div>
             <h2 className="text-lg font-semibold">Status do Aplicativo</h2>
@@ -221,7 +243,11 @@ function PWASettingsContent() {
             </p>
           </div>
           {!isInstalled && (
-            <Button variant="default" className="w-full max-w-[200px] gap-2">
+            <Button
+              variant="default"
+              className="w-full max-w-[200px] gap-2"
+              onClick={handleInstallApp}
+            >
               <Download className="h-4 w-4" />
               Instalar App
             </Button>
