@@ -1,69 +1,21 @@
 import { useState, useMemo } from 'react'
-import { Search, Newspaper, Clock, ExternalLink, Activity } from 'lucide-react'
+import {
+  Search,
+  Newspaper,
+  Clock,
+  ExternalLink,
+  Activity,
+  ArrowLeft,
+  User,
+  CalendarDays,
+} from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-
-const mockArticles = [
-  {
-    id: 1,
-    title: 'Nova Promessa do Futebol Brasileiro Assina com Clube Europeu',
-    summary:
-      'Jovem talento de 18 anos fecha contrato de 5 anos com gigante da Espanha após temporada brilhante no campeonato regional.',
-    category: 'Futebol',
-    source: 'Globo Esporte',
-    time: 'Há 2 horas',
-    image:
-      'https://img.usecurling.com/p/800/400?q=soccer%20player%20contract&color=blue',
-  },
-  {
-    id: 2,
-    title: 'Mundial de Surfe: Brasileiros Dominam as Finais',
-    summary:
-      'Com atuações históricas, surfistas do Brasil garantem as três primeiras colocações na etapa decisiva do Havaí.',
-    category: 'Surfe',
-    source: 'Canal Off',
-    time: 'Há 4 horas',
-    image:
-      'https://img.usecurling.com/p/800/400?q=surfing%20competition&color=cyan',
-  },
-  {
-    id: 3,
-    title: 'Finais da NBA: Jogo Decisivo Vai para a Prorrogação',
-    summary:
-      'Uma partida emocionante que parou o mundo dos esportes na noite de ontem com recorde histórico de audiência.',
-    category: 'Basquete',
-    source: 'ESPN',
-    time: 'Há 5 horas',
-    image:
-      'https://img.usecurling.com/p/800/400?q=basketball%20arena&color=orange',
-  },
-  {
-    id: 4,
-    title: 'O Crescimento do E-Sports no Cenário Global',
-    summary:
-      'Como os campeonatos de games estão ultrapassando audiências de esportes tradicionais ao redor do mundo em 2024.',
-    category: 'eSports',
-    source: 'Tech Sports',
-    time: 'Há 12 horas',
-    image:
-      'https://img.usecurling.com/p/800/400?q=esports%20tournament&color=purple',
-  },
-  {
-    id: 5,
-    title: 'Maratona Internacional Quebra Recorde de Participantes',
-    summary:
-      'Mais de 50 mil corredores tomaram as ruas da cidade neste domingo chuvoso, demonstrando o crescimento da modalidade.',
-    category: 'Corrida',
-    source: 'Runner World',
-    time: 'Ontem',
-    image:
-      'https://img.usecurling.com/p/800/400?q=marathon%20runners&color=red',
-  },
-]
+import { mockArenaArticles, type ArenaArticle } from '@/lib/data'
 
 const categories = [
   'Todos',
@@ -74,12 +26,81 @@ const categories = [
   'Corrida',
 ]
 
+function ArticleDetail({
+  article,
+  onBack,
+}: {
+  article: ArenaArticle
+  onBack: () => void
+}) {
+  return (
+    <div className="min-h-[calc(100vh-8rem)] bg-background pb-24 animate-in slide-in-from-right-4 duration-500">
+      <div className="sticky top-16 z-30 bg-background/90 backdrop-blur-md border-b border-border/40 px-5 py-4 flex items-center">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onBack}
+          className="-ml-2 text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="w-5 h-5 mr-2" />
+          Voltar
+        </Button>
+      </div>
+
+      <div className="px-5 pt-6 max-w-3xl mx-auto space-y-6">
+        <div className="space-y-4">
+          <Badge className="bg-purple-600 hover:bg-purple-700 text-white border-none shadow-sm text-xs font-bold uppercase tracking-wider">
+            {article.category}
+          </Badge>
+          <h1 className="text-3xl md:text-4xl font-extrabold leading-tight tracking-tight text-foreground">
+            {article.title}
+          </h1>
+          <p className="text-lg text-muted-foreground leading-relaxed font-medium">
+            {article.summary}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-muted-foreground border-y border-border/50 py-4">
+          <div className="flex items-center gap-1.5">
+            <User className="w-4 h-4" /> {article.author}
+          </div>
+          <div className="flex items-center gap-1.5">
+            <CalendarDays className="w-4 h-4" /> {article.date}
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Newspaper className="w-4 h-4" /> {article.source}
+          </div>
+        </div>
+
+        <div className="relative aspect-[21/9] w-full overflow-hidden rounded-2xl bg-muted shadow-md">
+          <img
+            src={article.image}
+            alt={article.title}
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        <div className="max-w-none text-foreground/90 leading-relaxed text-base space-y-6 mt-8">
+          {article.content.split('\n\n').map((paragraph, i) => (
+            <p key={i} className="leading-relaxed">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function ArenaGo() {
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState('Todos')
+  const [selectedArticleId, setSelectedArticleId] = useState<number | null>(
+    null,
+  )
 
   const filteredArticles = useMemo(() => {
-    return mockArticles.filter((article) => {
+    return mockArenaArticles.filter((article) => {
       const matchesSearch =
         article.title.toLowerCase().includes(search.toLowerCase()) ||
         article.summary.toLowerCase().includes(search.toLowerCase())
@@ -88,6 +109,19 @@ export default function ArenaGo() {
       return matchesSearch && matchesCategory
     })
   }, [search, activeCategory])
+
+  const selectedArticle = mockArenaArticles.find(
+    (a) => a.id === selectedArticleId,
+  )
+
+  if (selectedArticle) {
+    return (
+      <ArticleDetail
+        article={selectedArticle}
+        onBack={() => setSelectedArticleId(null)}
+      />
+    )
+  }
 
   return (
     <div className="min-h-[calc(100vh-8rem)] bg-background pb-24 animate-in fade-in duration-500">
@@ -169,6 +203,7 @@ export default function ArenaGo() {
               <Card
                 key={article.id}
                 className="overflow-hidden border-border/50 shadow-sm bg-card hover:shadow-md transition-shadow group cursor-pointer"
+                onClick={() => setSelectedArticleId(article.id)}
               >
                 <div className="relative aspect-video w-full overflow-hidden bg-muted">
                   <img
@@ -194,15 +229,12 @@ export default function ArenaGo() {
                       <Clock className="w-3 h-3" /> {article.time}
                     </span>
                   </div>
-
                   <h3 className="text-lg font-bold leading-tight line-clamp-2 mb-2 group-hover:text-purple-600 transition-colors">
                     {article.title}
                   </h3>
-
                   <p className="text-sm text-muted-foreground line-clamp-2 mb-4 leading-relaxed">
                     {article.summary}
                   </p>
-
                   <Button
                     variant="outline"
                     className="w-full rounded-xl text-purple-600 border-purple-600/30 hover:bg-purple-600/10 h-10 font-semibold group-hover:border-purple-600 transition-colors"
