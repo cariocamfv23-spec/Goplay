@@ -3096,6 +3096,9 @@ export interface ArenaArticle {
   author: string
   image: string
   content: string
+  broadcaster?: string
+  eventDate?: string
+  eventTime?: string
 }
 
 export const mockArenaArticles: ArenaArticle[] = [
@@ -3113,6 +3116,9 @@ export const mockArenaArticles: ArenaArticle[] = [
       'https://img.usecurling.com/p/800/400?q=soccer%20player%20contract&color=blue',
     content:
       'Em uma negociação que surpreendeu os bastidores do futebol nacional, a jovem promessa revelada na última Copa São Paulo de Futebol Júnior acaba de firmar um acordo milionário com um dos maiores clubes da Espanha. A transferência, estimada em mais de 40 milhões de euros, marca a maior venda da história do clube formador.\n\nSegundo informações exclusivas, o atleta já vinha sendo monitorado por olheiros europeus há pelo menos dois anos. Seu desempenho excepcional na reta final do campeonato estadual, onde marcou 12 gols em 15 partidas, foi o estopim para que o gigante espanhol cobrisse a oferta de clubes ingleses que também estavam na disputa.\n\nO jogador deve viajar para a Europa já na próxima semana para realizar os exames médicos e assinar oficialmente o contrato válido por cinco temporadas. "É a realização de um sonho de criança. Venho trabalhando duro todos os dias para chegar a esse nível e representar meu país nas maiores competições do mundo", declarou o atacante em sua última coletiva de imprensa no Brasil.',
+    broadcaster: 'ESPN',
+    eventDate: '2024-05-15',
+    eventTime: '20:30',
   },
   {
     id: 2,
@@ -3128,6 +3134,9 @@ export const mockArenaArticles: ArenaArticle[] = [
       'https://img.usecurling.com/p/800/400?q=surfing%20competition&color=cyan',
     content:
       'As ondas tubulares de Pipeline, no Havaí, foram o palco de mais um show de domínio verde e amarelo no cenário do surfe mundial. Em um dia de mar pesado e condições desafiadoras, a "Brazilian Storm" mais uma vez mostrou por que é considerada a principal força da atualidade na modalidade.\n\nOs três surfistas brasileiros chegaram às baterias finais demonstrando um nível de técnica e comprometimento que arrancou notas altíssimas dos juízes. A bateria que decidiu o título foi um espetáculo à parte, com tubos profundos e manobras aéreas que levaram o público local ao delírio.\n\nA conquista desta etapa não apenas reforça a hegemonia nacional, mas também encaminha o favoritismo para a disputa do título mundial no final da temporada. Os atletas celebraram muito na praia, destacando a união do grupo e a importância do treinamento intensivo realizado durante as semanas que antecederam o evento nas temidas ondas havaianas.',
+    broadcaster: 'SporTV',
+    eventDate: '2024-05-14',
+    eventTime: '14:00',
   },
   {
     id: 3,
@@ -3143,6 +3152,9 @@ export const mockArenaArticles: ArenaArticle[] = [
       'https://img.usecurling.com/p/800/400?q=basketball%20arena&color=orange',
     content:
       'A noite de ontem entrou para a história do basquete mundial com uma das partidas mais emocionantes já registradas em uma série de Finais. Com o placar empatado nos últimos segundos do tempo regulamentar, as equipes protagonizaram uma batalha de estratégias e nervos de aço que culminou em uma prorrogação de tirar o fôlego.\n\nOs astros de ambas as franquias chamaram a responsabilidade, com os armadores principais trocando bolas de três pontos impressionantes em posses de bola consecutivas. O ginásio, lotado em sua capacidade máxima, viu uma exibição de talento puro, onde cada rebote disputado e cada falta cavada tinham o peso do campeonato.\n\nAo final, a equipe da casa conseguiu se sobressair nos detalhes defensivos durante os minutos finais do tempo extra, garantindo a vitória por uma margem de apenas dois pontos. O triunfo iguala a série final e obriga a realização do tão aguardado Jogo 7, prometendo ainda mais drama e emoção para os fãs do esporte da bola laranja ao redor do globo.',
+    broadcaster: 'Star+',
+    eventDate: '2024-05-14',
+    eventTime: '21:30',
   },
   {
     id: 4,
@@ -3158,6 +3170,9 @@ export const mockArenaArticles: ArenaArticle[] = [
       'https://img.usecurling.com/p/800/400?q=esports%20tournament&color=purple',
     content:
       'A indústria de competições de jogos eletrônicos, popularmente conhecida como eSports, atingiu um patamar inédito em 2024. Relatórios recentes de audiência revelam que as finais dos principais torneios globais ultrapassaram os números de audiência de grandes eventos esportivos tradicionais, marcando uma mudança fundamental no entretenimento de massas.\n\nCom arenas lotadas, produções cinematográficas e premiações que chegam à casa das dezenas de milhões de dólares, os eSports deixaram de ser um nicho para se tornarem um pilar central da cultura jovem. Grandes marcas não endêmicas, que antes patrocinavam apenas equipes de futebol ou pilotos de Fórmula 1, agora investem pesadamente em equipes de League of Legends, Valorant e Counter-Strike.\n\nO Brasil se destaca nesse cenário não apenas como um enorme mercado consumidor, mas como um celeiro de talentos de classe mundial. As equipes nacionais continuam levantando troféus internacionais, impulsionando a profissionalização do setor no país e inspirando uma nova geração que vê nos videogames não apenas uma forma de lazer, mas uma carreira legítima e lucrativa.',
+    broadcaster: 'Twitch',
+    eventDate: '2024-05-13',
+    eventTime: '18:00',
   },
   {
     id: 5,
@@ -3173,6 +3188,9 @@ export const mockArenaArticles: ArenaArticle[] = [
       'https://img.usecurling.com/p/800/400?q=marathon%20runners&color=red',
     content:
       'Mesmo sob um céu cinzento e chuva constante, a tradicional Maratona Internacional realizada neste domingo estabeleceu um novo recorde de participação. Mais de 50 mil inscritos percorreram os 42,195 km pelas principais avenidas da cidade, em um evento que celebra a resiliência e a paixão pela corrida de rua.\n\nEntre atletas de elite buscando índices olímpicos e corredores amadores desafiando os próprios limites, a energia pelas ruas era contagiante. Voluntários e espectadores se aglomeraram nos pontos de hidratação, fornecendo apoio moral essencial nos trechos mais difíceis da prova, demonstrando o espírito comunitário único que a maratona desperta.\n\nO vencedor na categoria masculina de elite quebrou o recorde do percurso, finalizando a prova em pouco mais de 2 horas e 6 minutos. Na categoria feminina, uma atleta estreante surpreendeu as favoritas e garantiu o primeiro lugar no pódio. O evento reforça a popularização das corridas de longa distância como uma das atividades físicas que mais crescem em adeptos no país.',
+    broadcaster: 'Globo',
+    eventDate: '2024-05-12',
+    eventTime: '08:00',
   },
 ]
 
