@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import {
   Search,
   Info,
@@ -9,6 +9,11 @@ import {
   ShieldAlert,
   X,
   Play,
+  Lock,
+  Zap,
+  CreditCard,
+  QrCode,
+  Loader2,
 } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Input } from '@/components/ui/input'
@@ -17,6 +22,7 @@ import { Badge } from '@/components/ui/badge'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { useToast } from '@/components/ui/use-toast'
 
 const mockPosts = [
   {
@@ -36,6 +42,8 @@ const mockPosts = [
       'Mantenha o peito estufado e olhar à frente',
       'Retorne à posição inicial contraindo os glúteos',
     ],
+    price: 19.9,
+    pointsPrice: 500,
   },
   {
     id: 2,
@@ -54,6 +62,8 @@ const mockPosts = [
       'Balance kettlebell (kettlebell swing) 20 vezes',
       'Descanse 1 minuto e repita o circuito',
     ],
+    price: 24.9,
+    pointsPrice: 600,
   },
   {
     id: 3,
@@ -71,6 +81,8 @@ const mockPosts = [
       'Expire e dobre-se para a frente (Uttanasana)',
       'Inspire, alongue a coluna e olhe para frente',
     ],
+    price: 14.9,
+    pointsPrice: 350,
   },
   {
     id: 4,
@@ -89,6 +101,8 @@ const mockPosts = [
       'Mantenha a cadência em torno de 170-180 passos por minuto',
       'Relaxe os ombros e controle a respiração',
     ],
+    price: 19.9,
+    pointsPrice: 500,
   },
   {
     id: 5,
@@ -106,6 +120,8 @@ const mockPosts = [
       'Estenda as pernas e alongue os isquiotibiais',
       'Mantenha cada alongamento por 30 segundos',
     ],
+    price: 12.9,
+    pointsPrice: 300,
   },
   {
     id: 6,
@@ -123,6 +139,8 @@ const mockPosts = [
       'Puxe a barra mantendo as costas retas e o core ativado',
       'Estenda completamente os quadris e joelhos no topo',
     ],
+    price: 29.9,
+    pointsPrice: 800,
   },
 ]
 
@@ -141,6 +159,58 @@ export default function InfinityHub() {
   const [selectedWorkout, setSelectedWorkout] = useState<
     (typeof mockPosts)[0] | null
   >(null)
+
+  const [unlockedVideos, setUnlockedVideos] = useState<number[]>([])
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false)
+  const [selectedPaymentMethod, setSelectedPaymentMethod] =
+    useState('goplay_credits')
+  const { toast } = useToast()
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const video = e.currentTarget
+    if (
+      selectedWorkout &&
+      !unlockedVideos.includes(selectedWorkout.id) &&
+      video.currentTime >= 10
+    ) {
+      video.pause()
+      setIsPaymentModalOpen(true)
+    }
+  }
+
+  const handleStartWorkout = () => {
+    if (selectedWorkout && !unlockedVideos.includes(selectedWorkout.id)) {
+      setIsPaymentModalOpen(true)
+      if (videoRef.current) {
+        videoRef.current.pause()
+      }
+    } else {
+      toast({
+        title: 'Treino Iniciado!',
+        description: 'Bom treino!',
+      })
+      setSelectedWorkout(null)
+    }
+  }
+
+  const handlePayment = () => {
+    if (!selectedWorkout) return
+    setIsProcessingPayment(true)
+    setTimeout(() => {
+      setIsProcessingPayment(false)
+      setUnlockedVideos((prev) => [...prev, selectedWorkout.id])
+      setIsPaymentModalOpen(false)
+      toast({
+        title: 'Sucesso!',
+        description: 'Treino desbloqueado com sucesso.',
+      })
+      if (videoRef.current) {
+        videoRef.current.play()
+      }
+    }, 1500)
+  }
 
   const filteredPosts = useMemo(() => {
     return mockPosts.filter((post) => {
@@ -246,7 +316,7 @@ export default function InfinityHub() {
                       <Play className="w-6 h-6 ml-1 text-white" />
                     </div>
                   </div>
-                  <div className="absolute top-3 left-3 flex gap-2 pointer-events-none">
+                  <div className="absolute top-3 left-3 flex gap-2 pointer-events-none flex-wrap max-w-[80%]">
                     <Badge className="bg-purple-600/90 text-white border-none shadow-sm text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">
                       {post.modality}
                     </Badge>
@@ -256,6 +326,11 @@ export default function InfinityHub() {
                     >
                       {post.intensity}
                     </Badge>
+                    {!unlockedVideos.includes(post.id) && (
+                      <Badge className="bg-amber-500/90 text-white border-none backdrop-blur-md shadow-sm text-[10px] font-bold uppercase flex items-center gap-1">
+                        <Lock className="w-2.5 h-2.5" /> Premium
+                      </Badge>
+                    )}
                   </div>
                 </div>
 
@@ -283,9 +358,20 @@ export default function InfinityHub() {
                     {post.tip}
                   </p>
 
-                  <Button className="w-full mt-auto bg-purple-600 hover:bg-purple-700 text-white rounded-xl h-11 font-semibold group-hover:shadow-md transition-shadow">
-                    Assistir Treino
-                  </Button>
+                  <div className="mt-auto pt-4 flex items-center justify-between">
+                    {!unlockedVideos.includes(post.id) ? (
+                      <p className="text-xs font-bold text-amber-500 flex items-center gap-1">
+                        <Lock className="w-3 h-3" /> {post.pointsPrice} pts
+                      </p>
+                    ) : (
+                      <p className="text-xs font-bold text-green-500 flex items-center gap-1">
+                        <CheckCircle className="w-3 h-3" /> Desbloqueado
+                      </p>
+                    )}
+                    <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-xl h-9 px-4 font-semibold text-xs group-hover:shadow-md transition-shadow">
+                      Assistir
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -305,15 +391,35 @@ export default function InfinityHub() {
               <>
                 <div className="relative aspect-video w-full bg-black group">
                   <video
+                    ref={videoRef}
                     className="w-full h-full object-cover"
                     controls
                     poster={selectedWorkout.poster}
                     preload="metadata"
                     autoPlay
+                    onTimeUpdate={handleTimeUpdate}
                   >
                     <source src={selectedWorkout.videoUrl} type="video/mp4" />
                     Seu navegador não suporta o elemento de vídeo.
                   </video>
+
+                  <div className="absolute top-3 left-3 flex gap-2 pointer-events-none z-20">
+                    <Badge className="bg-purple-600/90 text-white border-none shadow-sm text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">
+                      {selectedWorkout.modality}
+                    </Badge>
+                    <Badge
+                      variant="secondary"
+                      className="bg-black/60 text-white border-none backdrop-blur-md shadow-sm text-[10px] font-semibold"
+                    >
+                      {selectedWorkout.intensity}
+                    </Badge>
+                    {!unlockedVideos.includes(selectedWorkout.id) && (
+                      <Badge className="bg-amber-500 text-white border-none backdrop-blur-md shadow-sm text-[10px] font-bold uppercase flex items-center gap-1">
+                        <Lock className="w-3 h-3" /> Preview (10s)
+                      </Badge>
+                    )}
+                  </div>
+
                   <Dialog.Close asChild>
                     <button className="absolute top-3 right-3 p-2 bg-black/50 hover:bg-black/80 rounded-full backdrop-blur-sm text-white transition-colors z-20">
                       <X className="w-5 h-5" />
@@ -322,16 +428,6 @@ export default function InfinityHub() {
                 </div>
 
                 <div className="p-5 overflow-y-auto no-scrollbar">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Badge className="bg-purple-600 text-white text-[10px] uppercase font-bold tracking-wider">
-                      {selectedWorkout.modality}
-                    </Badge>
-                    <span className="text-muted-foreground">•</span>
-                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                      {selectedWorkout.intensity}
-                    </span>
-                  </div>
-
                   <Dialog.Title className="text-2xl font-bold mb-4 tracking-tight">
                     {selectedWorkout.title}
                   </Dialog.Title>
@@ -385,15 +481,145 @@ export default function InfinityHub() {
                   </div>
 
                   <div className="mt-8 pt-4 border-t border-border/50">
-                    <Dialog.Close asChild>
-                      <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold text-base h-12 rounded-xl">
-                        Começar Treino
-                      </Button>
-                    </Dialog.Close>
+                    <Button
+                      className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold text-base h-12 rounded-xl flex items-center justify-center gap-2"
+                      onClick={handleStartWorkout}
+                    >
+                      {!unlockedVideos.includes(selectedWorkout.id) ? (
+                        <>
+                          <Lock className="w-5 h-5" /> Desbloquear Treino
+                        </>
+                      ) : (
+                        <>
+                          <Play className="w-5 h-5" /> Iniciar Agora
+                        </>
+                      )}
+                    </Button>
                   </div>
                 </div>
               </>
             )}
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+
+      {/* Payment Modal */}
+      <Dialog.Root
+        open={isPaymentModalOpen}
+        onOpenChange={setIsPaymentModalOpen}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[150] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+          <Dialog.Content className="fixed left-1/2 top-[50%] w-[95%] max-w-md -translate-x-1/2 -translate-y-1/2 bg-card border border-border/50 rounded-3xl p-6 z-[150] shadow-2xl outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 flex flex-col max-h-[90vh]">
+            <Dialog.Title className="text-xl font-bold mb-2">
+              Desbloquear Treino
+            </Dialog.Title>
+            <Dialog.Description className="text-sm text-muted-foreground mb-6">
+              Este é um conteúdo premium. Escolha como deseja pagar para ter
+              acesso completo ao treino e dicas.
+            </Dialog.Description>
+
+            <div className="space-y-3 mb-6">
+              <button
+                onClick={() => setSelectedPaymentMethod('goplay_credits')}
+                className={cn(
+                  'flex items-center justify-between w-full p-4 rounded-xl border transition-all',
+                  selectedPaymentMethod === 'goplay_credits'
+                    ? 'border-purple-600 bg-purple-600/10'
+                    : 'border-border hover:bg-secondary/50',
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-purple-600/20 text-purple-600 rounded-full">
+                    <Zap className="w-5 h-5" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-bold text-sm text-foreground">
+                      Créditos GoPlay
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Saldo: 5.500 pts
+                    </p>
+                  </div>
+                </div>
+                <span className="font-bold text-purple-600">
+                  {selectedWorkout?.pointsPrice} pts
+                </span>
+              </button>
+
+              <button
+                onClick={() => setSelectedPaymentMethod('credit_card')}
+                className={cn(
+                  'flex items-center justify-between w-full p-4 rounded-xl border transition-all',
+                  selectedPaymentMethod === 'credit_card'
+                    ? 'border-purple-600 bg-purple-600/10'
+                    : 'border-border hover:bg-secondary/50',
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-secondary text-foreground rounded-full">
+                    <CreditCard className="w-5 h-5" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-bold text-sm text-foreground">
+                      Cartão de Crédito
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Terminado em 4321
+                    </p>
+                  </div>
+                </div>
+                <span className="font-bold text-foreground">
+                  R$ {selectedWorkout?.price.toFixed(2).replace('.', ',')}
+                </span>
+              </button>
+
+              <button
+                onClick={() => setSelectedPaymentMethod('pix')}
+                className={cn(
+                  'flex items-center justify-between w-full p-4 rounded-xl border transition-all',
+                  selectedPaymentMethod === 'pix'
+                    ? 'border-purple-600 bg-purple-600/10'
+                    : 'border-border hover:bg-secondary/50',
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-secondary text-foreground rounded-full">
+                    <QrCode className="w-5 h-5" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-bold text-sm text-foreground">PIX</p>
+                    <p className="text-xs text-muted-foreground">
+                      Aprovação imediata
+                    </p>
+                  </div>
+                </div>
+                <span className="font-bold text-foreground">
+                  R$ {selectedWorkout?.price.toFixed(2).replace('.', ',')}
+                </span>
+              </button>
+            </div>
+
+            <div className="flex gap-3 mt-auto pt-4 border-t border-border/50">
+              <Button
+                variant="outline"
+                className="flex-1 rounded-xl h-12"
+                onClick={() => setIsPaymentModalOpen(false)}
+              >
+                Voltar
+              </Button>
+              <Button
+                className="flex-1 bg-purple-600 hover:bg-purple-700 text-white rounded-xl h-12 font-bold"
+                onClick={handlePayment}
+                disabled={isProcessingPayment}
+              >
+                {isProcessingPayment ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  'Confirmar Pagamento'
+                )}
+              </Button>
+            </div>
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
