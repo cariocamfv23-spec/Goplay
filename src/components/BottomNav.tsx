@@ -13,7 +13,7 @@ export function BottomNav() {
     ...navigationItems.slice(3, 4), // Explore
     ...navigationItems.slice(4), // Loja, Perfil
     { icon: Utensils, label: 'Food', path: '/food-sport' },
-    { icon: Flame, label: 'GoArena', path: '/arena', highlight: true },
+    { icon: Flame, label: 'Arena Go', path: '/arena', highlight: true },
     { icon: InfinityIcon, label: 'Infinity Hub', path: '/infinity-hub' },
   ]
 
