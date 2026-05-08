@@ -70,7 +70,8 @@ export function TopBar() {
     location.pathname !== '/messages' &&
     location.pathname !== '/jobs' &&
     location.pathname !== '/marketplace' &&
-    location.pathname !== '/feed'
+    location.pathname !== '/feed' &&
+    location.pathname !== '/infinity-hub'
 
   const handleSelectPreset = (newPreset: NostalgiaPreset) => {
     setPreset(newPreset)

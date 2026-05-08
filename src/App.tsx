@@ -39,6 +39,9 @@ const CheckIn = lazy(() => import('./pages/checkin/CheckIn'))
 const NexusHub = lazy(() => import('./pages/nexus/NexusHub'))
 const TribeProfile = lazy(() => import('./pages/nexus/TribeProfile'))
 
+// Infinity Hub
+const InfinityHub = lazy(() => import('./pages/infinity-hub/InfinityHub'))
+
 // Arena Go
 const ArenaGo = lazy(() => import('./pages/arena/ArenaGo'))
 
@@ -270,6 +273,8 @@ const App = () => {
                       {/* Nexus Routes */}
                       <Route path="/nexus" element={<NexusHub />} />
                       <Route path="/nexus/:id" element={<TribeProfile />} />
+
+                      <Route path="/infinity-hub" element={<InfinityHub />} />
 
                       <Route path="/arena" element={<ArenaGo />} />
                       <Route path="/food-sport" element={<FoodSport />} />

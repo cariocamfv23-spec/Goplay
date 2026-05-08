@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { navigationItems } from '@/lib/data'
 import { cn } from '@/lib/utils'
-import { Utensils, Flame, Orbit } from 'lucide-react'
+import { Utensils, Flame, Orbit, Infinity as InfinityIcon } from 'lucide-react'
 
 export function BottomNav() {
   const location = useLocation()
@@ -14,6 +14,7 @@ export function BottomNav() {
     { icon: Flame, label: 'Arena Go', path: '/arena', highlight: true },
     ...navigationItems.slice(4), // Loja, Perfil
     { icon: Utensils, label: 'Food', path: '/food-sport' },
+    { icon: InfinityIcon, label: 'Infinity Hub', path: '/infinity-hub' },
   ]
 
   return (
