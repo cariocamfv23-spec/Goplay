@@ -22,8 +22,10 @@ import { mockArenaArticles, type ArenaArticle } from '@/lib/data'
 const categories = [
   'Todos',
   'Futebol',
-  'Surfe',
   'Basquete',
+  'MMA',
+  'Tênis',
+  'Surfe',
   'eSports',
   'Corrida',
 ]
@@ -75,16 +77,20 @@ function ArticleDetail({
         </div>
 
         {article.broadcaster && (
-          <div className="flex items-center gap-3 bg-secondary/40 border border-border/50 rounded-xl p-4 text-sm font-medium text-foreground">
-            <div className="p-2 bg-purple-600/10 rounded-lg">
-              <Tv className="w-5 h-5 text-purple-600" />
+          <div className="flex items-center gap-3 bg-secondary/40 border border-border/50 rounded-xl p-4 text-sm font-medium text-foreground shadow-sm">
+            <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-xl shadow-[0_0_15px_rgba(147,51,234,0.3)] border border-purple-500/30">
+              <span className="text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+                📺
+              </span>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground mb-0.5">
+              <p className="text-xs text-muted-foreground mb-0.5 font-semibold uppercase tracking-wider">
                 Onde Assistir
               </p>
               <div className="flex items-center gap-2">
-                <span className="font-bold">{article.broadcaster}</span>
+                <span className="font-extrabold text-purple-500 drop-shadow-sm">
+                  {article.broadcaster}
+                </span>
                 <span className="text-muted-foreground">•</span>
                 <span>
                   {article.eventDate?.split('-').reverse().join('/')} às{' '}
@@ -325,14 +331,18 @@ export default function ArenaGo() {
                   </p>
 
                   {article.broadcaster && (
-                    <div className="mb-4 bg-secondary/30 rounded-lg p-2.5 flex items-center justify-between border border-border/50">
-                      <div className="flex items-center gap-2">
-                        <Tv className="w-4 h-4 text-purple-600" />
-                        <span className="text-xs font-bold text-foreground">
+                    <div className="mb-4 bg-secondary/40 rounded-xl p-3 flex items-center justify-between border border-border/50 shadow-sm transition-all group-hover:border-purple-500/30 group-hover:bg-purple-500/5">
+                      <div className="flex items-center gap-2.5">
+                        <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-gradient-to-br from-purple-500/10 to-indigo-500/10 shadow-[0_0_8px_rgba(147,51,234,0.2)]">
+                          <span className="text-base drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
+                            📺
+                          </span>
+                        </div>
+                        <span className="text-xs font-extrabold text-foreground tracking-wide group-hover:text-purple-500 transition-colors">
                           {article.broadcaster}
                         </span>
                       </div>
-                      <div className="text-[11px] font-medium text-muted-foreground">
+                      <div className="text-[11px] font-bold text-muted-foreground">
                         {article.eventDate?.split('-').reverse().join('/')} às{' '}
                         {article.eventTime}
                       </div>
