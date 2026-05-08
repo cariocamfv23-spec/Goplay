@@ -11,9 +11,9 @@ export function BottomNav() {
     ...navigationItems.slice(0, 3),
     { icon: Orbit, label: 'Nexus', path: '/nexus' },
     ...navigationItems.slice(3, 4), // Explore
-    { icon: Flame, label: 'Arena Go', path: '/arena', highlight: true },
     ...navigationItems.slice(4), // Loja, Perfil
     { icon: Utensils, label: 'Food', path: '/food-sport' },
+    { icon: Flame, label: 'GoArena', path: '/arena', highlight: true },
     { icon: InfinityIcon, label: 'Infinity Hub', path: '/infinity-hub' },
   ]
 
@@ -33,7 +33,7 @@ export function BottomNav() {
               'flex flex-col items-center justify-center min-w-[56px] flex-1 h-14 space-y-1 rounded-lg transition-colors group',
               isActive
                 ? isHighlight
-                  ? 'text-orange-500 drop-shadow-sm'
+                  ? 'text-purple-600 drop-shadow-sm'
                   : 'text-primary'
                 : 'text-muted-foreground hover:text-foreground hover:bg-secondary/30',
             )}
@@ -42,7 +42,7 @@ export function BottomNav() {
               className={cn(
                 'h-5 w-5 transition-all duration-300 group-active:scale-95',
                 isActive ? 'scale-110' : 'scale-100 opacity-70',
-                isHighlight && !isActive && 'text-orange-500/70',
+                isHighlight && !isActive && 'text-purple-600/70',
               )}
             />
             <span
