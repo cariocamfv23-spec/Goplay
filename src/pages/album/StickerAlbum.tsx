@@ -68,6 +68,16 @@ export default function StickerAlbum() {
       </div>
 
       <div className="px-4 -mt-6 relative z-20 space-y-6">
+        {/* Stateless Disclaimer */}
+        <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3 flex items-start gap-3 shadow-sm">
+          <Info className="w-5 h-5 text-yellow-600 shrink-0 mt-0.5" />
+          <p className="text-xs text-yellow-700 dark:text-yellow-400/90 leading-relaxed">
+            <strong className="font-bold">Aviso de Demonstração:</strong> Suas
+            figurinhas adquiridas nesta sessão serão resetadas ao recarregar a
+            página até que o banco de dados seja integrado.
+          </p>
+        </div>
+
         {/* Action Panel */}
         <Card className="p-4 flex items-center justify-between shadow-lg border-none bg-card">
           <div className="flex items-center gap-3">
@@ -165,10 +175,19 @@ export default function StickerAlbum() {
                             alt={sticker.name}
                             className="w-full h-full object-cover"
                           />
-                          <div className="absolute bottom-0 left-0 right-0 bg-black/60 backdrop-blur-sm p-1 text-center">
-                            <span className="text-[10px] font-bold text-white tracking-wider">
-                              #{sticker.number}
-                            </span>
+                          <div className="absolute top-1 right-1 bg-black/60 backdrop-blur-sm rounded px-1 text-[10px] shadow-sm">
+                            {sticker.flag}
+                          </div>
+                          <div className="absolute top-1 left-1 bg-black/60 backdrop-blur-sm rounded px-1 text-[10px] font-bold text-white">
+                            #{sticker.number}
+                          </div>
+                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent pt-4 pb-1 px-1 text-center">
+                            <p className="text-[10px] font-bold text-white leading-tight truncate">
+                              {sticker.name}
+                            </p>
+                            <p className="text-[8px] text-zinc-300 font-medium">
+                              {sticker.position}
+                            </p>
                           </div>
                         </>
                       ) : (
