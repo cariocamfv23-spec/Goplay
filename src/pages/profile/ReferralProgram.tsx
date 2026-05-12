@@ -25,6 +25,7 @@ import {
 } from '@/lib/referral-data'
 import { ActivePromotions } from '@/components/ActivePromotions'
 import { isWithinInterval } from 'date-fns'
+import { useAlbumStore } from '@/stores/useAlbumStore'
 
 export default function ReferralProgram() {
   const navigate = useNavigate()
@@ -162,6 +163,20 @@ export default function ReferralProgram() {
         icon: <TrendingUp className="h-4 w-4 text-green-500" />,
       })
     }
+
+    // 5. Album Pack Reward Logic
+    useAlbumStore.getState().addPack()
+    addNotification({
+      title: 'Pacote de Figurinhas Recebido!',
+      message:
+        'Um amigo entrou no GoPlay usando seu link! Você recebeu um pacote com 7 figurinhas para o seu Álbum da Copa de 2026.',
+      type: 'system',
+      priority: 'high',
+      link: '/album',
+    })
+    toast.success('Você ganhou 1 Pacote de Figurinhas!', {
+      icon: <Award className="h-5 w-5 text-green-500" />,
+    })
   }
 
   return (

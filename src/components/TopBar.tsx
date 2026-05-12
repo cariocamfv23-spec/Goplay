@@ -403,6 +403,16 @@ export function TopBar() {
                 PRO
               </Badge>
             </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/album')}>
+              <Trophy className="mr-2 h-4 w-4 text-green-500" />
+              <span className="font-bold text-foreground">Álbum Copa 2026</span>
+              <Badge
+                variant="secondary"
+                className="ml-auto text-[8px] bg-green-500/20 text-green-600 border-none px-1 py-0 h-4"
+              >
+                NOVO
+              </Badge>
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => navigate('/app-map')}>
               <Map className="mr-2 h-4 w-4" />
               <span>Mapa do App</span>

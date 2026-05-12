@@ -1,7 +1,13 @@
 import { Link, useLocation } from 'react-router-dom'
 import { navigationItems } from '@/lib/data'
 import { cn } from '@/lib/utils'
-import { Utensils, Flame, Orbit, Infinity as InfinityIcon } from 'lucide-react'
+import {
+  Utensils,
+  Flame,
+  Orbit,
+  Infinity as InfinityIcon,
+  Trophy,
+} from 'lucide-react'
 
 export function BottomNav() {
   const location = useLocation()
@@ -13,8 +19,8 @@ export function BottomNav() {
     ...navigationItems.slice(3, 4), // Explore
     ...navigationItems.slice(4), // Loja, Perfil
     { icon: Utensils, label: 'Food', path: '/food-sport' },
-    { icon: Flame, label: 'Arena Go', path: '/arena', highlight: true },
-    { icon: InfinityIcon, label: 'Infinity Hub', path: '/infinity-hub' },
+    { icon: Flame, label: 'Arena Go', path: '/arena' },
+    { icon: Trophy, label: 'Copa 26', path: '/album', highlight: true },
   ]
 
   return (
@@ -24,6 +30,8 @@ export function BottomNav() {
           (location.pathname.startsWith(item.path) && item.path !== '/') ||
           (location.pathname === '/' && item.path === '/')
         const isHighlight = 'highlight' in item && item.highlight
+        const highlightColorClass =
+          item.path === '/album' ? 'text-green-600' : 'text-purple-600'
 
         return (
           <Link
@@ -33,7 +41,7 @@ export function BottomNav() {
               'flex flex-col items-center justify-center min-w-[56px] flex-1 h-14 space-y-1 rounded-lg transition-colors group',
               isActive
                 ? isHighlight
-                  ? 'text-purple-600 drop-shadow-sm'
+                  ? `${highlightColorClass} drop-shadow-sm`
                   : 'text-primary'
                 : 'text-muted-foreground hover:text-foreground hover:bg-secondary/30',
             )}
@@ -42,7 +50,7 @@ export function BottomNav() {
               className={cn(
                 'h-5 w-5 transition-all duration-300 group-active:scale-95',
                 isActive ? 'scale-110' : 'scale-100 opacity-70',
-                isHighlight && !isActive && 'text-purple-600/70',
+                isHighlight && !isActive && `${highlightColorClass}/70`,
               )}
             />
             <span

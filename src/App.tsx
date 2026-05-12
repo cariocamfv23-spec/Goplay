@@ -26,6 +26,9 @@ const ProfileSelection = lazy(() => import('./pages/auth/ProfileSelection'))
 const Retrospective = lazy(() => import('./pages/retrospective/Retrospective'))
 const MemoryViewer = lazy(() => import('./pages/memory/MemoryViewer'))
 
+// Sticker Album
+const StickerAlbum = lazy(() => import('./pages/album/StickerAlbum'))
+
 // App Map
 const AppMap = lazy(() => import('./pages/AppMap'))
 
@@ -264,6 +267,7 @@ const App = () => {
                     <Route element={<ProtectedRoute />}>
                       <Route path="/home" element={<Home />} />
                       <Route path="/feed" element={<Feed />} />
+                      <Route path="/album" element={<StickerAlbum />} />
                       <Route path="/move" element={<Move />} />
                       <Route path="/move/kids-map" element={<KidsZoneMap />} />
                       <Route path="/explore" element={<Explore />} />
