@@ -8,15 +8,30 @@ import { useState } from 'react'
 import { PackOpener } from '@/components/album/PackOpener'
 import { ShareDialog } from '@/components/ShareDialog'
 import { mockCurrentUser } from '@/lib/data'
+import { useToast } from '@/hooks/use-toast'
 
 export default function StickerAlbum() {
-  const { collected, unopenedPacks } = useAlbumStore()
+  const { collected, unopenedPacks, addPack } = useAlbumStore()
   const [isOpenerOpen, setIsOpenerOpen] = useState(false)
   const [isShareOpen, setIsShareOpen] = useState(false)
+  const { toast } = useToast()
 
   const referralCode = mockCurrentUser.referralCode || 'GOPLAY2024'
-  const inviteLink = `https://goplay.app/invite/${referralCode}`
-  const inviteMessage = `Me ajude a completar o Álbum da Copa 2026! Baixe o Goplay com meu link e nós dois ganhamos pacotes de figurinhas: ${inviteLink}`
+  const inviteLink = `https://goplay-app-screens-11312.goskip.app/invite/${referralCode}`
+  const inviteMessage = `Comece sua coleção no GoPlay! Use meu link para ganhar seu álbum da Copa 2026:`
+
+  const handleShareAction = () => {
+    // Simulate reward loop after returning from share
+    setTimeout(() => {
+      addPack()
+      toast({
+        title: '🎉 Novo amigo cadastrado!',
+        description:
+          'Alguém se cadastrou com seu link! Você ganhou 1 pacote de figurinhas.',
+        duration: 6000,
+      })
+    }, 4500)
+  }
 
   const totalStickers = mockStickers.length
   const collectedCount = collected.length
@@ -214,6 +229,7 @@ export default function StickerAlbum() {
         title="Ganhe Figurinhas"
         description={inviteMessage}
         url={inviteLink}
+        onShareAction={handleShareAction}
       />
 
       {/* Pack Opener */}

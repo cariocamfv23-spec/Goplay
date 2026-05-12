@@ -17,6 +17,7 @@ import {
   Check,
 } from 'lucide-react'
 import { useState, ReactNode } from 'react'
+import { useToast } from '@/hooks/use-toast'
 
 interface ShareDialogProps {
   open: boolean
@@ -25,6 +26,7 @@ interface ShareDialogProps {
   description?: string
   url?: string
   preview?: ReactNode
+  onShareAction?: () => void
 }
 
 export function ShareDialog({
@@ -34,22 +36,108 @@ export function ShareDialog({
   description,
   url = window.location.href,
   preview,
+  onShareAction,
 }: ShareDialogProps) {
   const [copied, setCopied] = useState(false)
+  const { toast } = useToast()
 
   const handleCopy = () => {
     navigator.clipboard.writeText(url)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+    toast({
+      title: 'Link copiado!',
+      description:
+        'O link de convite foi copiado para a área de transferência.',
+    })
+  }
+
+  const handleShare = async (platform: string) => {
+    let shared = false
+    const fullText = description ? `${description} ${url}` : url
+
+    try {
+      if (platform === 'WhatsApp') {
+        window.open(
+          `https://wa.me/?text=${encodeURIComponent(fullText)}`,
+          '_blank',
+        )
+        shared = true
+      } else if (platform === 'Facebook') {
+        window.open(
+          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+          '_blank',
+        )
+        shared = true
+      } else if (platform === 'Twitter') {
+        window.open(
+          `https://twitter.com/intent/tweet?text=${encodeURIComponent(description || title)}&url=${encodeURIComponent(url)}`,
+          '_blank',
+        )
+        shared = true
+      } else if (platform === 'Email') {
+        window.location.href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(fullText)}`
+        shared = true
+      } else if (platform === 'Outros') {
+        if (navigator.share) {
+          await navigator.share({ title, text: description, url })
+          shared = true
+        } else {
+          toast({
+            title: 'Compartilhamento não suportado',
+            description:
+              'Seu navegador não suporta a funcionalidade de compartilhamento nativo.',
+          })
+        }
+      } else if (platform === 'Instagram') {
+        navigator.clipboard.writeText(fullText)
+        toast({
+          title: 'Link copiado!',
+          description:
+            'O Instagram não permite links diretos. Cole no app para compartilhar.',
+        })
+        shared = true
+      }
+    } catch (err) {
+      console.error(err)
+    }
+
+    if (shared && onShareAction) {
+      toast({
+        title: 'Redirecionando...',
+        description: `Abrindo ${platform} para compartilhar seu link.`,
+      })
+      onShareAction()
+    }
   }
 
   const shareOptions = [
-    { icon: MessageCircle, label: 'WhatsApp', color: 'bg-green-500' },
-    { icon: Instagram, label: 'Instagram', color: 'bg-pink-500' },
-    { icon: Facebook, label: 'Facebook', color: 'bg-blue-600' },
-    { icon: Twitter, label: 'Twitter', color: 'bg-sky-500' },
-    { icon: Mail, label: 'Email', color: 'bg-gray-500' },
-    { icon: MoreHorizontal, label: 'Outros', color: 'bg-zinc-700' },
+    {
+      id: 'WhatsApp',
+      icon: MessageCircle,
+      label: 'WhatsApp',
+      color: 'bg-[#25D366]',
+    },
+    {
+      id: 'Instagram',
+      icon: Instagram,
+      label: 'Instagram',
+      color: 'bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888]',
+    },
+    {
+      id: 'Facebook',
+      icon: Facebook,
+      label: 'Facebook',
+      color: 'bg-[#1877F2]',
+    },
+    { id: 'Twitter', icon: Twitter, label: 'Twitter', color: 'bg-[#1DA1F2]' },
+    { id: 'Email', icon: Mail, label: 'Email', color: 'bg-zinc-600' },
+    {
+      id: 'Outros',
+      icon: MoreHorizontal,
+      label: 'Outros',
+      color: 'bg-zinc-800',
+    },
   ]
 
   return (
@@ -69,7 +157,8 @@ export function ShareDialog({
         <div className="grid grid-cols-4 gap-4 py-4">
           {shareOptions.map((option) => (
             <button
-              key={option.label}
+              key={option.id}
+              onClick={() => handleShare(option.id)}
               className="flex flex-col items-center gap-2 group"
             >
               <div
