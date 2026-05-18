@@ -38,45 +38,46 @@ export function BottomNav() {
         </div>
       )}
       <div className="w-full min-h-16 h-auto bg-background/95 backdrop-blur-md border-t border-border/40 flex items-center justify-around px-1 z-40 pb-safe pt-2 transition-all shadow-[0_-5px_20px_-10px_rgba(0,0,0,0.1)] overflow-x-auto no-scrollbar">
-      {extendedNavItems.map((item) => {
-        const isActive =
-          (location.pathname.startsWith(item.path) && item.path !== '/') ||
-          (location.pathname === '/' && item.path === '/')
-        const isHighlight = 'highlight' in item && item.highlight
-        const highlightColorClass =
-          item.path === '/album' ? 'text-green-600' : 'text-purple-600'
+        {extendedNavItems.map((item) => {
+          const isActive =
+            (location.pathname.startsWith(item.path) && item.path !== '/') ||
+            (location.pathname === '/' && item.path === '/')
+          const isHighlight = 'highlight' in item && item.highlight
+          const highlightColorClass =
+            item.path === '/album' ? 'text-green-600' : 'text-purple-600'
 
-        return (
-          <Link
-            key={item.path}
-            to={item.path}
-            className={cn(
-              'flex flex-col items-center justify-center min-w-[56px] flex-1 h-14 space-y-1 rounded-lg transition-colors group',
-              isActive
-                ? isHighlight
-                  ? `${highlightColorClass} drop-shadow-sm`
-                  : 'text-primary'
-                : 'text-muted-foreground hover:text-foreground hover:bg-secondary/30',
-            )}
-          >
-            <item.icon
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
               className={cn(
-                'h-5 w-5 transition-all duration-300 group-active:scale-95',
-                isActive ? 'scale-110' : 'scale-100 opacity-70',
-                isHighlight && !isActive && `${highlightColorClass}/70`,
-              )}
-            />
-            <span
-              className={cn(
-                'text-[9px] font-medium transition-all whitespace-nowrap',
-                isActive ? 'font-bold' : '',
+                'flex flex-col items-center justify-center min-w-[56px] flex-1 h-14 space-y-1 rounded-lg transition-colors group',
+                isActive
+                  ? isHighlight
+                    ? `${highlightColorClass} drop-shadow-sm`
+                    : 'text-primary'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary/30',
               )}
             >
-              {item.label}
-            </span>
-          </Link>
-        )
-      })}
-    </div>
+              <item.icon
+                className={cn(
+                  'h-5 w-5 transition-all duration-300 group-active:scale-95',
+                  isActive ? 'scale-110' : 'scale-100 opacity-70',
+                  isHighlight && !isActive && `${highlightColorClass}/70`,
+                )}
+              />
+              <span
+                className={cn(
+                  'text-[9px] font-medium transition-all whitespace-nowrap',
+                  isActive ? 'font-bold' : '',
+                )}
+              >
+                {item.label}
+              </span>
+            </Link>
+          )
+        })}
+      </div>
+    </>
   )
 }
