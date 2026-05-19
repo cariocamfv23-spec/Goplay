@@ -8,11 +8,20 @@ import {
   Users,
   TrendingUp,
   Target,
+  Calendar,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import {
   Select,
   SelectContent,
@@ -79,6 +88,51 @@ type TeamStat = {
   description: string
   color: string
 }
+
+const SUMMARY_SCHEDULE = [
+  {
+    id: 'm1',
+    date: '11 Jun 2026',
+    time: '15:00',
+    team1: {
+      name: 'México',
+      flag: 'https://img.usecurling.com/p/100/100?q=mexico%20flag',
+    },
+    team2: {
+      name: 'Catar',
+      flag: 'https://img.usecurling.com/p/100/100?q=qatar%20flag',
+    },
+    stadium: 'Estádio Azteca',
+  },
+  {
+    id: 'm2',
+    date: '12 Jun 2026',
+    time: '16:00',
+    team1: {
+      name: 'EUA',
+      flag: 'https://img.usecurling.com/p/100/100?q=usa%20flag',
+    },
+    team2: {
+      name: 'País de Gales',
+      flag: 'https://img.usecurling.com/p/100/100?q=wales%20flag',
+    },
+    stadium: 'SoFi Stadium',
+  },
+  {
+    id: 'm3',
+    date: '15 Jun 2026',
+    time: '13:00',
+    team1: {
+      name: 'Brasil',
+      flag: 'https://img.usecurling.com/p/100/100?q=brazil%20flag',
+    },
+    team2: {
+      name: 'Sérvia',
+      flag: 'https://img.usecurling.com/p/100/100?q=serbia%20flag',
+    },
+    stadium: 'MetLife Stadium',
+  },
+]
 
 const TEAMS: TeamStat[] = [
   {
@@ -990,8 +1044,102 @@ export default function CopaStatsDashboard() {
           </div>
         </div>
 
+        {/* Match Schedule Summary */}
+        <div className="px-4 mt-8 animate-in fade-in duration-700 delay-200">
+          <div className="flex items-end justify-between mb-4">
+            <div>
+              <h2 className="text-xl font-black uppercase tracking-wider text-foreground">
+                Calendário da Copa
+              </h2>
+              <p className="text-xs text-muted-foreground font-medium">
+                Próximos confrontos
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs bg-secondary/20 border-border/30 hover:bg-secondary/40 h-8 rounded-full px-4"
+              onClick={() => navigate('/album/stats/table')}
+            >
+              Ver Tabela Completa
+            </Button>
+          </div>
+
+          <Card className="border-border/30 bg-secondary/10 backdrop-blur-md overflow-hidden shadow-lg">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader className="bg-secondary/20">
+                  <TableRow className="border-border/30 hover:bg-transparent">
+                    <TableHead className="w-[80px] text-[10px] uppercase font-bold text-muted-foreground whitespace-nowrap">
+                      Data
+                    </TableHead>
+                    <TableHead className="w-[60px] text-[10px] uppercase font-bold text-muted-foreground">
+                      Hora
+                    </TableHead>
+                    <TableHead className="text-[10px] uppercase font-bold text-muted-foreground">
+                      Confronto
+                    </TableHead>
+                    <TableHead className="text-[10px] uppercase font-bold text-muted-foreground text-right whitespace-nowrap">
+                      Local
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {SUMMARY_SCHEDULE.map((match) => (
+                    <TableRow
+                      key={match.id}
+                      className="border-border/20 hover:bg-secondary/20 cursor-pointer transition-colors"
+                      onClick={() => navigate('/album/stats/table')}
+                    >
+                      <TableCell className="font-medium text-xs whitespace-nowrap">
+                        <div className="flex items-center gap-1.5">
+                          <Calendar className="w-3 h-3 text-primary" />
+                          {match.date}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-xs text-muted-foreground">
+                        {match.time}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <div className="flex flex-col items-end w-[45px]">
+                            <span className="text-xs font-bold truncate w-full text-right">
+                              {match.team1.name}
+                            </span>
+                          </div>
+                          <img
+                            src={match.team1.flag}
+                            alt={match.team1.name}
+                            className="w-4 h-4 rounded-full object-cover border border-border/50 shrink-0"
+                          />
+                          <span className="text-[10px] font-black text-muted-foreground mx-0.5">
+                            X
+                          </span>
+                          <img
+                            src={match.team2.flag}
+                            alt={match.team2.name}
+                            className="w-4 h-4 rounded-full object-cover border border-border/50 shrink-0"
+                          />
+                          <div className="flex flex-col items-start w-[45px]">
+                            <span className="text-xs font-bold truncate w-full text-left">
+                              {match.team2.name}
+                            </span>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right text-[10px] text-muted-foreground whitespace-nowrap">
+                        {match.stadium}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </Card>
+        </div>
+
         {/* List Header & Controls */}
-        <div className="px-4 mt-8 mb-4 flex items-end justify-between animate-in fade-in duration-700 delay-200">
+        <div className="px-4 mt-8 mb-4 flex items-end justify-between animate-in fade-in duration-700 delay-300">
           <div>
             <h2 className="text-xl font-black uppercase tracking-wider text-foreground">
               Ranking de Força
@@ -1013,7 +1161,7 @@ export default function CopaStatsDashboard() {
         </div>
 
         {/* Teams List */}
-        <div className="px-4 flex flex-col gap-3 pb-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
+        <div className="px-4 flex flex-col gap-3 pb-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-500">
           {sortedTeams.map((team, index) => (
             <TeamCard key={team.id} team={team} rank={index + 1} />
           ))}

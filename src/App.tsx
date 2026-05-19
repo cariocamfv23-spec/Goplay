@@ -31,6 +31,7 @@ const StickerAlbum = lazy(() => import('./pages/album/StickerAlbum'))
 const CopaStatsDashboard = lazy(
   () => import('./pages/album/CopaStatsDashboard'),
 )
+const CopaMatchSchedule = lazy(() => import('./pages/album/CopaMatchSchedule'))
 
 // App Map
 const AppMap = lazy(() => import('./pages/AppMap'))
@@ -274,6 +275,10 @@ const App = () => {
                       <Route
                         path="/album/stats"
                         element={<CopaStatsDashboard />}
+                      />
+                      <Route
+                        path="/album/stats/table"
+                        element={<CopaMatchSchedule />}
                       />
                       <Route path="/move" element={<Move />} />
                       <Route path="/move/kids-map" element={<KidsZoneMap />} />
