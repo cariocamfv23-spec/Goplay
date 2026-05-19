@@ -54,13 +54,12 @@ type PlayerStat = {
   name: string
   image: string
   stats: {
-    Velocidade: number
-    Finalização: number
-    Passe: number
-    Drible: number
-    Físico: number
+    'Velocidade Máxima': string
+    'Precisão de Passe': string
+    Gols: number
+    Assistências: number
   }
-  tacticalAnalysis: string
+  impactAnalysis: string
 }
 
 type TeamStat = {
@@ -91,50 +90,50 @@ const TEAMS: TeamStat[] = [
     stats: { Tático: 88, Físico: 90, Mental: 85, Técnico: 98, Velocidade: 92 },
     keyPlayers: [
       {
+        id: 'neymar',
+        name: 'Neymar Jr.',
+        image:
+          'https://img.usecurling.com/p/256/256?q=neymar%20soccer%20brazil&dpr=2',
+        stats: {
+          'Velocidade Máxima': '31.2 km/h',
+          'Precisão de Passe': '89%',
+          Gols: 79,
+          Assistências: 59,
+        },
+        impactAnalysis:
+          'Recém-convocado, Neymar traz sua genialidade, drible desconcertante e capacidade de decisão incomparável. É a referência técnica e o maestro que dita o ritmo do ataque brasileiro na busca pelo cobiçado hexacampeonato.',
+      },
+      {
         id: 'vini',
         name: 'Vini Jr.',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=vini',
+        image:
+          'https://img.usecurling.com/p/256/256?q=vinicius%20jr%20real%20madrid&dpr=2',
         stats: {
-          Velocidade: 98,
-          Finalização: 89,
-          Passe: 85,
-          Drible: 96,
-          Físico: 82,
+          'Velocidade Máxima': '36.5 km/h',
+          'Precisão de Passe': '82%',
+          Gols: 24,
+          Assistências: 18,
         },
-        tacticalAnalysis:
-          'Sua velocidade explosiva e drible desequilibrante pelas pontas quebram as defesas adversárias, criando os espaços necessários para o ataque brasileiro prosperar rumo ao título.',
+        impactAnalysis:
+          'Sua velocidade explosiva e drible desequilibrante pelas pontas quebram as defesas adversárias, criando os espaços necessários para o ataque brasileiro prosperar rumo ao título mundial.',
       },
       {
         id: 'rodrygo',
         name: 'Rodrygo',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=rodrygo',
+        image:
+          'https://img.usecurling.com/p/256/256?q=rodrygo%20soccer%20brazil&dpr=2',
         stats: {
-          Velocidade: 92,
-          Finalização: 88,
-          Passe: 87,
-          Drible: 93,
-          Físico: 75,
+          'Velocidade Máxima': '33.8 km/h',
+          'Precisão de Passe': '87%',
+          Gols: 15,
+          Assistências: 12,
         },
-        tacticalAnalysis:
-          'Extremamente inteligente taticamente, atua em diversas posições do ataque, oferecendo fluidez e precisão no terço final do campo.',
-      },
-      {
-        id: 'endrick',
-        name: 'Endrick',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=endrick',
-        stats: {
-          Velocidade: 90,
-          Finalização: 85,
-          Passe: 78,
-          Drible: 88,
-          Físico: 85,
-        },
-        tacticalAnalysis:
-          'Traz força física incomum para sua idade, além de um instinto artilheiro que o torna uma ameaça letal dentro da área adversária.',
+        impactAnalysis:
+          'Extremamente inteligente taticamente, atua em diversas posições do ataque, oferecendo fluidez e precisão no terço final do campo. Seu faro de gol em momentos decisivos é um trunfo indispensável.',
       },
     ],
     description:
-      'A quintessência do talento futebolístico. Alta habilidade técnica e poder ofensivo.',
+      'A quintessência do talento futebolístico. Alta habilidade técnica e enorme poder ofensivo.',
     color: '#009c3b',
   },
   {
@@ -148,46 +147,44 @@ const TEAMS: TeamStat[] = [
       {
         id: 'mbappe',
         name: 'Mbappé',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=mbappe',
+        image:
+          'https://img.usecurling.com/p/256/256?q=kylian%20mbappe%20soccer%20france&dpr=2',
         stats: {
-          Velocidade: 99,
-          Finalização: 94,
-          Passe: 83,
-          Drible: 93,
-          Físico: 85,
+          'Velocidade Máxima': '38.0 km/h',
+          'Precisão de Passe': '83%',
+          Gols: 46,
+          Assistências: 31,
         },
-        tacticalAnalysis:
-          'Sua velocidade em transições e capacidade de finalização o tornam praticamente imparável. É o ponto focal do ataque francês.',
+        impactAnalysis:
+          'Sua velocidade alucinante em transições e capacidade de finalização letal o tornam praticamente imparável. É o ponto focal do ataque francês e a principal arma para a conquista de mais um título.',
       },
       {
         id: 'griezmann',
         name: 'Griezmann',
         image:
-          'https://img.usecurling.com/ppl/medium?gender=male&seed=griezmann',
+          'https://img.usecurling.com/p/256/256?q=griezmann%20soccer%20france&dpr=2',
         stats: {
-          Velocidade: 80,
-          Finalização: 85,
-          Passe: 92,
-          Drible: 86,
-          Físico: 78,
+          'Velocidade Máxima': '31.5 km/h',
+          'Precisão de Passe': '91%',
+          Gols: 44,
+          Assistências: 38,
         },
-        tacticalAnalysis:
-          'O cérebro tático do time. Dita o ritmo de jogo, conecta o meio ao ataque e incansável na recomposição defensiva.',
+        impactAnalysis:
+          'O cérebro tático do time. Dita o ritmo de jogo, conecta magistralmente o meio ao ataque e é incansável na recomposição defensiva. Sua visão de jogo refinada cria inúmeras chances de gol.',
       },
       {
         id: 'camavinga',
         name: 'Camavinga',
         image:
-          'https://img.usecurling.com/ppl/medium?gender=male&seed=camavinga',
+          'https://img.usecurling.com/p/256/256?q=camavinga%20soccer%20france&dpr=2',
         stats: {
-          Velocidade: 85,
-          Finalização: 70,
-          Passe: 88,
-          Drible: 84,
-          Físico: 85,
+          'Velocidade Máxima': '34.2 km/h',
+          'Precisão de Passe': '89%',
+          Gols: 2,
+          Assistências: 6,
         },
-        tacticalAnalysis:
-          'Traz dinamismo e versatilidade ao meio-campo, capaz de quebrar linhas com passes precisos e recuperar bolas importantes.',
+        impactAnalysis:
+          'Traz enorme dinamismo e versatilidade ao meio-campo francês. Capaz de quebrar linhas defensivas com passes verticais e recuperar posses de bola cruciais. Vital para a estabilidade da equipe.',
       },
     ],
     description:
@@ -205,49 +202,48 @@ const TEAMS: TeamStat[] = [
       {
         id: 'messi',
         name: 'Messi',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=messi',
+        image:
+          'https://img.usecurling.com/p/256/256?q=lionel%20messi%20soccer%20argentina&dpr=2',
         stats: {
-          Velocidade: 75,
-          Finalização: 93,
-          Passe: 96,
-          Drible: 94,
-          Físico: 65,
+          'Velocidade Máxima': '30.1 km/h',
+          'Precisão de Passe': '92%',
+          Gols: 109,
+          Assistências: 57,
         },
-        tacticalAnalysis:
-          'Líder e principal criador de jogadas. Sua visão de jogo ímpar e passes precisos encontram espaços onde não existem.',
+        impactAnalysis:
+          'Líder e principal criador de jogadas da seleção. Sua visão de jogo ímpar e passes cirúrgicos encontram espaços onde não existem, sendo a bússola moral e técnica da equipe rumo a mais um título.',
       },
       {
         id: 'alvarez',
-        name: 'Alvarez',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=alvarez',
+        name: 'Julian Alvarez',
+        image:
+          'https://img.usecurling.com/p/256/256?q=julian%20alvarez%20soccer%20argentina&dpr=2',
         stats: {
-          Velocidade: 86,
-          Finalização: 87,
-          Passe: 80,
-          Drible: 85,
-          Físico: 80,
+          'Velocidade Máxima': '34.8 km/h',
+          'Precisão de Passe': '82%',
+          Gols: 14,
+          Assistências: 7,
         },
-        tacticalAnalysis:
-          'Intensa pressão pós-perda e movimentação inteligente criam oportunidades constantes e incomodam as defesas rivais.',
+        impactAnalysis:
+          'Intensa pressão pós-perda e movimentação extremamente inteligente criam oportunidades constantes e incomodam as defesas rivais. Vital para a dinâmica e sufoco ofensivo no terço final.',
       },
       {
         id: 'macallister',
         name: 'Mac Allister',
         image:
-          'https://img.usecurling.com/ppl/medium?gender=male&seed=macallister',
+          'https://img.usecurling.com/p/256/256?q=mac%20allister%20soccer%20argentina&dpr=2',
         stats: {
-          Velocidade: 78,
-          Finalização: 82,
-          Passe: 88,
-          Drible: 85,
-          Físico: 75,
+          'Velocidade Máxima': '32.4 km/h',
+          'Precisão de Passe': '88%',
+          Gols: 8,
+          Assistências: 11,
         },
-        tacticalAnalysis:
-          'Motor do meio-campo argentino, dita o tempo de jogo e aparece como elemento surpresa na área para finalizar.',
+        impactAnalysis:
+          'Motor incansável do meio-campo argentino, dita o tempo de jogo e aparece frequentemente como elemento surpresa na área para finalizar. Garante transição rápida, sólida e muito eficiente.',
       },
     ],
     description:
-      'Atuais campeões com uma coesão de equipe inigualável e resiliência mental.',
+      'Atuais campeões do mundo com uma coesão de equipe inigualável e resiliência mental.',
     color: '#74acdf',
   },
   {
@@ -260,50 +256,49 @@ const TEAMS: TeamStat[] = [
     keyPlayers: [
       {
         id: 'bellingham',
-        name: 'Bellingham',
+        name: 'Jude Bellingham',
         image:
-          'https://img.usecurling.com/ppl/medium?gender=male&seed=bellingham',
+          'https://img.usecurling.com/p/256/256?q=jude%20bellingham%20soccer%20england&dpr=2',
         stats: {
-          Velocidade: 85,
-          Finalização: 86,
-          Passe: 88,
-          Drible: 89,
-          Físico: 90,
+          'Velocidade Máxima': '33.9 km/h',
+          'Precisão de Passe': '89%',
+          Gols: 22,
+          Assistências: 14,
         },
-        tacticalAnalysis:
-          'Um meio-campista completo que avança com força, criando jogadas e finalizando com precisão. A alma do time inglês.',
+        impactAnalysis:
+          'Um meio-campista absurdamente completo que avança com força física rara, criando jogadas e finalizando com precisão. É o pilar da nova geração inglesa para tentar romper o longo jejum.',
       },
       {
         id: 'kane',
-        name: 'Kane',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=kane',
+        name: 'Harry Kane',
+        image:
+          'https://img.usecurling.com/p/256/256?q=harry%20kane%20soccer%20england&dpr=2',
         stats: {
-          Velocidade: 70,
-          Finalização: 94,
-          Passe: 89,
-          Drible: 82,
-          Físico: 86,
+          'Velocidade Máxima': '31.2 km/h',
+          'Precisão de Passe': '84%',
+          Gols: 68,
+          Assistências: 21,
         },
-        tacticalAnalysis:
-          'Atacante letal que também atua como armador recuado. Sua capacidade de reter a bola e dar assistências é fundamental.',
+        impactAnalysis:
+          'Atacante letal e capitão experiente que também atua como exímio armador recuado. Sua capacidade de reter a bola de costas, atrair a marcação e distribuir o jogo é fundamental para o sucesso.',
       },
       {
         id: 'saka',
-        name: 'Saka',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=saka',
+        name: 'Bukayo Saka',
+        image:
+          'https://img.usecurling.com/p/256/256?q=bukayo%20saka%20soccer%20england&dpr=2',
         stats: {
-          Velocidade: 90,
-          Finalização: 84,
-          Passe: 83,
-          Drible: 90,
-          Físico: 75,
+          'Velocidade Máxima': '35.4 km/h',
+          'Precisão de Passe': '86%',
+          Gols: 18,
+          Assistências: 15,
         },
-        tacticalAnalysis:
-          'Alegria e criatividade na ponta direita. Seus dribles curtos e cortes para o meio desmontam as linhas defensivas.',
+        impactAnalysis:
+          'Pura alegria e criatividade imprevisível na ponta direita. Seus dribles curtos venenosos, cortes rápidos para o meio e capacidade de finalização desmontam totalmente as defesas rivais fechadas.',
       },
     ],
     description:
-      'Uma geração de ouro que mistura energia jovem com liderança experiente.',
+      'Uma geração de ouro formidável que mistura energia jovem com liderança experiente.',
     color: '#ce1124',
   },
   {
@@ -317,48 +312,48 @@ const TEAMS: TeamStat[] = [
       {
         id: 'pedri',
         name: 'Pedri',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=pedri',
+        image:
+          'https://img.usecurling.com/p/256/256?q=pedri%20soccer%20spain&dpr=2',
         stats: {
-          Velocidade: 78,
-          Finalização: 75,
-          Passe: 92,
-          Drible: 88,
-          Físico: 70,
+          'Velocidade Máxima': '31.8 km/h',
+          'Precisão de Passe': '93%',
+          Gols: 10,
+          Assistências: 19,
         },
-        tacticalAnalysis:
-          'Controle absoluto no meio-campo. Sua posse de bola e passes incisivos geram controle e fluidez ao jogo espanhol.',
+        impactAnalysis:
+          'Controle absoluto e sublime no meio-campo. Sua posse de bola colada aos pés, giros extremamente rápidos e passes verticais incisivos geram estabilidade, ditando perfeitamente o ritmo espanhol.',
       },
       {
         id: 'yamal',
-        name: 'Yamal',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=yamal',
+        name: 'Lamine Yamal',
+        image:
+          'https://img.usecurling.com/p/256/256?q=lamine%20yamal%20soccer%20spain&dpr=2',
         stats: {
-          Velocidade: 89,
-          Finalização: 80,
-          Passe: 84,
-          Drible: 91,
-          Físico: 65,
+          'Velocidade Máxima': '34.7 km/h',
+          'Precisão de Passe': '84%',
+          Gols: 11,
+          Assistências: 14,
         },
-        tacticalAnalysis:
-          'Jovem prodígio com extrema habilidade no 1 contra 1, quebrando sistemas defensivos retrancados com criatividade.',
+        impactAnalysis:
+          'Jovem prodígio mágico com extrema e abusada habilidade no 1 contra 1. Quebra com naturalidade sistemas defensivos muito retrancados, oferecendo uma arma aguda e super veloz na ponta.',
       },
       {
         id: 'rodri',
         name: 'Rodri',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=rodri',
+        image:
+          'https://img.usecurling.com/p/256/256?q=rodri%20soccer%20spain&dpr=2',
         stats: {
-          Velocidade: 70,
-          Finalização: 78,
-          Passe: 93,
-          Drible: 80,
-          Físico: 88,
+          'Velocidade Máxima': '30.5 km/h',
+          'Precisão de Passe': '94%',
+          Gols: 12,
+          Assistências: 8,
         },
-        tacticalAnalysis:
-          'O pivô tático da equipe. Garante segurança defensiva e é a primeira peça na construção de jogadas ofensivas.',
+        impactAnalysis:
+          'O grande pivô tático da equipe e mestre de sua posição. Garante segurança defensiva primorosa e é a primeira peça indispensável na construção paciente de envolventes jogadas ofensivas.',
       },
     ],
     description:
-      'Mestres da posse de bola e do jogo posicional, ditando o ritmo de qualquer partida.',
+      'Mestres absolutos da posse de bola e do refinado jogo posicional, dominando adversários.',
     color: '#aa151b',
   },
   {
@@ -371,49 +366,49 @@ const TEAMS: TeamStat[] = [
     keyPlayers: [
       {
         id: 'musiala',
-        name: 'Musiala',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=musiala',
+        name: 'Jamal Musiala',
+        image:
+          'https://img.usecurling.com/p/256/256?q=jamal%20musiala%20soccer%20germany&dpr=2',
         stats: {
-          Velocidade: 88,
-          Finalização: 84,
-          Passe: 85,
-          Drible: 94,
-          Físico: 72,
+          'Velocidade Máxima': '34.2 km/h',
+          'Precisão de Passe': '87%',
+          Gols: 16,
+          Assistências: 14,
         },
-        tacticalAnalysis:
-          'Drible em espaços curtos excepcional. Ele arrasta marcações e cria oportunidades onde parece não haver espaço.',
+        impactAnalysis:
+          'Drible em espaços minúsculos excepcional e pura imprevisibilidade. Ele arrasta marcações duplas e cria oportunidades cristalinas onde a olho nu parece não haver qualquer espaço disponível.',
       },
       {
         id: 'wirtz',
-        name: 'Wirtz',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=wirtz',
+        name: 'Florian Wirtz',
+        image:
+          'https://img.usecurling.com/p/256/256?q=florian%20wirtz%20soccer%20germany&dpr=2',
         stats: {
-          Velocidade: 84,
-          Finalização: 85,
-          Passe: 90,
-          Drible: 89,
-          Físico: 70,
+          'Velocidade Máxima': '33.5 km/h',
+          'Precisão de Passe': '89%',
+          Gols: 14,
+          Assistências: 18,
         },
-        tacticalAnalysis:
-          'Visão de jogo impressionante. Seus passes rompem linhas e aceleram a transição ofensiva da equipe alemã.',
+        impactAnalysis:
+          'Visão de jogo periférica impressionante e rápida agilidade mental. Seus passes venenosos rompem linhas defensivas sólidas e aceleram drasticamente a mortal transição ofensiva germânica.',
       },
       {
         id: 'kimmich',
-        name: 'Kimmich',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=kimmich',
+        name: 'Joshua Kimmich',
+        image:
+          'https://img.usecurling.com/p/256/256?q=joshua%20kimmich%20soccer%20germany&dpr=2',
         stats: {
-          Velocidade: 76,
-          Finalização: 78,
-          Passe: 91,
-          Drible: 82,
-          Físico: 80,
+          'Velocidade Máxima': '31.1 km/h',
+          'Precisão de Passe': '91%',
+          Gols: 10,
+          Assistências: 42,
         },
-        tacticalAnalysis:
-          'Versatilidade e garra. Atuando na lateral ou no meio, é essencial na criação de jogadas com seus cruzamentos perfeitos.',
+        impactAnalysis:
+          'Versatilidade de classe mundial, liderança técnica e garra inabaláveis. Atuando na lateral ou organizando pelo meio, é essencial na criação de jogadas com seus cruzamentos milimétricos.',
       },
     ],
     description:
-      'Taticamente versátil e eficiente, passando por um poderoso renascimento.',
+      'Taticamente versátil e extremamente eficiente, passando por um poderoso renascimento.',
     color: '#ffce00',
   },
   {
@@ -426,50 +421,49 @@ const TEAMS: TeamStat[] = [
     keyPlayers: [
       {
         id: 'leao',
-        name: 'Leão',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=leao',
+        name: 'Rafael Leão',
+        image:
+          'https://img.usecurling.com/p/256/256?q=rafael%20leao%20soccer%20portugal&dpr=2',
         stats: {
-          Velocidade: 95,
-          Finalização: 82,
-          Passe: 80,
-          Drible: 92,
-          Físico: 86,
+          'Velocidade Máxima': '36.5 km/h',
+          'Precisão de Passe': '81%',
+          Gols: 18,
+          Assistências: 22,
         },
-        tacticalAnalysis:
-          'Força e explosão na ponta esquerda. Ganha duelos físicos e de velocidade, criando muito perigo.',
+        impactAnalysis:
+          'Força bruta incontrolável e explosão física na ponta esquerda. Ganha sucessivos duelos de velocidade com enorme facilidade, criando terror constante através de jogadas inviduais geniais.',
       },
       {
         id: 'bruno',
         name: 'Bruno Fernandes',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=bruno',
+        image:
+          'https://img.usecurling.com/p/256/256?q=bruno%20fernandes%20soccer%20portugal&dpr=2',
         stats: {
-          Velocidade: 78,
-          Finalização: 86,
-          Passe: 92,
-          Drible: 84,
-          Físico: 78,
+          'Velocidade Máxima': '32.0 km/h',
+          'Precisão de Passe': '86%',
+          Gols: 32,
+          Assistências: 45,
         },
-        tacticalAnalysis:
-          'Principal armador e batedor da equipe. Seus passes de longa distância e finalizações de fora da área são letais.',
+        impactAnalysis:
+          'Principal armador lúcido, líder vocal em campo e especialista nato de bolas paradas. Seus passes longos espetaculares e finalizações de média distância são letais contra retrancas.',
       },
       {
         id: 'bernardo',
         name: 'Bernardo Silva',
         image:
-          'https://img.usecurling.com/ppl/medium?gender=male&seed=bernardo',
+          'https://img.usecurling.com/p/256/256?q=bernardo%20silva%20soccer%20portugal&dpr=2',
         stats: {
-          Velocidade: 76,
-          Finalização: 78,
-          Passe: 90,
-          Drible: 92,
-          Físico: 68,
+          'Velocidade Máxima': '31.5 km/h',
+          'Precisão de Passe': '90%',
+          Gols: 15,
+          Assistências: 28,
         },
-        tacticalAnalysis:
-          'Incansável sem a bola e mágico com ela. Mantém a posse em espaços reduzidos e dita o ritmo ofensivo.',
+        impactAnalysis:
+          'Operário incansável sem a bola e um verdadeiro artista com ela. Consegue reter a posse sob extrema pressão e ditar cadenciadamente o ritmo melódico do perigoso ataque português.',
       },
     ],
     description:
-      'Um elenco incrivelmente profundo com maestros técnicos no meio-campo e ataque.',
+      'Um elenco incrivelmente profundo e recheado de super estrelas com muita fome de vitória.',
     color: '#ff0000',
   },
   {
@@ -482,49 +476,49 @@ const TEAMS: TeamStat[] = [
     keyPlayers: [
       {
         id: 'barella',
-        name: 'Barella',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=barella',
+        name: 'Nicolò Barella',
+        image:
+          'https://img.usecurling.com/p/256/256?q=nicolo%20barella%20soccer%20italy&dpr=2',
         stats: {
-          Velocidade: 82,
-          Finalização: 78,
-          Passe: 86,
-          Drible: 84,
-          Físico: 85,
+          'Velocidade Máxima': '33.2 km/h',
+          'Precisão de Passe': '88%',
+          Gols: 12,
+          Assistências: 18,
         },
-        tacticalAnalysis:
-          'Dinamismo no meio-campo. Ele pressiona alto, recupera a bola e chega à área para finalizar com muita energia.',
+        impactAnalysis:
+          'Dinamismo e intensidade puros no coração do meio-campo. Ele lidera a pressão alta de forma incansável, rouba bolas vitais e ainda pisa na área adversária para finalizar com imensa técnica.',
       },
       {
         id: 'chiesa',
-        name: 'Chiesa',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=chiesa',
+        name: 'Federico Chiesa',
+        image:
+          'https://img.usecurling.com/p/256/256?q=federico%20chiesa%20soccer%20italy&dpr=2',
         stats: {
-          Velocidade: 91,
-          Finalização: 84,
-          Passe: 80,
-          Drible: 88,
-          Físico: 76,
+          'Velocidade Máxima': '35.1 km/h',
+          'Precisão de Passe': '80%',
+          Gols: 21,
+          Assistências: 14,
         },
-        tacticalAnalysis:
-          'O desafogo ofensivo italiano. Sua velocidade e finalização potente com as duas pernas garantem gols importantes.',
+        impactAnalysis:
+          'O grande e imprevisível desafogo ofensivo nas transições letais. Sua velocidade vertiginosa e finalização cortante com ambas as pernas garantem desequilíbrio e gols em jogos travados.',
       },
       {
         id: 'bastoni',
-        name: 'Bastoni',
-        image: 'https://img.usecurling.com/ppl/medium?gender=male&seed=bastoni',
+        name: 'Alessandro Bastoni',
+        image:
+          'https://img.usecurling.com/p/256/256?q=alessandro%20bastoni%20soccer%20italy&dpr=2',
         stats: {
-          Velocidade: 72,
-          Finalização: 55,
-          Passe: 84,
-          Drible: 74,
-          Físico: 85,
+          'Velocidade Máxima': '31.8 km/h',
+          'Precisão de Passe': '91%',
+          Gols: 4,
+          Assistências: 7,
         },
-        tacticalAnalysis:
-          'Um zagueiro construtor. Inicia os ataques com passes longos precisos e organiza a defesa com inteligência tática.',
+        impactAnalysis:
+          'Um moderno zagueiro construtor de primeiríssima classe. Inicia e limpa as jogadas de trás com passes precisos e defende sua grande área com a lendária inteligência tática do calccio.',
       },
     ],
     description:
-      'Historicamente defensores formidáveis com enorme astúcia tática e resiliência.',
+      'Historicamente defensores formidáveis aliados a enorme astúcia tática e forte resiliência.',
     color: '#0066cc',
   },
 ]
@@ -597,7 +591,7 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
             <div className="flex items-center gap-4">
               <div className="flex flex-col items-end">
                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                  Prob. Título
+                  Impacto no Título
                 </span>
                 <span
                   className="text-lg font-black tabular-nums tracking-tighter"
@@ -708,7 +702,7 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
                         <DialogHeader>
                           <DialogTitle className="flex items-center gap-4">
                             <div
-                              className="w-14 h-14 rounded-full overflow-hidden border-[3px] shadow-lg"
+                              className="w-16 h-16 rounded-full overflow-hidden border-[3px] shadow-lg shrink-0"
                               style={{ borderColor: team.color }}
                             >
                               <img
@@ -733,47 +727,42 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
                         </DialogHeader>
 
                         <div className="mt-4 space-y-6">
-                          {/* Progress Bars */}
+                          {/* Technical Stats Grid */}
                           <div className="space-y-4">
                             <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
                               <Activity className="w-3.5 h-3.5" />
                               Estatísticas Técnicas
                             </h4>
-                            <div className="space-y-3">
+                            <div className="grid grid-cols-2 gap-3">
                               {Object.entries(player.stats).map(
                                 ([statName, value]) => (
-                                  <div key={statName} className="space-y-1.5">
-                                    <div className="flex justify-between text-[11px] font-bold uppercase tracking-wider">
-                                      <span className="text-foreground/80">
-                                        {statName}
-                                      </span>
-                                      <span style={{ color: team.color }}>
-                                        {value}
-                                      </span>
-                                    </div>
-                                    <div className="w-full bg-black/40 h-2 rounded-full overflow-hidden shadow-inner">
-                                      <div
-                                        className="h-full transition-all duration-1000 ease-out"
-                                        style={{
-                                          width: `${value}%`,
-                                          backgroundColor: team.color,
-                                        }}
-                                      />
-                                    </div>
+                                  <div
+                                    key={statName}
+                                    className="bg-background/40 backdrop-blur-sm p-3 rounded-xl border border-border/20 flex flex-col items-center justify-center gap-1.5 shadow-sm"
+                                  >
+                                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground text-center">
+                                      {statName}
+                                    </span>
+                                    <span
+                                      className="text-xl font-black tabular-nums tracking-tighter"
+                                      style={{ color: team.color }}
+                                    >
+                                      {value}
+                                    </span>
                                   </div>
                                 ),
                               )}
                             </div>
                           </div>
 
-                          {/* Tactical Analysis */}
-                          <div className="p-4 rounded-xl bg-black/20 border border-border/20 shadow-inner">
-                            <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 flex items-center gap-1.5">
+                          {/* Impact Analysis */}
+                          <div className="p-4 rounded-xl bg-background/40 backdrop-blur-sm border border-border/20 shadow-sm">
+                            <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5">
                               <Target className="w-3.5 h-3.5" />
-                              Análise Tática
+                              Análise de Impacto
                             </h4>
                             <p className="text-sm leading-relaxed text-foreground/90 font-medium">
-                              {player.tacticalAnalysis}
+                              {player.impactAnalysis}
                             </p>
                           </div>
                         </div>
@@ -925,7 +914,7 @@ export default function CopaStatsDashboard() {
               <SelectValue placeholder="Ordenar por" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="probability">Prob. Título</SelectItem>
+              <SelectItem value="probability">Impacto Título</SelectItem>
               <SelectItem value="strength">Força (TPI)</SelectItem>
               <SelectItem value="name">Alfabética</SelectItem>
             </SelectContent>
