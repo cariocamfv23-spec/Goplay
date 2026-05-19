@@ -93,7 +93,7 @@ const TEAMS: TeamStat[] = [
         id: 'neymar',
         name: 'Neymar Jr.',
         image:
-          'https://img.usecurling.com/p/256/256?q=neymar%20soccer%20brazil&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=neymar%20jr%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '31.2 km/h',
           'Precisão de Passe': '89%',
@@ -107,7 +107,7 @@ const TEAMS: TeamStat[] = [
         id: 'vini',
         name: 'Vini Jr.',
         image:
-          'https://img.usecurling.com/p/256/256?q=vinicius%20jr%20real%20madrid&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=vinicius%20junior%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '36.5 km/h',
           'Precisão de Passe': '82%',
@@ -121,7 +121,7 @@ const TEAMS: TeamStat[] = [
         id: 'rodrygo',
         name: 'Rodrygo',
         image:
-          'https://img.usecurling.com/p/256/256?q=rodrygo%20soccer%20brazil&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=rodrygo%20goes%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '33.8 km/h',
           'Precisão de Passe': '87%',
@@ -148,7 +148,7 @@ const TEAMS: TeamStat[] = [
         id: 'mbappe',
         name: 'Mbappé',
         image:
-          'https://img.usecurling.com/p/256/256?q=kylian%20mbappe%20soccer%20france&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=kylian%20mbappe%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '38.0 km/h',
           'Precisão de Passe': '83%',
@@ -162,7 +162,7 @@ const TEAMS: TeamStat[] = [
         id: 'griezmann',
         name: 'Griezmann',
         image:
-          'https://img.usecurling.com/p/256/256?q=griezmann%20soccer%20france&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=antoine%20griezmann%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '31.5 km/h',
           'Precisão de Passe': '91%',
@@ -176,7 +176,7 @@ const TEAMS: TeamStat[] = [
         id: 'camavinga',
         name: 'Camavinga',
         image:
-          'https://img.usecurling.com/p/256/256?q=camavinga%20soccer%20france&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=eduardo%20camavinga%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '34.2 km/h',
           'Precisão de Passe': '89%',
@@ -203,7 +203,7 @@ const TEAMS: TeamStat[] = [
         id: 'messi',
         name: 'Messi',
         image:
-          'https://img.usecurling.com/p/256/256?q=lionel%20messi%20soccer%20argentina&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=lionel%20messi%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '30.1 km/h',
           'Precisão de Passe': '92%',
@@ -217,7 +217,7 @@ const TEAMS: TeamStat[] = [
         id: 'alvarez',
         name: 'Julian Alvarez',
         image:
-          'https://img.usecurling.com/p/256/256?q=julian%20alvarez%20soccer%20argentina&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=julian%20alvarez%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '34.8 km/h',
           'Precisão de Passe': '82%',
@@ -231,7 +231,7 @@ const TEAMS: TeamStat[] = [
         id: 'macallister',
         name: 'Mac Allister',
         image:
-          'https://img.usecurling.com/p/256/256?q=mac%20allister%20soccer%20argentina&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=alexis%20mac%20allister%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '32.4 km/h',
           'Precisão de Passe': '88%',
@@ -258,7 +258,7 @@ const TEAMS: TeamStat[] = [
         id: 'bellingham',
         name: 'Jude Bellingham',
         image:
-          'https://img.usecurling.com/p/256/256?q=jude%20bellingham%20soccer%20england&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=jude%20bellingham%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '33.9 km/h',
           'Precisão de Passe': '89%',
@@ -272,7 +272,7 @@ const TEAMS: TeamStat[] = [
         id: 'kane',
         name: 'Harry Kane',
         image:
-          'https://img.usecurling.com/p/256/256?q=harry%20kane%20soccer%20england&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=harry%20kane%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '31.2 km/h',
           'Precisão de Passe': '84%',
@@ -286,7 +286,7 @@ const TEAMS: TeamStat[] = [
         id: 'saka',
         name: 'Bukayo Saka',
         image:
-          'https://img.usecurling.com/p/256/256?q=bukayo%20saka%20soccer%20england&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=bukayo%20saka%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '35.4 km/h',
           'Precisão de Passe': '86%',
@@ -313,7 +313,7 @@ const TEAMS: TeamStat[] = [
         id: 'pedri',
         name: 'Pedri',
         image:
-          'https://img.usecurling.com/p/256/256?q=pedri%20soccer%20spain&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=pedri%20gonzalez%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '31.8 km/h',
           'Precisão de Passe': '93%',
@@ -327,7 +327,7 @@ const TEAMS: TeamStat[] = [
         id: 'yamal',
         name: 'Lamine Yamal',
         image:
-          'https://img.usecurling.com/p/256/256?q=lamine%20yamal%20soccer%20spain&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=lamine%20yamal%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '34.7 km/h',
           'Precisão de Passe': '84%',
@@ -341,7 +341,7 @@ const TEAMS: TeamStat[] = [
         id: 'rodri',
         name: 'Rodri',
         image:
-          'https://img.usecurling.com/p/256/256?q=rodri%20soccer%20spain&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=rodri%20hernandez%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '30.5 km/h',
           'Precisão de Passe': '94%',
@@ -368,7 +368,7 @@ const TEAMS: TeamStat[] = [
         id: 'musiala',
         name: 'Jamal Musiala',
         image:
-          'https://img.usecurling.com/p/256/256?q=jamal%20musiala%20soccer%20germany&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=jamal%20musiala%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '34.2 km/h',
           'Precisão de Passe': '87%',
@@ -382,7 +382,7 @@ const TEAMS: TeamStat[] = [
         id: 'wirtz',
         name: 'Florian Wirtz',
         image:
-          'https://img.usecurling.com/p/256/256?q=florian%20wirtz%20soccer%20germany&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=florian%20wirtz%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '33.5 km/h',
           'Precisão de Passe': '89%',
@@ -396,7 +396,7 @@ const TEAMS: TeamStat[] = [
         id: 'kimmich',
         name: 'Joshua Kimmich',
         image:
-          'https://img.usecurling.com/p/256/256?q=joshua%20kimmich%20soccer%20germany&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=joshua%20kimmich%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '31.1 km/h',
           'Precisão de Passe': '91%',
@@ -423,7 +423,7 @@ const TEAMS: TeamStat[] = [
         id: 'leao',
         name: 'Rafael Leão',
         image:
-          'https://img.usecurling.com/p/256/256?q=rafael%20leao%20soccer%20portugal&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=rafael%20leao%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '36.5 km/h',
           'Precisão de Passe': '81%',
@@ -437,7 +437,7 @@ const TEAMS: TeamStat[] = [
         id: 'bruno',
         name: 'Bruno Fernandes',
         image:
-          'https://img.usecurling.com/p/256/256?q=bruno%20fernandes%20soccer%20portugal&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=bruno%20fernandes%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '32.0 km/h',
           'Precisão de Passe': '86%',
@@ -451,7 +451,7 @@ const TEAMS: TeamStat[] = [
         id: 'bernardo',
         name: 'Bernardo Silva',
         image:
-          'https://img.usecurling.com/p/256/256?q=bernardo%20silva%20soccer%20portugal&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=bernardo%20silva%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '31.5 km/h',
           'Precisão de Passe': '90%',
@@ -478,7 +478,7 @@ const TEAMS: TeamStat[] = [
         id: 'barella',
         name: 'Nicolò Barella',
         image:
-          'https://img.usecurling.com/p/256/256?q=nicolo%20barella%20soccer%20italy&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=nicolo%20barella%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '33.2 km/h',
           'Precisão de Passe': '88%',
@@ -492,7 +492,7 @@ const TEAMS: TeamStat[] = [
         id: 'chiesa',
         name: 'Federico Chiesa',
         image:
-          'https://img.usecurling.com/p/256/256?q=federico%20chiesa%20soccer%20italy&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=federico%20chiesa%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '35.1 km/h',
           'Precisão de Passe': '80%',
@@ -506,7 +506,7 @@ const TEAMS: TeamStat[] = [
         id: 'bastoni',
         name: 'Alessandro Bastoni',
         image:
-          'https://img.usecurling.com/p/256/256?q=alessandro%20bastoni%20soccer%20italy&dpr=2',
+          'https://img.usecurling.com/p/256/256?q=alessandro%20bastoni%20realistic%20portrait%20face&dpr=2',
         stats: {
           'Velocidade Máxima': '31.8 km/h',
           'Precisão de Passe': '91%',
@@ -686,14 +686,14 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
                     <Dialog key={player.id}>
                       <DialogTrigger asChild>
                         <button className="flex flex-col items-center gap-1.5 group hover:opacity-80 transition-opacity outline-none">
-                          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-border/50 group-hover:border-primary/80 transition-colors shadow-sm">
+                          <div className="w-14 h-14 rounded-full overflow-hidden border-[2.5px] border-border/50 group-hover:border-primary/80 transition-colors shadow-sm">
                             <img
                               src={player.image}
                               alt={player.name}
                               className="w-full h-full object-cover"
                             />
                           </div>
-                          <span className="text-[10px] font-bold text-muted-foreground group-hover:text-foreground transition-colors max-w-[60px] text-center truncate leading-tight">
+                          <span className="text-[10px] font-bold text-muted-foreground group-hover:text-foreground transition-colors max-w-[65px] text-center truncate leading-tight">
                             {player.name}
                           </span>
                         </button>
@@ -702,7 +702,7 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
                         <DialogHeader>
                           <DialogTitle className="flex items-center gap-4">
                             <div
-                              className="w-16 h-16 rounded-full overflow-hidden border-[3px] shadow-lg shrink-0"
+                              className="w-24 h-24 rounded-full overflow-hidden border-[3px] shadow-lg shrink-0"
                               style={{ borderColor: team.color }}
                             >
                               <img
@@ -711,13 +711,13 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
                                 className="w-full h-full object-cover"
                               />
                             </div>
-                            <div className="flex flex-col items-start gap-0.5">
-                              <span className="text-xl font-black tracking-tight">
+                            <div className="flex flex-col items-start gap-1">
+                              <span className="text-2xl font-black tracking-tight">
                                 {player.name}
                               </span>
                               <Badge
                                 variant="outline"
-                                className="text-[10px] uppercase font-bold tracking-widest px-1.5 py-0 border-border/50"
+                                className="text-[11px] uppercase font-bold tracking-widest px-2 py-0.5 border-border/50 bg-background/40"
                                 style={{ color: team.color }}
                               >
                                 {team.name}
@@ -738,13 +738,13 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
                                 ([statName, value]) => (
                                   <div
                                     key={statName}
-                                    className="bg-background/40 backdrop-blur-sm p-3 rounded-xl border border-border/20 flex flex-col items-center justify-center gap-1.5 shadow-sm"
+                                    className="bg-background/40 backdrop-blur-sm p-4 rounded-xl border border-border/20 flex flex-col items-center justify-center gap-1.5 shadow-sm hover:border-border/40 transition-colors"
                                   >
                                     <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground text-center">
                                       {statName}
                                     </span>
                                     <span
-                                      className="text-xl font-black tabular-nums tracking-tighter"
+                                      className="text-2xl font-black tabular-nums tracking-tighter"
                                       style={{ color: team.color }}
                                     >
                                       {value}
@@ -756,12 +756,16 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
                           </div>
 
                           {/* Impact Analysis */}
-                          <div className="p-4 rounded-xl bg-background/40 backdrop-blur-sm border border-border/20 shadow-sm">
-                            <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5">
+                          <div className="p-5 rounded-xl bg-background/40 backdrop-blur-sm border border-border/20 shadow-sm relative overflow-hidden">
+                            <div
+                              className="absolute top-0 right-0 w-32 h-32 opacity-10 blur-2xl pointer-events-none rounded-full"
+                              style={{ backgroundColor: team.color }}
+                            />
+                            <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5 relative z-10">
                               <Target className="w-3.5 h-3.5" />
-                              Análise de Impacto
+                              Impacto para o Título
                             </h4>
-                            <p className="text-sm leading-relaxed text-foreground/90 font-medium">
+                            <p className="text-sm leading-relaxed text-foreground/90 font-medium relative z-10">
                               {player.impactAnalysis}
                             </p>
                           </div>
