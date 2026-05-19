@@ -15,6 +15,10 @@ import {
   Medal,
   Flame,
   Crosshair,
+  Info,
+  Gift,
+  CheckCircle,
+  Ticket,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -63,6 +67,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { useToast } from '@/components/ui/use-toast'
 
 type PlayerStat = {
   id: string
@@ -200,6 +205,39 @@ const COMPLETED_MATCHES = [
       image:
         'https://img.usecurling.com/p/256/256?q=neymar%20jr%20realistic%20portrait%20face&dpr=2',
     },
+  },
+]
+
+const BOLAO_MATCHES = [
+  {
+    id: 'b1',
+    date: '15 Jun 2026',
+    time: '16:00',
+    team1: {
+      name: 'Brasil',
+      flag: 'https://img.usecurling.com/p/100/100?q=brazil%20flag',
+    },
+    team2: {
+      name: 'França',
+      flag: 'https://img.usecurling.com/p/100/100?q=france%20flag',
+    },
+    stadium: 'Maracanã',
+    mockResult: { t1: 2, t2: 0, scorer: 'Neymar Jr.' },
+  },
+  {
+    id: 'b2',
+    date: '16 Jun 2026',
+    time: '20:00',
+    team1: {
+      name: 'Argentina',
+      flag: 'https://img.usecurling.com/p/100/100?q=argentina%20flag',
+    },
+    team2: {
+      name: 'Inglaterra',
+      flag: 'https://img.usecurling.com/p/100/100?q=england%20flag',
+    },
+    stadium: 'Wembley',
+    mockResult: { t1: 1, t2: 2, scorer: 'Harry Kane' },
   },
 ]
 
@@ -742,7 +780,6 @@ function PlayerStatsDialog({
             </div>
           </div>
 
-          {/* Heatmap & Highlights */}
           <div className="space-y-4 pt-4 border-t border-border/20">
             <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
               <Map className="w-3.5 h-3.5" /> Análise Tática e Lances
@@ -885,7 +922,6 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
 
         <CollapsibleContent>
           <div className="p-4 pt-0 border-t border-border/10 bg-black/20 grid grid-cols-1 md:grid-cols-2 gap-6 mt-2 animate-in slide-in-from-top-2 duration-300">
-            {/* Radar Chart */}
             <div className="flex flex-col gap-2 pt-4">
               <h4 className="text-[10px] font-bold flex items-center gap-1.5 uppercase tracking-widest text-muted-foreground">
                 <Activity className="w-3.5 h-3.5" /> Perfil Técnico
@@ -924,7 +960,6 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
               </div>
             </div>
 
-            {/* Stats Details */}
             <div className="flex flex-col justify-center gap-5 pb-2">
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
@@ -994,12 +1029,32 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
 
 export default function CopaStatsDashboard() {
   const navigate = useNavigate()
+  const { toast } = useToast()
   const [sortBy, setSortBy] = useState<'probability' | 'strength' | 'name'>(
     'probability',
   )
   const [rankingTab, setRankingTab] = useState<
     'scorers' | 'tactical' | 'goals'
   >('scorers')
+
+  // Bolão States
+  const [predictions, setPredictions] = useState<
+    Record<
+      string,
+      {
+        t1Score: number
+        t2Score: number
+        scorer: string
+        status: 'pending' | 'won' | 'lost'
+      }
+    >
+  >({})
+  const [selectedMatch, setSelectedMatch] = useState<any>(null)
+  const [showVoucher, setShowVoucher] = useState<any>(null)
+
+  const [t1, setT1] = useState(0)
+  const [t2, setT2] = useState(0)
+  const [scorer, setScorer] = useState('')
 
   const sortedTeams = useMemo(() => {
     return [...TEAMS].sort((a, b) => {
@@ -1028,15 +1083,53 @@ export default function CopaStatsDashboard() {
     })
   }, [])
 
+  const handlePredict = (match: any) => {
+    setSelectedMatch(match)
+    setT1(0)
+    setT2(0)
+    setScorer('')
+  }
+
+  const submitPrediction = () => {
+    if (!selectedMatch) return
+
+    const isPerfect =
+      t1 === selectedMatch.mockResult.t1 &&
+      t2 === selectedMatch.mockResult.t2 &&
+      scorer.trim().toLowerCase() ===
+        selectedMatch.mockResult.scorer.toLowerCase()
+
+    const newPrediction = {
+      t1Score: t1,
+      t2Score: t2,
+      scorer,
+      status: isPerfect ? 'won' : 'pending',
+    } as const
+
+    setPredictions((prev) => ({
+      ...prev,
+      [selectedMatch.id]: newPrediction,
+    }))
+
+    if (isPerfect) {
+      setShowVoucher(selectedMatch)
+    } else {
+      toast({
+        title: 'Palpite Registrado!',
+        description:
+          'Seu palpite foi salvo. (Como é uma simulação, apenas acertos exatos disparam o prêmio agora).',
+      })
+    }
+    setSelectedMatch(null)
+  }
+
   return (
     <div className="min-h-screen bg-background pb-32 overflow-x-hidden">
-      {/* Background Glows */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[120px]" />
         <div className="absolute bottom-[20%] right-[-10%] w-[50%] h-[50%] bg-[hsl(var(--gold)/0.1)] rounded-full blur-[120px]" />
       </div>
 
-      {/* Header */}
       <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border/30 shadow-sm">
         <div className="flex items-center justify-between p-4 px-4 pt-safe-top">
           <Button
@@ -1060,7 +1153,6 @@ export default function CopaStatsDashboard() {
       </div>
 
       <div className="relative z-10 max-w-2xl mx-auto">
-        {/* GOLD PROFILE - ROAD TO GLORY */}
         <div className="px-4 mt-6 animate-in fade-in duration-700">
           <Card className="border-[hsl(var(--gold)/0.4)] bg-black/40 overflow-hidden relative shadow-[0_0_20px_hsl(var(--gold)/0.1)]">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,hsl(var(--gold)/0.15),transparent_70%)] pointer-events-none" />
@@ -1121,7 +1213,6 @@ export default function CopaStatsDashboard() {
           </Card>
         </div>
 
-        {/* TOURNAMENT RESULTS PANEL */}
         <div className="px-4 mt-8 animate-in fade-in duration-700 delay-150">
           <div className="flex items-end justify-between mb-4">
             <div>
@@ -1203,7 +1294,128 @@ export default function CopaStatsDashboard() {
           </div>
         </div>
 
-        {/* DYNAMIC RANKINGS */}
+        {/* BOLÃO GOPLAY SECTION */}
+        <div className="px-4 mt-8 animate-in fade-in duration-700 delay-300">
+          <div className="flex items-end justify-between mb-4">
+            <div>
+              <h2 className="text-xl font-black uppercase tracking-wider text-foreground flex items-center gap-2">
+                <Target className="w-5 h-5 text-[hsl(var(--gold))]" />
+                Bolão GoPlay
+              </h2>
+              <p className="text-xs text-muted-foreground font-medium mt-1">
+                Acerte o placar e ganhe prêmios exclusivos
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-primary/10 border border-primary/20 rounded-xl p-3 mb-4 flex items-start gap-3">
+            <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+            <p className="text-[10px] text-primary/80 leading-relaxed font-medium">
+              <strong>Nota de Sistema:</strong> A verificação em tempo real de
+              resultados e o ranking global persistente do Bolão requerem
+              conexão com backend (Supabase ou Skip Cloud). Atualmente rodando
+              em modo simulação.
+            </p>
+          </div>
+
+          <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden">
+            {BOLAO_MATCHES.map((match) => (
+              <Card
+                key={match.id}
+                className="min-w-[280px] shrink-0 snap-center border-border/30 bg-secondary/10 backdrop-blur-md relative overflow-hidden"
+              >
+                {predictions[match.id]?.status === 'won' && (
+                  <div className="absolute top-0 right-0 bg-green-500 text-white text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-bl-lg z-10 shadow-sm">
+                    Na Mosca!
+                  </div>
+                )}
+                <div className="p-4">
+                  <div className="text-[10px] text-muted-foreground font-bold uppercase mb-3 flex justify-between">
+                    <span>{match.date}</span>
+                    <span>{match.stadium}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center mb-4">
+                    <div className="flex flex-col items-center gap-1.5 w-[35%]">
+                      <img
+                        src={match.team1.flag}
+                        className="w-10 h-10 rounded-full border-2 border-border/50 object-cover shadow-sm"
+                        alt={match.team1.name}
+                      />
+                      <span className="text-xs font-bold truncate w-full text-center">
+                        {match.team1.name}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-col items-center justify-center w-[30%]">
+                      {predictions[match.id] ? (
+                        <span className="text-2xl font-black text-foreground tabular-nums">
+                          {predictions[match.id].t1Score} -{' '}
+                          {predictions[match.id].t2Score}
+                        </span>
+                      ) : (
+                        <span className="text-xl font-black text-muted-foreground/50">
+                          VS
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col items-center gap-1.5 w-[35%]">
+                      <img
+                        src={match.team2.flag}
+                        className="w-10 h-10 rounded-full border-2 border-border/50 object-cover shadow-sm"
+                        alt={match.team2.name}
+                      />
+                      <span className="text-xs font-bold truncate w-full text-center">
+                        {match.team2.name}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-border/10">
+                    {predictions[match.id] ? (
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="text-muted-foreground font-semibold">
+                            Palpite de gol:
+                          </span>
+                          <span className="font-bold">
+                            {predictions[match.id].scorer}
+                          </span>
+                        </div>
+                        <Badge
+                          variant={
+                            predictions[match.id].status === 'won'
+                              ? 'default'
+                              : 'secondary'
+                          }
+                          className={cn(
+                            'w-full justify-center py-1',
+                            predictions[match.id].status === 'won' &&
+                              'bg-green-500 hover:bg-green-600 text-white shadow-sm',
+                          )}
+                        >
+                          {predictions[match.id].status === 'won'
+                            ? 'Prêmio Desbloqueado'
+                            : 'Aguardando Resultado'}
+                        </Badge>
+                      </div>
+                    ) : (
+                      <Button
+                        onClick={() => handlePredict(match)}
+                        size="sm"
+                        className="w-full text-xs font-black uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90"
+                      >
+                        Fazer Palpite
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+
         <div className="px-4 mt-8 animate-in fade-in duration-700 delay-300">
           <div className="mb-4">
             <h2 className="text-xl font-black uppercase tracking-wider text-foreground">
@@ -1302,7 +1514,6 @@ export default function CopaStatsDashboard() {
           </Card>
         </div>
 
-        {/* Top Favorites Chart */}
         <div className="px-4 mt-12 animate-in fade-in duration-700 delay-500">
           <Card className="border-border/30 bg-secondary/10 backdrop-blur-md overflow-hidden relative shadow-lg">
             <div className="absolute top-[-50px] right-[-50px] w-32 h-32 bg-primary/20 rounded-full blur-3xl pointer-events-none" />
@@ -1363,7 +1574,6 @@ export default function CopaStatsDashboard() {
           </Card>
         </div>
 
-        {/* Elite Players Gallery */}
         <div className="px-4 mt-8 animate-in fade-in duration-700 delay-500">
           <div className="flex items-end justify-between mb-4">
             <div>
@@ -1407,7 +1617,6 @@ export default function CopaStatsDashboard() {
           </div>
         </div>
 
-        {/* Match Schedule Summary */}
         <div className="px-4 mt-8 animate-in fade-in duration-700 delay-500">
           <div className="flex items-end justify-between mb-4">
             <div>
@@ -1501,7 +1710,6 @@ export default function CopaStatsDashboard() {
           </Card>
         </div>
 
-        {/* List Header & Controls */}
         <div className="px-4 mt-8 mb-4 flex items-end justify-between animate-in fade-in duration-700 delay-500">
           <div>
             <h2 className="text-xl font-black uppercase tracking-wider text-foreground">
@@ -1523,13 +1731,155 @@ export default function CopaStatsDashboard() {
           </Select>
         </div>
 
-        {/* Teams List */}
         <div className="px-4 flex flex-col gap-3 pb-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-500">
           {sortedTeams.map((team, index) => (
             <TeamCard key={team.id} team={team} rank={index + 1} />
           ))}
         </div>
       </div>
+
+      {/* Bolão Predictor Modal */}
+      <Dialog
+        open={!!selectedMatch}
+        onOpenChange={(open) => !open && setSelectedMatch(null)}
+      >
+        <DialogContent className="sm:max-w-md bg-secondary border-border/50">
+          <DialogHeader>
+            <DialogTitle className="uppercase tracking-widest font-black text-center text-foreground">
+              Faça seu Palpite
+            </DialogTitle>
+          </DialogHeader>
+          {selectedMatch && (
+            <div className="space-y-6 pt-4">
+              <div className="flex items-center justify-between px-4">
+                <div className="flex flex-col items-center gap-2 w-1/3">
+                  <img
+                    src={selectedMatch.team1.flag}
+                    className="w-14 h-14 rounded-full border-2 border-border/50 object-cover shadow-sm"
+                    alt={selectedMatch.team1.name}
+                  />
+                  <span className="font-bold text-sm text-center">
+                    {selectedMatch.team1.name}
+                  </span>
+                  <input
+                    type="number"
+                    value={t1}
+                    onChange={(e) => setT1(Number(e.target.value))}
+                    className="flex h-12 w-16 rounded-md border border-input bg-background px-3 py-2 text-xl font-black text-center ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    min={0}
+                  />
+                </div>
+                <span className="text-2xl font-black text-muted-foreground/30">
+                  X
+                </span>
+                <div className="flex flex-col items-center gap-2 w-1/3">
+                  <img
+                    src={selectedMatch.team2.flag}
+                    className="w-14 h-14 rounded-full border-2 border-border/50 object-cover shadow-sm"
+                    alt={selectedMatch.team2.name}
+                  />
+                  <span className="font-bold text-sm text-center">
+                    {selectedMatch.team2.name}
+                  </span>
+                  <input
+                    type="number"
+                    value={t2}
+                    onChange={(e) => setT2(Number(e.target.value))}
+                    className="flex h-12 w-16 rounded-md border border-input bg-background px-3 py-2 text-xl font-black text-center ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    min={0}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2 px-4">
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                  Quem fará um gol?
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ex: Neymar Jr."
+                  value={scorer}
+                  onChange={(e) => setScorer(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                />
+                <p className="text-[10px] text-muted-foreground italic mt-2 border-l-2 border-primary/50 pl-2">
+                  Dica para testar: {selectedMatch.mockResult.t1}x
+                  {selectedMatch.mockResult.t2} com gol de '
+                  {selectedMatch.mockResult.scorer}' aciona o prêmio!
+                </p>
+              </div>
+
+              <div className="px-4 pb-2">
+                <Button
+                  className="w-full font-black uppercase tracking-widest h-12"
+                  onClick={submitPrediction}
+                >
+                  Participar do Bolão
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Bolão Reward Voucher Modal */}
+      <Dialog
+        open={!!showVoucher}
+        onOpenChange={(open) => !open && setShowVoucher(null)}
+      >
+        <DialogContent className="sm:max-w-md bg-gradient-to-br from-indigo-950 to-purple-950 border-[hsl(var(--gold))] text-white">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-black text-[hsl(var(--gold))] text-center uppercase tracking-widest flex items-center justify-center gap-2 drop-shadow-md">
+              <Trophy className="w-6 h-6" /> Na Mosca!
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col items-center gap-4 py-4">
+            <div className="w-32 h-32 rounded-full bg-black/40 border-4 border-[hsl(var(--gold))] p-4 flex items-center justify-center relative shadow-[0_0_40px_hsl(var(--gold)/0.4)] animate-in zoom-in duration-500">
+              <Gift className="w-16 h-16 text-[hsl(var(--gold))] animate-bounce" />
+              <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-1.5 shadow-lg">
+                <CheckCircle className="w-6 h-6 text-white" />
+              </div>
+            </div>
+            <div className="text-center space-y-2 w-full px-4">
+              <h3 className="text-lg font-bold text-white">
+                Parabéns! Você acertou em cheio!
+              </h3>
+              <div className="bg-black/40 p-5 rounded-xl border border-white/20 mt-4 backdrop-blur-md relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[hsl(var(--gold)/0.1)] blur-2xl rounded-full pointer-events-none" />
+                <div className="flex items-center gap-2 mb-3 justify-center text-[hsl(var(--gold))] relative z-10">
+                  <Ticket className="w-5 h-5" />
+                  <span className="font-black uppercase tracking-wider text-sm">
+                    Voucher Desbloqueado
+                  </span>
+                </div>
+                <p className="text-[13px] font-bold text-white/90 uppercase tracking-wide relative z-10">
+                  Vale-Presente: Camiseta Oficial da{' '}
+                  {showVoucher?.team1?.name || 'Seleção'}
+                </p>
+                <div className="flex items-center justify-center gap-1.5 mt-2 text-green-400 relative z-10">
+                  <CheckCircle className="w-3.5 h-3.5" />
+                  <p className="text-[11px] font-bold uppercase tracking-wider">
+                    Inclui: Frete Gratuito para todo o Brasil
+                  </p>
+                </div>
+              </div>
+            </div>
+            <p className="text-[10px] text-center text-white/50 px-8 mt-2 leading-relaxed font-medium">
+              * Para resgatar, acesse a loja GoPlay e insira o código gerado em
+              seu perfil. Em ambiente real, o prêmio está sujeito à
+              disponibilidade de estoque.
+            </p>
+            <div className="px-4 w-full mt-2">
+              <Button
+                className="w-full bg-[hsl(var(--gold))] text-black font-black uppercase tracking-widest hover:bg-[hsl(var(--gold)/0.8)] shadow-[0_0_15px_hsl(var(--gold)/0.3)] h-12"
+                onClick={() => setShowVoucher(null)}
+              >
+                Resgatar Prêmio
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
