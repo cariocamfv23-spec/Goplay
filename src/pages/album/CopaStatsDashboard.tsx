@@ -420,6 +420,20 @@ const TEAMS: TeamStat[] = [
     stats: { Tático: 85, Físico: 86, Mental: 84, Técnico: 91, Velocidade: 88 },
     keyPlayers: [
       {
+        id: 'cr7',
+        name: 'Cristiano Ronaldo',
+        image:
+          'https://img.usecurling.com/p/256/256?q=cristiano%20ronaldo%20realistic%20portrait%20face&dpr=2',
+        stats: {
+          'Velocidade Máxima': '32.5 km/h',
+          'Precisão de Passe': '82%',
+          Gols: 128,
+          Assistências: 46,
+        },
+        impactAnalysis:
+          'A lenda viva portuguesa continua sendo uma ameaça letal na grande área. Sua experiência, liderança absoluta e faro de gol inigualável podem ser o diferencial em momentos de alta pressão.',
+      },
+      {
         id: 'leao',
         name: 'Rafael Leão',
         image:
@@ -522,6 +536,91 @@ const TEAMS: TeamStat[] = [
     color: '#0066cc',
   },
 ]
+
+function PlayerStatsDialog({
+  player,
+  team,
+  children,
+}: {
+  player: PlayerStat
+  team: Pick<TeamStat, 'name' | 'color'>
+  children: React.ReactNode
+}) {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="sm:max-w-md bg-secondary/95 border-border/50 backdrop-blur-xl">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-4">
+            <div
+              className="w-24 h-24 rounded-full overflow-hidden border-[3px] shadow-lg shrink-0"
+              style={{ borderColor: team.color }}
+            >
+              <img
+                src={player.image}
+                alt={player.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="flex flex-col items-start gap-1">
+              <span className="text-2xl font-black tracking-tight text-foreground">
+                {player.name}
+              </span>
+              <Badge
+                variant="outline"
+                className="text-[11px] uppercase font-bold tracking-widest px-2 py-0.5 border-border/50 bg-background/40"
+                style={{ color: team.color }}
+              >
+                {team.name}
+              </Badge>
+            </div>
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="mt-4 space-y-6">
+          <div className="space-y-4">
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+              <Activity className="w-3.5 h-3.5" />
+              Estatísticas Técnicas
+            </h4>
+            <div className="grid grid-cols-2 gap-3">
+              {Object.entries(player.stats).map(([statName, value]) => (
+                <div
+                  key={statName}
+                  className="bg-background/40 backdrop-blur-sm p-4 rounded-xl border border-border/20 flex flex-col items-center justify-center gap-1.5 shadow-sm hover:border-border/40 transition-colors"
+                >
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground text-center">
+                    {statName}
+                  </span>
+                  <span
+                    className="text-2xl font-black tabular-nums tracking-tighter"
+                    style={{ color: team.color }}
+                  >
+                    {value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="p-5 rounded-xl bg-background/40 backdrop-blur-sm border border-border/20 shadow-sm relative overflow-hidden">
+            <div
+              className="absolute top-0 right-0 w-32 h-32 opacity-10 blur-2xl pointer-events-none rounded-full"
+              style={{ backgroundColor: team.color }}
+            />
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5 relative z-10">
+              <Target className="w-3.5 h-3.5" />
+              Impacto para o Título
+            </h4>
+            <p className="text-sm leading-relaxed text-foreground/90 font-medium relative z-10">
+              {player.impactAnalysis}
+            </p>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
 
 function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -683,95 +782,24 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
                 </h4>
                 <div className="flex flex-wrap gap-4 mt-2">
                   {team.keyPlayers.map((player) => (
-                    <Dialog key={player.id}>
-                      <DialogTrigger asChild>
-                        <button className="flex flex-col items-center gap-1.5 group hover:opacity-80 transition-opacity outline-none">
-                          <div className="w-14 h-14 rounded-full overflow-hidden border-[2.5px] border-border/50 group-hover:border-primary/80 transition-colors shadow-sm">
-                            <img
-                              src={player.image}
-                              alt={player.name}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <span className="text-[10px] font-bold text-muted-foreground group-hover:text-foreground transition-colors max-w-[65px] text-center truncate leading-tight">
-                            {player.name}
-                          </span>
-                        </button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-md bg-secondary/95 border-border/50 backdrop-blur-xl">
-                        <DialogHeader>
-                          <DialogTitle className="flex items-center gap-4">
-                            <div
-                              className="w-24 h-24 rounded-full overflow-hidden border-[3px] shadow-lg shrink-0"
-                              style={{ borderColor: team.color }}
-                            >
-                              <img
-                                src={player.image}
-                                alt={player.name}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            <div className="flex flex-col items-start gap-1">
-                              <span className="text-2xl font-black tracking-tight">
-                                {player.name}
-                              </span>
-                              <Badge
-                                variant="outline"
-                                className="text-[11px] uppercase font-bold tracking-widest px-2 py-0.5 border-border/50 bg-background/40"
-                                style={{ color: team.color }}
-                              >
-                                {team.name}
-                              </Badge>
-                            </div>
-                          </DialogTitle>
-                        </DialogHeader>
-
-                        <div className="mt-4 space-y-6">
-                          {/* Technical Stats Grid */}
-                          <div className="space-y-4">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-                              <Activity className="w-3.5 h-3.5" />
-                              Estatísticas Técnicas
-                            </h4>
-                            <div className="grid grid-cols-2 gap-3">
-                              {Object.entries(player.stats).map(
-                                ([statName, value]) => (
-                                  <div
-                                    key={statName}
-                                    className="bg-background/40 backdrop-blur-sm p-4 rounded-xl border border-border/20 flex flex-col items-center justify-center gap-1.5 shadow-sm hover:border-border/40 transition-colors"
-                                  >
-                                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground text-center">
-                                      {statName}
-                                    </span>
-                                    <span
-                                      className="text-2xl font-black tabular-nums tracking-tighter"
-                                      style={{ color: team.color }}
-                                    >
-                                      {value}
-                                    </span>
-                                  </div>
-                                ),
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Impact Analysis */}
-                          <div className="p-5 rounded-xl bg-background/40 backdrop-blur-sm border border-border/20 shadow-sm relative overflow-hidden">
-                            <div
-                              className="absolute top-0 right-0 w-32 h-32 opacity-10 blur-2xl pointer-events-none rounded-full"
-                              style={{ backgroundColor: team.color }}
-                            />
-                            <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5 relative z-10">
-                              <Target className="w-3.5 h-3.5" />
-                              Impacto para o Título
-                            </h4>
-                            <p className="text-sm leading-relaxed text-foreground/90 font-medium relative z-10">
-                              {player.impactAnalysis}
-                            </p>
-                          </div>
+                    <PlayerStatsDialog
+                      key={player.id}
+                      player={player}
+                      team={team}
+                    >
+                      <button className="flex flex-col items-center gap-1.5 group hover:opacity-80 transition-opacity outline-none">
+                        <div className="w-14 h-14 rounded-full overflow-hidden border-[2.5px] border-border/50 group-hover:border-primary/80 transition-colors shadow-sm">
+                          <img
+                            src={player.image}
+                            alt={player.name}
+                            className="w-full h-full object-cover"
+                          />
                         </div>
-                      </DialogContent>
-                    </Dialog>
+                        <span className="text-[10px] font-bold text-muted-foreground group-hover:text-foreground transition-colors max-w-[65px] text-center truncate leading-tight">
+                          {player.name}
+                        </span>
+                      </button>
+                    </PlayerStatsDialog>
                   ))}
                 </div>
               </div>
@@ -809,6 +837,21 @@ export default function CopaStatsDashboard() {
   const top5Teams = [...TEAMS]
     .sort((a, b) => b.probability - a.probability)
     .slice(0, 5)
+
+  const elitePlayersData = useMemo(() => {
+    const eliteIds = [
+      { teamId: 'br', playerId: 'neymar' },
+      { teamId: 'ar', playerId: 'messi' },
+      { teamId: 'pt', playerId: 'cr7' },
+      { teamId: 'fr', playerId: 'mbappe' },
+      { teamId: 'en', playerId: 'bellingham' },
+    ]
+    return eliteIds.map((ep) => {
+      const team = TEAMS.find((t) => t.id === ep.teamId)!
+      const player = team.keyPlayers.find((p) => p.id === ep.playerId)!
+      return { team, player }
+    })
+  }, [])
 
   return (
     <div className="min-h-screen bg-background pb-32 overflow-x-hidden">
@@ -901,6 +944,50 @@ export default function CopaStatsDashboard() {
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Elite Players Gallery */}
+        <div className="px-4 mt-8 animate-in fade-in duration-700 delay-150">
+          <div className="flex items-end justify-between mb-4">
+            <div>
+              <h2 className="text-xl font-black uppercase tracking-wider text-foreground">
+                Principais Jogadores
+              </h2>
+              <p className="text-xs text-muted-foreground font-medium">
+                Galeria de atletas de elite
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden">
+            {elitePlayersData.map(({ team, player }) => (
+              <PlayerStatsDialog key={player.id} player={player} team={team}>
+                <button className="flex flex-col items-center gap-2 group hover:opacity-80 transition-opacity outline-none snap-start shrink-0 w-[120px] bg-secondary/20 p-3 rounded-2xl border border-border/30 backdrop-blur-sm">
+                  <div
+                    className="relative w-20 h-20 rounded-full overflow-hidden border-[3px] border-border/50 group-hover:scale-105 transition-transform duration-300 shadow-sm"
+                    style={{ borderColor: team.color }}
+                  >
+                    <img
+                      src={player.image}
+                      alt={player.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col items-center gap-0.5 mt-1">
+                    <span className="text-xs font-bold text-foreground transition-colors text-center leading-tight">
+                      {player.name}
+                    </span>
+                    <span
+                      className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider"
+                      style={{ color: team.color }}
+                    >
+                      {team.name}
+                    </span>
+                  </div>
+                </button>
+              </PlayerStatsDialog>
+            ))}
+          </div>
         </div>
 
         {/* List Header & Controls */}
