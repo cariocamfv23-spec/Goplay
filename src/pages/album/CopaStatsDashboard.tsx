@@ -9,6 +9,12 @@ import {
   TrendingUp,
   Target,
   Calendar,
+  Trophy,
+  Map,
+  PlayCircle,
+  Medal,
+  Flame,
+  Crosshair,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -133,6 +139,168 @@ const SUMMARY_SCHEDULE = [
     stadium: 'MetLife Stadium',
   },
 ]
+
+const COMPLETED_MATCHES = [
+  {
+    id: 'c1',
+    date: '10 Jun 2026',
+    stage: 'Abertura',
+    team1: {
+      name: 'México',
+      flag: 'https://img.usecurling.com/p/100/100?q=mexico%20flag',
+      score: 3,
+    },
+    team2: {
+      name: 'Catar',
+      flag: 'https://img.usecurling.com/p/100/100?q=qatar%20flag',
+      score: 1,
+    },
+    motm: {
+      name: 'S. Giménez',
+      image:
+        'https://img.usecurling.com/p/100/100?q=santiago%20gimenez%20realistic%20portrait%20face',
+    },
+  },
+  {
+    id: 'c2',
+    date: '11 Jun 2026',
+    stage: 'Fase de Grupos',
+    team1: {
+      name: 'EUA',
+      flag: 'https://img.usecurling.com/p/100/100?q=usa%20flag',
+      score: 2,
+    },
+    team2: {
+      name: 'P. de Gales',
+      flag: 'https://img.usecurling.com/p/100/100?q=wales%20flag',
+      score: 2,
+    },
+    motm: {
+      name: 'C. Pulisic',
+      image:
+        'https://img.usecurling.com/p/100/100?q=christian%20pulisic%20realistic%20portrait%20face',
+    },
+  },
+  {
+    id: 'c3',
+    date: '12 Jun 2026',
+    stage: 'Fase de Grupos',
+    team1: {
+      name: 'Brasil',
+      flag: 'https://img.usecurling.com/p/100/100?q=brazil%20flag',
+      score: 2,
+    },
+    team2: {
+      name: 'Sérvia',
+      flag: 'https://img.usecurling.com/p/100/100?q=serbia%20flag',
+      score: 0,
+    },
+    motm: {
+      name: 'Neymar Jr.',
+      image:
+        'https://img.usecurling.com/p/256/256?q=neymar%20jr%20realistic%20portrait%20face&dpr=2',
+    },
+  },
+]
+
+const RANKINGS = {
+  scorers: [
+    { id: '1', name: 'Neymar Jr.', team: 'Brasil', value: 6, subtitle: 'Gols' },
+    {
+      id: '2',
+      name: 'Kylian Mbappé',
+      team: 'França',
+      value: 5,
+      subtitle: 'Gols',
+    },
+    {
+      id: '3',
+      name: 'Harry Kane',
+      team: 'Inglaterra',
+      value: 4,
+      subtitle: 'Gols',
+    },
+    {
+      id: '4',
+      name: 'Lamine Yamal',
+      team: 'Espanha',
+      value: 3,
+      subtitle: 'Gols',
+    },
+    {
+      id: '5',
+      name: 'Jude Bellingham',
+      team: 'Inglaterra',
+      value: 3,
+      subtitle: 'Gols',
+    },
+  ],
+  tactical: [
+    { id: '4', name: 'Rodri', team: 'Espanha', value: 9.8, subtitle: 'Rating' },
+    {
+      id: '5',
+      name: 'Jude Bellingham',
+      team: 'Inglaterra',
+      value: 9.6,
+      subtitle: 'Rating',
+    },
+    {
+      id: '6',
+      name: 'Jamal Musiala',
+      team: 'Alemanha',
+      value: 9.4,
+      subtitle: 'Rating',
+    },
+    {
+      id: '7',
+      name: 'Lionel Messi',
+      team: 'Argentina',
+      value: 9.2,
+      subtitle: 'Rating',
+    },
+    {
+      id: '8',
+      name: 'Bruno Fernandes',
+      team: 'Portugal',
+      value: 9.1,
+      subtitle: 'Rating',
+    },
+  ],
+  goals: [
+    {
+      id: '7',
+      name: 'Vini Jr.',
+      team: 'Brasil',
+      desc: 'Voleio de fora da área vs Sérvia',
+      value: '1º',
+      subtitle: 'Lugar',
+    },
+    {
+      id: '8',
+      name: 'Lamine Yamal',
+      team: 'Espanha',
+      desc: 'Chute colocado no ângulo vs Itália',
+      value: '2º',
+      subtitle: 'Lugar',
+    },
+    {
+      id: '9',
+      name: 'Lionel Messi',
+      team: 'Argentina',
+      desc: 'Falta na gaveta vs Uruguai',
+      value: '3º',
+      subtitle: 'Lugar',
+    },
+    {
+      id: '10',
+      name: 'Kylian Mbappé',
+      team: 'França',
+      desc: 'Arrancada do meio campo vs Holanda',
+      value: '4º',
+      subtitle: 'Lugar',
+    },
+  ],
+}
 
 const TEAMS: TeamStat[] = [
   {
@@ -465,131 +633,48 @@ const TEAMS: TeamStat[] = [
       'Taticamente versátil e extremamente eficiente, passando por um poderoso renascimento.',
     color: '#ffce00',
   },
-  {
-    id: 'pt',
-    name: 'Portugal',
-    probability: 8.5,
-    strength: 87,
-    athleteLevel: 90,
-    stats: { Tático: 85, Físico: 86, Mental: 84, Técnico: 91, Velocidade: 88 },
-    keyPlayers: [
-      {
-        id: 'cr7',
-        name: 'Cristiano Ronaldo',
-        image:
-          'https://img.usecurling.com/p/256/256?q=cristiano%20ronaldo%20realistic%20portrait%20face&dpr=2',
-        stats: {
-          'Velocidade Máxima': '32.5 km/h',
-          'Precisão de Passe': '82%',
-          Gols: 128,
-          Assistências: 46,
-        },
-        impactAnalysis:
-          'A lenda viva portuguesa continua sendo uma ameaça letal na grande área. Sua experiência, liderança absoluta e faro de gol inigualável podem ser o diferencial em momentos de alta pressão.',
-      },
-      {
-        id: 'leao',
-        name: 'Rafael Leão',
-        image:
-          'https://img.usecurling.com/p/256/256?q=rafael%20leao%20realistic%20portrait%20face&dpr=2',
-        stats: {
-          'Velocidade Máxima': '36.5 km/h',
-          'Precisão de Passe': '81%',
-          Gols: 18,
-          Assistências: 22,
-        },
-        impactAnalysis:
-          'Força bruta incontrolável e explosão física na ponta esquerda. Ganha sucessivos duelos de velocidade com enorme facilidade, criando terror constante através de jogadas inviduais geniais.',
-      },
-      {
-        id: 'bruno',
-        name: 'Bruno Fernandes',
-        image:
-          'https://img.usecurling.com/p/256/256?q=bruno%20fernandes%20realistic%20portrait%20face&dpr=2',
-        stats: {
-          'Velocidade Máxima': '32.0 km/h',
-          'Precisão de Passe': '86%',
-          Gols: 32,
-          Assistências: 45,
-        },
-        impactAnalysis:
-          'Principal armador lúcido, líder vocal em campo e especialista nato de bolas paradas. Seus passes longos espetaculares e finalizações de média distância são letais contra retrancas.',
-      },
-      {
-        id: 'bernardo',
-        name: 'Bernardo Silva',
-        image:
-          'https://img.usecurling.com/p/256/256?q=bernardo%20silva%20realistic%20portrait%20face&dpr=2',
-        stats: {
-          'Velocidade Máxima': '31.5 km/h',
-          'Precisão de Passe': '90%',
-          Gols: 15,
-          Assistências: 28,
-        },
-        impactAnalysis:
-          'Operário incansável sem a bola e um verdadeiro artista com ela. Consegue reter a posse sob extrema pressão e ditar cadenciadamente o ritmo melódico do perigoso ataque português.',
-      },
-    ],
-    description:
-      'Um elenco incrivelmente profundo e recheado de super estrelas com muita fome de vitória.',
-    color: '#ff0000',
-  },
-  {
-    id: 'it',
-    name: 'Itália',
-    probability: 3.5,
-    strength: 85,
-    athleteLevel: 86,
-    stats: { Tático: 92, Físico: 82, Mental: 88, Técnico: 85, Velocidade: 80 },
-    keyPlayers: [
-      {
-        id: 'barella',
-        name: 'Nicolò Barella',
-        image:
-          'https://img.usecurling.com/p/256/256?q=nicolo%20barella%20realistic%20portrait%20face&dpr=2',
-        stats: {
-          'Velocidade Máxima': '33.2 km/h',
-          'Precisão de Passe': '88%',
-          Gols: 12,
-          Assistências: 18,
-        },
-        impactAnalysis:
-          'Dinamismo e intensidade puros no coração do meio-campo. Ele lidera a pressão alta de forma incansável, rouba bolas vitais e ainda pisa na área adversária para finalizar com imensa técnica.',
-      },
-      {
-        id: 'chiesa',
-        name: 'Federico Chiesa',
-        image:
-          'https://img.usecurling.com/p/256/256?q=federico%20chiesa%20realistic%20portrait%20face&dpr=2',
-        stats: {
-          'Velocidade Máxima': '35.1 km/h',
-          'Precisão de Passe': '80%',
-          Gols: 21,
-          Assistências: 14,
-        },
-        impactAnalysis:
-          'O grande e imprevisível desafogo ofensivo nas transições letais. Sua velocidade vertiginosa e finalização cortante com ambas as pernas garantem desequilíbrio e gols em jogos travados.',
-      },
-      {
-        id: 'bastoni',
-        name: 'Alessandro Bastoni',
-        image:
-          'https://img.usecurling.com/p/256/256?q=alessandro%20bastoni%20realistic%20portrait%20face&dpr=2',
-        stats: {
-          'Velocidade Máxima': '31.8 km/h',
-          'Precisão de Passe': '91%',
-          Gols: 4,
-          Assistências: 7,
-        },
-        impactAnalysis:
-          'Um moderno zagueiro construtor de primeiríssima classe. Inicia e limpa as jogadas de trás com passes precisos e defende sua grande área com a lendária inteligência tática do calccio.',
-      },
-    ],
-    description:
-      'Historicamente defensores formidáveis aliados a enorme astúcia tática e forte resiliência.',
-    color: '#0066cc',
-  },
 ]
+
+const goldPlayerIds = [
+  { id: 'neymar', rating: 9.9 },
+  { id: 'mbappe', rating: 9.7 },
+  { id: 'messi', rating: 9.5 },
+  { id: 'bellingham', rating: 9.3 },
+  { id: 'kane', rating: 9.0 },
+  { id: 'vini', rating: 8.8 },
+  { id: 'yamal', rating: 8.6 },
+  { id: 'musiala', rating: 8.5 },
+]
+
+const getPlayerFromTeams = (playerId: string) => {
+  for (const team of TEAMS) {
+    const p = team.keyPlayers.find((p) => p.id === playerId)
+    if (p) return { player: p, team }
+  }
+  return null
+}
+
+const getGoldPos = (index: number, total: number, rating: number) => {
+  const maxDistance = 42
+  const minDistance = 16
+  const maxRating = 9.9
+  const minRating = 8.5
+
+  let distance = 0
+  if (rating >= maxRating) distance = minDistance
+  else if (rating <= minRating) distance = maxDistance
+  else {
+    const ratio = (maxRating - rating) / (maxRating - minRating)
+    distance = minDistance + ratio * (maxDistance - minDistance)
+  }
+
+  const angle = (index * (360 / total) - 90) * (Math.PI / 180)
+
+  return {
+    left: 50 + distance * Math.cos(angle),
+    top: 50 + distance * Math.sin(angle),
+  }
+}
 
 function PlayerStatsDialog({
   player,
@@ -603,7 +688,7 @@ function PlayerStatsDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-md bg-secondary/95 border-border/50 backdrop-blur-xl">
+      <DialogContent className="sm:max-w-md bg-secondary/95 border-border/50 backdrop-blur-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-4">
             <div
@@ -657,14 +742,47 @@ function PlayerStatsDialog({
             </div>
           </div>
 
-          <div className="p-5 rounded-xl bg-background/40 backdrop-blur-sm border border-border/20 shadow-sm relative overflow-hidden">
-            <div
-              className="absolute top-0 right-0 w-32 h-32 opacity-10 blur-2xl pointer-events-none rounded-full"
-              style={{ backgroundColor: team.color }}
-            />
+          {/* Heatmap & Highlights */}
+          <div className="space-y-4 pt-4 border-t border-border/20">
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+              <Map className="w-3.5 h-3.5" /> Análise Tática e Lances
+            </h4>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-xl overflow-hidden border border-border/20 relative aspect-[4/3] group cursor-pointer">
+                <img
+                  src={`https://img.usecurling.com/p/300/200?q=heat%20map%20soccer&color=red&seed=${player.name.length}`}
+                  alt="Heatmap"
+                  className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-2.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-white">
+                    Heatmap Tático
+                  </span>
+                </div>
+              </div>
+              <div className="rounded-xl overflow-hidden border border-border/20 relative aspect-[4/3] group cursor-pointer">
+                <img
+                  src={`https://img.usecurling.com/p/300/200?q=soccer%20stadium%20night&seed=${player.name.length}`}
+                  alt="Highlight"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/20 transition-colors">
+                  <PlayCircle className="w-8 h-8 text-white/90 drop-shadow-lg group-hover:scale-110 transition-transform" />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-2.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-white">
+                    Ver Destaques
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-5 rounded-xl bg-background/40 backdrop-blur-sm border border-[hsl(var(--gold)/0.3)] shadow-sm relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 opacity-20 blur-2xl pointer-events-none rounded-full bg-[hsl(var(--gold))]" />
             <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5 relative z-10">
-              <Target className="w-3.5 h-3.5" />
-              Impacto para o Título
+              <Trophy className="w-3.5 h-3.5 text-[hsl(var(--gold))]" />
+              Impacto para o Título (Gold Profile)
             </h4>
             <p className="text-sm leading-relaxed text-foreground/90 font-medium relative z-10">
               {player.impactAnalysis}
@@ -842,7 +960,7 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
                       team={team}
                     >
                       <button className="flex flex-col items-center gap-1.5 group hover:opacity-80 transition-opacity outline-none">
-                        <div className="w-14 h-14 rounded-full overflow-hidden border-[2.5px] border-border/50 group-hover:border-primary/80 transition-colors shadow-sm">
+                        <div className="w-14 h-14 rounded-full overflow-hidden border-[2.5px] border-border/50 group-hover:border-[hsl(var(--gold))] transition-colors shadow-sm">
                           <img
                             src={player.image}
                             alt={player.name}
@@ -879,6 +997,9 @@ export default function CopaStatsDashboard() {
   const [sortBy, setSortBy] = useState<'probability' | 'strength' | 'name'>(
     'probability',
   )
+  const [rankingTab, setRankingTab] = useState<
+    'scorers' | 'tactical' | 'goals'
+  >('scorers')
 
   const sortedTeams = useMemo(() => {
     return [...TEAMS].sort((a, b) => {
@@ -896,9 +1017,9 @@ export default function CopaStatsDashboard() {
     const eliteIds = [
       { teamId: 'br', playerId: 'neymar' },
       { teamId: 'ar', playerId: 'messi' },
-      { teamId: 'pt', playerId: 'cr7' },
       { teamId: 'fr', playerId: 'mbappe' },
       { teamId: 'en', playerId: 'bellingham' },
+      { teamId: 'es', playerId: 'yamal' },
     ]
     return eliteIds.map((ep) => {
       const team = TEAMS.find((t) => t.id === ep.teamId)!
@@ -928,10 +1049,10 @@ export default function CopaStatsDashboard() {
           </Button>
           <div className="flex flex-col items-center">
             <h1 className="text-lg font-black uppercase tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-primary to-[hsl(var(--gold))]">
-              Estatísticas Copa 26
+              Copa 26 Stats
             </h1>
             <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
-              Índice de Força e Probabilidades
+              Dashboard de Torneio
             </span>
           </div>
           <div className="w-10 shrink-0" />
@@ -939,8 +1060,250 @@ export default function CopaStatsDashboard() {
       </div>
 
       <div className="relative z-10 max-w-2xl mx-auto">
+        {/* GOLD PROFILE - ROAD TO GLORY */}
+        <div className="px-4 mt-6 animate-in fade-in duration-700">
+          <Card className="border-[hsl(var(--gold)/0.4)] bg-black/40 overflow-hidden relative shadow-[0_0_20px_hsl(var(--gold)/0.1)]">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,hsl(var(--gold)/0.15),transparent_70%)] pointer-events-none" />
+
+            <div className="p-6 flex flex-col items-center relative z-10">
+              <div className="flex flex-col items-center text-center mb-6">
+                <h2 className="text-xl font-black uppercase tracking-widest text-[hsl(var(--gold))] flex items-center gap-2">
+                  <Trophy className="w-5 h-5" /> Gold Profile
+                </h2>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">
+                  Road to Glory - Top Performers
+                </p>
+              </div>
+
+              <div className="relative w-full max-w-[300px] aspect-square mx-auto">
+                <div className="absolute inset-[15%] rounded-full border-[1.5px] border-[hsl(var(--gold)/0.4)] border-dashed" />
+                <div className="absolute inset-[30%] rounded-full border-[1.5px] border-[hsl(var(--gold)/0.25)] border-dashed" />
+                <div className="absolute inset-[45%] rounded-full border-[1.5px] border-[hsl(var(--gold)/0.15)] border-dashed" />
+
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-[#ffd700] to-[#b8860b] p-4 rounded-full shadow-[0_0_40px_hsl(var(--gold)/0.6)] z-20 border-2 border-yellow-300">
+                  <Trophy className="w-10 h-10 text-black drop-shadow-md" />
+                </div>
+
+                {goldPlayerIds.map((p, i) => {
+                  const pos = getGoldPos(i, goldPlayerIds.length, p.rating)
+                  const data = getPlayerFromTeams(p.id)
+                  if (!data) return null
+
+                  return (
+                    <div
+                      key={p.id}
+                      className="absolute z-30 transition-all duration-500 hover:scale-125 hover:z-40"
+                      style={{
+                        top: `${pos.top}%`,
+                        left: `${pos.left}%`,
+                        transform: 'translate(-50%, -50%)',
+                      }}
+                    >
+                      <PlayerStatsDialog player={data.player} team={data.team}>
+                        <button className="relative w-12 h-12 rounded-full p-[2px] bg-gradient-to-br from-[hsl(var(--gold))] to-amber-700 shadow-lg outline-none">
+                          <div className="w-full h-full rounded-full overflow-hidden bg-black">
+                            <img
+                              src={data.player.image}
+                              alt={data.player.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-black/90 border border-[hsl(var(--gold))] px-1.5 py-0.5 rounded text-[8px] font-black text-[hsl(var(--gold))] shadow-sm whitespace-nowrap">
+                            {p.rating}
+                          </div>
+                        </button>
+                      </PlayerStatsDialog>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* TOURNAMENT RESULTS PANEL */}
+        <div className="px-4 mt-8 animate-in fade-in duration-700 delay-150">
+          <div className="flex items-end justify-between mb-4">
+            <div>
+              <h2 className="text-xl font-black uppercase tracking-wider text-foreground">
+                Resultados
+              </h2>
+              <p className="text-xs text-muted-foreground font-medium">
+                Últimas partidas encerradas
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden">
+            {COMPLETED_MATCHES.map((match) => (
+              <Card
+                key={match.id}
+                className="min-w-[280px] shrink-0 snap-center border-border/30 bg-secondary/10 backdrop-blur-md"
+              >
+                <div className="p-4">
+                  <div className="text-[10px] text-muted-foreground font-bold uppercase mb-3 flex justify-between">
+                    <span>{match.stage}</span>
+                    <span>{match.date}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center mb-4">
+                    <div className="flex flex-col items-center gap-1.5 w-[35%]">
+                      <img
+                        src={match.team1.flag}
+                        className="w-10 h-10 rounded-full border-2 border-border/50 object-cover shadow-sm"
+                        alt={match.team1.name}
+                      />
+                      <span className="text-xs font-bold truncate w-full text-center">
+                        {match.team1.name}
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-center justify-center w-[30%]">
+                      <span className="text-3xl font-black text-foreground tabular-nums">
+                        {match.team1.score} - {match.team2.score}
+                      </span>
+                      <Badge
+                        variant="outline"
+                        className="text-[9px] mt-1 bg-green-500/10 text-green-500 border-green-500/20 px-1.5"
+                      >
+                        FINAL
+                      </Badge>
+                    </div>
+                    <div className="flex flex-col items-center gap-1.5 w-[35%]">
+                      <img
+                        src={match.team2.flag}
+                        className="w-10 h-10 rounded-full border-2 border-border/50 object-cover shadow-sm"
+                        alt={match.team2.name}
+                      />
+                      <span className="text-xs font-bold truncate w-full text-center">
+                        {match.team2.name}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-border/10 flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <Star className="w-3.5 h-3.5 text-[hsl(var(--gold))]" />
+                      <span className="text-[10px] uppercase font-bold text-muted-foreground">
+                        Man of the Match
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-black">
+                        {match.motm.name}
+                      </span>
+                      <img
+                        src={match.motm.image}
+                        className="w-7 h-7 rounded-full border border-border/30 object-cover"
+                        alt={match.motm.name}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* DYNAMIC RANKINGS */}
+        <div className="px-4 mt-8 animate-in fade-in duration-700 delay-300">
+          <div className="mb-4">
+            <h2 className="text-xl font-black uppercase tracking-wider text-foreground">
+              Rankings
+            </h2>
+            <p className="text-xs text-muted-foreground font-medium">
+              Destaques individuais do torneio
+            </p>
+          </div>
+
+          <div className="flex gap-2 bg-secondary/30 p-1.5 rounded-xl mb-4 border border-border/20">
+            <button
+              onClick={() => setRankingTab('scorers')}
+              className={cn(
+                'flex-1 text-[11px] font-black uppercase tracking-wider py-2.5 rounded-lg transition-all flex items-center justify-center gap-1.5',
+                rankingTab === 'scorers'
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground',
+              )}
+            >
+              <Target className="w-3.5 h-3.5" />
+              Artilharia
+            </button>
+            <button
+              onClick={() => setRankingTab('tactical')}
+              className={cn(
+                'flex-1 text-[11px] font-black uppercase tracking-wider py-2.5 rounded-lg transition-all flex items-center justify-center gap-1.5',
+                rankingTab === 'tactical'
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground',
+              )}
+            >
+              <Crosshair className="w-3.5 h-3.5" />
+              Tático
+            </button>
+            <button
+              onClick={() => setRankingTab('goals')}
+              className={cn(
+                'flex-1 text-[11px] font-black uppercase tracking-wider py-2.5 rounded-lg transition-all flex items-center justify-center gap-1.5',
+                rankingTab === 'goals'
+                  ? 'bg-[hsl(var(--gold))] text-black shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground',
+              )}
+            >
+              <Flame className="w-3.5 h-3.5" />
+              Pinturas
+            </button>
+          </div>
+
+          <Card className="border-border/30 bg-secondary/10 backdrop-blur-md overflow-hidden shadow-lg">
+            <div className="divide-y divide-border/20">
+              {RANKINGS[rankingTab].map((item, i) => (
+                <div
+                  key={item.id}
+                  className="p-4 flex items-center justify-between hover:bg-secondary/20 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-6 text-center text-lg font-black text-muted-foreground/40">
+                      {i + 1}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold">{item.name}</span>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase">
+                          {item.team}
+                        </span>
+                        {item.desc && (
+                          <>
+                            <span className="w-1 h-1 rounded-full bg-border" />
+                            <span className="text-[10px] text-muted-foreground italic truncate max-w-[120px]">
+                              {item.desc}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span
+                      className={cn(
+                        'text-lg font-black',
+                        rankingTab === 'goals'
+                          ? 'text-[hsl(var(--gold))]'
+                          : 'text-primary',
+                      )}
+                    >
+                      {item.value}
+                    </span>
+                    <span className="text-[9px] uppercase font-bold text-muted-foreground">
+                      {item.subtitle}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+
         {/* Top Favorites Chart */}
-        <div className="px-4 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="px-4 mt-12 animate-in fade-in duration-700 delay-500">
           <Card className="border-border/30 bg-secondary/10 backdrop-blur-md overflow-hidden relative shadow-lg">
             <div className="absolute top-[-50px] right-[-50px] w-32 h-32 bg-primary/20 rounded-full blur-3xl pointer-events-none" />
             <CardHeader className="pb-0 pt-5">
@@ -1001,14 +1364,14 @@ export default function CopaStatsDashboard() {
         </div>
 
         {/* Elite Players Gallery */}
-        <div className="px-4 mt-8 animate-in fade-in duration-700 delay-150">
+        <div className="px-4 mt-8 animate-in fade-in duration-700 delay-500">
           <div className="flex items-end justify-between mb-4">
             <div>
               <h2 className="text-xl font-black uppercase tracking-wider text-foreground">
-                Principais Jogadores
+                Galeria Elite
               </h2>
               <p className="text-xs text-muted-foreground font-medium">
-                Galeria de atletas de elite
+                Destaques das seleções
               </p>
             </div>
           </div>
@@ -1045,11 +1408,11 @@ export default function CopaStatsDashboard() {
         </div>
 
         {/* Match Schedule Summary */}
-        <div className="px-4 mt-8 animate-in fade-in duration-700 delay-200">
+        <div className="px-4 mt-8 animate-in fade-in duration-700 delay-500">
           <div className="flex items-end justify-between mb-4">
             <div>
               <h2 className="text-xl font-black uppercase tracking-wider text-foreground">
-                Calendário da Copa
+                Calendário
               </h2>
               <p className="text-xs text-muted-foreground font-medium">
                 Próximos confrontos
@@ -1061,7 +1424,7 @@ export default function CopaStatsDashboard() {
               className="text-xs bg-secondary/20 border-border/30 hover:bg-secondary/40 h-8 rounded-full px-4"
               onClick={() => navigate('/album/stats/table')}
             >
-              Ver Tabela Completa
+              Ver Tabela
             </Button>
           </div>
 
@@ -1139,7 +1502,7 @@ export default function CopaStatsDashboard() {
         </div>
 
         {/* List Header & Controls */}
-        <div className="px-4 mt-8 mb-4 flex items-end justify-between animate-in fade-in duration-700 delay-300">
+        <div className="px-4 mt-8 mb-4 flex items-end justify-between animate-in fade-in duration-700 delay-500">
           <div>
             <h2 className="text-xl font-black uppercase tracking-wider text-foreground">
               Ranking de Força
