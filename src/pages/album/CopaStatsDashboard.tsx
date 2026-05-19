@@ -210,6 +210,22 @@ const COMPLETED_MATCHES = [
 
 const BOLAO_MATCHES = [
   {
+    id: 'b0',
+    date: '14 Jun 2026',
+    time: 'Encerrado',
+    team1: {
+      name: 'Alemanha',
+      flag: 'https://img.usecurling.com/p/100/100?q=germany%20flag',
+    },
+    team2: {
+      name: 'Brasil',
+      flag: 'https://img.usecurling.com/p/100/100?q=brazil%20flag',
+    },
+    stadium: 'Allianz Arena',
+    mockResult: { t1: 1, t2: 3, scorer: 'Vini Jr.' },
+    finalized: true,
+  },
+  {
     id: 'b1',
     date: '15 Jun 2026',
     time: '16:00',
@@ -1048,7 +1064,14 @@ export default function CopaStatsDashboard() {
         status: 'pending' | 'won' | 'lost'
       }
     >
-  >({})
+  >({
+    b0: {
+      t1Score: 1,
+      t2Score: 3,
+      scorer: 'Vini Jr.',
+      status: 'won',
+    },
+  })
   const [selectedMatch, setSelectedMatch] = useState<any>(null)
   const [showVoucher, setShowVoucher] = useState<any>(null)
 
@@ -1322,21 +1345,38 @@ export default function CopaStatsDashboard() {
             {BOLAO_MATCHES.map((match) => (
               <Card
                 key={match.id}
-                className="min-w-[280px] shrink-0 snap-center border-border/30 bg-secondary/10 backdrop-blur-md relative overflow-hidden"
+                className={cn(
+                  'min-w-[280px] shrink-0 snap-center border-border/30 bg-secondary/10 backdrop-blur-md relative overflow-hidden transition-all',
+                  predictions[match.id]?.status === 'won' &&
+                    'border-[hsl(var(--gold)/0.5)] shadow-[0_0_15px_hsl(var(--gold)/0.2)]',
+                )}
               >
                 {predictions[match.id]?.status === 'won' && (
-                  <div className="absolute top-0 right-0 bg-green-500 text-white text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-bl-lg z-10 shadow-sm">
-                    Na Mosca!
-                  </div>
+                  <>
+                    <div className="absolute top-0 right-0 bg-gradient-to-r from-[hsl(var(--gold))] to-amber-600 text-black text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-bl-lg z-20 shadow-md">
+                      Na Mosca!
+                    </div>
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--gold)/0.05),transparent_70%)] pointer-events-none" />
+                  </>
                 )}
                 <div className="p-4">
                   <div className="text-[10px] text-muted-foreground font-bold uppercase mb-3 flex justify-between">
-                    <span>{match.date}</span>
+                    <span className="flex items-center gap-1.5">
+                      {match.date}
+                      {match.finalized && (
+                        <Badge
+                          variant="outline"
+                          className="text-[8px] bg-red-500/10 text-red-500 border-red-500/20 px-1 py-0 h-4"
+                        >
+                          FINALIZADO
+                        </Badge>
+                      )}
+                    </span>
                     <span>{match.stadium}</span>
                   </div>
 
-                  <div className="flex justify-between items-center mb-4">
-                    <div className="flex flex-col items-center gap-1.5 w-[35%]">
+                  <div className="flex justify-between items-center mb-4 relative">
+                    <div className="flex flex-col items-center gap-1.5 w-[35%] z-10">
                       <img
                         src={match.team1.flag}
                         className="w-10 h-10 rounded-full border-2 border-border/50 object-cover shadow-sm"
@@ -1347,12 +1387,21 @@ export default function CopaStatsDashboard() {
                       </span>
                     </div>
 
-                    <div className="flex flex-col items-center justify-center w-[30%]">
+                    <div className="flex flex-col items-center justify-center w-[30%] z-10">
                       {predictions[match.id] ? (
-                        <span className="text-2xl font-black text-foreground tabular-nums">
-                          {predictions[match.id].t1Score} -{' '}
-                          {predictions[match.id].t2Score}
-                        </span>
+                        <div className="flex flex-col items-center">
+                          <span className="text-2xl font-black text-foreground tabular-nums leading-none">
+                            {predictions[match.id].t1Score} -{' '}
+                            {predictions[match.id].t2Score}
+                          </span>
+                          {match.finalized && (
+                            <span className="text-[10px] text-muted-foreground font-bold uppercase mt-1 text-center">
+                              Placar Real:
+                              <br />
+                              {match.mockResult.t1} - {match.mockResult.t2}
+                            </span>
+                          )}
+                        </div>
                       ) : (
                         <span className="text-xl font-black text-muted-foreground/50">
                           VS
@@ -1383,22 +1432,22 @@ export default function CopaStatsDashboard() {
                             {predictions[match.id].scorer}
                           </span>
                         </div>
-                        <Badge
-                          variant={
-                            predictions[match.id].status === 'won'
-                              ? 'default'
-                              : 'secondary'
-                          }
-                          className={cn(
-                            'w-full justify-center py-1',
-                            predictions[match.id].status === 'won' &&
-                              'bg-green-500 hover:bg-green-600 text-white shadow-sm',
-                          )}
-                        >
-                          {predictions[match.id].status === 'won'
-                            ? 'Prêmio Desbloqueado'
-                            : 'Aguardando Resultado'}
-                        </Badge>
+                        {predictions[match.id].status === 'won' ? (
+                          <Button
+                            onClick={() => setShowVoucher(match)}
+                            size="sm"
+                            className="w-full text-xs font-black uppercase tracking-widest bg-[hsl(var(--gold))] text-black hover:bg-[hsl(var(--gold)/0.8)] shadow-[0_0_10px_hsl(var(--gold)/0.4)] animate-pulse"
+                          >
+                            Resgatar Prêmio
+                          </Button>
+                        ) : (
+                          <Badge
+                            variant="secondary"
+                            className="w-full justify-center py-1"
+                          >
+                            Aguardando Resultado
+                          </Badge>
+                        )}
                       </div>
                     ) : (
                       <Button
@@ -1827,54 +1876,130 @@ export default function CopaStatsDashboard() {
         open={!!showVoucher}
         onOpenChange={(open) => !open && setShowVoucher(null)}
       >
-        <DialogContent className="sm:max-w-md bg-gradient-to-br from-indigo-950 to-purple-950 border-[hsl(var(--gold))] text-white">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-black text-[hsl(var(--gold))] text-center uppercase tracking-widest flex items-center justify-center gap-2 drop-shadow-md">
-              <Trophy className="w-6 h-6" /> Na Mosca!
+        <DialogContent className="sm:max-w-md bg-zinc-950 border-[hsl(var(--gold))] text-white overflow-hidden">
+          {/* Sensational Background Effects */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--gold)/0.2),transparent_70%)] pointer-events-none" />
+          <div className="absolute -left-20 -top-20 w-40 h-40 bg-[hsl(var(--gold)/0.3)] blur-[80px] rounded-full" />
+          <div className="absolute -right-20 -bottom-20 w-40 h-40 bg-[hsl(var(--gold)/0.3)] blur-[80px] rounded-full" />
+          <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/600/600?q=glitter%20particles&color=yellow')] opacity-10 mix-blend-color-dodge pointer-events-none" />
+
+          <DialogHeader className="relative z-10 pt-4">
+            <DialogTitle className="text-3xl font-black text-[hsl(var(--gold))] text-center uppercase tracking-widest flex items-center justify-center gap-2 drop-shadow-[0_0_10px_hsl(var(--gold)/0.5)]">
+              <Trophy className="w-8 h-8" /> NA MOSCA!
             </DialogTitle>
-          </DialogHeader>
-          <div className="flex flex-col items-center gap-4 py-4">
-            <div className="w-32 h-32 rounded-full bg-black/40 border-4 border-[hsl(var(--gold))] p-4 flex items-center justify-center relative shadow-[0_0_40px_hsl(var(--gold)/0.4)] animate-in zoom-in duration-500">
-              <Gift className="w-16 h-16 text-[hsl(var(--gold))] animate-bounce" />
-              <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-1.5 shadow-lg">
-                <CheckCircle className="w-6 h-6 text-white" />
-              </div>
-            </div>
-            <div className="text-center space-y-2 w-full px-4">
-              <h3 className="text-lg font-bold text-white">
-                Parabéns! Você acertou em cheio!
-              </h3>
-              <div className="bg-black/40 p-5 rounded-xl border border-white/20 mt-4 backdrop-blur-md relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[hsl(var(--gold)/0.1)] blur-2xl rounded-full pointer-events-none" />
-                <div className="flex items-center gap-2 mb-3 justify-center text-[hsl(var(--gold))] relative z-10">
-                  <Ticket className="w-5 h-5" />
-                  <span className="font-black uppercase tracking-wider text-sm">
-                    Voucher Desbloqueado
-                  </span>
-                </div>
-                <p className="text-[13px] font-bold text-white/90 uppercase tracking-wide relative z-10">
-                  Vale-Presente: Camiseta Oficial da{' '}
-                  {showVoucher?.team1?.name || 'Seleção'}
-                </p>
-                <div className="flex items-center justify-center gap-1.5 mt-2 text-green-400 relative z-10">
-                  <CheckCircle className="w-3.5 h-3.5" />
-                  <p className="text-[11px] font-bold uppercase tracking-wider">
-                    Inclui: Frete Gratuito para todo o Brasil
-                  </p>
-                </div>
-              </div>
-            </div>
-            <p className="text-[10px] text-center text-white/50 px-8 mt-2 leading-relaxed font-medium">
-              * Para resgatar, acesse a loja GoPlay e insira o código gerado em
-              seu perfil. Em ambiente real, o prêmio está sujeito à
-              disponibilidade de estoque.
+            <p className="text-center text-sm font-bold text-white/80 uppercase tracking-widest mt-2">
+              Palpite Perfeito Concluído
             </p>
+          </DialogHeader>
+
+          <div className="flex flex-col items-center gap-6 py-2 relative z-10">
+            {/* The Sensational Voucher */}
+            <div className="w-full relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-[hsl(var(--gold))] via-amber-200 to-[hsl(var(--gold))] rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse" />
+              <div className="relative bg-zinc-900 border-2 border-[hsl(var(--gold))] rounded-2xl p-6 overflow-hidden flex flex-col items-center gap-4 shadow-2xl">
+                {/* Team Elements */}
+                <div className="absolute -right-8 -top-8 opacity-20 rotate-12 pointer-events-none">
+                  <img
+                    src={showVoucher?.team1?.flag}
+                    className="w-40 h-40 object-cover blur-[2px]"
+                    alt="Flag Background"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between w-full border-b border-white/10 pb-4 relative z-10">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={showVoucher?.team1?.flag}
+                      className="w-10 h-10 rounded-full border-2 border-[hsl(var(--gold))] shadow-md object-cover"
+                      alt={showVoucher?.team1?.name}
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-[10px] uppercase tracking-widest text-[hsl(var(--gold))] font-bold">
+                        Recompensa Exclusiva
+                      </span>
+                      <span className="text-sm font-black text-white">
+                        {showVoucher?.team1?.name}
+                      </span>
+                    </div>
+                  </div>
+                  <Ticket className="w-8 h-8 text-[hsl(var(--gold))] opacity-80" />
+                </div>
+
+                <div className="text-center space-y-1 relative z-10 w-full py-2">
+                  <h3 className="text-lg md:text-xl font-black text-white uppercase tracking-wider leading-tight drop-shadow-md">
+                    Você acaba de ganhar uma camiseta oficial da{' '}
+                    {showVoucher?.team1?.name}!
+                  </h3>
+                </div>
+
+                <div className="flex flex-col w-full gap-3 relative z-10">
+                  <div className="flex items-center justify-between bg-black/50 rounded-lg p-3 border border-white/5">
+                    <div className="flex flex-col">
+                      <span className="text-[10px] text-white/50 uppercase font-bold tracking-widest">
+                        Código do Voucher
+                      </span>
+                      <span className="font-mono text-lg font-bold text-[hsl(var(--gold))] tracking-wider">
+                        GOPLAY-WIN-
+                        {showVoucher?.team1?.name
+                          ?.substring(0, 3)
+                          .toUpperCase() || 'BR'}
+                        -26
+                      </span>
+                    </div>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-8 w-8 text-white/50 hover:text-white"
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          `GOPLAY-WIN-${showVoucher?.team1?.name?.substring(0, 3).toUpperCase() || 'BR'}-26`,
+                        )
+                      }}
+                    >
+                      <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 15 15"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-4 h-4"
+                      >
+                        <path
+                          d="M5 2V1H10V2H5ZM4.75 0C4.33579 0 4 0.335786 4 0.75V1H3.5C2.67157 1 2 1.67157 2 2.5V12.5C2 13.3284 2.67157 14 3.5 14H11.5C12.3284 14 13 13.3284 13 12.5V2.5C13 1.67157 12.3284 1 11.5 1H11V0.75C11 0.335786 10.6642 0 10.25 0H4.75ZM11 2V2.25C11 2.66421 10.6642 3 10.25 3H4.75C4.33579 3 4 2.66421 4 2.25V2H3.5C3.22386 2 3 2.22386 3 2.5V12.5C3 12.7761 3.22386 13 3.5 13H11.5C11.7761 13 12 12.7761 12 12.5V2.5C12 2.22386 11.7761 2 11.5 2H11Z"
+                          fill="currentColor"
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                        ></path>
+                      </svg>
+                    </Button>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-2 bg-green-500/20 text-green-400 p-2.5 rounded-lg border border-green-500/30">
+                    <CheckCircle className="w-4 h-4" />
+                    <span className="text-xs font-black uppercase tracking-widest">
+                      Frete Gratuito Incluído
+                    </span>
+                  </div>
+                </div>
+
+                {/* Perforated edge effect */}
+                <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-zinc-950 rounded-full border-r-2 border-[hsl(var(--gold))] z-20" />
+                <div className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-zinc-950 rounded-full border-l-2 border-[hsl(var(--gold))] z-20" />
+              </div>
+            </div>
+
+            <p className="text-[10px] text-center text-white/50 px-4 leading-relaxed font-medium">
+              * Para resgatar, acesse a aba Recompensas em seu perfil e insira o
+              código gerado. (Aviso: Recompensa em modo simulação. Status
+              reinicia ao recarregar a página.)
+            </p>
+
             <div className="px-4 w-full mt-2">
               <Button
-                className="w-full bg-[hsl(var(--gold))] text-black font-black uppercase tracking-widest hover:bg-[hsl(var(--gold)/0.8)] shadow-[0_0_15px_hsl(var(--gold)/0.3)] h-12"
+                className="w-full bg-[hsl(var(--gold))] text-black font-black uppercase tracking-widest hover:bg-[hsl(var(--gold)/0.8)] shadow-[0_0_20px_hsl(var(--gold)/0.4)] h-14 text-sm"
                 onClick={() => setShowVoucher(null)}
               >
-                Resgatar Prêmio
+                Resgatar Prêmio Agora
               </Button>
             </div>
           </div>
