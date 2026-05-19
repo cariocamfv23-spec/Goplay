@@ -2,6 +2,7 @@ import { mockProducts, mockFinancialSummary } from '@/lib/data'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
 import {
   Search,
   ShoppingCart,
@@ -11,16 +12,34 @@ import {
   Wallet,
   ImageOff,
   X,
+  CheckCircle2,
 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
+import { useBolaoStore } from '@/stores/useBolaoStore'
 
 export default function Marketplace() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const { claimPrize } = useBolaoStore()
+
+  const isRedeeming = searchParams.get('redeem') === 'true'
+  const redeemTeam = searchParams.get('team')
+
   const [search, setSearch] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('Todos')
   const [selectedModality, setSelectedModality] = useState('Todos')
+
+  useEffect(() => {
+    if (isRedeeming) {
+      setSelectedCategory('Vestuário')
+      setSelectedModality('Futebol')
+      if (redeemTeam) {
+        setSearch('Camisa')
+      }
+    }
+  }, [isRedeeming, redeemTeam])
 
   const categories = [
     'Todos',
@@ -53,6 +72,36 @@ export default function Marketplace() {
     return matchesSearch && matchesCategory && matchesModality
   })
 
+  // Create a mock product for the prize if redeeming
+  const mockPrizeProduct =
+    isRedeeming && redeemTeam
+      ? {
+          id: 'prize-1',
+          name: `Camiseta Oficial - ${redeemTeam}`,
+          category: 'Vestuário',
+          modality: 'Futebol',
+          price: 0,
+          pointsPrice: 0,
+          rating: 5.0,
+          isPremium: true,
+          image: `https://img.usecurling.com/p/400/400?q=soccer%20jersey%20${encodeURIComponent(redeemTeam)}`,
+          availability: 'in_stock',
+        }
+      : null
+
+  const finalProducts = mockPrizeProduct
+    ? [
+        mockPrizeProduct,
+        ...filteredProducts.filter((p) => !p.name.includes(redeemTeam!)),
+      ]
+    : filteredProducts
+
+  const handleClaim = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    claimPrize()
+    navigate('/marketplace/cart')
+  }
+
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in flex flex-col">
       {/* Header with Balance */}
@@ -67,7 +116,9 @@ export default function Marketplace() {
               className="relative"
             >
               <ShoppingCart className="h-6 w-6" />
-              {/* Optional: Add badge for cart items count here */}
+              {isRedeeming && (
+                <span className="absolute top-1 right-1 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-background" />
+              )}
             </Button>
           </div>
 
@@ -141,10 +192,34 @@ export default function Marketplace() {
         </div>
       </div>
 
+      {isRedeeming && (
+        <div className="mx-4 mt-4 p-4 rounded-xl bg-gradient-to-r from-[hsl(var(--gold))] to-amber-600 text-black flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg animate-in fade-in slide-in-from-top-4">
+          <div className="flex items-center gap-3">
+            <div className="bg-black/20 p-2.5 rounded-full shrink-0">
+              <Trophy className="h-6 w-6 text-black" />
+            </div>
+            <div>
+              <h3 className="font-black uppercase tracking-widest text-sm flex items-center gap-1.5">
+                Prêmio do Bolão Ativado
+                <CheckCircle2 className="h-4 w-4 text-green-900" />
+              </h3>
+              <p className="text-xs font-bold opacity-90 leading-snug mt-0.5">
+                Você ganhou uma camiseta oficial da seleção{' '}
+                {redeemTeam ? `(${redeemTeam})` : ''} + Frete Gratuito
+              </p>
+            </div>
+          </div>
+          <Badge className="bg-black text-[hsl(var(--gold))] hover:bg-black/90 uppercase font-black px-3 py-1 shadow-sm whitespace-nowrap">
+            Voucher Ativo
+          </Badge>
+        </div>
+      )}
+
       {/* Banners - Only show on 'All' view */}
       {selectedCategory === 'Todos' &&
         selectedModality === 'Todos' &&
-        !search && (
+        !search &&
+        !isRedeeming && (
           <div className="p-4 overflow-x-auto whitespace-nowrap scrollbar-hide -mx-4 px-8 pb-2">
             <div className="inline-block w-[280px] h-[140px] bg-gradient-to-r from-primary to-purple-600 rounded-2xl mr-4 p-4 relative overflow-hidden align-top shadow-md">
               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay"></div>
@@ -179,14 +254,23 @@ export default function Marketplace() {
 
       {/* Product Grid */}
       <div className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        {filteredProducts.map((product) => (
+        {finalProducts.map((product) => (
           <Card
             key={product.id}
             className={cn(
               'border-none shadow-sm overflow-hidden group cursor-pointer transition-all hover:shadow-md active:scale-[0.98]',
-              product.isPremium ? 'ring-1 ring-gold/50' : '',
+              product.isPremium ? 'ring-1 ring-[hsl(var(--gold))/0.5]' : '',
+              product.id === 'prize-1'
+                ? 'ring-2 ring-[hsl(var(--gold))] shadow-[0_0_15px_hsl(var(--gold)/0.3)] scale-[1.02] transform origin-bottom'
+                : '',
             )}
-            onClick={() => navigate(`/marketplace/product/${product.id}`)}
+            onClick={() => {
+              if (product.id === 'prize-1') {
+                handleClaim({ stopPropagation: () => {} } as any)
+              } else {
+                navigate(`/marketplace/product/${product.id}`)
+              }
+            }}
           >
             <div className="aspect-square bg-secondary/30 relative overflow-hidden">
               <img
@@ -203,19 +287,45 @@ export default function Marketplace() {
                 <ImageOff className="h-8 w-8 text-muted-foreground/30" />
               </div>
 
-              <div className="absolute top-2 right-2 bg-background/90 backdrop-blur rounded-full px-1.5 py-0.5 flex items-center gap-1 z-10 shadow-sm">
-                <Star className="h-3 w-3 fill-gold text-gold" />
+              {product.id === 'prize-1' && (
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
+              )}
+
+              <div className="absolute top-2 right-2 bg-background/90 backdrop-blur rounded-full px-1.5 py-0.5 flex items-center gap-1 z-20 shadow-sm">
+                <Star className="h-3 w-3 fill-[hsl(var(--gold))] text-[hsl(var(--gold))]" />
                 <span className="text-[10px] font-bold">{product.rating}</span>
               </div>
-              {product.isPremium && (
-                <div className="absolute top-2 left-2 bg-gold text-black rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider z-10 shadow-sm">
-                  Premium
+
+              {product.id === 'prize-1' ? (
+                <div className="absolute top-2 left-2 bg-[hsl(var(--gold))] text-black rounded px-1.5 py-0.5 text-[10px] font-black uppercase tracking-widest z-20 shadow-sm flex items-center gap-1">
+                  <Trophy className="w-3 h-3" /> Prêmio
+                </div>
+              ) : (
+                product.isPremium && (
+                  <div className="absolute top-2 left-2 bg-[hsl(var(--gold))] text-black rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider z-20 shadow-sm">
+                    Premium
+                  </div>
+                )
+              )}
+
+              {product.id === 'prize-1' && (
+                <div className="absolute bottom-2 left-0 right-0 flex justify-center z-20">
+                  <Badge className="bg-green-500 text-white border-none text-[10px] font-black uppercase tracking-widest px-2 py-0.5 shadow-md">
+                    Frete Grátis
+                  </Badge>
                 </div>
               )}
             </div>
             <CardContent className="p-3">
               <div className="flex justify-between items-center mb-1">
-                <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">
+                <span
+                  className={cn(
+                    'text-[10px] uppercase tracking-wider font-medium',
+                    product.id === 'prize-1'
+                      ? 'text-[hsl(var(--gold))]'
+                      : 'text-muted-foreground',
+                  )}
+                >
                   {product.category}
                 </span>
                 {product.availability === 'low_stock' && (
@@ -224,29 +334,49 @@ export default function Marketplace() {
                   </span>
                 )}
               </div>
-              <h3 className="font-bold text-sm mb-2 line-clamp-1 leading-tight">
+              <h3 className="font-bold text-sm mb-2 line-clamp-2 leading-tight min-h-[40px]">
                 {product.name}
               </h3>
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-primary text-sm">
-                    R$ {(product.price ?? 0).toFixed(2)}
-                  </span>
-                  <Button
-                    size="icon"
-                    className="h-7 w-7 rounded-full bg-primary/10 hover:bg-primary text-primary hover:text-white transition-colors shadow-none"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      navigate(`/marketplace/product/${product.id}`)
-                    }}
+                  <span
+                    className={cn(
+                      'font-black text-sm',
+                      product.id === 'prize-1'
+                        ? 'text-green-500'
+                        : 'text-primary',
+                    )}
                   >
-                    <ShoppingCart className="h-3.5 w-3.5" />
-                  </Button>
+                    {product.price === 0
+                      ? 'GRÁTIS'
+                      : `R$ ${(product.price ?? 0).toFixed(2)}`}
+                  </span>
+
+                  {product.id === 'prize-1' ? (
+                    <Button
+                      size="sm"
+                      className="h-7 text-[10px] font-black uppercase tracking-widest bg-[hsl(var(--gold))] text-black hover:bg-[hsl(var(--gold))/80] shadow-sm"
+                      onClick={handleClaim}
+                    >
+                      Resgatar
+                    </Button>
+                  ) : (
+                    <Button
+                      size="icon"
+                      className="h-7 w-7 rounded-full bg-primary/10 hover:bg-primary text-primary hover:text-white transition-colors shadow-none shrink-0"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        navigate(`/marketplace/product/${product.id}`)
+                      }}
+                    >
+                      <ShoppingCart className="h-3.5 w-3.5" />
+                    </Button>
+                  )}
                 </div>
                 {product.pointsPrice > 0 && (
                   <div className="text-[10px] text-muted-foreground flex items-center gap-1">
                     ou{' '}
-                    <span className="font-bold text-gold">
+                    <span className="font-bold text-[hsl(var(--gold))]">
                       {product.pointsPrice} pts
                     </span>
                   </div>
@@ -255,7 +385,7 @@ export default function Marketplace() {
             </CardContent>
           </Card>
         ))}
-        {filteredProducts.length === 0 && (
+        {finalProducts.length === 0 && (
           <div className="col-span-2 md:col-span-3 lg:col-span-4 flex flex-col items-center justify-center py-16 text-muted-foreground text-center">
             <div className="h-16 w-16 bg-secondary rounded-full flex items-center justify-center mb-4">
               <Search className="h-8 w-8 text-muted-foreground/50" />
@@ -270,6 +400,9 @@ export default function Marketplace() {
                 setSelectedCategory('Todos')
                 setSelectedModality('Todos')
                 setSearch('')
+                if (isRedeeming) {
+                  navigate('/marketplace')
+                }
               }}
             >
               Limpar filtros

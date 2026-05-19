@@ -34,6 +34,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
 import { useFlashbackStore } from '@/stores/useFlashbackStore'
+import { useBolaoStore } from '@/stores/useBolaoStore'
 import { cn } from '@/lib/utils'
 
 export function NotificationMenu() {
@@ -41,6 +42,7 @@ export function NotificationMenu() {
   const { notifications, unreadCount, markAsRead, markAllAsRead } =
     useNotificationStore()
   const { openFlashback } = useFlashbackStore()
+  const { hasWon, wonTeam } = useBolaoStore()
   const [open, setOpen] = useState(false)
 
   const hasUnreadMemory = notifications.some(
@@ -155,6 +157,32 @@ export function NotificationMenu() {
             </Button>
           )}
         </div>
+
+        {hasWon && (
+          <div
+            className="p-3 bg-gradient-to-r from-[hsl(var(--gold))] to-amber-600 text-black m-3 rounded-xl flex items-center justify-between cursor-pointer shadow-lg animate-pulse"
+            onClick={() => {
+              setOpen(false)
+              navigate(
+                `/marketplace?redeem=true&team=${encodeURIComponent(wonTeam || '')}`,
+              )
+            }}
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="bg-black/20 p-1.5 rounded-full">
+                <Trophy className="h-5 w-5 text-black" />
+              </div>
+              <div>
+                <p className="text-xs font-black uppercase tracking-wider">
+                  Resgatar Prêmio
+                </p>
+                <p className="text-[10px] font-bold opacity-80 leading-tight">
+                  Camiseta oficial + Frete Grátis
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         <ScrollArea className="h-[300px]">
           {notifications.length > 0 ? (

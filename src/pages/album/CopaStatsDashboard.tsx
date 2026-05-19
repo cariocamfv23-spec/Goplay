@@ -68,6 +68,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { useToast } from '@/components/ui/use-toast'
+import useNotificationStore from '@/stores/useNotificationStore'
+import { useBolaoStore } from '@/stores/useBolaoStore'
 
 type PlayerStat = {
   id: string
@@ -1136,6 +1138,14 @@ export default function CopaStatsDashboard() {
 
     if (isPerfect) {
       setShowVoucher(selectedMatch)
+      useBolaoStore.getState().setWon(selectedMatch.team1.name)
+      useNotificationStore.getState().addNotification({
+        title: '🏆 Bolão GoPlay - Na Mosca!',
+        message: `Você acertou o placar exato de ${selectedMatch.team1.name} x ${selectedMatch.team2.name}! Resgate agora sua camiseta oficial com frete grátis.`,
+        type: 'system',
+        link: `/marketplace?redeem=true&team=${encodeURIComponent(selectedMatch.team1.name)}`,
+        priority: 'high',
+      })
     } else {
       toast({
         title: 'Palpite Registrado!',
@@ -1997,7 +2007,12 @@ export default function CopaStatsDashboard() {
             <div className="px-4 w-full mt-2">
               <Button
                 className="w-full bg-[hsl(var(--gold))] text-black font-black uppercase tracking-widest hover:bg-[hsl(var(--gold)/0.8)] shadow-[0_0_20px_hsl(var(--gold)/0.4)] h-14 text-sm"
-                onClick={() => setShowVoucher(null)}
+                onClick={() => {
+                  setShowVoucher(null)
+                  navigate(
+                    `/marketplace?redeem=true&team=${encodeURIComponent(showVoucher?.team1?.name || '')}`,
+                  )
+                }}
               >
                 Resgatar Prêmio Agora
               </Button>
