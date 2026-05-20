@@ -30,10 +30,10 @@ export function BottomNav() {
         <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <Link
             to="/album/stats"
-            className="flex items-center gap-2 bg-gradient-to-r from-primary to-[hsl(var(--gold))] text-primary-foreground px-6 py-3 rounded-full font-bold shadow-lg shadow-primary/30 hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
+            className="flex items-center gap-2 bg-gradient-to-r from-[hsl(var(--gold))] to-amber-600 text-black px-6 py-3 rounded-full font-bold shadow-lg shadow-[hsl(var(--gold)/0.3)] hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
           >
-            <BarChart3 className="w-5 h-5" />
-            Power Index Copa 26
+            <Trophy className="w-5 h-5" />
+            Hub Copa 26
           </Link>
         </div>
       )}

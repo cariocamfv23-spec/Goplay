@@ -27,6 +27,7 @@ const Retrospective = lazy(() => import('./pages/retrospective/Retrospective'))
 const MemoryViewer = lazy(() => import('./pages/memory/MemoryViewer'))
 
 // Sticker Album
+const CopaHub = lazy(() => import('./pages/album/CopaHub'))
 const StickerAlbum = lazy(() => import('./pages/album/StickerAlbum'))
 const CopaStatsDashboard = lazy(
   () => import('./pages/album/CopaStatsDashboard'),
@@ -271,7 +272,11 @@ const App = () => {
                     <Route element={<ProtectedRoute />}>
                       <Route path="/home" element={<Home />} />
                       <Route path="/feed" element={<Feed />} />
-                      <Route path="/album" element={<StickerAlbum />} />
+                      <Route path="/album" element={<CopaHub />} />
+                      <Route
+                        path="/album/stickers"
+                        element={<StickerAlbum />}
+                      />
                       <Route
                         path="/album/stats"
                         element={<CopaStatsDashboard />}

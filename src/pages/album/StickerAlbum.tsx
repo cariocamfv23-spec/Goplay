@@ -5,12 +5,14 @@ import { Card } from '@/components/ui/card'
 import { Trophy, Share2, PackageOpen, Info, Lock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { PackOpener } from '@/components/album/PackOpener'
 import { ShareDialog } from '@/components/ShareDialog'
 import { mockCurrentUser } from '@/lib/data'
 import { useToast } from '@/hooks/use-toast'
 
 export default function StickerAlbum() {
+  const navigate = useNavigate()
   const { collected, unopenedPacks, addPack } = useAlbumStore()
   const [isOpenerOpen, setIsOpenerOpen] = useState(false)
   const [isShareOpen, setIsShareOpen] = useState(false)
@@ -52,6 +54,31 @@ export default function StickerAlbum() {
       {/* Header World Cup Themed */}
       <div className="bg-gradient-to-br from-green-700 via-emerald-600 to-green-900 text-white pb-8 rounded-b-[2.5rem] relative overflow-hidden shadow-xl">
         <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/1000/1000?q=soccer%20pattern&color=green')] bg-cover opacity-10 mix-blend-overlay" />
+
+        <div className="absolute top-safe pt-4 left-4 z-20">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate('/album')}
+            className="text-white hover:bg-white/20 rounded-full"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-5 h-5"
+            >
+              <path d="m12 19-7-7 7-7" />
+              <path d="M19 12H5" />
+            </svg>
+          </Button>
+        </div>
 
         <div className="relative z-10 pt-10 pb-4 px-6 text-center space-y-4">
           <div className="mx-auto w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 shadow-inner">
