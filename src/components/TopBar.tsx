@@ -20,6 +20,7 @@ import {
   Map,
   Lock,
   Eye,
+  Shield,
 } from 'lucide-react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -420,6 +421,10 @@ export function TopBar() {
             <DropdownMenuItem onClick={() => navigate('/settings')}>
               <Settings className="mr-2 h-4 w-4" />
               <span>Configurações</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/admin')}>
+              <Shield className="mr-2 h-4 w-4 text-primary" />
+              <span className="font-bold text-foreground">Admin</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>

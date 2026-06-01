@@ -202,6 +202,9 @@ const TimeCapsuleDashboard = lazy(
 const CreateCapsule = lazy(() => import('./pages/timecapsule/CreateCapsule'))
 const CapsuleDetail = lazy(() => import('./pages/timecapsule/CapsuleDetail'))
 
+// Admin Dashboard
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
+
 const App = () => {
   const { color } = useThemeStore()
 
@@ -490,6 +493,8 @@ const App = () => {
                         element={<PrivacySettings />}
                       />
                       <Route path="/settings/pwa" element={<PWASettings />} />
+
+                      <Route path="/admin" element={<AdminDashboard />} />
 
                       <Route path="/ai/coach" element={<AiCoach />} />
                       <Route
