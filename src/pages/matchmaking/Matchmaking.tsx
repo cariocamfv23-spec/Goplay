@@ -18,6 +18,7 @@ import {
   CheckCircle2,
   Radio,
 } from 'lucide-react'
+import { TransportMenu } from '@/components/TransportMenu'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -385,7 +386,7 @@ function FieldCard({
             {field.pricePerHour}
           </span>
         </div>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-1.5 mb-3">
           {field.amenities.slice(0, 4).map((a) => (
             <Badge
               key={a}
@@ -396,6 +397,15 @@ function FieldCard({
             </Badge>
           ))}
         </div>
+        <TransportMenu
+          location={{
+            address: field.address,
+            lat: field.lat,
+            lng: field.lng,
+            name: field.name,
+          }}
+          label="Como Chegar"
+        />
       </CardContent>
     </Card>
   )
@@ -448,12 +458,21 @@ function ScheduledMatchCard({ match }: { match: (typeof MOCK_SCHEDULED)[0] }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground bg-background/30 rounded-lg p-2">
+        <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground bg-background/30 rounded-lg p-2 mb-3">
           <MapPin className="w-3 h-3 text-primary shrink-0" />
           <span className="truncate font-medium">
             {match.field.name} — {match.field.address}
           </span>
         </div>
+        <TransportMenu
+          location={{
+            address: match.field.address,
+            lat: match.field.lat,
+            lng: match.field.lng,
+            name: match.field.name,
+          }}
+          label="Ir para o Local"
+        />
       </CardContent>
     </Card>
   )

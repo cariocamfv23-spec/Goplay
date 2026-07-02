@@ -102,6 +102,15 @@ export default function Home() {
       bg: 'bg-gradient-to-tr from-primary/20 to-gold/20 border border-primary/20',
       isNew: true,
     },
+    {
+      label: 'Marcar Jogo',
+      icon: Trophy,
+      path: '/matchmaking',
+      color: 'text-primary',
+      bg: 'bg-gradient-to-tr from-primary/10 to-purple-500/10 border border-primary/10',
+      isNew: true,
+      badgeText: 'NOVO',
+    },
   ]
 
   // Grouped Features Configuration
@@ -300,7 +309,7 @@ export default function Home() {
             <StoriesRail />
 
             {/* Priority Shortcuts */}
-            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-6 mt-2">
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-6 mt-2">
               {shortcuts.map((shortcut, idx) => (
                 <button
                   key={idx}
@@ -319,10 +328,15 @@ export default function Home() {
                     )}
                   >
                     <shortcut.icon className="w-5 h-5" />
-                    {shortcut.isNew && (
+                    {shortcut.isNew && !shortcut.badgeText && (
                       <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary border-2 border-background"></span>
+                      </span>
+                    )}
+                    {shortcut.badgeText && (
+                      <span className="absolute -top-2 -right-2 bg-gradient-to-r from-primary to-purple-600 text-white text-[8px] font-black uppercase px-1.5 py-0.5 rounded-full shadow-md border border-background whitespace-nowrap">
+                        {shortcut.badgeText}
                       </span>
                     )}
                   </div>

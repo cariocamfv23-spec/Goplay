@@ -22,6 +22,7 @@ import { CheckInModal } from '@/components/CheckInModal'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 import { LightningChallengeOverlay } from '@/components/LightningChallengeOverlay'
+import { TransportMenu } from '@/components/TransportMenu'
 
 export default function MatchDetails() {
   const { id } = useParams()
@@ -177,13 +178,21 @@ export default function MatchDetails() {
               <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                 <MapPin className="h-5 w-5" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-xs text-muted-foreground">Local</p>
                 <p className="text-sm font-bold truncate">{match.location}</p>
               </div>
             </div>
           </CardContent>
         </Card>
+
+        <TransportMenu
+          location={{
+            address: match.location,
+            name: match.teamName,
+          }}
+          label="Como Chegar"
+        />
 
         {/* Check-in Action */}
         <div className="bg-gradient-to-r from-zinc-900 to-zinc-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">

@@ -35,6 +35,8 @@ export interface MatchField {
   startTime: string
   pricePerHour: string
   amenities: string[]
+  lat: number
+  lng: number
 }
 
 export interface MatchHistoryEntry {
@@ -243,6 +245,8 @@ export const MOCK_FIELDS: MatchField[] = [
     startTime: '20:00',
     pricePerHour: 'R$ 220/h',
     amenities: ['Vestiário', 'Estacionamento', 'Iluminação', 'Bar'],
+    lat: -23.5273,
+    lng: -46.6961,
   },
   {
     id: 'f2',
@@ -256,6 +260,8 @@ export const MOCK_FIELDS: MatchField[] = [
     startTime: '19:00',
     pricePerHour: 'R$ 120/h',
     amenities: ['Iluminação', 'Bebedouro'],
+    lat: -23.5505,
+    lng: -46.6333,
   },
   {
     id: 'f3',
@@ -269,6 +275,8 @@ export const MOCK_FIELDS: MatchField[] = [
     startTime: '21:00',
     pricePerHour: 'R$ 200/h',
     amenities: ['Churrasqueira', 'Estacionamento', 'Bar', 'TV'],
+    lat: -23.6105,
+    lng: -46.7056,
   },
   {
     id: 'f4',
@@ -282,6 +290,8 @@ export const MOCK_FIELDS: MatchField[] = [
     startTime: '18:00',
     pricePerHour: 'R$ 150/h',
     amenities: ['Vestiário', 'Wi-Fi', 'Arquibancada', 'Placar Eletrônico'],
+    lat: -23.5475,
+    lng: -46.6361,
   },
   {
     id: 'f5',
@@ -295,6 +305,8 @@ export const MOCK_FIELDS: MatchField[] = [
     startTime: '19:30',
     pricePerHour: 'R$ 90/h',
     amenities: ['Iluminação', 'Área de Lazer'],
+    lat: -23.5675,
+    lng: -46.6978,
   },
   {
     id: 'f6',
@@ -308,6 +320,8 @@ export const MOCK_FIELDS: MatchField[] = [
     startTime: '20:30',
     pricePerHour: 'R$ 250/h',
     amenities: ['Vestiário', 'Wi-Fi', 'Bar', 'Lounge', 'Estacionamento'],
+    lat: -23.6075,
+    lng: -46.6611,
   },
 ]
 
