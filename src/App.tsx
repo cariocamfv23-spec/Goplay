@@ -26,6 +26,9 @@ const ProfileSelection = lazy(() => import('./pages/auth/ProfileSelection'))
 const Retrospective = lazy(() => import('./pages/retrospective/Retrospective'))
 const MemoryViewer = lazy(() => import('./pages/memory/MemoryViewer'))
 
+// Matchmaking
+const Matchmaking = lazy(() => import('./pages/matchmaking/Matchmaking'))
+
 // Sticker Album
 const CopaHub = lazy(() => import('./pages/album/CopaHub'))
 const StickerAlbum = lazy(() => import('./pages/album/StickerAlbum'))
@@ -291,6 +294,7 @@ const App = () => {
                       <Route path="/move" element={<Move />} />
                       <Route path="/move/kids-map" element={<KidsZoneMap />} />
                       <Route path="/explore" element={<Explore />} />
+                      <Route path="/matchmaking" element={<Matchmaking />} />
                       <Route path="/check-in" element={<CheckIn />} />
                       <Route path="/app-map" element={<AppMap />} />
 

@@ -26,7 +26,7 @@ export default function Explore() {
   const [search, setSearch] = useState('')
   const navigate = useNavigate()
 
-  // Restore menus: Live Games, Jobs, Flyer Creator
+  // Restore menus: Live Games, Jobs, Flyer Creator, Matchmaking
   const extraCategories = [
     {
       id: 'live',
@@ -34,6 +34,13 @@ export default function Explore() {
       icon: Tv,
       bg: 'bg-red-100 dark:bg-red-900/20',
       color: 'text-red-600 dark:text-red-400',
+    },
+    {
+      id: 'matchmaking',
+      label: 'Matchmaking',
+      icon: Zap,
+      bg: 'bg-amber-100 dark:bg-amber-900/20',
+      color: 'text-amber-600 dark:text-amber-400',
     },
     {
       id: 'jobs',
@@ -64,6 +71,8 @@ export default function Explore() {
         return '/explore/live'
       case 'flyer':
         return '/explore/flyer-creator'
+      case 'matchmaking':
+        return '/matchmaking'
       case 'map-events':
         return '/explore/map-events'
       default:
@@ -76,6 +85,7 @@ export default function Explore() {
     'events',
     'venues',
     'live',
+    'matchmaking',
     'gyms',
     'nutrition',
     'clinics',
