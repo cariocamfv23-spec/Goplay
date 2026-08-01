@@ -12,7 +12,9 @@ import {
   Trophy,
   Car,
   Zap,
+  Flag,
 } from 'lucide-react'
+import { TeamRoleBadge } from '@/components/matchmaking/TeamRoleBadge'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -132,6 +134,22 @@ export default function MatchDetails() {
               <ShieldCheck className="h-3 w-3 mr-1" /> Check-in OK
             </Badge>
           )}
+        </div>
+      </div>
+
+      <div className="mt-3 px-4">
+        <div className="flex items-center gap-2 rounded-xl border border-border/30 bg-secondary/10 p-3">
+          <TeamRoleBadge role="home" />
+          <span className="text-[10px] font-bold text-muted-foreground">
+            vs
+          </span>
+          <TeamRoleBadge role="visitor" />
+          <div className="ml-auto flex items-center gap-1.5">
+            <Whistle className="w-3.5 h-3.5 text-primary" />
+            <span className="text-[10px] font-bold uppercase text-muted-foreground">
+              Árbitro: Sim
+            </span>
+          </div>
         </div>
       </div>
 

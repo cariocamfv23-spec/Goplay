@@ -7,6 +7,20 @@ export type Category =
   | 'masculino'
 export type FieldType = 'sintetico' | 'terrao'
 export type MatchmakingMode = 'balanced' | 'random' | 'varied'
+export type PaymentResponsibility = 'split' | 'home'
+export type TeamRole = 'home' | 'visitor'
+
+export interface VisitorChecklistState {
+  arrived: boolean
+  onTime: boolean
+}
+
+export interface MatchConfig {
+  hasReferee: boolean
+  fieldFee: string
+  refereeFee: string
+  paymentResponsibility: PaymentResponsibility
+}
 
 export interface MatchTeam {
   id: string
@@ -61,6 +75,8 @@ export interface ScheduledMatch {
   startTime: string
   modality: Modality
   category: Category
+  config: MatchConfig
+  visitorChecklist: VisitorChecklistState
 }
 
 export const MY_TEAM: MatchTeam = {
@@ -410,6 +426,13 @@ export const MOCK_SCHEDULED: ScheduledMatch[] = [
     startTime: '21:00',
     modality: 'society',
     category: 'competitivo',
+    config: {
+      hasReferee: true,
+      fieldFee: '200',
+      refereeFee: '80',
+      paymentResponsibility: 'split',
+    },
+    visitorChecklist: { arrived: true, onTime: true },
   },
   {
     id: 'sm2',
@@ -420,6 +443,13 @@ export const MOCK_SCHEDULED: ScheduledMatch[] = [
     startTime: '20:30',
     modality: 'society',
     category: 'veterano',
+    config: {
+      hasReferee: false,
+      fieldFee: '250',
+      refereeFee: '0',
+      paymentResponsibility: 'home',
+    },
+    visitorChecklist: { arrived: false, onTime: false },
   },
 ]
 
@@ -492,4 +522,94 @@ export function getFormColor(result: 'W' | 'L' | 'D'): string {
 export function getWinRate(team: MatchTeam): number {
   const total = team.wins + team.losses + team.draws
   return total > 0 ? Math.round((team.wins / total) * 100) : 0
+}
+
+export const TEAM_BUDGETS: Record<string, number> = {
+  'my-team': 250,
+  t1: 150,
+  t2: 280,
+  t3: 120,
+  t4: 300,
+  t5: 180,
+  t6: 130,
+  t7: 200,
+  t8: 220,
+  t9: 140,
+  t10: 160,
+}
+
+export interface SuggestionResult {
+  team: MatchTeam
+  field: MatchField
+  score: number
+  reasons: { label: string; detail: string }[]
+  fieldFee: string
+  refereeFee: string
+}
+
+const SKILL_TOLERANCE_MAP: Record<string, number> = {
+  precise: 50,
+  balanced: 100,
+  wide: 200,
+}
+
+export function suggestOpponent(
+  modality: Modality,
+  maxDistance: number,
+  maxBudget: number,
+  skillTolerance: 'precise' | 'balanced' | 'wide',
+): SuggestionResult | null {
+  const tolerance = SKILL_TOLERANCE_MAP[skillTolerance] ?? 100
+  const candidates = MOCK_TEAMS.filter((t) => t.modality === modality)
+    .filter((t) => t.distanceKm <= maxDistance)
+    .filter((t) => Math.abs(t.skillRating - MY_TEAM.skillRating) <= tolerance)
+    .filter((t) => (TEAM_BUDGETS[t.id] ?? 200) >= maxBudget * 0.5)
+
+  if (candidates.length === 0) return null
+
+  const affordableFields = MOCK_FIELDS.filter((f) => {
+    const price = parseFloat(f.pricePerHour.replace(/[^\d]/g, ''))
+    return price <= maxBudget
+  })
+
+  let best: SuggestionResult | null = null
+
+  for (const team of candidates) {
+    const score = getMatchmakingScore(team, MY_TEAM)
+    const teamBudget = TEAM_BUDGETS[team.id] ?? 200
+    const field = affordableFields
+      .filter((f) => {
+        const price = parseFloat(f.pricePerHour.replace(/[^\d]/g, ''))
+        return price <= teamBudget
+      })
+      .sort((a, b) => a.distanceKm - b.distanceKm)[0]
+
+    if (!field) continue
+
+    const fieldPrice = parseFloat(field.pricePerHour.replace(/[^\d]/g, ''))
+    const reasons = [
+      {
+        label: 'Nível Compatível',
+        detail: `${team.skillRating} SR vs ${MY_TEAM.skillRating} SR`,
+      },
+      { label: 'Próximo', detail: `${team.distanceKm} km de distância` },
+      {
+        label: 'Dentro do Orçamento',
+        detail: `Campo: R$ ${fieldPrice}/h`,
+      },
+    ]
+
+    if (!best || score > best.score) {
+      best = {
+        team,
+        field,
+        score,
+        reasons,
+        fieldFee: String(fieldPrice),
+        refereeFee: '80',
+      }
+    }
+  }
+
+  return best
 }

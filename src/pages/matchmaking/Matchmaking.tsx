@@ -17,6 +17,9 @@ import {
   History,
   CheckCircle2,
   Radio,
+  Flag,
+  Megaphone,
+  Sparkles,
 } from 'lucide-react'
 import { TransportMenu } from '@/components/TransportMenu'
 import { cn } from '@/lib/utils'
@@ -49,7 +52,21 @@ import {
   type MatchmakingMode,
   type MatchTeam,
   type MatchField,
+  type VisitorChecklistState,
+  type SuggestionResult,
 } from '@/lib/matchmaking-data'
+import {
+  MatchConfigCard,
+  type MatchConfigState,
+} from '@/components/matchmaking/MatchConfigCard'
+import { VisitorChecklist } from '@/components/matchmaking/VisitorChecklist'
+import { MatchFinancialsCard } from '@/components/matchmaking/MatchFinancialsCard'
+import { TeamRoleBadge } from '@/components/matchmaking/TeamRoleBadge'
+import { SuggestOpponentDialog } from '@/components/matchmaking/SuggestOpponentDialog'
+import {
+  MatchConfirmationCard,
+  type ConfirmedMatch,
+} from '@/components/matchmaking/MatchConfirmationCard'
 
 const MODE_ICONS: Record<string, typeof Scale> = {
   scale: Scale,
@@ -311,13 +328,19 @@ function TeamCard({
           </span>
         </div>
 
+        <div className="flex items-center gap-1.5 mb-3">
+          <TeamRoleBadge role="home" />
+          <span className="text-[9px] text-muted-foreground font-bold">vs</span>
+          <TeamRoleBadge role="visitor" />
+        </div>
+
         <Button
           onClick={() => onChallenge(team)}
           className="w-full h-9 text-xs font-black uppercase tracking-widest"
           size="sm"
         >
           <Zap className="w-3.5 h-3.5 mr-1" />
-          Desafiar Equipe
+          Desafiar como Mandante
         </Button>
       </CardContent>
     </Card>
@@ -412,10 +435,13 @@ function FieldCard({
 }
 
 function ScheduledMatchCard({ match }: { match: (typeof MOCK_SCHEDULED)[0] }) {
+  const [visitorChecklist, setVisitorChecklist] =
+    useState<VisitorChecklistState>(match.visitorChecklist)
+
   return (
     <Card className="border-border/30 bg-secondary/10 backdrop-blur-md overflow-hidden shadow-lg">
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between mb-3">
+      <CardContent className="p-4 space-y-3">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             <Calendar className="w-4 h-4 text-primary" />
             <span className="text-xs font-black uppercase tracking-wider">
@@ -427,29 +453,42 @@ function ScheduledMatchCard({ match }: { match: (typeof MOCK_SCHEDULED)[0] }) {
               {match.startTime}
             </span>
           </div>
-          <Badge variant="outline" className="text-[9px] uppercase font-bold">
-            {match.field.fieldType === 'sintetico' ? 'Sintético' : 'Terrão'}
-          </Badge>
+          <div className="flex items-center gap-1.5">
+            {match.config.hasReferee && (
+              <Badge className="text-[8px] uppercase font-black px-1.5 py-0 bg-primary/15 text-primary border-none">
+                <Megaphone className="w-2.5 h-2.5 mr-0.5" /> Árbitro
+              </Badge>
+            )}
+            <Badge variant="outline" className="text-[9px] uppercase font-bold">
+              {match.field.fieldType === 'sintetico' ? 'Sintético' : 'Terrão'}
+            </Badge>
+          </div>
         </div>
 
-        <div className="flex items-center justify-between gap-2 mb-3">
+        <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <img
               src={match.teamA.logo}
               alt={match.teamA.name}
               className="w-10 h-10 rounded-full bg-secondary/40 p-1 border border-border/50"
             />
-            <span className="text-xs font-bold truncate">
-              {match.teamA.name}
-            </span>
+            <div className="min-w-0">
+              <TeamRoleBadge role="home" />
+              <span className="text-xs font-bold truncate block mt-0.5">
+                {match.teamA.name}
+              </span>
+            </div>
           </div>
           <span className="text-xs font-black text-muted-foreground px-2">
             VS
           </span>
           <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
-            <span className="text-xs font-bold truncate text-right">
-              {match.teamB.name}
-            </span>
+            <div className="min-w-0 text-right">
+              <TeamRoleBadge role="visitor" className="ml-auto" />
+              <span className="text-xs font-bold truncate block mt-0.5">
+                {match.teamB.name}
+              </span>
+            </div>
             <img
               src={match.teamB.logo}
               alt={match.teamB.name}
@@ -458,12 +497,23 @@ function ScheduledMatchCard({ match }: { match: (typeof MOCK_SCHEDULED)[0] }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground bg-background/30 rounded-lg p-2 mb-3">
+        <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground bg-background/30 rounded-lg p-2">
           <MapPin className="w-3 h-3 text-primary shrink-0" />
           <span className="truncate font-medium">
             {match.field.name} — {match.field.address}
           </span>
         </div>
+
+        <MatchFinancialsCard
+          config={match.config}
+          visitorChecklist={visitorChecklist}
+        />
+
+        <VisitorChecklist
+          initial={visitorChecklist}
+          onChange={setVisitorChecklist}
+        />
+
         <TransportMenu
           location={{
             address: match.field.address,
@@ -544,6 +594,16 @@ export default function Matchmaking() {
   const [mode, setMode] = useState<MatchmakingMode>('balanced')
   const [maxDistance, setMaxDistance] = useState(50)
   const [selectedField, setSelectedField] = useState<MatchField | null>(null)
+  const [matchConfig, setMatchConfig] = useState<MatchConfigState>({
+    hasReferee: true,
+    fieldFee: '220',
+    refereeFee: '80',
+    paymentResponsibility: 'split',
+  })
+  const [suggestOpen, setSuggestOpen] = useState(false)
+  const [acceptedSuggestion, setAcceptedSuggestion] =
+    useState<SuggestionResult | null>(null)
+  const [confirmedMatches, setConfirmedMatches] = useState<ConfirmedMatch[]>([])
 
   const filteredTeams = useMemo(() => {
     let teams = MOCK_TEAMS.filter((t) => t.modality === modality)
@@ -569,12 +629,29 @@ export default function Matchmaking() {
     )
   }, [maxDistance])
 
-  const handleChallenge = useCallback((team: MatchTeam) => {
-    toast.success(`Desafio enviado para ${team.name}!`, {
-      description:
-        'A equipe foi notificada e você receberá a resposta em breve.',
-    })
-  }, [])
+  const handleChallenge = useCallback(
+    (team: MatchTeam) => {
+      const field = selectedField ?? MOCK_FIELDS[0]
+      const confirmed: ConfirmedMatch = {
+        id: `confirmed-${Date.now()}`,
+        teamA: MY_TEAM,
+        teamB: team,
+        field,
+        date: '20 Jun 2026',
+        startTime: field.startTime,
+        config: matchConfig,
+        visitorChecklist: { arrived: false, onTime: false },
+      }
+      setConfirmedMatches((prev) => [confirmed, ...prev])
+      toast.success(`Acordo fechado com ${team.name}!`, {
+        description:
+          'Mandante: Red Wolves FC · Visitante: ' +
+          team.name +
+          '. Confira o resumo do acordo no topo da tela.',
+      })
+    },
+    [selectedField, matchConfig],
+  )
 
   const handleSelectField = useCallback((field: MatchField) => {
     setSelectedField(field)
@@ -582,6 +659,29 @@ export default function Matchmaking() {
       description: `Horário sem atraso: ${field.startTime} | ${field.fieldType === 'sintetico' ? 'Sintético' : 'Terrão'}`,
     })
   }, [])
+
+  const handleAcceptSuggestion = useCallback(
+    (result: SuggestionResult, config: MatchConfigState) => {
+      setAcceptedSuggestion(result)
+      setMatchConfig(config)
+      setSelectedField(result.field)
+      const confirmed: ConfirmedMatch = {
+        id: `confirmed-${Date.now()}`,
+        teamA: MY_TEAM,
+        teamB: result.team,
+        field: result.field,
+        date: '20 Jun 2026',
+        startTime: result.field.startTime,
+        config,
+        visitorChecklist: { arrived: false, onTime: false },
+      }
+      setConfirmedMatches((prev) => [confirmed, ...prev])
+      toast.success(`Acordo fechado com ${result.team.name}!`, {
+        description: `Campo: ${result.field.name} · Taxa: R$ ${result.fieldFee} · Match Score: ${result.score}% · Confira o resumo no topo da tela.`,
+      })
+    },
+    [],
+  )
 
   return (
     <div className="min-h-screen bg-background pb-32 overflow-x-hidden">
@@ -621,10 +721,13 @@ export default function Matchmaking() {
                 <div className="w-12 h-12 rounded-2xl bg-[hsl(var(--gold))/0.1] flex items-center justify-center border border-[hsl(var(--gold))/0.2]">
                   <Trophy className="w-6 h-6 text-[hsl(var(--gold))]" />
                 </div>
-                <div>
-                  <h2 className="text-base font-black uppercase tracking-wider text-foreground">
-                    {MY_TEAM.name}
-                  </h2>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <h2 className="text-base font-black uppercase tracking-wider text-foreground">
+                      {MY_TEAM.name}
+                    </h2>
+                    <TeamRoleBadge role="home" />
+                  </div>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <Badge
                       variant="secondary"
@@ -707,6 +810,42 @@ export default function Matchmaking() {
             </Select>
           </div>
         </div>
+
+        <div className="px-4 mt-5 animate-in fade-in duration-700">
+          <h3 className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5">
+            <Megaphone className="w-3.5 h-3.5" /> Gestão da Partida
+          </h3>
+          <MatchConfigCard config={matchConfig} onChange={setMatchConfig} />
+        </div>
+
+        <div className="px-4 mt-5 animate-in fade-in duration-700">
+          <Button
+            onClick={() => setSuggestOpen(true)}
+            className="w-full h-12 text-sm font-black uppercase tracking-widest bg-gradient-to-r from-primary to-[hsl(var(--gold))] hover:opacity-90 border-none shadow-lg"
+          >
+            <Sparkles className="w-4 h-4 mr-1.5" /> Sugerir Adversário
+          </Button>
+          {acceptedSuggestion && (
+            <div className="mt-3 rounded-xl border border-green-500/30 bg-green-500/10 p-3 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
+              <span className="text-[10px] font-bold text-green-500 truncate">
+                {acceptedSuggestion.team.name} selecionado ·{' '}
+                {acceptedSuggestion.field.name}
+              </span>
+            </div>
+          )}
+        </div>
+
+        {confirmedMatches.length > 0 && (
+          <div className="px-4 mt-6 space-y-4 animate-in fade-in duration-700">
+            <h3 className="text-xs font-black uppercase tracking-widest text-green-500 flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Acordos Fechados
+            </h3>
+            {confirmedMatches.map((match) => (
+              <MatchConfirmationCard key={match.id} match={match} />
+            ))}
+          </div>
+        )}
 
         <Tabs defaultValue="teams" className="w-full mt-8">
           <div className="px-4">
@@ -811,6 +950,13 @@ export default function Matchmaking() {
           </TabsContent>
         </Tabs>
       </div>
+
+      <SuggestOpponentDialog
+        open={suggestOpen}
+        onOpenChange={setSuggestOpen}
+        modality={modality}
+        onAccept={handleAcceptSuggestion}
+      />
     </div>
   )
 }
