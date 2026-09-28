@@ -86,8 +86,7 @@ export function PostCard({ post }: PostProps) {
     setIsCool(!isCool)
     setCoolCount(isCool ? coolCount - 1 : coolCount + 1)
     if (!isCool) {
-      // @ts-expect-error - Sound category
-      playSound('like_generic')
+      playSound('like_generic' as any)
     }
   }
 

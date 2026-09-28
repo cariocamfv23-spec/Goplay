@@ -139,7 +139,7 @@ export interface TimelineEvent {
 }
 
 export interface ProfileData {
-  id: string | number
+  id: string | any
   name: string
   username: string
   avatar: string
@@ -210,6 +210,12 @@ export interface ProfileData {
   playstyle?: string
   company?: string
   focusCategories?: string[]
+
+  // Optional extended athlete/profile properties
+  stats?: Record<string, any>
+  level?: number
+  role?: string
+  points?: number
 }
 
 export interface FinancialTransaction {
@@ -2906,6 +2912,28 @@ export const mockReplays: LiveEvent[] = [
 ]
 
 export const mockFuelTransactions = []
+export interface TeamInvitation {
+  id: string
+  teamName: string
+  teamLogo: string
+  modality: string
+  level: string
+  time: string
+  location: string
+}
+
+export const mockInvitations: TeamInvitation[] = [
+  {
+    id: 'inv1',
+    teamName: 'Red Wolves FC',
+    teamLogo: 'https://img.usecurling.com/i?q=wolf%20logo&color=red',
+    modality: 'Futebol Society',
+    level: 'Amador Avançado',
+    time: 'Sábado, 16:00',
+    location: 'Arena Goplay Central',
+  },
+]
+
 export const mockNutrition: NutritionPartner[] = [
   {
     id: 'n1',

@@ -145,7 +145,7 @@ export default function MatchDetails() {
           </span>
           <TeamRoleBadge role="visitor" />
           <div className="ml-auto flex items-center gap-1.5">
-            <Whistle className="w-3.5 h-3.5 text-primary" />
+            <Flag className="w-3.5 h-3.5 text-primary" />
             <span className="text-[10px] font-bold uppercase text-muted-foreground">
               Árbitro: Sim
             </span>

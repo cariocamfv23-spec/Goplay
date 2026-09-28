@@ -37,8 +37,10 @@ const store = {
     state = { ...state, ...newState }
     listeners.forEach((listener) => listener())
   },
-  toggle: () => {
-    store.setState({ isEnabled: !state.isEnabled })
+  toggle: (enabled?: boolean) => {
+    store.setState({
+      isEnabled: enabled !== undefined ? enabled : !state.isEnabled,
+    })
   },
   setPreset: (preset: NostalgiaPreset) => {
     store.setState({ preset })

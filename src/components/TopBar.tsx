@@ -354,8 +354,10 @@ export function TopBar() {
             {/* Profile Views Entry with Admin Toggle */}
             <DropdownMenuItem
               onSelect={(e) => {
-                const target = e.originalEvent.target as HTMLElement
-                if (target.closest('.admin-switch-container')) {
+                const target = (e as any).originalEvent?.target as
+                  | HTMLElement
+                  | undefined
+                if (target?.closest?.('.admin-switch-container')) {
                   e.preventDefault()
                 } else {
                   navigate('/profile/views')
