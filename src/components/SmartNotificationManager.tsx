@@ -27,55 +27,61 @@ export function SmartNotificationManager() {
   // VIP Profile View Simulation (within 2 seconds of landing on Home)
   useEffect(() => {
     const simulateVipView = () => {
-      const vipVisitors = [
+      const visitorsPool = [
         {
-          id: 'u10',
-          name: 'Rafael Torres',
-          role: 'Scout',
-          avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=78',
+          id: 'vis-scout-1',
+          name: 'Carlos Meneghel',
+          role: 'Scout Chefe / RB Bragantino',
+          type: 'scout',
+          avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=88',
+          title: 'Um olheiro visualizou seu perfil',
+          message:
+            'Carlos Meneghel (Scout Chefe) está analisando seus lances e gols recentes!',
         },
         {
-          id: 'a1',
-          name: 'GoGlobal Sports',
-          role: 'Sponsor',
-          avatar: 'https://img.usecurling.com/i?q=globe&color=blue',
+          id: 'vis-uni-1',
+          name: 'Marcus Vance',
+          role: 'Recrutador / University of Florida',
+          type: 'university',
+          avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=62',
+          title: 'Um recrutador de faculdade/bolsa de estudos viu seu perfil',
+          message:
+            'University of Florida avaliou seu histórico para bolsa esportiva 100%.',
+        },
+        {
+          id: 'vis-team-1',
+          name: 'Comissão Técnica Sub-21',
+          role: 'Palmeiras FC Scouting',
+          type: 'team',
+          avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=44',
+          title: 'Um time está de olho em você',
+          message:
+            'O Palmeiras FC visitou seu perfil para analisar estatísticas de desempenho.',
         },
       ]
 
-      // Pick a random VIP
-      const vip = vipVisitors[Math.floor(Math.random() * vipVisitors.length)]
+      // Pick a random visitor
+      const visitor =
+        visitorsPool[Math.floor(Math.random() * visitorsPool.length)]
       const now = Date.now()
 
-      if (canNotifyVip(vip.id, now)) {
-        recordVipView(vip.id, now)
+      if (canNotifyVip(visitor.id, now)) {
+        recordVipView(visitor.id, now)
 
-        const isScout = vip.role === 'Scout'
-        const isSponsor = vip.role === 'Sponsor'
-
-        const title = isScout
-          ? 'Alerta de Olheiro'
-          : isSponsor
-            ? 'Oportunidade VIP'
-            : 'Visitante VIP!'
-
-        const message = isScout
-          ? 'Um Olheiro visualizou seu Perfil VIP'
-          : isSponsor
-            ? 'Um Patrocinador demonstrou interesse no seu Perfil VIP'
-            : `${vip.name} está visualizando seu perfil.`
-
-        const NotificationIcon = isScout ? Eye : isSponsor ? Handshake : Crown
+        const isScout = visitor.type === 'scout'
+        const isUni = visitor.type === 'university'
+        const NotificationIcon = isScout ? Eye : isUni ? Crown : Eye
 
         addNotification({
-          title,
-          message,
-          type: 'verification',
+          title: visitor.title,
+          message: visitor.message,
+          type: isUni ? 'scholarship' : 'verification',
           priority: 'high',
-          link: `/profile/${vip.id}`,
+          link: '/profile/views',
           user: {
-            id: vip.id,
-            name: vip.name,
-            avatar: vip.avatar,
+            id: visitor.id,
+            name: visitor.name,
+            avatar: visitor.avatar,
           },
         })
 
@@ -88,25 +94,25 @@ export function SmartNotificationManager() {
                   'flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-opacity-20',
                   isScout
                     ? 'bg-blue-500/20 text-blue-500'
-                    : isSponsor
-                      ? 'bg-emerald-500/20 text-emerald-500'
-                      : 'bg-gold/20 text-gold',
+                    : isUni
+                      ? 'bg-amber-500/20 text-amber-500'
+                      : 'bg-emerald-500/20 text-emerald-500',
                 )}
               >
                 <NotificationIcon className="h-6 w-6" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-foreground truncate">
-                  {title}
+                  {visitor.title}
                 </p>
                 <p className="text-xs text-muted-foreground line-clamp-2 leading-tight">
-                  {message}
+                  {visitor.message}
                 </p>
               </div>
               <button
                 onClick={() => {
                   toast.dismiss(t)
-                  navigate(`/profile/${vip.id}`)
+                  navigate('/profile/views')
                 }}
                 className="shrink-0 rounded-xl bg-primary px-3 py-2 text-xs font-bold text-primary-foreground transition-all hover:scale-105 active:scale-95 shadow-md shadow-primary/20"
               >
@@ -282,7 +288,7 @@ export function SmartNotificationManager() {
             priority: 'medium',
             link: `/profile/${friend.id}`,
             user: {
-              id: friend.id,
+              id: String(friend.id),
               name: friend.name,
               avatar: friend.avatar,
             },

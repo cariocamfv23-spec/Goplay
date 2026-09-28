@@ -30,6 +30,7 @@ import {
   Megaphone,
   History,
   UserPlus,
+  Eye,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -100,6 +101,18 @@ export function NotificationMenu() {
       case 'goal_deadline':
         return <Target className="h-4 w-4 text-red-500" />
       case 'verification':
+        if (
+          title.toLowerCase().includes('scout') ||
+          title.toLowerCase().includes('olheiro')
+        ) {
+          return <Eye className="h-4 w-4 text-blue-500" />
+        }
+        if (
+          title.toLowerCase().includes('time') ||
+          title.toLowerCase().includes('de olho')
+        ) {
+          return <Crown className="h-4 w-4 text-emerald-500" />
+        }
         if (title.toLowerCase().includes('vip')) {
           return <Crown className="h-4 w-4 text-gold" />
         }

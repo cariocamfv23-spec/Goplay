@@ -43,7 +43,10 @@ export default function Notifications() {
       text.includes('scout') ||
       text.includes('sponsor') ||
       text.includes('olheiro') ||
-      text.includes('patrocinador')
+      text.includes('patrocinador') ||
+      text.includes('recrutador') ||
+      text.includes('bolsa') ||
+      text.includes('de olho em você')
     )
   }
 
@@ -79,6 +82,11 @@ export default function Notifications() {
           title.toLowerCase().includes('olheiro')
         )
           return <Eye className="h-5 w-5 text-blue-500" />
+        if (
+          title.toLowerCase().includes('time') ||
+          title.toLowerCase().includes('de olho')
+        )
+          return <Crown className="h-5 w-5 text-emerald-500" />
         if (
           title.toLowerCase().includes('sponsor') ||
           title.toLowerCase().includes('patrocinador')

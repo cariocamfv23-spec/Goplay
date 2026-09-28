@@ -9,7 +9,9 @@ import {
   Shield,
   MapPin,
   CheckCircle,
+  Star,
 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { useNavigate, useParams } from 'react-router-dom'
 import { mockRideRequests } from '@/lib/data'
 import { useState } from 'react'

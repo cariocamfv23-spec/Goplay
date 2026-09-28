@@ -2211,6 +2211,56 @@ export const mockGyms: Gym[] = [
     price: 'R$ 350/mês',
   },
 ]
+export const mockFeedbacks = [
+  {
+    id: 'fb-1',
+    author: {
+      name: 'Coach Roberto',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=31',
+      role: 'Treinador Principal',
+    },
+    date: 'Ontem',
+    rating: 5,
+    content:
+      'Excelente desempenho físico e posicionamento tático exemplar no último treino.',
+    context: 'Treino Tático Sub-20',
+  },
+  {
+    id: 'fb-2',
+    author: {
+      name: 'Dr. Fernando Lins',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=42',
+      role: 'Fisiologista',
+    },
+    date: '3 dias atrás',
+    rating: 4.8,
+    content:
+      'Recuperação muscular excelente e níveis de fadiga totalmente controlados.',
+    context: 'Avaliação Biométrica',
+  },
+]
+
+export const mockDriverStats = [
+  {
+    id: 'd1',
+    name: 'Roberto Carlos',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=99',
+    rides: 1540,
+    rating: 4.9,
+    responseTime: '3 min',
+    earnings: 'R$ 4.250',
+  },
+  {
+    id: 'd2',
+    name: 'Maria Silva',
+    avatar: 'https://img.usecurling.com/ppl/medium?gender=female&seed=88',
+    rides: 890,
+    rating: 4.8,
+    responseTime: '7 min',
+    earnings: 'R$ 2.890',
+  },
+]
+
 export const mockDrivers: ProfileData[] = [
   {
     id: 'd1',
@@ -2482,23 +2532,91 @@ export const mockProducts: Product[] = [
 ]
 export const mockNotifications: Notification[] = [
   {
+    id: 'n-scout-alert',
+    title: 'Um olheiro visualizou seu perfil',
+    message:
+      'Carlos Meneghel (Scout Chefe / RB Bragantino) analisou seu perfil e histórico de partidas. Desbloqueie o Premium para ver a nota técnica e o contato direto.',
+    time: '5 min',
+    read: false,
+    type: 'verification',
+    date: 'Hoje',
+    priority: 'critical',
+    link: '/profile/views',
+    user: {
+      id: 'vis-scout-1',
+      name: 'Carlos Meneghel',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=88',
+    },
+  },
+  {
+    id: 'n-uni-alert',
+    title: 'Um recrutador de faculdade/bolsa de estudos viu seu perfil',
+    message:
+      'Coach Marcus Vance (University of Florida - NCAA Division I) consultou suas métricas e avalia oferta de bolsa de 100%. Acesse para desbloquear.',
+    time: '45 min',
+    read: false,
+    type: 'scholarship',
+    date: 'Hoje',
+    priority: 'high',
+    link: '/profile/views',
+    user: {
+      id: 'vis-uni-1',
+      name: 'Marcus Vance',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=62',
+    },
+  },
+  {
+    id: 'n-team-alert',
+    title: 'Um time está de olho em você',
+    message:
+      'O Departamento de Scout do Palmeiras FC visitou seu perfil pela 3ª vez esta semana para analisar seu mapa de calor e finalizações.',
+    time: '2 horas',
+    read: false,
+    type: 'verification',
+    date: 'Hoje',
+    priority: 'high',
+    link: '/profile/views',
+    user: {
+      id: 'vis-team-1',
+      name: 'Comissão Técnica Sub-21',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=44',
+    },
+  },
+  {
+    id: 'n-scout-inter',
+    title: 'Um olheiro internacional visualizou seu perfil',
+    message:
+      'Giuliano Moretti (Scout América do Sul / Atalanta BC) visualizou seus lances em vídeo.',
+    time: 'Ontem',
+    read: false,
+    type: 'verification',
+    date: 'Ontem',
+    priority: 'high',
+    link: '/profile/views',
+    user: {
+      id: 'vis-scout-2',
+      name: 'Giuliano Moretti',
+      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=73',
+    },
+  },
+  {
     id: 'n7',
     title: 'Atualizações Goplay',
     message:
-      'Bem-vindo ao novo sistema de notificações centralizado do Goplay! Fique por dentro de todas as interações e novidades da plataforma.',
-    time: 'Agora mesmo',
-    read: false,
+      'Novo painel estilo LinkedIn de "Quem Viu Seu Perfil" já está disponível no seu perfil com acompanhamento em tempo real.',
+    time: 'Hoje',
+    read: true,
     type: 'system_update',
     date: 'Hoje',
-    priority: 'high',
-    link: '/feed',
+    priority: 'medium',
+    link: '/profile/views',
   },
   {
     id: 'n8',
     title: 'Novo Comentário',
     message: 'Mariana Souza comentou na sua publicação.',
-    time: '10 min',
-    read: false,
+    time: '3 horas',
+    read: true,
     type: 'comment',
     date: 'Hoje',
     link: '/feed',
@@ -2509,54 +2627,14 @@ export const mockNotifications: Notification[] = [
     },
   },
   {
-    id: 'n9',
-    title: 'Nova Interação',
-    message:
-      'Pedro Santos também comentou em uma publicação que você está seguindo.',
-    time: '1 hora',
-    read: true,
-    type: 'thread_comment',
-    date: 'Hoje',
-    link: '/feed',
-    user: {
-      id: 'u6',
-      name: 'Pedro Santos',
-      avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=67',
-    },
-  },
-  {
-    id: 'n5',
-    title: 'Visitante VIP!',
-    message:
-      'Um Olheiro está visualizando seu perfil. João Silva (Global Sports Agency)',
-    time: '2 min',
-    read: false,
-    type: 'verification',
-    date: 'Hoje',
-    priority: 'high',
-    link: '/profile/scout1',
-  },
-  {
-    id: 'n6',
-    title: 'Visitante VIP!',
-    message:
-      'Um Treinador está visualizando seu perfil. Carlos Ferreira (Clube Atlético)',
-    time: '15 min',
-    read: false,
-    type: 'verification',
-    date: 'Hoje',
-    priority: 'high',
-    link: '/profile/coach1',
-  },
-  {
     id: 'n1',
     title: 'Match de Patrocínio!',
     message:
       'A Red Bull expressou interesse no seu perfil. Confira os detalhes.',
-    time: '20 min',
-    read: false,
+    time: 'Ontem',
+    read: true,
     type: 'sponsorship_match',
-    date: 'Hoje',
+    date: 'Ontem',
     priority: 'high',
     link: '/explore/sponsorship',
   },
