@@ -24,6 +24,8 @@ import {
   MessageSquare,
   Megaphone,
   History,
+  CheckCircle2,
+  AlertCircle,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -116,6 +118,12 @@ export default function Notifications() {
         return <GraduationCap className="h-5 w-5 text-emerald-500" />
       case 'level_up':
         return <Zap className="h-5 w-5 text-purple-500" />
+      case 'registration_approved':
+        return <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+      case 'registration_rejected':
+        return <AlertCircle className="h-5 w-5 text-red-500" />
+      case 'event_registration':
+        return <Calendar className="h-5 w-5 text-primary" />
       case 'ranking':
         if (
           title.toLowerCase().includes('caiu') ||
@@ -196,6 +204,12 @@ export default function Notifications() {
         return 'border-l-4 border-l-emerald-500 bg-emerald-500/10 dark:bg-emerald-900/20'
       return 'border-l-4 border-l-gold bg-gold/10 dark:bg-gold/10'
     }
+
+    if (type === 'registration_approved')
+      return 'border-l-4 border-l-emerald-500 bg-emerald-500/10 dark:bg-emerald-950/20'
+
+    if (type === 'registration_rejected')
+      return 'border-l-4 border-l-red-500 bg-red-500/10 dark:bg-red-950/20'
 
     if (priority === 'high')
       return 'border-l-4 border-l-green-500 bg-green-500/10 dark:bg-green-900/20'

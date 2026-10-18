@@ -31,6 +31,8 @@ import {
   History,
   UserPlus,
   Eye,
+  CheckCircle2,
+  AlertCircle,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -193,6 +195,12 @@ export function NotificationMenu() {
       case 'memory':
       case 'time_travel':
         return <History className="h-4 w-4 text-purple-500" />
+      case 'registration_approved':
+        return <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+      case 'registration_rejected':
+        return <AlertCircle className="h-4 w-4 text-red-500" />
+      case 'event_registration':
+        return <Calendar className="h-4 w-4 text-primary" />
       default:
         return <Info className="h-4 w-4 text-primary" />
     }

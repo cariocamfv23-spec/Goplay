@@ -239,6 +239,36 @@ export default function ClubView({
           </div>
         </div>
 
+        {/* Organizer Quick Management Card for logged in Club */}
+        {isMe && (
+          <Card className="mt-5 border-2 border-primary/30 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent shadow-sm">
+            <CardContent className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <Badge className="bg-primary text-white text-[10px] font-bold">
+                    Área do Clube
+                  </Badge>
+                  <h3 className="font-bold text-sm text-foreground">
+                    Painel de Inscrições e Peneiras
+                  </h3>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Acesse suas peneiras oficiais, aprove ou recuse atletas e
+                  acompanhe métricas reais.
+                </p>
+              </div>
+              <Button
+                size="sm"
+                onClick={() => navigate('/organizer')}
+                className="bg-primary text-white shadow-md text-xs font-semibold gap-1.5 shrink-0"
+              >
+                <Trophy className="w-3.5 h-3.5" />
+                Abrir Painel do Organizador
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
         <div className="mt-6 space-y-4">
           {/* Categorias Esportivas do Clube */}
           <Card>

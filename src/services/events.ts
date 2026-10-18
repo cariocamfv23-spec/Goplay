@@ -34,13 +34,22 @@ export interface EventItem {
   isRegistered?: boolean
 }
 
+export type RegistrationStatus =
+  | 'pending'
+  | 'approved'
+  | 'rejected'
+  | 'confirmed'
+  | 'canceled'
+  | 'waitlist'
+
 export interface RegistrationItem {
   id: string
   eventId: string
   userId: string
-  status: 'confirmed' | 'canceled' | 'waitlist'
+  status: RegistrationStatus
   notes?: string
   createdAt: string
+  eventTitle?: string
   participant?: {
     id: string
     name: string
@@ -48,7 +57,18 @@ export interface RegistrationItem {
     sport?: string
     position?: string
     city?: string
+    state?: string
+    birthDate?: string
+    experience?: string
   }
+}
+
+export interface EventOrganizerStats {
+  totalEvents: number
+  totalRegistrations: number
+  pendingCount: number
+  approvedCount: number
+  rejectedCount: number
 }
 
 export const eventsService = {
@@ -493,33 +513,44 @@ export const eventsService = {
   /**
    * Fetches registrations for an event (Only allowed for the organizer or the user themselves by RLS).
    */
-  async getEventRegistrations(eventId: string): Promise<RegistrationItem[]> {
+  async getEventRegistrations(
+    eventId: string,
+    options?: { includeCanceled?: boolean },
+  ): Promise<RegistrationItem[]> {
     try {
-      const { data, error } = await db
+      let query = db
         .from('event_registrations')
         .select('*')
         .eq('event_id', eventId)
-        .neq('status', 'canceled')
-        .order('created_at', { ascending: true })
+
+      if (!options?.includeCanceled) {
+        query = query.neq('status', 'canceled')
+      }
+
+      const { data, error } = await query.order('created_at', {
+        ascending: false,
+      })
 
       if (error || !data) return []
 
       const userIds = data.map((d: any) => d.user_id)
       const { data: profiles } = await db
         .from('profiles')
-        .select('id, full_name, avatar_url, sport, position, city')
+        .select(
+          'id, full_name, avatar_url, sport, position, city, state, birth_date, experience',
+        )
         .in('id', userIds)
 
       const profMap = new Map<string, any>()
-      profiles?.forEach((p) => profMap.set(p.id, p))
+      profiles?.forEach((p: any) => profMap.set(p.id, p))
 
-      return data.map((r) => {
+      return data.map((r: any) => {
         const prof = profMap.get(r.user_id)
         return {
           id: r.id,
           eventId: r.event_id,
           userId: r.user_id,
-          status: r.status as any,
+          status: r.status as RegistrationStatus,
           notes: r.notes,
           createdAt: r.created_at,
           participant: {
@@ -527,15 +558,275 @@ export const eventsService = {
             name: prof?.full_name || 'Atleta',
             avatar:
               prof?.avatar_url ||
-              'https://img.usecurling.com/ppl/thumbnail?seed=reg',
+              `https://img.usecurling.com/ppl/thumbnail?seed=${r.user_id.slice(0, 4)}`,
             sport: prof?.sport,
             position: prof?.position,
             city: prof?.city,
+            state: prof?.state,
+            birthDate: prof?.birth_date,
+            experience: prof?.experience,
           },
         }
       })
     } catch {
       return []
+    }
+  },
+
+  /**
+   * Fetches all events created by an organizer.
+   */
+  async getOrganizerEvents(
+    creatorId: string,
+  ): Promise<{ data: EventItem[]; error: Error | null }> {
+    try {
+      if (!creatorId) return { data: [], error: null }
+
+      const { data: rawEvents, error } = await db
+        .from('events')
+        .select('*')
+        .eq('creator_id', creatorId)
+        .order('event_date', { ascending: false })
+
+      if (error) throw error
+      if (!rawEvents || rawEvents.length === 0) return { data: [], error: null }
+
+      const eventIds = rawEvents.map((e: any) => e.id)
+      const { data: regData } = await db
+        .from('event_registrations')
+        .select('event_id, status')
+        .in('event_id', eventIds)
+
+      const countsMap = new Map<
+        string,
+        { total: number; pending: number; approved: number; rejected: number }
+      >()
+
+      regData?.forEach((r: any) => {
+        const curr = countsMap.get(r.event_id) || {
+          total: 0,
+          pending: 0,
+          approved: 0,
+          rejected: 0,
+        }
+        if (r.status !== 'canceled') {
+          curr.total += 1
+          if (r.status === 'pending') curr.pending += 1
+          else if (r.status === 'approved' || r.status === 'confirmed')
+            curr.approved += 1
+          else if (r.status === 'rejected') curr.rejected += 1
+        }
+        countsMap.set(r.event_id, curr)
+      })
+
+      const formatted: EventItem[] = rawEvents.map((e: any) => {
+        const counts = countsMap.get(e.id) || { total: 0 }
+        return {
+          id: e.id,
+          creatorId: e.creator_id,
+          title: e.title,
+          description: e.description || '',
+          type: (e.type as any) || 'event',
+          sport: e.sport,
+          category: e.category,
+          eventDate: e.event_date,
+          eventTime: e.event_time,
+          city: e.city,
+          state: e.state,
+          locationName: e.location_name,
+          address: e.address,
+          bannerUrl: e.banner_url,
+          requirements: e.requirements,
+          instructions: e.instructions,
+          registrationDeadline: e.registration_deadline,
+          maxParticipants: e.max_participants,
+          price: Number(e.price) || 0,
+          status: (e.status as any) || 'open',
+          createdAt: e.created_at,
+          registrationsCount: counts.total,
+        }
+      })
+
+      return { data: formatted, error: null }
+    } catch (err: any) {
+      return {
+        data: [],
+        error: err instanceof Error ? err : new Error(String(err)),
+      }
+    }
+  },
+
+  /**
+   * Fetches all registrations across all events owned by an organizer.
+   */
+  async getOrganizerAllRegistrations(
+    creatorId: string,
+  ): Promise<{ data: RegistrationItem[]; error: Error | null }> {
+    try {
+      if (!creatorId) return { data: [], error: null }
+
+      // Get event IDs owned by organizer
+      const { data: myEvents, error: evErr } = await db
+        .from('events')
+        .select('id, title')
+        .eq('creator_id', creatorId)
+
+      if (evErr) throw evErr
+      if (!myEvents || myEvents.length === 0) return { data: [], error: null }
+
+      const eventMap = new Map<string, string>()
+      myEvents.forEach((e: any) => eventMap.set(e.id, e.title))
+      const eventIds = myEvents.map((e: any) => e.id)
+
+      const { data: rawRegs, error: regErr } = await db
+        .from('event_registrations')
+        .select('*')
+        .in('event_id', eventIds)
+        .order('created_at', { ascending: false })
+
+      if (regErr) throw regErr
+      if (!rawRegs || rawRegs.length === 0) return { data: [], error: null }
+
+      const userIds = Array.from(
+        new Set(rawRegs.map((r: any) => r.user_id)),
+      ) as string[]
+      const { data: profiles } = await db
+        .from('profiles')
+        .select(
+          'id, full_name, avatar_url, sport, position, city, state, birth_date, experience',
+        )
+        .in('id', userIds)
+
+      const profMap = new Map<string, any>()
+      profiles?.forEach((p: any) => profMap.set(p.id, p))
+
+      const items: RegistrationItem[] = rawRegs.map((r: any) => {
+        const prof = profMap.get(r.user_id)
+        return {
+          id: r.id,
+          eventId: r.event_id,
+          userId: r.user_id,
+          status: r.status as RegistrationStatus,
+          notes: r.notes,
+          createdAt: r.created_at,
+          eventTitle: eventMap.get(r.event_id) || 'Evento',
+          participant: {
+            id: r.user_id,
+            name: prof?.full_name || 'Atleta',
+            avatar:
+              prof?.avatar_url ||
+              `https://img.usecurling.com/ppl/thumbnail?seed=${r.user_id.slice(0, 4)}`,
+            sport: prof?.sport,
+            position: prof?.position,
+            city: prof?.city,
+            state: prof?.state,
+            birthDate: prof?.birth_date,
+            experience: prof?.experience,
+          },
+        }
+      })
+
+      return { data: items, error: null }
+    } catch (err: any) {
+      return {
+        data: [],
+        error: err instanceof Error ? err : new Error(String(err)),
+      }
+    }
+  },
+
+  /**
+   * Updates an athlete's registration status (Approve / Reject / Pending),
+   * strictly verifying permissions and creating a real Supabase notification for the athlete.
+   */
+  async updateRegistrationStatus(params: {
+    registrationId: string
+    newStatus: 'approved' | 'rejected' | 'pending'
+    organizerId: string
+  }): Promise<{
+    success: boolean
+    error: Error | null
+    newStatus?: RegistrationStatus
+  }> {
+    try {
+      const { registrationId, newStatus, organizerId } = params
+      if (!organizerId) throw new Error('Organizador não autenticado.')
+
+      // Call database secure RPC function first
+      const { data: rpcRes, error: rpcErr } = await db.rpc(
+        'decide_event_registration',
+        {
+          p_registration_id: registrationId,
+          p_new_status: newStatus,
+        },
+      )
+
+      if (rpcErr || (rpcRes && rpcRes.success === false)) {
+        const msg =
+          rpcRes?.error ||
+          rpcErr?.message ||
+          'Não foi possível atualizar o status da inscrição.'
+        throw new Error(msg)
+      }
+
+      const athleteId = rpcRes?.user_id
+      const eventId = rpcRes?.event_id
+      const eventTitle = rpcRes?.event_title || 'Evento / Peneira'
+
+      // Dispatch real Supabase notification to the athlete
+      if (athleteId) {
+        try {
+          const isApproval = newStatus === 'approved'
+          const isRejection = newStatus === 'rejected'
+
+          // Get organizer profile name
+          const { data: orgProfile } = await supabase
+            .from('profiles')
+            .select('full_name, club_name')
+            .eq('id', organizerId)
+            .maybeSingle()
+
+          const orgName =
+            orgProfile?.club_name ||
+            orgProfile?.full_name ||
+            'O Clube / Organizador'
+
+          const notifTitle = isApproval
+            ? 'Inscrição Aprovada! 🎉'
+            : isRejection
+              ? 'Resultado da Inscrição'
+              : 'Status da Inscrição Atualizado'
+
+          const notifMessage = isApproval
+            ? `${orgName} aprovou sua inscrição na peneira/evento "${eventTitle}". Fique atento aos detalhes e horários!`
+            : isRejection
+              ? `${orgName} avaliou sua inscrição para "${eventTitle}". Desta vez a vaga não foi preenchida, mas continue treinando!`
+              : `Sua inscrição em "${eventTitle}" voltou para análise pendente.`
+
+          await db.from('notifications').insert({
+            user_id: athleteId,
+            actor_id: organizerId,
+            type: isApproval
+              ? 'registration_approved'
+              : isRejection
+                ? 'registration_rejected'
+                : 'event_registration',
+            title: notifTitle,
+            message: notifMessage,
+            link: `/events/${eventId}`,
+          })
+        } catch (notifErr) {
+          // If notification dispatch fails, do not silently roll back the decision
+          console.warn('Falha ao enviar notificação de decisão:', notifErr)
+        }
+      }
+
+      return { success: true, error: null, newStatus }
+    } catch (err: any) {
+      return {
+        success: false,
+        error: err instanceof Error ? err : new Error(String(err)),
+      }
     }
   },
 }

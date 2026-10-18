@@ -17,15 +17,31 @@ import {
   FileText,
   Loader2,
   ShieldAlert,
+  Check,
+  X,
+  ExternalLink,
+  ShieldCheck,
+  Search,
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import {
   eventsService,
   type EventItem,
   type RegistrationItem,
+  type RegistrationStatus,
 } from '@/services/events'
 import { useAuth } from '@/hooks/use-auth'
 import { toast } from 'sonner'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 export default function EventDetails() {
   const { id } = useParams<{ id: string }>()
@@ -37,6 +53,14 @@ export default function EventDetails() {
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [isRegistered, setIsRegistered] = useState(false)
+  const [actionRegistration, setActionRegistration] = useState<{
+    item: RegistrationItem
+    action: 'approved' | 'rejected'
+  } | null>(null)
+  const [actionLoading, setActionLoading] = useState(false)
+  const [regFilter, setRegFilter] = useState<
+    'all' | 'pending' | 'approved' | 'rejected'
+  >('all')
 
   const isSupabaseId =
     typeof id === 'string' &&
@@ -435,54 +459,291 @@ export default function EventDetails() {
         {/* Organizer Privileged Section: Participants list */}
         {event.isCreator && isSupabaseId && (
           <div className="p-4 rounded-xl border border-primary/30 bg-secondary/30 space-y-3">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold flex items-center gap-2">
-                <Users className="w-4 h-4 text-primary" />
-                Inscrições Recebidas ({registrations.length})
-              </h3>
-              <Badge variant="secondary" className="text-[10px]">
-                Visão do Organizador
-              </Badge>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 className="text-sm font-bold flex items-center gap-2">
+                  <Users className="w-4 h-4 text-primary" />
+                  Inscrições Recebidas ({registrations.length})
+                </h3>
+                <p className="text-[11px] text-muted-foreground">
+                  Gerencie aprovações e recusas com notificações automáticas
+                </p>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-7 text-[11px] border-primary/40 text-primary gap-1"
+                  onClick={() => navigate('/organizer')}
+                >
+                  <ExternalLink className="w-3 h-3" />
+                  Painel Geral do Clube
+                </Button>
+                <Badge variant="secondary" className="text-[10px]">
+                  Organizador
+                </Badge>
+              </div>
             </div>
+
+            {/* Filter tags for organizer */}
+            <div className="flex items-center gap-1.5 pt-1">
+              <Button
+                size="sm"
+                variant={regFilter === 'all' ? 'default' : 'outline'}
+                className="h-6 text-[10px] px-2 rounded-full"
+                onClick={() => setRegFilter('all')}
+              >
+                Todas ({registrations.length})
+              </Button>
+              <Button
+                size="sm"
+                variant={regFilter === 'pending' ? 'default' : 'outline'}
+                className="h-6 text-[10px] px-2 rounded-full border-amber-500/50 text-amber-500 hover:bg-amber-500/10"
+                onClick={() => setRegFilter('pending')}
+              >
+                Pendentes (
+                {registrations.filter((r) => r.status === 'pending').length})
+              </Button>
+              <Button
+                size="sm"
+                variant={regFilter === 'approved' ? 'default' : 'outline'}
+                className="h-6 text-[10px] px-2 rounded-full border-emerald-500/50 text-emerald-500 hover:bg-emerald-500/10"
+                onClick={() => setRegFilter('approved')}
+              >
+                Aprovadas (
+                {
+                  registrations.filter(
+                    (r) => r.status === 'approved' || r.status === 'confirmed',
+                  ).length
+                }
+                )
+              </Button>
+              <Button
+                size="sm"
+                variant={regFilter === 'rejected' ? 'default' : 'outline'}
+                className="h-6 text-[10px] px-2 rounded-full border-red-500/50 text-red-500 hover:bg-red-500/10"
+                onClick={() => setRegFilter('rejected')}
+              >
+                Recusadas (
+                {registrations.filter((r) => r.status === 'rejected').length})
+              </Button>
+            </div>
+
             {registrations.length === 0 ? (
               <p className="text-xs text-muted-foreground py-2">
                 Nenhum participante inscrito até o momento.
               </p>
             ) : (
-              <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
-                {registrations.map((r) => (
-                  <div
-                    key={r.id}
-                    className="flex items-center justify-between p-2 rounded-lg bg-background border border-border/40 text-xs"
-                  >
-                    <div className="flex items-center gap-2">
-                      <Avatar className="w-7 h-7">
-                        <AvatarImage src={r.participant?.avatar} />
-                        <AvatarFallback>
-                          {r.participant?.name?.[0]}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-semibold">{r.participant?.name}</p>
-                        <p className="text-[10px] text-muted-foreground">
-                          {r.participant?.sport || 'Atleta'} •{' '}
-                          {r.participant?.city || 'Brasil'}
-                        </p>
+              <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
+                {registrations
+                  .filter((r) => {
+                    if (regFilter === 'all') return true
+                    if (regFilter === 'pending') return r.status === 'pending'
+                    if (regFilter === 'approved')
+                      return r.status === 'approved' || r.status === 'confirmed'
+                    if (regFilter === 'rejected') return r.status === 'rejected'
+                    return true
+                  })
+                  .map((r) => (
+                    <div
+                      key={r.id}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg bg-background border border-border/40 text-xs gap-2"
+                    >
+                      <div
+                        className="flex items-center gap-2.5 cursor-pointer hover:opacity-85 transition-opacity"
+                        onClick={() => navigate(`/profile/${r.userId}`)}
+                      >
+                        <Avatar className="w-8 h-8 border border-border">
+                          <AvatarImage src={r.participant?.avatar} />
+                          <AvatarFallback>
+                            {r.participant?.name?.[0] || 'A'}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <p className="font-semibold text-foreground hover:text-primary transition-colors">
+                              {r.participant?.name}
+                            </p>
+                            <ExternalLink className="w-3 h-3 text-muted-foreground" />
+                          </div>
+                          <p className="text-[10px] text-muted-foreground">
+                            {r.participant?.sport || 'Atleta'}{' '}
+                            {r.participant?.position
+                              ? `• ${r.participant.position}`
+                              : ''}{' '}
+                            • {r.participant?.city || 'Brasil'}
+                            {r.participant?.state
+                              ? `/${r.participant.state}`
+                              : ''}
+                          </p>
+                          <span className="text-[10px] text-muted-foreground/80">
+                            Inscrito em{' '}
+                            {new Date(r.createdAt).toLocaleDateString('pt-BR')}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 self-end sm:self-center">
+                        <Badge
+                          variant="outline"
+                          className={
+                            r.status === 'approved' || r.status === 'confirmed'
+                              ? 'text-[10px] text-emerald-600 border-emerald-500/40 bg-emerald-500/10'
+                              : r.status === 'rejected'
+                                ? 'text-[10px] text-red-600 border-red-500/40 bg-red-500/10'
+                                : 'text-[10px] text-amber-500 border-amber-500/40 bg-amber-500/10'
+                          }
+                        >
+                          {r.status === 'approved'
+                            ? 'Aprovado'
+                            : r.status === 'confirmed'
+                              ? 'Confirmado'
+                              : r.status === 'rejected'
+                                ? 'Recusado'
+                                : 'Pendente'}
+                        </Badge>
+
+                        {/* Action buttons */}
+                        {r.status !== 'canceled' && (
+                          <div className="flex items-center gap-1">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              disabled={
+                                r.status === 'approved' ||
+                                r.status === 'confirmed'
+                              }
+                              className="h-7 px-2 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 font-medium"
+                              onClick={() =>
+                                setActionRegistration({
+                                  item: r,
+                                  action: 'approved',
+                                })
+                              }
+                            >
+                              <Check className="w-3.5 h-3.5 mr-1" />
+                              Aprovar
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              disabled={r.status === 'rejected'}
+                              className="h-7 px-2 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30 font-medium"
+                              onClick={() =>
+                                setActionRegistration({
+                                  item: r,
+                                  action: 'rejected',
+                                })
+                              }
+                            >
+                              <X className="w-3.5 h-3.5 mr-1" />
+                              Recusar
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     </div>
-                    <Badge
-                      variant="outline"
-                      className="text-[10px] text-emerald-600 border-emerald-500/40"
-                    >
-                      Confirmado
-                    </Badge>
-                  </div>
-                ))}
+                  ))}
               </div>
             )}
           </div>
         )}
       </div>
+
+      {/* Confirmation Dialog for Approval / Rejection */}
+      <AlertDialog
+        open={!!actionRegistration}
+        onOpenChange={(open) => !open && setActionRegistration(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {actionRegistration?.action === 'approved'
+                ? 'Confirmar Aprovação da Inscrição'
+                : 'Confirmar Recusa da Inscrição'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {actionRegistration?.action === 'approved' ? (
+                <>
+                  Deseja realmente aprovar a inscrição de{' '}
+                  <strong>{actionRegistration?.item.participant?.name}</strong>?
+                  O atleta receberá uma notificação oficial de aprovação e sua
+                  vaga será confirmada.
+                </>
+              ) : (
+                <>
+                  Deseja realmente recusar a inscrição de{' '}
+                  <strong>{actionRegistration?.item.participant?.name}</strong>?
+                  O atleta será notificado de maneira respeitosa sobre o
+                  resultado da seletiva. O registro será mantido com status
+                  recusado.
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={actionLoading}>
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              disabled={actionLoading}
+              className={
+                actionRegistration?.action === 'approved'
+                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                  : 'bg-destructive hover:bg-destructive/90 text-destructive-foreground'
+              }
+              onClick={async (e) => {
+                e.preventDefault()
+                if (!actionRegistration || !user?.id) return
+
+                setActionLoading(true)
+                const { error, success } =
+                  await eventsService.updateRegistrationStatus({
+                    registrationId: actionRegistration.item.id,
+                    newStatus: actionRegistration.action,
+                    organizerId: user.id,
+                  })
+                setActionLoading(false)
+
+                if (error || !success) {
+                  toast.error(
+                    error?.message ||
+                      'Não foi possível atualizar o status da inscrição.',
+                  )
+                  return
+                }
+
+                // Update local state smoothly
+                setRegistrations((prev) =>
+                  prev.map((r) =>
+                    r.id === actionRegistration.item.id
+                      ? {
+                          ...r,
+                          status:
+                            actionRegistration.action as RegistrationStatus,
+                        }
+                      : r,
+                  ),
+                )
+
+                toast.success(
+                  actionRegistration.action === 'approved'
+                    ? 'Inscrição aprovada com sucesso! O atleta foi notificado.'
+                    : 'Inscrição recusada com sucesso. O atleta foi notificado.',
+                )
+                setActionRegistration(null)
+              }}
+            >
+              {actionLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin mr-1.5" />
+              ) : null}
+              {actionRegistration?.action === 'approved'
+                ? 'Confirmar Aprovação'
+                : 'Confirmar Recusa'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Floating Bottom Action Bar */}
       {/* Positioned above BottomNav on mobile (z-40 + bottom-16 / md:bottom-0) */}
