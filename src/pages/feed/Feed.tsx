@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DemoProfilesBanner } from '@/components/profile/DemoProfilesBanner'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { feedService, type PostItem } from '@/services/feed'
 import { useAuth } from '@/hooks/use-auth'
 import { Loader2, RefreshCw } from 'lucide-react'
@@ -13,6 +14,8 @@ import { Button } from '@/components/ui/button'
 
 export default function Feed() {
   const { user } = useAuth()
+  const [searchParams] = useSearchParams()
+  const targetPostId = searchParams.get('post')
   const [realPosts, setRealPosts] = useState<PostItem[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -26,6 +29,23 @@ export default function Feed() {
   useEffect(() => {
     loadFeed()
   }, [loadFeed])
+
+  // Scroll to target post if passed in URL query (?post=<id>)
+  useEffect(() => {
+    if (!loading && targetPostId) {
+      const timer = setTimeout(() => {
+        const el = document.getElementById(`post-${targetPostId}`)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          el.classList.add('ring-2', 'ring-primary', 'transition-all')
+          setTimeout(() => {
+            el.classList.remove('ring-2', 'ring-primary')
+          }, 3000)
+        }
+      }, 300)
+      return () => clearTimeout(timer)
+    }
+  }, [loading, targetPostId])
 
   // Convert real posts to PostCard format
   const formattedRealPosts = realPosts.map((p) => ({
@@ -97,15 +117,20 @@ export default function Feed() {
                   </div>
                 ) : (
                   allPosts.map((post) => (
-                    <PostCard
+                    <div
+                      id={`post-${post.id}`}
                       key={post.id}
-                      post={post}
-                      onDeleted={(deletedId) => {
-                        setRealPosts((prev) =>
-                          prev.filter((p) => p.id !== deletedId),
-                        )
-                      }}
-                    />
+                      className="rounded-2xl"
+                    >
+                      <PostCard
+                        post={post}
+                        onDeleted={(deletedId) => {
+                          setRealPosts((prev) =>
+                            prev.filter((p) => p.id !== deletedId),
+                          )
+                        }}
+                      />
+                    </div>
                   ))
                 )}
               </TabsContent>
@@ -114,15 +139,20 @@ export default function Feed() {
                 className="space-y-6 m-0 animate-in fade-in slide-in-from-bottom-4 duration-500"
               >
                 {socialPosts.map((post) => (
-                  <PostCard
+                  <div
+                    id={`post-${post.id}`}
                     key={post.id}
-                    post={post}
-                    onDeleted={(deletedId) => {
-                      setRealPosts((prev) =>
-                        prev.filter((p) => p.id !== deletedId),
-                      )
-                    }}
-                  />
+                    className="rounded-2xl"
+                  >
+                    <PostCard
+                      post={post}
+                      onDeleted={(deletedId) => {
+                        setRealPosts((prev) =>
+                          prev.filter((p) => p.id !== deletedId),
+                        )
+                      }}
+                    />
+                  </div>
                 ))}
               </TabsContent>
               <TabsContent

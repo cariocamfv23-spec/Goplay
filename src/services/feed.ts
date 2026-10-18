@@ -297,7 +297,63 @@ export const feedService = {
           .from('post_likes')
           .insert({ post_id: postId, user_id: userId })
 
-        if (error && !error.message.includes('duplicate')) throw error
+        if (
+          error &&
+          !error.message?.includes('duplicate') &&
+          error.code !== '23505'
+        ) {
+          throw error
+        }
+
+        // Notification for post author (non-blocking)
+        try {
+          const postLink = `/feed?post=${postId}`
+
+          // 1. Fetch post owner
+          const { data: postData } = await db
+            .from('posts')
+            .select('user_id, content')
+            .eq('id', postId)
+            .maybeSingle()
+
+          // 2. Only notify if author exists and is not the actor
+          if (postData?.user_id && postData.user_id !== userId) {
+            // 3. Anti-duplication check: check if notification already exists for this actor, author and post link
+            const { data: existingNotif } = await db
+              .from('notifications')
+              .select('id')
+              .eq('user_id', postData.user_id)
+              .eq('actor_id', userId)
+              .eq('type', 'like')
+              .eq('link', postLink)
+              .limit(1)
+
+            if (!existingNotif || existingNotif.length === 0) {
+              const { data: actorProfile } = await db
+                .from('profiles')
+                .select('full_name')
+                .eq('id', userId)
+                .maybeSingle()
+
+              const actorName = actorProfile?.full_name || 'Um atleta'
+
+              await db.from('notifications').insert({
+                user_id: postData.user_id,
+                actor_id: userId,
+                type: 'like',
+                title: 'Nova Curtida',
+                message: `${actorName} curtiu a sua publicação.`,
+                link: postLink,
+              })
+            }
+          }
+        } catch (notifErr) {
+          console.error(
+            '[feedService.toggleLike] Falha não bloqueante ao criar notificação de curtida:',
+            notifErr,
+          )
+        }
+
         return { isLiked: true, error: null }
       }
     } catch (err: any) {
@@ -394,6 +450,42 @@ export const feedService = {
         .select('full_name, avatar_url')
         .eq('id', userId)
         .maybeSingle()
+
+      // Notification for post author (resilient and non-blocking for comment insertion)
+      try {
+        const postLink = `/feed?post=${postId}`
+
+        // 1. Fetch post author
+        const { data: postData } = await db
+          .from('posts')
+          .select('user_id')
+          .eq('id', postId)
+          .maybeSingle()
+
+        // 2. Only notify if author exists and is not the actor
+        if (postData?.user_id && postData.user_id !== userId) {
+          const actorName = prof?.full_name || 'Um atleta'
+          const trimmedComment = content.trim()
+          const preview =
+            trimmedComment.length > 50
+              ? `${trimmedComment.substring(0, 47)}...`
+              : trimmedComment
+
+          await db.from('notifications').insert({
+            user_id: postData.user_id,
+            actor_id: userId,
+            type: 'comment',
+            title: 'Novo Comentário',
+            message: `${actorName} comentou: "${preview}"`,
+            link: postLink,
+          })
+        }
+      } catch (notifErr) {
+        console.error(
+          '[feedService.addComment] Falha não bloqueante ao criar notificação de comentário:',
+          notifErr,
+        )
+      }
 
       return {
         data: {
