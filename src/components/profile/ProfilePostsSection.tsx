@@ -17,9 +17,14 @@ import {
   Sparkles,
   MessageSquare,
   Video,
+  AtSign,
+  Music,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase/client'
+import { MentionAutocomplete } from '@/components/feed/MentionAutocomplete'
+import { AudioMusicModal } from '@/components/feed/AudioMusicModal'
+import type { PostMention, PostMusicLink } from '@/services/feed'
 
 interface ProfilePostsSectionProps {
   userId: string
@@ -45,8 +50,16 @@ export function ProfilePostsSection({
   const [content, setContent] = useState('')
   const [selectedMedia, setSelectedMedia] = useState<File | null>(null)
   const [mediaPreview, setMediaPreview] = useState<string | null>(null)
+  const [selectedAudio, setSelectedAudio] = useState<File | null>(null)
+  const [selectedMusicLink, setSelectedMusicLink] =
+    useState<PostMusicLink | null>(null)
+  const [mentions, setMentions] = useState<PostMention[]>([])
+  const [mentionQuery, setMentionQuery] = useState('')
+  const [isMentionOpen, setIsMentionOpen] = useState(false)
+  const [isMusicModalOpen, setIsMusicModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const isSupabaseAuthor =
     typeof userId === 'string' &&
@@ -134,6 +147,59 @@ export function ProfilePostsSection({
     }
   }
 
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = e.target.value
+    setContent(val)
+
+    // Detect "@" for autocomplete
+    const cursor = e.target.selectionStart || val.length
+    const textBeforeCursor = val.slice(0, cursor)
+    const atMatch = textBeforeCursor.match(/@([a-zA-Z0-9_À-ÿ]*)$/)
+
+    if (atMatch) {
+      setMentionQuery(atMatch[1])
+      setIsMentionOpen(true)
+    } else {
+      setIsMentionOpen(false)
+    }
+  }
+
+  const handleSelectMention = (mention: PostMention) => {
+    if (mentions.some((m) => m.id === mention.id)) {
+      toast.info('Perfil já adicionado às marcações.')
+      setIsMentionOpen(false)
+      return
+    }
+
+    if (mentions.length >= 10) {
+      toast.error('Limite de até 10 marcações por publicação atingido.')
+      setIsMentionOpen(false)
+      return
+    }
+
+    setMentions((prev) => [...prev, mention])
+
+    // Replace the trailing @query with empty string or space in content
+    const textarea = textareaRef.current
+    if (textarea) {
+      const cursor = textarea.selectionStart || content.length
+      const textBeforeCursor = content.slice(0, cursor)
+      const textAfterCursor = content.slice(cursor)
+      const replacedBefore = textBeforeCursor.replace(
+        /@([a-zA-Z0-9_À-ÿ]*)$/,
+        '',
+      )
+      setContent(`${replacedBefore}${textAfterCursor}`)
+    }
+
+    setIsMentionOpen(false)
+    toast.success(`@${mention.name} marcado no post!`)
+  }
+
+  const handleRemoveMention = (id: string) => {
+    setMentions((prev) => prev.filter((m) => m.id !== id))
+  }
+
   const handleCreatePost = async () => {
     if (!authUser?.id) {
       toast.error('Faça login para criar uma publicação.')
@@ -141,8 +207,8 @@ export function ProfilePostsSection({
     }
 
     const trimmed = content.trim()
-    if (!trimmed && !selectedMedia) {
-      toast.error('Escreva uma mensagem ou adicione uma foto/vídeo.')
+    if (!trimmed && !selectedMedia && !selectedAudio && !selectedMusicLink) {
+      toast.error('Escreva uma mensagem ou adicione uma foto, vídeo ou música.')
       return
     }
 
@@ -154,6 +220,9 @@ export function ProfilePostsSection({
       userId: authUser.id,
       content: trimmed,
       mediaFiles: selectedMedia ? [selectedMedia] : [],
+      audioFile: selectedAudio,
+      musicLink: selectedMusicLink,
+      mentions,
       postType,
     })
 
@@ -174,6 +243,10 @@ export function ProfilePostsSection({
     // Reset composer form
     setContent('')
     handleClearMedia()
+    setSelectedAudio(null)
+    setSelectedMusicLink(null)
+    setMentions([])
+    setIsMentionOpen(false)
 
     // Add to local list immediately
     setPosts((prev) => {
@@ -219,15 +292,102 @@ export function ProfilePostsSection({
                 <AvatarFallback>EU</AvatarFallback>
               </Avatar>
 
-              <div className="flex-1 space-y-2">
-                <Textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  placeholder="Compartilhe uma conquista, treino, novidade ou pensamento..."
-                  rows={3}
-                  disabled={isSubmitting}
-                  className="resize-none bg-background/60 border-border/60 focus-visible:ring-primary text-sm min-h-[72px]"
-                />
+              <div className="flex-1 space-y-2 relative">
+                <div className="relative">
+                  <MentionAutocomplete
+                    query={mentionQuery}
+                    isOpen={isMentionOpen}
+                    onSelect={handleSelectMention}
+                    onClose={() => setIsMentionOpen(false)}
+                    currentUserId={authUser?.id}
+                    existingMentions={mentions}
+                  />
+
+                  <Textarea
+                    ref={textareaRef}
+                    value={content}
+                    onChange={handleContentChange}
+                    placeholder="Compartilhe uma conquista, novidade... Digite @ para marcar alguém!"
+                    rows={3}
+                    disabled={isSubmitting}
+                    className="resize-none bg-background/60 border-border/60 focus-visible:ring-primary text-sm min-h-[72px]"
+                  />
+                </div>
+
+                {/* Mention Chips List */}
+                {mentions.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    <span className="text-[10px] font-semibold text-muted-foreground flex items-center gap-1">
+                      <AtSign className="w-3 h-3 text-primary" />
+                      Marcados ({mentions.length}):
+                    </span>
+                    {mentions.map((m) => (
+                      <Badge
+                        key={m.id}
+                        variant="secondary"
+                        className="text-xs py-0.5 px-2 bg-primary/10 text-primary border border-primary/20 flex items-center gap-1 rounded-full animate-in fade-in"
+                      >
+                        <Avatar className="w-3.5 h-3.5">
+                          <AvatarImage
+                            src={
+                              m.avatar ||
+                              `https://img.usecurling.com/ppl/thumbnail?seed=${m.id.slice(0, 4)}`
+                            }
+                          />
+                          <AvatarFallback className="text-[8px]">
+                            {m.name.slice(0, 1)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span>{m.name}</span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveMention(m.id)}
+                          disabled={isSubmitting}
+                          className="hover:text-destructive p-0.5 rounded-full ml-0.5"
+                          title="Remover marcação"
+                        >
+                          <X className="w-2.5 h-2.5" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+
+                {/* Music / Audio Indicator in Composer */}
+                {(selectedAudio || selectedMusicLink) && (
+                  <div className="p-2.5 rounded-xl border border-primary/30 bg-primary/5 flex items-center justify-between gap-2 text-xs">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="w-7 h-7 rounded-full bg-primary/20 text-primary flex items-center justify-center shrink-0">
+                        <Music className="w-3.5 h-3.5" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-foreground truncate">
+                          {selectedAudio
+                            ? selectedAudio.name
+                            : selectedMusicLink?.title || 'Música Anexada'}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground truncate">
+                          {selectedAudio
+                            ? `${(selectedAudio.size / (1024 * 1024)).toFixed(2)} MB • Áudio do dispositivo`
+                            : `${selectedMusicLink?.platform.toUpperCase() || 'LINK'}: ${selectedMusicLink?.url}`}
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      className="h-6 w-6 rounded-full text-muted-foreground hover:text-destructive"
+                      onClick={() => {
+                        setSelectedAudio(null)
+                        setSelectedMusicLink(null)
+                      }}
+                      disabled={isSubmitting}
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                )}
 
                 {/* Media Preview inside Composer */}
                 {mediaPreview && (
@@ -260,7 +420,7 @@ export function ProfilePostsSection({
                 )}
 
                 <div className="flex items-center justify-between pt-1">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 flex-wrap">
                     <Button
                       type="button"
                       variant="outline"
@@ -274,9 +434,7 @@ export function ProfilePostsSection({
                       ) : (
                         <ImagePlus className="w-3.5 h-3.5 text-primary" />
                       )}
-                      <span>
-                        {selectedMedia ? 'Trocar Mídia' : 'Foto / Vídeo'}
-                      </span>
+                      <span>{selectedMedia ? 'Mídia' : 'Foto/Vídeo'}</span>
                     </Button>
                     <input
                       ref={fileInputRef}
@@ -285,6 +443,47 @@ export function ProfilePostsSection({
                       className="hidden"
                       onChange={handleFileChange}
                     />
+
+                    {/* Tag / Mention Button */}
+                    <Button
+                      type="button"
+                      variant={mentions.length > 0 ? 'secondary' : 'outline'}
+                      size="sm"
+                      onClick={() => {
+                        setMentionQuery('')
+                        setIsMentionOpen((prev) => !prev)
+                      }}
+                      disabled={isSubmitting}
+                      className="h-8 text-xs gap-1.5 border-border/60 hover:bg-secondary/60"
+                    >
+                      <AtSign className="w-3.5 h-3.5 text-primary" />
+                      <span>
+                        {mentions.length > 0
+                          ? `Marcados (${mentions.length})`
+                          : 'Marcar'}
+                      </span>
+                    </Button>
+
+                    {/* Music / Audio Button */}
+                    <Button
+                      type="button"
+                      variant={
+                        selectedAudio || selectedMusicLink
+                          ? 'secondary'
+                          : 'outline'
+                      }
+                      size="sm"
+                      onClick={() => setIsMusicModalOpen(true)}
+                      disabled={isSubmitting}
+                      className="h-8 text-xs gap-1.5 border-border/60 hover:bg-secondary/60"
+                    >
+                      <Music className="w-3.5 h-3.5 text-primary" />
+                      <span>
+                        {selectedAudio || selectedMusicLink
+                          ? 'Música ✓'
+                          : 'Música'}
+                      </span>
+                    </Button>
                   </div>
 
                   <Button
@@ -292,7 +491,11 @@ export function ProfilePostsSection({
                     size="sm"
                     onClick={handleCreatePost}
                     disabled={
-                      isSubmitting || (!content.trim() && !selectedMedia)
+                      isSubmitting ||
+                      (!content.trim() &&
+                        !selectedMedia &&
+                        !selectedAudio &&
+                        !selectedMusicLink)
                     }
                     className="h-8 px-4 font-bold text-xs gap-1.5 shadow-md bg-primary hover:bg-primary/90 text-white"
                   >
@@ -314,6 +517,16 @@ export function ProfilePostsSection({
           </CardContent>
         </Card>
       )}
+
+      {/* Audio / Music Selector Modal */}
+      <AudioMusicModal
+        open={isMusicModalOpen}
+        onOpenChange={setIsMusicModalOpen}
+        onSaveAudio={setSelectedAudio}
+        onSaveMusicLink={setSelectedMusicLink}
+        currentAudioFile={selectedAudio}
+        currentMusicLink={selectedMusicLink}
+      />
 
       {/* Loading State */}
       {loading && (
@@ -397,6 +610,9 @@ export function ProfilePostsSection({
               media: post.media,
               image: post.media?.[0],
               videoUrl: post.videoUrl,
+              audioUrl: post.audioUrl,
+              musicLink: post.musicLink,
+              mentions: post.mentions,
               likes: post.likesCount,
               comments: post.commentsCount,
               shares: 0,

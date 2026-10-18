@@ -1,5 +1,14 @@
 import { Button } from '@/components/ui/button'
-import { Plus, Ghost, Video, X, Sparkles, Box } from 'lucide-react'
+import {
+  Plus,
+  Ghost,
+  Video,
+  X,
+  Sparkles,
+  Box,
+  AtSign,
+  Music,
+} from 'lucide-react'
 import { toast } from 'sonner'
 import {
   Dialog,
@@ -17,6 +26,11 @@ import { Separator } from '@/components/ui/separator'
 import { Post3DGenerator } from '@/components/Post3DGenerator'
 import { GhostViewMode } from '@/components/Ghost3DViewer'
 import { cn } from '@/lib/utils'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { MentionAutocomplete } from '@/components/feed/MentionAutocomplete'
+import { AudioMusicModal } from '@/components/feed/AudioMusicModal'
+import type { PostMention, PostMusicLink } from '@/services/feed'
 
 import { useAuth } from '@/hooks/use-auth'
 import { feedService } from '@/services/feed'
@@ -32,15 +46,80 @@ export function CreatePostFab({
   const [content, setContent] = useState('')
   const [selectedMedia, setSelectedMedia] = useState<File | null>(null)
   const [mediaPreview, setMediaPreview] = useState<string | null>(null)
+  const [selectedAudio, setSelectedAudio] = useState<File | null>(null)
+  const [selectedMusicLink, setSelectedMusicLink] =
+    useState<PostMusicLink | null>(null)
+  const [mentions, setMentions] = useState<PostMention[]>([])
+  const [mentionQuery, setMentionQuery] = useState('')
+  const [isMentionOpen, setIsMentionOpen] = useState(false)
+  const [isMusicModalOpen, setIsMusicModalOpen] = useState(false)
   const [show3DGenerator, setShow3DGenerator] = useState(false)
   const [generatedMode, setGeneratedMode] = useState<GhostViewMode | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
   const navigate = useNavigate()
 
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = e.target.value
+    setContent(val)
+
+    const cursor = e.target.selectionStart || val.length
+    const textBeforeCursor = val.slice(0, cursor)
+    const atMatch = textBeforeCursor.match(/@([a-zA-Z0-9_À-ÿ]*)$/)
+
+    if (atMatch) {
+      setMentionQuery(atMatch[1])
+      setIsMentionOpen(true)
+    } else {
+      setIsMentionOpen(false)
+    }
+  }
+
+  const handleSelectMention = (mention: PostMention) => {
+    if (mentions.some((m) => m.id === mention.id)) {
+      toast.info('Perfil já adicionado às marcações.')
+      setIsMentionOpen(false)
+      return
+    }
+
+    if (mentions.length >= 10) {
+      toast.error('Limite de até 10 marcações por publicação atingido.')
+      setIsMentionOpen(false)
+      return
+    }
+
+    setMentions((prev) => [...prev, mention])
+
+    const textarea = textareaRef.current
+    if (textarea) {
+      const cursor = textarea.selectionStart || content.length
+      const textBeforeCursor = content.slice(0, cursor)
+      const textAfterCursor = content.slice(cursor)
+      const replacedBefore = textBeforeCursor.replace(
+        /@([a-zA-Z0-9_À-ÿ]*)$/,
+        '',
+      )
+      setContent(`${replacedBefore}${textAfterCursor}`)
+    }
+
+    setIsMentionOpen(false)
+    toast.success(`@${mention.name} marcado no post!`)
+  }
+
+  const handleRemoveMention = (id: string) => {
+    setMentions((prev) => prev.filter((m) => m.id !== id))
+  }
+
   const handlePost = async () => {
-    if (!content.trim() && !selectedMedia) return
+    if (
+      !content.trim() &&
+      !selectedMedia &&
+      !selectedAudio &&
+      !selectedMusicLink
+    )
+      return
 
     if (user?.id) {
       setIsSubmitting(true)
@@ -48,6 +127,9 @@ export function CreatePostFab({
         userId: user.id,
         content: content.trim(),
         mediaFiles: selectedMedia ? [selectedMedia] : [],
+        audioFile: selectedAudio,
+        musicLink: selectedMusicLink,
+        mentions,
         postType: selectedMedia?.type.startsWith('video/')
           ? 'video'
           : selectedMedia
@@ -81,6 +163,10 @@ export function CreatePostFab({
     setContent('')
     setSelectedMedia(null)
     setMediaPreview(null)
+    setSelectedAudio(null)
+    setSelectedMusicLink(null)
+    setMentions([])
+    setIsMentionOpen(false)
     setShow3DGenerator(false)
     setGeneratedMode(null)
   }
@@ -147,15 +233,102 @@ export function CreatePostFab({
               <DialogTitle>Criar Nova Publicação</DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
+              <div className="grid gap-2 relative">
                 <Label htmlFor="content">No que você está pensando?</Label>
-                <Textarea
-                  id="content"
-                  placeholder="Compartilhe seu treino, conquista ou ideia..."
-                  className="min-h-[100px] resize-none"
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                />
+                <div className="relative">
+                  <MentionAutocomplete
+                    query={mentionQuery}
+                    isOpen={isMentionOpen}
+                    onSelect={handleSelectMention}
+                    onClose={() => setIsMentionOpen(false)}
+                    currentUserId={user?.id}
+                    existingMentions={mentions}
+                  />
+
+                  <Textarea
+                    ref={textareaRef}
+                    id="content"
+                    placeholder="Compartilhe seu treino, conquista... Digite @ para marcar alguém!"
+                    className="min-h-[100px] resize-none"
+                    value={content}
+                    onChange={handleContentChange}
+                  />
+                </div>
+
+                {/* Mention Chips List */}
+                {mentions.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    <span className="text-[10px] font-semibold text-muted-foreground flex items-center gap-1">
+                      <AtSign className="w-3 h-3 text-primary" />
+                      Marcados ({mentions.length}):
+                    </span>
+                    {mentions.map((m) => (
+                      <Badge
+                        key={m.id}
+                        variant="secondary"
+                        className="text-xs py-0.5 px-2 bg-primary/10 text-primary border border-primary/20 flex items-center gap-1 rounded-full animate-in fade-in"
+                      >
+                        <Avatar className="w-3.5 h-3.5">
+                          <AvatarImage
+                            src={
+                              m.avatar ||
+                              `https://img.usecurling.com/ppl/thumbnail?seed=${m.id.slice(0, 4)}`
+                            }
+                          />
+                          <AvatarFallback className="text-[8px]">
+                            {m.name.slice(0, 1)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span>{m.name}</span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveMention(m.id)}
+                          disabled={isSubmitting}
+                          className="hover:text-destructive p-0.5 rounded-full ml-0.5"
+                          title="Remover marcação"
+                        >
+                          <X className="w-2.5 h-2.5" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+
+                {/* Music / Audio Indicator */}
+                {(selectedAudio || selectedMusicLink) && (
+                  <div className="p-2.5 rounded-xl border border-primary/30 bg-primary/5 flex items-center justify-between gap-2 text-xs">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="w-7 h-7 rounded-full bg-primary/20 text-primary flex items-center justify-center shrink-0">
+                        <Music className="w-3.5 h-3.5" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-foreground truncate">
+                          {selectedAudio
+                            ? selectedAudio.name
+                            : selectedMusicLink?.title || 'Música Anexada'}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground truncate">
+                          {selectedAudio
+                            ? `${(selectedAudio.size / (1024 * 1024)).toFixed(2)} MB • Áudio local`
+                            : `${selectedMusicLink?.platform.toUpperCase()}: ${selectedMusicLink?.url}`}
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      className="h-6 w-6 rounded-full text-muted-foreground hover:text-destructive"
+                      onClick={() => {
+                        setSelectedAudio(null)
+                        setSelectedMusicLink(null)
+                      }}
+                      disabled={isSubmitting}
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                )}
               </div>
 
               {/* Media Preview Area */}
@@ -218,16 +391,18 @@ export function CreatePostFab({
               )}
 
               <div className="grid gap-2">
-                <Label>Adicionar Mídia</Label>
-                <div className="grid grid-cols-2 gap-2">
+                <Label>Adicionar à publicação</Label>
+                <div className="grid grid-cols-3 gap-2">
                   <Button
                     variant="outline"
-                    className="w-full text-xs gap-2"
+                    className="w-full text-xs gap-1.5 px-2"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isSubmitting}
                   >
-                    <Video className="w-4 h-4" />
-                    {selectedMedia ? 'Trocar Arquivo' : 'Foto / Vídeo'}
+                    <Video className="w-3.5 h-3.5 text-primary" />
+                    <span className="truncate">
+                      {selectedMedia ? 'Mídia' : 'Foto/Vídeo'}
+                    </span>
                   </Button>
                   <input
                     type="file"
@@ -237,8 +412,39 @@ export function CreatePostFab({
                     onChange={handleFileSelect}
                   />
 
-                  <Button variant="outline" className="w-full text-xs" disabled>
-                    Localização
+                  <Button
+                    variant={mentions.length > 0 ? 'secondary' : 'outline'}
+                    className="w-full text-xs gap-1.5 px-2"
+                    onClick={() => {
+                      setMentionQuery('')
+                      setIsMentionOpen((prev) => !prev)
+                    }}
+                    disabled={isSubmitting}
+                  >
+                    <AtSign className="w-3.5 h-3.5 text-primary" />
+                    <span className="truncate">
+                      {mentions.length > 0
+                        ? `Tags (${mentions.length})`
+                        : 'Marcar'}
+                    </span>
+                  </Button>
+
+                  <Button
+                    variant={
+                      selectedAudio || selectedMusicLink
+                        ? 'secondary'
+                        : 'outline'
+                    }
+                    className="w-full text-xs gap-1.5 px-2"
+                    onClick={() => setIsMusicModalOpen(true)}
+                    disabled={isSubmitting}
+                  >
+                    <Music className="w-3.5 h-3.5 text-primary" />
+                    <span className="truncate">
+                      {selectedAudio || selectedMusicLink
+                        ? 'Música ✓'
+                        : 'Música'}
+                    </span>
                   </Button>
                 </div>
               </div>
@@ -263,7 +469,13 @@ export function CreatePostFab({
             <div className="flex justify-end">
               <Button
                 onClick={handlePost}
-                disabled={(!content.trim() && !selectedMedia) || isSubmitting}
+                disabled={
+                  (!content.trim() &&
+                    !selectedMedia &&
+                    !selectedAudio &&
+                    !selectedMusicLink) ||
+                  isSubmitting
+                }
                 className="font-bold gap-1.5"
               >
                 {isSubmitting ? (
@@ -279,6 +491,15 @@ export function CreatePostFab({
           </>
         )}
       </DialogContent>
+
+      <AudioMusicModal
+        open={isMusicModalOpen}
+        onOpenChange={setIsMusicModalOpen}
+        onSaveAudio={setSelectedAudio}
+        onSaveMusicLink={setSelectedMusicLink}
+        currentAudioFile={selectedAudio}
+        currentMusicLink={selectedMusicLink}
+      />
     </Dialog>
   )
 }

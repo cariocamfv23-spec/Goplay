@@ -19,7 +19,12 @@ import {
   VolumeX,
   X,
   Mic,
+  AtSign,
+  Music,
+  ExternalLink,
+  Disc3,
 } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { useLikeInteraction } from '@/hooks/useLikeInteraction'
 import { cn } from '@/lib/utils'
 import { useState, useEffect } from 'react'
@@ -214,9 +219,71 @@ export function PostDetailDialog({
               {/* Caption */}
               <div>
                 <h2 className="font-bold text-lg mb-1">{post.title}</h2>
-                <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                <p className="text-sm leading-relaxed whitespace-pre-wrap mb-2">
                   {post.content}
                 </p>
+
+                {/* Mentions inside modal */}
+                {post.mentions && post.mentions.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-1.5 my-2">
+                    <span className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1">
+                      <AtSign className="w-3 h-3 text-primary" />
+                      Marcados:
+                    </span>
+                    {post.mentions.map((mention: any) => (
+                      <Link
+                        key={mention.id}
+                        to={`/profile/${mention.id}`}
+                        onClick={() => onOpenChange(false)}
+                        className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 transition-colors"
+                      >
+                        @{mention.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+
+                {/* Attached Audio Player in Modal */}
+                {post.audioUrl && (
+                  <div className="my-2 p-2.5 rounded-xl border border-primary/30 bg-primary/5 space-y-1">
+                    <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+                      <Disc3 className="w-3.5 h-3.5 text-primary animate-spin" />
+                      Áudio / Trilha Sonora
+                    </div>
+                    <audio
+                      src={post.audioUrl}
+                      controls
+                      className="w-full h-8"
+                    />
+                  </div>
+                )}
+
+                {/* External Music Link in Modal */}
+                {post.musicLink && (
+                  <div className="my-2 p-2.5 rounded-xl border border-border/80 bg-secondary/30 flex items-center justify-between gap-2 text-xs">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Music className="w-4 h-4 text-primary shrink-0" />
+                      <div className="min-w-0">
+                        <p className="font-semibold text-foreground truncate">
+                          {post.musicLink.title || 'Música Compartilhada'}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground truncate">
+                          {post.musicLink.artist || post.musicLink.url}
+                        </p>
+                      </div>
+                    </div>
+                    <a
+                      href={post.musicLink.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-primary text-white shrink-0 hover:bg-primary/90"
+                    >
+                      <span>Ouvir</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                )}
+
                 <div className="flex flex-wrap gap-1 mt-3">
                   {post.hashtags?.map((tag: string) => (
                     <span

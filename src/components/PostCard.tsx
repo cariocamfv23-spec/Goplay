@@ -9,6 +9,9 @@ import {
   Hand,
   HeartHandshake,
   ExternalLink,
+  AtSign,
+  Music,
+  Disc3,
 } from 'lucide-react'
 import {
   Carousel,
@@ -61,6 +64,20 @@ interface PostProps {
     hashtags?: string[]
     videoDuration?: string
     videoUrl?: string
+    audioUrl?: string | null
+    musicLink?: {
+      platform: 'spotify' | 'youtube' | 'apple' | 'other'
+      url: string
+      title?: string
+      artist?: string
+    } | null
+    mentions?: Array<{
+      id: string
+      name: string
+      avatar?: string | null
+      accountType?: string | null
+      sport?: string | null
+    }>
     articleTitle?: string
     articleDomain?: string
     likes: number
@@ -418,6 +435,105 @@ export function PostCard({ post, onDeleted }: PostProps) {
             <p className="text-sm mb-3 leading-relaxed whitespace-pre-wrap">
               {post.content}
             </p>
+          )}
+
+          {/* Mentions / Tags Bar (Instagram-like pills) */}
+          {post.mentions && post.mentions.length > 0 && (
+            <div className="flex flex-wrap items-center gap-1.5 mb-3">
+              <span className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1">
+                <AtSign className="w-3 h-3 text-primary" />
+                com
+              </span>
+              {post.mentions.map((mention) => (
+                <Link
+                  key={mention.id}
+                  to={`/profile/${mention.id}`}
+                  className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 transition-all hover:scale-[1.02] active:scale-95"
+                >
+                  <Avatar className="w-3.5 h-3.5 border border-primary/30">
+                    <AvatarImage
+                      src={
+                        mention.avatar ||
+                        `https://img.usecurling.com/ppl/thumbnail?seed=${mention.id.slice(0, 4)}`
+                      }
+                    />
+                    <AvatarFallback className="text-[8px]">
+                      {mention.name.slice(0, 1)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span>@{mention.name}</span>
+                </Link>
+              ))}
+            </div>
+          )}
+
+          {/* Audio Player (attached native sound/music track) */}
+          {post.audioUrl && (
+            <div className="mb-3 p-3 rounded-xl border border-primary/30 bg-gradient-to-r from-primary/10 via-secondary/40 to-background shadow-xs space-y-1.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-semibold text-foreground flex items-center gap-1.5">
+                  <Disc3 className="w-4 h-4 text-primary animate-[spin_8s_linear_infinite]" />
+                  Áudio / Trilha Sonora
+                </span>
+                <Badge
+                  variant="outline"
+                  className="text-[9px] uppercase px-1.5 py-0 border-primary/30 text-primary"
+                >
+                  Mídia Anexada
+                </Badge>
+              </div>
+              <audio
+                src={post.audioUrl}
+                controls
+                preload="metadata"
+                className="w-full h-9 rounded-lg"
+              />
+            </div>
+          )}
+
+          {/* External Music Link Player Card (Spotify, YouTube, Apple Music) */}
+          {post.musicLink && (
+            <div className="mb-3 p-3 rounded-xl border border-border/80 bg-secondary/30 hover:bg-secondary/40 transition-colors">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-9 h-9 rounded-full bg-primary/15 text-primary flex items-center justify-center shrink-0">
+                    <Music className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-xs font-semibold text-foreground truncate">
+                        {post.musicLink.title || 'Música Compartilhada'}
+                      </p>
+                      <Badge
+                        variant="secondary"
+                        className="text-[9px] px-1 py-0 uppercase font-medium bg-secondary text-muted-foreground shrink-0"
+                      >
+                        {post.musicLink.platform}
+                      </Badge>
+                    </div>
+                    {post.musicLink.artist ? (
+                      <p className="text-[11px] text-muted-foreground truncate">
+                        {post.musicLink.artist}
+                      </p>
+                    ) : (
+                      <p className="text-[10px] text-muted-foreground truncate">
+                        {post.musicLink.url}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <a
+                  href={post.musicLink.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg bg-primary hover:bg-primary/90 text-white shrink-0 shadow-xs"
+                >
+                  <span>Ouvir</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+            </div>
           )}
 
           {renderContent()}

@@ -158,6 +158,9 @@ export function useRealtimeFeed(
             media: Array.isArray(newRow.media_urls) ? newRow.media_urls : [],
             type: newRow.post_type || 'text',
             videoUrl: newRow.video_url || undefined,
+            audioUrl: newRow.audio_url || null,
+            musicLink: newRow.music_link || null,
+            mentions: Array.isArray(newRow.mentions) ? newRow.mentions : [],
             likesCount: 0,
             commentsCount: 0,
             isLiked: false,
@@ -202,6 +205,17 @@ export function useRealtimeFeed(
                     : p.media,
                   type: updatedRow.post_type ?? p.type,
                   videoUrl: updatedRow.video_url ?? p.videoUrl,
+                  audioUrl:
+                    updatedRow.audio_url !== undefined
+                      ? updatedRow.audio_url
+                      : p.audioUrl,
+                  musicLink:
+                    updatedRow.music_link !== undefined
+                      ? updatedRow.music_link
+                      : p.musicLink,
+                  mentions: Array.isArray(updatedRow.mentions)
+                    ? updatedRow.mentions
+                    : p.mentions,
                 }
               }),
             )

@@ -11,6 +11,21 @@ export interface PostAuthor {
   sport?: string | null
 }
 
+export interface PostMention {
+  id: string
+  name: string
+  avatar?: string | null
+  accountType?: string | null
+  sport?: string | null
+}
+
+export interface PostMusicLink {
+  platform: 'spotify' | 'youtube' | 'apple' | 'other'
+  url: string
+  title?: string
+  artist?: string
+}
+
 export interface PostItem {
   id: string
   userId: string
@@ -19,6 +34,9 @@ export interface PostItem {
   media: string[]
   type: 'text' | 'image' | 'video' | 'article'
   videoUrl?: string
+  audioUrl?: string | null
+  musicLink?: PostMusicLink | null
+  mentions?: PostMention[]
   likesCount: number
   commentsCount: number
   isLiked: boolean
@@ -136,6 +154,9 @@ export const feedService = {
           media: Array.isArray(p.media_urls) ? p.media_urls : [],
           type: (p.post_type as any) || 'text',
           videoUrl: p.video_url || undefined,
+          audioUrl: p.audio_url || null,
+          musicLink: p.music_link || null,
+          mentions: Array.isArray(p.mentions) ? p.mentions : [],
           likesCount: likesByPost.get(p.id) || 0,
           commentsCount: commentsByPost.get(p.id) || 0,
           isLiked: userLikedSet.has(p.id),
@@ -237,6 +258,9 @@ export const feedService = {
           media: Array.isArray(p.media_urls) ? p.media_urls : [],
           type: (p.post_type as any) || 'text',
           videoUrl: p.video_url || undefined,
+          audioUrl: p.audio_url || null,
+          musicLink: p.music_link || null,
+          mentions: Array.isArray(p.mentions) ? p.mentions : [],
           likesCount: likesByPost.get(p.id) || 0,
           commentsCount: commentsByPost.get(p.id) || 0,
           isLiked: userLikedSet.has(p.id),
@@ -261,13 +285,29 @@ export const feedService = {
     userId: string
     content: string
     mediaFiles?: File[]
+    audioFile?: File | null
+    musicLink?: PostMusicLink | null
+    mentions?: PostMention[]
     postType?: 'text' | 'image' | 'video'
   }): Promise<{ data: PostItem | null; error: Error | null }> {
     try {
-      const { userId, content, mediaFiles = [], postType = 'text' } = params
+      const {
+        userId,
+        content,
+        mediaFiles = [],
+        audioFile = null,
+        musicLink = null,
+        mentions = [],
+        postType = 'text',
+      } = params
       if (!userId) throw new Error('Usuário não autenticado.')
-      if (!content.trim() && mediaFiles.length === 0) {
-        throw new Error('O post deve conter texto ou mídia.')
+      if (
+        !content.trim() &&
+        mediaFiles.length === 0 &&
+        !audioFile &&
+        !musicLink
+      ) {
+        throw new Error('O post deve conter texto, mídia ou música.')
       }
 
       const mediaUrls: string[] = []
@@ -293,6 +333,42 @@ export const feedService = {
         else if (detectedType !== 'video') detectedType = 'image'
       }
 
+      // Upload optional audio file if provided (mp3, wav, m4a, etc.)
+      let uploadedAudioUrl: string | null = null
+      if (audioFile) {
+        const ext = audioFile.name.split('.').pop()?.toLowerCase() || 'mp3'
+        const audioPath = `${userId}/audio_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${ext}`
+
+        const { error: audioUploadErr } = await supabase.storage
+          .from('posts')
+          .upload(audioPath, audioFile, {
+            upsert: true,
+            contentType: audioFile.type || 'audio/mpeg',
+          })
+
+        if (audioUploadErr) {
+          throw new Error('Falha no upload de áudio: ' + audioUploadErr.message)
+        }
+
+        const { data: pubAudio } = supabase.storage
+          .from('posts')
+          .getPublicUrl(audioPath)
+        uploadedAudioUrl = pubAudio.publicUrl
+      }
+
+      // Deduplicate mentions and ensure max 10
+      const cleanMentions: PostMention[] = Array.isArray(mentions)
+        ? mentions
+            .filter((m) => m && m.id && m.id !== userId)
+            .reduce<PostMention[]>((acc, cur) => {
+              if (!acc.some((x) => x.id === cur.id)) {
+                acc.push(cur)
+              }
+              return acc
+            }, [])
+            .slice(0, 10)
+        : []
+
       const { data: inserted, error: insertErr } = await db
         .from('posts')
         .insert({
@@ -302,6 +378,9 @@ export const feedService = {
           post_type: detectedType,
           video_url:
             detectedType === 'video' && mediaUrls[0] ? mediaUrls[0] : null,
+          audio_url: uploadedAudioUrl,
+          music_link: musicLink || null,
+          mentions: cleanMentions,
         } as any)
         .select()
         .single()
@@ -315,6 +394,48 @@ export const feedService = {
         .eq('id', userId)
         .maybeSingle()
 
+      // Create non-blocking notifications for tagged users
+      if (cleanMentions.length > 0) {
+        try {
+          const authorName = prof?.full_name || 'Alguém'
+          const postLink = `/feed?post=${inserted.id}`
+          const snippet =
+            inserted.content.length > 50
+              ? `${inserted.content.substring(0, 47)}...`
+              : inserted.content
+
+          for (const mention of cleanMentions) {
+            if (!mention.id || mention.id === userId) continue
+
+            // Idempotency: verify notification does not already exist
+            const { data: existing } = await db
+              .from('notifications')
+              .select('id')
+              .eq('user_id', mention.id)
+              .eq('actor_id', userId)
+              .eq('type', 'mention')
+              .eq('link', postLink)
+              .limit(1)
+
+            if (!existing || existing.length === 0) {
+              await db.from('notifications').insert({
+                user_id: mention.id,
+                actor_id: userId,
+                type: 'mention',
+                title: 'Você foi marcado',
+                message: `${authorName} marcou você em uma publicação${snippet ? `: "${snippet}"` : '.'}`,
+                link: postLink,
+              })
+            }
+          }
+        } catch (notifErr) {
+          console.error(
+            '[feedService.createPost] Erro não bloqueante ao criar notificações de menção:',
+            notifErr,
+          )
+        }
+      }
+
       const newItem: PostItem = {
         id: inserted.id,
         userId,
@@ -324,13 +445,21 @@ export const feedService = {
           avatar:
             prof?.avatar_url ||
             'https://img.usecurling.com/ppl/thumbnail?seed=me',
-          type: prof?.account_type || 'Atleta',
+          type:
+            prof?.account_type === 'club'
+              ? 'Clube'
+              : prof?.account_type === 'coach'
+                ? 'Treinador'
+                : 'Atleta',
           sport: prof?.sport,
         },
         content: inserted.content,
         media: inserted.media_urls || [],
         type: inserted.post_type as any,
         videoUrl: inserted.video_url || undefined,
+        audioUrl: inserted.audio_url || null,
+        musicLink: inserted.music_link || null,
+        mentions: cleanMentions,
         likesCount: 0,
         commentsCount: 0,
         isLiked: false,
