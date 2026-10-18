@@ -4,17 +4,29 @@ import { Progress } from '@/components/ui/progress'
 import { mockGoals } from '@/lib/data'
 import { useNavigate } from 'react-router-dom'
 
-export function GoalCard() {
-  const navigate = useNavigate()
-  // Pick the first active goal or mock one if none
-  const activeGoal = mockGoals.find((g) => g.status === 'active') || {
-    id: 'g-mock',
-    title: 'Meta Semanal',
-    currentValue: 3,
-    targetValue: 5,
-    unit: 'treinos',
-    progress: 60,
+interface GoalCardProps {
+  goal?: {
+    id?: string
+    title: string
+    currentValue?: number
+    targetValue: number
+    unit: string
+    progress: number
   }
+}
+
+export function GoalCard({ goal }: GoalCardProps = {}) {
+  const navigate = useNavigate()
+  // Pick passed goal, or the first active goal, or mock one if none
+  const activeGoal = goal ||
+    mockGoals.find((g) => g.status === 'active') || {
+      id: 'g-mock',
+      title: 'Meta Semanal',
+      currentValue: 3,
+      targetValue: 5,
+      unit: 'treinos',
+      progress: 60,
+    }
 
   return (
     <Card

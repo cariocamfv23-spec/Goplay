@@ -320,7 +320,7 @@ export default function Notifications() {
                           (not.type === 'memory' ||
                             not.type === 'time_travel') &&
                             'bg-purple-500/10 border-purple-500/30',
-                          not.type === 'friend_suggestion' &&
+                          (not.type as string) === 'friend_suggestion' &&
                             'bg-pink-500/10 border-pink-500/30',
                         )}
                       >

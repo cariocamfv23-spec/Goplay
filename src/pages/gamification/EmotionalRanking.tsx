@@ -171,8 +171,7 @@ export default function EmotionalRanking() {
                   </div>
                   <Progress
                     value={rank.eqScore}
-                    className="h-1.5 bg-purple-100 dark:bg-purple-900/20"
-                    indicatorClassName="bg-purple-500"
+                    className="h-1.5 bg-purple-100 dark:bg-purple-900/20 [&>div]:bg-purple-500"
                   />
                 </div>
 
@@ -187,8 +186,7 @@ export default function EmotionalRanking() {
                   </div>
                   <Progress
                     value={rank.resilienceScore}
-                    className="h-1.5 bg-orange-100 dark:bg-orange-900/20"
-                    indicatorClassName="bg-orange-500"
+                    className="h-1.5 bg-orange-100 dark:bg-orange-900/20 [&>div]:bg-orange-500"
                   />
                 </div>
               </div>

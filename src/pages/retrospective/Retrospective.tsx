@@ -20,7 +20,7 @@ const SLIDES = [
   { id: 'milestones', component: MilestonesSlide },
   { id: 'achievements', component: AchievementsSlide },
   { id: 'evolution', component: EvolutionSlide },
-  { id: 'outro', component: OutroSlide },
+  { id: 'outro', component: OutroSlide as React.ComponentType<any> },
 ]
 
 export default function Retrospective() {

@@ -22,15 +22,17 @@ import { cn } from '@/lib/utils'
 interface CheckInModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  venueName: string
-  points: number
+  venueName?: string
+  points?: number
+  onSuccess?: () => void
 }
 
 export function CheckInModal({
   open,
   onOpenChange,
-  venueName,
-  points,
+  venueName = 'Local do Evento',
+  points = 100,
+  onSuccess,
 }: CheckInModalProps) {
   const [step, setStep] = useState<
     'idle' | 'camera' | 'preview' | 'loading' | 'success'
@@ -104,6 +106,7 @@ export function CheckInModal({
     // Simulate upload/API
     setTimeout(() => {
       setStep('success')
+      onSuccess?.()
     }, 1500)
   }
 

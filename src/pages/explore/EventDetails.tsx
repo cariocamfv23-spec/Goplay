@@ -73,7 +73,7 @@ export default function EventDetails() {
             </div>
           </div>
 
-          {event.weather && <WeatherWidget weather={event.weather} />}
+          {event.weather && <WeatherWidget />}
         </div>
 
         <div className="space-y-4">

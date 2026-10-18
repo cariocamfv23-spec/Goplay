@@ -102,7 +102,6 @@ export default function MotionAnalysis() {
       if (Math.random() > 0.8) {
         setReps((prev) => {
           const newReps = prev + 1
-          // @ts-expect-error
           playSound('notification_points')
           setFeedback({
             id: Date.now().toString(),

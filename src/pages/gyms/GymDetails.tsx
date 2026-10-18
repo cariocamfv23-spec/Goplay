@@ -47,7 +47,9 @@ export default function GymDetails() {
 
         <PaymentDialog
           title={`Mensalidade ${gym.name}`}
-          price={gym.price}
+          price={
+            parseFloat(gym.price.replace(/[^\d.,]/g, '').replace(',', '.')) || 0
+          }
           onSuccess={() => {}}
         >
           <Button className="w-full h-14 text-lg font-bold rounded-xl shadow-lg shadow-primary/20">
