@@ -7,6 +7,8 @@ export interface ProfileRow {
   id: string
   full_name: string | null
   avatar_url: string | null
+  cover_url?: string | null
+  cover_type?: 'image' | 'video' | string | null
   account_type: AccountType
   sport: string | null
   position: string | null
@@ -37,6 +39,8 @@ export interface PublicProfileItem {
   id: string
   full_name: string | null
   avatar_url: string | null
+  cover_url?: string | null
+  cover_type?: 'image' | 'video' | string | null
   account_type: AccountType
   sport: string | null
   position: string | null
@@ -183,6 +187,77 @@ export const profileService = {
         url: null,
         error: err instanceof Error ? err : new Error(String(err)),
       }
+    }
+  },
+
+  /**
+   * Upload a cover image or short video loop to the covers bucket and return its public URL.
+   */
+  async uploadCover(
+    userId: string,
+    file: File,
+  ): Promise<{
+    url: string | null
+    type: 'image' | 'video'
+    error: Error | null
+  }> {
+    try {
+      if (!userId) {
+        return {
+          url: null,
+          type: 'image',
+          error: new Error('Usuário não autenticado.'),
+        }
+      }
+
+      const isVideo = file.type.startsWith('video/')
+      const type: 'image' | 'video' = isVideo ? 'video' : 'image'
+
+      const fileExt =
+        file.name.split('.').pop()?.toLowerCase() || (isVideo ? 'mp4' : 'jpg')
+      const filePath = `${userId}/cover_${Date.now()}.${fileExt}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('covers')
+        .upload(filePath, file, {
+          upsert: true,
+          contentType: file.type,
+        })
+
+      if (uploadError) {
+        return { url: null, type, error: new Error(uploadError.message) }
+      }
+
+      const { data } = supabase.storage.from('covers').getPublicUrl(filePath)
+      return { url: data.publicUrl, type, error: null }
+    } catch (err: any) {
+      return {
+        url: null,
+        type: 'image',
+        error: err instanceof Error ? err : new Error(String(err)),
+      }
+    }
+  },
+
+  /**
+   * Remove the cover image/video for the authenticated user.
+   */
+  async removeCover(userId: string): Promise<{ error: Error | null }> {
+    try {
+      if (!userId) {
+        return { error: new Error('Usuário não autenticado.') }
+      }
+      const { error } = await supabase
+        .from('profiles')
+        .update({ cover_url: null, cover_type: 'image' } as any)
+        .eq('id', userId)
+
+      if (error) {
+        return { error: new Error(error.message) }
+      }
+      return { error: null }
+    } catch (err: any) {
+      return { error: err instanceof Error ? err : new Error(String(err)) }
     }
   },
 }

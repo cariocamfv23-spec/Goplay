@@ -59,6 +59,8 @@ import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
 import { getSportCoverImage } from '@/lib/sport-utils'
 import { DepthContainer } from '@/components/DepthContainer'
+import { Camera, Award, Target, CheckCircle2 } from 'lucide-react'
+import { EditCoverDialog } from '@/components/profile/EditCoverDialog'
 import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 import { useReplayStore } from '@/stores/useReplayStore'
 import { usePrivacyStore } from '@/stores/usePrivacyStore'
@@ -73,7 +75,6 @@ import {
 } from '@/components/ui/tooltip'
 import { useMemorySimulation } from '@/hooks/useMemorySimulation'
 import { EditProfileDialog } from '@/components/profile/EditProfileDialog'
-import { CheckCircle2, Target, Award } from 'lucide-react'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -91,6 +92,7 @@ export default function AthleteView({
   const [isAuraLegendOpen, setIsAuraLegendOpen] = useState(false)
   const [isEcoLegendOpen, setIsEcoLegendOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [isEditCoverOpen, setIsEditCoverOpen] = useState(false)
 
   useEffect(() => {
     setUser(initialUser)
@@ -125,7 +127,12 @@ export default function AthleteView({
   }, [isMe, user.id, isInvisibleMode])
 
   const userPosts = mockPosts
-  const coverImage = getSportCoverImage(user.sport)
+  const customCoverUrl =
+    user.rawProfile?.cover_url || (user as any).cover_url || null
+  const customCoverType =
+    user.rawProfile?.cover_type || (user as any).cover_type || 'image'
+  const defaultSportCover = getSportCoverImage(user.sport)
+  const activeCover = customCoverUrl || defaultSportCover
 
   const handleMusicSelect = (track: MusicTrack) => {
     setUser({ ...user, favoriteSong: track })
@@ -163,23 +170,47 @@ export default function AthleteView({
         </div>
       )}
 
-      {/* High-Quality Sport Cover Image */}
+      {/* High-Quality Sport Cover Image or Video Loop */}
       <div className="h-64 bg-muted relative overflow-hidden group z-10">
-        <img
-          src={coverImage}
-          alt={`Cover for ${user.sport || 'Athlete'}`}
-          className="w-full h-full object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105"
-          onError={(e) => {
-            e.currentTarget.src =
-              'https://img.usecurling.com/p/800/400?q=abstract%20gradient&color=blue'
-          }}
-        />
+        {customCoverUrl && customCoverType === 'video' ? (
+          <video
+            src={customCoverUrl}
+            className="w-full h-full object-cover opacity-90"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+        ) : (
+          <img
+            src={activeCover}
+            alt={`Cover for ${user.sport || 'Athlete'}`}
+            className="w-full h-full object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105"
+            onError={(e) => {
+              e.currentTarget.src =
+                'https://img.usecurling.com/p/800/400?q=abstract%20gradient&color=blue'
+            }}
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
 
         {user.sport && (
           <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-white/10 shadow-lg">
             {user.sport}
           </div>
+        )}
+
+        {/* Edit Cover Action Button (Owner only) */}
+        {isMe && (
+          <Button
+            size="sm"
+            variant="secondary"
+            className="absolute top-4 left-4 bg-black/60 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 text-xs font-semibold shadow-lg gap-1.5 h-8 transition-transform active:scale-95"
+            onClick={() => setIsEditCoverOpen(true)}
+          >
+            <Camera className="w-3.5 h-3.5 text-gold" />
+            <span>Editar Capa</span>
+          </Button>
         )}
       </div>
 
@@ -1024,25 +1055,45 @@ export default function AthleteView({
       />
 
       {isMe && (
-        <EditProfileDialog
-          open={isEditDialogOpen}
-          onOpenChange={setIsEditDialogOpen}
-          profile={user.rawProfile || null}
-          onSuccess={(updated) => {
-            setUser((prev: any) => ({
-              ...prev,
-              name: updated.full_name || prev.name,
-              avatar: updated.avatar_url || prev.avatar,
-              sport: updated.sport || prev.sport,
-              position: updated.position || prev.position,
-              location:
-                [updated.city, updated.state].filter(Boolean).join(', ') ||
-                prev.location,
-              bio: updated.bio || prev.bio,
-              rawProfile: updated,
-            }))
-          }}
-        />
+        <>
+          <EditProfileDialog
+            open={isEditDialogOpen}
+            onOpenChange={setIsEditDialogOpen}
+            profile={user.rawProfile || null}
+            onSuccess={(updated) => {
+              setUser((prev: any) => ({
+                ...prev,
+                name: updated.full_name || prev.name,
+                avatar: updated.avatar_url || prev.avatar,
+                sport: updated.sport || prev.sport,
+                position: updated.position || prev.position,
+                location:
+                  [updated.city, updated.state].filter(Boolean).join(', ') ||
+                  prev.location,
+                bio: updated.bio || prev.bio,
+                rawProfile: updated,
+              }))
+            }}
+          />
+
+          <EditCoverDialog
+            open={isEditCoverOpen}
+            onOpenChange={setIsEditCoverOpen}
+            profile={user.rawProfile || null}
+            currentCover={customCoverUrl}
+            currentType={customCoverType}
+            onCoverUpdated={(newCoverUrl, coverType) => {
+              setUser((prev: any) => ({
+                ...prev,
+                rawProfile: {
+                  ...(prev.rawProfile || {}),
+                  cover_url: newCoverUrl,
+                  cover_type: coverType,
+                },
+              }))
+            }}
+          />
+        </>
       )}
     </div>
   )

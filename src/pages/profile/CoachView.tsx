@@ -15,11 +15,13 @@ import {
   ArrowLeft,
   Edit2,
   CheckCircle2,
+  Camera,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useNavigate } from 'react-router-dom'
 import { EditProfileDialog } from '@/components/profile/EditProfileDialog'
+import { EditCoverDialog } from '@/components/profile/EditCoverDialog'
 import { type ProfileRow } from '@/services/profiles'
 
 export default function CoachView({
@@ -31,7 +33,12 @@ export default function CoachView({
 }) {
   const navigate = useNavigate()
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [isEditCoverOpen, setIsEditCoverOpen] = useState(false)
   const raw = profile.rawProfile
+  const customCoverUrl =
+    raw?.cover_url || (profile as any).cover_url || profile.cover || null
+  const customCoverType =
+    raw?.cover_type || (profile as any).cover_type || 'image'
 
   const coachName = raw?.full_name || profile.name
   const coachBio = raw?.bio || profile.bio
@@ -43,24 +50,47 @@ export default function CoachView({
 
   return (
     <div className="pb-8 animate-fade-in relative bg-background min-h-screen">
-      <div className="relative h-56 w-full bg-muted overflow-hidden">
-        <img
-          src={
-            profile.cover ||
-            'https://img.usecurling.com/p/800/300?q=coach%20stadium'
-          }
-          alt="Cover"
-          className="w-full h-full object-cover"
-        />
+      <div className="relative h-56 w-full bg-muted overflow-hidden group">
+        {customCoverUrl && customCoverType === 'video' ? (
+          <video
+            src={customCoverUrl}
+            className="w-full h-full object-cover opacity-90"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+        ) : (
+          <img
+            src={
+              customCoverUrl ||
+              'https://img.usecurling.com/p/800/300?q=coach%20stadium'
+            }
+            alt="Cover"
+            className="w-full h-full object-cover"
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
         <Button
           variant="ghost"
           size="icon"
-          className="absolute top-4 left-4 rounded-full bg-black/20 text-white hover:bg-black/40 backdrop-blur-md"
+          className="absolute top-4 left-4 rounded-full bg-black/40 text-white hover:bg-black/60 backdrop-blur-md z-10"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
+
+        {isMe && (
+          <Button
+            size="sm"
+            variant="secondary"
+            className="absolute top-4 right-4 bg-black/60 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 text-xs font-semibold shadow-lg gap-1.5 h-8 z-10"
+            onClick={() => setIsEditCoverOpen(true)}
+          >
+            <Camera className="w-3.5 h-3.5 text-gold" />
+            <span>Editar Capa</span>
+          </Button>
+        )}
       </div>
 
       <div className="px-5 relative -mt-16 mb-6">
@@ -208,6 +238,23 @@ export default function CoachView({
           <Calendar className="mr-2 h-5 w-5" /> Agendar Mentoria
         </Button>
       </div>
+
+      {isMe && (
+        <>
+          <EditProfileDialog
+            open={isEditDialogOpen}
+            onOpenChange={setIsEditDialogOpen}
+            profile={raw || null}
+          />
+          <EditCoverDialog
+            open={isEditCoverOpen}
+            onOpenChange={setIsEditCoverOpen}
+            profile={raw || null}
+            currentCover={customCoverUrl}
+            currentType={customCoverType}
+          />
+        </>
+      )}
     </div>
   )
 }

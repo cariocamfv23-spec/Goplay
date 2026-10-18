@@ -13,11 +13,13 @@ import {
   Mail,
   Layers,
   FileText,
+  Camera,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useNavigate } from 'react-router-dom'
 import { EditProfileDialog } from '@/components/profile/EditProfileDialog'
+import { EditCoverDialog } from '@/components/profile/EditCoverDialog'
 import { type ProfileRow } from '@/services/profiles'
 
 export default function ClubView({
@@ -29,7 +31,12 @@ export default function ClubView({
 }) {
   const navigate = useNavigate()
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [isEditCoverOpen, setIsEditCoverOpen] = useState(false)
   const raw = profile.rawProfile
+  const customCoverUrl =
+    raw?.cover_url || (profile as any).cover_url || profile.cover || null
+  const customCoverType =
+    raw?.cover_type || (profile as any).cover_type || 'image'
 
   const clubName = raw?.club_name || raw?.full_name || profile.name
   const institutionalDesc =
@@ -41,16 +48,39 @@ export default function ClubView({
 
   return (
     <div className="pb-8 animate-fade-in">
-      <div className="relative h-48 w-full bg-muted">
-        <img
-          src={
-            profile.cover ||
-            'https://img.usecurling.com/p/800/300?q=stadium%20field'
-          }
-          alt="Cover"
-          className="w-full h-full object-cover"
-        />
+      <div className="relative h-48 w-full bg-muted overflow-hidden group">
+        {customCoverUrl && customCoverType === 'video' ? (
+          <video
+            src={customCoverUrl}
+            className="w-full h-full object-cover opacity-90"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+        ) : (
+          <img
+            src={
+              customCoverUrl ||
+              'https://img.usecurling.com/p/800/300?q=stadium%20field'
+            }
+            alt="Cover"
+            className="w-full h-full object-cover"
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+
+        {isMe && (
+          <Button
+            size="sm"
+            variant="secondary"
+            className="absolute top-4 left-4 bg-black/60 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 text-xs font-semibold shadow-lg gap-1.5 h-8"
+            onClick={() => setIsEditCoverOpen(true)}
+          >
+            <Camera className="w-3.5 h-3.5 text-gold" />
+            <span>Editar Capa</span>
+          </Button>
+        )}
       </div>
 
       <div className="px-4 relative -mt-12 mb-4">
@@ -191,11 +221,20 @@ export default function ClubView({
       </div>
 
       {isMe && (
-        <EditProfileDialog
-          open={isEditDialogOpen}
-          onOpenChange={setIsEditDialogOpen}
-          profile={raw || null}
-        />
+        <>
+          <EditProfileDialog
+            open={isEditDialogOpen}
+            onOpenChange={setIsEditDialogOpen}
+            profile={raw || null}
+          />
+          <EditCoverDialog
+            open={isEditCoverOpen}
+            onOpenChange={setIsEditCoverOpen}
+            profile={raw || null}
+            currentCover={customCoverUrl}
+            currentType={customCoverType}
+          />
+        </>
       )}
     </div>
   )

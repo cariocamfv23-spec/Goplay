@@ -332,14 +332,21 @@ export function TopBar() {
               )}
             >
               <AthleteAura
-                profile={mockCurrentUser}
+                profile={{
+                  ...mockCurrentUser,
+                  name: displayName,
+                  avatar: profile?.avatar_url || mockCurrentUser.avatar,
+                }}
                 size="sm"
                 disableAnimation={false}
               >
                 <Avatar className="h-9 w-9 border-2 border-border/50 hover:border-primary transition-colors">
-                  <AvatarImage src={mockCurrentUser.avatar} />
+                  <AvatarImage
+                    src={profile?.avatar_url || mockCurrentUser.avatar}
+                    alt={displayName}
+                  />
                   <AvatarFallback>
-                    {mockCurrentUser.name.substring(0, 2).toUpperCase()}
+                    {displayName.substring(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </AthleteAura>

@@ -88,8 +88,13 @@ export default function TalentsList() {
         )
 
   const handleTalentClick = (talent: ProfileData) => {
-    setSelectedTalent(talent)
-    setIsDrawerOpen(true)
+    // If it's a real user or has a valid ID, navigate directly to public profile
+    if (talent.id) {
+      navigate(`/profile/${talent.id}`)
+    } else {
+      setSelectedTalent(talent)
+      setIsDrawerOpen(true)
+    }
   }
 
   return (
@@ -119,10 +124,12 @@ export default function TalentsList() {
         {/* Intro Banner */}
         <div className="bg-gradient-to-r from-indigo-900 to-primary rounded-xl p-5 text-white shadow-lg relative overflow-hidden">
           <div className="relative z-10">
-            <h2 className="font-bold text-lg mb-1">Área do Recrutador</h2>
+            <h2 className="font-bold text-lg mb-1">
+              Área do Recrutador & Talentos
+            </h2>
             <p className="text-xs text-white/80 max-w-[80%]">
-              Encontre as próximas estrelas do esporte. Acesse relatórios
-              detalhados e entre em contato direto.
+              Encontre atletas, clubes e treinadores cadastrados na plataforma.
+              Clique para abrir o perfil público.
             </p>
           </div>
           <Trophy className="absolute -right-4 -bottom-4 w-24 h-24 text-white/10 rotate-12" />

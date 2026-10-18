@@ -41,6 +41,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { mockCurrentUser, mockMatches } from '@/lib/data'
 import { cn } from '@/lib/utils'
 import { StoriesRail } from '@/components/StoriesRail'
+import { useAuth } from '@/hooks/use-auth'
 import { WeatherWidget } from '@/components/WeatherWidget'
 import { GoalCard } from '@/components/GoalCard'
 import { AiToolsRail } from '@/components/AiToolsRail'
@@ -53,8 +54,23 @@ import { SmartNotificationManager } from '@/components/SmartNotificationManager'
 
 export default function Home() {
   const navigate = useNavigate()
+  const { user, profile } = useAuth()
   const nextMatch = mockMatches[0]
   const [wizardOpen, setWizardOpen] = useState(false)
+
+  // Real user display data with fallback to guest/mock
+  const displayName =
+    profile?.full_name?.trim() ||
+    user?.user_metadata?.full_name?.trim() ||
+    user?.email?.split('@')[0] ||
+    mockCurrentUser.name
+  const firstName = displayName.split(' ')[0]
+  const displayAvatar =
+    profile?.avatar_url ||
+    user?.user_metadata?.avatar_url ||
+    mockCurrentUser.avatar
+  const displayInitials =
+    displayName.length >= 2 ? displayName.substring(0, 2).toUpperCase() : 'GP'
 
   // Priority Shortcuts Configuration
   const shortcuts = [
@@ -230,12 +246,14 @@ export default function Home() {
             <h1 className="text-2xl font-bold tracking-tight">
               Olá,{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
-                {mockCurrentUser.name.split(' ')[0]}
+                {firstName}
               </span>{' '}
               👋
             </h1>
             <p className="text-sm text-muted-foreground">
-              Pronto para o jogo de hoje?
+              {profile?.sport
+                ? `Pronto para os treinos de ${profile.sport}?`
+                : 'Pronto para o jogo de hoje?'}
             </p>
           </div>
           <div
@@ -244,16 +262,14 @@ export default function Home() {
           >
             <div className="relative">
               <Avatar className="h-12 w-12 border-2 border-primary/20 hover:border-primary transition-colors shadow-lg">
-                <AvatarImage src={mockCurrentUser.avatar} />
-                <AvatarFallback>
-                  {mockCurrentUser.name.substring(0, 2)}
-                </AvatarFallback>
+                <AvatarImage src={displayAvatar} alt={displayName} />
+                <AvatarFallback>{displayInitials}</AvatarFallback>
               </Avatar>
               <Badge
                 className="absolute -bottom-2 -right-1 bg-gradient-to-r from-gold to-amber-600 border-2 border-background px-1.5 py-0 text-[10px] font-bold shadow-sm"
                 variant="secondary"
               >
-                Lv. {mockCurrentUser.level}
+                Lv. {mockCurrentUser.level || 1}
               </Badge>
             </div>
           </div>

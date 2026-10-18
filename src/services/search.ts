@@ -45,6 +45,8 @@ export const searchService = {
           id,
           full_name,
           avatar_url,
+          cover_url,
+          cover_type,
           account_type,
           sport,
           position,
