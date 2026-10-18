@@ -29,6 +29,10 @@ import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 import { DepthContainer } from '@/components/DepthContainer'
 import { FeedVideoPlayer } from '@/components/FeedVideoPlayer'
 import { NarrationConfig } from '@/lib/data'
+import { useAuth } from '@/hooks/use-auth'
+import { feedService } from '@/services/feed'
+import { toast } from 'sonner'
+import { Trash2 } from 'lucide-react'
 
 export interface SocialContext {
   type: 'like' | 'comment' | 'repost'
@@ -41,9 +45,15 @@ export interface SocialContext {
 
 interface PostProps {
   post: {
-    id: number
+    id: number | string
     type: string
-    user: { id?: string; name: string; avatar: string; type: string }
+    user: {
+      id?: string
+      name: string
+      avatar: string
+      type: string
+      sport?: string | null
+    }
     content: string
     media?: string[]
     image?: string
@@ -55,27 +65,89 @@ interface PostProps {
     articleDomain?: string
     likes: number
     comments: number
-    shares: number
-    applauds: number
-    supports: number
+    shares?: number
+    applauds?: number
+    supports?: number
     cools?: number
     time: string
     narration?: NarrationConfig
     liked?: boolean
     socialContext?: SocialContext
   }
+  onDeleted?: (postId: string | number) => void
 }
 
-export function PostCard({ post }: PostProps) {
+export function PostCard({ post, onDeleted }: PostProps) {
+  const { user: authUser } = useAuth()
   const [showComments, setShowComments] = useState(false)
   const [showDetail, setShowDetail] = useState(false)
   const [imgError, setImgError] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
-  const { isLiked, likeCount, handleLike } = useLikeInteraction(
-    post,
-    post.likes,
-    post.liked,
-  )
+  const isSupabasePost =
+    typeof post.id === 'string' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      post.id,
+    )
+
+  const isOwner = authUser?.id && post.user?.id && authUser.id === post.user.id
+
+  // Real or mock like state
+  const [realLiked, setRealLiked] = useState<boolean>(post.liked ?? false)
+  const [realLikeCount, setRealLikeCount] = useState<number>(post.likes || 0)
+
+  const {
+    isLiked: mockIsLiked,
+    likeCount: mockLikeCount,
+    handleLike: handleMockLike,
+  } = useLikeInteraction(post, post.likes, post.liked)
+
+  const effectiveLiked = isSupabasePost ? realLiked : mockIsLiked
+  const effectiveLikeCount = isSupabasePost ? realLikeCount : mockLikeCount
+
+  const onLikeClick = async () => {
+    if (isSupabasePost && authUser?.id) {
+      const nextLiked = !realLiked
+      setRealLiked(nextLiked)
+      setRealLikeCount((prev) => (nextLiked ? prev + 1 : Math.max(0, prev - 1)))
+
+      const { isLiked, error } = await feedService.toggleLike(
+        post.id as string,
+        authUser.id,
+        realLiked,
+      )
+      if (error) {
+        // Revert on error
+        setRealLiked(!nextLiked)
+        setRealLikeCount((prev) =>
+          !nextLiked ? prev + 1 : Math.max(0, prev - 1),
+        )
+        toast.error('Erro ao curtir publicação.')
+      }
+    } else {
+      handleMockLike()
+    }
+  }
+
+  const handleDeletePost = async () => {
+    if (!isSupabasePost || !authUser?.id) return
+    if (!confirm('Deseja realmente excluir esta publicação?')) return
+
+    setIsDeleting(true)
+    const { error } = await feedService.deletePost(
+      post.id as string,
+      authUser.id,
+    )
+    setIsDeleting(false)
+
+    if (error) {
+      toast.error('Não foi possível excluir a publicação.')
+      return
+    }
+
+    toast.success('Publicação excluída com sucesso.')
+    if (onDeleted) onDeleted(post.id)
+  }
 
   const [isCool, setIsCool] = useState(false)
   const [coolCount, setCoolCount] = useState(post.cools || 0)
@@ -308,13 +380,27 @@ export function PostCard({ post }: PostProps) {
               </span>
             </div>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-muted-foreground hover:bg-secondary/80 rounded-full"
-          >
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
+          {isOwner && isSupabasePost && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full"
+              title="Excluir minha publicação"
+              onClick={handleDeletePost}
+              disabled={isDeleting}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )}
+          {(!isOwner || !isSupabasePost) && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-muted-foreground hover:bg-secondary/80 rounded-full"
+            >
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          )}
         </CardHeader>
 
         <CardContent className="p-4 pt-1">
@@ -334,19 +420,21 @@ export function PostCard({ post }: PostProps) {
                 size="sm"
                 className={cn(
                   'flex flex-col items-center gap-0 h-auto py-1 px-2 transition-colors active:scale-90',
-                  isLiked
+                  effectiveLiked
                     ? 'text-red-500'
                     : 'text-muted-foreground hover:text-red-400',
                 )}
-                onClick={handleLike}
+                onClick={onLikeClick}
               >
                 <Heart
                   className={cn(
                     'h-5 w-5 transition-all',
-                    isLiked ? 'fill-current scale-110' : '',
+                    effectiveLiked ? 'fill-current scale-110' : '',
                   )}
                 />
-                <span className="text-[10px] font-medium">{likeCount}</span>
+                <span className="text-[10px] font-medium">
+                  {effectiveLikeCount}
+                </span>
               </Button>
 
               {/* Applaud (Aplaudir) */}
@@ -409,7 +497,11 @@ export function PostCard({ post }: PostProps) {
         </CardContent>
       </Card>
 
-      <CommentsSheet open={showComments} onOpenChange={setShowComments} />
+      <CommentsSheet
+        open={showComments}
+        onOpenChange={setShowComments}
+        postId={post.id}
+      />
       <PostDetailDialog
         post={post}
         open={showDetail}

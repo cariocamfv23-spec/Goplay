@@ -75,6 +75,10 @@ import {
 } from '@/components/ui/tooltip'
 import { useMemorySimulation } from '@/hooks/useMemorySimulation'
 import { EditProfileDialog } from '@/components/profile/EditProfileDialog'
+import { connectionService } from '@/services/connections'
+import { ConnectionsListDialog } from '@/components/profile/ConnectionsListDialog'
+import { useAuth } from '@/hooks/use-auth'
+import { UserCheck, Loader2 } from 'lucide-react'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -84,6 +88,7 @@ export default function AthleteView({
   isMe?: boolean
 }) {
   const navigate = useNavigate()
+  const { user: authUser } = useAuth()
   const [activeTab, setActiveTab] = useState('posts')
   const [user, setUser] = useState(initialUser)
   const [isMusicSelectorOpen, setIsMusicSelectorOpen] = useState(false)
@@ -93,6 +98,77 @@ export default function AthleteView({
   const [isEcoLegendOpen, setIsEcoLegendOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isEditCoverOpen, setIsEditCoverOpen] = useState(false)
+
+  // Real connection state
+  const [isFollowing, setIsFollowing] = useState(false)
+  const [followingLoading, setFollowingLoading] = useState(false)
+  const [realFollowersCount, setRealFollowersCount] = useState<number>(0)
+  const [realFollowingCount, setRealFollowingCount] = useState<number>(0)
+  const [connectionsDialog, setConnectionsDialog] = useState<{
+    open: boolean
+    mode: 'followers' | 'following'
+  }>({ open: false, mode: 'followers' })
+
+  const isSupabaseProfile =
+    typeof user.id === 'string' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      user.id,
+    )
+
+  useEffect(() => {
+    if (isSupabaseProfile && user.id) {
+      connectionService.getCounts(user.id).then((counts) => {
+        setRealFollowersCount(counts.followers)
+        setRealFollowingCount(counts.following)
+      })
+
+      if (authUser?.id && !isMe) {
+        connectionService.isFollowing(authUser.id, user.id).then((status) => {
+          setIsFollowing(status)
+        })
+      }
+    }
+  }, [user.id, authUser?.id, isMe, isSupabaseProfile])
+
+  const handleToggleFollow = async () => {
+    if (!authUser?.id) {
+      toast.error('Faça login para seguir outros perfis.')
+      return
+    }
+    if (!isSupabaseProfile) {
+      setIsFollowing(!isFollowing)
+      return
+    }
+
+    setFollowingLoading(true)
+    if (isFollowing) {
+      const { success, error } = await connectionService.unfollow(
+        authUser.id,
+        user.id,
+      )
+      setFollowingLoading(false)
+      if (error) {
+        toast.error('Erro ao deixar de seguir.')
+        return
+      }
+      setIsFollowing(false)
+      setRealFollowersCount((prev) => Math.max(0, prev - 1))
+      toast.success(`Você deixou de seguir ${user.name}.`)
+    } else {
+      const { success, error } = await connectionService.follow(
+        authUser.id,
+        user.id,
+      )
+      setFollowingLoading(false)
+      if (error) {
+        toast.error(error.message || 'Erro ao seguir.')
+        return
+      }
+      setIsFollowing(true)
+      setRealFollowersCount((prev) => prev + 1)
+      toast.success(`Você agora segue ${user.name}!`)
+    }
+  }
 
   useEffect(() => {
     setUser(initialUser)
@@ -131,6 +207,9 @@ export default function AthleteView({
     user.rawProfile?.cover_url || (user as any).cover_url || null
   const customCoverType =
     user.rawProfile?.cover_type || (user as any).cover_type || 'image'
+  const coverPosX = user.rawProfile?.cover_position_x ?? 50
+  const coverPosY = user.rawProfile?.cover_position_y ?? 50
+  const coverZoom = user.rawProfile?.cover_zoom ?? 1
   const defaultSportCover = getSportCoverImage(user.sport)
   const activeCover = customCoverUrl || defaultSportCover
 
@@ -170,12 +249,16 @@ export default function AthleteView({
         </div>
       )}
 
-      {/* High-Quality Sport Cover Image or Video Loop */}
-      <div className="h-64 bg-muted relative overflow-hidden group z-10">
+      {/* High-Quality Sport Cover Image or Video Loop with Framed Persisted Position & Zoom */}
+      <div className="h-64 bg-muted relative overflow-hidden group z-10 select-none">
         {customCoverUrl && customCoverType === 'video' ? (
           <video
             src={customCoverUrl}
             className="w-full h-full object-cover opacity-90"
+            style={{
+              transform: `scale(${coverZoom})`,
+              objectPosition: `${coverPosX}% ${coverPosY}%`,
+            }}
             autoPlay
             loop
             muted
@@ -185,7 +268,11 @@ export default function AthleteView({
           <img
             src={activeCover}
             alt={`Cover for ${user.sport || 'Athlete'}`}
-            className="w-full h-full object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105"
+            className="w-full h-full object-cover opacity-90 transition-transform duration-700"
+            style={{
+              transform: `scale(${coverZoom})`,
+              objectPosition: `${coverPosX}% ${coverPosY}%`,
+            }}
             onError={(e) => {
               e.currentTarget.src =
                 'https://img.usecurling.com/p/800/400?q=abstract%20gradient&color=blue'
@@ -242,9 +329,26 @@ export default function AthleteView({
               </Button>
             ) : (
               <div className="flex items-center gap-2">
-                <Button size="sm" className="bg-primary text-white shadow-md">
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  Seguir
+                <Button
+                  size="sm"
+                  variant={isFollowing ? 'outline' : 'default'}
+                  className={cn(
+                    'shadow-md font-semibold transition-all',
+                    isFollowing
+                      ? 'border-primary/40 text-primary bg-primary/5 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30'
+                      : 'bg-primary text-white',
+                  )}
+                  onClick={handleToggleFollow}
+                  disabled={followingLoading}
+                >
+                  {followingLoading ? (
+                    <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                  ) : isFollowing ? (
+                    <UserCheck className="h-4 w-4 mr-1.5" />
+                  ) : (
+                    <UserPlus className="h-4 w-4 mr-1.5" />
+                  )}
+                  {isFollowing ? 'Seguindo' : 'Seguir'}
                 </Button>
                 <Button
                   size="sm"
@@ -298,19 +402,33 @@ export default function AthleteView({
           </div>
 
           <div className="flex items-center justify-between bg-secondary/20 p-3 rounded-xl border border-border/50 mb-5 backdrop-blur-sm">
-            <div className="flex flex-col items-center flex-1 border-r border-border/50">
+            <div
+              className="flex flex-col items-center flex-1 border-r border-border/50 cursor-pointer hover:bg-secondary/30 py-1 rounded transition-colors"
+              onClick={() => {
+                if (isSupabaseProfile) {
+                  setConnectionsDialog({ open: true, mode: 'followers' })
+                }
+              }}
+            >
               <span className="font-bold text-lg leading-none">
-                {user.followers || 0}
+                {isSupabaseProfile ? realFollowersCount : user.followers || 0}
               </span>
-              <span className="text-muted-foreground text-[10px] uppercase tracking-wider mt-1">
+              <span className="text-muted-foreground text-[10px] uppercase tracking-wider mt-1 flex items-center gap-0.5">
                 Seguidores
               </span>
             </div>
-            <div className="flex flex-col items-center flex-1 border-r border-border/50">
+            <div
+              className="flex flex-col items-center flex-1 border-r border-border/50 cursor-pointer hover:bg-secondary/30 py-1 rounded transition-colors"
+              onClick={() => {
+                if (isSupabaseProfile) {
+                  setConnectionsDialog({ open: true, mode: 'following' })
+                }
+              }}
+            >
               <span className="font-bold text-lg leading-none">
-                {user.following || 0}
+                {isSupabaseProfile ? realFollowingCount : user.following || 0}
               </span>
-              <span className="text-muted-foreground text-[10px] uppercase tracking-wider mt-1">
+              <span className="text-muted-foreground text-[10px] uppercase tracking-wider mt-1 flex items-center gap-0.5">
                 Seguindo
               </span>
             </div>
@@ -1054,6 +1172,16 @@ export default function AthleteView({
         onOpenChange={setIsDetailOpen}
       />
 
+      <ConnectionsListDialog
+        open={connectionsDialog.open}
+        onOpenChange={(op) =>
+          setConnectionsDialog((prev) => ({ ...prev, open: op }))
+        }
+        userId={user.id}
+        mode={connectionsDialog.mode}
+        userName={user.name}
+      />
+
       {isMe && (
         <>
           <EditProfileDialog
@@ -1082,13 +1210,19 @@ export default function AthleteView({
             profile={user.rawProfile || null}
             currentCover={customCoverUrl}
             currentType={customCoverType}
-            onCoverUpdated={(newCoverUrl, coverType) => {
+            currentPosX={coverPosX}
+            currentPosY={coverPosY}
+            currentZoom={coverZoom}
+            onCoverUpdated={(newCoverUrl, coverType, framing) => {
               setUser((prev: any) => ({
                 ...prev,
                 rawProfile: {
                   ...(prev.rawProfile || {}),
                   cover_url: newCoverUrl,
                   cover_type: coverType,
+                  cover_position_x: framing?.posX ?? 50,
+                  cover_position_y: framing?.posY ?? 50,
+                  cover_zoom: framing?.zoom ?? 1,
                 },
               }))
             }}

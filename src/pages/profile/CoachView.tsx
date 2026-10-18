@@ -19,10 +19,15 @@ import {
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 import { useNavigate } from 'react-router-dom'
 import { EditProfileDialog } from '@/components/profile/EditProfileDialog'
 import { EditCoverDialog } from '@/components/profile/EditCoverDialog'
 import { type ProfileRow } from '@/services/profiles'
+import { connectionService } from '@/services/connections'
+import { useAuth } from '@/hooks/use-auth'
+import { toast } from 'sonner'
+import { UserCheck, Loader2 } from 'lucide-react'
 
 export default function CoachView({
   profile,
@@ -32,13 +37,60 @@ export default function CoachView({
   isMe?: boolean
 }) {
   const navigate = useNavigate()
+  const { user: authUser } = useAuth()
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isEditCoverOpen, setIsEditCoverOpen] = useState(false)
+  const [isFollowing, setIsFollowing] = useState(false)
+  const [followLoading, setFollowLoading] = useState(false)
+
+  const isSupabaseProfile =
+    typeof profile.id === 'string' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      profile.id,
+    )
+
+  const handleToggleFollow = async () => {
+    if (!authUser?.id) {
+      toast.error('Faça login para seguir o treinador.')
+      return
+    }
+    if (!isSupabaseProfile) {
+      setIsFollowing(!isFollowing)
+      return
+    }
+
+    setFollowLoading(true)
+    if (isFollowing) {
+      const { error } = await connectionService.unfollow(
+        authUser.id,
+        profile.id,
+      )
+      setFollowLoading(false)
+      if (error) {
+        toast.error('Erro ao deixar de seguir.')
+        return
+      }
+      setIsFollowing(false)
+      toast.success('Você deixou de seguir este treinador.')
+    } else {
+      const { error } = await connectionService.follow(authUser.id, profile.id)
+      setFollowLoading(false)
+      if (error) {
+        toast.error(error.message || 'Erro ao seguir.')
+        return
+      }
+      setIsFollowing(true)
+      toast.success('Você agora está seguindo este treinador!')
+    }
+  }
   const raw = profile.rawProfile
   const customCoverUrl =
     raw?.cover_url || (profile as any).cover_url || profile.cover || null
   const customCoverType =
     raw?.cover_type || (profile as any).cover_type || 'image'
+  const coverPosX = raw?.cover_position_x ?? 50
+  const coverPosY = raw?.cover_position_y ?? 50
+  const coverZoom = raw?.cover_zoom ?? 1
 
   const coachName = raw?.full_name || profile.name
   const coachBio = raw?.bio || profile.bio
@@ -55,6 +107,10 @@ export default function CoachView({
           <video
             src={customCoverUrl}
             className="w-full h-full object-cover opacity-90"
+            style={{
+              transform: `scale(${coverZoom})`,
+              objectPosition: `${coverPosX}% ${coverPosY}%`,
+            }}
             autoPlay
             loop
             muted
@@ -68,6 +124,10 @@ export default function CoachView({
             }
             alt="Cover"
             className="w-full h-full object-cover"
+            style={{
+              transform: `scale(${coverZoom})`,
+              objectPosition: `${coverPosX}% ${coverPosY}%`,
+            }}
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
@@ -145,8 +205,24 @@ export default function CoachView({
 
           {!isMe && (
             <div className="flex gap-3 mt-6">
-              <Button className="flex-1 bg-gradient-to-r from-primary to-purple-600 hover:opacity-90 text-white shadow-lg shadow-primary/20 h-12 rounded-xl font-bold">
-                <UserPlus className="h-5 w-5 mr-2" /> Conectar
+              <Button
+                className={cn(
+                  'flex-1 h-12 rounded-xl font-bold transition-all shadow-lg',
+                  isFollowing
+                    ? 'border-2 border-primary/40 bg-primary/10 text-primary hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30'
+                    : 'bg-gradient-to-r from-primary to-purple-600 hover:opacity-90 text-white shadow-primary/20',
+                )}
+                onClick={handleToggleFollow}
+                disabled={followLoading}
+              >
+                {followLoading ? (
+                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                ) : isFollowing ? (
+                  <UserCheck className="h-5 w-5 mr-2" />
+                ) : (
+                  <UserPlus className="h-5 w-5 mr-2" />
+                )}
+                {isFollowing ? 'Seguindo' : 'Seguir / Conectar'}
               </Button>
               <Button
                 variant="outline"
@@ -252,6 +328,9 @@ export default function CoachView({
             profile={raw || null}
             currentCover={customCoverUrl}
             currentType={customCoverType}
+            currentPosX={coverPosX}
+            currentPosY={coverPosY}
+            currentZoom={coverZoom}
           />
         </>
       )}

@@ -30,11 +30,59 @@ import useNotificationStore from '@/stores/useNotificationStore'
 import { useFlashbackStore } from '@/stores/useFlashbackStore'
 import { cn } from '@/lib/utils'
 
+import { useState, useEffect } from 'react'
+import { useAuth } from '@/hooks/use-auth'
+import {
+  notificationService,
+  type NotificationItem,
+} from '@/services/notifications'
+
 export default function Notifications() {
   const navigate = useNavigate()
-  const { notifications, markAsRead, markAllAsRead, unreadCount } =
-    useNotificationStore()
+  const { user } = useAuth()
+  const {
+    notifications,
+    markAsRead: markStoreAsRead,
+    markAllAsRead: markStoreAllAsRead,
+    unreadCount: storeUnreadCount,
+  } = useNotificationStore()
   const { openFlashback } = useFlashbackStore()
+
+  const [realNotifications, setRealNotifications] = useState<
+    NotificationItem[]
+  >([])
+
+  useEffect(() => {
+    if (user?.id) {
+      notificationService.getMyNotifications(user.id).then((items) => {
+        setRealNotifications(items)
+      })
+    }
+  }, [user?.id])
+
+  const mappedReal = realNotifications.map((n) => ({
+    id: n.id,
+    type: n.type,
+    title: n.title,
+    message: n.message,
+    date: 'Hoje',
+    time: n.timeAgo,
+    read: n.read,
+    priority: 'medium' as const,
+    link: n.link || undefined,
+    imageUrl: undefined as string | undefined,
+    avatarUrl: undefined as string | undefined,
+    user: n.actor
+      ? {
+          name: n.actor.name,
+          avatar: n.actor.avatar,
+        }
+      : undefined,
+    isReal: true,
+  }))
+
+  const allNotifications: any[] = [...mappedReal, ...notifications]
+  const unreadCount = allNotifications.filter((n) => !n.read).length
 
   const isVipAlert = (title: string, message: string = '') => {
     const text = (title + ' ' + message).toLowerCase()
@@ -153,7 +201,14 @@ export default function Notifications() {
 
   const handleNotificationClick = (not: any) => {
     if (!not.read) {
-      markAsRead(not.id)
+      if (not.isReal && user?.id) {
+        notificationService.markAsRead(not.id, user.id)
+        setRealNotifications((prev) =>
+          prev.map((n) => (n.id === not.id ? { ...n, read: true } : n)),
+        )
+      } else {
+        markStoreAsRead(not.id)
+      }
     }
 
     if (not.type === 'time_travel' || not.type === 'memory') {
@@ -171,8 +226,8 @@ export default function Notifications() {
     }
   }
 
-  const groupedNotifications = notifications.reduce(
-    (acc, not) => {
+  const groupedNotifications: Record<string, any[]> = allNotifications.reduce(
+    (acc: Record<string, any[]>, not: any) => {
       const date = not.date || 'Anteriores'
       if (!acc[date]) {
         acc[date] = []
@@ -180,10 +235,10 @@ export default function Notifications() {
       acc[date].push(not)
       return acc
     },
-    {} as Record<string, typeof notifications>,
+    {} as Record<string, any[]>,
   )
 
-  const hasNotifications = notifications.length > 0
+  const hasNotifications = allNotifications.length > 0
 
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
@@ -205,7 +260,15 @@ export default function Notifications() {
               variant="ghost"
               size="sm"
               className="text-primary text-xs h-8 px-2"
-              onClick={markAllAsRead}
+              onClick={() => {
+                if (user?.id) {
+                  notificationService.markAllAsRead(user.id)
+                  setRealNotifications((prev) =>
+                    prev.map((n) => ({ ...n, read: true })),
+                  )
+                }
+                markStoreAllAsRead()
+              }}
             >
               Marcar todas como lidas
             </Button>

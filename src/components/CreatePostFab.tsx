@@ -18,38 +18,69 @@ import { Post3DGenerator } from '@/components/Post3DGenerator'
 import { GhostViewMode } from '@/components/Ghost3DViewer'
 import { cn } from '@/lib/utils'
 
-export function CreatePostFab() {
+import { useAuth } from '@/hooks/use-auth'
+import { feedService } from '@/services/feed'
+import { Loader2 } from 'lucide-react'
+
+export function CreatePostFab({
+  onPostCreated,
+}: {
+  onPostCreated?: () => void
+}) {
+  const { user } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const [content, setContent] = useState('')
-  const [videoFile, setVideoFile] = useState<File | null>(null)
-  const [videoPreview, setVideoPreview] = useState<string | null>(null)
+  const [selectedMedia, setSelectedMedia] = useState<File | null>(null)
+  const [mediaPreview, setMediaPreview] = useState<string | null>(null)
   const [show3DGenerator, setShow3DGenerator] = useState(false)
   const [generatedMode, setGeneratedMode] = useState<GhostViewMode | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
 
-  const handlePost = () => {
-    if (!content.trim() && !videoFile) return
+  const handlePost = async () => {
+    if (!content.trim() && !selectedMedia) return
 
-    toast.success('Publicação enviada!', {
-      description: generatedMode
-        ? `Seu Replay 3D (${generatedMode}) foi publicado com sucesso!`
-        : 'Seu post aparecerá no feed em instantes.',
-      icon: generatedMode ? (
-        <Box className="w-4 h-4 text-primary" />
-      ) : undefined,
-    })
+    if (user?.id) {
+      setIsSubmitting(true)
+      const { data, error } = await feedService.createPost({
+        userId: user.id,
+        content: content.trim(),
+        mediaFiles: selectedMedia ? [selectedMedia] : [],
+        postType: selectedMedia?.type.startsWith('video/')
+          ? 'video'
+          : selectedMedia
+            ? 'image'
+            : 'text',
+      })
+      setIsSubmitting(false)
 
-    // Reset state
+      if (error || !data) {
+        toast.error(
+          'Erro ao publicar: ' + (error?.message || 'Falha de conexão.'),
+        )
+        return
+      }
+
+      toast.success('Publicação compartilhada com sucesso!', {
+        description: 'Seu post já está visível para a comunidade Goplay.',
+      })
+      if (onPostCreated) onPostCreated()
+    } else {
+      toast.success('Publicação enviada!', {
+        description: 'Seu post aparecerá no feed em instantes.',
+      })
+    }
+
     setIsOpen(false)
     resetForm()
   }
 
   const resetForm = () => {
     setContent('')
-    setVideoFile(null)
-    setVideoPreview(null)
+    setSelectedMedia(null)
+    setMediaPreview(null)
     setShow3DGenerator(false)
     setGeneratedMode(null)
   }
@@ -57,12 +88,12 @@ export function CreatePostFab() {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      if (!file.type.startsWith('video/')) {
-        toast.error('Por favor, selecione um arquivo de vídeo.')
+      if (file.size > 20 * 1024 * 1024) {
+        toast.error('Arquivo muito grande. O limite é 20MB.')
         return
       }
-      setVideoFile(file)
-      setVideoPreview(URL.createObjectURL(file))
+      setSelectedMedia(file)
+      setMediaPreview(URL.createObjectURL(file))
     }
   }
 
@@ -75,8 +106,8 @@ export function CreatePostFab() {
   }
 
   const handleRemoveVideo = () => {
-    setVideoFile(null)
-    setVideoPreview(null)
+    setSelectedMedia(null)
+    setMediaPreview(null)
     setGeneratedMode(null)
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
@@ -104,9 +135,9 @@ export function CreatePostFab() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-md bg-card border-border max-h-[90vh] overflow-y-auto">
         {/* If 3D Generator is active, show only that component */}
-        {show3DGenerator && videoFile ? (
+        {show3DGenerator && selectedMedia ? (
           <Post3DGenerator
-            videoFile={videoFile}
+            videoFile={selectedMedia}
             onConfirm={handle3DConfirm}
             onCancel={() => setShow3DGenerator(false)}
           />
@@ -127,15 +158,23 @@ export function CreatePostFab() {
                 />
               </div>
 
-              {/* Video Preview Area */}
-              {videoPreview && (
+              {/* Media Preview Area */}
+              {mediaPreview && (
                 <div className="relative rounded-xl overflow-hidden bg-black/5 border border-border group">
-                  <video
-                    src={videoPreview}
-                    className="w-full h-48 object-cover opacity-80"
-                    controls={false}
-                    muted
-                  />
+                  {selectedMedia?.type.startsWith('video/') ? (
+                    <video
+                      src={mediaPreview}
+                      className="w-full h-48 object-cover opacity-80"
+                      controls={false}
+                      muted
+                    />
+                  ) : (
+                    <img
+                      src={mediaPreview}
+                      className="w-full h-48 object-cover"
+                      alt="Prévia do post"
+                    />
+                  )}
 
                   {generatedMode && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
@@ -154,26 +193,27 @@ export function CreatePostFab() {
                   <Button
                     size="icon"
                     variant="destructive"
-                    className="absolute top-2 right-2 h-6 w-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute top-2 right-2 h-6 w-6 rounded-full opacity-90 hover:opacity-100 transition-opacity"
                     onClick={handleRemoveVideo}
                   >
                     <X className="w-3 h-3" />
                   </Button>
 
-                  {/* 3D Generation Trigger */}
-                  {!generatedMode && (
-                    <div className="absolute bottom-2 left-2 right-2">
-                      <Button
-                        variant="default"
-                        size="sm"
-                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg border border-indigo-400/30"
-                        onClick={() => setShow3DGenerator(true)}
-                      >
-                        <Sparkles className="w-4 h-4 mr-2" />
-                        Gerar Replay 3D
-                      </Button>
-                    </div>
-                  )}
+                  {/* 3D Generation Trigger for videos */}
+                  {!generatedMode &&
+                    selectedMedia?.type.startsWith('video/') && (
+                      <div className="absolute bottom-2 left-2 right-2">
+                        <Button
+                          variant="default"
+                          size="sm"
+                          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg border border-indigo-400/30"
+                          onClick={() => setShow3DGenerator(true)}
+                        >
+                          <Sparkles className="w-4 h-4 mr-2" />
+                          Gerar Replay 3D
+                        </Button>
+                      </div>
+                    )}
                 </div>
               )}
 
@@ -184,15 +224,16 @@ export function CreatePostFab() {
                     variant="outline"
                     className="w-full text-xs gap-2"
                     onClick={() => fileInputRef.current?.click()}
+                    disabled={isSubmitting}
                   >
                     <Video className="w-4 h-4" />
-                    {videoFile ? 'Trocar Vídeo' : 'Foto/Vídeo'}
+                    {selectedMedia ? 'Trocar Arquivo' : 'Foto / Vídeo'}
                   </Button>
                   <input
                     type="file"
                     ref={fileInputRef}
                     className="hidden"
-                    accept="video/*"
+                    accept="image/*,video/mp4,video/webm"
                     onChange={handleFileSelect}
                   />
 
@@ -222,9 +263,17 @@ export function CreatePostFab() {
             <div className="flex justify-end">
               <Button
                 onClick={handlePost}
-                disabled={!content.trim() && !videoFile}
+                disabled={(!content.trim() && !selectedMedia) || isSubmitting}
+                className="font-bold gap-1.5"
               >
-                Publicar
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin mr-1" />
+                    Publicando...
+                  </>
+                ) : (
+                  'Publicar'
+                )}
               </Button>
             </div>
           </>

@@ -117,6 +117,8 @@ export default function Profile() {
           activeProfileRow.institutional_description ||
           fallbackMock?.bio,
         type: activeProfileRow.account_type || fallbackMock?.type || 'athlete',
+        cover_url: activeProfileRow.cover_url,
+        cover_type: activeProfileRow.cover_type,
         // Real fields attached for views (Note: birth_date is strictly omitted for other users)
         rawProfile: isMe
           ? activeProfileRow

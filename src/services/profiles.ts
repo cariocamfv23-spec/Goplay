@@ -9,6 +9,9 @@ export interface ProfileRow {
   avatar_url: string | null
   cover_url?: string | null
   cover_type?: 'image' | 'video' | string | null
+  cover_position_x?: number | null
+  cover_position_y?: number | null
+  cover_zoom?: number | null
   account_type: AccountType
   sport: string | null
   position: string | null
@@ -249,7 +252,13 @@ export const profileService = {
       }
       const { error } = await supabase
         .from('profiles')
-        .update({ cover_url: null, cover_type: 'image' } as any)
+        .update({
+          cover_url: null,
+          cover_type: 'image',
+          cover_position_x: 50,
+          cover_position_y: 50,
+          cover_zoom: 1,
+        } as any)
         .eq('id', userId)
 
       if (error) {
@@ -258,6 +267,32 @@ export const profileService = {
       return { error: null }
     } catch (err: any) {
       return { error: err instanceof Error ? err : new Error(String(err)) }
+    }
+  },
+
+  /**
+   * Fetches official demo test accounts for navigation and demonstration.
+   */
+  async getDemoProfiles(): Promise<{
+    data: ProfileRow[]
+    error: Error | null
+  }> {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .ilike('id', '11111111-0000-0000-0000-%')
+        .order('created_at', { ascending: true })
+
+      if (error) {
+        return { data: [], error: new Error(error.message) }
+      }
+      return { data: (data as unknown as ProfileRow[]) ?? [], error: null }
+    } catch (err: any) {
+      return {
+        data: [],
+        error: err instanceof Error ? err : new Error(String(err)),
+      }
     }
   },
 }

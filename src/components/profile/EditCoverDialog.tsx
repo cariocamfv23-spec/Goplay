@@ -31,11 +31,17 @@ interface EditCoverDialogProps {
   profile: ProfileRow | null
   currentCover?: string | null
   currentType?: 'image' | 'video' | string | null
+  currentPosX?: number | null
+  currentPosY?: number | null
+  currentZoom?: number | null
   onCoverUpdated?: (
     newCoverUrl: string | null,
     coverType: 'image' | 'video',
+    framing?: { posX: number; posY: number; zoom: number },
   ) => void
 }
+
+import { cn } from '@/lib/utils'
 
 export function EditCoverDialog({
   open,
@@ -43,6 +49,9 @@ export function EditCoverDialog({
   profile,
   currentCover,
   currentType = 'image',
+  currentPosX = 50,
+  currentPosY = 50,
+  currentZoom = 1,
   onCoverUpdated,
 }: EditCoverDialogProps) {
   const { user, refreshProfile } = useAuth()
@@ -52,11 +61,70 @@ export function EditCoverDialog({
   const [directUrl, setDirectUrl] = useState<string>('')
   const [isUploading, setIsUploading] = useState(false)
   const [isRemoving, setIsRemoving] = useState(false)
+
+  // Framing parameters (persisted in DB)
+  const [zoom, setZoom] = useState<number>(() => {
+    return profile?.cover_zoom ?? currentZoom ?? 1
+  })
+  const [posX, setPosX] = useState<number>(() => {
+    return profile?.cover_position_x ?? currentPosX ?? 50
+  })
+  const [posY, setPosY] = useState<number>(() => {
+    return profile?.cover_position_y ?? currentPosY ?? 50
+  })
+
+  // Dragging state for interactive positioning
+  const [isDragging, setIsDragging] = useState(false)
+  const dragStartRef = useRef<{
+    mouseX: number
+    mouseY: number
+    startX: number
+    startY: number
+  } | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const effectiveCover = previewUrl || directUrl || currentCover || null
   const effectiveType =
     previewUrl && selectedFile?.type.startsWith('video/') ? 'video' : activeTab
+
+  const handleResetFraming = () => {
+    setZoom(1)
+    setPosX(50)
+    setPosY(50)
+  }
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!effectiveCover) return
+    setIsDragging(true)
+    dragStartRef.current = {
+      mouseX: e.clientX,
+      mouseY: e.clientY,
+      startX: posX,
+      startY: posY,
+    }
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !dragStartRef.current) return
+    const dx = e.clientX - dragStartRef.current.mouseX
+    const dy = e.clientY - dragStartRef.current.mouseY
+    // Sensitivity scale: 200px box ~= 100%
+    const newX = Math.max(
+      0,
+      Math.min(100, dragStartRef.current.startX - dx * 0.25),
+    )
+    const newY = Math.max(
+      0,
+      Math.min(100, dragStartRef.current.startY - dy * 0.25),
+    )
+    setPosX(Math.round(newX))
+    setPosY(Math.round(newY))
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+    dragStartRef.current = null
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -114,12 +182,15 @@ export function EditCoverDialog({
         finalType = type
       }
 
-      // Persist to public.profiles table in Supabase
+      // Persist to public.profiles table in Supabase (including framing parameters)
       const { data, error: updateError } = await profileService.updateMyProfile(
         user.id,
         {
           cover_url: finalCoverUrl,
           cover_type: finalType,
+          cover_position_x: posX,
+          cover_position_y: posY,
+          cover_zoom: zoom,
         },
       )
 
@@ -137,7 +208,11 @@ export function EditCoverDialog({
       )
 
       if (onCoverUpdated) {
-        onCoverUpdated(finalCoverUrl, finalType)
+        onCoverUpdated(finalCoverUrl, finalType, {
+          posX,
+          posY,
+          zoom,
+        })
       }
 
       onOpenChange(false)
@@ -189,24 +264,41 @@ export function EditCoverDialog({
         </DialogHeader>
 
         <div className="space-y-4 pt-1">
-          {/* Cover Preview Area */}
-          <div className="relative h-44 w-full rounded-xl overflow-hidden bg-muted border border-border/60 shadow-inner group">
+          {/* Cover Preview Area with Drag & Zoom */}
+          <div
+            className={cn(
+              'relative h-48 w-full rounded-xl overflow-hidden bg-muted border border-border/60 shadow-inner group select-none',
+              isDragging ? 'cursor-grabbing' : 'cursor-grab',
+            )}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+          >
             {effectiveCover ? (
               effectiveType === 'video' ? (
                 <video
                   src={effectiveCover}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-75"
+                  style={{
+                    transform: `scale(${zoom})`,
+                    objectPosition: `${posX}% ${posY}%`,
+                  }}
                   autoPlay
                   loop
                   muted
                   playsInline
-                  controls
                 />
               ) : (
                 <img
                   src={effectiveCover}
                   alt="Prévia da capa"
-                  className="w-full h-full object-cover"
+                  draggable={false}
+                  className="w-full h-full object-cover transition-transform duration-75"
+                  style={{
+                    transform: `scale(${zoom})`,
+                    objectPosition: `${posX}% ${posY}%`,
+                  }}
                   onError={(e) => {
                     e.currentTarget.src =
                       'https://img.usecurling.com/p/800/300?q=sports%20stadium'
@@ -225,17 +317,100 @@ export function EditCoverDialog({
               </div>
             )}
 
-            <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+            <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 pointer-events-none">
               <Eye className="w-3 h-3" />
-              Prévia em Tempo Real
+              Proporção Real da Capa
             </div>
 
+            {effectiveCover && (
+              <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[10px] px-2 py-0.5 rounded-md pointer-events-none">
+                Posição: {posX}% x {posY}% | Zoom: {zoom.toFixed(1)}x
+              </div>
+            )}
+
             {selectedFile && (
-              <div className="absolute bottom-2 left-2 bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm">
+              <div className="absolute bottom-2 left-2 bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm pointer-events-none">
                 Arquivo selecionado (não salvo ainda)
               </div>
             )}
           </div>
+
+          {/* Framing Controls (Zoom, Position H & V, Reset) */}
+          {effectiveCover && (
+            <div className="p-3 bg-secondary/30 rounded-xl border border-border/50 space-y-3">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-semibold text-foreground flex items-center gap-1.5">
+                  <ImageIcon className="w-3.5 h-3.5 text-primary" />
+                  Ajustes de Enquadramento
+                </span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 text-[11px] px-2 text-muted-foreground hover:text-foreground"
+                  onClick={handleResetFraming}
+                >
+                  Restaurar Original
+                </Button>
+              </div>
+
+              {/* Zoom Slider */}
+              <div className="space-y-1">
+                <div className="flex justify-between text-[11px] text-muted-foreground">
+                  <span>Zoom / Escala</span>
+                  <span>{zoom.toFixed(2)}x</span>
+                </div>
+                <input
+                  type="range"
+                  min="1"
+                  max="2.5"
+                  step="0.05"
+                  value={zoom}
+                  onChange={(e) => setZoom(parseFloat(e.target.value))}
+                  className="w-full accent-primary h-1.5 bg-muted rounded-lg cursor-pointer"
+                />
+              </div>
+
+              {/* Pos Horizontal */}
+              <div className="space-y-1">
+                <div className="flex justify-between text-[11px] text-muted-foreground">
+                  <span>Posição Horizontal (Eixo X)</span>
+                  <span>{posX}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value={posX}
+                  onChange={(e) => setPosX(parseInt(e.target.value, 10))}
+                  className="w-full accent-primary h-1.5 bg-muted rounded-lg cursor-pointer"
+                />
+              </div>
+
+              {/* Pos Vertical */}
+              <div className="space-y-1">
+                <div className="flex justify-between text-[11px] text-muted-foreground">
+                  <span>Posição Vertical (Eixo Y)</span>
+                  <span>{posY}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value={posY}
+                  onChange={(e) => setPosY(parseInt(e.target.value, 10))}
+                  className="w-full accent-primary h-1.5 bg-muted rounded-lg cursor-pointer"
+                />
+              </div>
+
+              <p className="text-[10px] text-muted-foreground text-center">
+                Dica: você também pode clicar e arrastar a imagem diretamente na
+                prévia acima.
+              </p>
+            </div>
+          )}
 
           <Tabs
             value={activeTab}

@@ -21,6 +21,10 @@ import { useNavigate } from 'react-router-dom'
 import { EditProfileDialog } from '@/components/profile/EditProfileDialog'
 import { EditCoverDialog } from '@/components/profile/EditCoverDialog'
 import { type ProfileRow } from '@/services/profiles'
+import { connectionService } from '@/services/connections'
+import { useAuth } from '@/hooks/use-auth'
+import { toast } from 'sonner'
+import { UserCheck, Loader2 } from 'lucide-react'
 
 export default function ClubView({
   profile,
@@ -30,13 +34,60 @@ export default function ClubView({
   isMe?: boolean
 }) {
   const navigate = useNavigate()
+  const { user: authUser } = useAuth()
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isEditCoverOpen, setIsEditCoverOpen] = useState(false)
+  const [isFollowing, setIsFollowing] = useState(false)
+  const [followLoading, setFollowLoading] = useState(false)
+
+  const isSupabaseProfile =
+    typeof profile.id === 'string' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      profile.id,
+    )
+
+  const handleToggleFollow = async () => {
+    if (!authUser?.id) {
+      toast.error('Faça login para seguir o clube.')
+      return
+    }
+    if (!isSupabaseProfile) {
+      setIsFollowing(!isFollowing)
+      return
+    }
+
+    setFollowLoading(true)
+    if (isFollowing) {
+      const { error } = await connectionService.unfollow(
+        authUser.id,
+        profile.id,
+      )
+      setFollowLoading(false)
+      if (error) {
+        toast.error('Erro ao deixar de seguir.')
+        return
+      }
+      setIsFollowing(false)
+      toast.success('Você deixou de seguir este clube.')
+    } else {
+      const { error } = await connectionService.follow(authUser.id, profile.id)
+      setFollowLoading(false)
+      if (error) {
+        toast.error(error.message || 'Erro ao seguir.')
+        return
+      }
+      setIsFollowing(true)
+      toast.success('Você agora está seguindo este clube!')
+    }
+  }
   const raw = profile.rawProfile
   const customCoverUrl =
     raw?.cover_url || (profile as any).cover_url || profile.cover || null
   const customCoverType =
     raw?.cover_type || (profile as any).cover_type || 'image'
+  const coverPosX = raw?.cover_position_x ?? 50
+  const coverPosY = raw?.cover_position_y ?? 50
+  const coverZoom = raw?.cover_zoom ?? 1
 
   const clubName = raw?.club_name || raw?.full_name || profile.name
   const institutionalDesc =
@@ -53,6 +104,10 @@ export default function ClubView({
           <video
             src={customCoverUrl}
             className="w-full h-full object-cover opacity-90"
+            style={{
+              transform: `scale(${coverZoom})`,
+              objectPosition: `${coverPosX}% ${coverPosY}%`,
+            }}
             autoPlay
             loop
             muted
@@ -66,6 +121,10 @@ export default function ClubView({
             }
             alt="Cover"
             className="w-full h-full object-cover"
+            style={{
+              transform: `scale(${coverZoom})`,
+              objectPosition: `${coverPosX}% ${coverPosY}%`,
+            }}
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -102,8 +161,25 @@ export default function ClubView({
               </Button>
             ) : (
               <>
-                <Button size="sm" className="bg-primary text-white shadow-md">
-                  <UserPlus className="h-4 w-4 mr-2" /> Seguir
+                <Button
+                  size="sm"
+                  variant={isFollowing ? 'outline' : 'default'}
+                  className={
+                    isFollowing
+                      ? 'border-primary/40 text-primary'
+                      : 'bg-primary text-white shadow-md'
+                  }
+                  onClick={handleToggleFollow}
+                  disabled={followLoading}
+                >
+                  {followLoading ? (
+                    <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                  ) : isFollowing ? (
+                    <UserCheck className="h-4 w-4 mr-1" />
+                  ) : (
+                    <UserPlus className="h-4 w-4 mr-1" />
+                  )}
+                  {isFollowing ? 'Seguindo' : 'Seguir'}
                 </Button>
                 <Button
                   size="sm"
@@ -233,6 +309,9 @@ export default function ClubView({
             profile={raw || null}
             currentCover={customCoverUrl}
             currentType={customCoverType}
+            currentPosX={coverPosX}
+            currentPosY={coverPosY}
+            currentZoom={coverZoom}
           />
         </>
       )}

@@ -9,13 +9,19 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Send, Heart } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import useNotificationStore from '@/stores/useNotificationStore'
+import { useAuth } from '@/hooks/use-auth'
+import { feedService, type PostCommentItem } from '@/services/feed'
+import { toast } from 'sonner'
+import { Trash2, Loader2 } from 'lucide-react'
 
 interface Comment {
   id: string
+  userId?: string
   user: {
+    id?: string
     name: string
     avatar: string
   }
@@ -23,11 +29,13 @@ interface Comment {
   time: string
   likes: number
   isLiked?: boolean
+  isMine?: boolean
 }
 
 interface CommentsSheetProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  postId?: string | number
   videoId?: string
 }
 
@@ -74,44 +82,120 @@ const MOCK_COMMENTS: Comment[] = [
   },
 ]
 
-export function CommentsSheet({ open, onOpenChange }: CommentsSheetProps) {
-  const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS)
+export function CommentsSheet({
+  open,
+  onOpenChange,
+  postId,
+}: CommentsSheetProps) {
+  const { user } = useAuth()
+  const [comments, setComments] = useState<Comment[]>([])
   const [newComment, setNewComment] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const { addNotification } = useNotificationStore()
 
-  const handleSend = () => {
-    if (!newComment.trim()) return
+  const isSupabasePost =
+    typeof postId === 'string' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      postId,
+    )
 
-    const comment: Comment = {
-      id: Date.now().toString(),
-      user: {
-        name: 'Você',
-        avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99',
-      },
-      text: newComment,
-      time: 'Agora',
-      likes: 0,
+  useEffect(() => {
+    if (!open) return
+
+    if (isSupabasePost && postId) {
+      setLoading(true)
+      feedService.getComments(postId).then(({ data, error }) => {
+        setLoading(false)
+        if (error) {
+          toast.error('Erro ao carregar comentários.')
+          return
+        }
+        const mapped: Comment[] = data.map((c) => ({
+          id: c.id,
+          userId: c.userId,
+          user: {
+            id: c.user.id,
+            name: c.user.name,
+            avatar: c.user.avatar,
+          },
+          text: c.content,
+          time: c.timeAgo,
+          likes: 0,
+          isMine: user?.id === c.userId,
+        }))
+        setComments(mapped)
+      })
+    } else {
+      setComments(MOCK_COMMENTS)
+    }
+  }, [open, postId, isSupabasePost, user?.id])
+
+  const handleSend = async () => {
+    if (!newComment.trim() || submitting) return
+
+    if (isSupabasePost && postId && user?.id) {
+      setSubmitting(true)
+      const { data, error } = await feedService.addComment({
+        postId,
+        userId: user.id,
+        content: newComment.trim(),
+      })
+      setSubmitting(false)
+
+      if (error || !data) {
+        toast.error('Não foi possível enviar o comentário.')
+        return
+      }
+
+      const added: Comment = {
+        id: data.id,
+        userId: data.userId,
+        user: {
+          id: user.id,
+          name: data.user.name,
+          avatar: data.user.avatar,
+        },
+        text: data.content,
+        time: 'Agora',
+        likes: 0,
+        isMine: true,
+      }
+      setComments((prev) => [...prev, added])
+      setNewComment('')
+      toast.success('Comentário publicado!')
+    } else {
+      // Mock fallback
+      const comment: Comment = {
+        id: Date.now().toString(),
+        user: {
+          name: 'Você',
+          avatar:
+            'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99',
+        },
+        text: newComment,
+        time: 'Agora',
+        likes: 0,
+        isMine: true,
+      }
+      setComments([comment, ...comments])
+      setNewComment('')
+    }
+  }
+
+  const handleDeleteComment = async (commentId: string) => {
+    if (!user?.id || !isSupabasePost) {
+      setComments((prev) => prev.filter((c) => c.id !== commentId))
+      return
     }
 
-    setComments([comment, ...comments])
-    setNewComment('')
-
-    // Simulate network interaction notification (e.g. another user comments in the thread)
-    setTimeout(() => {
-      addNotification({
-        title: 'Nova Interação',
-        message:
-          'João Silva também comentou em uma publicação que você interagiu.',
-        type: 'thread_comment',
-        priority: 'medium',
-        link: '/feed',
-        user: {
-          id: 'u1',
-          name: 'João Silva',
-          avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
-        },
-      })
-    }, 3000)
+    const { error } = await feedService.deleteComment(commentId, user.id)
+    if (error) {
+      toast.error('Erro ao excluir comentário.')
+      return
+    }
+    setComments((prev) => prev.filter((c) => c.id !== commentId))
+    toast.success('Comentário excluído.')
   }
 
   const toggleLike = (id: string) => {
@@ -143,50 +227,53 @@ export function CommentsSheet({ open, onOpenChange }: CommentsSheetProps) {
           </SheetHeader>
 
           <ScrollArea className="flex-1 px-4">
-            <div className="space-y-4 py-4">
-              {comments.map((comment) => (
-                <div key={comment.id} className="flex gap-3">
-                  <Avatar className="w-8 h-8 border border-zinc-700">
-                    <AvatarImage src={comment.user.avatar} />
-                    <AvatarFallback>{comment.user.name[0]}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-baseline justify-between">
-                      <span className="text-sm font-semibold text-zinc-200">
-                        {comment.user.name}
-                      </span>
-                      <span className="text-xs text-zinc-500">
-                        {comment.time}
-                      </span>
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-16 gap-2">
+                <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                <span className="text-xs text-zinc-500">
+                  Carregando comentários...
+                </span>
+              </div>
+            ) : comments.length === 0 ? (
+              <div className="text-center py-16 text-zinc-500 text-sm">
+                Nenhum comentário ainda. Seja o primeiro a comentar!
+              </div>
+            ) : (
+              <div className="space-y-4 py-4">
+                {comments.map((comment) => (
+                  <div key={comment.id} className="flex gap-3 group">
+                    <Avatar className="w-8 h-8 border border-zinc-700">
+                      <AvatarImage src={comment.user.avatar} />
+                      <AvatarFallback>{comment.user.name[0]}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-baseline justify-between">
+                        <span className="text-sm font-semibold text-zinc-200">
+                          {comment.user.name}
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-zinc-500">
+                            {comment.time}
+                          </span>
+                          {comment.isMine && (
+                            <button
+                              onClick={() => handleDeleteComment(comment.id)}
+                              className="text-zinc-500 hover:text-red-400 p-0.5 opacity-60 hover:opacity-100 transition-opacity"
+                              title="Excluir meu comentário"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                      <p className="text-sm text-zinc-300 leading-relaxed">
+                        {comment.text}
+                      </p>
                     </div>
-                    <p className="text-sm text-zinc-300 leading-relaxed">
-                      {comment.text}
-                    </p>
-                    <button className="text-xs font-medium text-zinc-500 hover:text-white transition-colors">
-                      Responder
-                    </button>
                   </div>
-                  <div className="flex flex-col items-center gap-1">
-                    <button
-                      onClick={() => toggleLike(comment.id)}
-                      className="p-1 hover:bg-zinc-800 rounded-full transition-colors"
-                    >
-                      <Heart
-                        className={cn(
-                          'w-4 h-4',
-                          comment.isLiked
-                            ? 'fill-red-500 text-red-500'
-                            : 'text-zinc-500',
-                        )}
-                      />
-                    </button>
-                    <span className="text-xs text-zinc-500">
-                      {comment.likes}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </ScrollArea>
 
           <div className="p-4 border-t border-zinc-800 bg-zinc-900 pb-8">
