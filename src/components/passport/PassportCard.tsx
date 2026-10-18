@@ -4,8 +4,23 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Logo } from '@/components/Logo'
 import { Globe, ShieldCheck, QrCode } from 'lucide-react'
 
-export function PassportCard() {
+interface PassportCardProps {
+  profile?: any
+}
+
+export function PassportCard({ profile }: PassportCardProps) {
   const user = mockCurrentUser
+  const displayName = profile?.full_name || profile?.name || user.name
+  const avatarUrl = profile?.avatar_url || profile?.avatar || user.avatar
+  const sport = profile?.sport || user.sport
+  const position = profile?.position || user.position
+  const locationText =
+    [profile?.city, profile?.state].filter(Boolean).join(', ') ||
+    profile?.location ||
+    ''
+  const isClub = profile?.account_type === 'club' || profile?.type === 'club'
+  const isCoach = profile?.account_type === 'coach' || profile?.type === 'coach'
+  const identifierCode = (profile?.id || user.id).slice(0, 8).toUpperCase()
 
   return (
     <div className="w-full max-w-sm aspect-[1.58/1] relative perspective-1000 group cursor-pointer mx-auto">
@@ -23,28 +38,38 @@ export function PassportCard() {
 
             <div className="flex gap-4 items-center">
               <Avatar className="h-20 w-20 border-2 border-white/30 rounded-lg">
-                <AvatarImage src={user.avatar} />
-                <AvatarFallback>{user.name[0]}</AvatarFallback>
+                <AvatarImage src={avatarUrl} />
+                <AvatarFallback>{displayName[0]}</AvatarFallback>
               </Avatar>
               <div className="space-y-1">
                 <div className="text-[10px] text-white/60 uppercase tracking-widest">
-                  {user.type === 'athlete' ? 'Atleta' : user.role}
+                  {sport ? `${sport} • ` : ''}
+                  {position ||
+                    (isClub ? 'Clube' : isCoach ? 'Treinador' : 'Atleta')}
                 </div>
-                <h2 className="text-lg font-bold">{user.name}</h2>
+                <h2 className="text-lg font-bold leading-tight line-clamp-1">
+                  {displayName}
+                </h2>
                 <div className="text-xs text-gold flex items-center gap-1">
-                  <ShieldCheck className="h-3 w-3" /> Verificado
+                  <ShieldCheck className="h-3 w-3" /> Goplay Verificado
                 </div>
+                {locationText && (
+                  <div className="text-[10px] text-white/70">
+                    {locationText}
+                  </div>
+                )}
               </div>
             </div>
-
             <div className="grid grid-cols-2 gap-4 text-xs">
               <div>
                 <div className="text-white/50">ID Goplay</div>
-                <div className="font-mono">{mockPassport.idNumber}</div>
+                <div className="font-mono">GP-{identifierCode}</div>
               </div>
               <div className="text-right">
-                <div className="text-white/50">Validade</div>
-                <div>{mockPassport.expiry}</div>
+                <div className="text-white/50">Status</div>
+                <div className="text-emerald-400 font-semibold">
+                  Ativo 2025/2026
+                </div>
               </div>
             </div>
           </div>
@@ -57,7 +82,7 @@ export function PassportCard() {
             Escaneie para validar o perfil do atleta em competições oficiais.
           </p>
           <div className="mt-4 text-xs font-mono text-zinc-400">
-            {mockPassport.idNumber}
+            GP-{identifierCode}-VERIFIED
           </div>
         </div>
       </div>

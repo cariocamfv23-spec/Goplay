@@ -31,6 +31,8 @@ import {
   type RegistrationStatus,
 } from '@/services/events'
 import { useAuth } from '@/hooks/use-auth'
+import { analyticsService } from '@/services/analytics'
+import { ShareDialog } from '@/components/ShareDialog'
 import { toast } from 'sonner'
 import {
   AlertDialog,
@@ -61,6 +63,7 @@ export default function EventDetails() {
   const [regFilter, setRegFilter] = useState<
     'all' | 'pending' | 'approved' | 'rejected'
   >('all')
+  const [isShareOpen, setIsShareOpen] = useState(false)
 
   const isSupabaseId =
     typeof id === 'string' &&
@@ -82,6 +85,9 @@ export default function EventDetails() {
         setRealEvent(data)
         setIsRegistered(data.isRegistered ?? false)
 
+        // Record deduplicated event view metric
+        analyticsService.trackEventView(id, user?.id)
+
         // If current user is the creator, fetch the registrations list
         if (user?.id && data.creatorId === user.id) {
           eventsService.getEventRegistrations(id).then((regs) => {
@@ -95,8 +101,14 @@ export default function EventDetails() {
   }, [id, isSupabaseId, user?.id])
 
   const handleRegister = async () => {
+    // Record registration intent metric
+    if (id) {
+      analyticsService.trackRegistrationStarted(id, user?.id)
+    }
+
     if (!user?.id) {
-      toast.error('Você precisa fazer login para se inscrever.', {
+      toast.info('Faça login para concluir sua inscrição no evento.', {
+        description: 'Você retornará diretamente para este evento.',
         action: {
           label: 'Fazer Login',
           onClick: () =>
@@ -122,6 +134,18 @@ export default function EventDetails() {
       }
 
       setIsRegistered(true)
+
+      // Record successful registration completion metric
+      analyticsService.trackEvent({
+        eventName: 'registration_completed',
+        userId: user.id,
+        targetId: id,
+        metadata: {
+          event_title: realEvent?.title,
+          sport: realEvent?.sport,
+        },
+      })
+
       toast.success('Inscrição confirmada com sucesso!', {
         description:
           'Verifique suas notificações e compareça no horário indicado.',
@@ -274,11 +298,9 @@ export default function EventDetails() {
           <Button
             variant="secondary"
             size="icon"
-            className="rounded-full bg-background/80 backdrop-blur-md"
-            onClick={() => {
-              navigator.clipboard?.writeText(window.location.href)
-              toast.success('Link do evento copiado!')
-            }}
+            className="rounded-full bg-background/80 backdrop-blur-md hover:bg-background text-foreground"
+            onClick={() => setIsShareOpen(true)}
+            aria-label="Compartilhar evento"
           >
             <Share2 className="w-5 h-5" />
           </Button>
@@ -731,6 +753,21 @@ export default function EventDetails() {
                     ? 'Inscrição aprovada com sucesso! O atleta foi notificado.'
                     : 'Inscrição recusada com sucesso. O atleta foi notificado.',
                 )
+
+                // Track approval/rejection metrics
+                analyticsService.trackEvent({
+                  eventName:
+                    actionRegistration.action === 'approved'
+                      ? 'registration_approved'
+                      : 'registration_rejected',
+                  userId: user?.id,
+                  targetId: actionRegistration.item.id,
+                  metadata: {
+                    event_id: id,
+                    athlete_id: actionRegistration.item.userId,
+                  },
+                })
+
                 setActionRegistration(null)
               }}
             >
@@ -830,6 +867,18 @@ export default function EventDetails() {
           )}
         </div>
       </div>
+      <ShareDialog
+        open={isShareOpen}
+        onOpenChange={setIsShareOpen}
+        title={event.title}
+        description={`Participe de "${event.title}" (${event.sport}) no Goplay App!`}
+        url={window.location.href}
+        onShareAction={(platform) => {
+          if (id) {
+            analyticsService.trackEventShare(id, platform || 'native', user?.id)
+          }
+        }}
+      />
     </div>
   )
 }

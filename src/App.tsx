@@ -270,6 +270,9 @@ const App = () => {
                       path="/profile-selection"
                       element={<ProfileSelection />}
                     />
+                    {/* Public Standalone Shareable Routes (Direct access without login) */}
+                    <Route path="/passport/:id" element={<SportsPassport />} />
+                    <Route path="/p/:id" element={<SportsPassport />} />
                     {/* Protected Full-Screen Routes */}
                     <Route element={<ProtectedRoute />}>
                       <Route

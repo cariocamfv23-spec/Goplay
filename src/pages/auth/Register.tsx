@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { analyticsService } from '@/services/analytics'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -26,6 +27,7 @@ import { useAuth } from '@/hooks/use-auth'
 
 export default function Register() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { signUp, signInWithGoogle } = useAuth()
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
@@ -100,10 +102,27 @@ export default function Register() {
         return
       }
 
+      const params = new URLSearchParams(location.search)
+      const redirectUrl = params.get('redirect')
+
+      // Record signup telemetry event
+      analyticsService.trackEvent({
+        eventName: 'user_signup_completed',
+        userId: data?.user?.id || null,
+        metadata: {
+          account_type: 'athlete',
+          has_redirect: !!redirectUrl,
+        },
+      })
+
       // If user session is created immediately (e-mail confirmation disabled or confirmed)
       if (data?.session) {
         toast.success('Conta criada com sucesso!')
-        navigate('/onboarding')
+        if (redirectUrl && redirectUrl.startsWith('/')) {
+          navigate(redirectUrl, { replace: true })
+        } else {
+          navigate('/onboarding')
+        }
       } else if (data?.user && !data?.session) {
         // Confirmation email required
         setAwaitingEmailConfirmation(true)
@@ -112,7 +131,11 @@ export default function Register() {
         })
       } else {
         toast.success('Conta criada com sucesso!')
-        navigate('/onboarding')
+        if (redirectUrl && redirectUrl.startsWith('/')) {
+          navigate(redirectUrl, { replace: true })
+        } else {
+          navigate('/onboarding')
+        }
       }
     } catch (err: any) {
       toast.error(err?.message || 'Erro inesperado ao cadastrar')

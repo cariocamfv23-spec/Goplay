@@ -26,7 +26,7 @@ interface ShareDialogProps {
   description?: string
   url?: string
   preview?: ReactNode
-  onShareAction?: () => void
+  onShareAction?: (platform?: string) => void
   videoTitle?: string
 }
 
@@ -35,29 +35,35 @@ export function ShareDialog({
   onOpenChange,
   title = 'Compartilhar',
   description,
-  url = window.location.href,
+  url,
   preview,
   onShareAction,
   videoTitle,
 }: ShareDialogProps) {
+  const resolvedUrl =
+    url || (typeof window !== 'undefined' ? window.location.href : '')
   const displayTitle = videoTitle ? `Compartilhar: ${videoTitle}` : title
   const [copied, setCopied] = useState(false)
   const { toast } = useToast()
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(url)
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(resolvedUrl)
+    }
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
     toast({
       title: 'Link copiado!',
-      description:
-        'O link de convite foi copiado para a área de transferência.',
+      description: 'O link foi copiado para a área de transferência.',
     })
+    if (onShareAction) {
+      onShareAction('copy_link')
+    }
   }
 
   const handleShare = async (platform: string) => {
     let shared = false
-    const fullText = description ? `${description} ${url}` : url
+    const fullText = description ? `${description} ${resolvedUrl}` : resolvedUrl
 
     try {
       if (platform === 'WhatsApp') {
@@ -68,13 +74,13 @@ export function ShareDialog({
         shared = true
       } else if (platform === 'Facebook') {
         window.open(
-          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(resolvedUrl)}`,
           '_blank',
         )
         shared = true
       } else if (platform === 'Twitter') {
         window.open(
-          `https://twitter.com/intent/tweet?text=${encodeURIComponent(description || title)}&url=${encodeURIComponent(url)}`,
+          `https://twitter.com/intent/tweet?text=${encodeURIComponent(description || title)}&url=${encodeURIComponent(resolvedUrl)}`,
           '_blank',
         )
         shared = true
@@ -82,18 +88,18 @@ export function ShareDialog({
         window.location.href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(fullText)}`
         shared = true
       } else if (platform === 'Outros') {
-        if (navigator.share) {
-          await navigator.share({ title, text: description, url })
+        if (navigator?.share) {
+          await navigator.share({ title, text: description, url: resolvedUrl })
           shared = true
         } else {
-          toast({
-            title: 'Compartilhamento não suportado',
-            description:
-              'Seu navegador não suporta a funcionalidade de compartilhamento nativo.',
-          })
+          // Fallback to copy link
+          handleCopy()
+          return
         }
       } else if (platform === 'Instagram') {
-        navigator.clipboard.writeText(fullText)
+        if (navigator?.clipboard?.writeText) {
+          navigator.clipboard.writeText(fullText)
+        }
         toast({
           title: 'Link copiado!',
           description:
@@ -101,16 +107,14 @@ export function ShareDialog({
         })
         shared = true
       }
-    } catch (err) {
-      console.error(err)
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') {
+        console.error(err)
+      }
     }
 
     if (shared && onShareAction) {
-      toast({
-        title: 'Redirecionando...',
-        description: `Abrindo ${platform} para compartilhar seu link.`,
-      })
-      onShareAction()
+      onShareAction(platform)
     }
   }
 
@@ -179,8 +183,8 @@ export function ShareDialog({
         <div className="border-t border-zinc-800 pt-4">
           <p className="text-sm font-medium text-zinc-400 mb-2">Link</p>
           <div className="flex gap-2">
-            <div className="flex-1 bg-zinc-900 rounded-md px-3 py-2 text-sm text-zinc-300 truncate border border-zinc-800">
-              {url}
+            <div className="flex-1 bg-zinc-900 rounded-md px-3 py-2 text-sm text-zinc-300 truncate border border-zinc-800 font-mono text-xs">
+              {resolvedUrl}
             </div>
             <Button
               onClick={handleCopy}

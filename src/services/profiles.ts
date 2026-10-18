@@ -32,6 +32,7 @@ export interface ProfileRow {
   specialties?: string | null
   certifications?: string | null
   phone?: string | null
+  is_admin?: boolean
 }
 
 export type ProfileUpdate = Partial<
@@ -54,6 +55,7 @@ export interface PublicProfileItem {
   categories?: string | null
   specialties?: string | null
   created_at: string
+  is_admin?: boolean
 }
 
 export const profileService = {
@@ -134,6 +136,7 @@ export const profileService = {
       delete (sanitizedUpdates as any).id
       delete (sanitizedUpdates as any).created_at
       delete (sanitizedUpdates as any).updated_at
+      delete (sanitizedUpdates as any).is_admin
 
       const { data, error } = await supabase
         .from('profiles')

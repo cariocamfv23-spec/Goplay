@@ -14,13 +14,33 @@ import {
 } from 'lucide-react'
 import { mockCurrentUser } from '@/lib/data'
 
-export function StrategicVisualPassport() {
+interface StrategicVisualPassportProps {
+  profile?: any
+  posts?: any[]
+}
+
+export function StrategicVisualPassport({
+  profile,
+  posts = [],
+}: StrategicVisualPassportProps) {
   const user = mockCurrentUser
+  const athleteName = profile?.full_name || profile?.name || user.name
+
+  // Filter video posts if available
+  const videoPosts = posts.filter(
+    (p) =>
+      p.post_type === 'video' ||
+      p.video_url ||
+      (p.media_urls &&
+        p.media_urls.some(
+          (u: string) => u.includes('video') || u.endsWith('.mp4'),
+        )),
+  )
 
   const highlights = [
     {
       id: 1,
-      title: `Season 2025 - ${user.name} Highlights`,
+      title: `Temporada 2025 — ${athleteName}`,
       duration: '03:45',
       type: 'Full Reel',
       thumbnail:

@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { ArrowLeft, Trophy, Loader2 } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { eventsService } from '@/services/events'
+import { analyticsService } from '@/services/analytics'
 import { toast } from 'sonner'
 import { AlertCircle, ShieldAlert, LogIn } from 'lucide-react'
 
@@ -87,10 +88,22 @@ export default function CreateChampionship() {
       rules: formData.instructions || 'Regulamento padrão Goplay',
     })
 
+    // Track event published metric
+    analyticsService.trackEvent({
+      eventName: 'event_published',
+      userId: user.id,
+      targetId: data.id,
+      metadata: {
+        sport: formData.sport,
+        type: type,
+        price: parseFloat(formData.entryFee) || 0,
+      },
+    })
+
     toast.success(
       type === 'tryout'
-        ? 'Peneira oficial criada com sucesso!'
-        : 'Evento criado com sucesso!',
+        ? 'Peneira criada com sucesso!'
+        : 'Campeonato criado com sucesso!',
     )
     navigate(`/events/${data.id}`)
   }

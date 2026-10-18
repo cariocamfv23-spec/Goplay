@@ -450,10 +450,18 @@ export function TopBar() {
               <Settings className="mr-2 h-4 w-4" />
               <span>Configurações</span>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate('/admin')}>
-              <Shield className="mr-2 h-4 w-4 text-primary" />
-              <span className="font-bold text-foreground">Admin</span>
-            </DropdownMenuItem>
+            {profile?.is_admin && (
+              <DropdownMenuItem onClick={() => navigate('/admin')}>
+                <Shield className="mr-2 h-4 w-4 text-primary" />
+                <span className="font-bold text-foreground">Painel Admin</span>
+                <Badge
+                  variant="secondary"
+                  className="ml-auto text-[8px] bg-primary/20 text-primary border-none px-1 py-0 h-4 font-bold"
+                >
+                  BETA
+                </Badge>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />

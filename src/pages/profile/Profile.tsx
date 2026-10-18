@@ -11,7 +11,10 @@ import SponsorView from './SponsorView'
 import { BirthdayCelebration } from './BirthdayCelebration'
 import { useAuth } from '@/hooks/use-auth'
 import { profileService, type ProfileRow } from '@/services/profiles'
-import { Loader2 } from 'lucide-react'
+import { analyticsService } from '@/services/analytics'
+import { ShareDialog } from '@/components/ShareDialog'
+import { Loader2, Share2, LogIn } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 export default function Profile() {
   const { id } = useParams()
@@ -20,6 +23,7 @@ export default function Profile() {
 
   const [loading, setLoading] = useState(false)
   const [remoteProfile, setRemoteProfile] = useState<ProfileRow | null>(null)
+  const [isShareOpen, setIsShareOpen] = useState(false)
 
   // Fetch real profile from Supabase when viewing another user's profile ID
   useEffect(() => {
@@ -132,9 +136,52 @@ export default function Profile() {
   const profileType =
     activeProfileRow?.account_type || (user as any).type || 'athlete'
 
+  const shareTargetId = activeProfileRow?.id || id || 'me'
+  const shareProfileName = user.name
+  const shareSport = user.sport
+  const shareUrl = activeProfileRow?.id
+    ? `${window.location.origin}/passport/${activeProfileRow.id}`
+    : window.location.href
+
   return (
     <div className="min-h-screen bg-background pb-20">
       <BirthdayCelebration user={user} isMe={Boolean(isMe)} />
+
+      {/* Quick Public Action Bar for shared links & visitors */}
+      <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-md px-4 py-2 border-b border-border/40 flex items-center justify-between">
+        <div className="text-xs text-muted-foreground flex items-center gap-1.5 truncate">
+          <span className="font-semibold text-foreground truncate">
+            {shareProfileName}
+          </span>
+          <span>•</span>
+          <span className="capitalize">{shareSport}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          {!authUser && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 text-xs font-semibold gap-1"
+              onClick={() => {
+                const target = window.location.pathname
+                window.location.href = `/login?redirect=${encodeURIComponent(target)}`
+              }}
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              Entrar
+            </Button>
+          )}
+          <Button
+            variant="secondary"
+            size="sm"
+            className="h-8 text-xs font-semibold gap-1 bg-primary/10 text-primary hover:bg-primary/20"
+            onClick={() => setIsShareOpen(true)}
+          >
+            <Share2 className="w-3.5 h-3.5" />
+            Compartilhar
+          </Button>
+        </div>
+      </div>
 
       {profileType === 'photographer' ? (
         <PhotographerView profile={user as any} />
@@ -151,6 +198,23 @@ export default function Profile() {
       ) : (
         <AthleteView user={user} isMe={Boolean(isMe)} />
       )}
+
+      <ShareDialog
+        open={isShareOpen}
+        onOpenChange={setIsShareOpen}
+        title={`Passaporte de ${shareProfileName}`}
+        description={`Confira o perfil esportivo de ${shareProfileName} (${shareSport}) no Goplay App!`}
+        url={shareUrl}
+        onShareAction={(platform) => {
+          if (activeProfileRow?.id) {
+            analyticsService.trackProfileShare(
+              activeProfileRow.id,
+              platform || 'native',
+              authUser?.id,
+            )
+          }
+        }}
+      />
     </div>
   )
 }
