@@ -30,13 +30,11 @@ export function TimelineSwitcher() {
             >
               {t.label}
               {isActive && (
-                <motion.div
-                  layoutId="active-timeline-indicator"
+                <div
                   className={cn(
                     'absolute inset-0 rounded-full z-[-1] opacity-80',
                     t.color,
                   )}
-                  transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                 />
               )}
             </button>

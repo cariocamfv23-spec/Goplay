@@ -11,6 +11,8 @@ import {
   Users,
   Trophy,
   Filter,
+  X,
+  RotateCcw,
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -36,6 +38,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
 import { searchService } from '@/services/search'
 import type { PublicProfileItem } from '@/services/profiles'
+import { SPORTS_CATALOG, BRAZILIAN_STATES } from '@/lib/sports-catalog'
 
 export default function Explore() {
   const [search, setSearch] = useState('')
@@ -188,13 +191,24 @@ export default function Explore() {
     [search, accountTypeFilter, sportFilter, cityFilter, stateFilter],
   )
 
-  // Trigger search on filter changes with small debounce for text
+  // Initial load
   useEffect(() => {
-    const timer = setTimeout(() => {
-      loadRealProfiles(1, false)
-    }, 300)
-    return () => clearTimeout(timer)
+    loadRealProfiles(1, false)
   }, [loadRealProfiles])
+
+  // Explicit execute search trigger
+  const handleExecuteSearch = (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
+    loadRealProfiles(1, false)
+  }
+
+  const handleClearFilters = () => {
+    setAccountTypeFilter('all')
+    setSportFilter('Todos')
+    setCityFilter('')
+    setStateFilter('')
+    setSearch('')
+  }
 
   // Convert real profile item to TalentPreviewCard shape
   const adaptRealProfileToCard = (rp: PublicProfileItem): ProfileData => {
@@ -241,17 +255,45 @@ export default function Explore() {
     <div className="min-h-screen bg-background pb-20">
       {/* Search Header */}
       <div className="sticky top-0 z-30 bg-background/90 backdrop-blur-md border-b border-border/50 px-4 py-3 space-y-3">
-        <div className="flex items-center gap-2">
+        <form
+          onSubmit={handleExecuteSearch}
+          className="flex items-center gap-2"
+        >
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Buscar por nome, esporte, clube ou cidade..."
-              className="pl-9 h-11 bg-secondary border-none rounded-xl transition-all focus:ring-2 focus:ring-primary/20"
+              className="pl-9 pr-8 h-11 bg-secondary border-none rounded-xl transition-all focus:ring-2 focus:ring-primary/20"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
+
+          {/* Explicit Search Button */}
           <Button
+            type="submit"
+            className="h-11 px-4 rounded-xl font-bold gap-1.5 shadow-sm shrink-0"
+            disabled={loadingProfiles}
+          >
+            {loadingProfiles ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Search className="h-4 w-4" />
+            )}
+            <span className="hidden sm:inline">Pesquisar</span>
+          </Button>
+
+          <Button
+            type="button"
             variant={showFilters ? 'default' : 'outline'}
             size="icon"
             className="h-11 w-11 rounded-xl shrink-0"
@@ -260,7 +302,7 @@ export default function Explore() {
           >
             <Filter className="h-4 w-4" />
           </Button>
-        </div>
+        </form>
 
         {/* Real Filter Drawer / Panel */}
         {showFilters && (
@@ -288,7 +330,7 @@ export default function Explore() {
 
               <div className="space-y-1">
                 <span className="text-[10px] font-bold uppercase text-muted-foreground">
-                  Modalidade
+                  Modalidade Esportiva
                 </span>
                 <Select
                   value={sportFilter}
@@ -297,14 +339,13 @@ export default function Explore() {
                   <SelectTrigger className="h-9 bg-background">
                     <SelectValue placeholder="Modalidade" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Todos">Todas</SelectItem>
-                    <SelectItem value="Futebol">Futebol</SelectItem>
-                    <SelectItem value="Futsal">Futsal</SelectItem>
-                    <SelectItem value="Basquete">Basquete</SelectItem>
-                    <SelectItem value="Vôlei">Vôlei</SelectItem>
-                    <SelectItem value="Natação">Natação</SelectItem>
-                    <SelectItem value="Atletismo">Atletismo</SelectItem>
+                  <SelectContent className="max-h-60">
+                    <SelectItem value="Todos">Todas as modalidades</SelectItem>
+                    {SPORTS_CATALOG.map((s) => (
+                      <SelectItem key={s.id} value={s.id}>
+                        {s.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -326,30 +367,54 @@ export default function Explore() {
                 <span className="text-[10px] font-bold uppercase text-muted-foreground">
                   UF
                 </span>
-                <Input
-                  placeholder="Ex: RJ"
-                  maxLength={2}
-                  className="h-9 bg-background text-xs uppercase"
-                  value={stateFilter}
-                  onChange={(e) => setStateFilter(e.target.value.toUpperCase())}
-                />
+                <Select
+                  value={stateFilter || '__all__'}
+                  onValueChange={(val) =>
+                    setStateFilter(val === '__all__' ? '' : val)
+                  }
+                >
+                  <SelectTrigger className="h-9 bg-background text-xs">
+                    <SelectValue placeholder="UF" />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-60">
+                    <SelectItem value="__all__">Todas</SelectItem>
+                    {BRAZILIAN_STATES.map((st) => (
+                      <SelectItem key={st.uf} value={st.uf}>
+                        {st.uf} - {st.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-1">
+            <div className="flex items-center justify-between pt-1">
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-xs h-7"
-                onClick={() => {
-                  setAccountTypeFilter('all')
-                  setSportFilter('Todos')
-                  setCityFilter('')
-                  setStateFilter('')
-                  setSearch('')
-                }}
+                className="text-xs h-8 text-muted-foreground hover:text-foreground"
+                onClick={handleClearFilters}
               >
+                <RotateCcw className="h-3 w-3 mr-1" />
                 Limpar Filtros
+              </Button>
+              <Button
+                size="sm"
+                className="text-xs h-8 font-semibold px-4"
+                onClick={() => handleExecuteSearch()}
+                disabled={loadingProfiles}
+              >
+                {loadingProfiles ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" />
+                    Filtrando...
+                  </>
+                ) : (
+                  <>
+                    <Search className="h-3.5 w-3.5 mr-1" />
+                    Pesquisar
+                  </>
+                )}
               </Button>
             </div>
           </div>

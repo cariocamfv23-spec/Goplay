@@ -116,13 +116,6 @@ export function ChatBubble({
                 <Progress
                   value={message.evaluationData.score}
                   className="h-2 bg-zinc-800"
-                  indicatorClassName={cn(
-                    message.evaluationData.score > 75
-                      ? 'bg-green-500'
-                      : message.evaluationData.score > 50
-                        ? 'bg-yellow-500'
-                        : 'bg-red-500',
-                  )}
                 />
 
                 <div className="bg-red-950/30 p-2 rounded border border-red-900/30">

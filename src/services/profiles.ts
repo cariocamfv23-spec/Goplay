@@ -130,8 +130,7 @@ export const profileService = {
 
       const { data, error } = await supabase
         .from('profiles')
-        // @ts-expect-error Types are extended with custom columns
-        .update(sanitizedUpdates)
+        .update(sanitizedUpdates as any)
         .eq('id', userId)
         .select()
         .single()

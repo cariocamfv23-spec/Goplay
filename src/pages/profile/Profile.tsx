@@ -67,39 +67,65 @@ export default function Profile() {
     ? myLiveProfile
     : remoteProfile
 
-  // Fallback to mock profile if viewing a legacy mock ID and not found in Supabase
+  // Fallback to mock profile only if viewing a legacy mock ID and not found in Supabase
+  const isUuid =
+    id &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
   const fallbackMock = isMe
     ? mockCurrentUser
-    : mockProfiles.find((p) => p.id.toString() === id) || mockCurrentUser
+    : isUuid
+      ? null
+      : mockProfiles.find((p) => p.id.toString() === id) || null
+
+  // If a specific Supabase ID was requested but not found in the database
+  if (!isMe && isUuid && !activeProfileRow && !loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center space-y-4">
+        <div className="p-4 rounded-full bg-secondary text-muted-foreground">
+          <Loader2 className="h-8 w-8 text-muted-foreground opacity-40" />
+        </div>
+        <h2 className="text-xl font-bold">Perfil Não Encontrado</h2>
+        <p className="text-sm text-muted-foreground max-w-sm">
+          O perfil solicitado não existe no Goplay App ou não está disponível
+          publicamente.
+        </p>
+      </div>
+    )
+  }
 
   // Adapt the real ProfileRow into the component's expected shape while preserving all real Supabase fields
   const user = activeProfileRow
     ? {
-        ...fallbackMock,
+        ...(fallbackMock || mockCurrentUser),
         id: activeProfileRow.id,
         name:
-          activeProfileRow.full_name || fallbackMock.name || 'Usuário Goplay',
+          activeProfileRow.full_name || fallbackMock?.name || 'Usuário Goplay',
         avatar:
           activeProfileRow.avatar_url ||
           `https://img.usecurling.com/ppl/medium?seed=${activeProfileRow.id.slice(0, 4)}`,
-        sport: activeProfileRow.sport || fallbackMock.sport || 'Esporte',
+        sport: activeProfileRow.sport || fallbackMock?.sport || 'Esporte',
         position:
-          activeProfileRow.position || fallbackMock.position || 'Goplay',
+          activeProfileRow.position || fallbackMock?.position || 'Goplay',
         location:
           [activeProfileRow.city, activeProfileRow.state]
             .filter(Boolean)
             .join(', ') ||
-          fallbackMock.location ||
+          fallbackMock?.location ||
           'Brasil',
         bio:
           activeProfileRow.bio ||
           activeProfileRow.institutional_description ||
-          fallbackMock.bio,
-        type: activeProfileRow.account_type || fallbackMock.type || 'athlete',
-        // Real fields attached for views
-        rawProfile: activeProfileRow,
+          fallbackMock?.bio,
+        type: activeProfileRow.account_type || fallbackMock?.type || 'athlete',
+        // Real fields attached for views (Note: birth_date is strictly omitted for other users)
+        rawProfile: isMe
+          ? activeProfileRow
+          : {
+              ...activeProfileRow,
+              birth_date: undefined, // ensure confidential birth date is never shown on other profiles
+            },
       }
-    : fallbackMock
+    : fallbackMock || mockCurrentUser
 
   const profileType =
     activeProfileRow?.account_type || (user as any).type || 'athlete'

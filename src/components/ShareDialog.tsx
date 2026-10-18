@@ -27,6 +27,7 @@ interface ShareDialogProps {
   url?: string
   preview?: ReactNode
   onShareAction?: () => void
+  videoTitle?: string
 }
 
 export function ShareDialog({
@@ -37,7 +38,9 @@ export function ShareDialog({
   url = window.location.href,
   preview,
   onShareAction,
+  videoTitle,
 }: ShareDialogProps) {
+  const displayTitle = videoTitle ? `Compartilhar: ${videoTitle}` : title
   const [copied, setCopied] = useState(false)
   const { toast } = useToast()
 

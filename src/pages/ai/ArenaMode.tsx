@@ -75,7 +75,6 @@ export default function ArenaMode() {
 
   const endGame = useCallback(() => {
     setGameState('finished')
-    // @ts-expect-error - using valid sound key
     playSound('notification_points')
     if (scoreRef.current > 0) {
       toast.success('Treino Finalizado!', {
@@ -156,7 +155,6 @@ export default function ArenaMode() {
     setCombo(0)
     lastSpawnTime.current = 0
     lastTipTime.current = 0
-    // @ts-expect-error - using valid sound key
     playSound('like_generic')
   }
 
@@ -172,7 +170,6 @@ export default function ArenaMode() {
       // Penalty
       setScore((prev) => Math.max(0, prev + value))
       setCombo(0)
-      // @ts-expect-error - using valid sound key
       playSound('notification_store')
       // Trigger visual shake
       const body = document.querySelector('body')
@@ -194,10 +191,8 @@ export default function ArenaMode() {
       setCombo((prev) => Math.min(prev + 1, 10))
 
       if (type === 'bonus') {
-        // @ts-expect-error - using valid sound key
         playSound('notification_points')
       } else {
-        // @ts-expect-error - using valid sound key
         playSound('like_generic')
       }
     }
@@ -209,7 +204,6 @@ export default function ArenaMode() {
     // Initial Scanning Phase
     const timer = setTimeout(() => {
       setGameState('ready')
-      // @ts-expect-error - using valid sound key
       playSound('notification_store') // Ready sound
     }, 3000)
     return () => clearTimeout(timer)
