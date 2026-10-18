@@ -24,84 +24,102 @@ import {
 import { toast } from 'sonner'
 import { SportsWallpaper } from '@/components/SportsWallpaper'
 import { useAuthStore } from '@/stores/useAuthStore'
+import { useAuth } from '@/hooks/use-auth'
 import { PageLoader } from '@/components/PageLoader'
 
 export default function Login() {
   const navigate = useNavigate()
   const { login, isAuthenticated, hasHydrated } = useAuthStore()
+  const { signIn } = useAuth()
   const [loading, setLoading] = useState(false)
   const [socialLoading, setSocialLoading] = useState<string | null>(null)
   const [biometricLoading, setBiometricLoading] = useState(false)
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
 
   // Redirect to home if already authenticated, preventing the display of the guest UI
   useEffect(() => {
     if (hasHydrated && isAuthenticated) {
-      setTimeout(() => {
-        navigate('/home', { replace: true })
-      }, 0)
+      navigate('/home', { replace: true })
     }
   }, [hasHydrated, isAuthenticated, navigate])
 
   // Load saved credentials on mount
   useEffect(() => {
-    const savedUsername = localStorage.getItem('goplay_username')
+    const savedEmail = localStorage.getItem('goplay_email')
     const savedPassword = localStorage.getItem('goplay_password')
     const savedRemember = localStorage.getItem('goplay_remember') === 'true'
 
-    if (savedRemember && savedUsername) {
-      setUsername(savedUsername)
+    if (savedRemember && savedEmail) {
+      setEmail(savedEmail)
       setRememberMe(true)
       if (savedPassword) setPassword(savedPassword)
     }
   }, [])
 
-  const handleLogin = () => {
-    if (!username.trim() || !password.trim()) {
-      toast.error('Preencha todos os campos para continuar')
+  const handleLogin = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
+    const cleanEmail = email.trim()
+    const cleanPassword = password.trim()
+
+    if (!cleanEmail || !cleanPassword) {
+      toast.error('Preencha e-mail e senha para continuar')
       return
     }
 
-    setTimeout(() => setLoading(true), 0)
+    if (cleanPassword.length < 6) {
+      toast.error('A senha deve ter pelo menos 6 caracteres.')
+      return
+    }
 
-    // Simulate API call and validation logic without blocking
-    setTimeout(() => {
-      // Execute the response handler logic in a non-blocking way
-      setTimeout(() => {
-        setLoading(false)
+    setLoading(true)
 
-        // Simulate authentication failure conditions
-        if (password.length < 6) {
-          toast.error('A senha deve ter pelo menos 6 caracteres.')
-          return
-        }
+    try {
+      const { error } = await signIn(cleanEmail, cleanPassword)
 
-        if (username.toLowerCase() === 'admin' && password !== 'admin123') {
-          toast.error('Credenciais inválidas. Verifique seu usuário e senha.')
-          return
-        }
-
-        // Success path
-        if (rememberMe) {
-          localStorage.setItem('goplay_username', username)
-          localStorage.setItem('goplay_password', password)
-          localStorage.setItem('goplay_remember', 'true')
+      if (error) {
+        if (
+          error.message?.includes('Invalid login credentials') ||
+          error.message?.includes('invalid_grant')
+        ) {
+          toast.error('Credenciais inválidas. Verifique seu e-mail e senha.')
+        } else if (error.message?.includes('Email not confirmed')) {
+          toast.error(
+            'E-mail ainda não confirmado. Verifique sua caixa de entrada.',
+          )
         } else {
-          localStorage.removeItem('goplay_username')
-          localStorage.removeItem('goplay_password')
-          localStorage.removeItem('goplay_remember')
+          toast.error(
+            error.message || 'Erro ao realizar login. Tente novamente.',
+          )
         }
+        return
+      }
 
-        // Non-blocking state update and navigation to prevent UI freezing
-        setTimeout(() => {
-          login()
-          toast.success('Login realizado com sucesso!')
-          navigate('/home', { replace: true })
-        }, 0)
-      }, 0)
-    }, 1500)
+      if (rememberMe) {
+        localStorage.setItem('goplay_email', cleanEmail)
+        localStorage.setItem('goplay_password', cleanPassword)
+        localStorage.setItem('goplay_remember', 'true')
+      } else {
+        localStorage.removeItem('goplay_email')
+        localStorage.removeItem('goplay_password')
+        localStorage.removeItem('goplay_remember')
+      }
+
+      toast.success('Login realizado com sucesso!')
+      navigate('/home', { replace: true })
+    } catch (err: any) {
+      toast.error(err?.message || 'Erro inesperado durante o login')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleForgotPassword = () => {
+    toast.info('Recuperação de Senha', {
+      description:
+        'Digite seu e-mail no campo acima. A interface de recuperação direta por link será ativada.',
+    })
   }
 
   const handleSocialLogin = (provider: string) => {
@@ -165,18 +183,18 @@ export default function Login() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username">Usuário</Label>
+                <Label htmlFor="email">E-mail</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    id="username"
-                    placeholder="Seu usuário"
-                    type="text"
+                    id="email"
+                    placeholder="seu@email.com"
+                    type="email"
                     className="pl-9"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>
@@ -187,7 +205,8 @@ export default function Login() {
                   <Button
                     variant="link"
                     type="button"
-                    className="px-0 h-auto text-xs text-muted-foreground"
+                    onClick={handleForgotPassword}
+                    className="px-0 h-auto text-xs text-muted-foreground hover:text-primary transition-colors"
                   >
                     Esqueceu a senha?
                   </Button>
@@ -222,10 +241,9 @@ export default function Login() {
               </div>
 
               <Button
-                type="button"
+                type="submit"
                 className="w-full font-bold"
                 disabled={loading || !!socialLoading || biometricLoading}
-                onClick={handleLogin}
               >
                 {loading ? (
                   <>

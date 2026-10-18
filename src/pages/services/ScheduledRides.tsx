@@ -2,15 +2,24 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { ArrowLeft, Calendar, MapPin, Clock } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { mockScheduledRides } from '@/lib/data'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { toast } from 'sonner'
 import { useState } from 'react'
 
+const mockScheduledRidesData = [
+  {
+    id: 'ride-1',
+    date: new Date(Date.now() + 86400000).toISOString(),
+    pickup: 'Av. Paulista, 1000 - Bela Vista',
+    dropoff: 'Allianz Parque - Barra Funda',
+    price: 'R$ 42,50',
+  },
+]
+
 export default function ScheduledRides() {
   const navigate = useNavigate()
-  const [rides, setRides] = useState(mockScheduledRides)
+  const [rides, setRides] = useState(mockScheduledRidesData)
 
   const handleCancel = (id: string) => {
     setRides((prev) => prev.filter((r) => r.id !== id))

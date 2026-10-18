@@ -108,14 +108,14 @@ export const useTimeCapsuleStore = create<TimeCapsuleState>()(
       archiveCapsule: (id) =>
         set((state) => ({
           capsules: state.capsules.map((c) =>
-            c.id === id ? { ...c, status: 'archived' } : c,
+            c.id === id ? { ...c, status: 'archived' as const } : c,
           ),
         })),
       checkReleases: () =>
         set((state) => {
           const now = Date.now()
           let updated = false
-          const newCapsules = state.capsules.map((c) => {
+          const newCapsules: TimeCapsule[] = state.capsules.map((c) => {
             if (c.status === 'archived' || c.status === 'released') return c
             const openTime = new Date(c.openAt).getTime()
 
@@ -129,14 +129,14 @@ export const useTimeCapsuleStore = create<TimeCapsuleState>()(
                 priority: 'high',
                 link: `/timecapsule/${c.id}`,
               })
-              return { ...c, status: 'released' }
+              return { ...c, status: 'released' as const }
             } else if (
               openTime > now &&
               openTime - now <= 7 * 86400000 &&
               c.status === 'sealed'
             ) {
               updated = true
-              return { ...c, status: 'waiting' }
+              return { ...c, status: 'waiting' as const }
             }
             return c
           })

@@ -49,6 +49,7 @@ import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
 import { usePrivacyStore } from '@/stores/usePrivacyStore'
 import { useAuthStore } from '@/stores/useAuthStore'
+import { useAuth } from '@/hooks/use-auth'
 
 export function TopBar() {
   const navigate = useNavigate()
@@ -57,6 +58,7 @@ export function TopBar() {
   const { color, setColor } = useThemeStore()
   const { isEnabled, toggle, preset, setPreset } = useNostalgiaStore()
   const { isPreviewLocked, setIsPreviewLocked } = usePrivacyStore()
+  const { user, profile } = useAuth()
   const { logout } = useAuthStore()
 
   const isMarket = location.pathname.includes('/marketplace')
@@ -92,10 +94,15 @@ export function TopBar() {
     })
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     logout()
-    navigate('/login')
+    navigate('/login', { replace: true })
+    toast.success('Você saiu da sua conta.')
   }
+
+  const displayName =
+    profile?.full_name || user?.email?.split('@')[0] || mockCurrentUser.name
+  const displayEmail = user?.email || mockCurrentUser.username
 
   return (
     <div
@@ -342,10 +349,10 @@ export function TopBar() {
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">
-                  {mockCurrentUser.name}
+                  {displayName}
                 </p>
-                <p className="text-xs leading-none text-muted-foreground">
-                  {mockCurrentUser.username}
+                <p className="text-xs leading-none text-muted-foreground truncate">
+                  {displayEmail}
                 </p>
               </div>
             </DropdownMenuLabel>

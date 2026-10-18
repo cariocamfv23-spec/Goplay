@@ -9,6 +9,7 @@ import { PageLoader } from './components/PageLoader'
 import { BrandingProvider } from '@/stores/useBrandingStore'
 import { CartProvider } from '@/stores/useCartStore'
 import { ThemeProvider } from '@/components/ThemeProvider'
+import { AuthProvider } from '@/hooks/use-auth'
 import { useThemeStore } from '@/stores/useThemeStore'
 import useSoundStore from '@/stores/useSoundStore'
 import { ProtectedRoute } from './components/ProtectedRoute'
@@ -159,6 +160,7 @@ const JobDetails = lazy(() => import('./pages/jobs/JobDetails'))
 const RecruiterDashboard = lazy(() => import('./pages/jobs/RecruiterDashboard'))
 
 // Services & Driver
+const ScheduledRides = lazy(() => import('./pages/services/ScheduledRides'))
 const RideRequest = lazy(() => import('./pages/services/RideRequest'))
 const DriverDashboard = lazy(() => import('./pages/driver/DriverDashboard'))
 const DriverRequests = lazy(() => import('./pages/driver/DriverRequests'))
@@ -243,336 +245,359 @@ const App = () => {
       <BrowserRouter
         future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
       >
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <FlashbackModal />
-          <BrandingProvider>
-            <CartProvider>
-              <Suspense fallback={<PageLoader />}>
-                <Routes>
-                  {/* Public Authentication and Setup Routes */}
-                  <Route path="/" element={<Index />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
-                  <Route path="/onboarding" element={<Onboarding />} />
-                  <Route
-                    path="/profile-selection"
-                    element={<ProfileSelection />}
-                  />
-
-                  {/* Protected Full-Screen Routes */}
-                  <Route element={<ProtectedRoute />}>
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <FlashbackModal />
+            <BrandingProvider>
+              <CartProvider>
+                <Suspense fallback={<PageLoader />}>
+                  <Routes>
+                    {/* Public Authentication and Setup Routes */}
+                    <Route path="/" element={<Index />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/onboarding" element={<Onboarding />} />
                     <Route
-                      path="/live/broadcast"
-                      element={<CreateLiveBroadcast />}
+                      path="/profile-selection"
+                      element={<ProfileSelection />}
                     />
-                    <Route path="/retrospective" element={<Retrospective />} />
-                    <Route path="/memory/:id" element={<MemoryViewer />} />
-                    <Route path="/timeshift" element={<TimeShift />} />
-                  </Route>
 
-                  {/* Layout Routes */}
-                  <Route element={<Layout />}>
-                    {/* All Inner Layout Pages are Protected */}
+                    {/* Protected Full-Screen Routes */}
                     <Route element={<ProtectedRoute />}>
-                      <Route path="/home" element={<Home />} />
-                      <Route path="/feed" element={<Feed />} />
-                      <Route path="/album" element={<CopaHub />} />
                       <Route
-                        path="/album/stickers"
-                        element={<StickerAlbum />}
+                        path="/live/broadcast"
+                        element={<CreateLiveBroadcast />}
                       />
                       <Route
-                        path="/album/stats"
-                        element={<CopaStatsDashboard />}
+                        path="/retrospective"
+                        element={<Retrospective />}
                       />
-                      <Route
-                        path="/album/stats/table"
-                        element={<CopaMatchSchedule />}
-                      />
-                      <Route path="/move" element={<Move />} />
-                      <Route path="/move/kids-map" element={<KidsZoneMap />} />
-                      <Route path="/explore" element={<Explore />} />
-                      <Route path="/matchmaking" element={<Matchmaking />} />
-                      <Route path="/check-in" element={<CheckIn />} />
-                      <Route path="/app-map" element={<AppMap />} />
+                      <Route path="/memory/:id" element={<MemoryViewer />} />
+                      <Route path="/timeshift" element={<TimeShift />} />
+                    </Route>
 
-                      {/* Nexus Routes */}
-                      <Route path="/nexus" element={<NexusHub />} />
-                      <Route path="/nexus/:id" element={<TribeProfile />} />
+                    {/* Layout Routes */}
+                    <Route element={<Layout />}>
+                      <Route
+                        path="/scheduled-rides"
+                        element={<ScheduledRides />}
+                      />
+                      {/* All Inner Layout Pages are Protected */}
+                      <Route element={<ProtectedRoute />}>
+                        <Route path="/home" element={<Home />} />{' '}
+                        <Route path="/feed" element={<Feed />} />
+                        <Route path="/album" element={<CopaHub />} />
+                        <Route
+                          path="/album/stickers"
+                          element={<StickerAlbum />}
+                        />
+                        <Route
+                          path="/album/stats"
+                          element={<CopaStatsDashboard />}
+                        />
+                        <Route
+                          path="/album/stats/table"
+                          element={<CopaMatchSchedule />}
+                        />
+                        <Route path="/move" element={<Move />} />
+                        <Route
+                          path="/move/kids-map"
+                          element={<KidsZoneMap />}
+                        />
+                        <Route path="/explore" element={<Explore />} />
+                        <Route path="/matchmaking" element={<Matchmaking />} />
+                        <Route path="/check-in" element={<CheckIn />} />
+                        <Route path="/app-map" element={<AppMap />} />
+                        {/* Nexus Routes */}
+                        <Route path="/nexus" element={<NexusHub />} />
+                        <Route path="/nexus/:id" element={<TribeProfile />} />
+                        <Route path="/infinity-hub" element={<InfinityHub />} />
+                        <Route path="/arena" element={<ArenaGo />} />
+                        <Route path="/food-sport" element={<FoodSport />} />
+                        <Route
+                          path="/contracts"
+                          element={<LiveContractsDashboard />}
+                        />
+                        <Route
+                          path="/contracts/create"
+                          element={<CreateContract />}
+                        />
+                        <Route
+                          path="/contracts/:id"
+                          element={<ContractDetails />}
+                        />
+                        <Route
+                          path="/organizer"
+                          element={<ChampionshipsList />}
+                        />
+                        <Route
+                          path="/organizer/create"
+                          element={<CreateChampionship />}
+                        />
+                        <Route
+                          path="/organizer/:id"
+                          element={<ChampionshipDashboard />}
+                        />
+                        <Route
+                          path="/explore/sponsorship"
+                          element={<SponsorshipMatch />}
+                        />
+                        <Route
+                          path="/explore/talents"
+                          element={<TalentsList />}
+                        />
+                        <Route
+                          path="/explore/talent-map"
+                          element={<InvisibleTalentMap />}
+                        />
+                        <Route
+                          path="/explore/photographers"
+                          element={<PhotographersList />}
+                        />
+                        <Route
+                          path="/explore/drivers"
+                          element={<DriversList />}
+                        />
+                        <Route
+                          path="/explore/events"
+                          element={<EventsList />}
+                        />
+                        <Route
+                          path="/explore/venues"
+                          element={<VenuesList />}
+                        />
+                        <Route path="/explore/gyms" element={<GymsList />} />
+                        <Route
+                          path="/explore/nutrition"
+                          element={<NutritionList />}
+                        />
+                        <Route
+                          path="/explore/clinics"
+                          element={<ClinicsList />}
+                        />
+                        <Route
+                          path="/explore/scholarships"
+                          element={<Scholarships />}
+                        />
+                        <Route
+                          path="/explore/agencies"
+                          element={<AgenciesList />}
+                        />
+                        <Route path="/explore/jobs" element={<JobsList />} />
+                        <Route
+                          path="/explore/map-events"
+                          element={<MapEvents />}
+                        />
+                        <Route
+                          path="/explore/international"
+                          element={<InternationalMatch />}
+                        />
+                        <Route path="/explore/live" element={<LiveEvents />} />
+                        <Route
+                          path="/explore/live/:id"
+                          element={<LiveStream />}
+                        />
+                        <Route
+                          path="/explore/replay/:id"
+                          element={<ReplayStream />}
+                        />
+                        <Route path="/explore/fuel" element={<FuelCredits />} />
+                        <Route
+                          path="/explore/fuel/stations"
+                          element={<PartnerGasStations />}
+                        />
+                        <Route
+                          path="/explore/kids"
+                          element={<KidsFriendlyList />}
+                        />
+                        <Route
+                          path="/explore/flyer-creator"
+                          element={<FlyerCreator />}
+                        />
+                        <Route path="/events/:id" element={<EventDetails />} />
+                        <Route path="/venues/:id" element={<VenueDetails />} />
+                        <Route path="/gyms/:id" element={<GymDetails />} />
+                        <Route
+                          path="/nutrition/:id"
+                          element={<NutritionPartnerDetails />}
+                        />
+                        <Route
+                          path="/clinics/:id"
+                          element={<ClinicDetails />}
+                        />
+                        <Route
+                          path="/hortifrutis/:id"
+                          element={<HortifrutiDetails />}
+                        />
+                        <Route
+                          path="/explore/scholarships/:id"
+                          element={<ScholarshipDetails />}
+                        />
+                        <Route
+                          path="/explore/agencies/:id"
+                          element={<AgencyDetails />}
+                        />
+                        <Route
+                          path="/explore/scholarships/:id/apply"
+                          element={<ScholarshipApplication />}
+                        />
+                        <Route path="/profile/:id" element={<Profile />} />
+                        <Route
+                          path="/profile/stats"
+                          element={<StatsDetail />}
+                        />
+                        <Route
+                          path="/profile/financial-statement"
+                          element={<FinancialStatement />}
+                        />
+                        <Route
+                          path="/profile/views"
+                          element={<ProfileViews />}
+                        />
+                        <Route
+                          path="/profile/timeline"
+                          element={<EvolutionTimeline />}
+                        />
+                        <Route
+                          path="/profile/evolution"
+                          element={<EvolutionMode />}
+                        />
+                        <Route
+                          path="/profile/passport"
+                          element={<SportsPassport />}
+                        />
+                        <Route
+                          path="/profile/referral"
+                          element={<ReferralProgram />}
+                        />
+                        <Route path="/wallet" element={<Wallet />} />
+                        <Route
+                          path="/financials/transactions"
+                          element={<TransactionHistory />}
+                        />
+                        <Route path="/goals" element={<GoalsDashboard />} />
+                        <Route path="/messages" element={<MessagesList />} />
+                        <Route path="/messages/:id" element={<ChatRoom />} />
+                        <Route path="/messages/new" element={<NewChat />} />
+                        <Route path="/marketplace" element={<Marketplace />} />
+                        <Route
+                          path="/marketplace/product/:id"
+                          element={<ProductDetails />}
+                        />
+                        <Route path="/marketplace/cart" element={<Cart />} />
+                        <Route
+                          path="/marketplace/orders"
+                          element={<OrderHistory />}
+                        />
+                        <Route
+                          path="/marketplace/orders/:id"
+                          element={<OrderDetails />}
+                        />
+                        <Route path="/jobs" element={<JobsList />} />
+                        <Route path="/jobs/:id" element={<JobDetails />} />
+                        <Route
+                          path="/jobs/dashboard"
+                          element={<RecruiterDashboard />}
+                        />
+                        <Route path="/ranking" element={<Ranking />} />
+                        <Route
+                          path="/notifications"
+                          element={<Notifications />}
+                        />
+                        <Route path="/settings" element={<Settings />} />
+                        <Route
+                          path="/settings/privacy"
+                          element={<PrivacySettings />}
+                        />
+                        <Route path="/settings/pwa" element={<PWASettings />} />
+                        <Route path="/admin" element={<AdminDashboard />} />
+                        <Route path="/ai/coach" element={<AiCoach />} />
+                        <Route
+                          path="/ai/settings"
+                          element={<AiCoachSettings />}
+                        />
+                        <Route
+                          path="/ai/reports"
+                          element={<PerformanceReports />}
+                        />
+                        <Route
+                          path="/ai/library"
+                          element={<ExerciseLibrary />}
+                        />
+                        <Route
+                          path="/ai/motion-analysis"
+                          element={<MotionAnalysis />}
+                        />
+                        <Route
+                          path="/ai/injury-scanner"
+                          element={<InjuryScanner />}
+                        />
+                        <Route path="/ai/editor" element={<VarzeaEditor />} />
+                        <Route path="/ai/ghost-play" element={<GhostPlay />} />
+                        <Route path="/ai/arena-mode" element={<ArenaMode />} />
+                        <Route path="/ai/avatar" element={<AiAvatar />} />
+                        <Route path="/ai/oracle" element={<Oracle />} />
+                        <Route
+                          path="/ai/nft-creator"
+                          element={<NftCreator />}
+                        />
+                        <Route
+                          path="/ai/bot-da-verdade"
+                          element={<BotDaVerdade />}
+                        />
+                        {/* Time Capsule Routes */}
+                        <Route
+                          path="/timecapsule"
+                          element={<TimeCapsuleDashboard />}
+                        />
+                        <Route
+                          path="/timecapsule/create"
+                          element={<CreateCapsule />}
+                        />
+                        <Route
+                          path="/timecapsule/:id"
+                          element={<CapsuleDetail />}
+                        />
+                      </Route>
+                    </Route>
 
-                      <Route path="/infinity-hub" element={<InfinityHub />} />
-
-                      <Route path="/arena" element={<ArenaGo />} />
-                      <Route path="/food-sport" element={<FoodSport />} />
-
+                    {/* Protected Driver Routes */}
+                    <Route element={<ProtectedRoute />}>
                       <Route
-                        path="/contracts"
-                        element={<LiveContractsDashboard />}
+                        path="/ride/request/:driverId"
+                        element={<RideRequest />}
                       />
                       <Route
-                        path="/contracts/create"
-                        element={<CreateContract />}
+                        path="/driver/dashboard"
+                        element={<DriverDashboard />}
                       />
                       <Route
-                        path="/contracts/:id"
-                        element={<ContractDetails />}
-                      />
-
-                      <Route
-                        path="/organizer"
-                        element={<ChampionshipsList />}
+                        path="/driver/requests"
+                        element={<DriverRequests />}
                       />
                       <Route
-                        path="/organizer/create"
-                        element={<CreateChampionship />}
+                        path="/driver/rewards"
+                        element={<DriverRewards />}
                       />
                       <Route
-                        path="/organizer/:id"
-                        element={<ChampionshipDashboard />}
-                      />
-
-                      <Route
-                        path="/explore/sponsorship"
-                        element={<SponsorshipMatch />}
+                        path="/driver/history"
+                        element={<DriverHistory />}
                       />
                       <Route
-                        path="/explore/talents"
-                        element={<TalentsList />}
-                      />
-                      <Route
-                        path="/explore/talent-map"
-                        element={<InvisibleTalentMap />}
-                      />
-                      <Route
-                        path="/explore/photographers"
-                        element={<PhotographersList />}
-                      />
-                      <Route
-                        path="/explore/drivers"
-                        element={<DriversList />}
-                      />
-                      <Route path="/explore/events" element={<EventsList />} />
-                      <Route path="/explore/venues" element={<VenuesList />} />
-                      <Route path="/explore/gyms" element={<GymsList />} />
-                      <Route
-                        path="/explore/nutrition"
-                        element={<NutritionList />}
-                      />
-                      <Route
-                        path="/explore/clinics"
-                        element={<ClinicsList />}
-                      />
-                      <Route
-                        path="/explore/scholarships"
-                        element={<Scholarships />}
-                      />
-                      <Route
-                        path="/explore/agencies"
-                        element={<AgenciesList />}
-                      />
-                      <Route path="/explore/jobs" element={<JobsList />} />
-                      <Route
-                        path="/explore/map-events"
-                        element={<MapEvents />}
-                      />
-                      <Route
-                        path="/explore/international"
-                        element={<InternationalMatch />}
-                      />
-                      <Route path="/explore/live" element={<LiveEvents />} />
-                      <Route
-                        path="/explore/live/:id"
-                        element={<LiveStream />}
-                      />
-                      <Route
-                        path="/explore/replay/:id"
-                        element={<ReplayStream />}
-                      />
-                      <Route path="/explore/fuel" element={<FuelCredits />} />
-                      <Route
-                        path="/explore/fuel/stations"
-                        element={<PartnerGasStations />}
-                      />
-                      <Route
-                        path="/explore/kids"
-                        element={<KidsFriendlyList />}
-                      />
-                      <Route
-                        path="/explore/flyer-creator"
-                        element={<FlyerCreator />}
-                      />
-
-                      <Route path="/events/:id" element={<EventDetails />} />
-                      <Route path="/venues/:id" element={<VenueDetails />} />
-                      <Route path="/gyms/:id" element={<GymDetails />} />
-                      <Route
-                        path="/nutrition/:id"
-                        element={<NutritionPartnerDetails />}
-                      />
-                      <Route path="/clinics/:id" element={<ClinicDetails />} />
-                      <Route
-                        path="/hortifrutis/:id"
-                        element={<HortifrutiDetails />}
-                      />
-                      <Route
-                        path="/explore/scholarships/:id"
-                        element={<ScholarshipDetails />}
-                      />
-                      <Route
-                        path="/explore/agencies/:id"
-                        element={<AgencyDetails />}
-                      />
-                      <Route
-                        path="/explore/scholarships/:id/apply"
-                        element={<ScholarshipApplication />}
-                      />
-
-                      <Route path="/profile/:id" element={<Profile />} />
-                      <Route path="/profile/stats" element={<StatsDetail />} />
-                      <Route
-                        path="/profile/financial-statement"
-                        element={<FinancialStatement />}
-                      />
-                      <Route path="/profile/views" element={<ProfileViews />} />
-                      <Route
-                        path="/profile/timeline"
-                        element={<EvolutionTimeline />}
-                      />
-                      <Route
-                        path="/profile/evolution"
-                        element={<EvolutionMode />}
-                      />
-                      <Route
-                        path="/profile/passport"
-                        element={<SportsPassport />}
-                      />
-                      <Route
-                        path="/profile/referral"
-                        element={<ReferralProgram />}
-                      />
-                      <Route path="/wallet" element={<Wallet />} />
-                      <Route
-                        path="/financials/transactions"
-                        element={<TransactionHistory />}
-                      />
-
-                      <Route path="/goals" element={<GoalsDashboard />} />
-
-                      <Route path="/messages" element={<MessagesList />} />
-                      <Route path="/messages/:id" element={<ChatRoom />} />
-                      <Route path="/messages/new" element={<NewChat />} />
-
-                      <Route path="/marketplace" element={<Marketplace />} />
-                      <Route
-                        path="/marketplace/product/:id"
-                        element={<ProductDetails />}
-                      />
-                      <Route path="/marketplace/cart" element={<Cart />} />
-                      <Route
-                        path="/marketplace/orders"
-                        element={<OrderHistory />}
-                      />
-                      <Route
-                        path="/marketplace/orders/:id"
-                        element={<OrderDetails />}
-                      />
-
-                      <Route path="/jobs" element={<JobsList />} />
-                      <Route path="/jobs/:id" element={<JobDetails />} />
-                      <Route
-                        path="/jobs/dashboard"
-                        element={<RecruiterDashboard />}
-                      />
-
-                      <Route path="/ranking" element={<Ranking />} />
-                      <Route
-                        path="/notifications"
-                        element={<Notifications />}
-                      />
-                      <Route path="/settings" element={<Settings />} />
-                      <Route
-                        path="/settings/privacy"
-                        element={<PrivacySettings />}
-                      />
-                      <Route path="/settings/pwa" element={<PWASettings />} />
-
-                      <Route path="/admin" element={<AdminDashboard />} />
-
-                      <Route path="/ai/coach" element={<AiCoach />} />
-                      <Route
-                        path="/ai/settings"
-                        element={<AiCoachSettings />}
-                      />
-                      <Route
-                        path="/ai/reports"
-                        element={<PerformanceReports />}
-                      />
-                      <Route path="/ai/library" element={<ExerciseLibrary />} />
-                      <Route
-                        path="/ai/motion-analysis"
-                        element={<MotionAnalysis />}
-                      />
-                      <Route
-                        path="/ai/injury-scanner"
-                        element={<InjuryScanner />}
-                      />
-                      <Route path="/ai/editor" element={<VarzeaEditor />} />
-                      <Route path="/ai/ghost-play" element={<GhostPlay />} />
-                      <Route path="/ai/arena-mode" element={<ArenaMode />} />
-                      <Route path="/ai/avatar" element={<AiAvatar />} />
-                      <Route path="/ai/oracle" element={<Oracle />} />
-                      <Route path="/ai/nft-creator" element={<NftCreator />} />
-                      <Route
-                        path="/ai/bot-da-verdade"
-                        element={<BotDaVerdade />}
-                      />
-
-                      {/* Time Capsule Routes */}
-                      <Route
-                        path="/timecapsule"
-                        element={<TimeCapsuleDashboard />}
-                      />
-                      <Route
-                        path="/timecapsule/create"
-                        element={<CreateCapsule />}
-                      />
-                      <Route
-                        path="/timecapsule/:id"
-                        element={<CapsuleDetail />}
+                        path="/driver/settings"
+                        element={<DriverSettings />}
                       />
                     </Route>
-                  </Route>
 
-                  {/* Protected Driver Routes */}
-                  <Route element={<ProtectedRoute />}>
-                    <Route
-                      path="/ride/request/:driverId"
-                      element={<RideRequest />}
-                    />
-                    <Route
-                      path="/driver/dashboard"
-                      element={<DriverDashboard />}
-                    />
-                    <Route
-                      path="/driver/requests"
-                      element={<DriverRequests />}
-                    />
-                    <Route path="/driver/rewards" element={<DriverRewards />} />
-                    <Route path="/driver/history" element={<DriverHistory />} />
-                    <Route
-                      path="/driver/settings"
-                      element={<DriverSettings />}
-                    />
-                  </Route>
-
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
-            </CartProvider>
-          </BrandingProvider>
-        </TooltipProvider>
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+              </CartProvider>
+            </BrandingProvider>
+          </TooltipProvider>
+        </AuthProvider>
       </BrowserRouter>
     </ThemeProvider>
   )

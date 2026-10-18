@@ -3,10 +3,13 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { User, Camera, Trophy, Briefcase, Car } from 'lucide-react'
+import { User, Camera, Trophy, Briefcase, Car, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { SportsWallpaper } from '@/components/SportsWallpaper'
+import { useAuth } from '@/hooks/use-auth'
+import { profileService } from '@/services/profiles'
+import { toast } from 'sonner'
 
 const profileTypes = [
   {
@@ -53,10 +56,36 @@ const profileTypes = [
 
 export default function ProfileSelection() {
   const navigate = useNavigate()
+  const { user, refreshProfile } = useAuth()
   const [selected, setSelected] = useState('athlete')
+  const [saving, setSaving] = useState(false)
 
-  const handleContinue = () => {
-    navigate('/home')
+  const handleContinue = async () => {
+    if (user?.id) {
+      setSaving(true)
+      try {
+        const mappedType =
+          selected === 'club'
+            ? 'club'
+            : selected === 'scout'
+              ? 'coach'
+              : 'athlete'
+        const { error } = await profileService.updateMyProfile(user.id, {
+          account_type: mappedType,
+        })
+        if (error) {
+          console.warn('Erro ao atualizar perfil:', error.message)
+        } else {
+          await refreshProfile()
+        }
+      } catch (err) {
+        console.warn('Falha na atualização do perfil:', err)
+      } finally {
+        setSaving(false)
+      }
+    }
+    toast.success('Perfil configurado!')
+    navigate('/home', { replace: true })
   }
 
   return (
@@ -112,8 +141,16 @@ export default function ProfileSelection() {
                 size="lg"
                 className="w-full md:w-auto md:min-w-[200px]"
                 onClick={handleContinue}
+                disabled={saving}
               >
-                Continuar
+                {saving ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Salvando...
+                  </>
+                ) : (
+                  'Continuar'
+                )}
               </Button>
             </div>
           </CardContent>
