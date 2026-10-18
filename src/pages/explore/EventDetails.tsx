@@ -75,7 +75,10 @@ export default function EventDetails() {
       toast.error('Você precisa fazer login para se inscrever.', {
         action: {
           label: 'Fazer Login',
-          onClick: () => navigate('/login'),
+          onClick: () =>
+            navigate(
+              `/login?redirect=${encodeURIComponent(window.location.pathname)}`,
+            ),
         },
       })
       return
@@ -83,7 +86,7 @@ export default function EventDetails() {
 
     if (isSupabaseId && id) {
       setSubmitting(true)
-      const { success, error } = await eventsService.registerForEvent({
+      const { error } = await eventsService.registerForEvent({
         eventId: id,
         userId: user.id,
       })
@@ -148,6 +151,18 @@ export default function EventDetails() {
     )
   }
 
+  // Compute registration status flags
+  const isPastDeadline = realEvent?.registrationDeadline
+    ? new Date() > new Date(`${realEvent.registrationDeadline}T23:59:59`)
+    : false
+
+  const isSoldOut = realEvent?.maxParticipants
+    ? (realEvent.registrationsCount || 0) >= realEvent.maxParticipants
+    : false
+
+  const isClosed =
+    realEvent?.status === 'closed' || realEvent?.status === 'canceled'
+
   const event = realEvent
     ? {
         title: realEvent.title,
@@ -171,12 +186,14 @@ export default function EventDetails() {
             ? 'Gratuito'
             : `R$ ${realEvent.price.toFixed(2)}`,
         attendees: realEvent.registrationsCount || 0,
-        maxAttendees: realEvent.maxParticipants || 100,
+        maxAttendees: realEvent.maxParticipants || null,
         creator: realEvent.creator,
         requirements: realEvent.requirements,
         instructions: realEvent.instructions,
         deadline: realEvent.registrationDeadline
-          ? new Date(realEvent.registrationDeadline).toLocaleDateString('pt-BR')
+          ? new Date(
+              `${realEvent.registrationDeadline}T00:00:00`,
+            ).toLocaleDateString('pt-BR')
           : null,
         isCreator: user?.id && realEvent.creatorId === user.id,
       }
@@ -483,31 +500,55 @@ export default function EventDetails() {
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
-                className="border-emerald-600 text-emerald-600 bg-emerald-50 hover:bg-destructive/10 hover:text-destructive hover:border-destructive transition-colors text-xs h-11"
+                className="border-emerald-600 text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 hover:bg-destructive/10 hover:text-destructive hover:border-destructive transition-colors text-xs h-11 px-4 font-semibold"
                 onClick={handleCancelRegistration}
                 disabled={submitting}
               >
                 {submitting ? (
-                  <Loader2 className="w-4 h-4 animate-spin mr-1" />
+                  <Loader2 className="w-4 h-4 animate-spin mr-1.5" />
                 ) : (
-                  <CheckCircle2 className="w-4 h-4 mr-1.5" />
+                  <CheckCircle2 className="w-4 h-4 mr-1.5 text-emerald-600" />
                 )}
-                Inscrito (Cancelar)
+                Inscrição confirmada (Cancelar)
               </Button>
             </div>
+          ) : isClosed ? (
+            <Button
+              variant="outline"
+              disabled
+              className="px-6 h-11 font-bold text-muted-foreground border-border"
+            >
+              Inscrições Encerradas
+            </Button>
+          ) : isPastDeadline ? (
+            <Button
+              variant="outline"
+              disabled
+              className="px-6 h-11 font-bold text-muted-foreground border-border"
+            >
+              Prazo Encerrado
+            </Button>
+          ) : isSoldOut ? (
+            <Button
+              variant="outline"
+              disabled
+              className="px-6 h-11 font-bold text-muted-foreground border-border"
+            >
+              Sem Vagas
+            </Button>
           ) : (
             <Button
-              className="px-6 h-11 font-bold shadow-lg shadow-primary/25 bg-primary text-white"
+              className="px-6 h-11 font-bold shadow-lg shadow-primary/25 bg-primary hover:bg-primary/90 text-white transition-all active:scale-95"
               onClick={handleRegister}
               disabled={submitting}
             >
               {submitting ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  Processando...
+                  Inscrição em andamento...
                 </>
               ) : (
-                'Quero me Inscrever'
+                'Inscrever-se'
               )}
             </Button>
           )}

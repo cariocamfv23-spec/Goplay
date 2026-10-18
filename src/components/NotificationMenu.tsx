@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Popover,
   PopoverContent,
@@ -36,17 +36,63 @@ import { useNavigate } from 'react-router-dom'
 import useNotificationStore from '@/stores/useNotificationStore'
 import { useFlashbackStore } from '@/stores/useFlashbackStore'
 import { useBolaoStore } from '@/stores/useBolaoStore'
+import { useAuth } from '@/hooks/use-auth'
+import {
+  notificationService,
+  type NotificationItem,
+} from '@/services/notifications'
 import { cn } from '@/lib/utils'
 
 export function NotificationMenu() {
   const navigate = useNavigate()
-  const { notifications, unreadCount, markAsRead, markAllAsRead } =
-    useNotificationStore()
+  const { user } = useAuth()
+  const {
+    notifications: storeNotifications,
+    markAsRead: markStoreAsRead,
+    markAllAsRead: markStoreAllAsRead,
+  } = useNotificationStore()
   const { openFlashback } = useFlashbackStore()
   const { hasWon, wonTeam } = useBolaoStore()
   const [open, setOpen] = useState(false)
+  const [realNotifications, setRealNotifications] = useState<
+    NotificationItem[]
+  >([])
 
-  const hasUnreadMemory = notifications.some(
+  useEffect(() => {
+    if (user?.id) {
+      notificationService.getMyNotifications(user.id).then((items) => {
+        setRealNotifications(items)
+      })
+    }
+  }, [user?.id, open])
+
+  const mappedReal = realNotifications.map((n) => ({
+    id: n.id,
+    type: n.type,
+    title: n.title,
+    message: n.message,
+    date: 'Hoje',
+    time: n.timeAgo,
+    read: n.read,
+    priority: 'medium' as const,
+    link: n.link || undefined,
+    user: n.actor
+      ? {
+          name: n.actor.name,
+          avatar: n.actor.avatar,
+        }
+      : undefined,
+    isReal: true,
+  }))
+
+  const allNotifications: any[] =
+    user?.id && realNotifications.length > 0
+      ? [...mappedReal]
+      : [...mappedReal, ...storeNotifications]
+
+  const unreadCount = allNotifications.filter((n) => !n.read).length
+
+  const hasUnreadMemory = allNotifications.some(
     (n) => !n.read && (n.type === 'time_travel' || n.type === 'memory'),
   )
 
@@ -62,7 +108,16 @@ export function NotificationMenu() {
     }
 
     if (!notification.read) {
-      markAsRead(notification.id)
+      if (notification.isReal && user?.id) {
+        notificationService.markAsRead(notification.id, user.id)
+        setRealNotifications((prev) =>
+          prev.map((n) =>
+            n.id === notification.id ? { ...n, read: true } : n,
+          ),
+        )
+      } else {
+        markStoreAsRead(notification.id)
+      }
     }
 
     if (notification.link) {
@@ -72,6 +127,14 @@ export function NotificationMenu() {
         notification.suggestedUserId || notification.id || 'new-friend'
       navigate(`/profile/${profileId}`)
     }
+  }
+
+  const handleMarkAllAsRead = () => {
+    if (user?.id) {
+      notificationService.markAllAsRead(user.id)
+      setRealNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
+    }
+    markStoreAllAsRead()
   }
 
   const getIcon = (type: string, title: string = '') => {
@@ -164,7 +227,7 @@ export function NotificationMenu() {
               variant="ghost"
               size="sm"
               className="h-auto p-0 text-xs text-primary hover:bg-transparent"
-              onClick={markAllAsRead}
+              onClick={handleMarkAllAsRead}
             >
               Marcar todas como lidas
             </Button>
@@ -198,13 +261,13 @@ export function NotificationMenu() {
         )}
 
         <ScrollArea className="h-[300px]">
-          {notifications.length > 0 ? (
+          {allNotifications.length > 0 ? (
             <div className="flex flex-col">
-              {notifications.map((notification) => (
+              {allNotifications.map((notification) => (
                 <button
                   key={notification.id}
                   className={cn(
-                    'flex gap-3 p-4 text-left hover:bg-muted/50 transition-colors border-b last:border-0 relative',
+                    'flex gap-3 p-4 text-left hover:bg-muted/50 transition-colors border-b last:border-0 relative w-full',
                     notification.type === 'friend_suggestion'
                       ? 'items-center'
                       : 'items-start',
@@ -243,15 +306,23 @@ export function NotificationMenu() {
                                 'ring-transparent border border-border',
                         )}
                       >
-                        <AvatarImage
-                          src={
-                            notification.user?.avatar ||
-                            notification.avatarUrl ||
-                            notification.imageUrl ||
-                            `https://img.usecurling.com/ppl/thumbnail?seed=${notification.id}`
-                          }
-                        />
-                        <AvatarFallback>
+                        {notification.user?.avatar ||
+                        notification.avatarUrl ||
+                        notification.imageUrl ? (
+                          <AvatarImage
+                            src={
+                              notification.user?.avatar ||
+                              notification.avatarUrl ||
+                              notification.imageUrl
+                            }
+                            alt={
+                              notification.user?.name ||
+                              notification.title ||
+                              'Usuário'
+                            }
+                          />
+                        ) : null}
+                        <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">
                           {(
                             notification.user?.name ||
                             notification.title ||

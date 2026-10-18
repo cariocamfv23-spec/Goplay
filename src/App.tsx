@@ -20,6 +20,8 @@ import Index from './pages/Index'
 // Lazy load pages
 const Login = lazy(() => import('./pages/auth/Login'))
 const Register = lazy(() => import('./pages/auth/Register'))
+const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'))
+const ResetPassword = lazy(() => import('./pages/auth/ResetPassword'))
 const Onboarding = lazy(() => import('./pages/auth/Onboarding'))
 const ProfileSelection = lazy(() => import('./pages/auth/ProfileSelection'))
 
@@ -258,12 +260,16 @@ const App = () => {
                     <Route path="/" element={<Index />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route
+                      path="/forgot-password"
+                      element={<ForgotPassword />}
+                    />
+                    <Route path="/reset-password" element={<ResetPassword />} />
                     <Route path="/onboarding" element={<Onboarding />} />
                     <Route
                       path="/profile-selection"
                       element={<ProfileSelection />}
                     />
-
                     {/* Protected Full-Screen Routes */}
                     <Route element={<ProtectedRoute />}>
                       <Route

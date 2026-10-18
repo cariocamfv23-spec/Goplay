@@ -92,7 +92,6 @@ export function CommentsSheet({
   const [newComment, setNewComment] = useState('')
   const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const { addNotification } = useNotificationStore()
 
   const isSupabasePost =
     typeof postId === 'string' &&
@@ -279,8 +278,17 @@ export function CommentsSheet({
           <div className="p-4 border-t border-zinc-800 bg-zinc-900 pb-8">
             <div className="flex items-center gap-3">
               <Avatar className="w-8 h-8">
-                <AvatarImage src="https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99" />
-                <AvatarFallback>EU</AvatarFallback>
+                {user ? (
+                  <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold">
+                    {user.email
+                      ? user.email.substring(0, 2).toUpperCase()
+                      : 'EU'}
+                  </AvatarFallback>
+                ) : (
+                  <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold">
+                    EU
+                  </AvatarFallback>
+                )}
               </Avatar>
               <div className="flex-1 relative">
                 <Input

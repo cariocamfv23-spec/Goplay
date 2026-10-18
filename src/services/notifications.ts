@@ -81,8 +81,8 @@ export const notificationService = {
           actor: actor
             ? {
                 id: actor.id,
-                name: actor.full_name,
-                avatar: actor.avatar_url,
+                name: actor.full_name || 'Atleta',
+                avatar: actor.avatar_url || '',
               }
             : undefined,
         }

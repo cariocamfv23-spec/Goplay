@@ -38,10 +38,16 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
 
-  // Redirect to home if already authenticated, preventing the display of the guest UI
+  // Redirect to home or redirect target if already authenticated, preventing the display of the guest UI
   useEffect(() => {
     if (hasHydrated && isAuthenticated) {
-      navigate('/home', { replace: true })
+      const params = new URLSearchParams(window.location.search)
+      const redirectUrl = params.get('redirect')
+      if (redirectUrl && redirectUrl.startsWith('/')) {
+        navigate(redirectUrl, { replace: true })
+      } else {
+        navigate('/home', { replace: true })
+      }
     }
   }, [hasHydrated, isAuthenticated, navigate])
 
@@ -107,7 +113,13 @@ export default function Login() {
       }
 
       toast.success('Login realizado com sucesso!')
-      navigate('/home', { replace: true })
+      const params = new URLSearchParams(window.location.search)
+      const redirectUrl = params.get('redirect')
+      if (redirectUrl && redirectUrl.startsWith('/')) {
+        navigate(redirectUrl, { replace: true })
+      } else {
+        navigate('/home', { replace: true })
+      }
     } catch (err: any) {
       toast.error(err?.message || 'Erro inesperado durante o login')
     } finally {
@@ -116,10 +128,7 @@ export default function Login() {
   }
 
   const handleForgotPassword = () => {
-    toast.info('Recuperação de Senha', {
-      description:
-        'Digite seu e-mail no campo acima. A interface de recuperação direta por link será ativada.',
-    })
+    navigate('/forgot-password')
   }
 
   const handleSocialLogin = (provider: string) => {

@@ -81,7 +81,11 @@ export default function Notifications() {
     isReal: true,
   }))
 
-  const allNotifications: any[] = [...mappedReal, ...notifications]
+  // Prioritize real Supabase notifications; mock fallback only if no real notifications exist or filtered
+  const allNotifications: any[] =
+    user?.id && realNotifications.length > 0
+      ? [...mappedReal]
+      : [...mappedReal, ...notifications]
   const unreadCount = allNotifications.filter((n) => !n.read).length
 
   const isVipAlert = (title: string, message: string = '') => {
@@ -331,15 +335,17 @@ export default function Notifications() {
                                   'ring-transparent border border-border',
                           )}
                         >
-                          <AvatarImage
-                            src={
-                              not.user?.avatar ||
-                              not.avatarUrl ||
-                              not.imageUrl ||
-                              `https://img.usecurling.com/ppl/thumbnail?seed=${not.id}`
-                            }
-                          />
-                          <AvatarFallback>
+                          {not.user?.avatar || not.avatarUrl || not.imageUrl ? (
+                            <AvatarImage
+                              src={
+                                not.user?.avatar ||
+                                not.avatarUrl ||
+                                not.imageUrl
+                              }
+                              alt={not.user?.name || not.title || 'Usuário'}
+                            />
+                          ) : null}
+                          <AvatarFallback className="bg-primary/10 text-primary font-bold">
                             {(not.user?.name || not.title || 'U')
                               .substring(0, 2)
                               .toUpperCase()}

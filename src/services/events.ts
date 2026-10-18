@@ -93,15 +93,21 @@ export const eventsService = {
       const eventIds = rawEvents.map((e: any) => e.id)
       const { data: regData } = await db
         .from('event_registrations')
-        .select('event_id, user_id')
+        .select('event_id, user_id, status')
         .in('event_id', eventIds)
 
       const regCountMap = new Map<string, number>()
       const userRegSet = new Set<string>()
 
       regData?.forEach((r: any) => {
-        regCountMap.set(r.event_id, (regCountMap.get(r.event_id) || 0) + 1)
-        if (params?.currentUserId && r.user_id === params.currentUserId) {
+        if (r.status !== 'canceled') {
+          regCountMap.set(r.event_id, (regCountMap.get(r.event_id) || 0) + 1)
+        }
+        if (
+          params?.currentUserId &&
+          r.user_id === params.currentUserId &&
+          r.status !== 'canceled'
+        ) {
           userRegSet.add(r.event_id)
         }
       })
@@ -185,11 +191,11 @@ export const eventsService = {
       if (currentUserId) {
         const { data: reg } = await db
           .from('event_registrations')
-          .select('id')
+          .select('id, status')
           .eq('event_id', eventId)
           .eq('user_id', currentUserId)
           .maybeSingle()
-        isRegistered = !!reg
+        isRegistered = !!reg && reg.status !== 'canceled'
       }
 
       const item: EventItem = {
@@ -353,19 +359,59 @@ export const eventsService = {
         throw new Error('Este evento não está aberto para inscrições.')
 
       if (ev.registration_deadline) {
-        const deadline = new Date(ev.registration_deadline)
+        // Parse deadline set to end of day 23:59:59
+        const deadline = new Date(`${ev.registration_deadline}T23:59:59`)
         if (new Date() > deadline) {
-          throw new Error('O prazo de inscrição para este evento encerrou.')
+          throw new Error(
+            'Inscrições encerradas. O prazo para este evento expirou.',
+          )
         }
       }
 
-      const { error: insErr } = await db.from('event_registrations').insert({
-        event_id: eventId,
-        user_id: userId,
-        status: 'confirmed',
-        notes: notes?.trim() || null,
-      })
+      // Check max participants if configured
+      if (ev.max_participants) {
+        const { count: currentCount } = await db
+          .from('event_registrations')
+          .select('id', { count: 'exact', head: true })
+          .eq('event_id', eventId)
+          .neq('status', 'canceled')
 
+        if (currentCount && currentCount >= ev.max_participants) {
+          throw new Error('Não há mais vagas disponíveis para este evento.')
+        }
+      }
+
+      // Upsert / Insert handling for re-registration after cancel
+      const { data: existingReg } = await db
+        .from('event_registrations')
+        .select('id, status')
+        .eq('event_id', eventId)
+        .eq('user_id', userId)
+        .maybeSingle()
+
+      let insErr: any = null
+      if (existingReg) {
+        if (existingReg.status === 'confirmed') {
+          throw new Error('Você já está inscrito neste evento!')
+        }
+        const { error: updErr } = await db
+          .from('event_registrations')
+          .update({
+            status: 'confirmed',
+            notes: notes?.trim() || null,
+            created_at: new Date().toISOString(),
+          })
+          .eq('id', existingReg.id)
+        insErr = updErr
+      } else {
+        const { error } = await db.from('event_registrations').insert({
+          event_id: eventId,
+          user_id: userId,
+          status: 'confirmed',
+          notes: notes?.trim() || null,
+        })
+        insErr = error
+      }
       if (insErr) {
         if (insErr.message.includes('duplicate') || insErr.code === '23505') {
           throw new Error('Você já está inscrito neste evento!')
@@ -422,13 +468,22 @@ export const eventsService = {
     userId: string,
   ): Promise<{ error: Error | null }> {
     try {
+      // Instead of hard deleting, set status to canceled so user can toggle, or delete if allowed
       const { error } = await db
         .from('event_registrations')
-        .delete()
+        .update({ status: 'canceled' })
         .eq('event_id', eventId)
         .eq('user_id', userId)
 
-      if (error) throw error
+      if (error) {
+        // Fallback to hard delete if update fails
+        const { error: delErr } = await db
+          .from('event_registrations')
+          .delete()
+          .eq('event_id', eventId)
+          .eq('user_id', userId)
+        if (delErr) throw delErr
+      }
       return { error: null }
     } catch (err: any) {
       return { error: err instanceof Error ? err : new Error(String(err)) }
@@ -444,6 +499,7 @@ export const eventsService = {
         .from('event_registrations')
         .select('*')
         .eq('event_id', eventId)
+        .neq('status', 'canceled')
         .order('created_at', { ascending: true })
 
       if (error || !data) return []
