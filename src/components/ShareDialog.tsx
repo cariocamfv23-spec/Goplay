@@ -67,10 +67,9 @@ export function ShareDialog({
 
     try {
       if (platform === 'WhatsApp') {
-        window.open(
-          `https://wa.me/?text=${encodeURIComponent(fullText)}`,
-          '_blank',
-        )
+        // WhatsApp Web / Mobile direct deep link
+        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(fullText)}`
+        window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
         shared = true
       } else if (platform === 'Facebook') {
         window.open(

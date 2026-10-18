@@ -43,12 +43,21 @@ export default function Login() {
   useEffect(() => {
     if (hasHydrated && isAuthenticated) {
       const params = new URLSearchParams(window.location.search)
-      const redirectUrl = params.get('redirect')
-      if (redirectUrl && redirectUrl.startsWith('/')) {
-        navigate(redirectUrl, { replace: true })
-      } else {
-        navigate('/home', { replace: true })
+      const redirectParam = params.get('redirect')
+      let target = '/home'
+      if (redirectParam) {
+        try {
+          const decoded = decodeURIComponent(redirectParam)
+          if (decoded.startsWith('/')) {
+            target = decoded
+          }
+        } catch {
+          if (redirectParam.startsWith('/')) {
+            target = redirectParam
+          }
+        }
       }
+      navigate(target, { replace: true })
     }
   }, [hasHydrated, isAuthenticated, navigate])
 
@@ -123,12 +132,21 @@ export default function Login() {
 
       toast.success('Login realizado com sucesso!')
       const params = new URLSearchParams(window.location.search)
-      const redirectUrl = params.get('redirect')
-      if (redirectUrl && redirectUrl.startsWith('/')) {
-        navigate(redirectUrl, { replace: true })
-      } else {
-        navigate('/home', { replace: true })
+      const redirectParam = params.get('redirect')
+      let target = '/home'
+      if (redirectParam) {
+        try {
+          const decoded = decodeURIComponent(redirectParam)
+          if (decoded.startsWith('/')) {
+            target = decoded
+          }
+        } catch {
+          if (redirectParam.startsWith('/')) {
+            target = redirectParam
+          }
+        }
       }
+      navigate(target, { replace: true })
     } catch (err: any) {
       toast.error(err?.message || 'Erro inesperado durante o login')
     } finally {

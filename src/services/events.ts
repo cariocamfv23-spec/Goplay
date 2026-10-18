@@ -292,42 +292,89 @@ export const eventsService = {
     price?: number
   }): Promise<{ data: EventItem | null; error: Error | null }> {
     try {
-      if (!params.creatorId) throw new Error('Usuário não autenticado.')
-      if (!params.title.trim()) throw new Error('Título é obrigatório.')
-      if (!params.sport) throw new Error('Modalidade esportiva é obrigatória.')
-      if (!params.eventDate) throw new Error('Data do evento é obrigatória.')
-      if (!params.city || !params.state)
-        throw new Error('Cidade e Estado são obrigatórios.')
+      if (!params.creatorId) {
+        throw new Error(
+          'Sessão não identificada. Faça login para publicar a peneira/evento.',
+        )
+      }
+      if (!params.title || !params.title.trim()) {
+        throw new Error('O título ou nome da peneira é obrigatório.')
+      }
+      if (!params.sport || !params.sport.trim()) {
+        throw new Error('A modalidade esportiva é obrigatória.')
+      }
+      if (!params.eventDate) {
+        throw new Error('A data de realização da peneira é obrigatória.')
+      }
+      if (
+        !params.city ||
+        !params.city.trim() ||
+        !params.state ||
+        !params.state.trim()
+      ) {
+        throw new Error('Cidade e UF do evento são obrigatórios.')
+      }
+
+      // Sanitize price
+      let cleanPrice = 0
+      if (params.price !== undefined && params.price !== null) {
+        const parsed = Number(params.price)
+        cleanPrice = isNaN(parsed) || parsed < 0 ? 0 : parsed
+      }
+
+      const payload = {
+        creator_id: params.creatorId,
+        title: params.title.trim(),
+        description: params.description?.trim() || '',
+        type: params.type || 'tryout',
+        sport: params.sport.trim(),
+        category: params.category?.trim() || 'Livre',
+        event_date: params.eventDate,
+        event_time: params.eventTime?.trim() || '08:30',
+        city: params.city.trim(),
+        state: params.state.trim().toUpperCase().slice(0, 2),
+        location_name: params.locationName?.trim() || 'Local a definir',
+        address: params.address?.trim() || null,
+        banner_url:
+          params.bannerUrl ||
+          `https://img.usecurling.com/p/800/400?q=${encodeURIComponent(params.sport)}%20stadium`,
+        requirements: params.requirements?.trim() || null,
+        instructions: params.instructions?.trim() || null,
+        registration_deadline: params.registrationDeadline || null,
+        max_participants:
+          params.maxParticipants && params.maxParticipants > 0
+            ? Math.floor(params.maxParticipants)
+            : null,
+        price: cleanPrice,
+        status: 'open',
+      }
 
       const { data, error } = await db
         .from('events')
-        .insert({
-          creator_id: params.creatorId,
-          title: params.title.trim(),
-          description: params.description?.trim() || '',
-          type: params.type,
-          sport: params.sport,
-          category: params.category?.trim() || 'Livre',
-          event_date: params.eventDate,
-          event_time: params.eventTime || '09:00',
-          city: params.city.trim(),
-          state: params.state.trim().toUpperCase(),
-          location_name: params.locationName.trim() || 'Local a definir',
-          address: params.address?.trim() || null,
-          banner_url:
-            params.bannerUrl ||
-            `https://img.usecurling.com/p/800/400?q=${encodeURIComponent(params.sport)}%20stadium`,
-          requirements: params.requirements?.trim() || null,
-          instructions: params.instructions?.trim() || null,
-          registration_deadline: params.registrationDeadline || null,
-          max_participants: params.maxParticipants || null,
-          price: params.price || 0,
-          status: 'open',
-        } as any)
+        .insert(payload as any)
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {
+        // Detailed error parsing for friendly user feedback
+        if (
+          error.code === '42501' ||
+          error.message?.includes('policy') ||
+          error.message?.includes('row-level security')
+        ) {
+          throw new Error(
+            'Permissão negada pelo servidor. Verifique se você está conectado com uma conta ativa.',
+          )
+        }
+        if (error.message?.includes('violates foreign key')) {
+          throw new Error(
+            'Conta de criador inválida no banco de dados. Tente sair e entrar novamente.',
+          )
+        }
+        throw new Error(
+          error.message || 'Erro ao gravar evento no banco de dados.',
+        )
+      }
 
       return {
         data: {

@@ -11,8 +11,15 @@ export function ProtectedRoute() {
   }
 
   if (!isAuthenticated) {
-    // Redirect unauthenticated users strictly to the login screen
-    return <Navigate to="/login" state={{ from: location }} replace />
+    // Redirect unauthenticated users strictly to the login screen preserving current path
+    const returnUrl = `${location.pathname}${location.search}`
+    return (
+      <Navigate
+        to={`/login?redirect=${encodeURIComponent(returnUrl)}`}
+        state={{ from: location }}
+        replace
+      />
+    )
   }
 
   return <Outlet />

@@ -65,6 +65,14 @@ export default function EventDetails() {
   >('all')
   const [isShareOpen, setIsShareOpen] = useState(false)
 
+  // Check if ?share=1 is present in URL to trigger share dialog automatically
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('share') === '1') {
+      setIsShareOpen(true)
+    }
+  }, [])
+
   const isSupabaseId =
     typeof id === 'string' &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
@@ -290,19 +298,25 @@ export default function EventDetails() {
           <Button
             variant="secondary"
             size="icon"
-            className="rounded-full bg-background/80 backdrop-blur-md"
-            onClick={() => navigate(-1)}
+            className="rounded-full bg-background/80 backdrop-blur-md shadow-md"
+            onClick={() => {
+              if (window.history.length > 1) {
+                navigate(-1)
+              } else {
+                navigate('/explore')
+              }
+            }}
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <Button
             variant="secondary"
-            size="icon"
-            className="rounded-full bg-background/80 backdrop-blur-md hover:bg-background text-foreground"
+            className="rounded-full bg-background/90 backdrop-blur-md hover:bg-background text-foreground font-semibold text-xs px-3.5 py-1.5 h-9 shadow-md flex items-center gap-1.5 border border-border/50"
             onClick={() => setIsShareOpen(true)}
             aria-label="Compartilhar evento"
           >
-            <Share2 className="w-5 h-5" />
+            <Share2 className="w-4 h-4 text-primary" />
+            <span>Compartilhar</span>
           </Button>
         </div>
 
@@ -786,6 +800,16 @@ export default function EventDetails() {
       {/* Positioned above BottomNav on mobile (z-40 + bottom-16 / md:bottom-0) */}
       <div className="fixed bottom-16 md:bottom-0 left-0 right-0 p-3.5 sm:p-4 bg-background/95 backdrop-blur-md border-t border-border/50 z-40 shadow-xl transition-all">
         <div className="max-w-3xl mx-auto flex items-center justify-between gap-3">
+          {/* Quick share action button in bottom bar */}
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-11 w-11 rounded-xl shrink-0 border-primary/40 text-primary hover:bg-primary/10"
+            onClick={() => setIsShareOpen(true)}
+            title="Compartilhar Peneira via WhatsApp"
+          >
+            <Share2 className="w-5 h-5" />
+          </Button>
           <div className="flex-1 min-w-0">
             <span className="text-[10px] text-muted-foreground uppercase tracking-wider block font-bold">
               Inscrição
@@ -870,9 +894,21 @@ export default function EventDetails() {
       <ShareDialog
         open={isShareOpen}
         onOpenChange={setIsShareOpen}
-        title={event.title}
-        description={`Participe de "${event.title}" (${event.sport}) no Goplay App!`}
-        url={window.location.href}
+        title={
+          event.type?.includes('Peneira')
+            ? `⭐ Peneira Oficial: ${event.title}`
+            : event.title
+        }
+        description={
+          event.type?.includes('Peneira')
+            ? `⚽ Seletiva/Peneira Oficial aberta: "${event.title}" (${event.sport}) no Goplay App! Local: ${event.location}. Vagas abertas, inscreva-se já pelo link:`
+            : `🏆 Participe de "${event.title}" (${event.sport}) no Goplay App! Local: ${event.location}. Acesse e faça sua inscrição:`
+        }
+        url={
+          typeof window !== 'undefined'
+            ? `${window.location.origin}/events/${id}`
+            : undefined
+        }
         onShareAction={(platform) => {
           if (id) {
             analyticsService.trackEventShare(id, platform || 'native', user?.id)

@@ -273,6 +273,8 @@ const App = () => {
                     {/* Public Standalone Shareable Routes (Direct access without login) */}
                     <Route path="/passport/:id" element={<SportsPassport />} />
                     <Route path="/p/:id" element={<SportsPassport />} />
+                    <Route path="/events/:id" element={<EventDetails />} />
+                    <Route path="/events" element={<EventsList />} />
                     {/* Protected Full-Screen Routes */}
                     <Route element={<ProtectedRoute />}>
                       <Route
@@ -425,7 +427,6 @@ const App = () => {
                           path="/explore/flyer-creator"
                           element={<FlyerCreator />}
                         />
-                        <Route path="/events/:id" element={<EventDetails />} />
                         <Route path="/venues/:id" element={<VenueDetails />} />
                         <Route path="/gyms/:id" element={<GymDetails />} />
                         <Route
