@@ -87,7 +87,14 @@ export const eventsService = {
         .order('event_date', { ascending: true })
 
       if (params?.type && params.type !== 'all') {
-        query = query.eq('type', params.type)
+        if (params.type === 'tryout') {
+          query = query.eq('type', 'tryout')
+        } else if (params.type === 'event') {
+          // Both championships and tournaments or general events
+          query = query.in('type', ['event', 'championship'])
+        } else {
+          query = query.eq('type', params.type)
+        }
       }
       if (params?.sport && params.sport !== 'Todos') {
         query = query.ilike('sport', `%${params.sport}%`)

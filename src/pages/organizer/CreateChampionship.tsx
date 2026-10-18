@@ -9,10 +9,11 @@ import { ArrowLeft, Trophy, Loader2 } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { eventsService } from '@/services/events'
 import { toast } from 'sonner'
+import { AlertCircle, ShieldAlert, LogIn } from 'lucide-react'
 
 export default function CreateChampionship() {
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, profile } = useAuth()
   const { addChampionship } = useChampionshipStore()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [type, setType] = useState<'tryout' | 'event'>('tryout')
@@ -34,48 +35,50 @@ export default function CreateChampionship() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!formData.title || !formData.startDate || !formData.location) {
+    if (!user?.id) {
+      toast.error('Você precisa estar conectado para criar um evento.', {
+        description: 'Faça login com uma conta de Clube ou Treinador.',
+      })
+      navigate('/login?redirect=/organizer/create')
+      return
+    }
+
+    if (
+      !formData.title.trim() ||
+      !formData.startDate ||
+      !formData.location.trim()
+    ) {
       toast.error('Preencha os campos obrigatórios (*)')
       return
     }
 
-    if (user?.id) {
-      setIsSubmitting(true)
-      const { data, error } = await eventsService.createEvent({
-        creatorId: user.id,
-        title: formData.title,
-        description: formData.description,
-        type: type === 'tryout' ? 'tryout' : 'championship',
-        sport: formData.sport,
-        category: formData.category,
-        eventDate: formData.startDate,
-        eventTime: formData.eventTime,
-        city: formData.city,
-        state: formData.state,
-        locationName: formData.location,
-        requirements: formData.requirements,
-        instructions: formData.instructions,
-        price: parseFloat(formData.entryFee) || 0,
-      })
-      setIsSubmitting(false)
+    setIsSubmitting(true)
+    const { data, error } = await eventsService.createEvent({
+      creatorId: user.id,
+      title: formData.title,
+      description: formData.description,
+      type: type === 'tryout' ? 'tryout' : 'championship',
+      sport: formData.sport,
+      category: formData.category,
+      eventDate: formData.startDate,
+      eventTime: formData.eventTime,
+      city: formData.city,
+      state: formData.state,
+      locationName: formData.location,
+      requirements: formData.requirements,
+      instructions: formData.instructions,
+      price: parseFloat(formData.entryFee) || 0,
+    })
+    setIsSubmitting(false)
 
-      if (error || !data) {
-        toast.error(
-          'Erro ao criar evento: ' + (error?.message || 'Tente novamente.'),
-        )
-        return
-      }
-
-      toast.success(
-        type === 'tryout'
-          ? 'Peneira oficial criada com sucesso!'
-          : 'Evento criado com sucesso!',
+    if (error || !data) {
+      toast.error(
+        'Erro ao criar evento: ' + (error?.message || 'Tente novamente.'),
       )
-      navigate(`/events/${data.id}`)
       return
     }
 
-    // Local state fallback
+    // Also update local championship store for offline cache
     addChampionship({
       name: formData.title,
       modality: formData.sport,
@@ -84,9 +87,16 @@ export default function CreateChampionship() {
       rules: formData.instructions || 'Regulamento padrão Goplay',
     })
 
-    toast.success('Evento criado!')
-    navigate('/organizer')
+    toast.success(
+      type === 'tryout'
+        ? 'Peneira oficial criada com sucesso!'
+        : 'Evento criado com sucesso!',
+    )
+    navigate(`/events/${data.id}`)
   }
+
+  const isOrganizerRole =
+    profile?.account_type === 'club' || profile?.account_type === 'coach'
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -109,7 +119,51 @@ export default function CreateChampionship() {
         </div>
       </div>
 
-      <div className="p-4 max-w-lg mx-auto">
+      <div className="p-4 max-w-lg mx-auto space-y-4">
+        {/* Unauthenticated notice */}
+        {!user && (
+          <Card className="border-amber-500/30 bg-amber-500/10 p-4">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+              <div className="space-y-2 flex-1">
+                <p className="text-xs font-semibold text-amber-700 dark:text-amber-300">
+                  Você precisa estar conectado para publicar um evento real.
+                </p>
+                <Button
+                  size="sm"
+                  className="text-xs bg-amber-600 hover:bg-amber-700 text-white gap-1.5"
+                  onClick={() => navigate('/login?redirect=/organizer/create')}
+                >
+                  <LogIn className="w-3.5 h-3.5" /> Fazer Login como Clube ou
+                  Organizador
+                </Button>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Informative notice for athletes creating events */}
+        {user && !isOrganizerRole && (
+          <div className="p-3 bg-secondary/50 rounded-xl border border-border/40 text-xs text-muted-foreground flex items-center justify-between">
+            <span>
+              Perfil atual:{' '}
+              <strong className="text-foreground">
+                {profile?.full_name || 'Atleta'}
+              </strong>{' '}
+              (Atleta). Clubes e Treinadores contam com ferramentas avançadas de
+              triagem.
+            </span>
+            <Button
+              variant="link"
+              size="sm"
+              className="text-xs text-primary p-0 h-auto"
+              onClick={() => navigate('/profile/me')}
+            >
+              Meu Perfil
+            </Button>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Type selector */}
           <div className="flex gap-2">

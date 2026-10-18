@@ -16,6 +16,7 @@ import {
   Edit2,
   CheckCircle2,
   Camera,
+  Trophy,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -288,6 +289,36 @@ export default function CoachView({
             )}
           </CardContent>
         </Card>
+
+        {/* Organizer Quick Management Card for logged in Coach */}
+        {isMe && (
+          <Card className="border-2 border-primary/30 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent shadow-sm">
+            <CardContent className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <Badge className="bg-primary text-white text-[10px] font-bold">
+                    Área do Treinador
+                  </Badge>
+                  <h3 className="font-bold text-sm text-foreground">
+                    Painel do Organizador & Torneios
+                  </h3>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Acesse suas peneiras, crie novos eventos e aprove inscrições
+                  de atletas.
+                </p>
+              </div>
+              <Button
+                size="sm"
+                onClick={() => navigate('/organizer')}
+                className="bg-primary text-white shadow-md text-xs font-semibold gap-1.5 shrink-0"
+              >
+                <Trophy className="w-3.5 h-3.5" />
+                Abrir Painel do Organizador
+              </Button>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Modalidades / Categories */}
         <div className="space-y-3 mt-2">

@@ -52,6 +52,14 @@ export default function Login() {
     }
   }, [hasHydrated, isAuthenticated, navigate])
 
+  const handleDemoLogin = (demoEmail: string) => {
+    setEmail(demoEmail)
+    setPassword('Skip@Pass')
+    toast.info(`Credenciais da conta de demonstração preenchidas.`, {
+      description: 'Clique em "Entrar com E-mail" para acessar.',
+    })
+  }
+
   // Load saved credentials on mount
   useEffect(() => {
     const savedEmail = localStorage.getItem('goplay_email')
@@ -304,6 +312,42 @@ export default function Login() {
                 )}
               </Button>
             </form>
+
+            {/* Quick Demo Access Bar */}
+            <div className="mt-4 pt-3 border-t border-border/40 text-center">
+              <span className="text-[11px] font-semibold text-muted-foreground block mb-2">
+                Acesso Rápido para Testes & Demonstração:
+              </span>
+              <div className="flex flex-wrap gap-1.5 justify-center">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-6 text-[10px] px-2 border-amber-500/40 text-amber-600 hover:bg-amber-500/10"
+                  onClick={() => handleDemoLogin('demo.clube@goplay.test')}
+                >
+                  🏢 Clube Atlético
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-6 text-[10px] px-2 border-primary/40 text-primary hover:bg-primary/10"
+                  onClick={() => handleDemoLogin('demo.treinador@goplay.test')}
+                >
+                  📋 Treinador Marcelo
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-6 text-[10px] px-2 border-border text-muted-foreground hover:text-foreground"
+                  onClick={() => handleDemoLogin('demo.futebol@goplay.test')}
+                >
+                  ⚽ Atleta Lucas
+                </Button>
+              </div>
+            </div>
 
             {/* Separator */}
             <div className="relative my-5">

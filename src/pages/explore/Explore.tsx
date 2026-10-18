@@ -260,30 +260,32 @@ export default function Explore() {
   }
 
   // Map Supabase events to Event shape for MapEventCard
-  const mappedRealEvents: (Event & { isRegistered?: boolean })[] =
-    realEvents.map((e) => ({
-      id: e.id,
-      title: e.title,
-      category: e.type === 'tryout' ? 'Peneira Oficial' : 'Campeonato',
-      modality: e.sport,
-      date: new Date(e.eventDate).toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: 'short',
-      }),
-      time: e.eventTime,
-      location: e.locationName,
-      city: e.city,
-      state: e.state,
-      address: e.address || '',
-      image:
-        e.bannerUrl ||
-        'https://img.usecurling.com/p/800/400?q=sports%20stadium',
-      price: e.price,
-      description: e.description,
-      organizer: e.creator?.name || 'Organizador Goplay',
-      level: e.type === 'tryout' ? 'Avançado' : 'Intermediário',
-      isRegistered: e.isRegistered,
-    }))
+  const mappedRealEvents: (Event & {
+    isRegistered?: boolean
+    rawType?: string
+  })[] = realEvents.map((e) => ({
+    id: e.id,
+    title: e.title,
+    category: e.type === 'tryout' ? 'Peneira Oficial' : 'Campeonato',
+    modality: e.sport,
+    rawType: e.type,
+    date: new Date(e.eventDate).toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: 'short',
+    }),
+    time: e.eventTime,
+    location: e.locationName,
+    city: e.city,
+    state: e.state,
+    address: e.address || '',
+    image:
+      e.bannerUrl || 'https://img.usecurling.com/p/800/400?q=sports%20stadium',
+    price: e.price,
+    description: e.description,
+    organizer: e.creator?.name || 'Organizador Goplay',
+    level: e.type === 'tryout' ? 'Avançado' : 'Intermediário',
+    isRegistered: e.isRegistered,
+  }))
 
   const allDisplayEvents = [...mappedRealEvents, ...mockEvents]
 

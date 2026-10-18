@@ -420,6 +420,18 @@ export function TopBar() {
                 PRO
               </Badge>
             </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/organizer')}>
+              <Trophy className="mr-2 h-4 w-4 text-amber-500" />
+              <span className="font-bold text-foreground">
+                Painel do Clube / Seletivas
+              </span>
+              <Badge
+                variant="secondary"
+                className="ml-auto text-[8px] bg-amber-500/20 text-amber-600 border-none px-1 py-0 h-4 font-bold"
+              >
+                CLUBE
+              </Badge>
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => navigate('/album')}>
               <Trophy className="mr-2 h-4 w-4 text-green-500" />
               <span className="font-bold text-foreground">Álbum Copa 2026</span>

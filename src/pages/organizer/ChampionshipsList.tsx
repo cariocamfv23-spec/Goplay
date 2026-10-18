@@ -46,7 +46,7 @@ import {
 
 export default function ChampionshipsList() {
   const { championships } = useChampionshipStore()
-  const { user } = useAuth()
+  const { user, profile } = useAuth()
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const [activeTab, setActiveTab] = useState<
@@ -203,9 +203,23 @@ export default function ChampionshipsList() {
               <Trophy className="h-6 w-6 text-gold" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold flex items-center gap-2">
-                Painel do Clube & Organizador
-              </h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-bold flex items-center gap-2">
+                  Painel do Clube & Organizador
+                </h1>
+                {profile?.account_type && (
+                  <Badge
+                    variant="outline"
+                    className="text-[10px] uppercase font-bold border-primary/30 text-primary"
+                  >
+                    {profile.account_type === 'club'
+                      ? 'Clube Oficial'
+                      : profile.account_type === 'coach'
+                        ? 'Treinador'
+                        : 'Atleta'}
+                  </Badge>
+                )}
+              </div>
               <p className="text-xs text-muted-foreground">
                 Administre eventos, peneiras oficiais e inscrições com dados
                 reais do Supabase
@@ -222,6 +236,26 @@ export default function ChampionshipsList() {
           </Button>
         </div>
       </div>
+
+      {/* Helpful banner if user is currently logged in as athlete */}
+      {user && profile && profile.account_type === 'athlete' && (
+        <div className="mb-6 p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div className="text-xs text-amber-800 dark:text-amber-200">
+            Você está conectado com o perfil de{' '}
+            <strong>{profile.full_name}</strong> (Atleta). Para gerenciar
+            seletivas oficiais completas como Clube ou Treinador, você pode
+            alterar seu tipo no perfil ou usar uma das contas demo oficiais.
+          </div>
+          <Button
+            size="sm"
+            variant="outline"
+            className="text-xs border-amber-500/40 text-amber-600 hover:bg-amber-500/10 shrink-0 self-start sm:self-auto"
+            onClick={() => navigate('/profile/me')}
+          >
+            Editar Perfil
+          </Button>
+        </div>
+      )}
 
       {/* KPI Stats Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">

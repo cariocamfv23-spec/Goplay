@@ -13,11 +13,12 @@ import {
 export function BottomNav() {
   const location = useLocation()
 
-  // Dynamically add Nexus, Food Sport and Arena to navigation without touching data.ts
+  // Dynamically add Nexus, Food Sport, Arena and Painel do Clube to navigation
   const extendedNavItems = [
     ...navigationItems.slice(0, 3),
     { icon: Orbit, label: 'Nexus', path: '/nexus' },
     ...navigationItems.slice(3, 4), // Explore
+    { icon: Trophy, label: 'Painel Clube', path: '/organizer' },
     ...navigationItems.slice(4), // Loja, Perfil
     { icon: Utensils, label: 'Food', path: '/food-sport' },
     { icon: Flame, label: 'Arena Go', path: '/arena' },

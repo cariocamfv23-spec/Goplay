@@ -41,10 +41,13 @@ export default function EventsList() {
     image:
       e.bannerUrl || 'https://img.usecurling.com/p/800/400?q=sports%20stadium',
     sport: e.sport,
-    type: e.type === 'tryout' ? 'Peneira Oficial' : 'Evento / Torneio',
+    rawType: e.type,
+    type: e.type === 'tryout' ? 'Peneira Oficial' : 'Torneio Oficial',
     isRegistered: e.isRegistered,
+    isReal: true,
   }))
 
+  // Prioritize real Supabase events at the top
   const allDisplayEvents: any[] = [...mappedRealEvents, ...mockEvents]
 
   const filtered = allDisplayEvents.filter((e: any) => {
@@ -53,12 +56,19 @@ export default function EventsList() {
       (e.sport || '').toLowerCase().includes(search.toLowerCase()) ||
       (e.location || '').toLowerCase().includes(search.toLowerCase())
 
+    const isTryout =
+      e.rawType === 'tryout' ||
+      (typeof e.type === 'string' &&
+        (e.type.toLowerCase().includes('peneira') ||
+          e.type.toLowerCase().includes('seletiva') ||
+          e.type.toLowerCase().includes('tryout')))
+
     const matchesType =
       selectedType === 'all'
         ? true
         : selectedType === 'tryout'
-          ? (e.type?.toLowerCase().includes('peneira') ?? false)
-          : !(e.type?.toLowerCase().includes('peneira') ?? false)
+          ? isTryout
+          : !isTryout
 
     return matchesSearch && matchesType
   })
@@ -170,12 +180,18 @@ export default function EventsList() {
                     <Badge
                       variant="outline"
                       className={
-                        event.type.includes('Peneira')
-                          ? 'backdrop-blur-md bg-amber-500/20 border-amber-500 text-amber-500 font-bold'
+                        event.type.includes('Peneira') ||
+                        event.rawType === 'tryout'
+                          ? 'backdrop-blur-md bg-amber-500/25 border-amber-500 text-amber-500 font-bold shadow-xs'
                           : 'backdrop-blur-md bg-background/80'
                       }
                     >
                       {event.type}
+                    </Badge>
+                  )}
+                  {event.isReal && (
+                    <Badge className="bg-primary/90 text-white font-semibold text-[10px]">
+                      Oficial Goplay
                     </Badge>
                   )}
                   {event.isRegistered && (
