@@ -274,6 +274,7 @@ const App = () => {
                     />
                     {/* Public Standalone Shareable Routes (Direct access without login) */}
                     <Route path="/passport/:id" element={<SportsPassport />} />
+                    <Route path="/passport" element={<SportsPassport />} />
                     <Route path="/p/:id" element={<SportsPassport />} />
                     <Route path="/events/:id" element={<EventDetails />} />
                     <Route path="/events" element={<EventsList />} />

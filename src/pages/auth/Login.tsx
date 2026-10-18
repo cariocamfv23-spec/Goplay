@@ -350,17 +350,19 @@ export default function Login() {
                   size="sm"
                   className="h-6 text-[10px] px-2 border-amber-500/40 text-amber-600 hover:bg-amber-500/10"
                   onClick={() => handleDemoLogin('demo.clube@goplay.test')}
+                  title="Clube Atlético Paulista (Admin / Organizador de Peneiras)"
                 >
-                  🏢 Clube Atlético
+                  🏢 Clube Atlético (Admin)
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
                   className="h-6 text-[10px] px-2 border-primary/40 text-primary hover:bg-primary/10"
-                  onClick={() => handleDemoLogin('demo.treinador@goplay.test')}
+                  onClick={() => handleDemoLogin('cariocamfv23@gmail.com')}
+                  title="Administrador Principal do Goplay Beta"
                 >
-                  📋 Treinador Marcelo
+                  🛡️ Admin Principal
                 </Button>
                 <Button
                   type="button"
@@ -368,6 +370,7 @@ export default function Login() {
                   size="sm"
                   className="h-6 text-[10px] px-2 border-border text-muted-foreground hover:text-foreground"
                   onClick={() => handleDemoLogin('demo.futebol@goplay.test')}
+                  title="Atleta Lucas Silva (Inscrições e Feed)"
                 >
                   ⚽ Atleta Lucas
                 </Button>
