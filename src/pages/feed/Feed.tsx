@@ -5,30 +5,25 @@ import { CreatePostFab } from '@/components/CreatePostFab'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DemoProfilesBanner } from '@/components/profile/DemoProfilesBanner'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { feedService, type PostItem } from '@/services/feed'
 import { useAuth } from '@/hooks/use-auth'
-import { Loader2, RefreshCw } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { useRealtimeFeed } from '@/hooks/useRealtimeFeed'
+import { Loader2, Radio } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 
 export default function Feed() {
   const { user } = useAuth()
   const [searchParams] = useSearchParams()
   const targetPostId = searchParams.get('post')
-  const [realPosts, setRealPosts] = useState<PostItem[]>([])
-  const [loading, setLoading] = useState(true)
 
-  const loadFeed = useCallback(async () => {
-    setLoading(true)
-    const { data } = await feedService.getPosts(user?.id)
-    setRealPosts(data || [])
-    setLoading(false)
-  }, [user?.id])
-
-  useEffect(() => {
-    loadFeed()
-  }, [loadFeed])
+  const {
+    posts: realPosts,
+    loading,
+    isLiveConnected,
+    refreshFeed,
+    removeLocalPost,
+  } = useRealtimeFeed(user?.id)
 
   // Scroll to target post if passed in URL query (?post=<id>)
   useEffect(() => {
@@ -86,22 +81,37 @@ export default function Feed() {
     <div className="min-h-screen bg-background relative">
       <div className="sticky top-16 z-20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40">
         <StoriesRail />
-        <div className="px-4 pt-2">
-          <DemoProfilesBanner />
+        <div className="px-4 pt-2 flex items-center justify-between">
+          <div className="flex-1">
+            <DemoProfilesBanner />
+          </div>
         </div>
         <div className="px-4 py-2">
           <Tabs defaultValue="all" className="w-full">
-            <TabsList className="w-full grid grid-cols-3 h-9">
-              <TabsTrigger value="all" className="text-xs">
-                Todos
-              </TabsTrigger>
-              <TabsTrigger value="social" className="text-xs">
-                Social
-              </TabsTrigger>
-              <TabsTrigger value="events" className="text-xs">
-                Eventos
-              </TabsTrigger>
-            </TabsList>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <TabsList className="flex-1 grid grid-cols-3 h-9">
+                <TabsTrigger value="all" className="text-xs">
+                  Todos
+                </TabsTrigger>
+                <TabsTrigger value="social" className="text-xs">
+                  Social
+                </TabsTrigger>
+                <TabsTrigger value="events" className="text-xs">
+                  Eventos
+                </TabsTrigger>
+              </TabsList>
+
+              {isLiveConnected && (
+                <Badge
+                  variant="outline"
+                  className="h-7 px-2.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-[10px] font-bold flex items-center gap-1.5 shrink-0 animate-in fade-in"
+                  title="Conectado ao Supabase Realtime (atualizações ao vivo)"
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>AO VIVO</span>
+                </Badge>
+              )}
+            </div>
 
             <div className="mt-4 pb-24">
               <TabsContent
@@ -125,9 +135,7 @@ export default function Feed() {
                       <PostCard
                         post={post}
                         onDeleted={(deletedId) => {
-                          setRealPosts((prev) =>
-                            prev.filter((p) => p.id !== deletedId),
-                          )
+                          removeLocalPost(String(deletedId))
                         }}
                       />
                     </div>
@@ -147,9 +155,7 @@ export default function Feed() {
                     <PostCard
                       post={post}
                       onDeleted={(deletedId) => {
-                        setRealPosts((prev) =>
-                          prev.filter((p) => p.id !== deletedId),
-                        )
+                        removeLocalPost(String(deletedId))
                       }}
                     />
                   </div>
@@ -174,7 +180,7 @@ export default function Feed() {
         </div>
       </div>
 
-      <CreatePostFab onPostCreated={loadFeed} />
+      <CreatePostFab onPostCreated={refreshFeed} />
     </div>
   )
 }

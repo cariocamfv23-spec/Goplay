@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/carousel'
 import { Badge } from '@/components/ui/badge'
 import { CommentsSheet } from './CommentsSheet'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import useSoundStore from '@/stores/useSoundStore'
@@ -95,6 +95,16 @@ export function PostCard({ post, onDeleted }: PostProps) {
   // Real or mock like state
   const [realLiked, setRealLiked] = useState<boolean>(post.liked ?? false)
   const [realLikeCount, setRealLikeCount] = useState<number>(post.likes || 0)
+
+  // Keep state synced when props update (e.g. from Realtime feed channel)
+  useEffect(() => {
+    if (isSupabasePost) {
+      if (post.liked !== undefined) {
+        setRealLiked(post.liked)
+      }
+      setRealLikeCount(post.likes || 0)
+    }
+  }, [post.liked, post.likes, isSupabasePost])
 
   const {
     isLiked: mockIsLiked,

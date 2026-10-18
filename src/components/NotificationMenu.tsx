@@ -39,10 +39,7 @@ import useNotificationStore from '@/stores/useNotificationStore'
 import { useFlashbackStore } from '@/stores/useFlashbackStore'
 import { useBolaoStore } from '@/stores/useBolaoStore'
 import { useAuth } from '@/hooks/use-auth'
-import {
-  notificationService,
-  type NotificationItem,
-} from '@/services/notifications'
+import { useRealtimeNotifications } from '@/hooks/useRealtimeFeed'
 import { cn } from '@/lib/utils'
 
 export function NotificationMenu() {
@@ -56,17 +53,13 @@ export function NotificationMenu() {
   const { openFlashback } = useFlashbackStore()
   const { hasWon, wonTeam } = useBolaoStore()
   const [open, setOpen] = useState(false)
-  const [realNotifications, setRealNotifications] = useState<
-    NotificationItem[]
-  >([])
 
-  useEffect(() => {
-    if (user?.id) {
-      notificationService.getMyNotifications(user.id).then((items) => {
-        setRealNotifications(items)
-      })
-    }
-  }, [user?.id, open])
+  // Realtime notification subscriptions with auto-sync and sound alerts
+  const {
+    notifications: realNotifications,
+    markAsRead: markRealAsRead,
+    markAllAsRead: markRealAllAsRead,
+  } = useRealtimeNotifications(user?.id)
 
   const mappedReal = realNotifications.map((n) => ({
     id: n.id,
@@ -111,12 +104,7 @@ export function NotificationMenu() {
 
     if (!notification.read) {
       if (notification.isReal && user?.id) {
-        notificationService.markAsRead(notification.id, user.id)
-        setRealNotifications((prev) =>
-          prev.map((n) =>
-            n.id === notification.id ? { ...n, read: true } : n,
-          ),
-        )
+        markRealAsRead(notification.id)
       } else {
         markStoreAsRead(notification.id)
       }
@@ -133,8 +121,7 @@ export function NotificationMenu() {
 
   const handleMarkAllAsRead = () => {
     if (user?.id) {
-      notificationService.markAllAsRead(user.id)
-      setRealNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
+      markRealAllAsRead()
     }
     markStoreAllAsRead()
   }

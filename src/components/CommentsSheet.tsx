@@ -14,8 +14,9 @@ import { cn } from '@/lib/utils'
 import useNotificationStore from '@/stores/useNotificationStore'
 import { useAuth } from '@/hooks/use-auth'
 import { feedService, type PostCommentItem } from '@/services/feed'
+import { useRealtimeComments } from '@/hooks/useRealtimeFeed'
 import { toast } from 'sonner'
-import { Trash2, Loader2 } from 'lucide-react'
+import { Trash2, Loader2, Radio } from 'lucide-react'
 
 interface Comment {
   id: string
@@ -131,10 +132,25 @@ export function CommentsSheet({
   postId,
 }: CommentsSheetProps) {
   const { user, profile } = useAuth()
-  const [comments, setComments] = useState<Comment[]>([])
   const [newComment, setNewComment] = useState('')
-  const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [mockComments, setMockComments] = useState<Comment[]>(
+    DEFAULT_FALLBACK_COMMENTS,
+  )
+
+  const isSupabasePost =
+    typeof postId === 'string' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      postId,
+    )
+
+  // Use Realtime hook for Supabase posts (active only when sheet is open)
+  const {
+    comments: realComments,
+    loading: realtimeLoading,
+    addLocalComment,
+    removeLocalComment,
+  } = useRealtimeComments(open && isSupabasePost ? postId : undefined)
 
   const getInitials = (name?: string, email?: string) => {
     if (name && name.trim()) {
@@ -150,55 +166,29 @@ export function CommentsSheet({
     return 'GP'
   }
 
-  const isSupabasePost =
-    typeof postId === 'string' &&
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      postId,
-    )
+  // Map real comments to sheet display format
+  const mappedRealComments: Comment[] = realComments.map((c) => ({
+    id: c.id,
+    userId: c.userId,
+    user: {
+      id: c.user.id,
+      name:
+        user?.id === c.userId && profile?.full_name
+          ? profile.full_name
+          : c.user.name,
+      avatar:
+        user?.id === c.userId && profile?.avatar_url
+          ? profile.avatar_url
+          : c.user.avatar,
+    },
+    text: c.content,
+    time: c.timeAgo,
+    likes: 0,
+    isMine: user?.id === c.userId,
+  }))
 
-  useEffect(() => {
-    if (!open) return
-
-    if (isSupabasePost && postId) {
-      setLoading(true)
-      feedService.getComments(postId).then(({ data, error }) => {
-        setLoading(false)
-        if (error) {
-          toast.error('Erro ao carregar comentários.')
-          return
-        }
-        const mapped: Comment[] = data.map((c) => ({
-          id: c.id,
-          userId: c.userId,
-          user: {
-            id: c.user.id,
-            name:
-              user?.id === c.userId && profile?.full_name
-                ? profile.full_name
-                : c.user.name,
-            avatar:
-              user?.id === c.userId && profile?.avatar_url
-                ? profile.avatar_url
-                : c.user.avatar,
-          },
-          text: c.content,
-          time: c.timeAgo,
-          likes: 0,
-          isMine: user?.id === c.userId,
-        }))
-        setComments(mapped)
-      })
-    } else {
-      setComments(DEFAULT_FALLBACK_COMMENTS)
-    }
-  }, [
-    open,
-    postId,
-    isSupabasePost,
-    user?.id,
-    profile?.full_name,
-    profile?.avatar_url,
-  ])
+  const displayComments = isSupabasePost ? mappedRealComments : mockComments
+  const loading = isSupabasePost ? realtimeLoading : false
 
   const handleSend = async () => {
     if (!newComment.trim() || submitting) return
@@ -217,20 +207,8 @@ export function CommentsSheet({
         return
       }
 
-      const added: Comment = {
-        id: data.id,
-        userId: data.userId,
-        user: {
-          id: user.id,
-          name: profile?.full_name || data.user.name || 'Você',
-          avatar: profile?.avatar_url || data.user.avatar || null,
-        },
-        text: data.content,
-        time: 'Agora',
-        likes: 0,
-        isMine: true,
-      }
-      setComments((prev) => [...prev, added])
+      // Add locally for instant UI update; realtime listener will gracefully deduplicate by ID
+      addLocalComment(data)
       setNewComment('')
       toast.success('Comentário publicado!')
     } else {
@@ -248,29 +226,29 @@ export function CommentsSheet({
         likes: 0,
         isMine: true,
       }
-      setComments([comment, ...comments])
+      setMockComments([comment, ...mockComments])
       setNewComment('')
     }
   }
 
   const handleDeleteComment = async (commentId: string) => {
     if (!user?.id || !isSupabasePost) {
-      setComments((prev) => prev.filter((c) => c.id !== commentId))
+      setMockComments((prev) => prev.filter((c) => c.id !== commentId))
       return
     }
 
+    removeLocalComment(commentId)
     const { error } = await feedService.deleteComment(commentId, user.id)
     if (error) {
       toast.error('Erro ao excluir comentário.')
       return
     }
-    setComments((prev) => prev.filter((c) => c.id !== commentId))
     toast.success('Comentário excluído.')
   }
 
   const toggleLike = (id: string) => {
-    setComments(
-      comments.map((c) => {
+    setMockComments(
+      mockComments.map((c) => {
         if (c.id === id) {
           return {
             ...c,
@@ -291,8 +269,14 @@ export function CommentsSheet({
       >
         <div className="flex flex-col h-full">
           <SheetHeader className="p-4 border-b border-zinc-800">
-            <SheetTitle className="text-white text-center">
-              Comentários ({comments.length})
+            <SheetTitle className="text-white text-center flex items-center justify-center gap-2">
+              <span>Comentários ({displayComments.length})</span>
+              {isSupabasePost && (
+                <span
+                  className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"
+                  title="Tempo Real Ativo"
+                />
+              )}
             </SheetTitle>
           </SheetHeader>
 
@@ -304,13 +288,13 @@ export function CommentsSheet({
                   Carregando comentários...
                 </span>
               </div>
-            ) : comments.length === 0 ? (
+            ) : displayComments.length === 0 ? (
               <div className="text-center py-16 text-zinc-500 text-sm">
                 Nenhum comentário ainda. Seja o primeiro a comentar!
               </div>
             ) : (
               <div className="space-y-4 py-4">
-                {comments.map((comment) => (
+                {displayComments.map((comment) => (
                   <div key={comment.id} className="flex gap-3 group">
                     <Avatar className="w-8 h-8 border border-zinc-700 bg-secondary/30 shrink-0">
                       {comment.user.avatar ? (

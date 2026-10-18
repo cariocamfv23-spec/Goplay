@@ -32,12 +32,8 @@ import useNotificationStore from '@/stores/useNotificationStore'
 import { useFlashbackStore } from '@/stores/useFlashbackStore'
 import { cn } from '@/lib/utils'
 
-import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
-import {
-  notificationService,
-  type NotificationItem,
-} from '@/services/notifications'
+import { useRealtimeNotifications } from '@/hooks/useRealtimeFeed'
 
 export default function Notifications() {
   const navigate = useNavigate()
@@ -50,17 +46,11 @@ export default function Notifications() {
   } = useNotificationStore()
   const { openFlashback } = useFlashbackStore()
 
-  const [realNotifications, setRealNotifications] = useState<
-    NotificationItem[]
-  >([])
-
-  useEffect(() => {
-    if (user?.id) {
-      notificationService.getMyNotifications(user.id).then((items) => {
-        setRealNotifications(items)
-      })
-    }
-  }, [user?.id])
+  const {
+    notifications: realNotifications,
+    markAsRead: markRealAsRead,
+    markAllAsRead: markRealAllAsRead,
+  } = useRealtimeNotifications(user?.id)
 
   const mappedReal = realNotifications.map((n) => ({
     id: n.id,
@@ -220,10 +210,7 @@ export default function Notifications() {
   const handleNotificationClick = (not: any) => {
     if (!not.read) {
       if (not.isReal && user?.id) {
-        notificationService.markAsRead(not.id, user.id)
-        setRealNotifications((prev) =>
-          prev.map((n) => (n.id === not.id ? { ...n, read: true } : n)),
-        )
+        markRealAsRead(not.id)
       } else {
         markStoreAsRead(not.id)
       }
@@ -280,10 +267,7 @@ export default function Notifications() {
               className="text-primary text-xs h-8 px-2"
               onClick={() => {
                 if (user?.id) {
-                  notificationService.markAllAsRead(user.id)
-                  setRealNotifications((prev) =>
-                    prev.map((n) => ({ ...n, read: true })),
-                  )
+                  markRealAllAsRead()
                 }
                 markStoreAllAsRead()
               }}
