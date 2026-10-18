@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { ProfilePostsSection } from '@/components/profile/ProfilePostsSection'
 import { useNavigate } from 'react-router-dom'
 import { EditProfileDialog } from '@/components/profile/EditProfileDialog'
 import { EditCoverDialog } from '@/components/profile/EditCoverDialog'
@@ -323,6 +324,19 @@ export default function ClubView({
               </div>
             </CardContent>
           </Card>
+
+          {/* Publicações do Clube */}
+          <div className="pt-2">
+            <h3 className="font-bold mb-3 text-sm text-foreground flex items-center gap-2">
+              <FileText className="h-4 w-4 text-primary" /> Publicações do Clube
+            </h3>
+            <ProfilePostsSection
+              userId={profile.id}
+              isMe={isMe}
+              userName={clubName}
+              userAvatar={profile.avatar}
+            />
+          </div>
         </div>
       </div>
 

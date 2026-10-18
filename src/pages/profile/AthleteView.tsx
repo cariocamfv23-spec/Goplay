@@ -1,4 +1,5 @@
 import { mockCurrentUser, mockPosts, type MusicTrack } from '@/lib/data'
+import { ProfilePostsSection } from '@/components/profile/ProfilePostsSection'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -897,58 +898,12 @@ export default function AthleteView({
             value="posts"
             className="mt-4 animate-in slide-in-from-bottom-2 duration-500"
           >
-            <div className="grid grid-cols-3 gap-1">
-              {userPosts.map((post) => (
-                <DepthContainer
-                  key={post.id}
-                  className="aspect-square bg-muted relative overflow-hidden cursor-pointer group"
-                  maxRotation={5}
-                >
-                  <div
-                    onClick={() => handlePostClick(post)}
-                    className="w-full h-full relative"
-                  >
-                    <NostalgiaFilter intensity={0.5} />
-
-                    {post.media && post.media.length > 0 ? (
-                      <img
-                        src={post.media[0]}
-                        alt={post.title || 'Post'}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none'
-                          e.currentTarget.nextElementSibling?.classList.remove(
-                            'hidden',
-                          )
-                        }}
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-secondary flex items-center justify-center">
-                        <ImageOff className="h-6 w-6 text-muted-foreground/50" />
-                      </div>
-                    )}
-
-                    <div className="hidden absolute inset-0 bg-secondary flex items-center justify-center">
-                      <ImageOff className="h-6 w-6 text-muted-foreground/50" />
-                    </div>
-
-                    {post.type === 'video' && (
-                      <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-full p-1.5 shadow-sm">
-                        <Video className="h-3 w-3 text-white" />
-                      </div>
-                    )}
-
-                    {post.media && post.media.length > 1 && (
-                      <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-full p-1.5 shadow-sm">
-                        <Package className="h-3 w-3 text-white" />
-                      </div>
-                    )}
-
-                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </div>
-                </DepthContainer>
-              ))}
-            </div>
+            <ProfilePostsSection
+              userId={user.id}
+              isMe={isMe}
+              userName={user.name}
+              userAvatar={user.avatar}
+            />
           </TabsContent>
 
           <TabsContent

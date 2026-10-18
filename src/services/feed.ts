@@ -56,6 +56,104 @@ function formatRelativeTime(dateStr: string): string {
 
 export const feedService = {
   /**
+   * Fetches real posts for a specific user author with profile and current viewer like status.
+   */
+  async getUserPosts(
+    authorUserId: string,
+    currentViewerId?: string | null,
+    limit = 30,
+  ): Promise<{ data: PostItem[]; error: Error | null }> {
+    try {
+      if (!authorUserId) return { data: [], error: null }
+
+      const { data: rawPosts, error: postsError } = await db
+        .from('posts')
+        .select('*')
+        .eq('user_id', authorUserId)
+        .order('created_at', { ascending: false })
+        .limit(limit)
+
+      if (postsError) throw postsError
+      if (!rawPosts || rawPosts.length === 0) return { data: [], error: null }
+
+      // Fetch author profile
+      const { data: prof } = await db
+        .from('profiles')
+        .select('id, full_name, avatar_url, account_type, sport')
+        .eq('id', authorUserId)
+        .maybeSingle()
+
+      // Fetch likes count and viewer like state
+      const postIds = rawPosts.map((p: any) => p.id)
+      const { data: likesData, error: likesError } = await db
+        .from('post_likes')
+        .select('post_id, user_id')
+        .in('post_id', postIds)
+
+      if (likesError) throw likesError
+
+      // Fetch comments count
+      const { data: commentsData, error: commentsError } = await db
+        .from('post_comments')
+        .select('post_id')
+        .in('post_id', postIds)
+
+      if (commentsError) throw commentsError
+
+      const likesByPost = new Map<string, number>()
+      const userLikedSet = new Set<string>()
+      likesData?.forEach((like: any) => {
+        likesByPost.set(like.post_id, (likesByPost.get(like.post_id) || 0) + 1)
+        if (currentViewerId && like.user_id === currentViewerId) {
+          userLikedSet.add(like.post_id)
+        }
+      })
+
+      const commentsByPost = new Map<string, number>()
+      commentsData?.forEach((c: any) => {
+        commentsByPost.set(c.post_id, (commentsByPost.get(c.post_id) || 0) + 1)
+      })
+
+      const formattedPosts: PostItem[] = rawPosts.map((p: any) => {
+        return {
+          id: p.id,
+          userId: p.user_id,
+          user: {
+            id: p.user_id,
+            name: prof?.full_name || 'Usuário Goplay',
+            avatar:
+              prof?.avatar_url ||
+              `https://img.usecurling.com/ppl/thumbnail?seed=${p.user_id.slice(0, 4)}`,
+            type:
+              prof?.account_type === 'club'
+                ? 'Clube'
+                : prof?.account_type === 'coach'
+                  ? 'Treinador'
+                  : 'Atleta',
+            sport: prof?.sport,
+          },
+          content: p.content || '',
+          media: Array.isArray(p.media_urls) ? p.media_urls : [],
+          type: (p.post_type as any) || 'text',
+          videoUrl: p.video_url || undefined,
+          likesCount: likesByPost.get(p.id) || 0,
+          commentsCount: commentsByPost.get(p.id) || 0,
+          isLiked: userLikedSet.has(p.id),
+          createdAt: p.created_at,
+          timeAgo: formatRelativeTime(p.created_at),
+        }
+      })
+
+      return { data: formattedPosts, error: null }
+    } catch (err: any) {
+      return {
+        data: [],
+        error: err instanceof Error ? err : new Error(String(err)),
+      }
+    }
+  },
+
+  /**
    * Fetches real posts with author profile and current user like status.
    */
   async getPosts(

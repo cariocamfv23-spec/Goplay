@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { ProfilePostsSection } from '@/components/profile/ProfilePostsSection'
 import { cn } from '@/lib/utils'
 import { useNavigate } from 'react-router-dom'
 import { EditProfileDialog } from '@/components/profile/EditProfileDialog'
@@ -344,6 +345,19 @@ export default function CoachView({
         >
           <Calendar className="mr-2 h-5 w-5" /> Agendar Mentoria
         </Button>
+
+        {/* Publicações do Treinador */}
+        <div className="pt-4">
+          <h3 className="font-bold mb-3 text-sm text-foreground flex items-center gap-2">
+            <Trophy className="h-4 w-4 text-primary" /> Publicações do Treinador
+          </h3>
+          <ProfilePostsSection
+            userId={profile.id}
+            isMe={isMe}
+            userName={coachName}
+            userAvatar={profile.avatar}
+          />
+        </div>
       </div>
 
       {isMe && (
