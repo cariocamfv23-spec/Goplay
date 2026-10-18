@@ -379,8 +379,9 @@ export default function Settings() {
           <Button
             variant="ghost"
             className="w-full justify-start h-12 gap-3 text-base font-normal"
+            onClick={() => navigate('/profile/me')}
           >
-            <User className="h-5 w-5" /> Dados Pessoais
+            <User className="h-5 w-5" /> Editar Meu Perfil & Dados
           </Button>
           <Button
             variant="ghost"

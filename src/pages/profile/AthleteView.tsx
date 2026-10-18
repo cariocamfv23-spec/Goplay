@@ -72,6 +72,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useMemorySimulation } from '@/hooks/useMemorySimulation'
+import { EditProfileDialog } from '@/components/profile/EditProfileDialog'
+import { CheckCircle2, Target, Award } from 'lucide-react'
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -88,6 +90,11 @@ export default function AthleteView({
   const [isThemeSelectorOpen, setIsThemeSelectorOpen] = useState(false)
   const [isAuraLegendOpen, setIsAuraLegendOpen] = useState(false)
   const [isEcoLegendOpen, setIsEcoLegendOpen] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+
+  useEffect(() => {
+    setUser(initialUser)
+  }, [initialUser])
 
   // Post Detail State
   const [selectedPost, setSelectedPost] = useState<any>(null)
@@ -197,7 +204,7 @@ export default function AthleteView({
                 variant="outline"
                 size="sm"
                 className="bg-background/80 backdrop-blur-sm shadow-sm hover:bg-background"
-                onClick={() => navigate('/settings')}
+                onClick={() => setIsEditDialogOpen(true)}
               >
                 <Edit2 className="h-4 w-4 mr-2" />
                 Editar Perfil
@@ -301,6 +308,53 @@ export default function AthleteView({
           <p className="text-sm leading-relaxed mb-4 text-foreground/90">
             {user.bio}
           </p>
+
+          {/* Real athlete specific fields if present */}
+          {(user.rawProfile?.previous_clubs ||
+            user.rawProfile?.sports_goals ||
+            user.rawProfile?.experience) && (
+            <div className="space-y-2 mb-4 bg-secondary/10 p-3 rounded-xl border border-border/40 text-xs">
+              {user.rawProfile?.previous_clubs && (
+                <div className="flex items-start gap-2">
+                  <Award className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-semibold text-muted-foreground uppercase text-[10px] block">
+                      Clubes Anteriores
+                    </span>
+                    <span className="text-foreground">
+                      {user.rawProfile.previous_clubs}
+                    </span>
+                  </div>
+                </div>
+              )}
+              {user.rawProfile?.sports_goals && (
+                <div className="flex items-start gap-2 pt-1 border-t border-border/30">
+                  <Target className="w-3.5 h-3.5 text-gold shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-semibold text-muted-foreground uppercase text-[10px] block">
+                      Objetivos Esportivos
+                    </span>
+                    <span className="text-foreground">
+                      {user.rawProfile.sports_goals}
+                    </span>
+                  </div>
+                </div>
+              )}
+              {user.rawProfile?.experience && (
+                <div className="flex items-start gap-2 pt-1 border-t border-border/30">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-semibold text-muted-foreground uppercase text-[10px] block">
+                      Experiência
+                    </span>
+                    <span className="text-foreground">
+                      {user.rawProfile.experience}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="mb-6">
             {user.favoriteSong ? (
@@ -788,7 +842,7 @@ export default function AthleteView({
 
                       <div className="absolute bottom-2 left-2 flex items-center gap-1 text-white text-xs font-medium drop-shadow-md">
                         <Play className="h-3 w-3 fill-white" />
-                        {post.totalViews || '1.2k'}
+                        {(post as any).totalViews || '1.2k'}
                       </div>
                     </div>
                   </DepthContainer>
@@ -968,6 +1022,28 @@ export default function AthleteView({
         open={isDetailOpen}
         onOpenChange={setIsDetailOpen}
       />
+
+      {isMe && (
+        <EditProfileDialog
+          open={isEditDialogOpen}
+          onOpenChange={setIsEditDialogOpen}
+          profile={user.rawProfile || null}
+          onSuccess={(updated) => {
+            setUser((prev: any) => ({
+              ...prev,
+              name: updated.full_name || prev.name,
+              avatar: updated.avatar_url || prev.avatar,
+              sport: updated.sport || prev.sport,
+              position: updated.position || prev.position,
+              location:
+                [updated.city, updated.state].filter(Boolean).join(', ') ||
+                prev.location,
+              bio: updated.bio || prev.bio,
+              rawProfile: updated,
+            }))
+          }}
+        />
+      )}
     </div>
   )
 }

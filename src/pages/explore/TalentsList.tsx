@@ -1,24 +1,91 @@
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
-import { Search, Filter, Trophy, Star, Users } from 'lucide-react'
+import {
+  Search,
+  Filter,
+  Trophy,
+  Star,
+  Users,
+  Loader2,
+  MapPin,
+} from 'lucide-react'
 import { mockTalents, ProfileData } from '@/lib/data'
-import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { TalentUnlockDrawer } from '@/components/TalentUnlockDrawer'
+import { searchService } from '@/services/search'
+import type { PublicProfileItem } from '@/services/profiles'
+import { useNavigate } from 'react-router-dom'
 
 export default function TalentsList() {
+  const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const [selectedTalent, setSelectedTalent] = useState<ProfileData | null>(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
-  const filteredTalents = mockTalents.filter(
-    (t) =>
-      t.name.toLowerCase().includes(search.toLowerCase()) ||
-      t.sport?.toLowerCase().includes(search.toLowerCase()) ||
-      t.position?.toLowerCase().includes(search.toLowerCase()),
-  )
+  const [realProfiles, setRealProfiles] = useState<PublicProfileItem[]>([])
+  const [loading, setLoading] = useState(false)
+
+  // Fetch real talent profiles from Supabase
+  const loadTalents = useCallback(async () => {
+    setLoading(true)
+    try {
+      const { data } = await searchService.searchProfiles({
+        query: search,
+        accountType: 'all',
+        pageSize: 20,
+      })
+      setRealProfiles(data)
+    } catch {
+      // Graceful fallback
+    } finally {
+      setLoading(false)
+    }
+  }, [search])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      loadTalents()
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [loadTalents])
+
+  // Adapt real profiles into displayable cards
+  const realTalentCards: ProfileData[] = realProfiles.map((p) => {
+    const name = p.full_name || 'Usuário Goplay'
+    const username = name.toLowerCase().replace(/\s+/g, '')
+    return {
+      id: p.id,
+      name,
+      username,
+      avatar:
+        p.avatar_url ||
+        `https://img.usecurling.com/ppl/medium?seed=${p.id.slice(0, 4)}`,
+      cover: 'https://img.usecurling.com/p/800/300?q=sports%20stadium',
+      sport:
+        p.sport || (p.account_type === 'club' ? 'Clube Esportivo' : 'Atleta'),
+      position:
+        p.position || (p.account_type === 'coach' ? 'Treinador' : 'Goplay'),
+      location: [p.city, p.state].filter(Boolean).join(', ') || 'Brasil',
+      bio: p.bio || '',
+      type: p.account_type,
+      rating: 4.9,
+      stats: { matches: 0, mvp: 0 },
+    }
+  })
+
+  // Combined list showing real profiles first, then fallback curated talents if search is empty
+  const displayTalents =
+    realTalentCards.length > 0
+      ? realTalentCards
+      : mockTalents.filter(
+          (t) =>
+            t.name.toLowerCase().includes(search.toLowerCase()) ||
+            t.sport?.toLowerCase().includes(search.toLowerCase()) ||
+            t.position?.toLowerCase().includes(search.toLowerCase()),
+        )
 
   const handleTalentClick = (talent: ProfileData) => {
     setSelectedTalent(talent)
@@ -62,73 +129,99 @@ export default function TalentsList() {
         </div>
 
         <div>
-          <h2 className="text-lg font-bold mb-3">Atletas em Destaque</h2>
-          <div className="space-y-3">
-            {filteredTalents.map((talent) => (
-              <Card
-                key={talent.id}
-                className="overflow-hidden border-none shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-[0.99]"
-                onClick={() => handleTalentClick(talent)}
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-bold">Atletas em Destaque</h2>
+            {realTalentCards.length > 0 && (
+              <Badge
+                variant="outline"
+                className="text-xs bg-emerald-500/10 text-emerald-600 border-emerald-500/30"
               >
-                <CardContent className="p-0 flex">
-                  {/* Left Side Image */}
-                  <div className="w-28 relative">
-                    <img
-                      src={talent.avatar}
-                      alt={talent.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-2 left-2">
-                      <Badge className="bg-black/60 hover:bg-black/70 backdrop-blur-sm border-none text-[10px] h-5">
-                        {talent.sport}
-                      </Badge>
-                    </div>
-                  </div>
+                Perfis ao Vivo
+              </Badge>
+            )}
+          </div>
 
-                  {/* Right Side Content */}
-                  <div className="flex-1 p-3 flex flex-col justify-between">
-                    <div>
-                      <div className="flex justify-between items-start">
-                        <h3 className="font-bold text-sm leading-tight">
-                          {talent.name}
-                        </h3>
-                        <div className="flex items-center gap-1 text-xs font-bold text-gold">
-                          <Star className="h-3 w-3 fill-current" />
-                          {talent.rating}
+          {loading ? (
+            <div className="flex items-center justify-center py-10">
+              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            </div>
+          ) : displayTalents.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground bg-secondary/30 rounded-xl border border-dashed border-border p-6">
+              Nenhum talento encontrado para a busca "{search}".
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {displayTalents.map((talent) => (
+                <Card
+                  key={talent.id}
+                  className="overflow-hidden border-none shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-[0.99]"
+                  onClick={() => handleTalentClick(talent)}
+                >
+                  <CardContent className="p-0 flex">
+                    {/* Left Side Image */}
+                    <div className="w-28 relative">
+                      <img
+                        src={talent.avatar}
+                        alt={talent.name}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute top-2 left-2">
+                        <Badge className="bg-black/60 hover:bg-black/70 backdrop-blur-sm border-none text-[10px] h-5">
+                          {talent.sport}
+                        </Badge>
+                      </div>
+                    </div>
+
+                    {/* Right Side Content */}
+                    <div className="flex-1 p-3 flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between items-start">
+                          <h3 className="font-bold text-sm leading-tight">
+                            {talent.name}
+                          </h3>
+                          <div className="flex items-center gap-1 text-xs font-bold text-gold">
+                            <Star className="h-3 w-3 fill-current" />
+                            {talent.rating}
+                          </div>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {talent.position}{' '}
+                          {talent.age ? `• ${talent.age} anos` : ''}
+                        </p>
+                        <div className="flex gap-2 mt-2 text-[10px] text-muted-foreground">
+                          {talent.height && (
+                            <span className="bg-secondary px-1.5 py-0.5 rounded">
+                              {talent.height}
+                            </span>
+                          )}
+                          {talent.weight && (
+                            <span className="bg-secondary px-1.5 py-0.5 rounded">
+                              {talent.weight}
+                            </span>
+                          )}
                         </div>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {talent.position} • {talent.age} anos
-                      </p>
-                      <div className="flex gap-2 mt-2 text-[10px] text-muted-foreground">
-                        <span className="bg-secondary px-1.5 py-0.5 rounded">
-                          {talent.height}
-                        </span>
-                        <span className="bg-secondary px-1.5 py-0.5 rounded">
-                          {talent.weight}
-                        </span>
-                      </div>
-                    </div>
 
-                    <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/50">
-                      <div className="text-[10px]">
-                        <span className="font-bold">
-                          {talent.stats?.matches}
-                        </span>{' '}
-                        Jogos
+                      <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/50">
+                        <div className="text-[10px]">
+                          <span className="font-bold">
+                            {talent.stats?.matches || 0}
+                          </span>{' '}
+                          Jogos
+                        </div>
+                        <Button
+                          size="sm"
+                          className="h-7 text-xs px-3 bg-indigo-600 hover:bg-indigo-700"
+                        >
+                          Ver Detalhes
+                        </Button>
                       </div>
-                      <Button
-                        size="sm"
-                        className="h-7 text-xs px-3 bg-indigo-600 hover:bg-indigo-700"
-                      >
-                        Ver Detalhes
-                      </Button>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
   Search,
   MapPin,
@@ -7,24 +7,54 @@ import {
   Tv,
   Paintbrush,
   Zap,
+  Loader2,
+  Users,
+  Trophy,
+  Filter,
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
   exploreCategories,
   mockProfiles,
   mockEvents,
   mockVenues,
+  type ProfileData,
 } from '@/lib/data'
 import { TalentPreviewCard } from '@/components/TalentPreviewCard'
 import { MapEventCard } from '@/components/MapEventCard'
 import { useNavigate } from 'react-router-dom'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
+import { searchService } from '@/services/search'
+import type { PublicProfileItem } from '@/services/profiles'
 
 export default function Explore() {
   const [search, setSearch] = useState('')
+  const [accountTypeFilter, setAccountTypeFilter] = useState<
+    'all' | 'athlete' | 'club' | 'coach'
+  >('all')
+  const [sportFilter, setSportFilter] = useState('Todos')
+  const [cityFilter, setCityFilter] = useState('')
+  const [stateFilter, setStateFilter] = useState('')
+  const [showFilters, setShowFilters] = useState(false)
+
+  // Real Supabase profiles state
+  const [realProfiles, setRealProfiles] = useState<PublicProfileItem[]>([])
+  const [totalCount, setTotalCount] = useState<number | null>(null)
+  const [loadingProfiles, setLoadingProfiles] = useState(false)
+  const [searchError, setSearchError] = useState<string | null>(null)
+  const [page, setPage] = useState(1)
+  const [hasMore, setHasMore] = useState(false)
+
   const navigate = useNavigate()
 
   // Restore menus: Live Games, Jobs, Flyer Creator, Matchmaking
@@ -118,11 +148,83 @@ export default function Explore() {
     .map((id) => allCategories.find((c) => c.id === id))
     .filter(Boolean) as typeof allCategories
 
-  const filteredProfiles = mockProfiles.filter(
-    (p) =>
-      p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.sport?.toLowerCase().includes(search.toLowerCase()),
+  // Fetch real profiles from Supabase with debounced search and active filters
+  const loadRealProfiles = useCallback(
+    async (currentPage = 1, append = false) => {
+      setLoadingProfiles(true)
+      setSearchError(null)
+
+      try {
+        const {
+          data,
+          count,
+          error,
+          hasMore: more,
+        } = await searchService.searchProfiles({
+          query: search,
+          accountType: accountTypeFilter,
+          sport: sportFilter === 'Todos' ? undefined : sportFilter,
+          city: cityFilter,
+          state: stateFilter,
+          page: currentPage,
+          pageSize: 8,
+        })
+
+        if (error) {
+          setSearchError('Erro ao buscar perfis reais no banco de dados.')
+          if (!append) setRealProfiles([])
+        } else {
+          setRealProfiles((prev) => (append ? [...prev, ...data] : data))
+          setTotalCount(count)
+          setHasMore(more)
+          setPage(currentPage)
+        }
+      } catch (err: any) {
+        setSearchError('Falha na conexão ao carregar perfis.')
+      } finally {
+        setLoadingProfiles(false)
+      }
+    },
+    [search, accountTypeFilter, sportFilter, cityFilter, stateFilter],
   )
+
+  // Trigger search on filter changes with small debounce for text
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      loadRealProfiles(1, false)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [loadRealProfiles])
+
+  // Convert real profile item to TalentPreviewCard shape
+  const adaptRealProfileToCard = (rp: PublicProfileItem): ProfileData => {
+    const loc = [rp.city, rp.state].filter(Boolean).join(', ') || 'Brasil'
+    const name = rp.full_name || 'Usuário Sem Nome'
+    const username = name.toLowerCase().replace(/\s+/g, '')
+    return {
+      id: rp.id,
+      name,
+      username,
+      avatar:
+        rp.avatar_url ||
+        `https://img.usecurling.com/ppl/medium?seed=${rp.id.slice(0, 4)}`,
+      cover: 'https://img.usecurling.com/p/800/300?q=sports%20stadium',
+      sport: rp.sport || 'Atleta',
+      position:
+        rp.position ||
+        (rp.account_type === 'club'
+          ? 'Clube'
+          : rp.account_type === 'coach'
+            ? 'Coach'
+            : 'Esportista'),
+      location: loc,
+      bio: rp.bio || '',
+      type: rp.account_type,
+      rating: 4.8,
+      isDiscovered: false,
+      stats: { matches: 0, mvp: 0 },
+    }
+  }
 
   const filteredEvents = mockEvents.filter((e) =>
     e.title.toLowerCase().includes(search.toLowerCase()),
@@ -138,16 +240,120 @@ export default function Explore() {
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Search Header */}
-      <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border/50 px-4 py-3 space-y-3">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Buscar atletas, eventos, locais..."
-            className="pl-9 h-11 bg-secondary border-none rounded-xl transition-all focus:ring-2 focus:ring-primary/20"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+      <div className="sticky top-0 z-30 bg-background/90 backdrop-blur-md border-b border-border/50 px-4 py-3 space-y-3">
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar por nome, esporte, clube ou cidade..."
+              className="pl-9 h-11 bg-secondary border-none rounded-xl transition-all focus:ring-2 focus:ring-primary/20"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <Button
+            variant={showFilters ? 'default' : 'outline'}
+            size="icon"
+            className="h-11 w-11 rounded-xl shrink-0"
+            onClick={() => setShowFilters(!showFilters)}
+            title="Filtros avançados"
+          >
+            <Filter className="h-4 w-4" />
+          </Button>
         </div>
+
+        {/* Real Filter Drawer / Panel */}
+        {showFilters && (
+          <div className="p-3 bg-secondary/50 rounded-xl border border-border/60 space-y-3 animate-in fade-in slide-in-from-top-2">
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-1">
+                <span className="text-[10px] font-bold uppercase text-muted-foreground">
+                  Tipo de Perfil
+                </span>
+                <Select
+                  value={accountTypeFilter}
+                  onValueChange={(val: any) => setAccountTypeFilter(val)}
+                >
+                  <SelectTrigger className="h-9 bg-background">
+                    <SelectValue placeholder="Tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os tipos</SelectItem>
+                    <SelectItem value="athlete">Atletas</SelectItem>
+                    <SelectItem value="club">Clubes</SelectItem>
+                    <SelectItem value="coach">Treinadores</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1">
+                <span className="text-[10px] font-bold uppercase text-muted-foreground">
+                  Modalidade
+                </span>
+                <Select
+                  value={sportFilter}
+                  onValueChange={(val: string) => setSportFilter(val)}
+                >
+                  <SelectTrigger className="h-9 bg-background">
+                    <SelectValue placeholder="Modalidade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Todos">Todas</SelectItem>
+                    <SelectItem value="Futebol">Futebol</SelectItem>
+                    <SelectItem value="Futsal">Futsal</SelectItem>
+                    <SelectItem value="Basquete">Basquete</SelectItem>
+                    <SelectItem value="Vôlei">Vôlei</SelectItem>
+                    <SelectItem value="Natação">Natação</SelectItem>
+                    <SelectItem value="Atletismo">Atletismo</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2">
+              <div className="col-span-2 space-y-1">
+                <span className="text-[10px] font-bold uppercase text-muted-foreground">
+                  Cidade
+                </span>
+                <Input
+                  placeholder="Ex: Rio de Janeiro"
+                  className="h-9 bg-background text-xs"
+                  value={cityFilter}
+                  onChange={(e) => setCityFilter(e.target.value)}
+                />
+              </div>
+              <div className="space-y-1">
+                <span className="text-[10px] font-bold uppercase text-muted-foreground">
+                  UF
+                </span>
+                <Input
+                  placeholder="Ex: RJ"
+                  maxLength={2}
+                  className="h-9 bg-background text-xs uppercase"
+                  value={stateFilter}
+                  onChange={(e) => setStateFilter(e.target.value.toUpperCase())}
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs h-7"
+                onClick={() => {
+                  setAccountTypeFilter('all')
+                  setSportFilter('Todos')
+                  setCityFilter('')
+                  setStateFilter('')
+                  setSearch('')
+                }}
+              >
+                Limpar Filtros
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="p-4 space-y-8">
@@ -284,23 +490,81 @@ export default function Explore() {
             value="talents"
             className="space-y-4 mt-0 animate-in fade-in"
           >
-            {filteredProfiles.length > 0 ? (
-              filteredProfiles
-                .slice(0, 5)
-                .map((profile) => (
-                  <TalentPreviewCard key={profile.id} talent={profile} />
-                ))
+            {/* Header with real count */}
+            <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
+              <span>Perfis cadastrados no Supabase</span>
+              {totalCount !== null && (
+                <span className="font-semibold text-primary">
+                  {totalCount}{' '}
+                  {totalCount === 1
+                    ? 'perfil encontrado'
+                    : 'perfis encontrados'}
+                </span>
+              )}
+            </div>
+
+            {loadingProfiles && realProfiles.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 space-y-3 bg-secondary/20 rounded-xl border border-border/50">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <span className="text-sm text-muted-foreground font-medium">
+                  Carregando perfis cadastrados...
+                </span>
+              </div>
+            ) : searchError ? (
+              <div className="text-center py-8 text-destructive bg-destructive/10 rounded-xl border border-destructive/20 p-4 space-y-2">
+                <p className="text-sm font-semibold">{searchError}</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => loadRealProfiles(1, false)}
+                >
+                  Tentar Novamente
+                </Button>
+              </div>
+            ) : realProfiles.length > 0 ? (
+              <div className="space-y-4">
+                {realProfiles.map((p) => {
+                  const adapted = adaptRealProfileToCard(p)
+                  return <TalentPreviewCard key={p.id} talent={adapted} />
+                })}
+
+                {hasMore && (
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    disabled={loadingProfiles}
+                    onClick={() => loadRealProfiles(page + 1, true)}
+                  >
+                    {loadingProfiles ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Carregando mais...
+                      </>
+                    ) : (
+                      'Carregar Mais Perfis'
+                    )}
+                  </Button>
+                )}
+              </div>
             ) : (
-              <div className="text-center py-10 text-muted-foreground bg-secondary/30 rounded-xl border border-dashed border-border">
-                Nenhum talento encontrado.
+              <div className="text-center py-12 text-muted-foreground bg-secondary/30 rounded-xl border border-dashed border-border p-6 space-y-2">
+                <Users className="h-8 w-8 mx-auto text-muted-foreground/60" />
+                <p className="font-medium text-foreground">
+                  Nenhum perfil encontrado
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Tente ajustar a busca ou limpar os filtros para visualizar
+                  outros atletas e clubes.
+                </p>
               </div>
             )}
+
             <Button
               variant="outline"
               className="w-full"
               onClick={() => navigate('/explore/talents')}
             >
-              Ver Todos os Talentos
+              Explorar Área de Recrutadores & Scouts
             </Button>
           </TabsContent>
 

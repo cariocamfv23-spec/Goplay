@@ -1,15 +1,66 @@
 import { supabase } from '@/lib/supabase/client'
 import type { Database } from '@/lib/supabase/types'
 
-export type ProfileRow = Database['public']['Tables']['profiles']['Row']
-export type ProfileInsert = Database['public']['Tables']['profiles']['Insert']
-export type ProfileUpdate = Database['public']['Tables']['profiles']['Update']
+export type AccountType = 'athlete' | 'club' | 'coach'
+
+export interface ProfileRow {
+  id: string
+  full_name: string | null
+  avatar_url: string | null
+  account_type: AccountType
+  sport: string | null
+  position: string | null
+  birth_date: string | null
+  city: string | null
+  state: string | null
+  created_at: string
+  updated_at: string
+  // Additional fields for Athlete, Club, Coach
+  bio?: string | null
+  experience?: string | null
+  previous_clubs?: string | null
+  sports_goals?: string | null
+  club_name?: string | null
+  institutional_description?: string | null
+  categories?: string | null
+  contact_info?: string | null
+  specialties?: string | null
+  certifications?: string | null
+  phone?: string | null
+}
+
+export type ProfileUpdate = Partial<
+  Omit<ProfileRow, 'id' | 'created_at' | 'updated_at'>
+>
+
+export interface PublicProfileItem {
+  id: string
+  full_name: string | null
+  avatar_url: string | null
+  account_type: AccountType
+  sport: string | null
+  position: string | null
+  city: string | null
+  state: string | null
+  bio?: string | null
+  club_name?: string | null
+  categories?: string | null
+  specialties?: string | null
+  created_at: string
+}
 
 export const profileService = {
+  /**
+   * Fetches the authenticated user's complete profile.
+   */
   async getMyProfile(
     userId: string,
   ): Promise<{ data: ProfileRow | null; error: Error | null }> {
     try {
+      if (!userId) {
+        return { data: null, error: new Error('ID do usuário não fornecido.') }
+      }
+
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -19,7 +70,7 @@ export const profileService = {
       if (error) {
         return { data: null, error: new Error(error.message) }
       }
-      return { data, error: null }
+      return { data: (data as unknown as ProfileRow) ?? null, error: null }
     } catch (err: any) {
       return {
         data: null,
@@ -28,14 +79,59 @@ export const profileService = {
     }
   },
 
+  /**
+   * Fetches any user's profile by ID.
+   * Note: sensitive fields like birth_date should not be shown publicly
+   */
+  async getProfileById(
+    profileId: string,
+  ): Promise<{ data: ProfileRow | null; error: Error | null }> {
+    try {
+      if (!profileId) {
+        return { data: null, error: new Error('ID de perfil não fornecido.') }
+      }
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', profileId)
+        .maybeSingle()
+
+      if (error) {
+        return { data: null, error: new Error(error.message) }
+      }
+      return { data: (data as unknown as ProfileRow) ?? null, error: null }
+    } catch (err: any) {
+      return {
+        data: null,
+        error: err instanceof Error ? err : new Error(String(err)),
+      }
+    }
+  },
+
+  /**
+   * Updates only permitted fields of the current user's profile.
+   * RLS and database constraints prevent updating another user's profile or escalating privileges.
+   */
   async updateMyProfile(
     userId: string,
     updates: ProfileUpdate,
   ): Promise<{ data: ProfileRow | null; error: Error | null }> {
     try {
+      if (!userId) {
+        return { data: null, error: new Error('ID do usuário não fornecido.') }
+      }
+
+      // Explicitly reject prohibited or unapproved fields
+      const sanitizedUpdates = { ...updates }
+      delete (sanitizedUpdates as any).id
+      delete (sanitizedUpdates as any).created_at
+      delete (sanitizedUpdates as any).updated_at
+
       const { data, error } = await supabase
         .from('profiles')
-        .update(updates)
+        // @ts-expect-error Types are extended with custom columns
+        .update(sanitizedUpdates)
         .eq('id', userId)
         .select()
         .single()
@@ -43,7 +139,7 @@ export const profileService = {
       if (error) {
         return { data: null, error: new Error(error.message) }
       }
-      return { data, error: null }
+      return { data: (data as unknown as ProfileRow) ?? null, error: null }
     } catch (err: any) {
       return {
         data: null,
@@ -52,20 +148,40 @@ export const profileService = {
     }
   },
 
-  async getAllProfiles(): Promise<{ data: ProfileRow[]; error: Error | null }> {
+  /**
+   * Upload an avatar to the avatars bucket and return its public URL.
+   */
+  async uploadAvatar(
+    userId: string,
+    file: File,
+  ): Promise<{ url: string | null; error: Error | null }> {
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      if (error) {
-        return { data: [], error: new Error(error.message) }
+      if (!userId) {
+        return {
+          data: null,
+          error: new Error('Usuário não autenticado.'),
+        } as any
       }
-      return { data: data ?? [], error: null }
+
+      const fileExt = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+      const filePath = `${userId}/avatar_${Date.now()}.${fileExt}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file, {
+          upsert: true,
+          contentType: file.type,
+        })
+
+      if (uploadError) {
+        return { url: null, error: new Error(uploadError.message) }
+      }
+
+      const { data } = supabase.storage.from('avatars').getPublicUrl(filePath)
+      return { url: data.publicUrl, error: null }
     } catch (err: any) {
       return {
-        data: [],
+        url: null,
         error: err instanceof Error ? err : new Error(String(err)),
       }
     }
