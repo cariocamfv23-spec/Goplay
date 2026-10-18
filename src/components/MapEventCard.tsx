@@ -9,12 +9,13 @@ import {
   CloudRain,
   Wind,
   Trophy,
+  CheckCircle2,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 
 interface MapEventCardProps {
-  event: Event
+  event: Event & { isRegistered?: boolean }
   compact?: boolean
 }
 
@@ -68,6 +69,12 @@ export function MapEventCard({ event, compact = false }: MapEventCardProps) {
           <Badge className="bg-background/80 text-foreground backdrop-blur-md shadow-sm hover:bg-background">
             {event.modality}
           </Badge>
+          {event.isRegistered && (
+            <Badge className="bg-emerald-600 text-white font-bold flex items-center gap-1">
+              <CheckCircle2 className="w-3 h-3" />
+              Inscrito
+            </Badge>
+          )}
         </div>
         {event.weather && (
           <div className="absolute top-2 right-2 bg-background/90 backdrop-blur-md rounded-full px-2 py-1 flex items-center gap-1 shadow-sm">

@@ -23,7 +23,7 @@ interface Comment {
   user: {
     id?: string
     name: string
-    avatar: string
+    avatar?: string | null
   }
   text: string
   time: string
@@ -82,16 +82,73 @@ const MOCK_COMMENTS: Comment[] = [
   },
 ]
 
+const DEFAULT_FALLBACK_COMMENTS: Comment[] = [
+  {
+    id: 'mock-1',
+    user: {
+      name: 'Lucas Silva',
+      avatar: null,
+    },
+    text: 'Que jogada incrível! 🔥',
+    time: '2min',
+    likes: 24,
+  },
+  {
+    id: 'mock-2',
+    user: {
+      name: 'Camila Oliveira',
+      avatar: null,
+    },
+    text: 'A técnica do chute foi perfeita.',
+    time: '5min',
+    likes: 12,
+  },
+  {
+    id: 'mock-3',
+    user: {
+      name: 'Prof. Marcelo Prado',
+      avatar: null,
+    },
+    text: 'Precisamos treinar essa movimentação amanhã.',
+    time: '1h',
+    likes: 56,
+  },
+  {
+    id: 'mock-4',
+    user: {
+      name: 'Beatriz Mendes',
+      avatar: null,
+    },
+    text: 'Onde foi esse jogo?',
+    time: '3h',
+    likes: 2,
+  },
+]
+
 export function CommentsSheet({
   open,
   onOpenChange,
   postId,
 }: CommentsSheetProps) {
-  const { user } = useAuth()
+  const { user, profile } = useAuth()
   const [comments, setComments] = useState<Comment[]>([])
   const [newComment, setNewComment] = useState('')
   const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+
+  const getInitials = (name?: string, email?: string) => {
+    if (name && name.trim()) {
+      const parts = name.trim().split(/\s+/)
+      if (parts.length >= 2) {
+        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+      }
+      return name.slice(0, 2).toUpperCase()
+    }
+    if (email) {
+      return email.slice(0, 2).toUpperCase()
+    }
+    return 'GP'
+  }
 
   const isSupabasePost =
     typeof postId === 'string' &&
@@ -115,8 +172,14 @@ export function CommentsSheet({
           userId: c.userId,
           user: {
             id: c.user.id,
-            name: c.user.name,
-            avatar: c.user.avatar,
+            name:
+              user?.id === c.userId && profile?.full_name
+                ? profile.full_name
+                : c.user.name,
+            avatar:
+              user?.id === c.userId && profile?.avatar_url
+                ? profile.avatar_url
+                : c.user.avatar,
           },
           text: c.content,
           time: c.timeAgo,
@@ -126,9 +189,16 @@ export function CommentsSheet({
         setComments(mapped)
       })
     } else {
-      setComments(MOCK_COMMENTS)
+      setComments(DEFAULT_FALLBACK_COMMENTS)
     }
-  }, [open, postId, isSupabasePost, user?.id])
+  }, [
+    open,
+    postId,
+    isSupabasePost,
+    user?.id,
+    profile?.full_name,
+    profile?.avatar_url,
+  ])
 
   const handleSend = async () => {
     if (!newComment.trim() || submitting) return
@@ -152,8 +222,8 @@ export function CommentsSheet({
         userId: data.userId,
         user: {
           id: user.id,
-          name: data.user.name,
-          avatar: data.user.avatar,
+          name: profile?.full_name || data.user.name || 'Você',
+          avatar: profile?.avatar_url || data.user.avatar || null,
         },
         text: data.content,
         time: 'Agora',
@@ -167,10 +237,11 @@ export function CommentsSheet({
       // Mock fallback
       const comment: Comment = {
         id: Date.now().toString(),
+        userId: user?.id,
         user: {
-          name: 'Você',
-          avatar:
-            'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99',
+          id: user?.id,
+          name: profile?.full_name || 'Você',
+          avatar: profile?.avatar_url || null,
         },
         text: newComment,
         time: 'Agora',
@@ -241,13 +312,21 @@ export function CommentsSheet({
               <div className="space-y-4 py-4">
                 {comments.map((comment) => (
                   <div key={comment.id} className="flex gap-3 group">
-                    <Avatar className="w-8 h-8 border border-zinc-700">
-                      <AvatarImage src={comment.user.avatar} />
-                      <AvatarFallback>{comment.user.name[0]}</AvatarFallback>
+                    <Avatar className="w-8 h-8 border border-zinc-700 bg-secondary/30 shrink-0">
+                      {comment.user.avatar ? (
+                        <AvatarImage
+                          src={comment.user.avatar}
+                          alt={comment.user.name}
+                          className="object-cover"
+                        />
+                      ) : null}
+                      <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold">
+                        {getInitials(comment.user.name)}
+                      </AvatarFallback>
                     </Avatar>
-                    <div className="flex-1 space-y-1">
-                      <div className="flex items-baseline justify-between">
-                        <span className="text-sm font-semibold text-zinc-200">
+                    <div className="flex-1 space-y-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-2">
+                        <span className="text-sm font-semibold text-zinc-200 truncate">
                           {comment.user.name}
                         </span>
                         <div className="flex items-center gap-2">
@@ -277,18 +356,17 @@ export function CommentsSheet({
 
           <div className="p-4 border-t border-zinc-800 bg-zinc-900 pb-8">
             <div className="flex items-center gap-3">
-              <Avatar className="w-8 h-8">
-                {user ? (
-                  <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold">
-                    {user.email
-                      ? user.email.substring(0, 2).toUpperCase()
-                      : 'EU'}
-                  </AvatarFallback>
-                ) : (
-                  <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold">
-                    EU
-                  </AvatarFallback>
-                )}
+              <Avatar className="w-8 h-8 border border-zinc-700 bg-secondary/30 shrink-0">
+                {profile?.avatar_url ? (
+                  <AvatarImage
+                    src={profile.avatar_url}
+                    alt={profile.full_name || 'Seu perfil'}
+                    className="object-cover"
+                  />
+                ) : null}
+                <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold">
+                  {getInitials(profile?.full_name, user?.email)}
+                </AvatarFallback>
               </Avatar>
               <div className="flex-1 relative">
                 <Input

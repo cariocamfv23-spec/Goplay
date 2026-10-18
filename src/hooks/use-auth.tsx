@@ -26,6 +26,9 @@ interface AuthContextType {
     email: string,
     password: string,
   ) => Promise<{ data?: any; error: any }>
+  signInWithGoogle: (
+    redirectPath?: string,
+  ) => Promise<{ data?: any; error: any }>
   signOut: () => Promise<{ error: any }>
   resetPasswordForEmail: (email: string) => Promise<{ error: any }>
   updateUserPassword: (password: string) => Promise<{ error: any }>
@@ -125,6 +128,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return { data, error }
   }
 
+  const signInWithGoogle = async (redirectPath?: string) => {
+    try {
+      const origin = window.location.origin
+      const targetUrl = redirectPath
+        ? `${origin}${redirectPath.startsWith('/') ? redirectPath : `/${redirectPath}`}`
+        : `${origin}/home`
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: targetUrl,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'select_account',
+          },
+        },
+      })
+      return { data, error }
+    } catch (err: any) {
+      return {
+        data: null,
+        error: err instanceof Error ? err : new Error(String(err)),
+      }
+    }
+  }
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
     setProfile(null)
@@ -161,6 +190,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         profile,
         signUp,
         signIn,
+        signInWithGoogle,
         signOut,
         resetPasswordForEmail,
         updateUserPassword,

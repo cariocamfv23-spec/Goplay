@@ -231,41 +231,18 @@ export function PostDetailDialog({
 
               <Separator />
 
-              {/* Mock Comments Section */}
+              {/* Comments Section */}
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold text-muted-foreground">
-                  Comentários
+                  Comentários ({post.comments || 0})
                 </h3>
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex gap-2.5">
-                    <Avatar className="h-7 w-7">
-                      <AvatarImage
-                        src={`https://img.usecurling.com/ppl/thumbnail?gender=${
-                          i % 2 === 0 ? 'female' : 'male'
-                        }&seed=${i + 10}`}
-                      />
-                    </Avatar>
-                    <div className="flex-1">
-                      <div className="bg-secondary/30 p-2.5 rounded-lg rounded-tl-none">
-                        <span className="text-xs font-bold block mb-0.5">
-                          Usuário {i}
-                        </span>
-                        <p className="text-xs leading-relaxed">
-                          Incrível! Muito bom ver esse tipo de conteúdo por
-                          aqui. 👏
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-3 mt-1 ml-1">
-                        <span className="text-[10px] text-muted-foreground font-medium cursor-pointer hover:text-foreground">
-                          Curtir
-                        </span>
-                        <span className="text-[10px] text-muted-foreground font-medium cursor-pointer hover:text-foreground">
-                          Responder
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                <div className="p-4 rounded-xl bg-secondary/20 border border-border/40 text-center space-y-2">
+                  <p className="text-xs text-muted-foreground">
+                    Para visualizar, enviar e gerenciar comentários completos
+                    com identificação em tempo real, use a gaveta de comentários
+                    na publicação.
+                  </p>
+                </div>
               </div>
             </div>
           </ScrollArea>

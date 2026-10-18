@@ -229,7 +229,7 @@ export default function EventDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-32 md:pb-24">
       {/* Banner */}
       <div className="relative h-64 md:h-80 w-full">
         <img
@@ -485,38 +485,53 @@ export default function EventDetails() {
       </div>
 
       {/* Floating Bottom Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur border-t border-border/40 z-20 max-w-3xl mx-auto">
-        <div className="flex items-center gap-3">
-          <div className="flex-1">
+      {/* Positioned above BottomNav on mobile (z-40 + bottom-16 / md:bottom-0) */}
+      <div className="fixed bottom-16 md:bottom-0 left-0 right-0 p-3.5 sm:p-4 bg-background/95 backdrop-blur-md border-t border-border/50 z-40 shadow-xl transition-all">
+        <div className="max-w-3xl mx-auto flex items-center justify-between gap-3">
+          <div className="flex-1 min-w-0">
             <span className="text-[10px] text-muted-foreground uppercase tracking-wider block font-bold">
               Inscrição
             </span>
-            <span className="text-lg font-bold text-primary">
-              {event.price}
-            </span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-lg sm:text-xl font-bold text-primary">
+                {event.price}
+              </span>
+              {realEvent?.maxParticipants && (
+                <span className="text-[11px] text-muted-foreground hidden sm:inline">
+                  •{' '}
+                  {Math.max(
+                    0,
+                    realEvent.maxParticipants -
+                      (realEvent.registrationsCount || 0),
+                  )}{' '}
+                  vagas restantes
+                </span>
+              )}
+            </div>
           </div>
 
           {isRegistered ? (
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                className="border-emerald-600 text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 hover:bg-destructive/10 hover:text-destructive hover:border-destructive transition-colors text-xs h-11 px-4 font-semibold"
-                onClick={handleCancelRegistration}
-                disabled={submitting}
-              >
-                {submitting ? (
-                  <Loader2 className="w-4 h-4 animate-spin mr-1.5" />
-                ) : (
-                  <CheckCircle2 className="w-4 h-4 mr-1.5 text-emerald-600" />
-                )}
-                Inscrição confirmada (Cancelar)
-              </Button>
-            </div>
+            <Button
+              variant="outline"
+              className="border-emerald-600 text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-destructive/10 hover:text-destructive hover:border-destructive transition-colors text-xs sm:text-sm h-11 px-4 sm:px-5 font-semibold shrink-0"
+              onClick={handleCancelRegistration}
+              disabled={submitting}
+            >
+              {submitting ? (
+                <Loader2 className="w-4 h-4 animate-spin mr-1.5" />
+              ) : (
+                <CheckCircle2 className="w-4 h-4 mr-1.5 text-emerald-600 shrink-0" />
+              )}
+              <span>Inscrição Confirmada</span>
+              <span className="text-[10px] opacity-75 ml-1 hidden xs:inline">
+                (Cancelar)
+              </span>
+            </Button>
           ) : isClosed ? (
             <Button
               variant="outline"
               disabled
-              className="px-6 h-11 font-bold text-muted-foreground border-border"
+              className="px-5 sm:px-6 h-11 font-bold text-muted-foreground border-border shrink-0 text-xs sm:text-sm"
             >
               Inscrições Encerradas
             </Button>
@@ -524,7 +539,7 @@ export default function EventDetails() {
             <Button
               variant="outline"
               disabled
-              className="px-6 h-11 font-bold text-muted-foreground border-border"
+              className="px-5 sm:px-6 h-11 font-bold text-muted-foreground border-border shrink-0 text-xs sm:text-sm"
             >
               Prazo Encerrado
             </Button>
@@ -532,13 +547,13 @@ export default function EventDetails() {
             <Button
               variant="outline"
               disabled
-              className="px-6 h-11 font-bold text-muted-foreground border-border"
+              className="px-5 sm:px-6 h-11 font-bold text-muted-foreground border-border shrink-0 text-xs sm:text-sm"
             >
               Sem Vagas
             </Button>
           ) : (
             <Button
-              className="px-6 h-11 font-bold shadow-lg shadow-primary/25 bg-primary hover:bg-primary/90 text-white transition-all active:scale-95"
+              className="px-6 sm:px-8 h-11 font-bold text-xs sm:text-sm shadow-lg shadow-primary/25 bg-primary hover:bg-primary/90 text-white transition-all active:scale-95 shrink-0"
               onClick={handleRegister}
               disabled={submitting}
             >

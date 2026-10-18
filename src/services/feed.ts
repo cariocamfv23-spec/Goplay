@@ -36,7 +36,7 @@ export interface PostCommentItem {
   user: {
     id: string
     name: string
-    avatar: string
+    avatar: string | null
   }
 }
 
@@ -403,10 +403,8 @@ export const feedService = {
           timeAgo: formatRelativeTime(c.created_at),
           user: {
             id: c.user_id,
-            name: prof?.full_name || 'Usuário',
-            avatar:
-              prof?.avatar_url ||
-              `https://img.usecurling.com/ppl/thumbnail?seed=${c.user_id.slice(0, 4)}`,
+            name: prof?.full_name || 'Usuário Goplay',
+            avatar: prof?.avatar_url || null,
           },
         }
       })
@@ -498,9 +496,7 @@ export const feedService = {
           user: {
             id: userId,
             name: prof?.full_name || 'Você',
-            avatar:
-              prof?.avatar_url ||
-              'https://img.usecurling.com/ppl/thumbnail?seed=me',
+            avatar: prof?.avatar_url || null,
           },
         },
         error: null,

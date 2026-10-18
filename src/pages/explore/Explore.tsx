@@ -30,6 +30,7 @@ import {
   mockEvents,
   mockVenues,
   type ProfileData,
+  type Event,
 } from '@/lib/data'
 import { TalentPreviewCard } from '@/components/TalentPreviewCard'
 import { MapEventCard } from '@/components/MapEventCard'
@@ -37,6 +38,8 @@ import { useNavigate } from 'react-router-dom'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
 import { searchService } from '@/services/search'
+import { eventsService, type EventItem } from '@/services/events'
+import { useAuth } from '@/hooks/use-auth'
 import type { PublicProfileItem } from '@/services/profiles'
 import { SPORTS_CATALOG, BRAZILIAN_STATES } from '@/lib/sports-catalog'
 
@@ -50,6 +53,7 @@ export default function Explore() {
   const [stateFilter, setStateFilter] = useState('')
   const [showFilters, setShowFilters] = useState(false)
 
+  const { user } = useAuth()
   // Real Supabase profiles state
   const [realProfiles, setRealProfiles] = useState<PublicProfileItem[]>([])
   const [totalCount, setTotalCount] = useState<number | null>(null)
@@ -57,6 +61,8 @@ export default function Explore() {
   const [searchError, setSearchError] = useState<string | null>(null)
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(false)
+  const [realEvents, setRealEvents] = useState<EventItem[]>([])
+  const [loadingEvents, setLoadingEvents] = useState(false)
 
   const navigate = useNavigate()
 
@@ -196,6 +202,19 @@ export default function Explore() {
     loadRealProfiles(1, false)
   }, [loadRealProfiles])
 
+  // Load real events from Supabase
+  useEffect(() => {
+    setLoadingEvents(true)
+    eventsService
+      .getEvents({ currentUserId: user?.id })
+      .then(({ data }) => {
+        setRealEvents(data || [])
+      })
+      .finally(() => {
+        setLoadingEvents(false)
+      })
+  }, [user?.id])
+
   // Explicit execute search trigger
   const handleExecuteSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault()
@@ -240,8 +259,39 @@ export default function Explore() {
     }
   }
 
-  const filteredEvents = mockEvents.filter((e) =>
-    e.title.toLowerCase().includes(search.toLowerCase()),
+  // Map Supabase events to Event shape for MapEventCard
+  const mappedRealEvents: (Event & { isRegistered?: boolean })[] =
+    realEvents.map((e) => ({
+      id: e.id,
+      title: e.title,
+      category: e.type === 'tryout' ? 'Peneira Oficial' : 'Campeonato',
+      modality: e.sport,
+      date: new Date(e.eventDate).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'short',
+      }),
+      time: e.eventTime,
+      location: e.locationName,
+      city: e.city,
+      state: e.state,
+      address: e.address || '',
+      image:
+        e.bannerUrl ||
+        'https://img.usecurling.com/p/800/400?q=sports%20stadium',
+      price: e.price,
+      description: e.description,
+      organizer: e.creator?.name || 'Organizador Goplay',
+      level: e.type === 'tryout' ? 'Avançado' : 'Intermediário',
+      isRegistered: e.isRegistered,
+    }))
+
+  const allDisplayEvents = [...mappedRealEvents, ...mockEvents]
+
+  const filteredEvents = allDisplayEvents.filter(
+    (e) =>
+      (e.title || '').toLowerCase().includes(search.toLowerCase()) ||
+      (e.modality || '').toLowerCase().includes(search.toLowerCase()) ||
+      (e.city || '').toLowerCase().includes(search.toLowerCase()),
   )
 
   const filteredVenues = mockVenues.filter(
@@ -637,7 +687,14 @@ export default function Explore() {
             value="events"
             className="space-y-4 mt-0 animate-in fade-in"
           >
-            {filteredEvents.length > 0 ? (
+            {loadingEvents ? (
+              <div className="flex flex-col items-center justify-center py-10 gap-2 bg-secondary/20 rounded-xl border border-border/50">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                <span className="text-xs text-muted-foreground">
+                  Carregando eventos e peneiras...
+                </span>
+              </div>
+            ) : filteredEvents.length > 0 ? (
               filteredEvents.map((event) => (
                 <MapEventCard key={event.id} event={event} />
               ))
@@ -648,10 +705,10 @@ export default function Explore() {
             )}
             <Button
               variant="outline"
-              className="w-full"
+              className="w-full font-semibold"
               onClick={() => navigate('/explore/events')}
             >
-              Ver Todos os Eventos
+              Ver Todos os Eventos & Peneiras
             </Button>
           </TabsContent>
 
