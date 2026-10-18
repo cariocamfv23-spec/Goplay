@@ -22,6 +22,7 @@ const Login = lazy(() => import('./pages/auth/Login'))
 const Register = lazy(() => import('./pages/auth/Register'))
 const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'))
 const ResetPassword = lazy(() => import('./pages/auth/ResetPassword'))
+const AuthCallback = lazy(() => import('./pages/auth/AuthCallback'))
 const Onboarding = lazy(() => import('./pages/auth/Onboarding'))
 const ProfileSelection = lazy(() => import('./pages/auth/ProfileSelection'))
 
@@ -265,6 +266,7 @@ const App = () => {
                       element={<ForgotPassword />}
                     />
                     <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route path="/auth/callback" element={<AuthCallback />} />
                     <Route path="/onboarding" element={<Onboarding />} />
                     <Route
                       path="/profile-selection"

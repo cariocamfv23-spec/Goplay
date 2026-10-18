@@ -51,10 +51,52 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true)
 
   // Fetch profile whenever user ID changes
-  const loadProfile = async (userId: string) => {
+  // Returns true if profile exists, false otherwise
+  const loadProfile = async (userId: string): Promise<ProfileRow | null> => {
     const { data } = await profileService.getMyProfile(userId)
     setProfile(data)
     useAuthStore.getState().setProfile(data)
+    return data
+  }
+
+  // Ensure a profile exists for OAuth users (such as Google), even if the trigger had an issue
+  const ensureUserProfile = async (currentUser: User) => {
+    try {
+      const existing = await loadProfile(currentUser.id)
+      if (!existing) {
+        // Build initial fallback profile from user metadata (Google OAuth fills user_metadata)
+        const meta = currentUser.user_metadata || {}
+        const fullName =
+          meta.full_name ||
+          meta.name ||
+          currentUser.email?.split('@')[0] ||
+          'Atleta Goplay'
+        const avatarUrl = meta.avatar_url || meta.picture || null
+        const rawAccountType = (meta.account_type || 'athlete').toLowerCase()
+        const accountType =
+          rawAccountType === 'club' || rawAccountType === 'coach'
+            ? rawAccountType
+            : 'athlete'
+
+        const { data: created } = await supabase
+          .from('profiles')
+          .insert({
+            id: currentUser.id,
+            full_name: fullName,
+            avatar_url: avatarUrl,
+            account_type: accountType,
+          })
+          .select()
+          .maybeSingle()
+
+        if (created) {
+          setProfile(created as unknown as ProfileRow)
+          useAuthStore.getState().setProfile(created as unknown as ProfileRow)
+        }
+      }
+    } catch (err) {
+      console.warn('Erro ao verificar/criar perfil após login:', err)
+    }
   }
 
   useEffect(() => {
@@ -73,8 +115,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       useAuthStore.getState().setHasHydrated(true)
 
       if (currentUser) {
-        // Trigger profile fetch without awaiting inside onAuthStateChange
-        loadProfile(currentUser.id)
+        // Trigger profile fetch / creation without awaiting inside onAuthStateChange
+        ensureUserProfile(currentUser)
       } else {
         setProfile(null)
         useAuthStore.getState().setProfile(null)
@@ -92,7 +134,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       useAuthStore.getState().setHasHydrated(true)
 
       if (currentUser) {
-        loadProfile(currentUser.id)
+        ensureUserProfile(currentUser)
       }
     })
 
@@ -142,14 +184,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signInWithGoogle = async (redirectPath?: string) => {
     try {
       const origin = window.location.origin
-      const targetUrl = redirectPath
-        ? `${origin}${redirectPath.startsWith('/') ? redirectPath : `/${redirectPath}`}`
-        : `${origin}/home`
+      const cleanPath = redirectPath
+        ? redirectPath.startsWith('/')
+          ? redirectPath
+          : `/${redirectPath}`
+        : '/home'
+
+      // Store target in localStorage so any OAuth redirect fallback retains the original destination
+      try {
+        localStorage.setItem('goplay_oauth_redirect', cleanPath)
+      } catch {
+        // Safe fallback if localStorage is restricted
+      }
+
+      // Encode redirect as a query param on the callback url
+      const callbackTarget = `${origin}/auth/callback?redirect=${encodeURIComponent(cleanPath)}`
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: targetUrl,
+          redirectTo: callbackTarget,
           queryParams: {
             access_type: 'offline',
             prompt: 'select_account',

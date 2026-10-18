@@ -48,8 +48,23 @@ export async function runAuthSmokeTest() {
     invalidLoginError?.message,
   )
 
-  // 4. Test Valid Login with Seed User
-  console.log('4. Testing login with seed user cariocamfv23@gmail.com...')
+  // 4. Test Google OAuth initiation error handling (expected provider not enabled)
+  console.log('4. Testing Google OAuth initiation (provider disabled test)...')
+  const { error: googleOAuthError } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: 'http://localhost:3000/auth/callback',
+    },
+  })
+  console.log(
+    'Google OAuth response check:',
+    googleOAuthError
+      ? `Error caught safely: ${googleOAuthError.message}`
+      : 'OAuth triggered redirect url',
+  )
+
+  // 5. Test Valid Login with Seed User
+  console.log('5. Testing login with seed user cariocamfv23@gmail.com...')
   const { data: seedLoginData, error: seedLoginError } =
     await supabase.auth.signInWithPassword({
       email: 'cariocamfv23@gmail.com',
@@ -65,9 +80,9 @@ export async function runAuthSmokeTest() {
     )
   }
 
-  // 5. Test Profile Update for authenticated seed user
+  // 6. Test Profile Update for authenticated seed user
   if (seedLoginData?.user?.id) {
-    console.log('5. Testing update own profile...')
+    console.log('6. Testing update own profile...')
     const { data: updatedProfile, error: updateError } = await supabase
       .from('profiles')
       .update({ city: 'São Paulo', sport: 'Futebol' })
@@ -77,8 +92,8 @@ export async function runAuthSmokeTest() {
 
     console.log('Updated profile:', updatedProfile, 'Error:', updateError)
 
-    // 6. Test RLS protection: Attempting to update another user's profile
-    console.log('6. Testing RLS: attempting to update random profile...')
+    // 7. Test RLS protection: Attempting to update another user's profile
+    console.log('7. Testing RLS: attempting to update random profile...')
     const { data: illegalUpdate, error: illegalError } = await supabase
       .from('profiles')
       .update({ full_name: 'Hacked Name' })
@@ -93,8 +108,8 @@ export async function runAuthSmokeTest() {
     )
   }
 
-  // 7. Test Club Login and Tryout / Event Creation
-  console.log('7. Testing Club login (demo.clube@goplay.test)...')
+  // 8. Test Club Login and Tryout / Event Creation
+  console.log('8. Testing Club login (demo.clube@goplay.test)...')
   const { data: clubLoginData, error: clubLoginError } =
     await supabase.auth.signInWithPassword({
       email: 'demo.clube@goplay.test',
@@ -108,7 +123,7 @@ export async function runAuthSmokeTest() {
     const clubUserId = clubLoginData.user?.id
     if (clubUserId) {
       console.log(
-        '8. Testing Event/Peneira insertion via events table with club authenticated session...',
+        '9. Testing Event/Peneira insertion via events table with club authenticated session...',
       )
       const testEventDate = new Date(Date.now() + 86400000 * 7)
         .toISOString()
@@ -144,8 +159,8 @@ export async function runAuthSmokeTest() {
     }
   }
 
-  // 9. SignOut
-  console.log('9. Testing SignOut...')
+  // 10. SignOut
+  console.log('10. Testing SignOut...')
   const { error: signOutError } = await supabase.auth.signOut()
   console.log('SignOut completed. Error:', signOutError)
 
