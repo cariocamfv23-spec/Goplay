@@ -272,7 +272,7 @@ export const eventsService = {
    * Creates a new event or tryout.
    */
   async createEvent(params: {
-    creatorId: string
+    creatorId?: string
     title: string
     description?: string
     type: 'event' | 'tryout' | 'championship'
@@ -292,7 +292,18 @@ export const eventsService = {
     price?: number
   }): Promise<{ data: EventItem | null; error: Error | null }> {
     try {
-      if (!params.creatorId) {
+      // 1. Resolve active user session from Supabase client if not passed or to guarantee fresh session
+      let activeUserId = params.creatorId
+      if (!activeUserId) {
+        const { data: sessionData } = await supabase.auth.getSession()
+        activeUserId = sessionData.session?.user?.id
+      }
+      if (!activeUserId) {
+        const { data: userData } = await supabase.auth.getUser()
+        activeUserId = userData.user?.id
+      }
+
+      if (!activeUserId) {
         throw new Error(
           'Sessão não identificada. Faça login para publicar a peneira/evento.',
         )
@@ -323,7 +334,7 @@ export const eventsService = {
       }
 
       const payload = {
-        creator_id: params.creatorId,
+        creator_id: activeUserId,
         title: params.title.trim(),
         description: params.description?.trim() || '',
         type: params.type || 'tryout',

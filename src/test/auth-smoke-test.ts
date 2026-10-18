@@ -93,8 +93,59 @@ export async function runAuthSmokeTest() {
     )
   }
 
-  // 7. SignOut
-  console.log('7. Testing SignOut...')
+  // 7. Test Club Login and Tryout / Event Creation
+  console.log('7. Testing Club login (demo.clube@goplay.test)...')
+  const { data: clubLoginData, error: clubLoginError } =
+    await supabase.auth.signInWithPassword({
+      email: 'demo.clube@goplay.test',
+      password: 'Skip@Pass',
+    })
+
+  if (clubLoginError) {
+    console.error('Club login failed:', clubLoginError.message)
+  } else {
+    console.log('Club login success for:', clubLoginData.user?.email)
+    const clubUserId = clubLoginData.user?.id
+    if (clubUserId) {
+      console.log(
+        '8. Testing Event/Peneira insertion via events table with club authenticated session...',
+      )
+      const testEventDate = new Date(Date.now() + 86400000 * 7)
+        .toISOString()
+        .split('T')[0]
+      const { data: createdEvent, error: createEventError } = await supabase
+        .from('events')
+        .insert({
+          creator_id: clubUserId,
+          title: `Peneira Teste Automatizado QA ${Date.now()}`,
+          description: 'Teste de criação de peneira oficial pelo clube.',
+          type: 'tryout',
+          sport: 'Futebol',
+          category: 'Sub-20',
+          event_date: testEventDate,
+          event_time: '09:00',
+          city: 'Campinas',
+          state: 'SP',
+          location_name: 'CT Teste',
+          price: 0,
+          status: 'open',
+        })
+        .select()
+        .single()
+
+      if (createEventError) {
+        console.error('Club event creation failed:', createEventError.message)
+      } else {
+        console.log('Club event created successfully! ID:', createdEvent?.id)
+        // Cleanup test event
+        await supabase.from('events').delete().eq('id', createdEvent.id)
+        console.log('Test event cleaned up successfully.')
+      }
+    }
+  }
+
+  // 9. SignOut
+  console.log('9. Testing SignOut...')
   const { error: signOutError } = await supabase.auth.signOut()
   console.log('SignOut completed. Error:', signOutError)
 

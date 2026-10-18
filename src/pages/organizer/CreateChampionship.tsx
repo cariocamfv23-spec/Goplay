@@ -96,8 +96,22 @@ export default function CreateChampionship() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // 1. Session verification with automatic draft persistence
-    if (!user?.id) {
+    // 1. Session verification with automatic draft persistence (with direct Supabase fallback)
+    let currentUserId = user?.id
+    if (!currentUserId) {
+      const { data: sessData } = await (
+        await import('@/lib/supabase/client')
+      ).supabase.auth.getSession()
+      currentUserId = sessData.session?.user?.id
+    }
+    if (!currentUserId) {
+      const { data: usrData } = await (
+        await import('@/lib/supabase/client')
+      ).supabase.auth.getUser()
+      currentUserId = usrData.user?.id
+    }
+
+    if (!currentUserId) {
       saveDraft(type, formData)
       toast.error('Você precisa estar conectado para publicar.', {
         description:
@@ -126,7 +140,7 @@ export default function CreateChampionship() {
 
     try {
       const { data, error } = await eventsService.createEvent({
-        creatorId: user.id,
+        creatorId: currentUserId,
         title: formData.title,
         description: formData.description,
         type: type === 'tryout' ? 'tryout' : 'championship',
@@ -169,7 +183,7 @@ export default function CreateChampionship() {
       // Track metric
       analyticsService.trackEvent({
         eventName: 'event_published',
-        userId: user.id,
+        userId: currentUserId,
         targetId: data.id,
         metadata: {
           sport: formData.sport,

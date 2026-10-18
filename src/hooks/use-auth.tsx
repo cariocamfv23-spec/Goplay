@@ -125,6 +125,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       email,
       password,
     })
+    if (!error && data?.session) {
+      setSession(data.session)
+      const currentUser = data.session.user ?? null
+      setUser(currentUser)
+      setLoading(false)
+      useAuthStore.getState().setSession(data.session)
+      useAuthStore.getState().setHasHydrated(true)
+      if (currentUser) {
+        loadProfile(currentUser.id)
+      }
+    }
     return { data, error }
   }
 

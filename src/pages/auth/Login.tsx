@@ -100,7 +100,7 @@ export default function Login() {
     setLoading(true)
 
     try {
-      const { error } = await signIn(cleanEmail, cleanPassword)
+      const { data, error } = await signIn(cleanEmail, cleanPassword)
 
       if (error) {
         if (
@@ -118,6 +118,12 @@ export default function Login() {
           )
         }
         return
+      }
+
+      // Explicitly update zustand store immediately to prevent race conditions during redirect
+      if (data?.session) {
+        useAuthStore.getState().setSession(data.session)
+        useAuthStore.getState().setHasHydrated(true)
       }
 
       if (rememberMe) {
