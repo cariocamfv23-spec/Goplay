@@ -166,11 +166,17 @@ export default function AuthCallback() {
 
         toast.success('Login com Google concluído com sucesso!')
 
-        // 6. Navigation: if it is a brand new user and no explicit deep link was requested, route to onboarding
-        if (isFirstTimeUser && targetPath === '/home') {
-          navigate('/onboarding', { replace: true })
-        } else {
-          navigate(targetPath, { replace: true })
+        // 6. Navigation: do a full page reload / navigation (window.location.replace)
+        // This ensures the entire application, CSS stylesheets, layout shell, fonts, and theme tokens
+        // bootstrap completely from zero, avoiding SPA style hydration issues after returning from Google OAuth.
+        const destination =
+          isFirstTimeUser && targetPath === '/home' ? '/onboarding' : targetPath
+
+        // If replaceState is available, clean up the address bar first before reloading to clean destination
+        try {
+          window.location.replace(destination)
+        } catch {
+          window.location.href = destination
         }
       } catch (err: any) {
         if (!isCancelled) {
