@@ -44,6 +44,9 @@ const CopaMatchSchedule = lazy(() => import('./pages/album/CopaMatchSchedule'))
 // App Map
 const AppMap = lazy(() => import('./pages/AppMap'))
 
+const TermsOfService = lazy(() => import('./pages/legal/TermsOfService'))
+const PrivacyPolicy = lazy(() => import('./pages/legal/PrivacyPolicy'))
+
 const Home = lazy(() => import('./pages/home/Home'))
 const Feed = lazy(() => import('./pages/feed/Feed'))
 const Move = lazy(() => import('./pages/move/Move'))
@@ -259,6 +262,10 @@ const App = () => {
                   <Routes>
                     {/* Public Authentication and Setup Routes */}
                     <Route path="/" element={<Index />} />
+                    {/* Public Legal & Compliance Routes */}
+                    <Route path="/terms" element={<TermsOfService />} />
+                    <Route path="/privacy" element={<PrivacyPolicy />} />
+
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route

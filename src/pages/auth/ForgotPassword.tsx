@@ -98,9 +98,18 @@ export default function ForgotPassword() {
                     cadastrado no Goplay App, você receberá um link seguro para
                     redefinir sua senha em instantes.
                   </p>
-                  <p className="text-[11px] text-muted-foreground/80 italic">
-                    Não se esqueça de checar a pasta de Spam ou Lixo Eletrônico.
-                  </p>
+                  <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-700 dark:text-amber-300 text-left space-y-1">
+                    <p className="font-semibold flex items-center gap-1">
+                      📬 Dica sobre a entrega do e-mail:
+                    </p>
+                    <p className="leading-relaxed">
+                      Caso o e-mail demore alguns minutos, verifique sua caixa
+                      de entrada e a pasta de{' '}
+                      <strong>Spam / Lixo Eletrônico</strong>. Se você utiliza
+                      provedores corporativos ou filtros rígidos, adicione o
+                      domínio do Goplay aos remetentes confiáveis.
+                    </p>
+                  </div>
                 </div>
 
                 <div className="pt-2 flex flex-col gap-2">

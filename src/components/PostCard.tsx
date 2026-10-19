@@ -12,7 +12,18 @@ import {
   AtSign,
   Music,
   Disc3,
+  ShieldAlert,
+  UserX,
 } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { ReportDialog } from '@/components/moderation/ReportDialog'
+import { BlockDialog } from '@/components/moderation/BlockDialog'
 import {
   Carousel,
   CarouselContent,
@@ -100,6 +111,8 @@ export function PostCard({ post, onDeleted }: PostProps) {
   const [showDetail, setShowDetail] = useState(false)
   const [imgError, setImgError] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [reportOpen, setReportOpen] = useState(false)
+  const [blockOpen, setBlockOpen] = useState(false)
 
   const isSupabasePost =
     typeof post.id === 'string' &&
@@ -420,13 +433,49 @@ export function PostCard({ post, onDeleted }: PostProps) {
             </Button>
           )}
           {(!isOwner || !isSupabasePost) && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-muted-foreground hover:bg-secondary/80 rounded-full"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-muted-foreground hover:bg-secondary/80 rounded-full"
+                >
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                  onClick={() => {
+                    navigator.clipboard?.writeText(
+                      `${window.location.origin}/post/${post.id}`,
+                    )
+                    toast.success('Link copiado para a área de transferência!')
+                  }}
+                  className="cursor-pointer"
+                >
+                  Copiar link
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => setReportOpen(true)}
+                  className="text-destructive focus:text-destructive gap-2 cursor-pointer"
+                >
+                  <ShieldAlert className="w-4 h-4" />
+                  Denunciar publicação
+                </DropdownMenuItem>
+                {authUser?.id &&
+                  post.user?.id &&
+                  authUser.id !== post.user.id && (
+                    <DropdownMenuItem
+                      onClick={() => setBlockOpen(true)}
+                      className="text-destructive focus:text-destructive gap-2 cursor-pointer"
+                    >
+                      <UserX className="w-4 h-4" />
+                      Bloquear @{post.user.name}
+                    </DropdownMenuItem>
+                  )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </CardHeader>
 
@@ -633,6 +682,25 @@ export function PostCard({ post, onDeleted }: PostProps) {
         open={showDetail}
         onOpenChange={setShowDetail}
       />
+
+      <ReportDialog
+        open={reportOpen}
+        onOpenChange={setReportOpen}
+        contentType="post"
+        contentId={String(post.id)}
+        reportedUserId={post.user?.id ? String(post.user.id) : undefined}
+        reportedUserName={post.user?.name}
+        contentTitle={post.content}
+      />
+
+      {authUser?.id && post.user?.id && authUser.id !== post.user.id && (
+        <BlockDialog
+          open={blockOpen}
+          onOpenChange={setBlockOpen}
+          targetUserId={String(post.user.id)}
+          targetUserName={post.user?.name}
+        />
+      )}
     </>
   )
 }

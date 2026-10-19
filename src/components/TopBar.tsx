@@ -21,6 +21,8 @@ import {
   Lock,
   Eye,
   Shield,
+  ShieldCheck,
+  FileText,
 } from 'lucide-react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -449,6 +451,14 @@ export function TopBar() {
             <DropdownMenuItem onClick={() => navigate('/settings')}>
               <Settings className="mr-2 h-4 w-4" />
               <span>Configurações</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/terms')}>
+              <FileText className="mr-2 h-4 w-4 text-muted-foreground" />
+              <span>Termos de Uso</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/privacy')}>
+              <ShieldCheck className="mr-2 h-4 w-4 text-emerald-500" />
+              <span>Privacidade (LGPD)</span>
             </DropdownMenuItem>
             {profile?.is_admin && (
               <DropdownMenuItem onClick={() => navigate('/admin')}>

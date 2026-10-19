@@ -180,19 +180,32 @@ export const feedService = {
   async getPosts(
     currentUserId?: string | null,
     limit = 20,
+    blockedUserIds?: Set<string>,
   ): Promise<{ data: PostItem[]; error: Error | null }> {
     try {
       const { data: rawPosts, error: postsError } = await db
         .from('posts')
         .select('*')
         .order('created_at', { ascending: false })
-        .limit(limit)
+        .limit(limit * 2)
 
       if (postsError) throw postsError
       if (!rawPosts || rawPosts.length === 0) return { data: [], error: null }
 
+      // Filter out posts from blocked users (bidirectional)
+      const visiblePosts =
+        blockedUserIds && blockedUserIds.size > 0
+          ? rawPosts
+              .filter((p: any) => !blockedUserIds.has(p.user_id))
+              .slice(0, limit)
+          : rawPosts.slice(0, limit)
+
+      if (visiblePosts.length === 0) return { data: [], error: null }
+
       // Extract unique user IDs to fetch author profiles in batch
-      const userIds = Array.from(new Set(rawPosts.map((p: any) => p.user_id)))
+      const userIds = Array.from(
+        new Set(visiblePosts.map((p: any) => p.user_id)),
+      )
       const { data: profiles, error: profError } = await db
         .from('profiles')
         .select('id, full_name, avatar_url, account_type, sport')
@@ -235,7 +248,7 @@ export const feedService = {
         commentsByPost.set(c.post_id, (commentsByPost.get(c.post_id) || 0) + 1)
       })
 
-      const formattedPosts: PostItem[] = rawPosts.map((p) => {
+      const formattedPosts: PostItem[] = visiblePosts.map((p) => {
         const prof = profileMap.get(p.user_id)
         return {
           id: p.id,

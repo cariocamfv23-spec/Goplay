@@ -168,12 +168,28 @@ export default function PrivacySettings() {
             <Button
               variant="ghost"
               className="w-full justify-start h-14 rounded-none px-4 gap-3"
+              onClick={() => navigate('/privacy')}
             >
-              <Shield className="w-5 h-5 text-muted-foreground" />
-              <div className="flex flex-col items-start">
-                <span className="font-medium">Dados e Permissões</span>
+              <Shield className="w-5 h-5 text-emerald-500" />
+              <div className="flex flex-col items-start text-left">
+                <span className="font-medium">
+                  Política de Privacidade (LGPD)
+                </span>
                 <span className="text-xs text-muted-foreground">
-                  Gerencie seus dados no aplicativo
+                  Tratamento de dados de atletas e canal do Encarregado
+                </span>
+              </div>
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start h-14 rounded-none px-4 gap-3"
+              onClick={() => navigate('/terms')}
+            >
+              <Lock className="w-5 h-5 text-primary" />
+              <div className="flex flex-col items-start text-left">
+                <span className="font-medium">Termos de Uso</span>
+                <span className="text-xs text-muted-foreground">
+                  Condições do serviço, regras e eventos esportivos
                 </span>
               </div>
             </Button>

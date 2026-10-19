@@ -31,6 +31,7 @@ export default function SportsPassport() {
   const { user: authUser, profile: myLiveProfile } = useAuth()
   const [isEventLinkOpen, setIsEventLinkOpen] = useState(false)
   const [isShareOpen, setIsShareOpen] = useState(false)
+  const [isReportOpen, setIsReportOpen] = useState(false)
 
   const [loading, setLoading] = useState(true)
   const [targetProfile, setTargetProfile] = useState<ProfileRow | null>(null)
@@ -145,6 +146,18 @@ export default function SportsPassport() {
             >
               <LogIn className="w-3.5 h-3.5" />
               Entrar
+            </Button>
+          )}
+          {!isMe && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground hover:text-destructive"
+              onClick={() => setIsReportOpen(true)}
+              title="Denunciar este Passaporte"
+              aria-label="Denunciar Passaporte"
+            >
+              <ShieldAlert className="h-5 w-5" />
             </Button>
           )}
           <Button
@@ -339,6 +352,19 @@ export default function SportsPassport() {
         url={publicShareUrl}
         onShareAction={handleShareAction}
       />
+
+      {/* Report Passport Dialog */}
+      {!isMe && activeProfile?.id && (
+        <ReportDialog
+          open={isReportOpen}
+          onOpenChange={setIsReportOpen}
+          contentType="passport"
+          contentId={String(activeProfile.id)}
+          reportedUserId={String(activeProfile.id)}
+          reportedUserName={athleteName}
+          contentTitle={`Passaporte de ${athleteName} (${athleteSport})`}
+        />
+      )}
     </div>
   )
 }

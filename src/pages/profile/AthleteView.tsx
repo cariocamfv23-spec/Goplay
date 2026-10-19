@@ -60,7 +60,25 @@ import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
 import { getSportCoverImage } from '@/lib/sport-utils'
 import { DepthContainer } from '@/components/DepthContainer'
-import { Camera, Award, Target, CheckCircle2 } from 'lucide-react'
+import {
+  Camera,
+  Award,
+  Target,
+  CheckCircle2,
+  ShieldAlert,
+  UserX,
+  MoreVertical,
+} from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { ReportDialog } from '@/components/moderation/ReportDialog'
+import { BlockDialog } from '@/components/moderation/BlockDialog'
+import { moderationService } from '@/services/moderation'
 import { EditCoverDialog } from '@/components/profile/EditCoverDialog'
 import { NostalgiaFilter } from '@/components/NostalgiaFilter'
 import { useReplayStore } from '@/stores/useReplayStore'
@@ -109,6 +127,27 @@ export default function AthleteView({
     open: boolean
     mode: 'followers' | 'following'
   }>({ open: false, mode: 'followers' })
+
+  // Moderation state
+  const { user: currentAuthUser } = useAuth()
+  const [reportOpen, setReportOpen] = useState(false)
+  const [blockOpen, setBlockOpen] = useState(false)
+  const [isBlockedByMe, setIsBlockedByMe] = useState(false)
+  const [isBlockingMe, setIsBlockingMe] = useState(false)
+  const [checkingBlock, setCheckingBlock] = useState(false)
+
+  useEffect(() => {
+    if (!isMe && currentAuthUser?.id && user?.id) {
+      setCheckingBlock(true)
+      moderationService
+        .checkMutualBlock(currentAuthUser.id, String(user.id))
+        .then((res) => {
+          setIsBlockedByMe(res.isBlockedByMe)
+          setIsBlockingMe(res.isBlockingMe)
+        })
+        .finally(() => setCheckingBlock(false))
+    }
+  }, [isMe, currentAuthUser?.id, user?.id])
 
   const isSupabaseProfile =
     typeof user.id === 'string' &&
@@ -184,6 +223,24 @@ export default function AthleteView({
   const { isInvisibleMode, isPremium, toggleInvisibleMode, upgradeToPremium } =
     usePrivacyStore()
   const { simulateMemory } = useMemorySimulation()
+
+  // Moderation state
+  const { user: currentAuthUser } = useAuth()
+  const [reportOpen, setReportOpen] = useState(false)
+  const [blockOpen, setBlockOpen] = useState(false)
+  const [isBlockedByMe, setIsBlockedByMe] = useState(false)
+  const [isBlockingMe, setIsBlockingMe] = useState(false)
+
+  useEffect(() => {
+    if (!isMe && currentAuthUser?.id && user?.id) {
+      moderationService
+        .checkMutualBlock(currentAuthUser.id, String(user.id))
+        .then((res) => {
+          setIsBlockedByMe(res.isBlockedByMe)
+          setIsBlockingMe(res.isBlockingMe)
+        })
+    }
+  }, [isMe, currentAuthUser?.id, user?.id])
 
   const currentTheme = getTheme()
   const auraConfig = getAuraConfig(user)
@@ -330,36 +387,92 @@ export default function AthleteView({
               </Button>
             ) : (
               <div className="flex items-center gap-2">
-                <Button
-                  size="sm"
-                  variant={isFollowing ? 'outline' : 'default'}
-                  className={cn(
-                    'shadow-md font-semibold transition-all',
-                    isFollowing
-                      ? 'border-primary/40 text-primary bg-primary/5 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30'
-                      : 'bg-primary text-white',
-                  )}
-                  onClick={handleToggleFollow}
-                  disabled={followingLoading}
-                >
-                  {followingLoading ? (
-                    <Loader2 className="h-4 w-4 mr-1 animate-spin" />
-                  ) : isFollowing ? (
-                    <UserCheck className="h-4 w-4 mr-1.5" />
-                  ) : (
-                    <UserPlus className="h-4 w-4 mr-1.5" />
-                  )}
-                  {isFollowing ? 'Seguindo' : 'Seguir'}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className="bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm"
-                  onClick={() => navigate(`/messages/user-${user.id}`)}
-                >
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  Mensagem
-                </Button>
+                {isBlockedByMe ? (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-destructive/40 text-destructive bg-destructive/5 hover:bg-destructive/10"
+                    onClick={() => setBlockOpen(true)}
+                  >
+                    <UserX className="h-4 w-4 mr-1.5" />
+                    Bloqueado (Desbloquear)
+                  </Button>
+                ) : isBlockingMe ? (
+                  <Badge
+                    variant="secondary"
+                    className="text-xs text-muted-foreground"
+                  >
+                    Perfil indisponível
+                  </Badge>
+                ) : (
+                  <>
+                    <Button
+                      size="sm"
+                      variant={isFollowing ? 'outline' : 'default'}
+                      className={cn(
+                        'shadow-md font-semibold transition-all',
+                        isFollowing
+                          ? 'border-primary/40 text-primary bg-primary/5 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30'
+                          : 'bg-primary text-white',
+                      )}
+                      onClick={handleToggleFollow}
+                      disabled={followingLoading}
+                    >
+                      {followingLoading ? (
+                        <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                      ) : isFollowing ? (
+                        <UserCheck className="h-4 w-4 mr-1.5" />
+                      ) : (
+                        <UserPlus className="h-4 w-4 mr-1.5" />
+                      )}
+                      {isFollowing ? 'Seguindo' : 'Seguir'}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm"
+                      onClick={() => navigate(`/messages/user-${user.id}`)}
+                    >
+                      <MessageCircle className="h-4 w-4 mr-2" />
+                      Mensagem
+                    </Button>
+                  </>
+                )}
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-9 w-9 rounded-full text-muted-foreground hover:text-foreground"
+                    >
+                      <MoreVertical className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem
+                      onClick={() => setIsShareDialogOpen(true)}
+                      className="cursor-pointer"
+                    >
+                      Compartilhar perfil
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => setReportOpen(true)}
+                      className="text-destructive focus:text-destructive gap-2 cursor-pointer"
+                    >
+                      <ShieldAlert className="h-4 w-4" />
+                      Denunciar atleta
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => setBlockOpen(true)}
+                      className="text-destructive focus:text-destructive gap-2 cursor-pointer"
+                    >
+                      <UserX className="h-4 w-4" />
+                      {isBlockedByMe ? 'Desbloquear perfil' : 'Bloquear perfil'}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             )}
           </div>
@@ -1066,6 +1179,29 @@ export default function AthleteView({
 
       <AuraLegend open={isAuraLegendOpen} onOpenChange={setIsAuraLegendOpen} />
       <EcoLegend open={isEcoLegendOpen} onOpenChange={setIsEcoLegendOpen} />
+
+      {/* Moderation dialogs */}
+      {!isMe && (
+        <>
+          <ReportDialog
+            open={reportOpen}
+            onOpenChange={setReportOpen}
+            contentType="profile"
+            contentId={String(user.id)}
+            reportedUserId={String(user.id)}
+            reportedUserName={user.name}
+            contentTitle={`Perfil de Atleta: ${user.name}`}
+          />
+          <BlockDialog
+            open={blockOpen}
+            onOpenChange={setBlockOpen}
+            targetUserId={String(user.id)}
+            targetUserName={user.name}
+            isCurrentlyBlocked={isBlockedByMe}
+            onBlockChanged={(blocked) => setIsBlockedByMe(blocked)}
+          />
+        </>
+      )}
 
       <ShareDialog
         open={isShareDialogOpen}

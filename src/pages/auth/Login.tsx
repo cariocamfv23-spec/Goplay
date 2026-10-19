@@ -423,7 +423,7 @@ export default function Login() {
               </Button>
             </div>
           </CardContent>
-          <CardFooter className="flex justify-center">
+          <CardFooter className="flex flex-col items-center gap-3">
             <p className="text-sm text-muted-foreground">
               Não tem uma conta?{' '}
               <Button
@@ -434,6 +434,18 @@ export default function Login() {
                 Criar conta
               </Button>
             </p>
+            <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+              <Link to="/terms" className="hover:text-primary hover:underline">
+                Termos de Uso
+              </Link>
+              <span>•</span>
+              <Link
+                to="/privacy"
+                className="hover:text-primary hover:underline"
+              >
+                Política de Privacidade
+              </Link>
+            </div>
           </CardFooter>
         </Card>
       </div>

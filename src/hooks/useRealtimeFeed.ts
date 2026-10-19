@@ -5,6 +5,7 @@ import {
   type PostItem,
   type PostCommentItem,
 } from '@/services/feed'
+import { moderationService } from '@/services/moderation'
 import {
   notificationService,
   type NotificationItem,
@@ -49,8 +50,14 @@ export function useRealtimeFeed(
 
   const loadFeed = useCallback(async () => {
     try {
+      const blockedSet = currentUserIdRef.current
+        ? await moderationService.getBlockedUserIds(currentUserIdRef.current)
+        : new Set<string>()
+
       const { data, error } = await feedService.getPosts(
         currentUserIdRef.current,
+        20,
+        blockedSet,
       )
       if (isMountedRef.current) {
         if (!error && data) {
@@ -115,6 +122,16 @@ export function useRealtimeFeed(
 
           // If the post is already in state, do not duplicate
           if (postsRef.current.some((p) => p.id === newRow.id)) return
+
+          // Verify if author is blocked
+          if (currentUserIdRef.current && newRow.user_id) {
+            const { isBlockedByMe, isBlockingMe } =
+              await moderationService.checkMutualBlock(
+                currentUserIdRef.current,
+                newRow.user_id,
+              )
+            if (isBlockedByMe || isBlockingMe) return
+          }
 
           // Fetch post author profile for complete rendering
           let authorName = 'Usuário Goplay'

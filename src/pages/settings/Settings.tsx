@@ -21,6 +21,8 @@ import {
   Layers,
   Smartphone,
   Loader2,
+  FileText,
+  ShieldCheck,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Separator } from '@/components/ui/separator'
@@ -402,13 +404,28 @@ export default function Settings() {
 
         <div className="space-y-1">
           <h3 className="text-sm font-bold text-muted-foreground uppercase px-2">
-            Suporte
+            Suporte e Jurídico
           </h3>
           <Button
             variant="ghost"
             className="w-full justify-start h-12 gap-3 text-base font-normal"
+            onClick={() => navigate('/terms')}
           >
-            <HelpCircle className="h-5 w-5" /> Ajuda
+            <FileText className="h-5 w-5 text-primary" /> Termos de Uso
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start h-12 gap-3 text-base font-normal"
+            onClick={() => navigate('/privacy')}
+          >
+            <ShieldCheck className="h-5 w-5 text-emerald-500" /> Política de
+            Privacidade (LGPD)
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start h-12 gap-3 text-base font-normal"
+          >
+            <HelpCircle className="h-5 w-5" /> Ajuda e Dúvidas
           </Button>
         </div>
 

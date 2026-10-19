@@ -276,7 +276,30 @@ export default function Register() {
               </form>
             )}
           </CardContent>
-          <CardFooter className="flex justify-center">
+          <CardFooter className="flex flex-col items-center gap-3">
+            <p className="text-[11px] text-muted-foreground text-center leading-relaxed max-w-sm px-2">
+              Ao criar a conta você concorda com os{' '}
+              <Link
+                to="/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline font-semibold"
+              >
+                Termos de Uso
+              </Link>{' '}
+              e a{' '}
+              <Link
+                to="/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline font-semibold"
+              >
+                Política de Privacidade
+              </Link>{' '}
+              (proteção a dados de atletas e menores de 18 anos conforme a
+              LGPD).
+            </p>
+
             <p className="text-sm text-muted-foreground">
               Já tem uma conta?{' '}
               <Button

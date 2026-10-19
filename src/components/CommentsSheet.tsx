@@ -16,7 +16,8 @@ import { useAuth } from '@/hooks/use-auth'
 import { feedService, type PostCommentItem } from '@/services/feed'
 import { useRealtimeComments } from '@/hooks/useRealtimeFeed'
 import { toast } from 'sonner'
-import { Trash2, Loader2, Radio } from 'lucide-react'
+import { Trash2, Loader2, Radio, ShieldAlert } from 'lucide-react'
+import { ReportDialog } from '@/components/moderation/ReportDialog'
 
 interface Comment {
   id: string
@@ -134,6 +135,12 @@ export function CommentsSheet({
   const { user, profile } = useAuth()
   const [newComment, setNewComment] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [reportingComment, setReportingComment] = useState<{
+    id: string
+    text: string
+    userName: string
+    userId?: string
+  } | null>(null)
   const [mockComments, setMockComments] = useState<Comment[]>(
     DEFAULT_FALLBACK_COMMENTS,
   )
@@ -317,13 +324,28 @@ export function CommentsSheet({
                           <span className="text-xs text-zinc-500">
                             {comment.time}
                           </span>
-                          {comment.isMine && (
+                          {comment.isMine ? (
                             <button
                               onClick={() => handleDeleteComment(comment.id)}
                               className="text-zinc-500 hover:text-red-400 p-0.5 opacity-60 hover:opacity-100 transition-opacity"
                               title="Excluir meu comentário"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() =>
+                                setReportingComment({
+                                  id: String(comment.id),
+                                  text: comment.text,
+                                  userName: comment.user.name,
+                                  userId: (comment.user as any).id,
+                                })
+                              }
+                              className="text-zinc-500 hover:text-amber-400 p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                              title="Denunciar este comentário"
+                            >
+                              <ShieldAlert className="w-3.5 h-3.5" />
                             </button>
                           )}
                         </div>
@@ -373,6 +395,18 @@ export function CommentsSheet({
           </div>
         </div>
       </SheetContent>
+
+      {reportingComment && (
+        <ReportDialog
+          open={!!reportingComment}
+          onOpenChange={(open) => !open && setReportingComment(null)}
+          contentType="comment"
+          contentId={reportingComment.id}
+          reportedUserId={reportingComment.userId}
+          reportedUserName={reportingComment.userName}
+          contentTitle={reportingComment.text}
+        />
+      )}
     </Sheet>
   )
 }
