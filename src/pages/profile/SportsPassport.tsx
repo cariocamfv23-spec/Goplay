@@ -1,5 +1,19 @@
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Share2, Wallet, Download, QrCode } from 'lucide-react'
+import {
+  ArrowLeft,
+  Share2,
+  Wallet,
+  Download,
+  QrCode,
+  Loader2,
+  LogIn,
+  ExternalLink,
+  MapPin,
+  Award,
+  Target,
+  Trophy,
+  ShieldAlert,
+} from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { PassportCard } from '@/components/passport/PassportCard'
 import { CompetitionHistory } from '@/components/passport/CompetitionHistory'
@@ -15,15 +29,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { profileService, type ProfileRow } from '@/services/profiles'
 import { feedService, type PostItem } from '@/services/feed'
 import { analyticsService } from '@/services/analytics'
-import {
-  Loader2,
-  LogIn,
-  ExternalLink,
-  MapPin,
-  Award,
-  Target,
-  Trophy,
-} from 'lucide-react'
+import { ReportDialog } from '@/components/moderation/ReportDialog'
 
 export default function SportsPassport() {
   const { id } = useParams<{ id?: string }>()

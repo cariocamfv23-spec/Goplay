@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Table,
@@ -110,7 +110,7 @@ export default function AdminDashboard() {
   }, [isAdmin, periodDays])
 
   // 3. Fetch Real Reports from Supabase
-  const loadReports = async () => {
+  const loadReports = useCallback(async () => {
     if (!isAdmin) return
     setReportsLoading(true)
     const { data, error } = await moderationService.listAdminReports()
@@ -118,13 +118,13 @@ export default function AdminDashboard() {
       setReports(data)
     }
     setReportsLoading(false)
-  }
+  }, [isAdmin])
 
   useEffect(() => {
     if (isAdmin) {
       loadReports()
     }
-  }, [isAdmin])
+  }, [isAdmin, loadReports])
 
   const handleUpdateReport = async (reportId: string, status: ReportStatus) => {
     if (!authUser?.id) return

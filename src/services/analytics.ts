@@ -13,6 +13,9 @@ export type AnalyticsEventName =
   | 'profile_shared'
   | 'event_shared'
   | 'user_session_active'
+  | 'report_created'
+  | 'user_blocked'
+  | 'user_unblocked'
 
 export interface AnalyticsEventPayload {
   eventName: AnalyticsEventName

@@ -224,24 +224,6 @@ export default function AthleteView({
     usePrivacyStore()
   const { simulateMemory } = useMemorySimulation()
 
-  // Moderation state
-  const { user: currentAuthUser } = useAuth()
-  const [reportOpen, setReportOpen] = useState(false)
-  const [blockOpen, setBlockOpen] = useState(false)
-  const [isBlockedByMe, setIsBlockedByMe] = useState(false)
-  const [isBlockingMe, setIsBlockingMe] = useState(false)
-
-  useEffect(() => {
-    if (!isMe && currentAuthUser?.id && user?.id) {
-      moderationService
-        .checkMutualBlock(currentAuthUser.id, String(user.id))
-        .then((res) => {
-          setIsBlockedByMe(res.isBlockedByMe)
-          setIsBlockingMe(res.isBlockingMe)
-        })
-    }
-  }, [isMe, currentAuthUser?.id, user?.id])
-
   const currentTheme = getTheme()
   const auraConfig = getAuraConfig(user)
 
