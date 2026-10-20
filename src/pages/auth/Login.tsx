@@ -256,15 +256,11 @@ export default function Login() {
       return
     }
 
-    // 3. Checar se há token de sessão salvo para restaurar
-    if (
-      !enrolled.sessionToken ||
-      !enrolled.sessionToken.access_token ||
-      !enrolled.sessionToken.refresh_token
-    ) {
-      toast.error('Sessão biométrica expirada', {
+    // 3. Checar se há tokens salvos para restaurar a sessão após a validação biométrica
+    if (!enrolled.sessionToken || !enrolled.sessionToken.refresh_token) {
+      toast.error('Sessão biométrica não inicializada', {
         description:
-          'Entre com seu e-mail e senha para revalidar sua biometria neste aparelho.',
+          'Entre com seu e-mail e senha uma vez para associar sua biometria a este aparelho.',
       })
       return
     }
@@ -272,8 +268,8 @@ export default function Login() {
     setBiometricLoading(true)
 
     try {
-      // 4. Executa a cerimônia REAL do WebAuthn no dispositivo
-      // O aparelho (Android, iOS Face ID/Touch ID, Windows Hello) exibirá o modal nativo do sistema
+      // 4. Executa a cerimônia REAL do WebAuthn no dispositivo (exige sensor físico)
+      // O aparelho (Android biométrico, iOS Face ID/Touch ID, Windows Hello) exibirá o prompt nativo
       const result = await biometricService.authenticate()
 
       if (!result.success || !result.data) {
@@ -285,22 +281,24 @@ export default function Login() {
         return
       }
 
-      // 5. SOMENTE se a biometria real passar, restaura a sessão segura com os tokens
+      // 5. SOMENTE se a biometria real passar, restaura e renova a sessão segura no Supabase
+      const candidateTokens = result.data.sessionToken || enrolled.sessionToken
       const { data: restoreData, error: restoreError } =
         await restoreSessionWithTokens({
-          access_token: result.data.sessionToken!.access_token,
-          refresh_token: result.data.sessionToken!.refresh_token,
+          access_token: candidateTokens.access_token || '',
+          refresh_token: candidateTokens.refresh_token,
         })
 
       if (restoreError || !restoreData?.session) {
+        console.warn('Falha na renovação da sessão biométrica:', restoreError)
         toast.error('Sessão expirada no servidor', {
           description:
-            'Sua credencial biométrica é válida, mas a sessão precisa ser renovada com login convencional.',
+            'Sua credencial biométrica é válida, mas sua chave de acesso foi revogada pelo servidor. Faça login com e-mail e senha para reativá-la.',
         })
         return
       }
 
-      // Atualiza os tokens caso tenham sido renovados na restauração
+      // Atualiza os novos tokens renovados para que próximos logins continuem funcionando ininterruptamente
       if (
         restoreData.session.access_token &&
         restoreData.session.refresh_token

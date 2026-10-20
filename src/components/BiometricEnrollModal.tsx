@@ -13,6 +13,7 @@ import { biometricService } from '@/services/biometrics'
 import { useAuth } from '@/hooks/use-auth'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { toast } from 'sonner'
+import { supabase } from '@/lib/supabase/client'
 
 const DISMISSED_KEY = 'goplay_biometric_invite_dismissed'
 
@@ -65,11 +66,22 @@ export function BiometricEnrollModal() {
     setLoading(true)
 
     try {
-      const tokens = session
+      // Obter os tokens mais recentes diretamente do Supabase para garantir refresh_token válido
+      let currentSession = session
+      try {
+        const { data: freshData } = await supabase.auth.getSession()
+        if (freshData?.session) {
+          currentSession = freshData.session
+        }
+      } catch {
+        // fallback para a sessão do contexto
+      }
+
+      const tokens = currentSession
         ? {
-            access_token: session.access_token,
-            refresh_token: session.refresh_token,
-            expires_at: session.expires_at,
+            access_token: currentSession.access_token,
+            refresh_token: currentSession.refresh_token,
+            expires_at: currentSession.expires_at,
           }
         : undefined
 

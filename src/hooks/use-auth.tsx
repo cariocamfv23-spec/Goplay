@@ -9,6 +9,7 @@ import type { User, Session } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase/client'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { profileService, type ProfileRow } from '@/services/profiles'
+import { biometricService } from '@/services/biometrics'
 
 interface AuthContextType {
   user: User | null
@@ -29,7 +30,9 @@ interface AuthContextType {
   signInWithGoogle: (
     redirectPath?: string,
   ) => Promise<{ data?: any; error: any }>
-  signOut: () => Promise<{ error: any }>
+  signOut: (options?: {
+    scope?: 'local' | 'global' | 'others'
+  }) => Promise<{ error: any }>
   restoreSessionWithTokens: (tokens: {
     access_token: string
     refresh_token: string
@@ -118,6 +121,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       useAuthStore.getState().setSession(newSession)
       useAuthStore.getState().setHasHydrated(true)
 
+      if (currentUser && newSession?.refresh_token) {
+        // Mantém a credencial biométrica sincronizada com os tokens mais recentes da sessão ativa
+        biometricService.syncSessionIfEnrolled(newSession)
+      }
+
       if (currentUser) {
         // Trigger profile fetch / creation without awaiting inside onAuthStateChange
         ensureUserProfile(currentUser)
@@ -136,6 +144,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       useAuthStore.getState().setSession(initialSession)
       useAuthStore.getState().setHasHydrated(true)
+
+      if (currentUser && initialSession?.refresh_token) {
+        biometricService.syncSessionIfEnrolled(initialSession)
+      }
 
       if (currentUser) {
         ensureUserProfile(currentUser)
@@ -228,10 +240,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     refresh_token: string
   }) => {
     try {
-      const { data, error } = await supabase.auth.setSession({
+      // 1. Tenta setSession diretamente
+      let { data, error } = await supabase.auth.setSession({
         access_token: tokens.access_token,
         refresh_token: tokens.refresh_token,
       })
+
+      // 2. Fallback caso setSession falhe por access_token expirado: tenta refreshSession com o refresh_token
+      if (error || !data?.session) {
+        const refreshResult = await supabase.auth.refreshSession({
+          refresh_token: tokens.refresh_token,
+        })
+        if (!refreshResult.error && refreshResult.data?.session) {
+          data = refreshResult.data
+          error = null
+        }
+      }
 
       if (!error && data?.session) {
         setSession(data.session)
@@ -250,10 +274,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  const signOut = async () => {
-    const { error } = await supabase.auth.signOut()
+  const signOut = async (options?: {
+    scope?: 'local' | 'global' | 'others'
+  }) => {
+    // Escopo padrão 'local': encerra a sessão ativa deste cliente no navegador
+    // sem revogar tokens em nível de conta global, permitindo que a credencial biométrica do dispositivo
+    // consiga restabelecer a sessão com segurança mediante confirmação biométrica real (WebAuthn).
+    const scope = options?.scope ?? 'local'
+    const { error } = await supabase.auth.signOut({ scope })
     setProfile(null)
-    useAuthStore.getState().logout()
+    useAuthStore.getState().logout({ scope })
     return { error }
   }
 

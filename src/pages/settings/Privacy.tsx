@@ -23,6 +23,7 @@ import {
   type BiometricCredentialData,
 } from '@/services/biometrics'
 import { toast } from 'sonner'
+import { supabase } from '@/lib/supabase/client'
 import { Switch } from '@/components/ui/switch'
 import { PaymentDialog } from '@/components/PaymentDialog'
 import { Badge } from '@/components/ui/badge'
@@ -70,11 +71,22 @@ export default function PrivacySettings() {
     setEnrollingLoading(true)
 
     try {
-      const tokens = session
+      // Obter os tokens mais recentes do Supabase para garantir refresh_token válido
+      let currentSession = session
+      try {
+        const { data: freshData } = await supabase.auth.getSession()
+        if (freshData?.session) {
+          currentSession = freshData.session
+        }
+      } catch {
+        // fallback
+      }
+
+      const tokens = currentSession
         ? {
-            access_token: session.access_token,
-            refresh_token: session.refresh_token,
-            expires_at: session.expires_at,
+            access_token: currentSession.access_token,
+            refresh_token: currentSession.refresh_token,
+            expires_at: currentSession.expires_at,
           }
         : undefined
 

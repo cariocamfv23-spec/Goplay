@@ -10,7 +10,7 @@ interface AuthState {
   session: Session | null
   profile: ProfileRow | null
   login: () => void
-  logout: () => void
+  logout: (options?: { scope?: 'local' | 'global' | 'others' }) => void
   setSession: (session: Session | null) => void
   setProfile: (profile: ProfileRow | null) => void
   setHasHydrated: (state: boolean) => void
@@ -23,9 +23,10 @@ export const useAuthStore = create<AuthState>((set) => ({
   session: null,
   profile: null,
   login: () => set({ isAuthenticated: true }),
-  logout: () => {
-    // Also trigger Supabase signOut if still authenticated
-    supabase.auth.signOut().catch(() => {})
+  logout: (options) => {
+    // Dispara signOut com escopo 'local' por padrão para não invalidar a credencial biométrica do dispositivo
+    const scope = options?.scope ?? 'local'
+    supabase.auth.signOut({ scope }).catch(() => {})
     set({
       isAuthenticated: false,
       user: null,

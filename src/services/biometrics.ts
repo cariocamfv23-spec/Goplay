@@ -322,7 +322,35 @@ export const biometricService = {
   }): void {
     const enrolled = this.getEnrolledCredential()
     if (enrolled) {
-      enrolled.sessionToken = tokens
+      enrolled.sessionToken = {
+        access_token: tokens.access_token,
+        refresh_token: tokens.refresh_token,
+        expires_at: tokens.expires_at,
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(enrolled))
+    }
+  },
+
+  /**
+   * Sincroniza a sessão ativa caso este dispositivo tenha biometria cadastrada para o usuário
+   */
+  syncSessionIfEnrolled(
+    session: {
+      user?: { id?: string }
+      access_token?: string
+      refresh_token?: string
+      expires_at?: number
+    } | null,
+  ): void {
+    if (!session?.access_token || !session?.refresh_token) return
+    const enrolled = this.getEnrolledCredential()
+    if (!enrolled) return
+    if (!session.user?.id || enrolled.userId === session.user.id) {
+      enrolled.sessionToken = {
+        access_token: session.access_token,
+        refresh_token: session.refresh_token,
+        expires_at: session.expires_at,
+      }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(enrolled))
     }
   },

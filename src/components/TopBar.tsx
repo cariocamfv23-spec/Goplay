@@ -60,7 +60,7 @@ export function TopBar() {
   const { color, setColor } = useThemeStore()
   const { isEnabled, toggle, preset, setPreset } = useNostalgiaStore()
   const { isPreviewLocked, setIsPreviewLocked } = usePrivacyStore()
-  const { user, profile } = useAuth()
+  const { user, profile, signOut } = useAuth()
   const { logout } = useAuthStore()
 
   const isMarket = location.pathname.includes('/marketplace')
@@ -97,7 +97,11 @@ export function TopBar() {
   }
 
   const handleLogout = async () => {
-    logout()
+    try {
+      await signOut({ scope: 'local' })
+    } catch {
+      logout({ scope: 'local' })
+    }
     navigate('/login', { replace: true })
     toast.success('Você saiu da sua conta.')
   }

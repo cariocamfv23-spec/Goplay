@@ -43,10 +43,15 @@ import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Slider } from '@/components/ui/slider'
 import useSoundStore from '@/stores/useSoundStore'
+import { useAuth } from '@/hooks/use-auth'
+import { useAuthStore } from '@/stores/useAuthStore'
+import { toast } from 'sonner'
 
 export default function Settings() {
   const navigate = useNavigate()
   const { setTheme, theme } = useTheme()
+  const { signOut } = useAuth()
+  const { logout } = useAuthStore()
 
   const [isLoading, setIsLoading] = useState(true)
   const weatherStore = useWeatherStore()
@@ -434,6 +439,15 @@ export default function Settings() {
         <Button
           variant="ghost"
           className="w-full justify-start h-12 gap-3 text-base font-medium text-destructive hover:text-destructive hover:bg-destructive/10"
+          onClick={async () => {
+            try {
+              await signOut({ scope: 'local' })
+            } catch {
+              logout({ scope: 'local' })
+            }
+            toast.success('Você saiu da sua conta.')
+            navigate('/login', { replace: true })
+          }}
         >
           <LogOut className="h-5 w-5" /> Sair da Conta
         </Button>
