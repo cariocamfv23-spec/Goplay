@@ -33,6 +33,10 @@ interface AuthContextType {
   signOut: (options?: {
     scope?: 'local' | 'global' | 'others'
   }) => Promise<{ error: any }>
+  unlockWithBiometrics: (tokens?: {
+    access_token: string
+    refresh_token: string
+  }) => Promise<{ data?: any; error: any }>
   restoreSessionWithTokens: (tokens: {
     access_token: string
     refresh_token: string
@@ -117,6 +121,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const isLocked = biometricService.isLocked()
 
       if (isLocked) {
+        // Bloqueio local ativo: preserva a sessão no storage do Supabase, mas oculta da UI até o sensor confirmar
         setSession(null)
         setUser(null)
         setProfile(null)
@@ -124,7 +129,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         useAuthStore.getState().setSession(null)
         useAuthStore.getState().setProfile(null)
         useAuthStore.getState().setHasHydrated(true)
-        if (newSession) {
+        if (newSession?.refresh_token) {
           biometricService.syncSessionIfEnrolled(newSession)
         }
         return
@@ -140,7 +145,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       useAuthStore.getState().setHasHydrated(true)
 
       if (currentUser && newSession?.refresh_token) {
-        // Mantém a credencial biométrica sincronizada com os tokens mais recentes da sessão ativa (inclui rotatividade de refresh tokens)
+        // Mantém a credencial biométrica sincronizada com os tokens mais recentes da sessão ativa
         biometricService.syncSessionIfEnrolled(newSession)
       }
 
@@ -166,7 +171,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         useAuthStore.getState().setSession(null)
         useAuthStore.getState().setProfile(null)
         useAuthStore.getState().setHasHydrated(true)
-        if (initialSession) {
+        if (initialSession?.refresh_token) {
           biometricService.syncSessionIfEnrolled(initialSession)
         }
         return
@@ -274,6 +279,100 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
+  /**
+   * Desbloqueia a sessão do app após confirmação física pelo sensor biométrico.
+   * Prioridade 1: Sessão já persistida e gerenciada nativamente pelo cliente Supabase.
+   * Prioridade 2: refreshSession() nativo caso o token esteja prestes a expirar.
+   * Prioridade 3: Tokens de fallback passados como parâmetro ou backup local.
+   */
+  const unlockWithBiometrics = async (fallbackTokens?: {
+    access_token: string
+    refresh_token: string
+  }) => {
+    try {
+      // Remove o lock imediatamente para permitir que as APIs do Supabase operem
+      biometricService.unlock()
+
+      // 1. Tenta obter a sessão persistida diretamente do cliente Supabase
+      let activeSession: Session | null = null
+      try {
+        const { data: currentData } = await supabase.auth.getSession()
+        if (currentData?.session?.user) {
+          activeSession = currentData.session
+        }
+      } catch {
+        // prossegue para refresh
+      }
+
+      // 2. Se a sessão persistida parecer expirada ou ausente, tenta refresh nativo
+      if (!activeSession) {
+        try {
+          const { data: refreshed, error: refreshError } =
+            await supabase.auth.refreshSession()
+          if (!refreshError && refreshed?.session?.user) {
+            activeSession = refreshed.session
+          }
+        } catch {
+          // prossegue para tokens
+        }
+      }
+
+      // 3. Fallback: tokens de backup ou parâmetro
+      const candidateTokens = fallbackTokens?.refresh_token
+        ? fallbackTokens
+        : biometricService.getSessionBackup() ||
+          biometricService.getEnrolledCredential()?.sessionToken
+
+      if (!activeSession && candidateTokens?.refresh_token) {
+        try {
+          let { data: restored, error: restoreError } =
+            await supabase.auth.setSession({
+              access_token: candidateTokens.access_token || '',
+              refresh_token: candidateTokens.refresh_token,
+            })
+          if (restoreError || !restored?.session) {
+            const refreshResult = await supabase.auth.refreshSession({
+              refresh_token: candidateTokens.refresh_token,
+            })
+            if (!refreshResult.error && refreshResult.data?.session) {
+              restored = refreshResult.data
+              restoreError = null
+            }
+          }
+          if (!restoreError && restored?.session?.user) {
+            activeSession = restored.session
+          }
+        } catch {
+          // prossegue
+        }
+      }
+
+      if (activeSession?.user) {
+        // Sucesso: atualiza contexto, sincroniza e carrega perfil
+        biometricService.unlock()
+        biometricService.syncSessionIfEnrolled(activeSession)
+
+        setSession(activeSession)
+        const currentUser = activeSession.user
+        setUser(currentUser)
+        setLoading(false)
+        useAuthStore.getState().setSession(activeSession)
+        useAuthStore.getState().setHasHydrated(true)
+        loadProfile(currentUser.id)
+        return { data: { session: activeSession }, error: null }
+      }
+
+      // Se de fato nenhuma sessão puder ser restaurada no aparelho
+      biometricService.markNeedsReauth('no_session_on_device')
+      return {
+        data: null,
+        error: new Error('no_session_on_device'),
+      }
+    } catch (err: any) {
+      return { data: null, error: err }
+    }
+  }
+
   const restoreSessionWithTokens = async (tokens: {
     access_token: string
     refresh_token: string
@@ -315,7 +414,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           loadProfile(currentUser.id)
         }
       } else if (error) {
-        // Se a restauração falhar (token inválido/revogado/expirado), marca a credencial para evitar loop
+        // Apenas marca needsReauth se for erro de autenticação irrecuperável e não falha transitória de rede
         const isNetworkErr =
           error.message?.includes('network') ||
           error.message?.includes('fetch') ||
@@ -397,6 +496,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signIn,
         signInWithGoogle,
         signOut,
+        unlockWithBiometrics,
         restoreSessionWithTokens,
         resetPasswordForEmail,
         updateUserPassword,

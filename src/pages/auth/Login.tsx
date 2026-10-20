@@ -37,7 +37,12 @@ import { cn } from '@/lib/utils'
 export default function Login() {
   const navigate = useNavigate()
   const { login, isAuthenticated, hasHydrated } = useAuthStore()
-  const { signIn, signInWithGoogle, restoreSessionWithTokens } = useAuth()
+  const {
+    signIn,
+    signInWithGoogle,
+    unlockWithBiometrics,
+    restoreSessionWithTokens,
+  } = useAuth()
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [socialLoading, setSocialLoading] = useState<string | null>(null)
@@ -274,71 +279,36 @@ export default function Login() {
       }
 
       // 4. Sensor físico aprovado com sucesso!
-      // Agora desbloqueia e restaura a sessão. Primeiro tenta a sessão ativa persistida no Supabase client.
-      let activeSession: any = null
-
-      try {
-        const { data: getSessionData } = await supabase.auth.getSession()
-        if (getSessionData?.session?.user) {
-          activeSession = getSessionData.session
-        }
-      } catch {
-        // Prossegue para tentativas de renovação
-      }
-
-      // Se a sessão padrão do Supabase não estiver de prontidão ou expirada, tenta restaurar usando tokens da credencial
-      if (!activeSession) {
-        const candidateTokens =
-          result.data.sessionToken || enrolled.sessionToken
-
-        if (candidateTokens?.refresh_token) {
-          const { data: restoreData } = await restoreSessionWithTokens({
-            access_token: candidateTokens.access_token || '',
-            refresh_token: candidateTokens.refresh_token,
-          })
-          if (restoreData?.session) {
-            activeSession = restoreData.session
+      // Agora restaura a sessão nativa do cliente Supabase.
+      const candidateTokens = result.data.sessionToken?.refresh_token
+        ? {
+            access_token: result.data.sessionToken.access_token || '',
+            refresh_token: result.data.sessionToken.refresh_token,
           }
-        }
-      }
+        : undefined
 
-      // Se ainda não temos uma sessão válida, tenta refreshSession nativo do client
-      if (!activeSession) {
-        try {
-          const { data: refreshData } = await supabase.auth.refreshSession()
-          if (refreshData?.session) {
-            activeSession = refreshData.session
-          }
-        } catch {
-          // prossegue
-        }
-      }
+      const unlockResult = await unlockWithBiometrics(candidateTokens)
+      const activeSession = unlockResult.data?.session
 
       if (!activeSession?.user) {
-        // Se a sessão expirou completamente em todos os níveis, orienta o usuário
-        biometricService.markNeedsReauth('session_revoked')
+        // Se de fato nenhuma sessão existir no aparelho (ex.: storage limpo manualmente)
+        biometricService.markNeedsReauth('no_session_on_device')
         setEnrolledBiometric(biometricService.getEnrolledCredential())
 
         if (enrolled.userEmail) {
           setEmail(enrolled.userEmail)
         }
 
-        toast.error('Sessão expirada no servidor', {
+        toast.error('Nenhuma sessão salva encontrada', {
           description:
-            'Sua credencial biométrica é válida. Faça login com seu e-mail e senha para reativar o acesso por biometria.',
+            'Sua credencial biométrica é válida, mas a sessão precisa ser renovada com login convencional.',
           duration: 6000,
         })
         return
       }
 
-      // 5. Desbloqueia o app e sincroniza o estado autenticado
-      biometricService.unlock()
-      biometricService.syncSessionIfEnrolled(activeSession)
+      // 5. Sucesso confirmado
       setEnrolledBiometric(biometricService.getEnrolledCredential())
-
-      // Hidrata os stores de autenticação
-      useAuthStore.getState().setSession(activeSession)
-      useAuthStore.getState().setHasHydrated(true)
 
       const userName =
         result.data.userName ||

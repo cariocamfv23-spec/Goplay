@@ -175,11 +175,27 @@ export function runBiometricsUnitTests(): {
     biometricService.unlock()
     assert(!biometricService.isLocked(), 'unlock reverte isLocked para false')
 
-    // Teste 8: disableBiometrics remove a chave e o lock
+    // Teste 8: saveSessionBackup e getSessionBackup
+    biometricService.saveSessionBackup({
+      access_token: 'backup_access',
+      refresh_token: 'backup_refresh',
+    })
+    const backup = biometricService.getSessionBackup()
+    assert(
+      backup?.access_token === 'backup_access' &&
+        backup?.refresh_token === 'backup_refresh',
+      'saveSessionBackup e getSessionBackup funcionam corretamente',
+    )
+
+    // Teste 9: disableBiometrics remove a chave, o lock e o backup de sessão
     biometricService.lock()
     biometricService.disableBiometrics()
     assert(!biometricService.isEnrolled(), 'disableBiometrics limpou o storage')
     assert(!biometricService.isLocked(), 'disableBiometrics limpou o lock')
+    assert(
+      biometricService.getSessionBackup() === null,
+      'disableBiometrics limpou o backup de sessão',
+    )
   } catch (err: any) {
     failed++
     errors.push(`Exceção durante teste: ${err?.message || String(err)}`)

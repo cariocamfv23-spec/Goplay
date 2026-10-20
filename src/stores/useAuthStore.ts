@@ -26,11 +26,13 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: (_options) => {
     // A saída encerra a sessão visual e de memória da aplicação.
     // Quando a biometria está habilitada, a sessão subjacente é protegida pelo bloqueio biométrico (biometricService.lock).
+    // O flag hasHydrated permanece true para que a tela de Login não fique em loop de PageLoader.
     set({
       isAuthenticated: false,
       user: null,
       session: null,
       profile: null,
+      hasHydrated: true,
     })
   },
   setSession: (session) =>

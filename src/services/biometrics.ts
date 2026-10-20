@@ -6,6 +6,7 @@
 
 const STORAGE_KEY = 'goplay_biometric_credential_v1'
 const LOCK_KEY = 'goplay_biometric_locked_v1'
+const BACKUP_SESSION_KEY = 'goplay_biometric_session_backup_v1'
 
 export interface BiometricCredentialData {
   credentialId: string // Base64url encoded credential ID
@@ -14,7 +15,7 @@ export interface BiometricCredentialData {
   userName?: string
   enrolledAt: string
   deviceName?: string
-  needsReauth?: boolean // Indica se a sessão precisa de reativação via login convencional
+  needsReauth?: boolean // Indica se a sessão precisa de reativação via login convencional (apenas se não houver nenhuma sessão no aparelho)
   lastError?: string
   sessionToken?: {
     access_token: string
@@ -136,12 +137,48 @@ export const biometricService = {
   },
 
   /**
+   * Salva um backup da sessão do Supabase no storage local para casos onde
+   * a chave padrão do Supabase seja limpa ou sobrescrita
+   */
+  saveSessionBackup(tokens: {
+    access_token: string
+    refresh_token: string
+    expires_at?: number
+  }): void {
+    try {
+      if (tokens.refresh_token) {
+        localStorage.setItem(BACKUP_SESSION_KEY, JSON.stringify(tokens))
+      }
+    } catch {
+      // no-op
+    }
+  },
+
+  /**
+   * Retorna o backup de sessão local se existir
+   */
+  getSessionBackup(): {
+    access_token: string
+    refresh_token: string
+    expires_at?: number
+  } | null {
+    try {
+      const raw = localStorage.getItem(BACKUP_SESSION_KEY)
+      if (!raw) return null
+      return JSON.parse(raw)
+    } catch {
+      return null
+    }
+  },
+
+  /**
    * Remove o cadastro biométrico deste aparelho
    */
   disableBiometrics(): void {
     try {
       localStorage.removeItem(STORAGE_KEY)
       localStorage.removeItem(LOCK_KEY)
+      localStorage.removeItem(BACKUP_SESSION_KEY)
     } catch {
       // no-op
     }
@@ -231,9 +268,13 @@ export const biometricService = {
             ? 'Android (Biometria)'
             : 'Este Aparelho',
         sessionToken: params.sessionTokens,
+        needsReauth: false,
       }
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(savedData))
+      if (params.sessionTokens) {
+        this.saveSessionBackup(params.sessionTokens)
+      }
 
       return { success: true }
     } catch (err: any) {
@@ -397,6 +438,7 @@ export const biometricService = {
     refresh_token: string
     expires_at?: number
   }): void {
+    this.saveSessionBackup(tokens)
     const enrolled = this.getEnrolledCredential()
     if (enrolled) {
       enrolled.sessionToken = {
@@ -406,6 +448,11 @@ export const biometricService = {
       }
       enrolled.needsReauth = false
       enrolled.lastError = undefined
+      try {
+        localStorage.removeItem(LOCK_KEY)
+      } catch {
+        // no-op
+      }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(enrolled))
     }
   },
@@ -455,6 +502,11 @@ export const biometricService = {
         // no-op
       }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(enrolled))
+      this.saveSessionBackup({
+        access_token: session.access_token,
+        refresh_token: session.refresh_token,
+        expires_at: session.expires_at,
+      })
       return true
     }
     return false
