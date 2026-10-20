@@ -396,7 +396,7 @@ export default function Settings() {
             className="w-full justify-start h-12 gap-3 text-base font-normal"
             onClick={() => navigate('/settings/privacy')}
           >
-            <Lock className="h-5 w-5" /> Privacidade e Segurança
+            <Lock className="h-5 w-5" /> Privacidade, Segurança e Biometria
           </Button>
         </div>
 

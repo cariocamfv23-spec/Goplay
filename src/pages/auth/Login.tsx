@@ -27,15 +27,24 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import { useAuth } from '@/hooks/use-auth'
 import { PageLoader } from '@/components/PageLoader'
 import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton'
+import {
+  biometricService,
+  type BiometricCredentialData,
+} from '@/services/biometrics'
+import { AlertCircle, CheckCircle2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export default function Login() {
   const navigate = useNavigate()
   const { login, isAuthenticated, hasHydrated } = useAuthStore()
-  const { signIn, signInWithGoogle } = useAuth()
+  const { signIn, signInWithGoogle, restoreSessionWithTokens } = useAuth()
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [socialLoading, setSocialLoading] = useState<string | null>(null)
   const [biometricLoading, setBiometricLoading] = useState(false)
+  const [isWebAuthnSupported, setIsWebAuthnSupported] = useState(false)
+  const [enrolledBiometric, setEnrolledBiometric] =
+    useState<BiometricCredentialData | null>(null)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
@@ -70,7 +79,7 @@ export default function Login() {
     })
   }
 
-  // Load saved credentials on mount
+  // Load saved credentials and biometric status on mount
   useEffect(() => {
     const savedEmail = localStorage.getItem('goplay_email')
     const savedPassword = localStorage.getItem('goplay_password')
@@ -81,6 +90,12 @@ export default function Login() {
       setRememberMe(true)
       if (savedPassword) setPassword(savedPassword)
     }
+
+    // Checar suporte e alistamento biométrico neste aparelho
+    const supported = biometricService.isWebAuthnSupported()
+    setIsWebAuthnSupported(supported)
+    const enrolled = biometricService.getEnrolledCredential()
+    setEnrolledBiometric(enrolled)
   }, [])
 
   const handleLogin = async (e?: React.FormEvent) => {
@@ -125,6 +140,17 @@ export default function Login() {
       if (data?.session) {
         useAuthStore.getState().setSession(data.session)
         useAuthStore.getState().setHasHydrated(true)
+        // Se este aparelho tiver biometria cadastrada para esta mesma conta, renova os tokens
+        if (data.session.access_token && data.session.refresh_token) {
+          const enrolled = biometricService.getEnrolledCredential()
+          if (enrolled && enrolled.userId === data.session.user.id) {
+            biometricService.updateSavedSession({
+              access_token: data.session.access_token,
+              refresh_token: data.session.refresh_token,
+              expires_at: data.session.expires_at,
+            })
+          }
+        }
       }
 
       if (rememberMe) {
@@ -209,24 +235,115 @@ export default function Login() {
     }, 1500)
   }
 
-  const handleBiometricLogin = () => {
-    setTimeout(() => setBiometricLoading(true), 0)
-    toast.info('Aproxime o dedo do sensor', {
-      icon: <Fingerprint className="h-4 w-4 animate-pulse text-primary" />,
-      duration: 2000,
-    })
+  const handleBiometricLogin = async () => {
+    // 1. Checar se o navegador suporta WebAuthn
+    if (!biometricService.isWebAuthnSupported()) {
+      toast.error('Navegador incompatível com biometria', {
+        description:
+          'Seu navegador não suporta a Web Authentication API. Faça login com e-mail e senha.',
+      })
+      return
+    }
 
-    setTimeout(() => {
-      // Non-blocking state update and navigation to prevent UI freezing
-      setTimeout(() => {
-        setBiometricLoading(false)
-        login()
-        toast.success('Identidade confirmada', {
-          description: 'Acesso seguro liberado via biometria.',
+    // 2. Checar se há credencial biométrica cadastrada neste aparelho
+    const enrolled = biometricService.getEnrolledCredential()
+    if (!enrolled) {
+      toast.info('Biometria não ativada neste aparelho', {
+        description:
+          'Faça login com seu e-mail e senha uma vez e ative a "Entrada por Biometria" nas Configurações da sua conta.',
+        duration: 5000,
+      })
+      return
+    }
+
+    // 3. Checar se há token de sessão salvo para restaurar
+    if (
+      !enrolled.sessionToken ||
+      !enrolled.sessionToken.access_token ||
+      !enrolled.sessionToken.refresh_token
+    ) {
+      toast.error('Sessão biométrica expirada', {
+        description:
+          'Entre com seu e-mail e senha para revalidar sua biometria neste aparelho.',
+      })
+      return
+    }
+
+    setBiometricLoading(true)
+
+    try {
+      // 4. Executa a cerimônia REAL do WebAuthn no dispositivo
+      // O aparelho (Android, iOS Face ID/Touch ID, Windows Hello) exibirá o modal nativo do sistema
+      const result = await biometricService.authenticate()
+
+      if (!result.success || !result.data) {
+        toast.error('Biometria não confirmada', {
+          description:
+            result.error ||
+            'Não foi possível validar sua identidade biométrica. Tente novamente ou use e-mail e senha.',
         })
-        navigate('/home', { replace: true })
-      }, 0)
-    }, 2000)
+        return
+      }
+
+      // 5. SOMENTE se a biometria real passar, restaura a sessão segura com os tokens
+      const { data: restoreData, error: restoreError } =
+        await restoreSessionWithTokens({
+          access_token: result.data.sessionToken!.access_token,
+          refresh_token: result.data.sessionToken!.refresh_token,
+        })
+
+      if (restoreError || !restoreData?.session) {
+        toast.error('Sessão expirada no servidor', {
+          description:
+            'Sua credencial biométrica é válida, mas a sessão precisa ser renovada com login convencional.',
+        })
+        return
+      }
+
+      // Atualiza os tokens caso tenham sido renovados na restauração
+      if (
+        restoreData.session.access_token &&
+        restoreData.session.refresh_token
+      ) {
+        biometricService.updateSavedSession({
+          access_token: restoreData.session.access_token,
+          refresh_token: restoreData.session.refresh_token,
+          expires_at: restoreData.session.expires_at,
+        })
+      }
+
+      const userName =
+        result.data.userName ||
+        restoreData.session.user?.user_metadata?.full_name ||
+        result.data.userEmail.split('@')[0]
+
+      toast.success(`Identidade confirmada! Bem-vindo, ${userName}.`, {
+        description: 'Acesso seguro liberado via sensor biométrico.',
+      })
+
+      const params = new URLSearchParams(window.location.search)
+      const redirectParam = params.get('redirect')
+      let target = '/home'
+      if (redirectParam) {
+        try {
+          const decoded = decodeURIComponent(redirectParam)
+          if (decoded.startsWith('/')) target = decoded
+        } catch {
+          if (redirectParam.startsWith('/')) target = redirectParam
+        }
+      }
+
+      navigate(target, { replace: true })
+    } catch (err: any) {
+      console.error('Erro na autenticação biométrica:', err)
+      toast.error('Erro na biometria', {
+        description:
+          err?.message ||
+          'Falha inesperada ao tentar autenticar via biometria.',
+      })
+    } finally {
+      setBiometricLoading(false)
+    }
   }
 
   if (!hasHydrated) {
@@ -402,25 +519,57 @@ export default function Login() {
                 }
               />
 
-              <Button
-                variant="outline"
-                className="w-full gap-2 border-primary/20 hover:bg-primary/5 hover:text-primary transition-colors h-11"
-                type="button"
-                onClick={handleBiometricLogin}
-                disabled={
-                  loading ||
-                  googleLoading ||
-                  !!socialLoading ||
-                  biometricLoading
-                }
-              >
-                {biometricLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+              <div className="space-y-1">
+                <Button
+                  variant="outline"
+                  className={cn(
+                    'w-full gap-2 border-primary/25 hover:bg-primary/5 hover:text-primary transition-colors h-11 relative overflow-hidden',
+                    enrolledBiometric &&
+                      'border-primary/50 shadow-sm bg-primary/[0.02]',
+                  )}
+                  type="button"
+                  onClick={handleBiometricLogin}
+                  disabled={
+                    loading ||
+                    googleLoading ||
+                    !!socialLoading ||
+                    biometricLoading
+                  }
+                >
+                  {biometricLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                  ) : (
+                    <Fingerprint
+                      className={cn(
+                        'h-4 w-4',
+                        enrolledBiometric
+                          ? 'text-primary'
+                          : 'text-muted-foreground',
+                      )}
+                    />
+                  )}
+                  <span className="font-semibold">
+                    {enrolledBiometric
+                      ? 'Entrar com Biometria (Touch ID / Face ID)'
+                      : 'Entrar com Biometria'}
+                  </span>
+                </Button>
+
+                {/* Status indicator / feedback for biometric setup on device */}
+                {enrolledBiometric ? (
+                  <p className="text-[11px] text-center text-emerald-600 dark:text-emerald-400 font-medium flex items-center justify-center gap-1 pt-0.5">
+                    <CheckCircle2 className="w-3 h-3" />
+                    Biometria ativa neste aparelho (
+                    {enrolledBiometric.userEmail})
+                  </p>
                 ) : (
-                  <Fingerprint className="h-4 w-4" />
+                  <p className="text-[10.5px] text-center text-muted-foreground pt-0.5">
+                    {isWebAuthnSupported
+                      ? 'Requer ativação prévia nas Configurações do app.'
+                      : 'Biometria indisponível neste navegador.'}
+                  </p>
                 )}
-                <span className="font-semibold">Entrar com Biometria</span>
-              </Button>
+              </div>
             </div>
           </CardContent>
           <CardFooter className="flex flex-col items-center gap-3">

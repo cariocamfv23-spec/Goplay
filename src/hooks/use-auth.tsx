@@ -30,6 +30,10 @@ interface AuthContextType {
     redirectPath?: string,
   ) => Promise<{ data?: any; error: any }>
   signOut: () => Promise<{ error: any }>
+  restoreSessionWithTokens: (tokens: {
+    access_token: string
+    refresh_token: string
+  }) => Promise<{ data?: any; error: any }>
   resetPasswordForEmail: (email: string) => Promise<{ error: any }>
   updateUserPassword: (password: string) => Promise<{ error: any }>
   refreshProfile: () => Promise<void>
@@ -219,6 +223,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
+  const restoreSessionWithTokens = async (tokens: {
+    access_token: string
+    refresh_token: string
+  }) => {
+    try {
+      const { data, error } = await supabase.auth.setSession({
+        access_token: tokens.access_token,
+        refresh_token: tokens.refresh_token,
+      })
+
+      if (!error && data?.session) {
+        setSession(data.session)
+        const currentUser = data.session.user ?? null
+        setUser(currentUser)
+        setLoading(false)
+        useAuthStore.getState().setSession(data.session)
+        useAuthStore.getState().setHasHydrated(true)
+        if (currentUser) {
+          loadProfile(currentUser.id)
+        }
+      }
+      return { data, error }
+    } catch (err: any) {
+      return { data: null, error: err }
+    }
+  }
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
     setProfile(null)
@@ -257,6 +288,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signIn,
         signInWithGoogle,
         signOut,
+        restoreSessionWithTokens,
         resetPasswordForEmail,
         updateUserPassword,
         refreshProfile,
