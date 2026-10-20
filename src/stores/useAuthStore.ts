@@ -27,6 +27,15 @@ export const useAuthStore = create<AuthState>((set) => ({
     // A saída encerra a sessão visual e de memória da aplicação.
     // Quando a biometria está habilitada, a sessão subjacente é protegida pelo bloqueio biométrico (biometricService.lock).
     // O flag hasHydrated permanece true para que a tela de Login não fique em loop de PageLoader.
+    try {
+      // Limpa cache persistido do feed ao fazer logout para isolamento de dados
+      import('@/stores/useFeedStore').then(({ useFeedStore }) => {
+        useFeedStore.getState().clearFeed()
+      })
+    } catch {
+      // Ignora falha de import dinâmica
+    }
+
     set({
       isAuthenticated: false,
       user: null,

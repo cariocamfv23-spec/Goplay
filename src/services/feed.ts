@@ -176,6 +176,9 @@ export const feedService = {
 
   /**
    * Fetches real posts with author profile and current user like status.
+   * Optimizations:
+   * - Executes initial posts query, followed by profiles, likes and comments in parallel via Promise.all.
+   * - Eliminates N+1 roundtrips.
    */
   async getPosts(
     currentUserId?: string | null,
@@ -202,41 +205,33 @@ export const feedService = {
 
       if (visiblePosts.length === 0) return { data: [], error: null }
 
-      // Extract unique user IDs to fetch author profiles in batch
+      // Extract unique user IDs and visible post IDs
       const userIds = Array.from(
         new Set(visiblePosts.map((p: any) => p.user_id)),
       )
-      const { data: profiles, error: profError } = await db
-        .from('profiles')
-        .select('id, full_name, avatar_url, account_type, sport')
-        .in('id', userIds)
+      const postIds = visiblePosts.map((p: any) => p.id)
 
-      if (profError) throw profError
+      // Fetch profiles, likes and comments in parallel (eliminates waterfall serialization)
+      const [profilesRes, likesRes, commentsRes] = await Promise.all([
+        db
+          .from('profiles')
+          .select('id, full_name, avatar_url, account_type, sport')
+          .in('id', userIds),
+        db.from('post_likes').select('post_id, user_id').in('post_id', postIds),
+        db.from('post_comments').select('post_id').in('post_id', postIds),
+      ])
+
+      if (profilesRes.error) throw profilesRes.error
+      if (likesRes.error) throw likesRes.error
+      if (commentsRes.error) throw commentsRes.error
 
       const profileMap = new Map<string, any>()
-      profiles?.forEach((p: any) => profileMap.set(p.id, p))
-
-      // Fetch likes count and if current user liked
-      const postIds = rawPosts.map((p: any) => p.id)
-      const { data: likesData, error: likesError } = await db
-        .from('post_likes')
-        .select('post_id, user_id')
-        .in('post_id', postIds)
-
-      if (likesError) throw likesError
-
-      // Fetch comments count
-      const { data: commentsData, error: commentsError } = await db
-        .from('post_comments')
-        .select('post_id')
-        .in('post_id', postIds)
-
-      if (commentsError) throw commentsError
+      profilesRes.data?.forEach((p: any) => profileMap.set(p.id, p))
 
       // Compute aggregates
       const likesByPost = new Map<string, number>()
       const userLikedSet = new Set<string>()
-      likesData?.forEach((like) => {
+      likesRes.data?.forEach((like: any) => {
         likesByPost.set(like.post_id, (likesByPost.get(like.post_id) || 0) + 1)
         if (currentUserId && like.user_id === currentUserId) {
           userLikedSet.add(like.post_id)
@@ -244,11 +239,11 @@ export const feedService = {
       })
 
       const commentsByPost = new Map<string, number>()
-      commentsData?.forEach((c) => {
+      commentsRes.data?.forEach((c: any) => {
         commentsByPost.set(c.post_id, (commentsByPost.get(c.post_id) || 0) + 1)
       })
 
-      const formattedPosts: PostItem[] = visiblePosts.map((p) => {
+      const formattedPosts: PostItem[] = visiblePosts.map((p: any) => {
         const prof = profileMap.get(p.user_id)
         return {
           id: p.id,

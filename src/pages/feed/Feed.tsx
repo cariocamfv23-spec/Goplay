@@ -9,8 +9,35 @@ import { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useAuth } from '@/hooks/use-auth'
 import { useRealtimeFeed } from '@/hooks/useRealtimeFeed'
-import { Loader2, Radio } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+
+function PostCardSkeleton() {
+  return (
+    <Card className="border-none shadow-sm rounded-2xl bg-card mb-4 animate-pulse">
+      <CardHeader className="flex flex-row items-center p-4 pb-2 space-y-0 gap-3">
+        <Skeleton className="h-10 w-10 rounded-full shrink-0" />
+        <div className="flex-1 space-y-2">
+          <Skeleton className="h-3.5 w-32 rounded" />
+          <Skeleton className="h-2.5 w-20 rounded" />
+        </div>
+      </CardHeader>
+      <CardContent className="p-4 pt-1 space-y-3">
+        <Skeleton className="h-3.5 w-full rounded" />
+        <Skeleton className="h-3.5 w-4/5 rounded" />
+        <Skeleton className="h-48 w-full rounded-xl" />
+        <div className="flex items-center justify-between pt-2">
+          <div className="flex gap-4">
+            <Skeleton className="h-5 w-12 rounded" />
+            <Skeleton className="h-5 w-12 rounded" />
+          </div>
+          <Skeleton className="h-5 w-8 rounded" />
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
 
 export default function Feed() {
   const { user } = useAuth()
@@ -20,6 +47,7 @@ export default function Feed() {
   const {
     posts: realPosts,
     loading,
+    isSyncing,
     isLiveConnected,
     refreshFeed,
     removeLocalPost,
@@ -104,16 +132,24 @@ export default function Feed() {
                 </TabsTrigger>
               </TabsList>
 
-              {isLiveConnected && (
-                <Badge
-                  variant="outline"
-                  className="h-7 px-2.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-[10px] font-bold flex items-center gap-1.5 shrink-0 animate-in fade-in"
-                  title="Conectado ao Supabase Realtime (atualizações ao vivo)"
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>AO VIVO</span>
-                </Badge>
-              )}
+              <div className="flex items-center gap-1.5 shrink-0">
+                {isSyncing && realPosts.length > 0 && (
+                  <span
+                    className="h-1.5 w-1.5 rounded-full bg-primary animate-ping"
+                    title="Atualizando em segundo plano"
+                  />
+                )}
+                {isLiveConnected && (
+                  <Badge
+                    variant="outline"
+                    className="h-7 px-2.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-[10px] font-bold flex items-center gap-1.5 shrink-0 animate-in fade-in"
+                    title="Conectado ao Supabase Realtime (atualizações ao vivo)"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span>AO VIVO</span>
+                  </Badge>
+                )}
+              </div>
             </div>
 
             <div className="mt-4 pb-24">
@@ -121,12 +157,11 @@ export default function Feed() {
                 value="all"
                 className="space-y-6 m-0 animate-in fade-in slide-in-from-bottom-4 duration-500"
               >
-                {loading ? (
-                  <div className="flex flex-col items-center justify-center py-16 gap-2">
-                    <Loader2 className="w-6 h-6 animate-spin text-primary" />
-                    <span className="text-xs text-muted-foreground">
-                      Sincronizando feed...
-                    </span>
+                {loading && allPosts.length === 0 ? (
+                  <div className="space-y-4">
+                    <PostCardSkeleton />
+                    <PostCardSkeleton />
+                    <PostCardSkeleton />
                   </div>
                 ) : (
                   allPosts.map((post) => (
@@ -149,20 +184,27 @@ export default function Feed() {
                 value="social"
                 className="space-y-6 m-0 animate-in fade-in slide-in-from-bottom-4 duration-500"
               >
-                {socialPosts.map((post) => (
-                  <div
-                    id={`post-${post.id}`}
-                    key={post.id}
-                    className="rounded-2xl"
-                  >
-                    <PostCard
-                      post={post}
-                      onDeleted={(deletedId) => {
-                        removeLocalPost(String(deletedId))
-                      }}
-                    />
+                {loading && socialPosts.length === 0 ? (
+                  <div className="space-y-4">
+                    <PostCardSkeleton />
+                    <PostCardSkeleton />
                   </div>
-                ))}
+                ) : (
+                  socialPosts.map((post) => (
+                    <div
+                      id={`post-${post.id}`}
+                      key={post.id}
+                      className="rounded-2xl"
+                    >
+                      <PostCard
+                        post={post}
+                        onDeleted={(deletedId) => {
+                          removeLocalPost(String(deletedId))
+                        }}
+                      />
+                    </div>
+                  ))
+                )}
               </TabsContent>
               <TabsContent
                 value="events"

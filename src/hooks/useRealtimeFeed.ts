@@ -11,12 +11,14 @@ import {
   type NotificationItem,
 } from '@/services/notifications'
 import useSoundStore from '@/stores/useSoundStore'
+import { useFeedStore } from '@/stores/useFeedStore'
 import { toast } from 'sonner'
 import type { RealtimeChannel } from '@supabase/supabase-js'
 
 export interface RealtimeFeedState {
   posts: PostItem[]
   loading: boolean
+  isSyncing: boolean
   isLiveConnected: boolean
   refreshFeed: () => Promise<void>
   addLocalPost: (post: PostItem) => void
@@ -26,6 +28,10 @@ export interface RealtimeFeedState {
 
 /**
  * Hook for live feed updates via Supabase Realtime postgres_changes:
+ * - Uses Zustand useFeedStore as instant cache (stale-while-revalidate)
+ * - Initial fetch runs in parallel with Realtime subscription
+ * - When cache exists, `loading` is immediately FALSE (instant opening)
+ * - Background sync happens silently without blocking or freezing UI
  * - Listens to INSERT, UPDATE, DELETE on `posts`
  * - Listens to INSERT, DELETE on `post_likes` (updates likesCount live without flickering)
  * - Listens to INSERT, DELETE on `post_comments` (updates commentsCount live)
@@ -34,8 +40,21 @@ export interface RealtimeFeedState {
 export function useRealtimeFeed(
   currentUserId?: string | null,
 ): RealtimeFeedState {
-  const [posts, setPosts] = useState<PostItem[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
+  const storePosts = useFeedStore((s) => s.posts)
+  const isSyncing = useFeedStore((s) => s.isSyncing)
+  const setStorePosts = useFeedStore((s) => s.setPosts)
+  const setSyncing = useFeedStore((s) => s.setSyncing)
+  const addStorePost = useFeedStore((s) => s.addPost)
+  const removeStorePost = useFeedStore((s) => s.removePost)
+  const updateStorePostLike = useFeedStore((s) => s.updatePostLike)
+  const updateStoreCommentsCount = useFeedStore(
+    (s) => s.updatePostCommentsCount,
+  )
+  const updateStorePostData = useFeedStore((s) => s.updatePostData)
+
+  // If we have cached posts, we are immediately NOT loading.
+  // Only fresh mounts with zero cached posts consider loading true.
+  const [loading, setLoading] = useState<boolean>(() => storePosts.length === 0)
   const [isLiveConnected, setIsLiveConnected] = useState<boolean>(false)
 
   // Track channels and mounted status
@@ -46,60 +65,46 @@ export function useRealtimeFeed(
 
   // Keep a ref of current posts to avoid stale closures in callbacks
   const postsRef = useRef<PostItem[]>([])
-  postsRef.current = posts
+  postsRef.current = storePosts
 
   const loadFeed = useCallback(async () => {
+    setSyncing(true)
     try {
-      const blockedSet = currentUserIdRef.current
-        ? await moderationService.getBlockedUserIds(currentUserIdRef.current)
-        : new Set<string>()
+      // Parallelize blocked users fetch and initial posts query to avoid cascade delay
+      const [blockedSetResult, rawPostsResult] = await Promise.all([
+        currentUserIdRef.current
+          ? moderationService.getBlockedUserIds(currentUserIdRef.current)
+          : Promise.resolve(new Set<string>()),
+        feedService.getPosts(currentUserIdRef.current, 20),
+      ])
 
-      const { data, error } = await feedService.getPosts(
-        currentUserIdRef.current,
-        20,
-        blockedSet,
-      )
+      const blockedSet = blockedSetResult || new Set<string>()
+
       if (isMountedRef.current) {
-        if (!error && data) {
-          setPosts(data)
+        if (!rawPostsResult.error && rawPostsResult.data) {
+          // Filter out blocked users if any
+          const filtered =
+            blockedSet.size > 0
+              ? rawPostsResult.data.filter((p) => !blockedSet.has(p.userId))
+              : rawPostsResult.data
+          setStorePosts(filtered)
         }
         setLoading(false)
+        setSyncing(false)
       }
-    } catch (err) {
+    } catch {
       if (isMountedRef.current) {
         setLoading(false)
+        setSyncing(false)
       }
     }
-  }, [])
+  }, [setStorePosts, setSyncing])
 
-  // Manual actions
-  const addLocalPost = useCallback((newPost: PostItem) => {
-    setPosts((prev) => {
-      if (prev.some((p) => p.id === newPost.id)) return prev
-      return [newPost, ...prev]
-    })
-  }, [])
-
-  const removeLocalPost = useCallback((postId: string) => {
-    setPosts((prev) => prev.filter((p) => p.id !== postId))
-  }, [])
-
-  const updatePostLike = useCallback(
-    (postId: string, liked: boolean, countDelta: number) => {
-      setPosts((prev) =>
-        prev.map((p) => {
-          if (p.id !== postId) return p
-          const newCount = Math.max(0, p.likesCount + countDelta)
-          return { ...p, isLiked: liked, likesCount: newCount }
-        }),
-      )
-    },
-    [],
-  )
-
-  // Setup initial load and Realtime channel
+  // Setup initial load and Realtime channel in parallel (non-blocking)
   useEffect(() => {
     isMountedRef.current = true
+
+    // Fire data loading in parallel with channel subscription
     loadFeed()
 
     // Clean up any existing channel before subscribing
@@ -186,10 +191,7 @@ export function useRealtimeFeed(
           }
 
           if (isMountedRef.current) {
-            setPosts((prev) => {
-              if (prev.some((p) => p.id === newItem.id)) return prev
-              return [newItem, ...prev]
-            })
+            addStorePost(newItem)
           }
         },
       )
@@ -200,7 +202,7 @@ export function useRealtimeFeed(
           const oldRow = payload.old as any
           if (!oldRow?.id) return
           if (isMountedRef.current) {
-            setPosts((prev) => prev.filter((p) => p.id !== oldRow.id))
+            removeStorePost(oldRow.id)
           }
         },
       )
@@ -211,31 +213,25 @@ export function useRealtimeFeed(
           const updatedRow = payload.new as any
           if (!updatedRow?.id) return
           if (isMountedRef.current) {
-            setPosts((prev) =>
-              prev.map((p) => {
-                if (p.id !== updatedRow.id) return p
-                return {
-                  ...p,
-                  content: updatedRow.content ?? p.content,
-                  media: Array.isArray(updatedRow.media_urls)
-                    ? updatedRow.media_urls
-                    : p.media,
-                  type: updatedRow.post_type ?? p.type,
-                  videoUrl: updatedRow.video_url ?? p.videoUrl,
-                  audioUrl:
-                    updatedRow.audio_url !== undefined
-                      ? updatedRow.audio_url
-                      : p.audioUrl,
-                  musicLink:
-                    updatedRow.music_link !== undefined
-                      ? updatedRow.music_link
-                      : p.musicLink,
-                  mentions: Array.isArray(updatedRow.mentions)
-                    ? updatedRow.mentions
-                    : p.mentions,
-                }
-              }),
-            )
+            updateStorePostData(updatedRow.id, {
+              content: updatedRow.content,
+              media: Array.isArray(updatedRow.media_urls)
+                ? updatedRow.media_urls
+                : undefined,
+              type: updatedRow.post_type,
+              videoUrl: updatedRow.video_url,
+              audioUrl:
+                updatedRow.audio_url !== undefined
+                  ? updatedRow.audio_url
+                  : undefined,
+              musicLink:
+                updatedRow.music_link !== undefined
+                  ? updatedRow.music_link
+                  : undefined,
+              mentions: Array.isArray(updatedRow.mentions)
+                ? updatedRow.mentions
+                : undefined,
+            })
           }
         },
       )
@@ -254,19 +250,16 @@ export function useRealtimeFeed(
             newLike.user_id === currentUserIdRef.current
 
           if (isMountedRef.current) {
-            setPosts((prev) =>
-              prev.map((p) => {
-                if (p.id !== newLike.post_id) return p
-                // If it was performed by current user and is already marked as liked, avoid incrementing again
-                if (isByCurrentUser && p.isLiked) {
-                  return p
-                }
-                return {
-                  ...p,
-                  likesCount: p.likesCount + 1,
-                  isLiked: isByCurrentUser ? true : p.isLiked,
-                }
-              }),
+            const currentPost = postsRef.current.find(
+              (p) => p.id === newLike.post_id,
+            )
+            if (isByCurrentUser && currentPost?.isLiked) {
+              return
+            }
+            updateStorePostLike(
+              newLike.post_id,
+              isByCurrentUser ? true : Boolean(currentPost?.isLiked),
+              1,
             )
           }
         },
@@ -283,19 +276,16 @@ export function useRealtimeFeed(
             oldLike.user_id === currentUserIdRef.current
 
           if (isMountedRef.current) {
-            setPosts((prev) =>
-              prev.map((p) => {
-                if (p.id !== oldLike.post_id) return p
-                // If current user unliked and already marked false, avoid double decrement
-                if (isByCurrentUser && !p.isLiked) {
-                  return p
-                }
-                return {
-                  ...p,
-                  likesCount: Math.max(0, p.likesCount - 1),
-                  isLiked: isByCurrentUser ? false : p.isLiked,
-                }
-              }),
+            const currentPost = postsRef.current.find(
+              (p) => p.id === oldLike.post_id,
+            )
+            if (isByCurrentUser && !currentPost?.isLiked) {
+              return
+            }
+            updateStorePostLike(
+              oldLike.post_id,
+              isByCurrentUser ? false : Boolean(currentPost?.isLiked),
+              -1,
             )
           }
         },
@@ -311,15 +301,7 @@ export function useRealtimeFeed(
           if (!newComment?.post_id) return
 
           if (isMountedRef.current) {
-            setPosts((prev) =>
-              prev.map((p) => {
-                if (p.id !== newComment.post_id) return p
-                return {
-                  ...p,
-                  commentsCount: p.commentsCount + 1,
-                }
-              }),
-            )
+            updateStoreCommentsCount(newComment.post_id, 1)
           }
         },
       )
@@ -331,15 +313,7 @@ export function useRealtimeFeed(
           if (!oldComment?.post_id) return
 
           if (isMountedRef.current) {
-            setPosts((prev) =>
-              prev.map((p) => {
-                if (p.id !== oldComment.post_id) return p
-                return {
-                  ...p,
-                  commentsCount: Math.max(0, p.commentsCount - 1),
-                }
-              }),
-            )
+            updateStoreCommentsCount(oldComment.post_id, -1)
           }
         },
       )
@@ -363,16 +337,25 @@ export function useRealtimeFeed(
         channelRef.current = null
       }
     }
-  }, [currentUserId, loadFeed])
+  }, [
+    currentUserId,
+    loadFeed,
+    addStorePost,
+    removeStorePost,
+    updateStorePostData,
+    updateStorePostLike,
+    updateStoreCommentsCount,
+  ])
 
   return {
-    posts,
+    posts: storePosts,
     loading,
+    isSyncing,
     isLiveConnected,
     refreshFeed: loadFeed,
-    addLocalPost,
-    removeLocalPost,
-    updatePostLike,
+    addLocalPost: addStorePost,
+    removeLocalPost: removeStorePost,
+    updatePostLike: updateStorePostLike,
   }
 }
 
