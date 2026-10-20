@@ -60,7 +60,7 @@ export function BiometricEnrollModal() {
         return () => clearTimeout(timer)
       }
     })
-  }, [user])
+  }, [user, session])
 
   const handleDismiss = () => {
     setIsOpen(false)
