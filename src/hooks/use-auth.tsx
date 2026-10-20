@@ -122,7 +122,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       useAuthStore.getState().setHasHydrated(true)
 
       if (currentUser && newSession?.refresh_token) {
-        // Mantém a credencial biométrica sincronizada com os tokens mais recentes da sessão ativa
+        // Mantém a credencial biométrica sincronizada com os tokens mais recentes da sessão ativa (inclui rotatividade de refresh tokens)
         biometricService.syncSessionIfEnrolled(newSession)
       }
 
@@ -188,6 +188,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const currentUser = data.session.user ?? null
       setUser(currentUser)
       setLoading(false)
+      // Sincroniza e reativa silenciosamente a credencial biométrica alistada neste aparelho
+      biometricService.syncSessionIfEnrolled(data.session, email)
       useAuthStore.getState().setSession(data.session)
       useAuthStore.getState().setHasHydrated(true)
       if (currentUser) {
@@ -258,6 +260,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       if (!error && data?.session) {
+        // Atualiza a credencial com os novos tokens gerados pela rotação do Supabase
+        biometricService.updateSavedSession({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
+          expires_at: data.session.expires_at,
+        })
+
         setSession(data.session)
         const currentUser = data.session.user ?? null
         setUser(currentUser)
@@ -267,7 +276,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (currentUser) {
           loadProfile(currentUser.id)
         }
+      } else if (error) {
+        // Se a restauração falhar (token inválido/revogado/expirado), marca a credencial para evitar loop
+        const isNetworkErr =
+          error.message?.includes('network') ||
+          error.message?.includes('fetch') ||
+          error.status === 0
+        if (!isNetworkErr) {
+          biometricService.markNeedsReauth(error.message || 'invalid_token')
+        }
       }
+
       return { data, error }
     } catch (err: any) {
       return { data: null, error: err }
@@ -277,11 +296,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signOut = async (options?: {
     scope?: 'local' | 'global' | 'others'
   }) => {
-    // Escopo padrão 'local': encerra a sessão ativa deste cliente no navegador
-    // sem revogar tokens em nível de conta global, permitindo que a credencial biométrica do dispositivo
-    // consiga restabelecer a sessão com segurança mediante confirmação biométrica real (WebAuthn).
+    // Escopo 'local' encerra apenas a sessão ativa deste cliente no navegador.
+    // Preserva a credencial biométrica local (WebAuthn) para que um re-login com biometria
+    // funcione repetidamente sem revogar a cadeia de tokens daquele dispositivo.
     const scope = options?.scope ?? 'local'
-    const { error } = await supabase.auth.signOut({ scope })
+    let error: any = null
+    try {
+      const res = await supabase.auth.signOut({ scope })
+      error = res.error
+    } catch (err: any) {
+      error = err
+    }
     setProfile(null)
     useAuthStore.getState().logout({ scope })
     return { error }

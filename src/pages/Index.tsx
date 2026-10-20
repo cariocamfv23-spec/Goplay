@@ -23,7 +23,7 @@ export default function Index() {
     if (isAuthenticated) {
       navigate('/home', { replace: true })
     } else {
-      navigate('/login')
+      navigate('/login', { replace: true })
     }
   }
 

@@ -13,6 +13,8 @@ export interface BiometricCredentialData {
   userName?: string
   enrolledAt: string
   deviceName?: string
+  needsReauth?: boolean // Indica se a sessão precisa de reativação via login convencional
+  lastError?: string
   sessionToken?: {
     access_token: string
     refresh_token: string
@@ -313,7 +315,33 @@ export const biometricService = {
   },
 
   /**
+   * Marca a credencial biométrica como necessitando de reautenticação por e-mail/senha
+   * (evita loops e re-tentativas com refresh tokens revogados).
+   */
+  markNeedsReauth(reason = 'session_revoked'): void {
+    const enrolled = this.getEnrolledCredential()
+    if (enrolled) {
+      enrolled.needsReauth = true
+      enrolled.lastError = reason
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(enrolled))
+    }
+  },
+
+  /**
+   * Limpa o estado de erro de reautenticação da credencial.
+   */
+  clearNeedsReauth(): void {
+    const enrolled = this.getEnrolledCredential()
+    if (enrolled) {
+      enrolled.needsReauth = false
+      enrolled.lastError = undefined
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(enrolled))
+    }
+  },
+
+  /**
    * Atualiza a sessão associada ao cadastro biométrico atual (ex.: após renovar login ou token)
+   * e limpa qualquer estado de erro ou requisição de re-login prévio.
    */
   updateSavedSession(tokens: {
     access_token: string
@@ -327,31 +355,54 @@ export const biometricService = {
         refresh_token: tokens.refresh_token,
         expires_at: tokens.expires_at,
       }
+      enrolled.needsReauth = false
+      enrolled.lastError = undefined
       localStorage.setItem(STORAGE_KEY, JSON.stringify(enrolled))
     }
   },
 
   /**
-   * Sincroniza a sessão ativa caso este dispositivo tenha biometria cadastrada para o usuário
+   * Sincroniza a sessão ativa caso este dispositivo tenha biometria cadastrada para o usuário.
+   * Suporta correspondência por userId ou por email (re-login com credenciais convencionais ou Google).
+   * Retorna true se a credencial foi encontrada e atualizada com sucesso.
    */
   syncSessionIfEnrolled(
     session: {
-      user?: { id?: string }
+      user?: { id?: string; email?: string }
       access_token?: string
       refresh_token?: string
       expires_at?: number
     } | null,
-  ): void {
-    if (!session?.access_token || !session?.refresh_token) return
+    emailFallback?: string,
+  ): boolean {
+    if (!session?.access_token || !session?.refresh_token) return false
     const enrolled = this.getEnrolledCredential()
-    if (!enrolled) return
-    if (!session.user?.id || enrolled.userId === session.user.id) {
+    if (!enrolled) return false
+
+    const sessionUserId = session.user?.id
+    const sessionEmail = (session.user?.email || emailFallback || '')
+      .toLowerCase()
+      .trim()
+    const enrolledEmail = (enrolled.userEmail || '').toLowerCase().trim()
+
+    const isMatch =
+      !sessionUserId ||
+      enrolled.userId === sessionUserId ||
+      (sessionEmail && enrolledEmail && sessionEmail === enrolledEmail)
+
+    if (isMatch) {
+      if (sessionUserId) enrolled.userId = sessionUserId
+      if (sessionEmail) enrolled.userEmail = sessionEmail
       enrolled.sessionToken = {
         access_token: session.access_token,
         refresh_token: session.refresh_token,
         expires_at: session.expires_at,
       }
+      enrolled.needsReauth = false
+      enrolled.lastError = undefined
       localStorage.setItem(STORAGE_KEY, JSON.stringify(enrolled))
+      return true
     }
+    return false
   },
 }

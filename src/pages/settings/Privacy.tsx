@@ -184,11 +184,17 @@ export default function PrivacySettings() {
                 className={cn(
                   'text-[10px] font-semibold',
                   enrolledCredential
-                    ? 'bg-emerald-500/15 text-emerald-600 border border-emerald-500/30'
+                    ? enrolledCredential.needsReauth
+                      ? 'bg-amber-500/15 text-amber-600 border border-amber-500/30'
+                      : 'bg-emerald-500/15 text-emerald-600 border border-emerald-500/30'
                     : 'bg-muted text-muted-foreground',
                 )}
               >
-                {enrolledCredential ? 'Ativa neste Aparelho' : 'Desativada'}
+                {enrolledCredential
+                  ? enrolledCredential.needsReauth
+                    ? 'Reativação Pendente'
+                    : 'Ativa neste Aparelho'
+                  : 'Desativada'}
               </Badge>
             </CardTitle>
             <CardDescription className="text-sm">
@@ -238,10 +244,17 @@ export default function PrivacySettings() {
                 </div>
 
                 <div className="flex items-center justify-between pt-1">
-                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
-                    <CheckCircle2 className="w-4 h-4" />
-                    Pronto para uso na tela de login
-                  </span>
+                  {enrolledCredential.needsReauth ? (
+                    <span className="text-xs text-amber-600 dark:text-amber-400 font-medium flex items-center gap-1">
+                      <Info className="w-4 h-4" />
+                      Sincronizada automaticamente no próximo login
+                    </span>
+                  ) : (
+                    <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
+                      <CheckCircle2 className="w-4 h-4" />
+                      Pronto para uso na tela de login
+                    </span>
+                  )}
 
                   <Button
                     variant="outline"

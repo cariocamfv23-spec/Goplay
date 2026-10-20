@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase/client'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { profileService, type ProfileRow } from '@/services/profiles'
+import { biometricService } from '@/services/biometrics'
 import { PageLoader } from '@/components/PageLoader'
 import { toast } from 'sonner'
 import { Card, CardContent } from '@/components/ui/card'
@@ -113,6 +114,9 @@ export default function AuthCallback() {
         }
 
         const user = activeSession.user
+
+        // Sincroniza e reativa credencial biométrica alistada neste aparelho
+        biometricService.syncSessionIfEnrolled(activeSession, user.email)
 
         // 3. Immediately hydrate Zustand store to prevent race conditions in ProtectedRoute
         useAuthStore.getState().setSession(activeSession)

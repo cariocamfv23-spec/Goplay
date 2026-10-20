@@ -27,13 +27,19 @@ export function BiometricEnrollModal() {
     // Só exibe se:
     // 1. O usuário estiver autenticado
     // 2. O navegador suportar WebAuthn
-    // 3. A biometria ainda não estiver cadastrada neste aparelho
+    // 3. A biometria ainda não estiver cadastrada neste aparelho (ou já foi associada a este usuário)
     // 4. O usuário não tiver dispensado o convite recentemente
     if (!user) return
 
     if (!biometricService.isWebAuthnSupported()) return
 
-    if (biometricService.isEnrolled()) return
+    // Se já estiver alistado (mesmo que precise de reauth ou já tenha tokens), sincroniza a sessão atual e não abre o modal de novo alistamento
+    if (biometricService.isEnrolled()) {
+      if (session) {
+        biometricService.syncSessionIfEnrolled(session, user.email)
+      }
+      return
+    }
 
     const dismissed = localStorage.getItem(DISMISSED_KEY)
     if (dismissed) {

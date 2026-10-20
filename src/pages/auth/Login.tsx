@@ -31,7 +31,7 @@ import {
   biometricService,
   type BiometricCredentialData,
 } from '@/services/biometrics'
-import { AlertCircle, CheckCircle2 } from 'lucide-react'
+import { AlertCircle, CheckCircle2, RefreshCw } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export default function Login() {
@@ -96,6 +96,11 @@ export default function Login() {
     setIsWebAuthnSupported(supported)
     const enrolled = biometricService.getEnrolledCredential()
     setEnrolledBiometric(enrolled)
+
+    // Se a credencial cadastrada pertencer a um usuário, preenche o e-mail previamente para facilitar a reativação
+    if (enrolled?.userEmail) {
+      setEmail((prev) => prev || enrolled.userEmail)
+    }
   }, [])
 
   const handleLogin = async (e?: React.FormEvent) => {
@@ -136,21 +141,18 @@ export default function Login() {
         return
       }
 
-      // Explicitly update zustand store immediately to prevent race conditions during redirect
+      // Sincroniza e reativa a biometria cadastrada neste aparelho silenciosamente
       if (data?.session) {
+        const synced = biometricService.syncSessionIfEnrolled(
+          data.session,
+          cleanEmail,
+        )
+        if (synced) {
+          const updatedCred = biometricService.getEnrolledCredential()
+          setEnrolledBiometric(updatedCred)
+        }
         useAuthStore.getState().setSession(data.session)
         useAuthStore.getState().setHasHydrated(true)
-        // Se este aparelho tiver biometria cadastrada para esta mesma conta, renova os tokens
-        if (data.session.access_token && data.session.refresh_token) {
-          const enrolled = biometricService.getEnrolledCredential()
-          if (enrolled && enrolled.userId === data.session.user.id) {
-            biometricService.updateSavedSession({
-              access_token: data.session.access_token,
-              refresh_token: data.session.refresh_token,
-              expires_at: data.session.expires_at,
-            })
-          }
-        }
       }
 
       if (rememberMe) {
@@ -291,9 +293,34 @@ export default function Login() {
 
       if (restoreError || !restoreData?.session) {
         console.warn('Falha na renovação da sessão biométrica:', restoreError)
+
+        const errorMsg = restoreError?.message?.toLowerCase() || ''
+        const isNetworkErr =
+          errorMsg.includes('network') ||
+          errorMsg.includes('fetch') ||
+          restoreError?.status === 0
+
+        if (isNetworkErr) {
+          toast.error('Falha temporária de conexão', {
+            description:
+              'Não foi possível contatar o servidor para renovar a sessão. Verifique sua conexão à internet.',
+          })
+          return
+        }
+
+        // Marca a credencial como necessitando de reativação por login convencional
+        biometricService.markNeedsReauth('session_revoked')
+        setEnrolledBiometric(biometricService.getEnrolledCredential())
+
+        // Pré-preenche o campo de e-mail para agilizar a reativação pelo usuário
+        if (enrolled.userEmail) {
+          setEmail(enrolled.userEmail)
+        }
+
         toast.error('Sessão expirada no servidor', {
           description:
-            'Sua credencial biométrica é válida, mas sua chave de acesso foi revogada pelo servidor. Faça login com e-mail e senha para reativá-la.',
+            'Sua credencial é válida, mas sua chave de acesso expirou. Faça login abaixo com e-mail e senha para reativá-la.',
+          duration: 6000,
         })
         return
       }
@@ -308,6 +335,7 @@ export default function Login() {
           refresh_token: restoreData.session.refresh_token,
           expires_at: restoreData.session.expires_at,
         })
+        setEnrolledBiometric(biometricService.getEnrolledCredential())
       }
 
       const userName =
@@ -555,15 +583,28 @@ export default function Login() {
 
                 {/* Status indicator / feedback for biometric setup on device */}
                 {enrolledBiometric ? (
-                  <p className="text-[11px] text-center text-emerald-600 dark:text-emerald-400 font-medium flex items-center justify-center gap-1 pt-0.5">
-                    <CheckCircle2 className="w-3 h-3" />
-                    Biometria ativa neste aparelho (
-                    {enrolledBiometric.userEmail})
-                  </p>
+                  enrolledBiometric.needsReauth ? (
+                    <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-2 mt-1 space-y-1">
+                      <p className="text-[11px] text-amber-700 dark:text-amber-300 font-medium flex items-center justify-center gap-1">
+                        <RefreshCw className="w-3 h-3 animate-spin shrink-0" />
+                        Reativação necessária ({enrolledBiometric.userEmail})
+                      </p>
+                      <p className="text-[10px] text-center text-muted-foreground">
+                        Faça login com e-mail e senha acima para reativar o
+                        acesso por biometria sem precisar recadastrar.
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-[11px] text-center text-emerald-600 dark:text-emerald-400 font-medium flex items-center justify-center gap-1 pt-0.5">
+                      <CheckCircle2 className="w-3 h-3" />
+                      Biometria ativa neste aparelho (
+                      {enrolledBiometric.userEmail})
+                    </p>
+                  )
                 ) : (
                   <p className="text-[10.5px] text-center text-muted-foreground pt-0.5">
                     {isWebAuthnSupported
-                      ? 'Requer ativação prévia nas Configurações do app.'
+                      ? 'Requer ativação prévia nas Configurações ou no aviso da Home.'
                       : 'Biometria indisponível neste navegador.'}
                   </p>
                 )}
