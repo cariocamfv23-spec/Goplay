@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase/client'
+import { pushNotificationService } from '@/services/push-notifications'
 
 // Cast to any to query dynamically created public schema tables
 const db = supabase as any
@@ -104,6 +105,17 @@ export const connectionService = {
           message: `${followerProf?.full_name || 'Um atleta'} começou a seguir você no Goplay!`,
           link: `/profile/${followerId}`,
         })
+
+        // Push notification (non-blocking)
+        pushNotificationService
+          .triggerServerPush({
+            userId: followingId,
+            title: 'Novo Seguidor',
+            body: `${followerProf?.full_name || 'Um atleta'} começou a seguir você no Goplay!`,
+            url: `/profile/${followerId}`,
+            tag: `follow-${followerId}`,
+          })
+          .catch(() => {})
       } catch {
         // notification non-blocking
       }

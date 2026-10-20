@@ -50,7 +50,7 @@ import { toast } from 'sonner'
 export default function Settings() {
   const navigate = useNavigate()
   const { setTheme, theme } = useTheme()
-  const { signOut } = useAuth()
+  const { user, signOut } = useAuth()
   const { logout } = useAuthStore()
 
   const [isLoading, setIsLoading] = useState(true)
@@ -440,6 +440,15 @@ export default function Settings() {
           variant="ghost"
           className="w-full justify-start h-12 gap-3 text-base font-medium text-destructive hover:text-destructive hover:bg-destructive/10"
           onClick={async () => {
+            try {
+              // Deactivate push notifications on this device before signing out
+              const { pushNotificationService } = await import(
+                '@/services/push-notifications'
+              )
+              await pushNotificationService.handleLogout(user?.id)
+            } catch {
+              /* non-blocking push cleanup */
+            }
             try {
               await signOut({ scope: 'local' })
             } catch {

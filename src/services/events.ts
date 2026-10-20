@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase/client'
+import { pushNotificationService } from '@/services/push-notifications'
 
 const db = supabase as any
 
@@ -522,6 +523,16 @@ export const eventsService = {
             message: `${athleteProf?.full_name || 'Um atleta'} se inscreveu em "${ev.title}".`,
             link: `/events/${eventId}`,
           })
+
+          pushNotificationService
+            .triggerServerPush({
+              userId: ev.creator_id,
+              title: 'Nova Inscrição Recebida',
+              body: `${athleteProf?.full_name || 'Um atleta'} se inscreveu em "${ev.title}".`,
+              url: `/events/${eventId}`,
+              tag: `reg-received-${eventId}`,
+            })
+            .catch(() => {})
         }
 
         // Notification confirmation for the athlete
@@ -880,6 +891,17 @@ export const eventsService = {
             message: notifMessage,
             link: `/events/${eventId}`,
           })
+
+          // Trigger push to athlete with decision
+          pushNotificationService
+            .triggerServerPush({
+              userId: athleteId,
+              title: notifTitle,
+              body: notifMessage,
+              url: `/events/${eventId}`,
+              tag: `reg-decision-${eventId}`,
+            })
+            .catch(() => {})
         } catch (notifErr) {
           // If notification dispatch fails, do not silently roll back the decision
           console.warn('Falha ao enviar notificação de decisão:', notifErr)

@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase/client'
+import { pushNotificationService } from '@/services/push-notifications'
 import { ProfileRow } from './profiles'
 
 const db = supabase as any
@@ -434,6 +435,17 @@ export const feedService = {
                 message: `${authorName} marcou você em uma publicação${snippet ? `: "${snippet}"` : '.'}`,
                 link: postLink,
               })
+
+              // Trigger real Web Push notification (non-blocking)
+              pushNotificationService
+                .triggerServerPush({
+                  userId: mention.id,
+                  title: 'Você foi marcado',
+                  body: `${authorName} marcou você em uma publicação${snippet ? `: "${snippet}"` : '.'}`,
+                  url: postLink,
+                  tag: `mention-${inserted.id}`,
+                })
+                .catch(() => {})
             }
           }
         } catch (notifErr) {
@@ -580,6 +592,17 @@ export const feedService = {
                 message: `${actorName} curtiu a sua publicação.`,
                 link: postLink,
               })
+
+              // Trigger real Web Push notification (non-blocking)
+              pushNotificationService
+                .triggerServerPush({
+                  userId: postData.user_id,
+                  title: 'Nova Curtida',
+                  body: `${actorName} curtiu a sua publicação.`,
+                  url: postLink,
+                  tag: `like-${postId}`,
+                })
+                .catch(() => {})
             }
           }
         } catch (notifErr) {
@@ -712,6 +735,17 @@ export const feedService = {
             message: `${actorName} comentou: "${preview}"`,
             link: postLink,
           })
+
+          // Trigger real Web Push notification (non-blocking)
+          pushNotificationService
+            .triggerServerPush({
+              userId: postData.user_id,
+              title: 'Novo Comentário',
+              body: `${actorName} comentou: "${preview}"`,
+              url: postLink,
+              tag: `comment-${postId}`,
+            })
+            .catch(() => {})
         }
       } catch (notifErr) {
         console.error(
