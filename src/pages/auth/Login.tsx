@@ -258,20 +258,10 @@ export default function Login() {
       return
     }
 
-    // 3. Checar se há tokens salvos para restaurar a sessão após a validação biométrica
-    if (!enrolled.sessionToken || !enrolled.sessionToken.refresh_token) {
-      toast.error('Sessão biométrica não inicializada', {
-        description:
-          'Entre com seu e-mail e senha uma vez para associar sua biometria a este aparelho.',
-      })
-      return
-    }
-
     setBiometricLoading(true)
 
     try {
-      // 4. Executa a cerimônia REAL do WebAuthn no dispositivo (exige sensor físico)
-      // O aparelho (Android biométrico, iOS Face ID/Touch ID, Windows Hello) exibirá o prompt nativo
+      // 3. Executa a verificação REAL do WebAuthn no dispositivo (exige sensor físico: Face ID / Touch ID)
       const result = await biometricService.authenticate()
 
       if (!result.success || !result.data) {
@@ -283,65 +273,78 @@ export default function Login() {
         return
       }
 
-      // 5. SOMENTE se a biometria real passar, restaura e renova a sessão segura no Supabase
-      const candidateTokens = result.data.sessionToken || enrolled.sessionToken
-      const { data: restoreData, error: restoreError } =
-        await restoreSessionWithTokens({
-          access_token: candidateTokens.access_token || '',
-          refresh_token: candidateTokens.refresh_token,
-        })
+      // 4. Sensor físico aprovado com sucesso!
+      // Agora desbloqueia e restaura a sessão. Primeiro tenta a sessão ativa persistida no Supabase client.
+      let activeSession: any = null
 
-      if (restoreError || !restoreData?.session) {
-        console.warn('Falha na renovação da sessão biométrica:', restoreError)
-
-        const errorMsg = restoreError?.message?.toLowerCase() || ''
-        const isNetworkErr =
-          errorMsg.includes('network') ||
-          errorMsg.includes('fetch') ||
-          restoreError?.status === 0
-
-        if (isNetworkErr) {
-          toast.error('Falha temporária de conexão', {
-            description:
-              'Não foi possível contatar o servidor para renovar a sessão. Verifique sua conexão à internet.',
-          })
-          return
+      try {
+        const { data: getSessionData } = await supabase.auth.getSession()
+        if (getSessionData?.session?.user) {
+          activeSession = getSessionData.session
         }
+      } catch {
+        // Prossegue para tentativas de renovação
+      }
 
-        // Marca a credencial como necessitando de reativação por login convencional
+      // Se a sessão padrão do Supabase não estiver de prontidão ou expirada, tenta restaurar usando tokens da credencial
+      if (!activeSession) {
+        const candidateTokens =
+          result.data.sessionToken || enrolled.sessionToken
+
+        if (candidateTokens?.refresh_token) {
+          const { data: restoreData } = await restoreSessionWithTokens({
+            access_token: candidateTokens.access_token || '',
+            refresh_token: candidateTokens.refresh_token,
+          })
+          if (restoreData?.session) {
+            activeSession = restoreData.session
+          }
+        }
+      }
+
+      // Se ainda não temos uma sessão válida, tenta refreshSession nativo do client
+      if (!activeSession) {
+        try {
+          const { data: refreshData } = await supabase.auth.refreshSession()
+          if (refreshData?.session) {
+            activeSession = refreshData.session
+          }
+        } catch {
+          // prossegue
+        }
+      }
+
+      if (!activeSession?.user) {
+        // Se a sessão expirou completamente em todos os níveis, orienta o usuário
         biometricService.markNeedsReauth('session_revoked')
         setEnrolledBiometric(biometricService.getEnrolledCredential())
 
-        // Pré-preenche o campo de e-mail para agilizar a reativação pelo usuário
         if (enrolled.userEmail) {
           setEmail(enrolled.userEmail)
         }
 
         toast.error('Sessão expirada no servidor', {
           description:
-            'Sua credencial é válida, mas sua chave de acesso expirou. Faça login abaixo com e-mail e senha para reativá-la.',
+            'Sua credencial biométrica é válida. Faça login com seu e-mail e senha para reativar o acesso por biometria.',
           duration: 6000,
         })
         return
       }
 
-      // Atualiza os novos tokens renovados para que próximos logins continuem funcionando ininterruptamente
-      if (
-        restoreData.session.access_token &&
-        restoreData.session.refresh_token
-      ) {
-        biometricService.updateSavedSession({
-          access_token: restoreData.session.access_token,
-          refresh_token: restoreData.session.refresh_token,
-          expires_at: restoreData.session.expires_at,
-        })
-        setEnrolledBiometric(biometricService.getEnrolledCredential())
-      }
+      // 5. Desbloqueia o app e sincroniza o estado autenticado
+      biometricService.unlock()
+      biometricService.syncSessionIfEnrolled(activeSession)
+      setEnrolledBiometric(biometricService.getEnrolledCredential())
+
+      // Hidrata os stores de autenticação
+      useAuthStore.getState().setSession(activeSession)
+      useAuthStore.getState().setHasHydrated(true)
 
       const userName =
         result.data.userName ||
-        restoreData.session.user?.user_metadata?.full_name ||
-        result.data.userEmail.split('@')[0]
+        activeSession.user?.user_metadata?.full_name ||
+        result.data.userEmail.split('@')[0] ||
+        'Atleta'
 
       toast.success(`Identidade confirmada! Bem-vindo, ${userName}.`, {
         description: 'Acesso seguro liberado via sensor biométrico.',

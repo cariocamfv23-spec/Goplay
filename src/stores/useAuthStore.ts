@@ -24,8 +24,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   profile: null,
   login: () => set({ isAuthenticated: true }),
   logout: (_options) => {
-    // A limpeza remota de sessão via supabase.auth.signOut({ scope: 'local' }) é orquestrada
-    // pelo useAuth().signOut(). O store foca em limpar o estado de memória da UI.
+    // A saída encerra a sessão visual e de memória da aplicação.
+    // Quando a biometria está habilitada, a sessão subjacente é protegida pelo bloqueio biométrico (biometricService.lock).
     set({
       isAuthenticated: false,
       user: null,

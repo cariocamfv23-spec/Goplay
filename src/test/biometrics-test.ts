@@ -169,9 +169,17 @@ export function runBiometricsUnitTests(): {
       'Credencial original não foi adulterada',
     )
 
-    // Teste 7: disableBiometrics remove a chave
+    // Teste 7: lock e unlock biométrico
+    biometricService.lock()
+    assert(biometricService.isLocked(), 'lock marca isLocked como true')
+    biometricService.unlock()
+    assert(!biometricService.isLocked(), 'unlock reverte isLocked para false')
+
+    // Teste 8: disableBiometrics remove a chave e o lock
+    biometricService.lock()
     biometricService.disableBiometrics()
     assert(!biometricService.isEnrolled(), 'disableBiometrics limpou o storage')
+    assert(!biometricService.isLocked(), 'disableBiometrics limpou o lock')
   } catch (err: any) {
     failed++
     errors.push(`Exceção durante teste: ${err?.message || String(err)}`)

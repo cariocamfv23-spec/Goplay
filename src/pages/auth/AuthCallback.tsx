@@ -115,7 +115,8 @@ export default function AuthCallback() {
 
         const user = activeSession.user
 
-        // Sincroniza e reativa credencial biométrica alistada neste aparelho
+        // Desbloqueia lock prévio e sincroniza/reativa credencial biométrica
+        biometricService.unlock()
         biometricService.syncSessionIfEnrolled(activeSession, user.email)
 
         // 3. Immediately hydrate Zustand store to prevent race conditions in ProtectedRoute

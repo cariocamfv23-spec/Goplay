@@ -5,6 +5,7 @@
  */
 
 const STORAGE_KEY = 'goplay_biometric_credential_v1'
+const LOCK_KEY = 'goplay_biometric_locked_v1'
 
 export interface BiometricCredentialData {
   credentialId: string // Base64url encoded credential ID
@@ -97,10 +98,53 @@ export const biometricService = {
   },
 
   /**
+   * Verifica se o acesso biométrico está bloqueado neste aparelho
+   * (isto é, o usuário saiu da conta mas preservou a sessão para desbloqueio por sensor)
+   */
+  isLocked(): boolean {
+    if (!this.isEnrolled()) return false
+    try {
+      return localStorage.getItem(LOCK_KEY) === 'true'
+    } catch {
+      return false
+    }
+  },
+
+  /**
+   * Bloqueia o acesso localmente na saída do app, preservando as credenciais para reentrada biométrica
+   */
+  lock(): void {
+    if (this.isEnrolled()) {
+      try {
+        localStorage.setItem(LOCK_KEY, 'true')
+      } catch {
+        // no-op if localStorage is restricted
+      }
+    }
+  },
+
+  /**
+   * Desbloqueia o acesso após autenticação bem-sucedida pelo sensor
+   */
+  unlock(): void {
+    try {
+      localStorage.removeItem(LOCK_KEY)
+    } catch {
+      // no-op
+    }
+    this.clearNeedsReauth()
+  },
+
+  /**
    * Remove o cadastro biométrico deste aparelho
    */
   disableBiometrics(): void {
-    localStorage.removeItem(STORAGE_KEY)
+    try {
+      localStorage.removeItem(STORAGE_KEY)
+      localStorage.removeItem(LOCK_KEY)
+    } catch {
+      // no-op
+    }
   },
 
   /**
@@ -335,6 +379,11 @@ export const biometricService = {
     if (enrolled) {
       enrolled.needsReauth = false
       enrolled.lastError = undefined
+      try {
+        localStorage.removeItem(LOCK_KEY)
+      } catch {
+        // no-op
+      }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(enrolled))
     }
   },
@@ -400,6 +449,11 @@ export const biometricService = {
       }
       enrolled.needsReauth = false
       enrolled.lastError = undefined
+      try {
+        localStorage.removeItem(LOCK_KEY)
+      } catch {
+        // no-op
+      }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(enrolled))
       return true
     }

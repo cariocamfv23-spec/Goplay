@@ -112,6 +112,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, newSession) => {
+      // Se o dispositivo estiver em modo "bloqueado por biometria" (logout com biometria ativa),
+      // não libera a UI autenticada sem que o sensor seja acionado na tela de login
+      const isLocked = biometricService.isLocked()
+
+      if (isLocked) {
+        setSession(null)
+        setUser(null)
+        setProfile(null)
+        setLoading(false)
+        useAuthStore.getState().setSession(null)
+        useAuthStore.getState().setProfile(null)
+        useAuthStore.getState().setHasHydrated(true)
+        if (newSession) {
+          biometricService.syncSessionIfEnrolled(newSession)
+        }
+        return
+      }
+
       setSession(newSession)
       const currentUser = newSession?.user ?? null
       setUser(currentUser)
@@ -137,6 +155,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // 2. Initial session restoration
     supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
+      const isLocked = biometricService.isLocked()
+
+      if (isLocked) {
+        // Preserva o token no Supabase/localStorage para reentrada por sensor, mas oculta a sessão ativa da UI
+        setSession(null)
+        setUser(null)
+        setProfile(null)
+        setLoading(false)
+        useAuthStore.getState().setSession(null)
+        useAuthStore.getState().setProfile(null)
+        useAuthStore.getState().setHasHydrated(true)
+        if (initialSession) {
+          biometricService.syncSessionIfEnrolled(initialSession)
+        }
+        return
+      }
+
       setSession(initialSession)
       const currentUser = initialSession?.user ?? null
       setUser(currentUser)
@@ -184,6 +219,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       password,
     })
     if (!error && data?.session) {
+      // Desbloqueia qualquer lock local prévio
+      biometricService.unlock()
       setSession(data.session)
       const currentUser = data.session.user ?? null
       setUser(currentUser)
@@ -260,7 +297,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       if (!error && data?.session) {
-        // Atualiza a credencial com os novos tokens gerados pela rotação do Supabase
+        // Desbloqueia lock prévio e sincroniza tokens
+        biometricService.unlock()
         biometricService.updateSavedSession({
           access_token: data.session.access_token,
           refresh_token: data.session.refresh_token,
@@ -296,19 +334,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signOut = async (options?: {
     scope?: 'local' | 'global' | 'others'
   }) => {
-    // Escopo 'local' encerra apenas a sessão ativa deste cliente no navegador.
-    // Preserva a credencial biométrica local (WebAuthn) para que um re-login com biometria
-    // funcione repetidamente sem revogar a cadeia de tokens daquele dispositivo.
-    const scope = options?.scope ?? 'local'
+    // Se a biometria estiver cadastrada neste aparelho, efetuamos o "bloqueio local":
+    // a sessão é protegida no client e exigirá a confirmação pelo sensor físico (Face ID/Touch ID)
+    // para ser reaberta, SEM revogar o refresh token no servidor do Supabase.
+    // Se a biometria NÃO estiver cadastrada, executamos o signOut completo do Supabase.
+    const isEnrolled = biometricService.isEnrolled()
     let error: any = null
-    try {
-      const res = await supabase.auth.signOut({ scope })
-      error = res.error
-    } catch (err: any) {
-      error = err
+
+    if (isEnrolled) {
+      // Bloqueia localmente para reentrada por biometria sem revogar o refresh token
+      biometricService.lock()
+      // Atualiza o estado da UI imediatamente
+      setSession(null)
+      setUser(null)
+      setProfile(null)
+      useAuthStore.getState().logout()
+    } else {
+      const scope = options?.scope ?? 'local'
+      try {
+        const res = await supabase.auth.signOut({ scope })
+        error = res.error
+      } catch (err: any) {
+        error = err
+      }
+      setSession(null)
+      setUser(null)
+      setProfile(null)
+      useAuthStore.getState().logout({ scope })
     }
-    setProfile(null)
-    useAuthStore.getState().logout({ scope })
+
     return { error }
   }
 

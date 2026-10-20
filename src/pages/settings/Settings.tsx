@@ -443,7 +443,7 @@ export default function Settings() {
             try {
               await signOut({ scope: 'local' })
             } catch {
-              logout({ scope: 'local' })
+              logout()
             }
             toast.success('Você saiu da sua conta.')
             navigate('/login', { replace: true })
