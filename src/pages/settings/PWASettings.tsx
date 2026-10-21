@@ -206,17 +206,16 @@ function PWASettingsContent() {
     setLastTestResult(result)
 
     if (result.success && result.sentCount > 0) {
-      toast.success('Envio aceito pelo serviço push! 🚀', {
-        description:
-          'Verifique a barra de status ou bandeja de notificações do seu celular (mesmo minimizado ou fechado).',
+      toast.success('Envio aceito pelo FCM Google! 🚀', {
+        description: `${result.sentCount} aparelho(s) notificado(s). Verifique a barra de status ou bandeja do Android (mesmo com o app fechado).`,
       })
       await loadStatus()
     } else {
-      toast.error('Falha no envio do teste de push.', {
+      toast.error('Resultado do teste de push:', {
         description:
           result.error ||
           result.message ||
-          'Nenhum aparelho ativo recebeu a notificação.',
+          'Nenhum aparelho ativo pôde ser notificado no momento.',
       })
     }
   }
@@ -445,7 +444,7 @@ function PWASettingsContent() {
                         </span>
                       ) : (
                         <span className="text-destructive font-bold flex items-center gap-1">
-                          <AlertCircle className="h-3.5 w-3.5" /> Falha
+                          <AlertCircle className="h-3.5 w-3.5" /> Falha no Teste
                         </span>
                       )}
                     </div>
@@ -459,23 +458,40 @@ function PWASettingsContent() {
                         <strong>Requisições aceitas pelo FCM:</strong>{' '}
                         {lastTestResult.sentCount}
                       </p>
+                      {lastTestResult.error && (
+                        <p className="text-destructive font-medium pt-1">
+                          Motivo: {lastTestResult.error}
+                        </p>
+                      )}
+                      {lastTestResult.message && (
+                        <p className="text-foreground/90 text-[11px]">
+                          {lastTestResult.message}
+                        </p>
+                      )}
                       {lastTestResult.reports &&
                         lastTestResult.reports.length > 0 && (
-                          <div className="mt-2 space-y-1">
+                          <div className="mt-2 space-y-1.5">
                             <p className="font-medium text-foreground">
                               Destino do Push Service:
                             </p>
                             {lastTestResult.reports.map((r, idx) => (
                               <div
                                 key={idx}
-                                className="pl-2 border-l-2 border-primary/40 text-[11px]"
+                                className="pl-2 border-l-2 border-primary/40 text-[11px] space-y-0.5"
                               >
-                                <span>
-                                  Host: <code>{r.host}</code> • Status:{' '}
-                                  <strong>{r.statusCode || r.status}</strong>
-                                </span>
+                                <div className="flex items-center gap-1">
+                                  <span>
+                                    Host: <code>{r.host}</code>
+                                  </span>
+                                  <span>
+                                    • Status:{' '}
+                                    <strong>{r.statusCode || r.status}</strong>
+                                  </span>
+                                </div>
                                 {r.error && (
-                                  <p className="text-destructive">{r.error}</p>
+                                  <p className="text-destructive text-[10px] leading-tight">
+                                    {r.error}
+                                  </p>
                                 )}
                               </div>
                             ))}

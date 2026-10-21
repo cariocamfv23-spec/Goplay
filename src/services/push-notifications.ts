@@ -329,6 +329,7 @@ export const pushNotificationService = {
 
   /**
    * Invokes the backend Edge Function send-push with authenticated session token
+   * Extracts detailed server response even when HTTP error status (4xx, 5xx) is returned.
    */
   async triggerServerPush(params: {
     userId: string
@@ -339,21 +340,83 @@ export const pushNotificationService = {
     icon?: string
     badge?: string
     isTest?: boolean
-  }): Promise<{ success: boolean; error?: string; data?: any }> {
+  }): Promise<{
+    success: boolean
+    error?: string
+    data?: any
+    statusCode?: number
+  }> {
     try {
+      // Ensure fresh access token before invoking
+      const { data: sessionData } = await supabase.auth.getSession()
+      const accessToken = sessionData?.session?.access_token
+
+      const invokeHeaders: Record<string, string> = {}
+      if (accessToken) {
+        invokeHeaders['Authorization'] = `Bearer ${accessToken}`
+      }
+
       const { data, error } = await supabase.functions.invoke('send-push', {
         body: params,
+        headers: invokeHeaders,
       })
 
       if (error) {
-        console.warn('[WebPush] Retorno da Edge Function:', error.message)
-        return { success: false, error: error.message, data }
+        let detailedError = error.message
+        let statusCode: number | undefined
+        let responsePayload: any = null
+
+        // Handle FunctionsHttpError containing error.context Response object
+        if (
+          (error as any)?.context &&
+          typeof (error as any).context.json === 'function'
+        ) {
+          try {
+            statusCode = (error as any).context.status
+            responsePayload = await (error as any).context.json()
+            if (responsePayload?.error) {
+              detailedError = responsePayload.error
+              if (responsePayload.details) {
+                detailedError += ` (${responsePayload.details})`
+              }
+            }
+          } catch {
+            // Context body could not be parsed as JSON
+          }
+        }
+
+        // Clarify specific standard HTTP edge error cases
+        if (statusCode === 401) {
+          detailedError =
+            'Sessão expirada ou não autorizada pelo servidor (401). Faça logout e login novamente no app.'
+        } else if (statusCode === 403) {
+          detailedError =
+            'Permissão negada pelo servidor para disparar teste neste aparelho (403).'
+        } else if (statusCode === 503) {
+          detailedError =
+            'Chaves VAPID não configuradas no servidor Supabase (503).'
+        }
+
+        console.warn(
+          '[WebPush] Retorno com erro da Edge Function:',
+          detailedError,
+          { statusCode, responsePayload },
+        )
+        return {
+          success: false,
+          error: detailedError,
+          data: responsePayload || data,
+          statusCode,
+        }
       }
 
-      return { success: Boolean(data?.success), data }
+      return { success: Boolean(data?.success), data, statusCode: 200 }
     } catch (err: any) {
-      console.warn('[WebPush] Falha não bloqueante ao disparar push:', err)
-      return { success: false, error: err?.message }
+      console.warn('[WebPush] Falha de conexão ao disparar push:', err)
+      return {
+        success: false,
+        error: err?.message || 'Falha de conexão com a Edge Function',
+      }
     }
   },
 
@@ -401,18 +464,25 @@ export const pushNotificationService = {
         isTest: true,
       })
 
+      const resData = invokeRes.data || {}
+
       if (!invokeRes.success) {
+        const errorMsg =
+          invokeRes.error ||
+          resData?.error ||
+          resData?.message ||
+          'O servidor Supabase não conseguiu enviar a notificação ao serviço push.'
+
         return {
           success: false,
-          sentCount: 0,
-          totalDevices: 0,
-          error:
-            invokeRes.error ||
-            'O servidor não conseguiu encaminhar a notificação ao serviço push.',
+          sentCount: resData.sentCount || 0,
+          totalDevices: resData.totalDevices || 0,
+          prunedCount: resData.prunedCount || 0,
+          error: errorMsg,
+          reports: resData.reports,
         }
       }
 
-      const resData = invokeRes.data || {}
       return {
         success: Boolean(resData.success),
         sentCount: resData.sentCount || 0,

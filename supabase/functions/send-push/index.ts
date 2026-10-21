@@ -51,11 +51,28 @@ Deno.serve(async (req: Request) => {
       })
     }
 
+    // Parse body early so we know the target userId
+    const body: PushRequestPayload = await req.json()
+    const {
+      userId,
+      title,
+      body: messageBody,
+      url,
+      tag,
+      icon,
+      badge,
+      isTest,
+    } = body
+
     // 1. Verify caller authorization (must have valid JWT or service role)
-    const authHeader = req.headers.get('Authorization')
+    const authHeader =
+      req.headers.get('Authorization') || req.headers.get('authorization')
     if (!authHeader) {
       return new Response(
-        JSON.stringify({ error: 'Missing Authorization header' }),
+        JSON.stringify({
+          error: 'Missing Authorization header',
+          code: 'UNAUTHORIZED_NO_HEADER',
+        }),
         {
           status: 401,
           headers: { 'Content-Type': 'application/json', ...corsHeaders },
@@ -69,18 +86,39 @@ Deno.serve(async (req: Request) => {
     if (serviceRoleKey && token === serviceRoleKey) {
       callerUser = { id: 'service-role', email: 'service@supabase.internal' }
     } else {
+      // Primary verification: getUser(token) via anon client
       const authClient = createClient(supabaseUrl, supabaseAnonKey || '')
-      // In Deno Edge Runtime, token must be passed directly into getUser(token)
       const {
         data: { user },
         error: authError,
       } = await authClient.auth.getUser(token)
 
-      if (authError || !user) {
+      if (user) {
+        callerUser = user
+      } else {
+        // Fallback verification: if anon getUser fails (e.g. gateway auth header rewriting),
+        // try verifying using admin client or inspect JWT payload
+        if (serviceRoleKey) {
+          try {
+            const adminClient = createClient(supabaseUrl, serviceRoleKey)
+            const { data: adminUserData } =
+              await adminClient.auth.getUser(token)
+            if (adminUserData?.user) {
+              callerUser = adminUserData.user
+            }
+          } catch {
+            // Admin fallback attempt
+          }
+        }
+      }
+
+      if (!callerUser) {
         return new Response(
           JSON.stringify({
-            error: 'Unauthorized caller',
+            error:
+              'Sua sessão de usuário expirou ou o token de autorização é inválido.',
             details: authError?.message || 'Invalid or expired user session',
+            code: 'AUTH_INVALID_TOKEN',
           }),
           {
             status: 401,
@@ -88,21 +126,7 @@ Deno.serve(async (req: Request) => {
           },
         )
       }
-      callerUser = user
     }
-
-    // Parse body
-    const body: PushRequestPayload = await req.json()
-    const {
-      userId,
-      title,
-      body: messageBody,
-      url,
-      tag,
-      icon,
-      badge,
-      isTest,
-    } = body
 
     if (!userId || !title) {
       return new Response(
@@ -149,16 +173,32 @@ Deno.serve(async (req: Request) => {
       )
     }
 
-    // Retrieve VAPID credentials from environment
-    const vapidPublicKey = Deno.env.get('VAPID_PUBLIC_KEY')
-    const vapidPrivateKey = Deno.env.get('VAPID_PRIVATE_KEY')
-    const vapidSubject =
-      Deno.env.get('VAPID_SUBJECT') || 'mailto:contato@goplay.app'
+    // Retrieve and sanitize VAPID credentials from environment
+    const rawPublicKey = Deno.env.get('VAPID_PUBLIC_KEY')
+    const rawPrivateKey = Deno.env.get('VAPID_PRIVATE_KEY')
+    const rawSubject = Deno.env.get('VAPID_SUBJECT')
+
+    const vapidPublicKey = rawPublicKey
+      ? rawPublicKey.trim().replace(/^["']|["']$/g, '')
+      : null
+    const vapidPrivateKey = rawPrivateKey
+      ? rawPrivateKey.trim().replace(/^["']|["']$/g, '')
+      : null
+    let vapidSubject = rawSubject
+      ? rawSubject.trim().replace(/^["']|["']$/g, '')
+      : 'mailto:contato@goplay.app'
+    if (
+      !vapidSubject.startsWith('mailto:') &&
+      !vapidSubject.startsWith('https://')
+    ) {
+      vapidSubject = `mailto:${vapidSubject}`
+    }
 
     if (!vapidPublicKey || !vapidPrivateKey) {
       return new Response(
         JSON.stringify({
-          error: 'VAPID credentials not configured on backend',
+          error: 'Credenciais VAPID não configuradas no servidor Supabase.',
+          code: 'VAPID_NOT_CONFIGURED',
           configured: false,
         }),
         {
@@ -252,17 +292,20 @@ Deno.serve(async (req: Request) => {
 
       try {
         const subData = {
-          endpoint: sub.endpoint,
+          endpoint: sub.endpoint.trim(),
           keys: {
-            p256dh: sub.p256dh,
-            auth: sub.auth,
+            p256dh: sub.p256dh.trim(),
+            auth: sub.auth.trim(),
           },
         }
 
         // Web Push options with high urgency so Android wakes up from Doze / Background
+        // Note: RFC 8292 caps VAPID token lifetime to 24h (86400s), but ttl can be 86400.
+        // We set vapidExpiration to 43200 (12h) to avoid any edge boundary clamp.
         const delivered = await sendPushNotification(subData, payload, vapid, {
-          ttl: 86400, // 24h retrying on push service
+          ttl: 86400, // 24h retention on FCM push service
           urgency: 'high', // CRITICAL for Android: wakes up background/standby PWA
+          vapidExpiration: 43200,
         })
 
         if (!delivered) {
@@ -273,7 +316,8 @@ Deno.serve(async (req: Request) => {
             host: endpointHost,
             status: 'pruned',
             statusCode: 410,
-            error: 'Subscription expired or revoked by push service (410 Gone)',
+            error:
+              'Assinatura expirada ou revogada pelo serviço push do Google (410 Gone)',
           })
         } else {
           successCount++
@@ -284,43 +328,40 @@ Deno.serve(async (req: Request) => {
             statusCode: 201, // RFC 8030 standard push service acceptance
           })
         }
-      } catch (sendErr) {
-        if (sendErr instanceof WebPushError) {
-          if (sendErr.statusCode === 404 || sendErr.statusCode === 410) {
-            deadSubIds.push(sub.id)
-            deliveryReports.push({
-              subId: sub.id,
-              host: endpointHost,
-              status: 'pruned',
-              statusCode: sendErr.statusCode,
-              error: 'Push service reports endpoint no longer valid',
-            })
-          } else {
-            console.warn(
-              `[send-push] WebPushError from ${endpointHost} [${sendErr.statusCode}]:`,
-              sendErr.message,
-            )
-            deliveryReports.push({
-              subId: sub.id,
-              host: endpointHost,
-              status: 'failed',
-              statusCode: sendErr.statusCode,
-              error: sendErr.message,
-            })
-          }
-        } else {
-          console.error(
-            `[send-push] Unexpected error sending push to ${endpointHost}:`,
-            sendErr,
-          )
+      } catch (sendErr: any) {
+        const statusCode =
+          sendErr?.statusCode ||
+          sendErr?.status ||
+          (sendErr instanceof WebPushError ? sendErr.statusCode : undefined)
+        const errMsg = sendErr?.message || String(sendErr)
+
+        if (statusCode === 404 || statusCode === 410) {
+          deadSubIds.push(sub.id)
+          deliveryReports.push({
+            subId: sub.id,
+            host: endpointHost,
+            status: 'pruned',
+            statusCode,
+            error:
+              'Endpoint desativado pelo serviço push do navegador (404/410). Assinatura removida.',
+          })
+        } else if (statusCode === 401 || statusCode === 403) {
           deliveryReports.push({
             subId: sub.id,
             host: endpointHost,
             status: 'failed',
+            statusCode,
+            error: `Rejeição de credencial VAPID pelo FCM Google (${statusCode}): chave pública/privada não coincide com a assinatura registrada.`,
+          })
+        } else {
+          deliveryReports.push({
+            subId: sub.id,
+            host: endpointHost,
+            status: 'failed',
+            statusCode,
             error:
-              sendErr instanceof Error
-                ? sendErr.message
-                : 'Unexpected network error',
+              errMsg ||
+              'Falha de comunicação com o servidor de push da Google (FCM).',
           })
         }
       }
@@ -331,6 +372,8 @@ Deno.serve(async (req: Request) => {
       await adminDb.from('push_subscriptions').delete().in('id', deadSubIds)
     }
 
+    // Always return 200 with delivery details for client clarity even if 0 succeeded,
+    // so client can read full JSON deliveryReports and status codes (201, 401, 410, etc.)
     return new Response(
       JSON.stringify({
         success: successCount > 0,
@@ -338,6 +381,10 @@ Deno.serve(async (req: Request) => {
         prunedCount: deadSubIds.length,
         totalDevices: subscriptions.length,
         isTest: Boolean(isTest),
+        message:
+          successCount > 0
+            ? `${successCount} aparelho(s) notificado(s) com sucesso via FCM Google (HTTP 201).`
+            : `Nenhum aparelho pôde ser notificado (${subscriptions.length} dispositivo(s) cadastrado(s)). Verifique os detalhes do relatório.`,
         reports: deliveryReports,
       }),
       {
@@ -350,7 +397,8 @@ Deno.serve(async (req: Request) => {
       JSON.stringify({
         error:
           error?.message ||
-          'Internal server error processing push notification',
+          'Erro interno no servidor Supabase ao processar o push Web.',
+        code: 'EDGE_FUNCTION_EXCEPTION',
       }),
       {
         status: 500,
