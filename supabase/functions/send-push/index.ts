@@ -178,68 +178,112 @@ Deno.serve(async (req: Request) => {
     const rawPrivateKey = Deno.env.get('VAPID_PRIVATE_KEY')
     const rawSubject = Deno.env.get('VAPID_SUBJECT')
 
-    console.log('[send-push] VAPID env check:', {
-      hasPublicKey: Boolean(rawPublicKey),
-      pubLen: rawPublicKey?.length,
-      hasPrivateKey: Boolean(rawPrivateKey),
-      privLen: rawPrivateKey?.length,
-      hasSubject: Boolean(rawSubject),
-    })
-
-    // Helper to normalize base64/base64url keys: trim, unquote, strip trailing padding
-    const normalizeBase64Url = (key: string): string => {
-      if (!key) return ''
-      let cleaned = key
-        .trim()
-        .replace(/^["']|["']$/g, '')
-        .trim()
-      // Convert standard base64 (+ and /) to RFC 7515 Base64URL (- and _), remove trailing '=' padding
-      cleaned = cleaned
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/, '')
-      return cleaned
+    /**
+     * Ultra-tolerant sanitizer for Base64/Base64URL keys.
+     * Cleans wrapping/internal quotes, commas, semicolons, tabs, newlines, spaces,
+     * strips trailing '=' padding, and standardizes '+' -> '-' and '/' -> '_'.
+     */
+    const sanitizeVapidKey = (raw: string | undefined | null): string => {
+      if (!raw || typeof raw !== 'string') return ''
+      let s = raw.trim()
+      // Strip outer wrapping quotes/backticks/brackets if copied with code syntax
+      s = s.replace(/^["'`\[\(]+|["'`\]\)]+$/g, '')
+      // Strip outer punctuation like commas, semicolons
+      s = s.replace(/^[,;]+|[,;]+$/g, '')
+      // Remove any whitespace (spaces, tabs, newlines, non-breaking spaces)
+      s = s.replace(/\s+/g, '')
+      // Strip stray quotes, commas, semicolons that might have been pasted inside
+      s = s.replace(/["'`,;]/g, '')
+      // Normalize standard Base64 characters to Base64URL (RFC 7515 / RFC 8292)
+      s = s.replace(/\+/g, '-').replace(/\//g, '_')
+      // Remove Base64URL trailing '=' padding (Web Push standard requires unpadded base64url)
+      s = s.replace(/=+$/, '')
+      return s
     }
 
-    const sanitizeBase64UrlDecode = (
+    /**
+     * Tolerant sanitizer for VAPID_SUBJECT.
+     */
+    const sanitizeVapidSubject = (raw: string | undefined | null): string => {
+      if (!raw || typeof raw !== 'string') return 'mailto:contato@goplay.app'
+      let s = raw.trim()
+      s = s.replace(/^["'`]+|["'`]+$/g, '').trim()
+      s = s.replace(/^[,;]+|[,;]+$/g, '').trim()
+      s = s.replace(/\s+/g, '')
+      if (!s) return 'mailto:contato@goplay.app'
+      if (!s.startsWith('mailto:') && !s.startsWith('https://')) {
+        s = `mailto:${s}`
+      }
+      return s
+    }
+
+    const vapidPublicKey = rawPublicKey ? sanitizeVapidKey(rawPublicKey) : null
+    const vapidPrivateKey = rawPrivateKey
+      ? sanitizeVapidKey(rawPrivateKey)
+      : null
+    const vapidSubject = sanitizeVapidSubject(rawSubject)
+
+    // Detailed diagnostic logging for VAPID env (without exposing secret values)
+    console.log('[send-push] VAPID env diagnostics:', {
+      hasPublicKey: Boolean(rawPublicKey),
+      rawPubLen: rawPublicKey?.length ?? 0,
+      sanitizedPubLen: vapidPublicKey?.length ?? 0,
+      pubHasQuotes: rawPublicKey ? /["']/.test(rawPublicKey) : false,
+      pubHasComma: rawPublicKey ? /,/.test(rawPublicKey) : false,
+      pubHasWhitespace: rawPublicKey ? /\s/.test(rawPublicKey) : false,
+      hasPrivateKey: Boolean(rawPrivateKey),
+      rawPrivLen: rawPrivateKey?.length ?? 0,
+      sanitizedPrivLen: vapidPrivateKey?.length ?? 0,
+      privHasQuotes: rawPrivateKey ? /["']/.test(rawPrivateKey) : false,
+      privHasComma: rawPrivateKey ? /,/.test(rawPrivateKey) : false,
+      privHasWhitespace: rawPrivateKey ? /\s/.test(rawPrivateKey) : false,
+      hasSubject: Boolean(rawSubject),
+      subjectScheme: vapidSubject.split(':')[0],
+    })
+
+    const decodeBase64UrlBytes = (
       str: string,
       label: string,
-    ): { valid: boolean; length: number; error?: string } => {
+      rawLen: number,
+    ): {
+      valid: boolean
+      length: number
+      bytes?: Uint8Array
+      error?: string
+    } => {
       try {
         if (!str || typeof str !== 'string') {
           return {
             valid: false,
             length: 0,
-            error: `${label}: chave vazia ou indefinida`,
+            error: `${label}: chave vazia após sanitização (comprimento bruto: ${rawLen}).`,
           }
         }
+        // Base64URL string must contain only valid Base64URL characters [A-Za-z0-9_-]
+        const invalidCharMatch = str.match(/[^A-Za-z0-9_-]/)
+        if (invalidCharMatch) {
+          return {
+            valid: false,
+            length: 0,
+            error: `${label}: caractere inválido '${invalidCharMatch[0]}' encontrado (comprimento bruto: ${rawLen}, sanitizado: ${str.length}).`,
+          }
+        }
+
         const padding = '='.repeat((4 - (str.length % 4)) % 4)
         const base64 = (str + padding).replace(/-/g, '+').replace(/_/g, '/')
-        const raw = atob(base64)
-        return { valid: true, length: raw.length }
+        const binaryString = atob(base64)
+        const bytes = new Uint8Array(binaryString.length)
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i)
+        }
+        return { valid: true, length: bytes.length, bytes }
       } catch (e: any) {
         return {
           valid: false,
           length: 0,
-          error: `${label}: ${e?.message || 'atob failed'}`,
+          error: `${label}: falha ao decodificar Base64URL (${e?.message || 'atob falhou'}) — comprimento bruto: ${rawLen}, sanitizado: ${str.length}.`,
         }
       }
-    }
-
-    const vapidPublicKey = rawPublicKey
-      ? normalizeBase64Url(rawPublicKey)
-      : null
-    const vapidPrivateKey = rawPrivateKey
-      ? normalizeBase64Url(rawPrivateKey)
-      : null
-    let vapidSubject = rawSubject
-      ? rawSubject.trim().replace(/^["']|["']$/g, '')
-      : 'mailto:contato@goplay.app'
-    if (
-      !vapidSubject.startsWith('mailto:') &&
-      !vapidSubject.startsWith('https://')
-    ) {
-      vapidSubject = `mailto:${vapidSubject}`
     }
 
     if (!vapidPublicKey || !vapidPrivateKey) {
@@ -257,19 +301,21 @@ Deno.serve(async (req: Request) => {
     }
 
     // Validate VAPID keys format and byte lengths locally before invoking @mmmike/web-push
-    const pubValidation = sanitizeBase64UrlDecode(
+    const pubValidation = decodeBase64UrlBytes(
       vapidPublicKey,
       'VAPID_PUBLIC_KEY',
+      rawPublicKey?.length ?? 0,
     )
-    const privValidation = sanitizeBase64UrlDecode(
+    const privValidation = decodeBase64UrlBytes(
       vapidPrivateKey,
       'VAPID_PRIVATE_KEY',
+      rawPrivateKey?.length ?? 0,
     )
 
     if (!pubValidation.valid || !privValidation.valid) {
       const errDetail =
-        pubValidation.error ||
-        privValidation.error ||
+        (!pubValidation.valid ? pubValidation.error : null) ||
+        (!privValidation.valid ? privValidation.error : null) ||
         'Falha ao decodificar base64url'
       console.error(
         '[send-push] Erro de validação base64 nas chaves VAPID:',
@@ -280,6 +326,12 @@ Deno.serve(async (req: Request) => {
           error: `Erro nas chaves VAPID do servidor: ${errDetail}. Verifique os secrets VAPID no Supabase.`,
           code: 'VAPID_BASE64_DECODE_ERROR',
           details: errDetail,
+          diagnostics: {
+            pubRawLength: rawPublicKey?.length ?? 0,
+            pubSanitizedLength: vapidPublicKey?.length ?? 0,
+            privRawLength: rawPrivateKey?.length ?? 0,
+            privSanitizedLength: vapidPrivateKey?.length ?? 0,
+          },
         }),
         {
           status: 500,
@@ -289,12 +341,18 @@ Deno.serve(async (req: Request) => {
     }
 
     if (pubValidation.length !== 65) {
-      const msg = `VAPID_PUBLIC_KEY deve ter 65 bytes decodificados (P-256), encontrado ${pubValidation.length} bytes.`
+      const msg = `VAPID_PUBLIC_KEY deve ter 65 bytes decodificados (P-256 não comprimido, iniciado em 0x04), porém foram encontrados ${pubValidation.length} bytes (comprimento bruto: ${rawPublicKey?.length ?? 0}, caracteres sanitizados: ${vapidPublicKey.length}). O secret VAPID_PUBLIC_KEY colado no Supabase provavelmente não é a chave pública correta.`
       console.error('[send-push]', msg)
       return new Response(
         JSON.stringify({
           error: msg,
           code: 'VAPID_PUBLIC_KEY_INVALID_LENGTH',
+          diagnostics: {
+            pubRawLength: rawPublicKey?.length ?? 0,
+            pubSanitizedLength: vapidPublicKey.length,
+            pubDecodedBytes: pubValidation.length,
+            expectedBytes: 65,
+          },
         }),
         {
           status: 500,
@@ -304,12 +362,18 @@ Deno.serve(async (req: Request) => {
     }
 
     if (privValidation.length !== 32) {
-      const msg = `VAPID_PRIVATE_KEY deve ter 32 bytes decodificados (P-256), encontrado ${privValidation.length} bytes.`
+      const msg = `VAPID_PRIVATE_KEY deve ter 32 bytes decodificados (P-256 escalar privado), porém foram encontrados ${privValidation.length} bytes (comprimento bruto: ${rawPrivateKey?.length ?? 0}, caracteres sanitizados: ${vapidPrivateKey.length}). O secret VAPID_PRIVATE_KEY colado no Supabase provavelmente não é a chave privada correta.`
       console.error('[send-push]', msg)
       return new Response(
         JSON.stringify({
           error: msg,
           code: 'VAPID_PRIVATE_KEY_INVALID_LENGTH',
+          diagnostics: {
+            privRawLength: rawPrivateKey?.length ?? 0,
+            privSanitizedLength: vapidPrivateKey.length,
+            privDecodedBytes: privValidation.length,
+            expectedBytes: 32,
+          },
         }),
         {
           status: 500,
@@ -405,12 +469,20 @@ Deno.serve(async (req: Request) => {
           `[send-push] Sending to sub ${sub.id}, endpoint host: ${endpointHost}`,
         )
         // Ensure client keys from subscription are clean Base64URL without accidental whitespace or quotes
-        const cleanP256dh = normalizeBase64Url(sub.p256dh)
-        const cleanAuth = normalizeBase64Url(sub.auth)
+        const cleanP256dh = sanitizeVapidKey(sub.p256dh)
+        const cleanAuth = sanitizeVapidKey(sub.auth)
 
         // Pre-validate client subscription keys before invoking sendPushNotification
-        const p256Validation = sanitizeBase64UrlDecode(cleanP256dh, 'p256dh')
-        const authValidation = sanitizeBase64UrlDecode(cleanAuth, 'auth')
+        const p256Validation = decodeBase64UrlBytes(
+          cleanP256dh,
+          'p256dh',
+          sub.p256dh?.length ?? 0,
+        )
+        const authValidation = decodeBase64UrlBytes(
+          cleanAuth,
+          'auth',
+          sub.auth?.length ?? 0,
+        )
 
         if (!p256Validation.valid || !authValidation.valid) {
           const keyErr =
