@@ -97,7 +97,7 @@ Deno.serve(async (req: Request) => {
         callerUser = user
       } else {
         // Fallback verification: if anon getUser fails (e.g. gateway auth header rewriting),
-        // try verifying using admin client or inspect JWT payload
+        // try verifying using admin client
         if (serviceRoleKey) {
           try {
             const adminClient = createClient(supabaseUrl, serviceRoleKey)
@@ -178,11 +178,22 @@ Deno.serve(async (req: Request) => {
     const rawPrivateKey = Deno.env.get('VAPID_PRIVATE_KEY')
     const rawSubject = Deno.env.get('VAPID_SUBJECT')
 
+    // Helper to normalize base64/base64url keys: trim, unquote, strip padding if needed
+    const normalizeBase64Url = (key: string): string => {
+      let cleaned = key.trim().replace(/^["']|["']$/g, '')
+      // Convert standard base64 (+ and /) to RFC 7515 Base64URL (- and _), remove trailing '=' padding
+      cleaned = cleaned
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '')
+      return cleaned
+    }
+
     const vapidPublicKey = rawPublicKey
-      ? rawPublicKey.trim().replace(/^["']|["']$/g, '')
+      ? normalizeBase64Url(rawPublicKey)
       : null
     const vapidPrivateKey = rawPrivateKey
-      ? rawPrivateKey.trim().replace(/^["']|["']$/g, '')
+      ? normalizeBase64Url(rawPrivateKey)
       : null
     let vapidSubject = rawSubject
       ? rawSubject.trim().replace(/^["']|["']$/g, '')
@@ -291,21 +302,25 @@ Deno.serve(async (req: Request) => {
       }
 
       try {
+        console.log(
+          `[send-push] Sending to sub ${sub.id}, endpoint host: ${endpointHost}`,
+        )
+        // Ensure client keys from subscription are clean Base64URL without accidental whitespace or quotes
+        const cleanP256dh = normalizeBase64Url(sub.p256dh)
+        const cleanAuth = normalizeBase64Url(sub.auth)
+
         const subData = {
           endpoint: sub.endpoint.trim(),
           keys: {
-            p256dh: sub.p256dh.trim(),
-            auth: sub.auth.trim(),
+            p256dh: cleanP256dh,
+            auth: cleanAuth,
           },
         }
 
-        // Web Push options with high urgency so Android wakes up from Doze / Background
-        // Note: RFC 8292 caps VAPID token lifetime to 24h (86400s), but ttl can be 86400.
-        // We set vapidExpiration to 43200 (12h) to avoid any edge boundary clamp.
         const delivered = await sendPushNotification(subData, payload, vapid, {
-          ttl: 86400, // 24h retention on FCM push service
-          urgency: 'high', // CRITICAL for Android: wakes up background/standby PWA
-          vapidExpiration: 43200,
+          ttl: 86400, // 24 hours retention on FCM push service
+          urgency: 'high',
+          vapidExpiration: 43200, // 12 hours JWT lifetime
         })
 
         if (!delivered) {
@@ -333,7 +348,15 @@ Deno.serve(async (req: Request) => {
           sendErr?.statusCode ||
           sendErr?.status ||
           (sendErr instanceof WebPushError ? sendErr.statusCode : undefined)
+        const rawBody = sendErr?.body || ''
         const errMsg = sendErr?.message || String(sendErr)
+        console.error(`[send-push] Send error for sub ${sub.id}:`, {
+          name: sendErr?.name,
+          message: errMsg,
+          statusCode,
+          body: rawBody,
+          stack: sendErr?.stack,
+        })
 
         if (statusCode === 404 || statusCode === 410) {
           deadSubIds.push(sub.id)
@@ -360,6 +383,7 @@ Deno.serve(async (req: Request) => {
             status: 'failed',
             statusCode,
             error:
+              rawBody ||
               errMsg ||
               'Falha de comunicação com o servidor de push da Google (FCM).',
           })
