@@ -13,6 +13,10 @@ import {
   CheckCircle2,
   Info,
   Loader2,
+  SendHorizontal,
+  Server,
+  Radio,
+  Check,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
@@ -30,6 +34,7 @@ import { useAuth } from '@/hooks/use-auth'
 import {
   pushNotificationService,
   PushStatus,
+  PushTestResult,
 } from '@/services/push-notifications'
 import goplayIcon from '@/assets/goplay-icon-0e955.png'
 
@@ -87,6 +92,12 @@ function PWASettingsContent() {
   const [showPermissionDialog, setShowPermissionDialog] = useState(false)
   const [showIosInfoDialog, setShowIosInfoDialog] = useState(false)
 
+  // Test Push states
+  const [isTestingPush, setIsTestingPush] = useState(false)
+  const [lastTestResult, setLastTestResult] = useState<PushTestResult | null>(
+    null,
+  )
+
   const loadStatus = async () => {
     try {
       const status = await pushNotificationService.checkStatus()
@@ -130,7 +141,7 @@ function PWASettingsContent() {
       if (pushStatus.permission === 'denied') {
         toast.error('Permissão bloqueada pelo navegador.', {
           description:
-            'Acesse as configurações do seu navegador ou sistema para desbloquear as notificações do GoPlay.',
+            'Acesse as configurações do seu navegador ou sistema Android para desbloquear as notificações do Goplay.',
         })
         return
       }
@@ -168,12 +179,45 @@ function PWASettingsContent() {
       if (res.permissionDenied) {
         toast.error('Permissão não concedida.', {
           description:
-            'Você optou por não receber notificações ou o navegador bloqueou.',
+            'Você optou por não receber notificações ou o Android bloqueou.',
         })
       } else {
         toast.error(res.error || 'Erro ao registrar assinatura push.')
       }
       await loadStatus()
+    }
+  }
+
+  const handleRunPushTest = async () => {
+    if (!user) {
+      toast.error('Faça login para realizar o teste de push.')
+      return
+    }
+
+    setIsTestingPush(true)
+    setLastTestResult(null)
+
+    toast.info('Disparando teste de push no servidor...', {
+      description: 'O servidor Supabase está enviando via Edge Function.',
+    })
+
+    const result = await pushNotificationService.sendSelfTestPush(user.id)
+    setIsTestingPush(false)
+    setLastTestResult(result)
+
+    if (result.success && result.sentCount > 0) {
+      toast.success('Envio aceito pelo serviço push! 🚀', {
+        description:
+          'Verifique a barra de status ou bandeja de notificações do seu celular (mesmo minimizado ou fechado).',
+      })
+      await loadStatus()
+    } else {
+      toast.error('Falha no envio do teste de push.', {
+        description:
+          result.error ||
+          result.message ||
+          'Nenhum aparelho ativo recebeu a notificação.',
+      })
     }
   }
 
@@ -208,7 +252,7 @@ function PWASettingsContent() {
   }
 
   const handleInstallApp = async () => {
-    toast.success('Instalação do GoPlay', {
+    toast.success('Instalação do Goplay', {
       description:
         'Toque em Compartilhar ou no menu do navegador e selecione "Adicionar à Tela de Início".',
     })
@@ -262,16 +306,16 @@ function PWASettingsContent() {
           <div className="h-20 w-20 bg-primary/10 rounded-3xl flex items-center justify-center overflow-hidden shadow-md border border-primary/20">
             <img
               src={goplayIcon}
-              alt="GoPlay App Logo"
+              alt="Goplay App Logo"
               className="h-14 w-14 object-contain drop-shadow-sm"
             />
           </div>
           <div>
             <div className="flex items-center justify-center gap-1.5 font-semibold text-lg">
-              <span>GoPlay PWA</span>
+              <span>Goplay App</span>
               {isInstalled ? (
-                <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 font-medium">
-                  <CheckCircle2 className="h-3 w-3" /> Instalado
+                <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium">
+                  <CheckCircle2 className="h-3 w-3" /> PWA Instalado
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 font-medium">
@@ -281,8 +325,8 @@ function PWASettingsContent() {
             </div>
             <p className="text-sm text-muted-foreground mt-1">
               {isInstalled
-                ? 'Aplicativo instalado na tela de início com suporte nativo.'
-                : 'Instale o app na sua tela de início para a melhor experiência esportiva.'}
+                ? 'Aplicativo instalado na tela de início com suporte nativo a Web Push.'
+                : 'Instale o Goplay na tela de início para receber alertas em segundo plano.'}
             </p>
           </div>
           {!isInstalled && (
@@ -300,7 +344,7 @@ function PWASettingsContent() {
         {/* Push Notifications Section */}
         <div className="space-y-3">
           <h3 className="text-xs font-bold text-muted-foreground uppercase px-1 tracking-wider">
-            Notificações no Celular
+            Notificações no Celular (Android Web Push)
           </h3>
 
           <div className="bg-card rounded-2xl border border-border/60 overflow-hidden shadow-sm">
@@ -309,7 +353,7 @@ function PWASettingsContent() {
                 <div className="flex items-center gap-2">
                   <BellRing className="h-4 w-4 text-primary" />
                   <p className="text-sm font-semibold">
-                    Notificações Push no Celular
+                    Notificações Push no Aparelho
                   </p>
                 </div>
                 <p className="text-xs text-muted-foreground leading-relaxed">
@@ -339,10 +383,109 @@ function PWASettingsContent() {
                 <p className="text-muted-foreground leading-relaxed">
                   Curtidas e comentários nas suas publicações, novos seguidores,
                   confirmação e aprovação de inscrições em eventos/peneiras. Sem
-                  spam nem marketing.
+                  spam nem marketing comercial.
                 </p>
               </div>
             </div>
+
+            {/* Test Push Button Area */}
+            {user && (
+              <div className="p-4 bg-secondary/15 border-t border-border/40 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <p className="text-xs font-bold text-foreground uppercase tracking-wide flex items-center gap-1.5">
+                      <Radio className="h-3.5 w-3.5 text-primary animate-pulse" />
+                      Teste Independente de Push
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Dispara um push real via servidor Supabase para este
+                      aparelho.
+                    </p>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={handleRunPushTest}
+                  disabled={isTestingPush || isTogglingPush}
+                  className="w-full gap-2 font-medium shadow-sm"
+                  variant="outline"
+                >
+                  {isTestingPush ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                      Enviando push real pelo servidor...
+                    </>
+                  ) : (
+                    <>
+                      <SendHorizontal className="h-4 w-4 text-primary" />
+                      Enviar Notificação de Teste no Meu Aparelho
+                    </>
+                  )}
+                </Button>
+
+                <p className="text-[11px] text-muted-foreground/80 leading-normal">
+                  💡 <em>Dica de validação:</em> toque no botão acima e
+                  imediatamente pressione o botão Home do Android ou feche o
+                  Goplay para ver a notificação chegar na tela de bloqueio e na
+                  barra de notificações.
+                </p>
+
+                {/* Real-time Diagnostics Output */}
+                {lastTestResult && (
+                  <div className="p-3 rounded-xl bg-card border border-border/60 text-xs space-y-2 animate-fade-in">
+                    <div className="flex items-center justify-between font-semibold">
+                      <span className="flex items-center gap-1.5">
+                        <Server className="h-3.5 w-3.5 text-primary" />
+                        Diagnóstico do Servidor Supabase
+                      </span>
+                      {lastTestResult.success ? (
+                        <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                          <Check className="h-3.5 w-3.5" /> Sucesso (201
+                          Created)
+                        </span>
+                      ) : (
+                        <span className="text-destructive font-bold flex items-center gap-1">
+                          <AlertCircle className="h-3.5 w-3.5" /> Falha
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="text-muted-foreground space-y-1">
+                      <p>
+                        <strong>Aparelhos registrados:</strong>{' '}
+                        {lastTestResult.totalDevices}
+                      </p>
+                      <p>
+                        <strong>Requisições aceitas pelo FCM:</strong>{' '}
+                        {lastTestResult.sentCount}
+                      </p>
+                      {lastTestResult.reports &&
+                        lastTestResult.reports.length > 0 && (
+                          <div className="mt-2 space-y-1">
+                            <p className="font-medium text-foreground">
+                              Destino do Push Service:
+                            </p>
+                            {lastTestResult.reports.map((r, idx) => (
+                              <div
+                                key={idx}
+                                className="pl-2 border-l-2 border-primary/40 text-[11px]"
+                              >
+                                <span>
+                                  Host: <code>{r.host}</code> • Status:{' '}
+                                  <strong>{r.statusCode || r.status}</strong>
+                                </span>
+                                {r.error && (
+                                  <p className="text-destructive">{r.error}</p>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* iOS specific note if needed */}
             {pushStatus.iosWithoutPwa && (
@@ -394,7 +537,7 @@ function PWASettingsContent() {
               onClick={handleUpdate}
             >
               <RefreshCw className="h-4 w-4 text-primary" />
-              Verificar Atualizações do App
+              Verificar Atualizações do App (Atualizar Service Worker)
             </Button>
 
             <Button
@@ -423,7 +566,7 @@ function PWASettingsContent() {
               Ativar Notificações no Celular
             </DialogTitle>
             <DialogDescription className="text-center text-xs text-muted-foreground leading-relaxed pt-1">
-              O GoPlay enviará notificações push diretamente para a sua tela
+              O Goplay enviará notificações push diretamente para a sua tela
               inicial quando alguém interagir com seus posts, seguir você ou
               quando sua inscrição em um evento for atualizada.
             </DialogDescription>
@@ -495,7 +638,7 @@ function PWASettingsContent() {
           <div className="bg-muted/40 p-4 rounded-xl space-y-3 text-xs leading-relaxed">
             <div className="flex items-start gap-2.5">
               <span className="font-bold text-primary">1.</span>
-              <span>Abra o GoPlay no navegador Safari.</span>
+              <span>Abra o Goplay no navegador Safari.</span>
             </div>
             <div className="flex items-start gap-2.5">
               <span className="font-bold text-primary">2.</span>

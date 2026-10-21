@@ -14,7 +14,14 @@ interface PushRequestPayload {
   tag?: string
   icon?: string
   badge?: string
+  isTest?: boolean
 }
+
+// Fallback high-compatibility PNG icons for Android & Samsung OneUI
+const DEFAULT_ICON_PNG =
+  'https://img.usecurling.com/p/192/192?q=goplay%20logo&color=purple&v=4'
+const DEFAULT_BADGE_PNG =
+  'https://img.usecurling.com/p/96/96?q=goplay%20badge&color=white&v=4'
 
 Deno.serve(async (req: Request) => {
   // Handle CORS preflight
@@ -56,24 +63,46 @@ Deno.serve(async (req: Request) => {
       )
     }
 
-    const authClient = createClient(supabaseUrl, supabaseAnonKey || '', {
-      global: { headers: { Authorization: authHeader } },
-    })
-    const {
-      data: { user: callerUser },
-      error: authError,
-    } = await authClient.auth.getUser()
+    const token = authHeader.replace(/^Bearer\s+/i, '').trim()
+    let callerUser: { id: string; email?: string } | null = null
 
-    if (authError || !callerUser) {
-      return new Response(JSON.stringify({ error: 'Unauthorized caller' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      })
+    if (serviceRoleKey && token === serviceRoleKey) {
+      callerUser = { id: 'service-role', email: 'service@supabase.internal' }
+    } else {
+      const authClient = createClient(supabaseUrl, supabaseAnonKey || '')
+      // In Deno Edge Runtime, token must be passed directly into getUser(token)
+      const {
+        data: { user },
+        error: authError,
+      } = await authClient.auth.getUser(token)
+
+      if (authError || !user) {
+        return new Response(
+          JSON.stringify({
+            error: 'Unauthorized caller',
+            details: authError?.message || 'Invalid or expired user session',
+          }),
+          {
+            status: 401,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders },
+          },
+        )
+      }
+      callerUser = user
     }
 
     // Parse body
     const body: PushRequestPayload = await req.json()
-    const { userId, title, body: messageBody, url, tag, icon, badge } = body
+    const {
+      userId,
+      title,
+      body: messageBody,
+      url,
+      tag,
+      icon,
+      badge,
+      isTest,
+    } = body
 
     if (!userId || !title) {
       return new Response(
@@ -85,8 +114,27 @@ Deno.serve(async (req: Request) => {
       )
     }
 
-    // Anti-self-notification safety rule: NEVER push to the caller themselves
-    if (callerUser.id === userId) {
+    // Security & Safety rules:
+    // - If isTest is requested, caller MUST be testing their OWN account only
+    if (
+      isTest &&
+      callerUser.id !== 'service-role' &&
+      callerUser.id !== userId
+    ) {
+      return new Response(
+        JSON.stringify({
+          error:
+            'Test push can only be triggered for your own authenticated device.',
+        }),
+        {
+          status: 403,
+          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        },
+      )
+    }
+
+    // - If NOT a test, anti-self-notification prevents echoing author's own actions
+    if (!isTest && callerUser.id === userId) {
       return new Response(
         JSON.stringify({
           success: true,
@@ -120,7 +168,7 @@ Deno.serve(async (req: Request) => {
       )
     }
 
-    // Connect to Supabase using service-role (or caller token if service key absent) to fetch recipient's subscriptions
+    // Connect to Supabase using service-role key to fetch recipient's push subscriptions
     const adminDb = createClient(
       supabaseUrl,
       serviceRoleKey || supabaseAnonKey || '',
@@ -131,7 +179,7 @@ Deno.serve(async (req: Request) => {
 
     const { data: subscriptions, error: subError } = await adminDb
       .from('push_subscriptions')
-      .select('id, endpoint, p256dh, auth')
+      .select('id, endpoint, p256dh, auth, user_agent')
       .eq('user_id', userId)
 
     if (subError) {
@@ -152,7 +200,9 @@ Deno.serve(async (req: Request) => {
         JSON.stringify({
           success: true,
           sentCount: 0,
-          message: 'No active push subscriptions for this user',
+          totalDevices: 0,
+          message:
+            'Nenhuma assinatura push ativa encontrada para este usuário no banco.',
         }),
         {
           status: 200,
@@ -167,19 +217,39 @@ Deno.serve(async (req: Request) => {
       subject: vapidSubject,
     }
 
+    // Android/Samsung notification guidelines:
+    // Avoid SVGs in icon and badge: use raster PNGs to guarantee native system banner display
+    const safeIcon = icon && !icon.endsWith('.svg') ? icon : DEFAULT_ICON_PNG
+    const safeBadge =
+      badge && !badge.endsWith('.svg') ? badge : DEFAULT_BADGE_PNG
+
     const payload = {
       title,
       body: messageBody || '',
       url: url || '/',
-      tag: tag || 'goplay-alert',
-      icon: icon || '/icon-192.svg',
-      badge: badge || '/icon-192.svg',
+      tag: tag || (isTest ? `goplay-test-${Date.now()}` : 'goplay-alert'),
+      icon: safeIcon,
+      badge: safeBadge,
     }
 
     let successCount = 0
     const deadSubIds: string[] = []
+    const deliveryReports: Array<{
+      subId: string
+      host: string
+      status: 'delivered' | 'failed' | 'pruned'
+      statusCode?: number
+      error?: string
+    }> = []
 
     for (const sub of subscriptions) {
+      let endpointHost = 'unknown'
+      try {
+        endpointHost = new URL(sub.endpoint).host
+      } catch {
+        endpointHost = 'invalid-url'
+      }
+
       try {
         const subData = {
           endpoint: sub.endpoint,
@@ -189,29 +259,69 @@ Deno.serve(async (req: Request) => {
           },
         }
 
+        // Web Push options with high urgency so Android wakes up from Doze / Background
         const delivered = await sendPushNotification(subData, payload, vapid, {
           ttl: 86400, // 24h retrying on push service
+          urgency: 'high', // CRITICAL for Android: wakes up background/standby PWA
         })
 
         if (!delivered) {
           // Status 404 or 410: device uninstalled or revoked subscription
           deadSubIds.push(sub.id)
+          deliveryReports.push({
+            subId: sub.id,
+            host: endpointHost,
+            status: 'pruned',
+            statusCode: 410,
+            error: 'Subscription expired or revoked by push service (410 Gone)',
+          })
         } else {
           successCount++
+          deliveryReports.push({
+            subId: sub.id,
+            host: endpointHost,
+            status: 'delivered',
+            statusCode: 201, // RFC 8030 standard push service acceptance
+          })
         }
       } catch (sendErr) {
         if (sendErr instanceof WebPushError) {
-          // If status is 404 or 410, push service removed subscription
           if (sendErr.statusCode === 404 || sendErr.statusCode === 410) {
             deadSubIds.push(sub.id)
+            deliveryReports.push({
+              subId: sub.id,
+              host: endpointHost,
+              status: 'pruned',
+              statusCode: sendErr.statusCode,
+              error: 'Push service reports endpoint no longer valid',
+            })
           } else {
             console.warn(
-              `WebPushError [${sendErr.statusCode}]:`,
+              `[send-push] WebPushError from ${endpointHost} [${sendErr.statusCode}]:`,
               sendErr.message,
             )
+            deliveryReports.push({
+              subId: sub.id,
+              host: endpointHost,
+              status: 'failed',
+              statusCode: sendErr.statusCode,
+              error: sendErr.message,
+            })
           }
         } else {
-          console.error('Unexpected error sending push notification:', sendErr)
+          console.error(
+            `[send-push] Unexpected error sending push to ${endpointHost}:`,
+            sendErr,
+          )
+          deliveryReports.push({
+            subId: sub.id,
+            host: endpointHost,
+            status: 'failed',
+            error:
+              sendErr instanceof Error
+                ? sendErr.message
+                : 'Unexpected network error',
+          })
         }
       }
     }
@@ -223,10 +333,12 @@ Deno.serve(async (req: Request) => {
 
     return new Response(
       JSON.stringify({
-        success: true,
+        success: successCount > 0,
         sentCount: successCount,
         prunedCount: deadSubIds.length,
         totalDevices: subscriptions.length,
+        isTest: Boolean(isTest),
+        reports: deliveryReports,
       }),
       {
         status: 200,

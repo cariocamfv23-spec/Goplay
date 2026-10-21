@@ -1,14 +1,38 @@
+// Goplay App - Service Worker with Robust Web Push & Background Support
+// Version: 2026.10.21-v4
+
 importScripts(
   'https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js',
 )
 
+// High-compatibility raster icons for Android & OneUI (avoids SVG blank notification issue)
+const DEFAULT_NOTIFICATION_ICON =
+  'https://img.usecurling.com/p/192/192?q=goplay%20logo&color=purple&v=4'
+const DEFAULT_NOTIFICATION_BADGE =
+  'https://img.usecurling.com/p/96/96?q=goplay%20badge&color=white&v=4'
+
 // Automated update & lifecycle logic
 self.addEventListener('install', (event) => {
+  // Immediately activate new service worker logic without waiting for reload
   self.skipWaiting()
 })
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(clients.claim())
+  event.waitUntil(
+    Promise.all([
+      self.clients.claim(),
+      // Prune old caches on version bump if needed
+      caches
+        .keys()
+        .then((keys) =>
+          Promise.all(
+            keys
+              .filter((k) => k.startsWith('goplay-') && !k.endsWith('-v4'))
+              .map((k) => caches.delete(k)),
+          ),
+        ),
+    ]),
+  )
 })
 
 // ==========================================
@@ -16,12 +40,12 @@ self.addEventListener('activate', (event) => {
 // ==========================================
 self.addEventListener('push', (event) => {
   let data = {
-    title: 'GoPlay App',
-    body: 'Você tem uma nova notificação no GoPlay!',
+    title: 'Goplay App',
+    body: 'Você tem uma nova notificação no Goplay!',
     url: '/',
     tag: 'goplay-alert',
-    icon: '/icon-192.svg',
-    badge: '/icon-192.svg',
+    icon: DEFAULT_NOTIFICATION_ICON,
+    badge: DEFAULT_NOTIFICATION_BADGE,
   }
 
   if (event.data) {
@@ -29,28 +53,56 @@ self.addEventListener('push', (event) => {
       const parsed = event.data.json()
       data = { ...data, ...parsed }
     } catch (_err) {
-      const text = event.data.text()
-      if (text) {
-        data.body = text
+      try {
+        const text = event.data.text()
+        if (text) {
+          data.body = text
+        }
+      } catch {
+        // Fallback to default
       }
     }
   }
 
+  // Ensure icons are valid PNG raster URLs for Android system tray & lockscreen
+  const iconUrl =
+    data.icon && !data.icon.endsWith('.svg')
+      ? data.icon
+      : DEFAULT_NOTIFICATION_ICON
+  const badgeUrl =
+    data.badge && !data.badge.endsWith('.svg')
+      ? data.badge
+      : DEFAULT_NOTIFICATION_BADGE
+
+  // Complete NotificationOptions compliant with Android Notification Drawer & Heads-up banners
   const notificationOptions = {
     body: data.body,
-    icon: data.icon || '/icon-192.svg',
-    badge: data.badge || '/icon-192.svg',
-    tag: data.tag || 'goplay-notification',
+    icon: iconUrl,
+    badge: badgeUrl,
+    tag: data.tag || `goplay-${Date.now()}`,
     data: {
       url: data.url || '/',
       dateOfArrival: Date.now(),
     },
-    vibrate: [100, 50, 100],
+    // Vibrant pattern: [vibrate, pause, vibrate] to wake up Android vibration motors
+    vibrate: [200, 100, 200],
     renotify: true,
+    requireInteraction: false,
+    silent: false,
   }
 
+  // event.waitUntil guarantees the Service Worker process stays alive until Android posts notification
   event.waitUntil(
-    self.registration.showNotification(data.title, notificationOptions),
+    self.registration
+      .showNotification(data.title, notificationOptions)
+      .catch((showErr) => {
+        // Fallback without vibration or extra options if device rejects specific parameters
+        return self.registration.showNotification(data.title, {
+          body: data.body,
+          icon: DEFAULT_NOTIFICATION_ICON,
+          data: { url: data.url || '/' },
+        })
+      }),
   )
 })
 
@@ -62,7 +114,6 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close()
 
   const rawUrl = event.notification.data?.url || '/'
-  // Ensure target URL is absolute relative to self.location.origin
   const targetUrl = new URL(rawUrl, self.location.origin).href
 
   event.waitUntil(
@@ -99,7 +150,7 @@ if (typeof workbox !== 'undefined' && workbox) {
   workbox.routing.registerRoute(
     ({ url }) => /\.(js|css|html|svg|png|ico|woff2)$/i.test(url.pathname),
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: 'goplay-assets',
+      cacheName: 'goplay-assets-v4',
     }),
   )
 
@@ -107,7 +158,7 @@ if (typeof workbox !== 'undefined' && workbox) {
   workbox.routing.registerRoute(
     ({ url }) => url.pathname === '/' || url.pathname === '/index.html',
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: 'goplay-index',
+      cacheName: 'goplay-index-v4',
     }),
   )
 
@@ -119,7 +170,7 @@ if (typeof workbox !== 'undefined' && workbox) {
         const response = await fetch(request)
         return response
       } catch (error) {
-        const cache = await caches.open('goplay-index')
+        const cache = await caches.open('goplay-index-v4')
         const cachedResponse =
           (await cache.match('/index.html')) || (await cache.match('/'))
         if (cachedResponse) {

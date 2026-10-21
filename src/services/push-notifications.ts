@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase/client'
 
-// VAPID Public Key configurada para Web Push no GoPlay
+// VAPID Public Key configurada para Web Push no GoPlay App
 export const DEFAULT_VAPID_PUBLIC_KEY =
   'BJ8-dVxhiweb7IGbIVr0AuZb1CxEqkIjFVHyGI7hTNZ0q5480qWg6efiYYQV9YIYpjyW_CAPXvjMcOjmZnMsA1M'
 
@@ -29,6 +29,23 @@ export interface PushStatus {
   isSubscribed: boolean
   iosWithoutPwa: boolean
   registration: ServiceWorkerRegistration | null
+  subscriptionEndpoint?: string | null
+}
+
+export interface PushTestResult {
+  success: boolean
+  sentCount: number
+  totalDevices: number
+  prunedCount?: number
+  message?: string
+  error?: string
+  reports?: Array<{
+    subId: string
+    host: string
+    status: 'delivered' | 'failed' | 'pruned'
+    statusCode?: number
+    error?: string
+  }>
 }
 
 /**
@@ -58,7 +75,7 @@ export function isStandalonePWA(): boolean {
 }
 
 /**
- * Registers the Service Worker explicitly if supported
+ * Registers and forces update check for the Service Worker explicitly
  */
 export async function registerServiceWorker(): Promise<ServiceWorkerRegistration | null> {
   if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
@@ -67,7 +84,12 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
 
   try {
     const reg = await navigator.serviceWorker.register('/sw.js', { scope: '/' })
-    // Wait until it's ready/active
+    // Force background check for newer sw.js version
+    try {
+      reg.update().catch(() => {})
+    } catch {
+      /* ignore */
+    }
     await navigator.serviceWorker.ready
     return reg
   } catch (err) {
@@ -98,9 +120,7 @@ export const pushNotificationService = {
     const standalone = isStandalonePWA()
     const ios = isIOS()
 
-    // iOS 16.4+ requires the PWA to be installed on Home Screen (standalone) for PushManager to exist
     const iosWithoutPwa = ios && !standalone
-
     const supported = Boolean(hasSW && hasPushManager && hasNotification)
     const permission: NotificationPermission | 'unsupported' = hasNotification
       ? Notification.permission
@@ -127,6 +147,7 @@ export const pushNotificationService = {
         isSubscribed: Boolean(subscription),
         iosWithoutPwa: false,
         registration: reg,
+        subscriptionEndpoint: subscription ? subscription.endpoint : null,
       }
     } catch {
       return {
@@ -157,7 +178,7 @@ export const pushNotificationService = {
         return {
           success: false,
           error:
-            'No iOS, é necessário adicionar o GoPlay à Tela de Início (PWA) para habilitar notificações.',
+            'No iOS, é necessário adicionar o Goplay à Tela de Início (PWA) para habilitar notificações.',
         }
       }
       return {
@@ -290,7 +311,6 @@ export const pushNotificationService = {
         const sub = await reg.pushManager.getSubscription()
         if (sub) {
           const endpoint = sub.endpoint
-          // Invalidate browser subscription so next user on device doesn't inherit it
           await sub.unsubscribe().catch(() => {})
 
           if (userId && endpoint) {
@@ -316,22 +336,101 @@ export const pushNotificationService = {
     body: string
     url?: string
     tag?: string
-  }): Promise<{ success: boolean; error?: string }> {
+    icon?: string
+    badge?: string
+    isTest?: boolean
+  }): Promise<{ success: boolean; error?: string; data?: any }> {
     try {
       const { data, error } = await supabase.functions.invoke('send-push', {
         body: params,
       })
 
       if (error) {
-        // Edge function error (non-fatal for caller flow)
         console.warn('[WebPush] Retorno da Edge Function:', error.message)
-        return { success: false, error: error.message }
+        return { success: false, error: error.message, data }
       }
 
-      return { success: Boolean(data?.success) }
+      return { success: Boolean(data?.success), data }
     } catch (err: any) {
       console.warn('[WebPush] Falha não bloqueante ao disparar push:', err)
       return { success: false, error: err?.message }
+    }
+  },
+
+  /**
+   * Independent Push Test:
+   * Sends a REAL server-side push notification ONLY to the current authenticated user's device.
+   * Ensures subscription exists in the DB first, then invokes send-push with isTest: true.
+   */
+  async sendSelfTestPush(userId: string): Promise<PushTestResult> {
+    if (!userId) {
+      return {
+        success: false,
+        sentCount: 0,
+        totalDevices: 0,
+        error: 'Usuário não autenticado.',
+      }
+    }
+
+    try {
+      // 1. Verify and ensure push subscription is active on client & DB
+      const subRes = await this.subscribeUser(userId)
+      if (!subRes.success && subRes.permissionDenied) {
+        return {
+          success: false,
+          sentCount: 0,
+          totalDevices: 0,
+          error:
+            'Permissão de notificação negada no navegador. Habilite nas configurações do aparelho.',
+        }
+      }
+
+      // 2. Trigger real Edge Function test push
+      const testTimestamp = new Date().toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      })
+
+      const invokeRes = await this.triggerServerPush({
+        userId,
+        title: 'Goplay App • Teste de Notificação',
+        body: `Disparado pelo servidor às ${testTimestamp}. Notificações Web Push funcionando perfeitamente no seu Android!`,
+        url: '/settings/pwa',
+        tag: `test-${Date.now()}`,
+        isTest: true,
+      })
+
+      if (!invokeRes.success) {
+        return {
+          success: false,
+          sentCount: 0,
+          totalDevices: 0,
+          error:
+            invokeRes.error ||
+            'O servidor não conseguiu encaminhar a notificação ao serviço push.',
+        }
+      }
+
+      const resData = invokeRes.data || {}
+      return {
+        success: Boolean(resData.success),
+        sentCount: resData.sentCount || 0,
+        totalDevices: resData.totalDevices || 0,
+        prunedCount: resData.prunedCount || 0,
+        message: resData.message,
+        reports: resData.reports,
+      }
+    } catch (err: any) {
+      return {
+        success: false,
+        sentCount: 0,
+        totalDevices: 0,
+        error:
+          err instanceof Error
+            ? err.message
+            : 'Erro inesperado ao executar teste de push.',
+      }
     }
   },
 }
