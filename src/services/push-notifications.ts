@@ -1,15 +1,17 @@
 import { supabase } from '@/lib/supabase/client'
 
-// Fallback public key (can be overridden via VAPID_PUBLIC_KEY env or backend config)
+// VAPID Public Key configurada para Web Push no GoPlay
 export const DEFAULT_VAPID_PUBLIC_KEY =
-  'BLphyqo5bIOgkqHls1BKWY54tj0HsfHmpAoNCnBzZM71dYPP0c82II7RGLuacQo0DKZzdJdB2svuTxlq5K7U49w'
+  'BJ8-dVxhiweb7IGbIVr0AuZb1CxEqkIjFVHyGI7hTNZ0q5480qWg6efiYYQV9YIYpjyW_CAPXvjMcOjmZnMsA1M'
 
 /**
- * Converts a base64 string to a Uint8Array for applicationServerKey
+ * Converts a base64 or base64url string to a Uint8Array for applicationServerKey
+ * Safely handles unpadded or padded Base64URL and standard Base64
  */
 export function urlBase64ToUint8Array(base64String: string): Uint8Array {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
+  const cleanKey = base64String.trim()
+  const padding = '='.repeat((4 - (cleanKey.length % 4)) % 4)
+  const base64 = (cleanKey + padding).replace(/-/g, '+').replace(/_/g, '/')
 
   const rawData = window.atob(base64)
   const outputArray = new Uint8Array(rawData.length)
