@@ -1,9 +1,6 @@
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
 import { createClient } from 'npm:@supabase/supabase-js@2'
-import {
-  sendPushNotification,
-  WebPushError,
-} from 'npm:@mmmike/web-push@1.3.0/send'
+import { sendPushNotification, WebPushError } from 'npm:@mmmike/web-push@1.3.0/send'
 import { corsHeaders } from '../_shared/cors.ts'
 
 interface PushRequestPayload {
@@ -47,13 +44,10 @@ Deno.serve(async (req: Request) => {
     // 1. Verify caller authorization (must have valid JWT or service role)
     const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: 'Missing Authorization header' }),
-        {
-          status: 401,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
-        },
-      )
+      return new Response(JSON.stringify({ error: 'Missing Authorization header' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      })
     }
 
     const authClient = createClient(supabaseUrl, supabaseAnonKey || '', {
@@ -136,10 +130,7 @@ Deno.serve(async (req: Request) => {
 
     if (subError) {
       return new Response(
-        JSON.stringify({
-          error: 'Error fetching subscriptions',
-          details: subError.message,
-        }),
+        JSON.stringify({ error: 'Error fetching subscriptions', details: subError.message }),
         {
           status: 500,
           headers: { 'Content-Type': 'application/json', ...corsHeaders },
@@ -205,10 +196,7 @@ Deno.serve(async (req: Request) => {
           if (sendErr.statusCode === 404 || sendErr.statusCode === 410) {
             deadSubIds.push(sub.id)
           } else {
-            console.warn(
-              `WebPushError [${sendErr.statusCode}]:`,
-              sendErr.message,
-            )
+            console.warn(`WebPushError [${sendErr.statusCode}]:`, sendErr.message)
           }
         } else {
           console.error('Unexpected error sending push notification:', sendErr)
@@ -236,9 +224,7 @@ Deno.serve(async (req: Request) => {
   } catch (error: any) {
     return new Response(
       JSON.stringify({
-        error:
-          error?.message ||
-          'Internal server error processing push notification',
+        error: error?.message || 'Internal server error processing push notification',
       }),
       {
         status: 500,
