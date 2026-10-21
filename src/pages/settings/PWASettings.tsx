@@ -206,16 +206,18 @@ function PWASettingsContent() {
     setLastTestResult(result)
 
     if (result.success && result.sentCount > 0) {
-      toast.success('Envio aceito pelo FCM Google! 🚀', {
-        description: `${result.sentCount} aparelho(s) notificado(s). Verifique a barra de status ou bandeja do Android (mesmo com o app fechado).`,
+      toast.success('Envio aceito pelo FCM Google (201)! 🚀', {
+        description: `${result.sentCount} aparelho(s) notificado(s). Verifique a barra de notificações do seu aparelho Android.`,
       })
       await loadStatus()
     } else {
-      toast.error('Resultado do teste de push:', {
-        description:
-          result.error ||
-          result.message ||
-          'Nenhum aparelho ativo pôde ser notificado no momento.',
+      const errorDescription =
+        result.error ||
+        result.message ||
+        'Nenhum aparelho ativo pôde ser notificado no momento.'
+      toast.error('Falha no teste de push:', {
+        description: errorDescription,
+        duration: 7000,
       })
     }
   }

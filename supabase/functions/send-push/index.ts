@@ -178,15 +178,52 @@ Deno.serve(async (req: Request) => {
     const rawPrivateKey = Deno.env.get('VAPID_PRIVATE_KEY')
     const rawSubject = Deno.env.get('VAPID_SUBJECT')
 
-    // Helper to normalize base64/base64url keys: trim, unquote, strip padding if needed
+    console.log('[send-push] VAPID env check:', {
+      hasPublicKey: Boolean(rawPublicKey),
+      pubLen: rawPublicKey?.length,
+      hasPrivateKey: Boolean(rawPrivateKey),
+      privLen: rawPrivateKey?.length,
+      hasSubject: Boolean(rawSubject),
+    })
+
+    // Helper to normalize base64/base64url keys: trim, unquote, strip trailing padding
     const normalizeBase64Url = (key: string): string => {
-      let cleaned = key.trim().replace(/^["']|["']$/g, '')
+      if (!key) return ''
+      let cleaned = key
+        .trim()
+        .replace(/^["']|["']$/g, '')
+        .trim()
       // Convert standard base64 (+ and /) to RFC 7515 Base64URL (- and _), remove trailing '=' padding
       cleaned = cleaned
         .replace(/\+/g, '-')
         .replace(/\//g, '_')
         .replace(/=+$/, '')
       return cleaned
+    }
+
+    const sanitizeBase64UrlDecode = (
+      str: string,
+      label: string,
+    ): { valid: boolean; length: number; error?: string } => {
+      try {
+        if (!str || typeof str !== 'string') {
+          return {
+            valid: false,
+            length: 0,
+            error: `${label}: chave vazia ou indefinida`,
+          }
+        }
+        const padding = '='.repeat((4 - (str.length % 4)) % 4)
+        const base64 = (str + padding).replace(/-/g, '+').replace(/_/g, '/')
+        const raw = atob(base64)
+        return { valid: true, length: raw.length }
+      } catch (e: any) {
+        return {
+          valid: false,
+          length: 0,
+          error: `${label}: ${e?.message || 'atob failed'}`,
+        }
+      }
     }
 
     const vapidPublicKey = rawPublicKey
@@ -214,6 +251,68 @@ Deno.serve(async (req: Request) => {
         }),
         {
           status: 503,
+          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        },
+      )
+    }
+
+    // Validate VAPID keys format and byte lengths locally before invoking @mmmike/web-push
+    const pubValidation = sanitizeBase64UrlDecode(
+      vapidPublicKey,
+      'VAPID_PUBLIC_KEY',
+    )
+    const privValidation = sanitizeBase64UrlDecode(
+      vapidPrivateKey,
+      'VAPID_PRIVATE_KEY',
+    )
+
+    if (!pubValidation.valid || !privValidation.valid) {
+      const errDetail =
+        pubValidation.error ||
+        privValidation.error ||
+        'Falha ao decodificar base64url'
+      console.error(
+        '[send-push] Erro de validação base64 nas chaves VAPID:',
+        errDetail,
+      )
+      return new Response(
+        JSON.stringify({
+          error: `Erro nas chaves VAPID do servidor: ${errDetail}. Verifique os secrets VAPID no Supabase.`,
+          code: 'VAPID_BASE64_DECODE_ERROR',
+          details: errDetail,
+        }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        },
+      )
+    }
+
+    if (pubValidation.length !== 65) {
+      const msg = `VAPID_PUBLIC_KEY deve ter 65 bytes decodificados (P-256), encontrado ${pubValidation.length} bytes.`
+      console.error('[send-push]', msg)
+      return new Response(
+        JSON.stringify({
+          error: msg,
+          code: 'VAPID_PUBLIC_KEY_INVALID_LENGTH',
+        }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        },
+      )
+    }
+
+    if (privValidation.length !== 32) {
+      const msg = `VAPID_PRIVATE_KEY deve ter 32 bytes decodificados (P-256), encontrado ${privValidation.length} bytes.`
+      console.error('[send-push]', msg)
+      return new Response(
+        JSON.stringify({
+          error: msg,
+          code: 'VAPID_PRIVATE_KEY_INVALID_LENGTH',
+        }),
+        {
+          status: 500,
           headers: { 'Content-Type': 'application/json', ...corsHeaders },
         },
       )
@@ -308,6 +407,26 @@ Deno.serve(async (req: Request) => {
         // Ensure client keys from subscription are clean Base64URL without accidental whitespace or quotes
         const cleanP256dh = normalizeBase64Url(sub.p256dh)
         const cleanAuth = normalizeBase64Url(sub.auth)
+
+        // Pre-validate client subscription keys before invoking sendPushNotification
+        const p256Validation = sanitizeBase64UrlDecode(cleanP256dh, 'p256dh')
+        const authValidation = sanitizeBase64UrlDecode(cleanAuth, 'auth')
+
+        if (!p256Validation.valid || !authValidation.valid) {
+          const keyErr =
+            p256Validation.error ||
+            authValidation.error ||
+            'Invalid client key base64'
+          deadSubIds.push(sub.id)
+          deliveryReports.push({
+            subId: sub.id,
+            host: endpointHost,
+            status: 'pruned',
+            statusCode: 400,
+            error: `Chaves do cliente corrompidas no banco (${keyErr}). Assinatura limpa.`,
+          })
+          continue
+        }
 
         const subData = {
           endpoint: sub.endpoint.trim(),

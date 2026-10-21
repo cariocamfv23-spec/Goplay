@@ -362,39 +362,69 @@ export const pushNotificationService = {
       })
 
       if (error) {
-        let detailedError = error.message
+        let detailedError = error.message || 'Erro ao invocar Edge Function'
         let statusCode: number | undefined
         let responsePayload: any = null
 
         // Handle FunctionsHttpError containing error.context Response object
-        if (
-          (error as any)?.context &&
-          typeof (error as any).context.json === 'function'
-        ) {
+        if ((error as any)?.context) {
+          const contextObj = (error as any).context
+          if (typeof contextObj.status === 'number') {
+            statusCode = contextObj.status
+          }
+
+          // Try parsing response body if available as cloneable or text/json
           try {
-            statusCode = (error as any).context.status
-            responsePayload = await (error as any).context.json()
-            if (responsePayload?.error) {
-              detailedError = responsePayload.error
-              if (responsePayload.details) {
-                detailedError += ` (${responsePayload.details})`
+            if (typeof contextObj.json === 'function') {
+              responsePayload = await contextObj
+                .clone()
+                .json()
+                .catch(async () => {
+                  const text = await contextObj
+                    .clone()
+                    .text()
+                    .catch(() => '')
+                  return text ? { rawText: text } : null
+                })
+            } else if (typeof contextObj.text === 'function') {
+              const text = await contextObj.text().catch(() => '')
+              try {
+                responsePayload = JSON.parse(text)
+              } catch {
+                responsePayload = text ? { rawText: text } : null
               }
             }
           } catch {
-            // Context body could not be parsed as JSON
+            // Body extraction failed
           }
+        }
+
+        if (responsePayload?.error) {
+          detailedError = responsePayload.error
+          if (responsePayload.details) {
+            detailedError += ` — Detalhes: ${responsePayload.details}`
+          }
+        } else if (responsePayload?.message) {
+          detailedError = responsePayload.message
+        } else if (responsePayload?.rawText) {
+          detailedError = `${detailedError} [Resposta bruta: ${responsePayload.rawText.slice(0, 200)}]`
         }
 
         // Clarify specific standard HTTP edge error cases
         if (statusCode === 401) {
           detailedError =
-            'Sessão expirada ou não autorizada pelo servidor (401). Faça logout e login novamente no app.'
+            detailedError.includes('AUTH_INVALID_TOKEN') ||
+            detailedError.includes('sessão')
+              ? detailedError
+              : 'Sessão expirada ou não autorizada pelo servidor (HTTP 401). Faça logout e login novamente no app.'
         } else if (statusCode === 403) {
           detailedError =
-            'Permissão negada pelo servidor para disparar teste neste aparelho (403).'
+            'Permissão negada pelo servidor para disparar teste neste aparelho (HTTP 403).'
         } else if (statusCode === 503) {
           detailedError =
-            'Chaves VAPID não configuradas no servidor Supabase (503).'
+            'Chaves VAPID não configuradas no servidor Supabase (HTTP 503).'
+        } else if (statusCode === 500 && !responsePayload?.error) {
+          detailedError = `Erro interno da Edge Function send-push (HTTP 500): ${detailedError}`
         }
 
         console.warn(
@@ -413,9 +443,11 @@ export const pushNotificationService = {
       return { success: Boolean(data?.success), data, statusCode: 200 }
     } catch (err: any) {
       console.warn('[WebPush] Falha de conexão ao disparar push:', err)
+      const message =
+        err instanceof Error ? err.message : String(err || 'Erro desconhecido')
       return {
         success: false,
-        error: err?.message || 'Falha de conexão com a Edge Function',
+        error: `Falha de rede/cliente ao invocar Edge Function: ${message}`,
       }
     }
   },
@@ -467,11 +499,22 @@ export const pushNotificationService = {
       const resData = invokeRes.data || {}
 
       if (!invokeRes.success) {
-        const errorMsg =
-          invokeRes.error ||
-          resData?.error ||
-          resData?.message ||
-          'O servidor Supabase não conseguiu enviar a notificação ao serviço push.'
+        let errorMsg = invokeRes.error || resData?.error || resData?.message
+
+        if (!errorMsg) {
+          const statusSuffix = invokeRes.statusCode
+            ? ` (HTTP ${invokeRes.statusCode})`
+            : ''
+          errorMsg = `Falha ao processar a notificação no servidor Supabase${statusSuffix}. Verifique se a Edge Function send-push está ativa.`
+        }
+
+        // If reports has specific errors, append the first one for direct visibility
+        if (Array.isArray(resData?.reports) && resData.reports.length > 0) {
+          const failedReport = resData.reports.find((r: any) => r.error)
+          if (failedReport?.error && !errorMsg.includes(failedReport.error)) {
+            errorMsg = `${errorMsg} [${failedReport.host}: ${failedReport.error}]`
+          }
+        }
 
         return {
           success: false,
