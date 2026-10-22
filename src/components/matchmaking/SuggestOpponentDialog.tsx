@@ -1,3 +1,4 @@
+/* Component for suggesting match opponents based on skill, location and budget */
 import { useState, useEffect, useCallback } from "react"
 import {
   Dialog,
@@ -10,26 +11,26 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import {
+  suggestOpponent,
+  type Modality,
+  type SkillTolerance,
+  type SuggestionResult,
+  getWinRate,
+} from "@/lib/matchmaking-data"
+import { TeamRoleBadge } from "./TeamRoleBadge"
+import type { MatchConfigState } from "./MatchConfigCard"
+import {
   Sparkles,
-  Loader2,
   MapPin,
   Coins,
+  Target,
   Check,
   Zap,
-  Target,
+  Loader2,
   Crown,
 } from "lucide-react"
-import {
-  getWinRate,
-  suggestOpponent,
-  type SuggestionResult,
-  type Modality,
-} from "@/lib/matchmaking-data"
-import { TeamRoleBadge } from "@/components/matchmaking/TeamRoleBadge"
-import type { MatchConfigState } from "@/components/matchmaking/MatchConfigCard"
 
 type SearchState = "idle" | "searching" | "result" | "no-result"
-type SkillTolerance = "precise" | "balanced" | "wide"
 
 interface SuggestOpponentDialogProps {
   open: boolean
