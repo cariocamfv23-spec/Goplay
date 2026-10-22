@@ -10,7 +10,10 @@ import {
 import { TalentPreviewCard } from "@/components/TalentPreviewCard"
 
 interface TalentMapMarkerProps {
-  talent: ProfileData & { x: number y: number }
+  talent: ProfileData & {
+    x: number
+    y: number
+  }
   isTopTalent: boolean
 }
 

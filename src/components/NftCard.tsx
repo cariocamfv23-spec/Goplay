@@ -16,7 +16,12 @@ export type Accessory = {
   id: string
   emoji: string
   label: string
-  position: { top: string left: string scale: number rotate: number }
+  position: {
+    top: string
+    left: string
+    scale: number
+    rotate: number
+  }
 }
 
 interface NftCardProps {
