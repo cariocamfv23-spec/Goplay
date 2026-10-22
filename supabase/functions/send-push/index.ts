@@ -17,11 +17,11 @@ interface PushRequestPayload {
   isTest?: boolean
 }
 
-// Fallback high-compatibility PNG icons for Android & Samsung OneUI
+// Fallback high-compatibility official PNG icons for Android & Samsung OneUI
 const DEFAULT_ICON_PNG =
-  'https://img.usecurling.com/p/192/192?q=goplay%20logo&color=purple&v=4'
+  'https://goplay-app-screens-11312.goskip.app/icon-192.png'
 const DEFAULT_BADGE_PNG =
-  'https://img.usecurling.com/p/96/96?q=goplay%20badge&color=white&v=4'
+  'https://goplay-app-screens-11312.goskip.app/notification-badge.png'
 
 Deno.serve(async (req: Request) => {
   // Handle CORS preflight
@@ -30,114 +30,6 @@ Deno.serve(async (req: Request) => {
       status: 200,
       headers: corsHeaders,
     })
-  }
-
-  const urlObj = new URL(req.url)
-  const whichAsset = urlObj.searchParams.get('asset')
-
-  if (req.method === 'GET' && whichAsset === 'save-to-storage') {
-    const { render } = await import('jsr:@nick/resvg@0.1.0-rc.1')
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')
-    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
-
-    if (!supabaseUrl || !serviceRoleKey) {
-      return new Response(JSON.stringify({ error: 'Missing creds' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      })
-    }
-
-    const admin = createClient(supabaseUrl, serviceRoleKey)
-    await admin.storage
-      .createBucket('public-assets', { public: true })
-      .catch(() => {})
-
-    const svg192 = `<svg viewBox="0 0 512 512" width="192" height="192" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="goplay-bg-manifest-192" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#7C3AED" />
-      <stop offset="1" stop-color="#4C1D95" />
-    </linearGradient>
-    <linearGradient id="goplay-gold-manifest-192" x1="150" y1="150" x2="400" y2="400" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FDE68A" />
-      <stop offset="0.5" stop-color="#FBBF24" />
-      <stop offset="1" stop-color="#D97706" />
-    </linearGradient>
-    <filter id="shadow-manifest-192" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.3" />
-    </filter>
-  </defs>
-  <rect width="512" height="512" fill="url(#goplay-bg-manifest-192)" />
-  <path d="M140 180 L320 256 L140 332 Z" fill="white" fill-opacity="0.2" filter="url(#shadow-manifest-192)" />
-  <path d="M180 140 L400 256 L180 372 Z" fill="url(#goplay-gold-manifest-192)" filter="url(#shadow-manifest-192)" />
-</svg>`
-
-    const svg512 = `<svg viewBox="0 0 512 512" width="512" height="512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="goplay-bg-manifest" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#7C3AED" />
-      <stop offset="1" stop-color="#4C1D95" />
-    </linearGradient>
-    <linearGradient id="goplay-gold-manifest" x1="150" y1="150" x2="400" y2="400" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FDE68A" />
-      <stop offset="0.5" stop-color="#FBBF24" />
-      <stop offset="1" stop-color="#D97706" />
-    </linearGradient>
-    <filter id="shadow-manifest" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.3" />
-    </filter>
-  </defs>
-  <rect width="512" height="512" fill="url(#goplay-bg-manifest)" />
-  <path d="M140 180 L320 256 L140 332 Z" fill="white" fill-opacity="0.2" filter="url(#shadow-manifest)" />
-  <path d="M180 140 L400 256 L180 372 Z" fill="url(#goplay-gold-manifest)" filter="url(#shadow-manifest)" />
-</svg>`
-
-    const svgBadge = `<svg viewBox="0 0 96 96" width="96" height="96" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M28 20 L76 48 L28 76 Z" fill="#FFFFFF" />
-</svg>`
-
-    const png192 = render(svg192, { fitTo: { mode: 'width', value: 192 } })
-    const png512 = render(svg512, { fitTo: { mode: 'width', value: 512 } })
-    const pngBadge = render(svgBadge, { fitTo: { mode: 'width', value: 96 } })
-
-    const up192 = await admin.storage
-      .from('public-assets')
-      .upload('icon-192.png', png192, {
-        contentType: 'image/png',
-        upsert: true,
-      })
-    const up512 = await admin.storage
-      .from('public-assets')
-      .upload('icon-512.png', png512, {
-        contentType: 'image/png',
-        upsert: true,
-      })
-    const upBadge = await admin.storage
-      .from('public-assets')
-      .upload('notification-badge.png', pngBadge, {
-        contentType: 'image/png',
-        upsert: true,
-      })
-
-    const toB64 = (arr: Uint8Array) => {
-      let s = ''
-      for (let i = 0; i < arr.length; i++) s += String.fromCharCode(arr[i])
-      return btoa(s)
-    }
-
-    return new Response(
-      JSON.stringify({
-        up192,
-        up512,
-        upBadge,
-        b64_192_len: png192.length,
-        b64_512_len: png512.length,
-        b64_badge_len: pngBadge.length,
-      }),
-      {
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      },
-    )
   }
 
   try {

@@ -170,9 +170,9 @@ function renderGoplayIcon(size) {
           if (!isMainPlay) {
             // Subtle blur shadow
             if (pointInTriangle(origX, origY, sX1, sY1, sX2, sY2, sX3, sY3)) {
-              curR = curR * 0.7
-              curG = curG * 0.7
-              curB = curB * 0.7
+              curR = curR * 0.65
+              curG = curG * 0.65
+              curB = curB * 0.65
             }
           }
 

@@ -1,15 +1,15 @@
 // Goplay App - Service Worker with Robust Web Push & Background Support
-// Version: 2026.10.21-v4
+// Version: 2026.10.22-v5
 
 importScripts(
   'https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js',
 )
 
-// High-compatibility raster icons for Android & OneUI (avoids SVG blank notification issue)
+// High-compatibility official raster icons for Android & OneUI (avoids SVG blank notification issue)
 const DEFAULT_NOTIFICATION_ICON =
-  'https://img.usecurling.com/p/192/192?q=goplay%20logo&color=purple&v=4'
+  'https://goplay-app-screens-11312.goskip.app/icon-192.png'
 const DEFAULT_NOTIFICATION_BADGE =
-  'https://img.usecurling.com/p/96/96?q=goplay%20badge&color=white&v=4'
+  'https://goplay-app-screens-11312.goskip.app/notification-badge.png'
 
 // Automated update & lifecycle logic
 self.addEventListener('install', (event) => {
@@ -27,7 +27,7 @@ self.addEventListener('activate', (event) => {
         .then((keys) =>
           Promise.all(
             keys
-              .filter((k) => k.startsWith('goplay-') && !k.endsWith('-v4'))
+              .filter((k) => k.startsWith('goplay-') && !k.endsWith('-v5'))
               .map((k) => caches.delete(k)),
           ),
         ),
@@ -150,7 +150,7 @@ if (typeof workbox !== 'undefined' && workbox) {
   workbox.routing.registerRoute(
     ({ url }) => /\.(js|css|html|svg|png|ico|woff2)$/i.test(url.pathname),
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: 'goplay-assets-v4',
+      cacheName: 'goplay-assets-v5',
     }),
   )
 
@@ -158,7 +158,7 @@ if (typeof workbox !== 'undefined' && workbox) {
   workbox.routing.registerRoute(
     ({ url }) => url.pathname === '/' || url.pathname === '/index.html',
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: 'goplay-index-v4',
+      cacheName: 'goplay-index-v5',
     }),
   )
 
@@ -170,7 +170,7 @@ if (typeof workbox !== 'undefined' && workbox) {
         const response = await fetch(request)
         return response
       } catch (error) {
-        const cache = await caches.open('goplay-index-v4')
+        const cache = await caches.open('goplay-index-v5')
         const cachedResponse =
           (await cache.match('/index.html')) || (await cache.match('/'))
         if (cachedResponse) {
