@@ -277,6 +277,13 @@ export function generateAssets(publicDir) {
     badge96.length,
   )
 
+  const monochrome192 = renderBadgeIcon(192)
+  fs.writeFileSync(path.join(publicDir, 'icon-monochrome.png'), monochrome192)
+  console.log(
+    'Created public/icon-monochrome.png (192x192), size:',
+    monochrome192.length,
+  )
+
   console.log('All PNG assets generated successfully!')
 }
 

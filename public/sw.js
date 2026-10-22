@@ -6,8 +6,7 @@ importScripts(
 )
 
 // High-compatibility official raster icons for Android & OneUI (avoids SVG blank notification issue)
-const DEFAULT_NOTIFICATION_ICON =
-  'https://goplay-app-screens-11312.goskip.app/icon-192.png'
+const DEFAULT_NOTIFICATION_ICON = '/icon-192.png'
 const SW_VERSION = '2026.10.22-v8'
 
 // Automated update & lifecycle logic - immediate takeover
