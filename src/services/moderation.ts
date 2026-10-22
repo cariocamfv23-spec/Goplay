@@ -1,26 +1,11 @@
-import { supabase } from '@/lib/supabase/client'
-import { analyticsService } from '@/services/analytics'
+import { supabase } from "@/lib/supabase/client"
+import { analyticsService } from "@/services/analytics"
 
-export type ReportContentType =
-  | 'profile'
-  | 'post'
-  | 'comment'
-  | 'event'
-  | 'passport'
+export type ReportContentType = "profile" | "post" | "comment" | "event" | "passport"
 
-export type ReportReason =
-  | 'harassment'
-  | 'offensive_content'
-  | 'fraud'
-  | 'spam'
-  | 'minor_safety'
-  | 'other'
+export type ReportReason = "harassment" | "offensive_content" | "fraud" | "spam" | "minor_safety" | "other"
 
-export type ReportStatus =
-  | 'pending'
-  | 'investigating'
-  | 'resolved'
-  | 'dismissed'
+export type ReportStatus = "pending" | "investigating" | "resolved" | "dismissed"
 
 export interface CreateReportParams {
   reporterId: string
@@ -61,37 +46,37 @@ export const REPORT_REASONS: Array<{
   description: string
 }> = [
   {
-    value: 'harassment',
-    label: 'Assédio ou Perseguição',
-    description: 'Comportamento abusivo, ofensas direcionadas ou intimidação.',
+    value: "harassment",
+    label: "Assédio ou Perseguição",
+    description: "Comportamento abusivo, ofensas direcionadas ou intimidação.",
   },
   {
-    value: 'offensive_content',
-    label: 'Conteúdo Ofensivo ou Inapropriado',
-    description: 'Discurso de ódio, violência ou linguagem discriminatória.',
+    value: "offensive_content",
+    label: "Conteúdo Ofensivo ou Inapropriado",
+    description: "Discurso de ódio, violência ou linguagem discriminatória.",
   },
   {
-    value: 'fraud',
-    label: 'Fraude ou Falsidade Ideológica',
+    value: "fraud",
+    label: "Fraude ou Falsidade Ideológica",
     description:
-      'Perfil falso, informações esportivas enganosas ou golpe financeiro.',
+      "Perfil falso, informações esportivas enganosas ou golpe financeiro.",
   },
   {
-    value: 'spam',
-    label: 'Spam ou Divulgação Não Autorizada',
+    value: "spam",
+    label: "Spam ou Divulgação Não Autorizada",
     description:
-      'Mensagens repetitivas, links suspeitos ou propaganda não solicitada.',
+      "Mensagens repetitivas, links suspeitos ou propaganda não solicitada.",
   },
   {
-    value: 'minor_safety',
-    label: 'Menor de Idade sem Responsável / Risco',
+    value: "minor_safety",
+    label: "Menor de Idade sem Responsável / Risco",
     description:
-      'Violação de regras de proteção à infância ou abordagem indevida a atletas menores.',
+      "Violação de regras de proteção à infância ou abordagem indevida a atletas menores.",
   },
   {
-    value: 'other',
-    label: 'Outro Motivo',
-    description: 'Outra violação das regras de conduta do Goplay App.',
+    value: "other",
+    label: "Outro Motivo",
+    description: "Outra violação das regras de conduta do Goplay App.",
   },
 ]
 
@@ -99,9 +84,10 @@ export const moderationService = {
   /**
    * Registra uma nova denúncia real no Supabase.
    */
-  async createReport(
-    params: CreateReportParams,
-  ): Promise<{ data: ReportItem | null; error: Error | null }> {
+  async createReport(params: CreateReportParams): Promise<{
+    data: ReportItem | null
+    error: Error | null
+  }> {
     try {
       const {
         reporterId,
@@ -109,15 +95,15 @@ export const moderationService = {
         contentType,
         contentId = null,
         reason,
-        description = '',
+        description = "",
       } = params
 
       if (!reporterId) {
-        throw new Error('Usuário não autenticado para enviar denúncia.')
+        throw new Error("Usuário não autenticado para enviar denúncia.")
       }
 
       const { data, error } = await (supabase as any)
-        .from('reports')
+        .from("reports")
         .insert({
           reporter_id: reporterId,
           reported_user_id: reportedUserId,
@@ -125,7 +111,7 @@ export const moderationService = {
           content_id: contentId ? String(contentId) : null,
           reason,
           description: description?.trim() || null,
-          status: 'pending',
+          status: "pending",
         })
         .select()
         .single()
@@ -134,7 +120,7 @@ export const moderationService = {
 
       // Registro analítico leve
       analyticsService.trackEvent({
-        eventName: 'report_created',
+        eventName: "report_created",
         userId: reporterId,
         targetId: reportedUserId || contentId || undefined,
         metadata: {
@@ -168,29 +154,28 @@ export const moderationService = {
   /**
    * Bloqueia um usuário (mútuo).
    */
-  async blockUser(
-    blockerId: string,
-    blockedId: string,
-  ): Promise<{ error: Error | null }> {
+  async blockUser(blockerId: string, blockedId: string): Promise<{
+    error: Error | null
+  }> {
     try {
       if (!blockerId || !blockedId) {
-        throw new Error('Identificadores de usuário inválidos.')
+        throw new Error("Identificadores de usuário inválidos.")
       }
       if (blockerId === blockedId) {
-        throw new Error('Você não pode bloquear a si próprio.')
+        throw new Error("Você não pode bloquear a si próprio.")
       }
 
-      const { error } = await (supabase as any).from('user_blocks').insert({
+      const { error } = await (supabase as any).from("user_blocks").insert({
         blocker_id: blockerId,
         blocked_id: blockedId,
       })
 
-      if (error && error.code !== '23505') {
+      if (error && error.code !== "23505") {
         throw error
       }
 
       analyticsService.trackEvent({
-        eventName: 'user_blocked',
+        eventName: "user_blocked",
         userId: blockerId,
         targetId: blockedId,
       })
@@ -206,21 +191,20 @@ export const moderationService = {
   /**
    * Desbloqueia um usuário previamente bloqueado pelo usuário logado.
    */
-  async unblockUser(
-    blockerId: string,
-    blockedId: string,
-  ): Promise<{ error: Error | null }> {
+  async unblockUser(blockerId: string, blockedId: string): Promise<{
+    error: Error | null
+  }> {
     try {
       const { error } = await (supabase as any)
-        .from('user_blocks')
+        .from("user_blocks")
         .delete()
-        .eq('blocker_id', blockerId)
-        .eq('blocked_id', blockedId)
+        .eq("blocker_id", blockerId)
+        .eq("blocked_id", blockedId)
 
       if (error) throw error
 
       analyticsService.trackEvent({
-        eventName: 'user_unblocked',
+        eventName: "user_unblocked",
         userId: blockerId,
         targetId: blockedId,
       })
@@ -236,18 +220,18 @@ export const moderationService = {
   /**
    * Verifica se existe bloqueio ativo entre dois usuários (em qualquer direção).
    */
-  async checkMutualBlock(
-    currentUserId: string,
-    targetUserId: string,
-  ): Promise<{ isBlockedByMe: boolean; isBlockingMe: boolean }> {
+  async checkMutualBlock(currentUserId: string, targetUserId: string): Promise<{
+    isBlockedByMe: boolean
+    isBlockingMe: boolean
+  }> {
     try {
       if (!currentUserId || !targetUserId || currentUserId === targetUserId) {
         return { isBlockedByMe: false, isBlockingMe: false }
       }
 
       const { data, error } = await (supabase as any)
-        .from('user_blocks')
-        .select('blocker_id, blocked_id')
+        .from("user_blocks")
+        .select("blocker_id, blocked_id")
         .or(
           `and(blocker_id.eq.${currentUserId},blocked_id.eq.${targetUserId}),and(blocker_id.eq.${targetUserId},blocked_id.eq.${currentUserId})`,
         )
@@ -281,8 +265,8 @@ export const moderationService = {
 
     try {
       const { data, error } = await (supabase as any)
-        .from('user_blocks')
-        .select('blocker_id, blocked_id')
+        .from("user_blocks")
+        .select("blocker_id, blocked_id")
         .or(`blocker_id.eq.${currentUserId},blocked_id.eq.${currentUserId}`)
 
       if (!error && Array.isArray(data)) {
@@ -295,7 +279,7 @@ export const moderationService = {
         }
       }
     } catch (err) {
-      console.warn('Erro ao carregar lista de bloqueios:', err)
+      console.warn("Erro ao carregar lista de bloqueios:", err)
     }
 
     return blockedSet
@@ -304,17 +288,18 @@ export const moderationService = {
   /**
    * Lista todas as denúncias para moderadores/admins.
    */
-  async listAdminReports(
-    statusFilter?: ReportStatus,
-  ): Promise<{ data: ReportItem[]; error: Error | null }> {
+  async listAdminReports(statusFilter?: ReportStatus): Promise<{
+    data: ReportItem[]
+    error: Error | null
+  }> {
     try {
       let query = (supabase as any)
-        .from('reports')
-        .select('*')
-        .order('created_at', { ascending: false })
+        .from("reports")
+        .select("*")
+        .order("created_at", { ascending: false })
 
       if (statusFilter) {
-        query = query.eq('status', statusFilter)
+        query = query.eq("status", statusFilter)
       }
 
       const { data: rawReports, error } = await query
@@ -334,12 +319,12 @@ export const moderationService = {
       let profileMap = new Map<string, string>()
       if (userIds.length > 0) {
         const { data: profs } = await (supabase as any)
-          .from('profiles')
-          .select('id, full_name')
-          .in('id', userIds)
+          .from("profiles")
+          .select("id, full_name")
+          .in("id", userIds)
         if (profs) {
           for (const p of profs) {
-            profileMap.set(p.id, p.full_name || 'Sem nome')
+            profileMap.set(p.id, p.full_name || "Sem nome")
           }
         }
       }
@@ -356,9 +341,9 @@ export const moderationService = {
         resolvedAt: r.resolved_at,
         resolvedBy: r.resolved_by,
         createdAt: r.created_at,
-        reporterName: profileMap.get(r.reporter_id) || 'Usuário',
+        reporterName: profileMap.get(r.reporter_id) || "Usuário",
         reportedUserName: r.reported_user_id
-          ? profileMap.get(r.reported_user_id) || 'Perfil do App'
+          ? profileMap.get(r.reported_user_id) || "Perfil do App"
           : undefined,
       }))
 
@@ -380,15 +365,15 @@ export const moderationService = {
     adminUserId: string,
   ): Promise<{ error: Error | null }> {
     try {
-      const isResolved = status === 'resolved' || status === 'dismissed'
+      const isResolved = status === "resolved" || status === "dismissed"
       const { error } = await (supabase as any)
-        .from('reports')
+        .from("reports")
         .update({
           status,
           resolved_at: isResolved ? new Date().toISOString() : null,
           resolved_by: isResolved ? adminUserId : null,
         })
-        .eq('id', reportId)
+        .eq("id", reportId)
 
       if (error) throw error
       return { error: null }

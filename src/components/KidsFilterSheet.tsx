@@ -7,15 +7,15 @@ import {
   SheetTrigger,
   SheetFooter,
   SheetClose,
-} from '@/components/ui/sheet'
-import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Checkbox } from '@/components/ui/checkbox'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
-import { Badge } from '@/components/ui/badge'
-import { X } from 'lucide-react'
+} from "@/components/ui/sheet"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Checkbox } from "@/components/ui/checkbox"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
+import { Badge } from "@/components/ui/badge"
+import { X } from "lucide-react"
 
 export interface FilterState {
   activities: string[]
@@ -62,7 +62,7 @@ export function KidsFilterSheet({
   const clearFilters = () => {
     setFilters({
       activities: [],
-      ageGroup: 'all',
+      ageGroup: "all",
       periods: [],
     })
   }
@@ -70,7 +70,7 @@ export function KidsFilterSheet({
   const activeFiltersCount =
     filters.activities.length +
     filters.periods.length +
-    (filters.ageGroup !== 'all' ? 1 : 0)
+    (filters.ageGroup !== "all" ? 1 : 0)
 
   return (
     <Sheet>
@@ -104,7 +104,7 @@ export function KidsFilterSheet({
             <div className="space-y-3">
               <Label className="text-base font-semibold flex items-center gap-2">
                 Faixa Etária
-                {filters.ageGroup !== 'all' && (
+                {filters.ageGroup !== "all" && (
                   <Badge variant="secondary" className="text-[10px] h-5">
                     Ativo
                   </Badge>
@@ -118,11 +118,11 @@ export function KidsFilterSheet({
                 className="grid grid-cols-2 gap-2"
               >
                 {[
-                  { value: 'all', label: 'Todas as idades' },
-                  { value: '0-3', label: '0 a 3 anos' },
-                  { value: '3-6', label: '3 a 6 anos' },
-                  { value: '6-10', label: '6 a 10 anos' },
-                  { value: '10-14', label: '10 a 14 anos' },
+                  { value: "all", label: "Todas as idades" },
+                  { value: "0-3", label: "0 a 3 anos" },
+                  { value: "3-6", label: "3 a 6 anos" },
+                  { value: "6-10", label: "6 a 10 anos" },
+                  { value: "10-14", label: "10 a 14 anos" },
                 ].map((option) => (
                   <div key={option.value}>
                     <RadioGroupItem
@@ -155,9 +155,9 @@ export function KidsFilterSheet({
               </Label>
               <div className="grid grid-cols-3 gap-2">
                 {[
-                  { id: 'morning', label: 'Manhã', sub: '06h - 12h' },
-                  { id: 'afternoon', label: 'Tarde', sub: '12h - 18h' },
-                  { id: 'night', label: 'Noite', sub: '18h - 22h' },
+                  { id: "morning", label: "Manhã", sub: "06h - 12h" },
+                  { id: "afternoon", label: "Tarde", sub: "12h - 18h" },
+                  { id: "night", label: "Noite", sub: "18h - 22h" },
                 ].map((period) => (
                   <div key={period.id}>
                     <Checkbox

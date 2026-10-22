@@ -1,15 +1,15 @@
-import { StatsHistoryChart } from '@/components/StatsHistoryChart'
-import { TrainingSuggestions } from '@/components/TrainingSuggestions'
+import { StatsHistoryChart } from "@/components/StatsHistoryChart"
+import { TrainingSuggestions } from "@/components/TrainingSuggestions"
 import {
   mockStatsHistory,
   mockTrainingSuggestions,
   mockAiAnalysis,
-} from '@/lib/data'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, Zap, TrendingUp, Target, Activity } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { Progress } from '@/components/ui/progress'
-import { Card, CardContent } from '@/components/ui/card'
+} from "@/lib/data"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, Zap, TrendingUp, Target, Activity } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Progress } from "@/components/ui/progress"
+import { Card, CardContent } from "@/components/ui/card"
 
 export default function StatsDetail() {
   const navigate = useNavigate()

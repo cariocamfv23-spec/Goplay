@@ -1,16 +1,16 @@
-import { useTimeShiftStore, TimelineType } from '@/stores/useTimeShiftStore'
-import { cn } from '@/lib/utils'
-import { motion } from 'framer-motion'
-import { Play, RotateCcw, Pause } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { useTimeShiftStore, TimelineType } from "@/stores/useTimeShiftStore"
+import { cn } from "@/lib/utils"
+import { motion } from "framer-motion"
+import { Play, RotateCcw, Pause } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export function TimelineSwitcher() {
   const { timeline, setTimeline, isPlaying, togglePlay } = useTimeShiftStore()
 
-  const timelines: { id: TimelineType; label: string; color: string }[] = [
-    { id: 'real', label: 'Real', color: 'bg-zinc-500' },
-    { id: 'almost', label: 'Quase', color: 'bg-orange-500' },
-    { id: 'ideal', label: 'Ideal', color: 'bg-emerald-500' },
+  const timelines: { id: TimelineType label: string color: string }[] = [
+    { id: "real", label: "Real", color: "bg-zinc-500" },
+    { id: "almost", label: "Quase", color: "bg-orange-500" },
+    { id: "ideal", label: "Ideal", color: "bg-emerald-500" },
   ]
 
   return (
@@ -24,15 +24,15 @@ export function TimelineSwitcher() {
               key={t.id}
               onClick={() => setTimeline(t.id)}
               className={cn(
-                'flex-1 py-3 px-4 rounded-full text-sm font-bold transition-all relative z-10',
-                isActive ? 'text-white' : 'text-white/50 hover:text-white/80',
+                "flex-1 py-3 px-4 rounded-full text-sm font-bold transition-all relative z-10",
+                isActive ? "text-white" : "text-white/50 hover:text-white/80",
               )}
             >
               {t.label}
               {isActive && (
                 <div
                   className={cn(
-                    'absolute inset-0 rounded-full z-[-1] opacity-80',
+                    "absolute inset-0 rounded-full z-[-1] opacity-80",
                     t.color,
                   )}
                 />
@@ -50,7 +50,7 @@ export function TimelineSwitcher() {
           className="rounded-full h-12 w-12 border-white/10 bg-black/20 text-white hover:bg-white/10 hover:text-white"
           onClick={() => {
             // Reset logic could go here
-            const video = document.querySelector('video')
+            const video = document.querySelector("video")
             if (video) video.currentTime = 0
           }}
         >
@@ -61,12 +61,12 @@ export function TimelineSwitcher() {
           variant="default"
           size="icon"
           className={cn(
-            'rounded-full h-16 w-16 shadow-lg transition-transform hover:scale-105',
-            timeline === 'real'
-              ? 'bg-zinc-600 hover:bg-zinc-500'
-              : timeline === 'almost'
-                ? 'bg-orange-500 hover:bg-orange-400'
-                : 'bg-emerald-500 hover:bg-emerald-400',
+            "rounded-full h-16 w-16 shadow-lg transition-transform hover:scale-105",
+            timeline === "real"
+              ? "bg-zinc-600 hover:bg-zinc-500"
+              : timeline === "almost"
+                ? "bg-orange-500 hover:bg-orange-400"
+                : "bg-emerald-500 hover:bg-emerald-400",
           )}
           onClick={togglePlay}
         >

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   ArrowLeft,
   Smartphone,
@@ -17,11 +17,11 @@ import {
   Server,
   Radio,
   Check,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { toast } from 'sonner'
-import { Switch } from '@/components/ui/switch'
-import { Skeleton } from '@/components/ui/skeleton'
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
+import { Switch } from "@/components/ui/switch"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   Dialog,
   DialogContent,
@@ -29,19 +29,18 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog'
-import { useAuth } from '@/hooks/use-auth'
+} from "@/components/ui/dialog"
+import { useAuth } from "@/hooks/use-auth"
 import {
   pushNotificationService,
   PushStatus,
   PushTestResult,
-} from '@/services/push-notifications'
-import goplayIcon from '@/assets/goplay-icon-0e955.png'
+} from "@/services/push-notifications"
+import goplayIcon from "@/assets/goplay-icon-0e955.png"
 
-class PWASettingsErrorBoundary extends React.Component<
-  { children: React.ReactNode },
-  { hasError: boolean }
-> {
+class PWASettingsErrorBoundary extends React.Component<{
+  children: React.ReactNode
+}, { hasError: boolean }> {
   constructor(props: { children: React.ReactNode }) {
     super(props)
     this.state = { hasError: false }
@@ -52,7 +51,7 @@ class PWASettingsErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('PWA Settings Error:', error, errorInfo)
+    console.error("PWA Settings Error:", error, errorInfo)
   }
 
   render() {
@@ -103,7 +102,7 @@ function PWASettingsContent() {
       const status = await pushNotificationService.checkStatus()
       setPushStatus(status)
     } catch (err) {
-      console.error('Falha ao verificar status push:', err)
+      console.error("Falha ao verificar status push:", err)
     } finally {
       setIsLoading(false)
     }
@@ -115,7 +114,7 @@ function PWASettingsContent() {
 
   const handleTogglePush = async (nextValue: boolean) => {
     if (!user) {
-      toast.error('Você precisa estar logado para ativar notificações.')
+      toast.error("Você precisa estar logado para ativar notificações.")
       return
     }
 
@@ -123,7 +122,7 @@ function PWASettingsContent() {
       if (pushStatus?.iosWithoutPwa) {
         setShowIosInfoDialog(true)
       } else {
-        toast.error('Notificações push não suportadas neste navegador.')
+        toast.error("Notificações push não suportadas neste navegador.")
       }
       return
     }
@@ -131,17 +130,17 @@ function PWASettingsContent() {
     // If turning ON and permission not yet granted, open conscious opt-in explanation dialog first
     if (nextValue) {
       if (
-        pushStatus.permission === 'default' ||
-        pushStatus.permission === 'unsupported'
+        pushStatus.permission === "default" ||
+        pushStatus.permission === "unsupported"
       ) {
         setShowPermissionDialog(true)
         return
       }
 
-      if (pushStatus.permission === 'denied') {
-        toast.error('Permissão bloqueada pelo navegador.', {
+      if (pushStatus.permission === "denied") {
+        toast.error("Permissão bloqueada pelo navegador.", {
           description:
-            'Acesse as configurações do seu navegador ou sistema Android para desbloquear as notificações do Goplay.',
+            "Acesse as configurações do seu navegador ou sistema Android para desbloquear as notificações do Goplay.",
         })
         return
       }
@@ -154,10 +153,10 @@ function PWASettingsContent() {
       const res = await pushNotificationService.unsubscribeUser(user.id)
       setIsTogglingPush(false)
       if (res.success) {
-        toast.success('Notificações no celular desativadas.')
+        toast.success("Notificações no celular desativadas.")
         await loadStatus()
       } else {
-        toast.error(res.error || 'Falha ao desativar.')
+        toast.error(res.error || "Falha ao desativar.")
       }
     }
   }
@@ -171,18 +170,18 @@ function PWASettingsContent() {
     setIsTogglingPush(false)
 
     if (res.success) {
-      toast.success('Notificações no celular ativadas com sucesso! 🎉', {
-        description: 'Você receberá alertas mesmo com o app em segundo plano.',
+      toast.success("Notificações no celular ativadas com sucesso! 🎉", {
+        description: "Você receberá alertas mesmo com o app em segundo plano.",
       })
       await loadStatus()
     } else {
       if (res.permissionDenied) {
-        toast.error('Permissão não concedida.', {
+        toast.error("Permissão não concedida.", {
           description:
-            'Você optou por não receber notificações ou o Android bloqueou.',
+            "Você optou por não receber notificações ou o Android bloqueou.",
         })
       } else {
-        toast.error(res.error || 'Erro ao registrar assinatura push.')
+        toast.error(res.error || "Erro ao registrar assinatura push.")
       }
       await loadStatus()
     }
@@ -190,15 +189,15 @@ function PWASettingsContent() {
 
   const handleRunPushTest = async () => {
     if (!user) {
-      toast.error('Faça login para realizar o teste de push.')
+      toast.error("Faça login para realizar o teste de push.")
       return
     }
 
     setIsTestingPush(true)
     setLastTestResult(null)
 
-    toast.info('Disparando teste de push no servidor...', {
-      description: 'O servidor Supabase está enviando via Edge Function.',
+    toast.info("Disparando teste de push no servidor...", {
+      description: "O servidor Supabase está enviando via Edge Function.",
     })
 
     const result = await pushNotificationService.sendSelfTestPush(user.id)
@@ -206,7 +205,7 @@ function PWASettingsContent() {
     setLastTestResult(result)
 
     if (result.success && result.sentCount > 0) {
-      toast.success('Envio aceito pelo FCM Google (201)! 🚀', {
+      toast.success("Envio aceito pelo FCM Google (201)! 🚀", {
         description: `${result.sentCount} aparelho(s) notificado(s). Verifique a barra de notificações do seu aparelho Android.`,
       })
       await loadStatus()
@@ -214,8 +213,8 @@ function PWASettingsContent() {
       const errorDescription =
         result.error ||
         result.message ||
-        'Nenhum aparelho ativo pôde ser notificado no momento.'
-      toast.error('Falha no teste de push:', {
+        "Nenhum aparelho ativo pôde ser notificado no momento."
+      toast.error("Falha no teste de push:", {
         description: errorDescription,
         duration: 7000,
       })
@@ -224,36 +223,36 @@ function PWASettingsContent() {
 
   const handleClearCache = async () => {
     try {
-      if ('caches' in window) {
+      if ("caches" in window) {
         const names = await caches.keys()
         await Promise.all(names.map((name) => caches.delete(name)))
       }
-      if ('serviceWorker' in navigator) {
+      if ("serviceWorker" in navigator) {
         const registrations = await navigator.serviceWorker.getRegistrations()
         for (const reg of registrations) {
           await reg.update().catch(() => {})
         }
       }
-      toast.success('Cache do aplicativo limpo com sucesso!', {
+      toast.success("Cache do aplicativo limpo com sucesso!", {
         description:
-          'Caches locais removidos e Service Worker revalidado no servidor.',
+          "Caches locais removidos e Service Worker revalidado no servidor.",
       })
     } catch {
-      toast.success('Cache do aplicativo limpo!')
+      toast.success("Cache do aplicativo limpo!")
     }
   }
 
   const handleUpdate = async () => {
-    toast.info('Verificando atualizações...', {
+    toast.info("Verificando atualizações...", {
       description:
-        'Baixando nova versão do Service Worker e atualizando cache.',
+        "Baixando nova versão do Service Worker e atualizando cache.",
     })
     try {
-      if ('serviceWorker' in navigator) {
+      if ("serviceWorker" in navigator) {
         const reg = await navigator.serviceWorker.getRegistration()
         if (reg) {
           if (reg.waiting) {
-            reg.waiting.postMessage({ type: 'SKIP_WAITING' })
+            reg.waiting.postMessage({ type: "SKIP_WAITING" })
           }
           await reg.update()
         }
@@ -267,7 +266,7 @@ function PWASettingsContent() {
   }
 
   const handleInstallApp = async () => {
-    toast.success('Instalação do Goplay', {
+    toast.success("Instalação do Goplay", {
       description:
         'Toque em Compartilhar ou no menu do navegador e selecione "Adicionar à Tela de Início".',
     })
@@ -340,8 +339,8 @@ function PWASettingsContent() {
             </div>
             <p className="text-sm text-muted-foreground mt-1">
               {isInstalled
-                ? 'Aplicativo instalado na tela de início com suporte nativo a Web Push.'
-                : 'Instale o Goplay na tela de início para receber alertas em segundo plano.'}
+                ? "Aplicativo instalado na tela de início com suporte nativo a Web Push."
+                : "Instale o Goplay na tela de início para receber alertas em segundo plano."}
             </p>
           </div>
           {!isInstalled && (
@@ -467,11 +466,11 @@ function PWASettingsContent() {
 
                     <div className="text-muted-foreground space-y-1">
                       <p>
-                        <strong>Aparelhos registrados:</strong>{' '}
+                        <strong>Aparelhos registrados:</strong>{" "}
                         {lastTestResult.totalDevices}
                       </p>
                       <p>
-                        <strong>Requisições aceitas pelo FCM:</strong>{' '}
+                        <strong>Requisições aceitas pelo FCM:</strong>{" "}
                         {lastTestResult.sentCount}
                       </p>
                       {lastTestResult.error && (
@@ -500,7 +499,7 @@ function PWASettingsContent() {
                                     Host: <code>{r.host}</code>
                                   </span>
                                   <span>
-                                    • Status:{' '}
+                                    • Status:{" "}
                                     <strong>{r.statusCode || r.status}</strong>
                                   </span>
                                 </div>
@@ -525,7 +524,7 @@ function PWASettingsContent() {
                 <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
                 <p>
                   <strong>Dica para iPhone/iPad:</strong> O Safari exige que
-                  você toque no botão <em>Compartilhar</em> e depois em{' '}
+                  você toque no botão <em>Compartilhar</em> e depois em{" "}
                   <em>"Adicionar à Tela de Início"</em> antes de ativar as
                   notificações push (iOS 16.4+).
                 </p>
@@ -561,7 +560,6 @@ function PWASettingsContent() {
           <h3 className="text-xs font-bold text-muted-foreground uppercase px-1 tracking-wider">
             Manutenção do App
           </h3>
-
           <div className="bg-card rounded-2xl border border-border/60 overflow-hidden shadow-sm">
             <Button
               variant="ghost"
@@ -569,7 +567,7 @@ function PWASettingsContent() {
               onClick={handleUpdate}
             >
               <RefreshCw className="h-4 w-4 text-primary" />
-              Verificar Atualizações do App (Atualizar Service Worker v9)
+              Verificar Atualizações do App (Atualizar Service Worker v10)
             </Button>
 
             <Button
@@ -582,9 +580,9 @@ function PWASettingsContent() {
             </Button>
           </div>
           <p className="text-[11px] text-muted-foreground px-2">
-            Versão do Service Worker: <code>2026.10.22-v9</code> • Manifest:{' '}
-            <code>v9</code> com ícone monocromático 200.
-          </p>
+            Versão do Service Worker: <code>2026.10.22-v10</code> • Manifest:{" "}
+            <code>v10</code> com ícone monocromático 512 e entries SVG/PNG.
+          </p>{" "}
         </div>
       </div>
 
@@ -639,7 +637,7 @@ function PWASettingsContent() {
                   Ativando...
                 </>
               ) : (
-                'Permitir Notificações'
+                "Permitir Notificações"
               )}
             </Button>
             <Button

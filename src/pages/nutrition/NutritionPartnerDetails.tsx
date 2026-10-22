@@ -1,9 +1,9 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { mockNutrition } from '@/lib/data'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, Star, CreditCard } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { PaymentDialog } from '@/components/PaymentDialog'
+import { useParams, useNavigate } from "react-router-dom"
+import { mockNutrition } from "@/lib/data"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, Star, CreditCard } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { PaymentDialog } from "@/components/PaymentDialog"
 
 export default function NutritionPartnerDetails() {
   const { id } = useParams()
@@ -27,14 +27,14 @@ export default function NutritionPartnerDetails() {
   // Assumes BRL format (comma as decimal separator) or simple integer
   const getNumericPrice = (priceStr: string) => {
     if (!priceStr) return 0
-    if (typeof priceStr === 'number') return priceStr
+    if (typeof priceStr === "number") return priceStr
 
     // 1. Remove thousands separators (.)
-    let clean = priceStr.replace(/\./g, '')
+    let clean = priceStr.replace(/\./g, "")
     // 2. Remove all non-numeric chars except comma (,)
-    clean = clean.replace(/[^0-9,]/g, '')
+    clean = clean.replace(/[^0-9,]/g, "")
     // 3. Replace decimal separator (,) with dot (.)
-    clean = clean.replace(',', '.')
+    clean = clean.replace(",", ".")
 
     const value = parseFloat(clean)
     return isNaN(value) ? 0 : value

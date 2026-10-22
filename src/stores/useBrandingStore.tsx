@@ -4,7 +4,7 @@ import {
   useState,
   useEffect,
   ReactNode,
-} from 'react'
+} from "react"
 
 type BrandingState = {
   logoUrl: string
@@ -15,20 +15,20 @@ type BrandingState = {
 }
 
 // Set '/icon.svg?v=5' as the identifier for the internal SVG logo
-export const defaultIcon = '/icon.svg?v=5'
-export const defaultLogo = '/icon.svg?v=5'
+export const defaultIcon = "/icon.svg?v=5"
+export const defaultLogo = "/icon.svg?v=5"
 
 const BrandingContext = createContext<BrandingState | undefined>(undefined)
 
 export const BrandingProvider = ({ children }: { children: ReactNode }) => {
   const [logoUrl, setLogoUrl] = useState(() => {
-    const stored = localStorage.getItem('goplay_logo')
+    const stored = localStorage.getItem("goplay_logo")
     // Migrate old image URLs to the new SVG default
     if (
       stored &&
-      (stored.includes('cloudinary') ||
-        stored.includes('subframe') ||
-        stored.includes('usecurling'))
+      (stored.includes("cloudinary") ||
+        stored.includes("subframe") ||
+        stored.includes("usecurling"))
     ) {
       return defaultLogo
     }
@@ -36,13 +36,13 @@ export const BrandingProvider = ({ children }: { children: ReactNode }) => {
   })
 
   const [iconUrl, setIconUrl] = useState(() => {
-    const stored = localStorage.getItem('goplay_icon')
+    const stored = localStorage.getItem("goplay_icon")
     // Migrate old image URLs to the new SVG default
     if (
       stored &&
-      (stored.includes('cloudinary') ||
-        stored.includes('subframe') ||
-        stored.includes('usecurling'))
+      (stored.includes("cloudinary") ||
+        stored.includes("subframe") ||
+        stored.includes("usecurling"))
     ) {
       return defaultIcon
     }
@@ -51,7 +51,7 @@ export const BrandingProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const preloadImage = (url: string) => {
-      if (url === 'default' || url.includes('/icon.svg')) return
+      if (url === "default" || url.includes("/icon.svg")) return
       const img = new Image()
       img.src = url
     }
@@ -60,21 +60,21 @@ export const BrandingProvider = ({ children }: { children: ReactNode }) => {
   }, [logoUrl, iconUrl])
 
   useEffect(() => {
-    localStorage.setItem('goplay_logo', logoUrl)
+    localStorage.setItem("goplay_logo", logoUrl)
   }, [logoUrl])
 
   useEffect(() => {
-    localStorage.setItem('goplay_icon', iconUrl)
+    localStorage.setItem("goplay_icon", iconUrl)
     updateFavicon(iconUrl)
   }, [iconUrl])
 
   const updateFavicon = (url: string) => {
-    if (url === 'default') return
+    if (url === "default") return
 
     let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement
     if (!link) {
-      link = document.createElement('link')
-      link.rel = 'icon'
+      link = document.createElement("link")
+      link.rel = "icon"
       document.head.appendChild(link)
     }
     link.href = url
@@ -83,8 +83,8 @@ export const BrandingProvider = ({ children }: { children: ReactNode }) => {
       "link[rel='apple-touch-icon']",
     ) as HTMLLinkElement
     if (!appleLink) {
-      appleLink = document.createElement('link')
-      appleLink.rel = 'apple-touch-icon'
+      appleLink = document.createElement("link")
+      appleLink.rel = "apple-touch-icon"
       document.head.appendChild(appleLink)
     }
     appleLink.href = url
@@ -107,7 +107,7 @@ export const BrandingProvider = ({ children }: { children: ReactNode }) => {
 const useBrandingStore = () => {
   const context = useContext(BrandingContext)
   if (!context) {
-    throw new Error('useBrandingStore must be used within a BrandingProvider')
+    throw new Error("useBrandingStore must be used within a BrandingProvider")
   }
   return context
 }

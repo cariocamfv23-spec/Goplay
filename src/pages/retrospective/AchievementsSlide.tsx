@@ -1,6 +1,6 @@
-import { mockRetrospective } from '@/lib/data'
-import { cn } from '@/lib/utils'
-import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
+import { mockRetrospective } from "@/lib/data"
+import { cn } from "@/lib/utils"
+import { useRetrospectiveStore } from "@/stores/useRetrospectiveStore"
 
 export default function AchievementsSlide() {
   const { getTheme } = useRetrospectiveStore()
@@ -17,12 +17,12 @@ export default function AchievementsSlide() {
           <div
             key={item.id}
             className={cn(
-              'relative overflow-hidden rounded-3xl p-6 flex items-center gap-4 border border-white/20 shadow-lg animate-in zoom-in-90 fade-in duration-500 fill-mode-both',
+              "relative overflow-hidden rounded-3xl p-6 flex items-center gap-4 border border-white/20 shadow-lg animate-in zoom-in-90 fade-in duration-500 fill-mode-both",
               index === 0
-                ? 'bg-gradient-to-br from-white/20 to-white/5'
+                ? "bg-gradient-to-br from-white/20 to-white/5"
                 : index === 1
-                  ? 'bg-gradient-to-br from-white/15 to-white/5'
-                  : 'bg-gradient-to-br from-white/10 to-white/5',
+                  ? "bg-gradient-to-br from-white/15 to-white/5"
+                  : "bg-gradient-to-br from-white/10 to-white/5",
             )}
             style={{ animationDelay: `${index * 250 + 200}ms` }}
           >
@@ -32,8 +32,8 @@ export default function AchievementsSlide() {
 
             <div
               className={cn(
-                'w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner shrink-0',
-                'bg-white',
+                "w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner shrink-0",
+                "bg-white",
                 currentTheme.icon,
               )}
             >

@@ -1,15 +1,15 @@
-import { useAlbumStore } from '@/stores/useAlbumStore'
-import { mockStickers, Sticker } from '@/lib/album-data'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Trophy, Share2, PackageOpen, Info, Lock } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { PackOpener } from '@/components/album/PackOpener'
-import { ShareDialog } from '@/components/ShareDialog'
-import { mockCurrentUser } from '@/lib/data'
-import { useToast } from '@/hooks/use-toast'
+import { useAlbumStore } from "@/stores/useAlbumStore"
+import { mockStickers, Sticker } from "@/lib/album-data"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Trophy, Share2, PackageOpen, Info, Lock } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { PackOpener } from "@/components/album/PackOpener"
+import { ShareDialog } from "@/components/ShareDialog"
+import { mockCurrentUser } from "@/lib/data"
+import { useToast } from "@/hooks/use-toast"
 
 export default function StickerAlbum() {
   const navigate = useNavigate()
@@ -18,7 +18,7 @@ export default function StickerAlbum() {
   const [isShareOpen, setIsShareOpen] = useState(false)
   const { toast } = useToast()
 
-  const referralCode = mockCurrentUser.referralCode || 'GOPLAY2024'
+  const referralCode = mockCurrentUser.referralCode || "GOPLAY2024"
   const inviteLink = `https://goplay-app-screens-11312.goskip.app/invite/${referralCode}`
   const inviteMessage = `Comece sua coleção no GoPlay! Use meu link para ganhar seu álbum da Copa 2026:`
 
@@ -27,9 +27,9 @@ export default function StickerAlbum() {
     setTimeout(() => {
       addPack()
       toast({
-        title: '🎉 Novo amigo cadastrado!',
+        title: "🎉 Novo amigo cadastrado!",
         description:
-          'Alguém se cadastrou com seu link! Você ganhou 1 pacote de figurinhas.',
+          "Alguém se cadastrou com seu link! Você ganhou 1 pacote de figurinhas.",
         duration: 6000,
       })
     }, 4500)
@@ -59,7 +59,7 @@ export default function StickerAlbum() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate('/album')}
+            onClick={() => navigate("/album")}
             className="text-white hover:bg-white/20 rounded-full"
           >
             <svg
@@ -126,10 +126,10 @@ export default function StickerAlbum() {
             <div className="relative">
               <PackageOpen
                 className={cn(
-                  'w-8 h-8',
+                  "w-8 h-8",
                   unopenedPacks > 0
-                    ? 'text-yellow-500'
-                    : 'text-muted-foreground',
+                    ? "text-yellow-500"
+                    : "text-muted-foreground",
                 )}
               />
               {unopenedPacks > 0 && (
@@ -149,10 +149,10 @@ export default function StickerAlbum() {
             onClick={() => setIsOpenerOpen(true)}
             disabled={unopenedPacks === 0}
             className={cn(
-              'font-bold transition-all shadow-md active:scale-95',
+              "font-bold transition-all shadow-md active:scale-95",
               unopenedPacks > 0
-                ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black hover:from-yellow-500 hover:to-yellow-700'
-                : '',
+                ? "bg-gradient-to-r from-yellow-400 to-yellow-600 text-black hover:from-yellow-500 hover:to-yellow-700"
+                : "",
             )}
           >
             Abrir Pacote
@@ -168,7 +168,7 @@ export default function StickerAlbum() {
           </h3>
           <p className="text-sm text-muted-foreground">
             Convide seus amigos para o GoPlay. A cada amigo que se cadastrar
-            pelo seu link, você ganha{' '}
+            pelo seu link, você ganha{" "}
             <strong>1 pacote com 7 figurinhas!</strong>
           </p>
           <Button
@@ -201,13 +201,13 @@ export default function StickerAlbum() {
                     <div
                       key={sticker.id}
                       className={cn(
-                        'relative aspect-[3/4] rounded-lg overflow-hidden border shadow-sm transition-all duration-300',
+                        "relative aspect-[3/4] rounded-lg overflow-hidden border shadow-sm transition-all duration-300",
                         isCollected
-                          ? 'border-primary/50'
-                          : 'border-dashed border-border bg-secondary/30',
-                        isCollected && sticker.rarity === 'rare'
-                          ? 'ring-2 ring-yellow-400 ring-offset-2 ring-offset-background'
-                          : '',
+                          ? "border-primary/50"
+                          : "border-dashed border-border bg-secondary/30",
+                        isCollected && sticker.rarity === "rare"
+                          ? "ring-2 ring-yellow-400 ring-offset-2 ring-offset-background"
+                          : "",
                       )}
                     >
                       {isCollected ? (

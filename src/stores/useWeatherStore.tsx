@@ -1,14 +1,14 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import { WeatherCondition } from '@/lib/data'
-import useSoundStore from './useSoundStore'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
+import { WeatherCondition } from "@/lib/data"
+import useSoundStore from "./useSoundStore"
 
 export interface WeatherAlert {
   id: string
   title: string
   message: string
   type: WeatherCondition
-  severity: 'low' | 'medium' | 'high' | 'critical'
+  severity: "low" | "medium" | "high" | "critical"
   timestamp: string
   active: boolean
 }
@@ -28,7 +28,7 @@ interface WeatherState {
 
   toggleAll: (enabled: boolean) => void
   toggleType: (
-    type: keyof Omit<WeatherPreferences, 'enabled'>,
+    type: keyof Omit<WeatherPreferences, "enabled">,
     enabled: boolean,
   ) => void
   addAlert: (alert: WeatherAlert) => void
@@ -39,25 +39,25 @@ interface WeatherState {
 
 const SAMPLE_ALERTS: Partial<WeatherAlert>[] = [
   {
-    type: 'storm',
-    title: 'DEFESA CIVIL: ALERTA DE TEMPESTADE',
+    type: "storm",
+    title: "DEFESA CIVIL: ALERTA DE TEMPESTADE",
     message:
-      'Previsão de tempestade severa com raios e rajadas de vento para sua região nas próximas horas. Evite áreas abertas.',
-    severity: 'critical',
+      "Previsão de tempestade severa com raios e rajadas de vento para sua região nas próximas horas. Evite áreas abertas.",
+    severity: "critical",
   },
   {
-    type: 'rainy',
-    title: 'DEFESA CIVIL: CHUVAS INTENSAS',
+    type: "rainy",
+    title: "DEFESA CIVIL: CHUVAS INTENSAS",
     message:
-      'Risco de alagamentos e deslizamentos devido ao grande volume de chuva. Se estiver em área de risco, busque abrigo.',
-    severity: 'high',
+      "Risco de alagamentos e deslizamentos devido ao grande volume de chuva. Se estiver em área de risco, busque abrigo.",
+    severity: "high",
   },
   {
-    type: 'sunny',
-    title: 'DEFESA CIVIL: ONDA DE CALOR',
+    type: "sunny",
+    title: "DEFESA CIVIL: ONDA DE CALOR",
     message:
-      'Temperaturas perigosamente elevadas. Hidrate-se constantemente e evite exposição direta ao sol entre 10h e 16h.',
-    severity: 'high',
+      "Temperaturas perigosamente elevadas. Hidrate-se constantemente e evite exposição direta ao sol entre 10h e 16h.",
+    severity: "high",
   },
 ]
 
@@ -72,7 +72,7 @@ export const useWeatherStore = create<WeatherState>()(
         extremeHeat: true,
       },
       activeAlerts: [],
-      currentLocation: 'São Paulo, SP',
+      currentLocation: "São Paulo, SP",
 
       toggleAll: (enabled) =>
         set((state) => ({
@@ -91,7 +91,7 @@ export const useWeatherStore = create<WeatherState>()(
         set((state) => ({
           activeAlerts: [alert, ...state.activeAlerts],
         }))
-        useSoundStore.getState().playTone('weather')
+        useSoundStore.getState().playTone("weather")
       },
 
       dismissAlert: (id) =>
@@ -110,11 +110,11 @@ export const useWeatherStore = create<WeatherState>()(
           SAMPLE_ALERTS[Math.floor(Math.random() * SAMPLE_ALERTS.length)]
 
         let shouldShow = true
-        if (randomAlert.type === 'storm' && !preferences.storm)
+        if (randomAlert.type === "storm" && !preferences.storm)
           shouldShow = false
-        if (randomAlert.type === 'rainy' && !preferences.heavyRain)
+        if (randomAlert.type === "rainy" && !preferences.heavyRain)
           shouldShow = false
-        if (randomAlert.type === 'sunny' && !preferences.extremeHeat)
+        if (randomAlert.type === "sunny" && !preferences.extremeHeat)
           shouldShow = false
 
         if (shouldShow) {
@@ -133,13 +133,13 @@ export const useWeatherStore = create<WeatherState>()(
               active: true,
             }
             set({ activeAlerts: [newAlert, ...activeAlerts] })
-            useSoundStore.getState().playTone('weather')
+            useSoundStore.getState().playTone("weather")
           }
         }
       },
     }),
     {
-      name: 'goplay-weather-storage',
+      name: "goplay-weather-storage",
       partialize: (state) => ({
         preferences: state.preferences,
         activeAlerts: [],

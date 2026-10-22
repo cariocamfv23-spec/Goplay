@@ -1,8 +1,8 @@
-import { mockCurrentUser, mockRetrospective } from '@/lib/data'
-import { Button } from '@/components/ui/button'
-import { RotateCcw, Share2, ArrowRight } from 'lucide-react'
-import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
-import { cn } from '@/lib/utils'
+import { mockCurrentUser, mockRetrospective } from "@/lib/data"
+import { Button } from "@/components/ui/button"
+import { RotateCcw, Share2, ArrowRight } from "lucide-react"
+import { useRetrospectiveStore } from "@/stores/useRetrospectiveStore"
+import { cn } from "@/lib/utils"
 
 interface OutroSlideProps {
   onRestart: () => void
@@ -18,7 +18,7 @@ export default function OutroSlide({ onRestart, onFinish }: OutroSlideProps) {
       <div className="relative animate-in zoom-in fade-in duration-1000">
         <div
           className={cn(
-            'absolute inset-0 blur-3xl opacity-40 animate-pulse',
+            "absolute inset-0 blur-3xl opacity-40 animate-pulse",
             currentTheme.accent,
           )}
         />
@@ -31,7 +31,7 @@ export default function OutroSlide({ onRestart, onFinish }: OutroSlideProps) {
         </div>
         <div
           className={cn(
-            'absolute -bottom-3 left-1/2 -translate-x-1/2 text-black text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider z-20 whitespace-nowrap',
+            "absolute -bottom-3 left-1/2 -translate-x-1/2 text-black text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider z-20 whitespace-nowrap",
             currentTheme.accent,
           )}
         >
@@ -43,7 +43,7 @@ export default function OutroSlide({ onRestart, onFinish }: OutroSlideProps) {
         <h2 className="text-3xl font-bold">
           Obrigado, <br />
           <span className={cn(currentTheme.accentText)}>
-            {mockCurrentUser.name.split(' ')[0]}
+            {mockCurrentUser.name.split(" ")[0]}
           </span>
         </h2>
         <p className="text-sm opacity-80 leading-relaxed font-light">
@@ -55,16 +55,16 @@ export default function OutroSlide({ onRestart, onFinish }: OutroSlideProps) {
         <Button
           variant="outline"
           className={cn(
-            'w-full h-12 rounded-xl border-2 bg-transparent font-bold transition-all duration-300',
-            currentTheme.id === 'gold'
-              ? 'border-gold text-gold hover:bg-gold/10 hover:text-gold hover:border-gold'
+            "w-full h-12 rounded-xl border-2 bg-transparent font-bold transition-all duration-300",
+            currentTheme.id === "gold"
+              ? "border-gold text-gold hover:bg-gold/10 hover:text-gold hover:border-gold"
               : cn(currentTheme.accentText, currentTheme.ring),
           )}
           style={
             currentTheme.isCustom
               ? {
-                  borderColor: 'var(--retro-accent)',
-                  color: 'var(--retro-accent)',
+                  borderColor: "var(--retro-accent)",
+                  color: "var(--retro-accent)",
                 }
               : undefined
           }

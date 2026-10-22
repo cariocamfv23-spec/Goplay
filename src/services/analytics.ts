@@ -1,21 +1,6 @@
-import { supabase } from '@/lib/supabase/client'
+import { supabase } from "@/lib/supabase/client"
 
-export type AnalyticsEventName =
-  | 'user_signup_completed'
-  | 'athlete_profile_created'
-  | 'profile_fields_completed'
-  | 'event_published'
-  | 'event_viewed'
-  | 'registration_started'
-  | 'registration_completed'
-  | 'registration_approved'
-  | 'registration_rejected'
-  | 'profile_shared'
-  | 'event_shared'
-  | 'user_session_active'
-  | 'report_created'
-  | 'user_blocked'
-  | 'user_unblocked'
+export type AnalyticsEventName = "user_signup_completed" | "athlete_profile_created" | "profile_fields_completed" | "event_published" | "event_viewed" | "registration_started" | "registration_completed" | "registration_approved" | "registration_rejected" | "profile_shared" | "event_shared" | "user_session_active" | "report_created" | "user_blocked" | "user_unblocked"
 
 export interface AnalyticsEventPayload {
   eventName: AnalyticsEventName
@@ -39,14 +24,14 @@ const DEDUPE_WINDOW_MS = 60 * 1000 // 1 minute per event target within session
 
 function getSessionId(): string {
   try {
-    let sid = sessionStorage.getItem('goplay_session_id')
+    let sid = sessionStorage.getItem("goplay_session_id")
     if (!sid) {
       sid = `ses_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
-      sessionStorage.setItem('goplay_session_id', sid)
+      sessionStorage.setItem("goplay_session_id", sid)
     }
     return sid
   } catch {
-    return 'ses_anon'
+    return "ses_anon"
   }
 }
 
@@ -77,8 +62,8 @@ export const analyticsService = {
   }: AnalyticsEventPayload): Promise<void> {
     try {
       // Automatic session deduplication for noisy view events
-      if (eventName === 'event_viewed' || eventName === 'user_session_active') {
-        const dedupeKey = `${eventName}:${targetId || 'global'}:${userId || 'anon'}`
+      if (eventName === "event_viewed" || eventName === "user_session_active") {
+        const dedupeKey = `${eventName}:${targetId || "global"}:${userId || "anon"}`
         if (shouldThrottle(dedupeKey)) {
           return
         }
@@ -94,7 +79,7 @@ export const analyticsService = {
       delete (safeMetadata as any).pix_key
 
       // Insert into analytics_events table (casting supabase client to any to support newly migrated table)
-      await (supabase as any).from('analytics_events').insert({
+      await (supabase as any).from("analytics_events").insert({
         event_name: eventName,
         user_id: userId || null,
         target_id: targetId || null,
@@ -103,7 +88,7 @@ export const analyticsService = {
       })
     } catch (err) {
       // Telemetry must never crash primary flows
-      console.warn('[Analytics] Failed to record event:', err)
+      console.warn("[Analytics] Failed to record event:", err)
     }
   },
 
@@ -116,7 +101,7 @@ export const analyticsService = {
     currentUserId?: string | null,
   ) {
     return this.trackEvent({
-      eventName: 'profile_shared',
+      eventName: "profile_shared",
       userId: currentUserId || null,
       targetId: profileId,
       metadata: { method },
@@ -132,7 +117,7 @@ export const analyticsService = {
     currentUserId?: string | null,
   ) {
     return this.trackEvent({
-      eventName: 'event_shared',
+      eventName: "event_shared",
       userId: currentUserId || null,
       targetId: eventId,
       metadata: { method },
@@ -147,7 +132,7 @@ export const analyticsService = {
     currentUserId?: string | null,
   ) {
     return this.trackEvent({
-      eventName: 'registration_started',
+      eventName: "registration_started",
       userId: currentUserId || null,
       targetId: eventId,
       metadata: { timestamp: new Date().toISOString() },
@@ -159,7 +144,7 @@ export const analyticsService = {
    */
   async trackEventView(eventId: string, currentUserId?: string | null) {
     return this.trackEvent({
-      eventName: 'event_viewed',
+      eventName: "event_viewed",
       userId: currentUserId || null,
       targetId: eventId,
     })
@@ -200,27 +185,27 @@ export const analyticsService = {
 
       // 1. Query profiles table
       const { data: rawProfiles, error: pError } = await (supabase as any)
-        .from('profiles')
-        .select('*')
+        .from("profiles")
+        .select("*")
 
       if (pError) throw new Error(pError.message)
 
       const profiles = (rawProfiles || []) as any[]
       const totalUsers = profiles.length
       const totalAthletes = profiles.filter(
-        (p) => p.account_type === 'athlete',
+        (p) => p.account_type === "athlete",
       ).length
       const totalClubs = profiles.filter(
-        (p) => p.account_type === 'club',
+        (p) => p.account_type === "club",
       ).length
       const totalCoaches = profiles.filter(
-        (p) => p.account_type === 'coach',
+        (p) => p.account_type === "coach",
       ).length
 
       // Criteria for essential fields completed (Athlete: sport, position, city, bio OR experience/clubs)
       const athletesWithCompleteProfile = profiles.filter(
         (p) =>
-          p.account_type === 'athlete' &&
+          p.account_type === "athlete" &&
           Boolean(p.sport) &&
           Boolean(p.position) &&
           Boolean(p.city) &&
@@ -229,8 +214,8 @@ export const analyticsService = {
 
       // 2. Query events
       const { data: rawEvents, error: eError } = await (supabase as any)
-        .from('events')
-        .select('id, created_at, status')
+        .from("events")
+        .select("id, created_at, status")
 
       if (eError) throw new Error(eError.message)
 
@@ -241,43 +226,42 @@ export const analyticsService = {
       ).length
 
       // 3. Query registrations directly from event_registrations
-      const { data: rawRegistrations, error: regError } = await (
-        supabase as any
-      )
-        .from('event_registrations')
-        .select('id, status, created_at, user_id, event_id')
+      const { data: rawRegistrations, error: regError } =
+        await (supabase as any)
+          .from("event_registrations")
+          .select("id, status, created_at, user_id, event_id")
 
       if (regError) throw new Error(regError.message)
 
       const registrations = (rawRegistrations || []) as any[]
       const registrationsApproved = registrations.filter(
-        (r) => r.status === 'approved',
+        (r) => r.status === "approved",
       ).length
       const registrationsRejected = registrations.filter(
-        (r) => r.status === 'rejected',
+        (r) => r.status === "rejected",
       ).length
 
       // 4. Query telemetry events (allowed only for admins via RLS)
       const { data: rawTelemetry, error: tError } = await (supabase as any)
-        .from('analytics_events')
-        .select('*')
-        .gte('created_at', startDate)
+        .from("analytics_events")
+        .select("*")
+        .gte("created_at", startDate)
 
       // If non-admin, RLS returns empty or error
       if (tError) throw new Error(tError.message)
 
       const eventsList = (rawTelemetry || []) as AnalyticsEventRecord[]
       const eventViewsCount = eventsList.filter(
-        (e) => e.event_name === 'event_viewed',
+        (e) => e.event_name === "event_viewed",
       ).length
       const registrationsStartedCount = eventsList.filter(
-        (e) => e.event_name === 'registration_started',
+        (e) => e.event_name === "registration_started",
       ).length
       const profileSharesCount = eventsList.filter(
-        (e) => e.event_name === 'profile_shared',
+        (e) => e.event_name === "profile_shared",
       ).length
       const eventSharesCount = eventsList.filter(
-        (e) => e.event_name === 'event_shared',
+        (e) => e.event_name === "event_shared",
       ).length
 
       // Registrations completed in period from actual DB registrations

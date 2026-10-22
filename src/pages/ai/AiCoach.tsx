@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   MessageSquare,
@@ -10,11 +10,11 @@ import {
   Settings,
   BarChart2,
   Target,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { Card, CardContent } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Card, CardContent } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 
 export default function AiCoach() {
   const navigate = useNavigate()
@@ -36,7 +36,7 @@ export default function AiCoach() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => navigate('/ai/settings')}
+          onClick={() => navigate("/ai/settings")}
         >
           <Settings className="h-5 w-5" />
         </Button>
@@ -67,7 +67,7 @@ export default function AiCoach() {
                 <span className="text-xs text-muted-foreground">Hoje</span>
               </div>
               <p className="text-sm leading-relaxed text-foreground/90">
-                Analisei seus últimos jogos. Você melhorou{' '}
+                Analisei seus últimos jogos. Você melhorou{" "}
                 <span className="text-green-500 font-bold">15%</span> na
                 velocidade, mas precisamos focar na precisão dos passes.
               </p>
@@ -80,7 +80,7 @@ export default function AiCoach() {
           <Button
             variant="outline"
             className="h-auto py-3 flex flex-col gap-1 items-center justify-center border-dashed"
-            onClick={() => navigate('/ai/reports')}
+            onClick={() => navigate("/ai/reports")}
           >
             <BarChart2 className="h-5 w-5 text-primary" />
             <span className="text-xs font-semibold">Relatórios</span>
@@ -88,7 +88,7 @@ export default function AiCoach() {
           <Button
             variant="outline"
             className="h-auto py-3 flex flex-col gap-1 items-center justify-center border-dashed"
-            onClick={() => navigate('/goals')}
+            onClick={() => navigate("/goals")}
           >
             <Target className="h-5 w-5 text-primary" />
             <span className="text-xs font-semibold">Metas</span>
@@ -96,7 +96,7 @@ export default function AiCoach() {
           <Button
             variant="outline"
             className="h-auto py-3 flex flex-col gap-1 items-center justify-center border-dashed"
-            onClick={() => navigate('/ai/settings')}
+            onClick={() => navigate("/ai/settings")}
           >
             <Settings className="h-5 w-5 text-primary" />
             <span className="text-xs font-semibold">Configurar</span>
@@ -106,7 +106,7 @@ export default function AiCoach() {
         {/* Motion Analysis Call to Action */}
         <Card
           className="overflow-hidden border-primary/20 bg-gradient-to-br from-zinc-900 to-black text-white cursor-pointer group hover:shadow-lg transition-all duration-300"
-          onClick={() => navigate('/ai/motion-analysis')}
+          onClick={() => navigate("/ai/motion-analysis")}
         >
           <div className="relative p-6">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
@@ -136,7 +136,7 @@ export default function AiCoach() {
         {/* Injury Scanner Link */}
         <Card
           className="bg-card border-border/50 hover:border-primary/50 transition-colors cursor-pointer"
-          onClick={() => navigate('/ai/injury-scanner')}
+          onClick={() => navigate("/ai/injury-scanner")}
         >
           <CardContent className="p-4 flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -157,7 +157,7 @@ export default function AiCoach() {
         {/* Exercise Library Link */}
         <Card
           className="bg-card border-border/50 hover:border-primary/50 transition-colors cursor-pointer"
-          onClick={() => navigate('/ai/library')}
+          onClick={() => navigate("/ai/library")}
         >
           <CardContent className="p-4 flex items-center justify-between">
             <div className="flex items-center gap-4">

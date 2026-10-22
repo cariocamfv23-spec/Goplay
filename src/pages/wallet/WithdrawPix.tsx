@@ -1,21 +1,21 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { ArrowLeft } from 'lucide-react'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { ArrowLeft } from "lucide-react"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 
 export default function WithdrawPix() {
   const navigate = useNavigate()
-  const [amount, setAmount] = useState('')
-  const [pixKey, setPixKey] = useState('')
+  const [amount, setAmount] = useState("")
+  const [pixKey, setPixKey] = useState("")
 
   const handleWithdraw = (e: React.FormEvent) => {
     e.preventDefault()
-    toast.success('Solicitação de saque realizada!')
-    navigate('/wallet')
+    toast.success("Solicitação de saque realizada!")
+    navigate("/wallet")
   }
 
   return (

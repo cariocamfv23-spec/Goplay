@@ -1,21 +1,21 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { Search, Filter, Camera, Star, ChevronRight } from 'lucide-react'
-import { mockProfiles, photographerCategories, ProfileData } from '@/lib/data'
-import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
-import { cn } from '@/lib/utils'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Search, Filter, Camera, Star, ChevronRight } from "lucide-react"
+import { mockProfiles, photographerCategories, ProfileData } from "@/lib/data"
+import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+import { cn } from "@/lib/utils"
 
 export default function PhotographersList() {
   const navigate = useNavigate()
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("")
 
   const photographers = mockProfiles.filter(
-    (p) => p.type === 'photographer',
+    (p) => p.type === "photographer",
   ) as ProfileData[]
 
   const filteredPhotographers = photographers.filter((p) => {
@@ -54,7 +54,7 @@ export default function PhotographersList() {
 
         <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
           <Button
-            variant={selectedCategory === null ? 'default' : 'secondary'}
+            variant={selectedCategory === null ? "default" : "secondary"}
             size="sm"
             className="rounded-full px-4 shadow-sm h-8"
             onClick={() => setSelectedCategory(null)}
@@ -64,7 +64,7 @@ export default function PhotographersList() {
           {photographerCategories.map((category) => (
             <Button
               key={category}
-              variant={selectedCategory === category ? 'default' : 'secondary'}
+              variant={selectedCategory === category ? "default" : "secondary"}
               size="sm"
               className="rounded-full px-4 shadow-sm whitespace-nowrap h-8"
               onClick={() => setSelectedCategory(category)}
@@ -200,7 +200,7 @@ export default function PhotographersList() {
               variant="outline"
               className="mt-4"
               onClick={() => {
-                setSearch('')
+                setSearch("")
                 setSelectedCategory(null)
               }}
             >

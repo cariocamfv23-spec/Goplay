@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   ArrowLeft,
   Search,
@@ -8,11 +8,11 @@ import {
   TrendingUp,
   Filter,
   Info,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { mockTalents, ProfileData } from '@/lib/data'
-import { CriteriaSelector } from '@/components/sponsors/CriteriaSelector'
-import { ProfileMatchCard } from '@/components/sponsors/ProfileMatchCard'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { mockTalents, ProfileData } from "@/lib/data"
+import { CriteriaSelector } from "@/components/sponsors/CriteriaSelector"
+import { ProfileMatchCard } from "@/components/sponsors/ProfileMatchCard"
 import {
   Dialog,
   DialogContent,
@@ -20,11 +20,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog"
 
 export default function SponsorshipMatch() {
   const navigate = useNavigate()
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("")
 
   // Filter and Sort Logic for "Elite" Profiles
   const eliteProfiles = mockTalents

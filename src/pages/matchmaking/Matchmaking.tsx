@@ -1,5 +1,5 @@
-import { useState, useMemo, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useMemo, useCallback } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   ArrowLeft,
   Trophy,
@@ -20,21 +20,21 @@ import {
   Flag,
   Megaphone,
   Sparkles,
-} from 'lucide-react'
-import { TransportMenu } from '@/components/TransportMenu'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+} from "lucide-react"
+import { TransportMenu } from "@/components/TransportMenu"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { toast } from 'sonner'
+} from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { toast } from "sonner"
 import {
   MOCK_TEAMS,
   MOCK_FIELDS,
@@ -54,19 +54,19 @@ import {
   type MatchField,
   type VisitorChecklistState,
   type SuggestionResult,
-} from '@/lib/matchmaking-data'
+} from "@/lib/matchmaking-data"
 import {
   MatchConfigCard,
   type MatchConfigState,
-} from '@/components/matchmaking/MatchConfigCard'
-import { VisitorChecklist } from '@/components/matchmaking/VisitorChecklist'
-import { MatchFinancialsCard } from '@/components/matchmaking/MatchFinancialsCard'
-import { TeamRoleBadge } from '@/components/matchmaking/TeamRoleBadge'
-import { SuggestOpponentDialog } from '@/components/matchmaking/SuggestOpponentDialog'
+} from "@/components/matchmaking/MatchConfigCard"
+import { VisitorChecklist } from "@/components/matchmaking/VisitorChecklist"
+import { MatchFinancialsCard } from "@/components/matchmaking/MatchFinancialsCard"
+import { TeamRoleBadge } from "@/components/matchmaking/TeamRoleBadge"
+import { SuggestOpponentDialog } from "@/components/matchmaking/SuggestOpponentDialog"
 import {
   MatchConfirmationCard,
   type ConfirmedMatch,
-} from '@/components/matchmaking/MatchConfirmationCard'
+} from "@/components/matchmaking/MatchConfirmationCard"
 
 const MODE_ICONS: Record<string, typeof Scale> = {
   scale: Scale,
@@ -74,14 +74,14 @@ const MODE_ICONS: Record<string, typeof Scale> = {
   globe: Globe,
 }
 
-function TeamFormBadge({ form }: { form: ('W' | 'L' | 'D')[] }) {
+function TeamFormBadge({ form }: { form: ("W" | "L" | "D")[] }) {
   return (
     <div className="flex gap-1">
       {form.map((r, i) => (
         <span
           key={i}
           className={cn(
-            'w-5 h-5 rounded flex items-center justify-center text-[10px] font-black',
+            "w-5 h-5 rounded flex items-center justify-center text-[10px] font-black",
             getFormColor(r),
           )}
         >
@@ -106,16 +106,16 @@ function ModalitySelector({
           key={m.id}
           onClick={() => onChange(m.id)}
           className={cn(
-            'flex-1 flex flex-col items-center gap-1 py-3 rounded-xl border transition-all',
+            "flex-1 flex flex-col items-center gap-1 py-3 rounded-xl border transition-all",
             value === m.id
-              ? 'border-[hsl(var(--gold))] bg-[hsl(var(--gold)/0.1)] shadow-[0_0_12px_hsl(var(--gold)/0.2)]'
-              : 'border-border/30 bg-secondary/20 hover:border-border/60',
+              ? "border-[hsl(var(--gold))] bg-[hsl(var(--gold)/0.1)] shadow-[0_0_12px_hsl(var(--gold)/0.2)]"
+              : "border-border/30 bg-secondary/20 hover:border-border/60",
           )}
         >
           <span
             className={cn(
-              'text-sm font-black uppercase tracking-wider',
-              value === m.id ? 'text-[hsl(var(--gold))]' : 'text-foreground',
+              "text-sm font-black uppercase tracking-wider",
+              value === m.id ? "text-[hsl(var(--gold))]" : "text-foreground",
             )}
           >
             {m.label}
@@ -143,16 +143,16 @@ function CategorySelector({
           key={c.id}
           onClick={() => onChange(c.id)}
           className={cn(
-            'shrink-0 flex flex-col items-center gap-0.5 px-4 py-2.5 rounded-full border transition-all',
+            "shrink-0 flex flex-col items-center gap-0.5 px-4 py-2.5 rounded-full border transition-all",
             value === c.id
-              ? 'border-primary bg-primary/10'
-              : 'border-border/30 bg-secondary/20 hover:border-border/60',
+              ? "border-primary bg-primary/10"
+              : "border-border/30 bg-secondary/20 hover:border-border/60",
           )}
         >
           <span
             className={cn(
-              'text-xs font-bold uppercase tracking-wider',
-              value === c.id ? 'text-primary' : 'text-foreground',
+              "text-xs font-bold uppercase tracking-wider",
+              value === c.id ? "text-primary" : "text-foreground",
             )}
           >
             {c.label}
@@ -181,26 +181,26 @@ function MatchmakingModeSelector({
             key={mode.id}
             onClick={() => onChange(mode.id)}
             className={cn(
-              'flex flex-col items-center gap-2 p-3 rounded-xl border transition-all text-center',
+              "flex flex-col items-center gap-2 p-3 rounded-xl border transition-all text-center",
               isActive
-                ? 'border-primary bg-primary/10 shadow-sm'
-                : 'border-border/30 bg-secondary/20 hover:border-border/60',
+                ? "border-primary bg-primary/10 shadow-sm"
+                : "border-border/30 bg-secondary/20 hover:border-border/60",
             )}
           >
             <div
               className={cn(
-                'w-10 h-10 rounded-full flex items-center justify-center',
+                "w-10 h-10 rounded-full flex items-center justify-center",
                 isActive
-                  ? 'bg-primary/20 text-primary'
-                  : 'bg-secondary/40 text-muted-foreground',
+                  ? "bg-primary/20 text-primary"
+                  : "bg-secondary/40 text-muted-foreground",
               )}
             >
               <Icon className="w-5 h-5" />
             </div>
             <span
               className={cn(
-                'text-[11px] font-bold uppercase tracking-wider',
-                isActive ? 'text-primary' : 'text-foreground',
+                "text-[11px] font-bold uppercase tracking-wider",
+                isActive ? "text-primary" : "text-foreground",
               )}
             >
               {mode.label}
@@ -265,12 +265,12 @@ function TeamCard({
             </span>
             <span
               className={cn(
-                'text-xl font-black tabular-nums',
+                "text-xl font-black tabular-nums",
                 matchScore >= 80
-                  ? 'text-green-500'
+                  ? "text-green-500"
                   : matchScore >= 60
-                    ? 'text-yellow-500'
-                    : 'text-red-500',
+                    ? "text-yellow-500"
+                    : "text-red-500",
               )}
             >
               {matchScore}%
@@ -369,13 +369,13 @@ function FieldCard({
         <div className="absolute top-2 left-2 flex gap-1.5">
           <Badge
             className={cn(
-              'text-[9px] uppercase font-black px-2 py-0.5',
-              field.fieldType === 'sintetico'
-                ? 'bg-green-500 text-white'
-                : 'bg-orange-600 text-white',
+              "text-[9px] uppercase font-black px-2 py-0.5",
+              field.fieldType === "sintetico"
+                ? "bg-green-500 text-white"
+                : "bg-orange-600 text-white",
             )}
           >
-            {field.fieldType === 'sintetico' ? 'Sintético' : 'Terrão'}
+            {field.fieldType === "sintetico" ? "Sintético" : "Terrão"}
           </Badge>
         </div>
         <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-full">
@@ -434,7 +434,7 @@ function FieldCard({
   )
 }
 
-function ScheduledMatchCard({ match }: { match: (typeof MOCK_SCHEDULED)[0] }) {
+function ScheduledMatchCard({ match }: { match: typeof MOCK_SCHEDULED[0] }) {
   const [visitorChecklist, setVisitorChecklist] =
     useState<VisitorChecklistState>(match.visitorChecklist)
 
@@ -460,7 +460,7 @@ function ScheduledMatchCard({ match }: { match: (typeof MOCK_SCHEDULED)[0] }) {
               </Badge>
             )}
             <Badge variant="outline" className="text-[9px] uppercase font-bold">
-              {match.field.fieldType === 'sintetico' ? 'Sintético' : 'Terrão'}
+              {match.field.fieldType === "sintetico" ? "Sintético" : "Terrão"}
             </Badge>
           </div>
         </div>
@@ -528,7 +528,7 @@ function ScheduledMatchCard({ match }: { match: (typeof MOCK_SCHEDULED)[0] }) {
   )
 }
 
-function HistoryRow({ entry }: { entry: (typeof MOCK_MATCH_HISTORY)[0] }) {
+function HistoryRow({ entry }: { entry: typeof MOCK_MATCH_HISTORY[0] }) {
   return (
     <div className="flex items-center gap-3 p-3 rounded-xl border border-border/20 bg-secondary/10 hover:bg-secondary/20 transition-colors">
       <div className="w-10 h-10 rounded-full bg-secondary/40 flex items-center justify-center overflow-hidden border border-border/50 shrink-0">
@@ -548,19 +548,19 @@ function HistoryRow({ entry }: { entry: (typeof MOCK_MATCH_HISTORY)[0] }) {
           </span>
           <span className="w-1 h-1 rounded-full bg-border" />
           <span className="text-[10px] text-muted-foreground uppercase font-bold">
-            {entry.fieldType === 'sintetico' ? 'Sintético' : 'Terrão'}
+            {entry.fieldType === "sintetico" ? "Sintético" : "Terrão"}
           </span>
         </div>
       </div>
       <div className="flex flex-col items-end shrink-0">
         <span
           className={cn(
-            'text-lg font-black tabular-nums',
-            entry.result === 'win'
-              ? 'text-green-500'
-              : entry.result === 'loss'
-                ? 'text-red-500'
-                : 'text-yellow-500',
+            "text-lg font-black tabular-nums",
+            entry.result === "win"
+              ? "text-green-500"
+              : entry.result === "loss"
+                ? "text-red-500"
+                : "text-yellow-500",
           )}
         >
           {entry.scoreTeam} - {entry.scoreOpponent}
@@ -568,19 +568,19 @@ function HistoryRow({ entry }: { entry: (typeof MOCK_MATCH_HISTORY)[0] }) {
         <Badge
           variant="outline"
           className={cn(
-            'text-[8px] uppercase font-black px-1.5 py-0',
-            entry.result === 'win'
-              ? 'border-green-500/30 text-green-500 bg-green-500/10'
-              : entry.result === 'loss'
-                ? 'border-red-500/30 text-red-500 bg-red-500/10'
-                : 'border-yellow-500/30 text-yellow-500 bg-yellow-500/10',
+            "text-[8px] uppercase font-black px-1.5 py-0",
+            entry.result === "win"
+              ? "border-green-500/30 text-green-500 bg-green-500/10"
+              : entry.result === "loss"
+                ? "border-red-500/30 text-red-500 bg-red-500/10"
+                : "border-yellow-500/30 text-yellow-500 bg-yellow-500/10",
           )}
         >
-          {entry.result === 'win'
-            ? 'Vitória'
-            : entry.result === 'loss'
-              ? 'Derrota'
-              : 'Empate'}
+          {entry.result === "win"
+            ? "Vitória"
+            : entry.result === "loss"
+              ? "Derrota"
+              : "Empate"}
         </Badge>
       </div>
     </div>
@@ -589,16 +589,16 @@ function HistoryRow({ entry }: { entry: (typeof MOCK_MATCH_HISTORY)[0] }) {
 
 export default function Matchmaking() {
   const navigate = useNavigate()
-  const [modality, setModality] = useState<Modality>('society')
-  const [category, setCategory] = useState<Category>('competitivo')
-  const [mode, setMode] = useState<MatchmakingMode>('balanced')
+  const [modality, setModality] = useState<Modality>("society")
+  const [category, setCategory] = useState<Category>("competitivo")
+  const [mode, setMode] = useState<MatchmakingMode>("balanced")
   const [maxDistance, setMaxDistance] = useState(50)
   const [selectedField, setSelectedField] = useState<MatchField | null>(null)
   const [matchConfig, setMatchConfig] = useState<MatchConfigState>({
     hasReferee: true,
-    fieldFee: '220',
-    refereeFee: '80',
-    paymentResponsibility: 'split',
+    fieldFee: "220",
+    refereeFee: "80",
+    paymentResponsibility: "split",
   })
   const [suggestOpen, setSuggestOpen] = useState(false)
   const [acceptedSuggestion, setAcceptedSuggestion] =
@@ -607,15 +607,15 @@ export default function Matchmaking() {
 
   const filteredTeams = useMemo(() => {
     let teams = MOCK_TEAMS.filter((t) => t.modality === modality)
-    if (mode === 'balanced') {
+    if (mode === "balanced") {
       teams = teams.filter((t) => t.distanceKm <= maxDistance)
-    } else if (mode === 'random') {
+    } else if (mode === "random") {
       teams = [...teams].sort(() => Math.random() - 0.5)
-    } else if (mode === 'varied') {
+    } else if (mode === "varied") {
       teams = [...teams].sort((a, b) => a.distanceKm - b.distanceKm)
     }
 
-    if (mode !== 'balanced') return teams
+    if (mode !== "balanced") return teams
 
     return [...teams]
       .map((t) => ({ team: t, score: getMatchmakingScore(t, MY_TEAM) }))
@@ -637,7 +637,7 @@ export default function Matchmaking() {
         teamA: MY_TEAM,
         teamB: team,
         field,
-        date: '20 Jun 2026',
+        date: "20 Jun 2026",
         startTime: field.startTime,
         config: matchConfig,
         visitorChecklist: { arrived: false, onTime: false },
@@ -645,9 +645,9 @@ export default function Matchmaking() {
       setConfirmedMatches((prev) => [confirmed, ...prev])
       toast.success(`Acordo fechado com ${team.name}!`, {
         description:
-          'Mandante: Red Wolves FC · Visitante: ' +
+          "Mandante: Red Wolves FC · Visitante: " +
           team.name +
-          '. Confira o resumo do acordo no topo da tela.',
+          ". Confira o resumo do acordo no topo da tela.",
       })
     },
     [selectedField, matchConfig],
@@ -656,7 +656,9 @@ export default function Matchmaking() {
   const handleSelectField = useCallback((field: MatchField) => {
     setSelectedField(field)
     toast.info(`Campo selecionado: ${field.name}`, {
-      description: `Horário sem atraso: ${field.startTime} | ${field.fieldType === 'sintetico' ? 'Sintético' : 'Terrão'}`,
+      description: `Horário sem atraso: ${field.startTime} | ${
+        field.fieldType === "sintetico" ? "Sintético" : "Terrão"
+      }`,
     })
   }, [])
 
@@ -670,7 +672,7 @@ export default function Matchmaking() {
         teamA: MY_TEAM,
         teamB: result.team,
         field: result.field,
-        date: '20 Jun 2026',
+        date: "20 Jun 2026",
         startTime: result.field.startTime,
         config,
         visitorChecklist: { arrived: false, onTime: false },
@@ -829,7 +831,7 @@ export default function Matchmaking() {
             <div className="mt-3 rounded-xl border border-green-500/30 bg-green-500/10 p-3 flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
               <span className="text-[10px] font-bold text-green-500 truncate">
-                {acceptedSuggestion.team.name} selecionado ·{' '}
+                {acceptedSuggestion.team.name} selecionado ·{" "}
                 {acceptedSuggestion.field.name}
               </span>
             </div>

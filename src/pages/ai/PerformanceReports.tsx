@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   TrendingUp,
@@ -7,36 +7,36 @@ import {
   Download,
   Share2,
   ChevronRight,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from '@/components/ui/card'
-import { StatsRadarChart } from '@/components/StatsRadarChart'
-import { StatsHistoryChart } from '@/components/StatsHistoryChart'
-import { mockStatsHistory } from '@/lib/data'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Badge } from '@/components/ui/badge'
-import { useGoalStore } from '@/stores/useGoalStore'
-import { Progress } from '@/components/ui/progress'
+} from "@/components/ui/card"
+import { StatsRadarChart } from "@/components/StatsRadarChart"
+import { StatsHistoryChart } from "@/components/StatsHistoryChart"
+import { mockStatsHistory } from "@/lib/data"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge"
+import { useGoalStore } from "@/stores/useGoalStore"
+import { Progress } from "@/components/ui/progress"
 
 const mockSkills = [
-  { label: 'Velocidade', value: 85, max: 100, unit: '%' },
-  { label: 'Força', value: 72, max: 100, unit: '%' },
-  { label: 'Resistência', value: 90, max: 100, unit: '%' },
-  { label: 'Técnica', value: 65, max: 100, unit: '%' },
-  { label: 'Tática', value: 78, max: 100, unit: '%' },
-  { label: 'Mental', value: 88, max: 100, unit: '%' },
+  { label: "Velocidade", value: 85, max: 100, unit: "%" },
+  { label: "Força", value: 72, max: 100, unit: "%" },
+  { label: "Resistência", value: 90, max: 100, unit: "%" },
+  { label: "Técnica", value: 65, max: 100, unit: "%" },
+  { label: "Tática", value: 78, max: 100, unit: "%" },
+  { label: "Mental", value: 88, max: 100, unit: "%" },
 ]
 
 export default function PerformanceReports() {
   const navigate = useNavigate()
   const { goals } = useGoalStore()
-  const activeGoals = goals.filter((g) => g.status === 'active')
+  const activeGoals = goals.filter((g) => g.status === "active")
 
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">
@@ -90,7 +90,7 @@ export default function PerformanceReports() {
         {/* Goals Teaser */}
         <Card
           className="bg-card border-border/50 hover:border-primary/50 transition-colors cursor-pointer group"
-          onClick={() => navigate('/goals')}
+          onClick={() => navigate("/goals")}
         >
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-3">
@@ -210,12 +210,12 @@ export default function PerformanceReports() {
                   <p>
                     <span className="font-bold text-foreground">
                       Resistência:
-                    </span>{' '}
+                    </span>{" "}
                     Seu condicionamento está 15% acima da média para sua
                     categoria.
                   </p>
                   <p>
-                    <span className="font-bold text-foreground">Mental:</span>{' '}
+                    <span className="font-bold text-foreground">Mental:</span>{" "}
                     Excelente foco e consistência durante séries longas.
                   </p>
                 </CardContent>
@@ -229,11 +229,11 @@ export default function PerformanceReports() {
                 </CardHeader>
                 <CardContent className="text-sm space-y-2">
                   <p>
-                    <span className="font-bold text-foreground">Técnica:</span>{' '}
+                    <span className="font-bold text-foreground">Técnica:</span>{" "}
                     Detectamos instabilidade no joelho esquerdo em agachamentos.
                   </p>
                   <p>
-                    <span className="font-bold text-foreground">Força:</span>{' '}
+                    <span className="font-bold text-foreground">Força:</span>{" "}
                     Potência de explosão pode ser melhorada com pliometria.
                   </p>
                 </CardContent>

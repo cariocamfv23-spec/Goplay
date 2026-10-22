@@ -1,6 +1,6 @@
-import { useNostalgiaStore, NostalgiaPreset } from '@/stores/useNostalgiaStore'
-import { cn } from '@/lib/utils'
-import { useEffect, useState } from 'react'
+import { useNostalgiaStore, NostalgiaPreset } from "@/stores/useNostalgiaStore"
+import { cn } from "@/lib/utils"
+import { useEffect, useState } from "react"
 
 interface NostalgiaFilterProps {
   className?: string
@@ -33,7 +33,7 @@ export function NostalgiaFilter({
   // Layer 1: Mandatory Graphic Frames Implementation
   const renderFrame = () => {
     switch (activePreset) {
-      case 'cassette':
+      case "cassette":
         return (
           <>
             {/* --- K7 TAPE AESTHETIC --- */}
@@ -104,7 +104,7 @@ export function NostalgiaFilter({
           </>
         )
 
-      case 'vhs':
+      case "vhs":
         return (
           <>
             {/* --- VHS CINEMATIC SKIN --- */}
@@ -118,7 +118,7 @@ export function NostalgiaFilter({
             <div className="absolute left-0 right-0 h-2 bg-white/20 blur-md z-30 animate-tracking pointer-events-none mix-blend-screen" />
             <div
               className="absolute left-0 right-0 h-1 bottom-[10%] bg-white/10 blur-sm z-30 animate-tracking pointer-events-none mix-blend-overlay"
-              style={{ animationDelay: '2s', animationDuration: '7s' }}
+              style={{ animationDelay: "2s", animationDuration: "7s" }}
             />
 
             {/* Color Bleed / Chromatic Aberration */}
@@ -136,8 +136,8 @@ export function NostalgiaFilter({
             </div>
             <div className="absolute bottom-14 left-6 pointer-events-none z-40 font-mono text-white/80 text-lg tracking-widest drop-shadow-[2px_2px_0_rgba(0,0,0,0.8)]">
               {time.toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
+                hour: "2-digit",
+                minute: "2-digit",
               })}
               <span className="ml-4 text-sm opacity-80">SP</span>
             </div>
@@ -147,8 +147,8 @@ export function NostalgiaFilter({
           </>
         )
 
-      case '90s':
-      case 'retro':
+      case "90s":
+      case "retro":
         return (
           <>
             {/* --- 90s RETRO CRT DISPLAY --- */}
@@ -173,7 +173,7 @@ export function NostalgiaFilter({
 
             {/* Camcorder Date */}
             <div className="absolute bottom-10 right-10 pointer-events-none z-40 font-digital text-[#ff8e25] text-lg tracking-widest drop-shadow-[2px_2px_0_rgba(0,0,0,0.8)] shadow-black">
-              {time.toLocaleDateString('pt-BR')}
+              {time.toLocaleDateString("pt-BR")}
             </div>
 
             {/* REC indicator */}
@@ -186,7 +186,7 @@ export function NostalgiaFilter({
           </>
         )
 
-      case 'digital':
+      case "digital":
         return (
           <>
             {/* Green Tint & Contrast */}
@@ -216,7 +216,7 @@ export function NostalgiaFilter({
           </>
         )
 
-      case 'pele':
+      case "pele":
         return (
           <>
             {/* 80s TV Frame */}
@@ -245,7 +245,7 @@ export function NostalgiaFilter({
           </>
         )
 
-      case 'ali':
+      case "ali":
         return (
           <>
             {/* B&W Film Frame */}
@@ -271,14 +271,14 @@ export function NostalgiaFilter({
           </>
         )
 
-      case 'analog':
-      case 'polaroid':
-      case 'grain':
+      case "analog":
+      case "polaroid":
+      case "grain":
       default:
         // For other presets, maintain original subtle overlay but allow wallpaper to shine
         return (
           <>
-            {activePreset === 'polaroid' && (
+            {activePreset === "polaroid" && (
               <div className="absolute inset-0 z-30 border-[16px] border-b-[60px] border-white pointer-events-none shadow-[inset_0_0_20px_rgba(0,0,0,0.1)] flex items-end justify-center pb-4">
                 <span className="font-handwriting text-black/60 text-xl rotate-1">
                   Moments
@@ -286,7 +286,7 @@ export function NostalgiaFilter({
               </div>
             )}
 
-            {activePreset === 'analog' && (
+            {activePreset === "analog" && (
               <div className="absolute inset-0 pointer-events-none z-10 bg-gradient-to-tr from-orange-500/10 via-transparent to-purple-500/10 mix-blend-screen opacity-60" />
             )}
 
@@ -302,7 +302,7 @@ export function NostalgiaFilter({
   return (
     <div
       className={cn(
-        'absolute inset-0 w-full h-full pointer-events-none rounded-[inherit] overflow-hidden',
+        "absolute inset-0 w-full h-full pointer-events-none rounded-[inherit] overflow-hidden",
         className,
       )}
     >

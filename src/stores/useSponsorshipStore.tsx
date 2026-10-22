@@ -1,12 +1,12 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import useNotificationStore from '@/stores/useNotificationStore'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
+import useNotificationStore from "@/stores/useNotificationStore"
 
-export type CriteriaType = 'brand' | 'posts' | 'uniform' | 'promo'
+export type CriteriaType = "brand" | "posts" | "uniform" | "promo"
 
 interface SponsorshipMatch {
   profileId: string | number
-  status: 'pending' | 'accepted' | 'rejected'
+  status: "pending" | "accepted" | "rejected"
   timestamp: string
   criteria: CriteriaType[]
 }
@@ -42,7 +42,7 @@ export const useSponsorshipStore = create<SponsorshipState>()(
             ...state.matches,
             {
               profileId,
-              status: 'pending',
+              status: "pending",
               timestamp: new Date().toISOString(),
               criteria: selectedCriteria,
             },
@@ -51,10 +51,10 @@ export const useSponsorshipStore = create<SponsorshipState>()(
 
         // Trigger notification
         useNotificationStore.getState().addNotification({
-          title: 'Solicitação Enviada',
-          message: 'Sua proposta de patrocínio foi enviada com sucesso.',
-          type: 'sponsorship_match',
-          priority: 'medium',
+          title: "Solicitação Enviada",
+          message: "Sua proposta de patrocínio foi enviada com sucesso.",
+          type: "sponsorship_match",
+          priority: "medium",
         })
       },
 
@@ -63,7 +63,7 @@ export const useSponsorshipStore = create<SponsorshipState>()(
       },
     }),
     {
-      name: 'goplay-sponsorship-storage',
+      name: "goplay-sponsorship-storage",
     },
   ),
 )

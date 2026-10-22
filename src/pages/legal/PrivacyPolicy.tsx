@@ -1,4 +1,4 @@
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link } from "react-router-dom"
 import {
   ArrowLeft,
   ShieldCheck,
@@ -10,10 +10,10 @@ import {
   AlertCircle,
   Database,
   Share2,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
 
 export default function PrivacyPolicy() {
   const navigate = useNavigate()
@@ -99,7 +99,7 @@ export default function PrivacyPolicy() {
                 perfil e biografia.
               </li>
               <li>
-                <strong>Dados Esportivos (Passaporte Esportivo):</strong>{' '}
+                <strong>Dados Esportivos (Passaporte Esportivo):</strong>{" "}
                 Modalidade esportiva, posição de jogo, pé/mão dominante, altura,
                 peso, histórico de clubes anteriores, títulos, certificações e
                 metas de carreira.
@@ -135,7 +135,7 @@ export default function PrivacyPolicy() {
             <p>
               Em conformidade estrita com o Artigo 14 da Lei Geral de Proteção
               de Dados Pessoais (LGPD), o tratamento de dados pessoais de
-              crianças e adolescentes é realizado no{' '}
+              crianças e adolescentes é realizado no{" "}
               <strong>melhor interesse do menor</strong>.
             </p>
             <ul className="list-disc list-inside space-y-1.5 text-foreground/90 pl-1 text-xs">
@@ -151,7 +151,7 @@ export default function PrivacyPolicy() {
                 participação em peneiras oficiais.
               </li>
               <li>
-                <strong>Não Comercialização de Dados:</strong> O Goplay{' '}
+                <strong>Não Comercialização de Dados:</strong> O Goplay{" "}
                 <strong>JAMAIS</strong> vende, aluga ou cede dados de atletas
                 menores de idade para fins de publicidade direcionada ou
                 empresas de crédito.
@@ -160,7 +160,7 @@ export default function PrivacyPolicy() {
                 <strong>Canal Exclusivo para Responsáveis:</strong> Os pais
                 podem, a qualquer tempo, solicitar acesso, correção ou exclusão
                 total dos dados do menor pelo e-mail do Encarregado de Proteção
-                de Dados:{' '}
+                de Dados:{" "}
                 <a
                   href="mailto:cariocamfv23@gmail.com"
                   className="font-bold text-primary hover:underline"
@@ -298,7 +298,7 @@ export default function PrivacyPolicy() {
             Utilizamos armazenamento local do navegador (
             <code className="text-[11px] bg-secondary px-1 py-0.5 rounded">
               localStorage
-            </code>{' '}
+            </code>{" "}
             e cookies de sessão) estritamente para manter você conectado (tokens
             de autenticação Supabase) e guardar suas preferências visuais (tema
             claro/escuro). Não empregamos cookies de rastreamento invasivo de

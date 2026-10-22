@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   Trophy,
@@ -11,85 +11,85 @@ import {
   Target,
   Flag,
   Share2,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { mockTimelineEvents, mockStatsHistory, TimelineEvent } from '@/lib/data'
-import { StatsHistoryChart } from '@/components/StatsHistoryChart'
-import { cn } from '@/lib/utils'
-import { useGoalStore } from '@/stores/useGoalStore'
-import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
-import { useState } from 'react'
-import { ShareDialog } from '@/components/ShareDialog'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { mockTimelineEvents, mockStatsHistory, TimelineEvent } from "@/lib/data"
+import { StatsHistoryChart } from "@/components/StatsHistoryChart"
+import { cn } from "@/lib/utils"
+import { useGoalStore } from "@/stores/useGoalStore"
+import { format } from "date-fns"
+import { ptBR } from "date-fns/locale"
+import { useState } from "react"
+import { ShareDialog } from "@/components/ShareDialog"
 
 export default function EvolutionTimeline() {
   const navigate = useNavigate()
   const { goals } = useGoalStore()
   const [shareOpen, setShareOpen] = useState(false)
   const [shareContent, setShareContent] = useState({
-    title: '',
-    description: '',
+    title: "",
+    description: "",
   })
 
   // Convert Goals to Timeline Events for seamless integration
   const goalEvents: TimelineEvent[] = goals.map((goal) => ({
     id: `goal-${goal.id}`,
-    date: format(new Date(goal.createdAt), 'dd MMM', { locale: ptBR }),
-    fullDate: format(new Date(goal.createdAt), 'dd MMMM, yyyy', {
+    date: format(new Date(goal.createdAt), "dd MMM", { locale: ptBR }),
+    fullDate: format(new Date(goal.createdAt), "dd MMMM, yyyy", {
       locale: ptBR,
     }),
-    type: goal.status === 'completed' ? 'achievement' : 'milestone',
+    type: goal.status === "completed" ? "achievement" : "milestone",
     title:
-      goal.status === 'completed'
+      goal.status === "completed"
         ? `Meta Alcançada: ${goal.title}`
         : `Nova Meta: ${goal.title}`,
     description: `Objetivo: Atingir ${goal.targetValue} ${goal.unit} em ${goal.metric}.`,
-    stats: [{ label: 'Progresso', value: `${goal.progress}%` }],
+    stats: [{ label: "Progresso", value: `${goal.progress}%` }],
   }))
 
   // Merge and Sort events by date (simple string comparison for demo, ideally Date obj)
   const allEvents = [...mockTimelineEvents, ...goalEvents].sort((a, b) => {
     // Basic sort logic for demo purposes, assuming "Hoje" comes first
-    if (a.date === 'Hoje') return -1
-    if (b.date === 'Hoje') return 1
-    if (a.date === 'Ontem') return -1
-    if (b.date === 'Ontem') return 1
+    if (a.date === "Hoje") return -1
+    if (b.date === "Hoje") return 1
+    if (a.date === "Ontem") return -1
+    if (b.date === "Ontem") return 1
     return 0 // Keep original order for others roughly
   })
 
-  const getEventIcon = (type: TimelineEvent['type']) => {
+  const getEventIcon = (type: TimelineEvent["type"]) => {
     switch (type) {
-      case 'match':
+      case "match":
         return <Trophy className="h-5 w-5 text-green-500" />
-      case 'training':
+      case "training":
         return <Zap className="h-5 w-5 text-orange-500" />
-      case 'ai_insight':
+      case "ai_insight":
         return <Brain className="h-5 w-5 text-purple-500" />
-      case 'achievement':
+      case "achievement":
         return <Trophy className="h-5 w-5 text-gold" />
-      case 'milestone':
+      case "milestone":
         return <Flag className="h-5 w-5 text-blue-500" />
       default:
         return <Activity className="h-5 w-5 text-muted-foreground" />
     }
   }
 
-  const getEventColor = (type: TimelineEvent['type']) => {
+  const getEventColor = (type: TimelineEvent["type"]) => {
     switch (type) {
-      case 'match':
-        return 'border-green-500/20 bg-green-500/5'
-      case 'training':
-        return 'border-orange-500/20 bg-orange-500/5'
-      case 'ai_insight':
-        return 'border-purple-500/20 bg-purple-500/5'
-      case 'achievement':
-        return 'border-gold/30 bg-gold/5'
-      case 'milestone':
-        return 'border-blue-500/20 bg-blue-500/5'
+      case "match":
+        return "border-green-500/20 bg-green-500/5"
+      case "training":
+        return "border-orange-500/20 bg-orange-500/5"
+      case "ai_insight":
+        return "border-purple-500/20 bg-purple-500/5"
+      case "achievement":
+        return "border-gold/30 bg-gold/5"
+      case "milestone":
+        return "border-blue-500/20 bg-blue-500/5"
       default:
-        return 'border-border bg-card'
+        return "border-border bg-card"
     }
   }
 
@@ -103,7 +103,7 @@ export default function EvolutionTimeline() {
 
   const handleShareTimeline = () => {
     setShareContent({
-      title: 'Minha Jornada no Goplay',
+      title: "Minha Jornada no Goplay",
       description: `Confira minha evolução no Goplay! Já completei ${allEvents.length} atividades e conquistas.`,
     })
     setShareOpen(true)
@@ -139,7 +139,7 @@ export default function EvolutionTimeline() {
           <Button
             size="sm"
             variant="outline"
-            onClick={() => navigate('/goals')}
+            onClick={() => navigate("/goals")}
             className="gap-2"
           >
             <Target className="h-4 w-4" />
@@ -185,7 +185,7 @@ export default function EvolutionTimeline() {
                   <Calendar className="h-3 w-3 mr-1 opacity-70" />
                   {event.fullDate}
                 </Badge>
-                {event.type === 'achievement' && (
+                {event.type === "achievement" && (
                   <Badge
                     variant="default"
                     className="text-[10px] bg-gold text-black hover:bg-gold/90 h-5 border-0"
@@ -193,7 +193,7 @@ export default function EvolutionTimeline() {
                     Conquista
                   </Badge>
                 )}
-                {event.type === 'milestone' && (
+                {event.type === "milestone" && (
                   <Badge variant="secondary" className="text-[10px] h-5">
                     Marco Histórico
                   </Badge>
@@ -203,7 +203,7 @@ export default function EvolutionTimeline() {
               {/* Event Card */}
               <Card
                 className={cn(
-                  'overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/30 group relative',
+                  "overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/30 group relative",
                   getEventColor(event.type),
                 )}
               >
@@ -211,12 +211,12 @@ export default function EvolutionTimeline() {
                   {/* Left Accent Bar */}
                   <div
                     className={cn(
-                      'w-1 shrink-0',
-                      event.type === 'match' && 'bg-green-500',
-                      event.type === 'training' && 'bg-orange-500',
-                      event.type === 'ai_insight' && 'bg-purple-500',
-                      event.type === 'achievement' && 'bg-gold',
-                      event.type === 'milestone' && 'bg-blue-500',
+                      "w-1 shrink-0",
+                      event.type === "match" && "bg-green-500",
+                      event.type === "training" && "bg-orange-500",
+                      event.type === "ai_insight" && "bg-purple-500",
+                      event.type === "achievement" && "bg-gold",
+                      event.type === "milestone" && "bg-blue-500",
                     )}
                   />
 

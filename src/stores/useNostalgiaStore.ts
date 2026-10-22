@@ -1,16 +1,6 @@
-import { useSyncExternalStore } from 'react'
+import { useSyncExternalStore } from "react"
 
-export type NostalgiaPreset =
-  | 'vhs'
-  | '90s'
-  | 'cassette'
-  | 'retro'
-  | 'pele'
-  | 'ali'
-  | 'digital'
-  | 'analog'
-  | 'polaroid'
-  | 'grain'
+export type NostalgiaPreset = "vhs" | "90s" | "cassette" | "retro" | "pele" | "ali" | "digital" | "analog" | "polaroid" | "grain"
 
 interface NostalgiaState {
   isEnabled: boolean
@@ -20,7 +10,7 @@ interface NostalgiaState {
 
 const initialState: NostalgiaState = {
   isEnabled: false,
-  preset: 'vhs',
+  preset: "vhs",
   intensity: 1,
 }
 

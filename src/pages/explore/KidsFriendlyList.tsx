@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 import {
   Search,
   Filter,
@@ -15,12 +15,12 @@ import {
   ShieldCheck,
   Calendar,
   Users,
-} from 'lucide-react'
-import { mockKidsVenues, KidsVenue } from '@/lib/data'
-import { useNavigate } from 'react-router-dom'
-import { useState, useMemo } from 'react'
-import { KidsFilterSheet, FilterState } from '@/components/KidsFilterSheet'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { mockKidsVenues, KidsVenue } from "@/lib/data"
+import { useNavigate } from "react-router-dom"
+import { useState, useMemo } from "react"
+import { KidsFilterSheet, FilterState } from "@/components/KidsFilterSheet"
+import { cn } from "@/lib/utils"
 import {
   Dialog,
   DialogContent,
@@ -28,8 +28,8 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog'
-import { toast } from 'sonner'
+} from "@/components/ui/dialog"
+import { toast } from "sonner"
 
 const allActivities = Array.from(
   new Set(mockKidsVenues.flatMap((v) => v.activities)),
@@ -37,10 +37,10 @@ const allActivities = Array.from(
 
 export default function KidsFriendlyList() {
   const navigate = useNavigate()
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("")
   const [filters, setFilters] = useState<FilterState>({
     activities: [],
-    ageGroup: 'all',
+    ageGroup: "all",
     periods: [],
   })
   const [selectedVenue, setSelectedVenue] = useState<KidsVenue | null>(null)
@@ -61,13 +61,13 @@ export default function KidsFriendlyList() {
       }
 
       // 3. Age Group Filter
-      if (filters.ageGroup !== 'all') {
-        const [minStr, maxStr] = filters.ageGroup.split('-')
+      if (filters.ageGroup !== "all") {
+        const [minStr, maxStr] = filters.ageGroup.split("-")
         const filterMin = parseInt(minStr)
         const filterMax = parseInt(maxStr)
 
         // Special case for '10+'
-        if (filters.ageGroup === '10-14') {
+        if (filters.ageGroup === "10-14") {
           if (!(venue.minAge <= 14 && venue.maxAge >= 10)) return false
         } else {
           if (!(venue.minAge <= filterMax && venue.maxAge >= filterMin))
@@ -88,12 +88,12 @@ export default function KidsFriendlyList() {
   const activeFiltersCount =
     filters.activities.length +
     filters.periods.length +
-    (filters.ageGroup !== 'all' ? 1 : 0)
+    (filters.ageGroup !== "all" ? 1 : 0)
 
   const handleBooking = () => {
-    toast.success('Solicitação enviada!', {
+    toast.success("Solicitação enviada!", {
       description:
-        'Sua reserva foi encaminhada para aprovação. Verifique seu email.',
+        "Sua reserva foi encaminhada para aprovação. Verifique seu email.",
     })
     setSelectedVenue(null)
   }
@@ -137,12 +137,12 @@ export default function KidsFriendlyList() {
             }}
           >
             <Button
-              variant={activeFiltersCount > 0 ? 'default' : 'outline'}
+              variant={activeFiltersCount > 0 ? "default" : "outline"}
               size="icon"
               className={cn(
-                'shrink-0 rounded-xl relative',
+                "shrink-0 rounded-xl relative",
                 activeFiltersCount > 0 &&
-                  'bg-primary text-primary-foreground border-primary',
+                  "bg-primary text-primary-foreground border-primary",
               )}
             >
               <Filter className="h-4 w-4" />
@@ -158,11 +158,11 @@ export default function KidsFriendlyList() {
         {/* Active Filters Summary */}
         {activeFiltersCount > 0 && (
           <div className="flex flex-wrap gap-2 animate-fade-in-down">
-            {filters.ageGroup !== 'all' && (
+            {filters.ageGroup !== "all" && (
               <Badge variant="secondary" className="pl-1 pr-2 py-1 gap-1">
                 <XIcon
                   className="h-3 w-3 cursor-pointer"
-                  onClick={() => setFilters({ ...filters, ageGroup: 'all' })}
+                  onClick={() => setFilters({ ...filters, ageGroup: "all" })}
                 />
                 Idade: {filters.ageGroup}
               </Badge>
@@ -182,18 +182,18 @@ export default function KidsFriendlyList() {
                     })
                   }
                 />
-                {p === 'morning'
-                  ? 'Manhã'
-                  : p === 'afternoon'
-                    ? 'Tarde'
-                    : 'Noite'}
+                {p === "morning"
+                  ? "Manhã"
+                  : p === "afternoon"
+                    ? "Tarde"
+                    : "Noite"}
               </Badge>
             ))}
             <Button
               variant="ghost"
               size="sm"
               onClick={() =>
-                setFilters({ activities: [], ageGroup: 'all', periods: [] })
+                setFilters({ activities: [], ageGroup: "all", periods: [] })
               }
               className="h-6 text-xs text-muted-foreground px-2"
             >
@@ -237,11 +237,11 @@ export default function KidsFriendlyList() {
                   variant="secondary"
                   className={`backdrop-blur shadow-sm ${
                     venue.isFree
-                      ? 'bg-green-500/90 text-white'
-                      : 'bg-yellow-500/90 text-white'
+                      ? "bg-green-500/90 text-white"
+                      : "bg-yellow-500/90 text-white"
                   }`}
                 >
-                  {venue.isFree ? 'Grátis' : 'Pago'}
+                  {venue.isFree ? "Grátis" : "Pago"}
                 </Badge>
                 <Badge
                   variant="secondary"
@@ -303,7 +303,7 @@ export default function KidsFriendlyList() {
             <Button
               variant="link"
               onClick={() =>
-                setFilters({ activities: [], ageGroup: 'all', periods: [] })
+                setFilters({ activities: [], ageGroup: "all", periods: [] })
               }
             >
               Limpar filtros
@@ -455,7 +455,7 @@ export default function KidsFriendlyList() {
                       Valor por criança
                     </span>
                     <span className="text-lg font-bold text-primary">
-                      {selectedVenue.isFree ? 'Grátis' : 'Sob consulta'}
+                      {selectedVenue.isFree ? "Grátis" : "Sob consulta"}
                     </span>
                   </div>
                   <Button

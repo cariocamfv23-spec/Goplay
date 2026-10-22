@@ -1,14 +1,14 @@
-import { supabase } from '@/lib/supabase/client'
-import type { Database } from '@/lib/supabase/types'
+import { supabase } from "@/lib/supabase/client"
+import type { Database } from "@/lib/supabase/types"
 
-export type AccountType = 'athlete' | 'club' | 'coach'
+export type AccountType = "athlete" | "club" | "coach"
 
 export interface ProfileRow {
   id: string
   full_name: string | null
   avatar_url: string | null
   cover_url?: string | null
-  cover_type?: 'image' | 'video' | string | null
+  cover_type?: "image" | "video" | string | null
   cover_position_x?: number | null
   cover_position_y?: number | null
   cover_zoom?: number | null
@@ -35,16 +35,14 @@ export interface ProfileRow {
   is_admin?: boolean
 }
 
-export type ProfileUpdate = Partial<
-  Omit<ProfileRow, 'id' | 'created_at' | 'updated_at'>
->
+export type ProfileUpdate = Partial<Omit<ProfileRow, "id" | "created_at" | "updated_at">>
 
 export interface PublicProfileItem {
   id: string
   full_name: string | null
   avatar_url: string | null
   cover_url?: string | null
-  cover_type?: 'image' | 'video' | string | null
+  cover_type?: "image" | "video" | string | null
   account_type: AccountType
   sport: string | null
   position: string | null
@@ -62,24 +60,25 @@ export const profileService = {
   /**
    * Fetches the authenticated user's complete profile.
    */
-  async getMyProfile(
-    userId: string,
-  ): Promise<{ data: ProfileRow | null; error: Error | null }> {
+  async getMyProfile(userId: string): Promise<{
+    data: ProfileRow | null
+    error: Error | null
+  }> {
     try {
       if (!userId) {
-        return { data: null, error: new Error('ID do usuário não fornecido.') }
+        return { data: null, error: new Error("ID do usuário não fornecido.") }
       }
 
       const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
         .maybeSingle()
 
       if (error) {
         return { data: null, error: new Error(error.message) }
       }
-      return { data: (data as unknown as ProfileRow) ?? null, error: null }
+      return { data: data as unknown as ProfileRow ?? null, error: null }
     } catch (err: any) {
       return {
         data: null,
@@ -92,24 +91,25 @@ export const profileService = {
    * Fetches any user's profile by ID.
    * Note: sensitive fields like birth_date should not be shown publicly
    */
-  async getProfileById(
-    profileId: string,
-  ): Promise<{ data: ProfileRow | null; error: Error | null }> {
+  async getProfileById(profileId: string): Promise<{
+    data: ProfileRow | null
+    error: Error | null
+  }> {
     try {
       if (!profileId) {
-        return { data: null, error: new Error('ID de perfil não fornecido.') }
+        return { data: null, error: new Error("ID de perfil não fornecido.") }
       }
 
       const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', profileId)
+        .from("profiles")
+        .select("*")
+        .eq("id", profileId)
         .maybeSingle()
 
       if (error) {
         return { data: null, error: new Error(error.message) }
       }
-      return { data: (data as unknown as ProfileRow) ?? null, error: null }
+      return { data: data as unknown as ProfileRow ?? null, error: null }
     } catch (err: any) {
       return {
         data: null,
@@ -122,13 +122,13 @@ export const profileService = {
    * Updates only permitted fields of the current user's profile.
    * RLS and database constraints prevent updating another user's profile or escalating privileges.
    */
-  async updateMyProfile(
-    userId: string,
-    updates: ProfileUpdate,
-  ): Promise<{ data: ProfileRow | null; error: Error | null }> {
+  async updateMyProfile(userId: string, updates: ProfileUpdate): Promise<{
+    data: ProfileRow | null
+    error: Error | null
+  }> {
     try {
       if (!userId) {
-        return { data: null, error: new Error('ID do usuário não fornecido.') }
+        return { data: null, error: new Error("ID do usuário não fornecido.") }
       }
 
       // Explicitly reject prohibited or unapproved fields
@@ -139,16 +139,16 @@ export const profileService = {
       delete (sanitizedUpdates as any).is_admin
 
       const { data, error } = await supabase
-        .from('profiles')
+        .from("profiles")
         .update(sanitizedUpdates as any)
-        .eq('id', userId)
+        .eq("id", userId)
         .select()
         .single()
 
       if (error) {
         return { data: null, error: new Error(error.message) }
       }
-      return { data: (data as unknown as ProfileRow) ?? null, error: null }
+      return { data: data as unknown as ProfileRow ?? null, error: null }
     } catch (err: any) {
       return {
         data: null,
@@ -160,23 +160,23 @@ export const profileService = {
   /**
    * Upload an avatar to the avatars bucket and return its public URL.
    */
-  async uploadAvatar(
-    userId: string,
-    file: File,
-  ): Promise<{ url: string | null; error: Error | null }> {
+  async uploadAvatar(userId: string, file: File): Promise<{
+    url: string | null
+    error: Error | null
+  }> {
     try {
       if (!userId) {
         return {
           data: null,
-          error: new Error('Usuário não autenticado.'),
+          error: new Error("Usuário não autenticado."),
         } as any
       }
 
-      const fileExt = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+      const fileExt = file.name.split(".").pop()?.toLowerCase() || "jpg"
       const filePath = `${userId}/avatar_${Date.now()}.${fileExt}`
 
       const { error: uploadError } = await supabase.storage
-        .from('avatars')
+        .from("avatars")
         .upload(filePath, file, {
           upsert: true,
           contentType: file.type,
@@ -186,7 +186,7 @@ export const profileService = {
         return { url: null, error: new Error(uploadError.message) }
       }
 
-      const { data } = supabase.storage.from('avatars').getPublicUrl(filePath)
+      const { data } = supabase.storage.from("avatars").getPublicUrl(filePath)
       return { url: data.publicUrl, error: null }
     } catch (err: any) {
       return {
@@ -199,32 +199,29 @@ export const profileService = {
   /**
    * Upload a cover image or short video loop to the covers bucket and return its public URL.
    */
-  async uploadCover(
-    userId: string,
-    file: File,
-  ): Promise<{
+  async uploadCover(userId: string, file: File): Promise<{
     url: string | null
-    type: 'image' | 'video'
+    type: "image" | "video"
     error: Error | null
   }> {
     try {
       if (!userId) {
         return {
           url: null,
-          type: 'image',
-          error: new Error('Usuário não autenticado.'),
+          type: "image",
+          error: new Error("Usuário não autenticado."),
         }
       }
 
-      const isVideo = file.type.startsWith('video/')
-      const type: 'image' | 'video' = isVideo ? 'video' : 'image'
+      const isVideo = file.type.startsWith("video/")
+      const type: "image" | "video" = isVideo ? "video" : "image"
 
       const fileExt =
-        file.name.split('.').pop()?.toLowerCase() || (isVideo ? 'mp4' : 'jpg')
+        file.name.split(".").pop()?.toLowerCase() || (isVideo ? "mp4" : "jpg")
       const filePath = `${userId}/cover_${Date.now()}.${fileExt}`
 
       const { error: uploadError } = await supabase.storage
-        .from('covers')
+        .from("covers")
         .upload(filePath, file, {
           upsert: true,
           contentType: file.type,
@@ -234,12 +231,12 @@ export const profileService = {
         return { url: null, type, error: new Error(uploadError.message) }
       }
 
-      const { data } = supabase.storage.from('covers').getPublicUrl(filePath)
+      const { data } = supabase.storage.from("covers").getPublicUrl(filePath)
       return { url: data.publicUrl, type, error: null }
     } catch (err: any) {
       return {
         url: null,
-        type: 'image',
+        type: "image",
         error: err instanceof Error ? err : new Error(String(err)),
       }
     }
@@ -251,18 +248,18 @@ export const profileService = {
   async removeCover(userId: string): Promise<{ error: Error | null }> {
     try {
       if (!userId) {
-        return { error: new Error('Usuário não autenticado.') }
+        return { error: new Error("Usuário não autenticado.") }
       }
       const { error } = await supabase
-        .from('profiles')
+        .from("profiles")
         .update({
           cover_url: null,
-          cover_type: 'image',
+          cover_type: "image",
           cover_position_x: 50,
           cover_position_y: 50,
           cover_zoom: 1,
         } as any)
-        .eq('id', userId)
+        .eq("id", userId)
 
       if (error) {
         return { error: new Error(error.message) }
@@ -282,15 +279,15 @@ export const profileService = {
   }> {
     try {
       const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .ilike('id', '11111111-0000-0000-0000-%')
-        .order('created_at', { ascending: true })
+        .from("profiles")
+        .select("*")
+        .ilike("id", "11111111-0000-0000-0000-%")
+        .order("created_at", { ascending: true })
 
       if (error) {
         return { data: [], error: new Error(error.message) }
       }
-      return { data: (data as unknown as ProfileRow[]) ?? [], error: null }
+      return { data: data as unknown as ProfileRow[] ?? [], error: null }
     } catch (err: any) {
       return {
         data: [],

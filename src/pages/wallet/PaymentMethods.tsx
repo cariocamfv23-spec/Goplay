@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { ArrowLeft, CreditCard, Plus, Trash2 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { ArrowLeft, CreditCard, Plus, Trash2 } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 export default function PaymentMethods() {
   const navigate = useNavigate()

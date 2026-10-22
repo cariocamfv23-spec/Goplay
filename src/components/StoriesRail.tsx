@@ -1,12 +1,12 @@
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Plus, Radio } from 'lucide-react'
-import { mockStories, mockCurrentUser } from '@/lib/data'
-import { cn } from '@/lib/utils'
-import React, { useState } from 'react'
-import { SportSeparator3D } from '@/components/SportSeparator3D'
-import { LiveStoryModal } from '@/components/LiveStoryModal'
-import { useNavigate } from 'react-router-dom'
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Plus, Radio } from "lucide-react"
+import { mockStories, mockCurrentUser } from "@/lib/data"
+import { cn } from "@/lib/utils"
+import React, { useState } from "react"
+import { SportSeparator3D } from "@/components/SportSeparator3D"
+import { LiveStoryModal } from "@/components/LiveStoryModal"
+import { useNavigate } from "react-router-dom"
 
 export function StoriesRail() {
   const [liveStoryOpen, setLiveStoryOpen] = useState(false)
@@ -39,7 +39,7 @@ export function StoriesRail() {
           {/* GO LIVE BUTTON (Transmitir) */}
           <div
             className="flex flex-col items-center gap-1.5 cursor-pointer group hover:-translate-y-1 transition-transform duration-300 ml-1"
-            onClick={() => navigate('/live/broadcast')}
+            onClick={() => navigate("/live/broadcast")}
           >
             <div className="relative rounded-full p-[2px] bg-gradient-to-tr from-rose-500 to-red-600 group-hover:scale-105 shadow-sm group-hover:shadow-lg transition-all duration-300 ring-2 ring-background flex items-center justify-center w-[68px] h-[68px]">
               <div className="bg-background rounded-full w-full h-full flex items-center justify-center border-2 border-background">
@@ -88,10 +88,10 @@ export function StoriesRail() {
               <div className="flex flex-col items-center gap-1.5 cursor-pointer group hover:-translate-y-1 transition-transform duration-300">
                 <div
                   className={cn(
-                    'rounded-full p-[2px] transition-all duration-300 group-hover:scale-105 shadow-sm group-hover:shadow-lg',
+                    "rounded-full p-[2px] transition-all duration-300 group-hover:scale-105 shadow-sm group-hover:shadow-lg",
                     story.viewed
-                      ? 'bg-muted'
-                      : 'bg-gradient-to-tr from-primary via-purple-500 to-gold',
+                      ? "bg-muted"
+                      : "bg-gradient-to-tr from-primary via-purple-500 to-gold",
                   )}
                 >
                   <Avatar className="w-16 h-16 border-2 border-background">

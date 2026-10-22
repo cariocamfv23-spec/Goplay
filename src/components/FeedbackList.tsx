@@ -1,14 +1,14 @@
-import { mockFeedbacks } from '@/lib/data'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Card, CardContent } from '@/components/ui/card'
-import { Star, MessageSquarePlus } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { toast } from 'sonner'
+import { mockFeedbacks } from "@/lib/data"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Card, CardContent } from "@/components/ui/card"
+import { Star, MessageSquarePlus } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 
 export function FeedbackList() {
   const handleRequestFeedback = () => {
-    toast.success('Solicitação enviada!', {
-      description: 'Seus treinadores e amigos foram notificados.',
+    toast.success("Solicitação enviada!", {
+      description: "Seus treinadores e amigos foram notificados.",
     })
   }
 

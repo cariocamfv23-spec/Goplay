@@ -1,11 +1,11 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import { Goal, mockGoals } from '@/lib/data'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
+import { Goal, mockGoals } from "@/lib/data"
 
 interface GoalState {
   goals: Goal[]
   addGoal: (
-    goal: Omit<Goal, 'id' | 'createdAt' | 'status' | 'progress'>,
+    goal: Omit<Goal, "id" | "createdAt" | "status" | "progress">,
   ) => void
   updateGoal: (id: string, data: Partial<Goal>) => void
   deleteGoal: (id: string) => void
@@ -21,7 +21,7 @@ export const useGoalStore = create<GoalState>()(
           const newGoal: Goal = {
             ...data,
             id: Math.random().toString(36).substr(2, 9),
-            status: 'active',
+            status: "active",
             progress: 0,
             createdAt: new Date().toISOString(),
           }
@@ -41,13 +41,13 @@ export const useGoalStore = create<GoalState>()(
         set((state) => ({
           goals: state.goals.map((goal) =>
             goal.id === id
-              ? { ...goal, status: 'completed', progress: 100 }
+              ? { ...goal, status: "completed", progress: 100 }
               : goal,
           ),
         })),
     }),
     {
-      name: 'goplay-goal-storage',
+      name: "goplay-goal-storage",
     },
   ),
 )

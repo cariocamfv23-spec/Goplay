@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef } from "react"
 import {
   ArrowLeft,
   Wand2,
@@ -21,22 +21,22 @@ import {
   MonitorPlay,
   Trash2,
   RefreshCw,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { toast } from 'sonner'
-import { ShareDialog } from '@/components/ShareDialog'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { toast } from "sonner"
+import { ShareDialog } from "@/components/ShareDialog"
+import { cn } from "@/lib/utils"
 
-type TemplateType = 'matchup' | 'event' | 'fight'
-type LayoutStyle = 'classic' | 'modern' | 'bold'
-type ImageSource = 'ai' | 'upload'
+type TemplateType = "matchup" | "event" | "fight"
+type LayoutStyle = "classic" | "modern" | "bold"
+type ImageSource = "ai" | "upload"
 
 interface FlyerData {
   title: string
@@ -61,93 +61,94 @@ export default function FlyerCreator() {
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const [step, setStep] = useState<
-    'select' | 'details' | 'design' | 'generating' | 'result'
-  >('select')
+  const [step, setStep] =
+    useState<"select" | "details" | "design" | "generating" | "result">(
+      "select",
+    )
 
   const [selectedTemplate, setSelectedTemplate] =
-    useState<TemplateType>('matchup')
+    useState<TemplateType>("matchup")
 
   const [showShare, setShowShare] = useState(false)
 
   const [flyerData, setFlyerData] = useState<FlyerData>({
-    title: '',
-    teamA: '',
-    teamB: '',
-    date: '',
-    time: '',
-    location: '',
-    category: '',
+    title: "",
+    teamA: "",
+    teamB: "",
+    date: "",
+    time: "",
+    location: "",
+    category: "",
   })
 
   const [designData, setDesignData] = useState<DesignData>({
-    layout: 'classic',
-    primaryColor: '#ffffff',
-    secondaryColor: '#ef4444', // Default Red
-    imageSource: 'ai',
+    layout: "classic",
+    primaryColor: "#ffffff",
+    secondaryColor: "#ef4444", // Default Red
+    imageSource: "ai",
     customImage: null,
     aiGeneratedImage: null,
   })
 
   const templates = [
     {
-      id: 'matchup',
-      name: 'Dia de Jogo',
-      description: 'Clássico confronto 1x1 ou Time vs Time',
+      id: "matchup",
+      name: "Dia de Jogo",
+      description: "Clássico confronto 1x1 ou Time vs Time",
       icon: Trophy,
-      color: 'bg-blue-500',
+      color: "bg-blue-500",
     },
     {
-      id: 'event',
-      name: 'Evento Esportivo',
-      description: 'Corridas, ciclismo e encontros gerais',
+      id: "event",
+      name: "Evento Esportivo",
+      description: "Corridas, ciclismo e encontros gerais",
       icon: Bike,
-      color: 'bg-green-500',
+      color: "bg-green-500",
     },
     {
-      id: 'fight',
-      name: 'Fight Night',
-      description: 'Boxe, MMA e artes marciais',
+      id: "fight",
+      name: "Fight Night",
+      description: "Boxe, MMA e artes marciais",
       icon: Swords,
-      color: 'bg-red-500',
+      color: "bg-red-500",
     },
   ]
 
   const colorPresets = [
-    '#ffffff', // White
-    '#000000', // Black
-    '#ef4444', // Red
-    '#3b82f6', // Blue
-    '#22c55e', // Green
-    '#eab308', // Yellow
-    '#a855f7', // Purple
-    '#ec4899', // Pink
+    "#ffffff", // White
+    "#000000", // Black
+    "#ef4444", // Red
+    "#3b82f6", // Blue
+    "#22c55e", // Green
+    "#eab308", // Yellow
+    "#a855f7", // Purple
+    "#ec4899", // Pink
   ]
 
   const handleTemplateSelect = (id: string) => {
     setSelectedTemplate(id as TemplateType)
     // Set default colors based on template
-    if (id === 'matchup')
-      setDesignData((prev) => ({ ...prev, secondaryColor: '#eab308' }))
-    if (id === 'event')
-      setDesignData((prev) => ({ ...prev, secondaryColor: '#22c55e' }))
-    if (id === 'fight')
-      setDesignData((prev) => ({ ...prev, secondaryColor: '#ef4444' }))
-    setStep('details')
+    if (id === "matchup")
+      setDesignData((prev) => ({ ...prev, secondaryColor: "#eab308" }))
+    if (id === "event")
+      setDesignData((prev) => ({ ...prev, secondaryColor: "#22c55e" }))
+    if (id === "fight")
+      setDesignData((prev) => ({ ...prev, secondaryColor: "#ef4444" }))
+    setStep("details")
   }
 
   const handleDetailsSubmit = () => {
     if (
-      (selectedTemplate === 'matchup' &&
+      (selectedTemplate === "matchup" &&
         (!flyerData.teamA || !flyerData.teamB)) ||
-      (selectedTemplate === 'event' && !flyerData.title) ||
+      (selectedTemplate === "event" && !flyerData.title) ||
       !flyerData.date ||
       !flyerData.location
     ) {
-      toast.error('Preencha as informações principais')
+      toast.error("Preencha as informações principais")
       return
     }
-    setStep('design')
+    setStep("design")
   }
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -158,7 +159,7 @@ export default function FlyerCreator() {
         setDesignData((prev) => ({
           ...prev,
           customImage: reader.result as string,
-          imageSource: 'upload',
+          imageSource: "upload",
         }))
       }
       reader.readAsDataURL(file)
@@ -166,83 +167,83 @@ export default function FlyerCreator() {
   }
 
   const handleGenerate = () => {
-    if (designData.imageSource === 'upload' && !designData.customImage) {
-      toast.error('Por favor, faça o upload de uma imagem')
+    if (designData.imageSource === "upload" && !designData.customImage) {
+      toast.error("Por favor, faça o upload de uma imagem")
       return
     }
 
-    if (designData.imageSource === 'ai') {
-      setStep('generating')
+    if (designData.imageSource === "ai") {
+      setStep("generating")
 
       // Determine query based on data
-      let query = 'sports stadium'
-      if (selectedTemplate === 'fight')
-        query = 'boxing ring mma dark atmosphere'
-      if (selectedTemplate === 'event')
-        query = `${flyerData.category || 'sports'} event outdoor`
-      if (selectedTemplate === 'matchup')
-        query = `${flyerData.category || 'soccer'} stadium night match`
+      let query = "sports stadium"
+      if (selectedTemplate === "fight")
+        query = "boxing ring mma dark atmosphere"
+      if (selectedTemplate === "event")
+        query = `${flyerData.category || "sports"} event outdoor`
+      if (selectedTemplate === "matchup")
+        query = `${flyerData.category || "soccer"} stadium night match`
 
       // Simulate AI generation
       setTimeout(() => {
         // Use placeholder with query
-        const aiImage = `https://img.usecurling.com/p/600/800?q=${encodeURIComponent(query)}&color=${designData.secondaryColor.replace('#', '')}`
+        const aiImage = `https://img.usecurling.com/p/600/800?q=${encodeURIComponent(query)}&color=${designData.secondaryColor.replace("#", "")}`
         setDesignData((prev) => ({ ...prev, aiGeneratedImage: aiImage }))
-        setStep('result')
-        toast.success('Flyer gerado com sucesso!')
+        setStep("result")
+        toast.success("Flyer gerado com sucesso!")
       }, 3000)
     } else {
       // Direct to result for upload
-      setStep('result')
-      toast.success('Flyer criado com sucesso!')
+      setStep("result")
+      toast.success("Flyer criado com sucesso!")
     }
   }
 
   const handleDownload = () => {
-    toast.success('Download iniciado...', {
-      description: 'A imagem foi salva na sua galeria.',
+    toast.success("Download iniciado...", {
+      description: "A imagem foi salva na sua galeria.",
     })
   }
 
   // Visual component for the flyer preview
   const FlyerPreview = ({ interactive = false }: { interactive?: boolean }) => {
     // Determine background image
-    let bgImage = ''
-    if (designData.imageSource === 'upload' && designData.customImage) {
+    let bgImage = ""
+    if (designData.imageSource === "upload" && designData.customImage) {
       bgImage = designData.customImage
     } else if (
-      designData.imageSource === 'ai' &&
+      designData.imageSource === "ai" &&
       designData.aiGeneratedImage &&
-      step === 'result'
+      step === "result"
     ) {
       bgImage = designData.aiGeneratedImage
     } else {
       // Preview/Placeholder for Design Step
       switch (selectedTemplate) {
-        case 'fight':
+        case "fight":
           bgImage =
-            'https://img.usecurling.com/p/600/800?q=boxing%20ring%20dark&color=red'
+            "https://img.usecurling.com/p/600/800?q=boxing%20ring%20dark&color=red"
           break
-        case 'event':
+        case "event":
           bgImage =
-            'https://img.usecurling.com/p/600/800?q=road%20race%20cycling&color=green'
+            "https://img.usecurling.com/p/600/800?q=road%20race%20cycling&color=green"
           break
         default:
           bgImage =
-            'https://img.usecurling.com/p/600/800?q=soccer%20stadium%20night&color=blue'
+            "https://img.usecurling.com/p/600/800?q=soccer%20stadium%20night&color=blue"
       }
     }
 
     // Styles based on Layout
-    const isClassic = designData.layout === 'classic'
-    const isModern = designData.layout === 'modern'
-    const isBold = designData.layout === 'bold'
+    const isClassic = designData.layout === "classic"
+    const isModern = designData.layout === "modern"
+    const isBold = designData.layout === "bold"
 
     return (
       <div
         className={cn(
-          'relative w-full aspect-[3/4] overflow-hidden shadow-2xl bg-black group transition-all duration-500',
-          interactive ? 'rounded-xl' : 'rounded-none',
+          "relative w-full aspect-[3/4] overflow-hidden shadow-2xl bg-black group transition-all duration-500",
+          interactive ? "rounded-xl" : "rounded-none",
         )}
       >
         {/* Background Image */}
@@ -251,9 +252,9 @@ export default function FlyerCreator() {
             src={bgImage}
             alt="Background"
             className={cn(
-              'absolute inset-0 w-full h-full object-cover transition-transform duration-700',
-              step === 'result' ? '' : 'opacity-80',
-              isBold ? 'grayscale opacity-50 contrast-125' : 'opacity-70',
+              "absolute inset-0 w-full h-full object-cover transition-transform duration-700",
+              step === "result" ? "" : "opacity-80",
+              isBold ? "grayscale opacity-50 contrast-125" : "opacity-70",
             )}
           />
         </div>
@@ -284,26 +285,26 @@ export default function FlyerCreator() {
         {/* Content Overlay */}
         <div
           className={cn(
-            'absolute inset-0 p-6 flex flex-col text-white transition-all duration-500',
-            isClassic ? 'justify-between text-center' : '',
-            isModern ? 'justify-end text-left pl-8 pb-10' : '',
-            isBold ? 'justify-center items-center text-center' : '',
+            "absolute inset-0 p-6 flex flex-col text-white transition-all duration-500",
+            isClassic ? "justify-between text-center" : "",
+            isModern ? "justify-end text-left pl-8 pb-10" : "",
+            isBold ? "justify-center items-center text-center" : "",
           )}
         >
           {/* Header */}
           <div
             className={cn(
-              'space-y-2',
-              isClassic ? 'mt-4' : '',
-              isModern ? 'absolute top-6 left-6' : '',
-              isBold ? 'absolute top-10' : '',
+              "space-y-2",
+              isClassic ? "mt-4" : "",
+              isModern ? "absolute top-6 left-6" : "",
+              isBold ? "absolute top-10" : "",
             )}
           >
             <Badge
               className="backdrop-blur-md border-0 uppercase tracking-widest text-[10px]"
               style={{
-                backgroundColor: isModern ? 'white' : 'rgba(255,255,255,0.2)',
-                color: isModern ? 'black' : 'white',
+                backgroundColor: isModern ? "white" : "rgba(255,255,255,0.2)",
+                color: isModern ? "black" : "white",
               }}
             >
               Goplay Presents
@@ -318,54 +319,54 @@ export default function FlyerCreator() {
                     : designData.primaryColor,
                 }}
               >
-                {selectedTemplate === 'event'
-                  ? flyerData.title || 'NOME DO EVENTO'
-                  : selectedTemplate === 'fight'
-                    ? 'FIGHT NIGHT'
-                    : 'MATCH DAY'}
+                {selectedTemplate === "event"
+                  ? flyerData.title || "NOME DO EVENTO"
+                  : selectedTemplate === "fight"
+                    ? "FIGHT NIGHT"
+                    : "MATCH DAY"}
               </h2>
             )}
           </div>
 
           {/* Main Content (Teams/Event) */}
           <div className="space-y-4 my-auto w-full">
-            {selectedTemplate === 'matchup' || selectedTemplate === 'fight' ? (
+            {selectedTemplate === "matchup" || selectedTemplate === "fight" ? (
               <div
                 className={cn(
-                  'flex gap-4 items-center',
-                  isModern ? 'flex-col items-start' : 'flex-col',
+                  "flex gap-4 items-center",
+                  isModern ? "flex-col items-start" : "flex-col",
                 )}
               >
                 <div className="w-full">
                   <h3
                     className={cn(
-                      'font-bold uppercase truncate drop-shadow-md',
-                      isBold ? 'text-5xl' : 'text-3xl',
-                      isModern ? 'text-4xl text-left' : '',
+                      "font-bold uppercase truncate drop-shadow-md",
+                      isBold ? "text-5xl" : "text-3xl",
+                      isModern ? "text-4xl text-left" : "",
                     )}
                     style={{
-                      color: isBold ? 'white' : designData.primaryColor,
+                      color: isBold ? "white" : designData.primaryColor,
                     }}
                   >
-                    {flyerData.teamA || 'TIME A'}
+                    {flyerData.teamA || "TIME A"}
                   </h3>
                 </div>
 
                 <div
                   className={cn(
-                    'flex items-center justify-center font-black italic',
+                    "flex items-center justify-center font-black italic",
                     isBold
-                      ? 'text-6xl text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500'
-                      : 'h-10 w-10 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-sm',
+                      ? "text-6xl text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500"
+                      : "h-10 w-10 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-sm",
                   )}
                   style={
                     isModern
                       ? {
                           color: designData.primaryColor,
-                          background: 'none',
+                          background: "none",
                           padding: 0,
-                          justifyContent: 'flex-start',
-                          border: 'none',
+                          justifyContent: "flex-start",
+                          border: "none",
                         }
                       : {}
                   }
@@ -376,30 +377,30 @@ export default function FlyerCreator() {
                 <div className="w-full">
                   <h3
                     className={cn(
-                      'font-bold uppercase truncate drop-shadow-md',
-                      isBold ? 'text-5xl' : 'text-3xl',
-                      isModern ? 'text-4xl text-left' : '',
+                      "font-bold uppercase truncate drop-shadow-md",
+                      isBold ? "text-5xl" : "text-3xl",
+                      isModern ? "text-4xl text-left" : "",
                     )}
                     style={{
-                      color: isBold ? 'white' : designData.primaryColor,
+                      color: isBold ? "white" : designData.primaryColor,
                     }}
                   >
-                    {flyerData.teamB || 'TIME B'}
+                    {flyerData.teamB || "TIME B"}
                   </h3>
                 </div>
               </div>
             ) : (
-              <div className={cn('w-full', isModern ? 'pl-2' : 'px-4')}>
+              <div className={cn("w-full", isModern ? "pl-2" : "px-4")}>
                 {isModern && (
                   <h2 className="text-4xl font-black uppercase tracking-tighter leading-none drop-shadow-lg mb-4 text-white">
-                    {flyerData.title || 'NOME DO EVENTO'}
+                    {flyerData.title || "NOME DO EVENTO"}
                   </h2>
                 )}
                 <p
                   className="text-2xl font-black uppercase opacity-90 leading-tight"
                   style={{ color: designData.secondaryColor }}
                 >
-                  {flyerData.category || 'Categoria Livre'}
+                  {flyerData.category || "Categoria Livre"}
                 </p>
               </div>
             )}
@@ -408,18 +409,18 @@ export default function FlyerCreator() {
           {/* Footer Info */}
           <div
             className={cn(
-              'space-y-3',
-              isClassic ? 'mb-4' : '',
-              isModern ? 'mb-0' : '',
-              isBold ? 'absolute bottom-10 w-full px-10' : '',
+              "space-y-3",
+              isClassic ? "mb-4" : "",
+              isModern ? "mb-0" : "",
+              isBold ? "absolute bottom-10 w-full px-10" : "",
             )}
           >
             <div
               className={cn(
-                'flex flex-col gap-2 text-sm font-medium backdrop-blur-md p-4 rounded-xl border border-white/10',
+                "flex flex-col gap-2 text-sm font-medium backdrop-blur-md p-4 rounded-xl border border-white/10",
                 isModern
-                  ? 'bg-transparent border-none p-0 items-start'
-                  : 'bg-black/40',
+                  ? "bg-transparent border-none p-0 items-start"
+                  : "bg-black/40",
               )}
             >
               <div className="flex items-center gap-2">
@@ -427,14 +428,14 @@ export default function FlyerCreator() {
                   className="h-4 w-4"
                   style={{ color: designData.secondaryColor }}
                 />
-                <span>{flyerData.date || 'Data do Evento'}</span>
+                <span>{flyerData.date || "Data do Evento"}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock
                   className="h-4 w-4"
                   style={{ color: designData.secondaryColor }}
                 />
-                <span>{flyerData.time || 'Horário'}</span>
+                <span>{flyerData.time || "Horário"}</span>
               </div>
               <div className="flex items-center gap-2 text-left">
                 <MapPin
@@ -442,7 +443,7 @@ export default function FlyerCreator() {
                   style={{ color: designData.secondaryColor }}
                 />
                 <span className="truncate">
-                  {flyerData.location || 'Localização'}
+                  {flyerData.location || "Localização"}
                 </span>
               </div>
             </div>
@@ -468,11 +469,11 @@ export default function FlyerCreator() {
           variant="ghost"
           size="icon"
           onClick={() => {
-            if (step === 'select') navigate(-1)
-            else if (step === 'generating') return
-            else if (step === 'result') setStep('design')
-            else if (step === 'design') setStep('details')
-            else setStep('select')
+            if (step === "select") navigate(-1)
+            else if (step === "generating") return
+            else if (step === "result") setStep("design")
+            else if (step === "design") setStep("details")
+            else setStep("select")
           }}
           className="rounded-full"
         >
@@ -483,7 +484,7 @@ export default function FlyerCreator() {
 
       <div className="p-4 max-w-4xl mx-auto w-full">
         {/* STEP 1: SELECT TEMPLATE */}
-        {step === 'select' && (
+        {step === "select" && (
           <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500 max-w-md mx-auto">
             <div className="text-center space-y-2">
               <h2 className="text-2xl font-bold">Escolha um Modelo</h2>
@@ -502,16 +503,16 @@ export default function FlyerCreator() {
                   <CardContent className="p-0 flex">
                     <div
                       className={cn(
-                        'w-3 bg-gradient-to-b from-primary/50 to-primary',
+                        "w-3 bg-gradient-to-b from-primary/50 to-primary",
                         template.color
-                          .replace('bg-', 'from-')
-                          .replace('500', ''),
+                          .replace("bg-", "from-")
+                          .replace("500", ""),
                       )}
                     />
                     <div className="p-5 flex items-center gap-4 w-full">
                       <div
                         className={cn(
-                          'h-12 w-12 rounded-full flex items-center justify-center shrink-0 shadow-md',
+                          "h-12 w-12 rounded-full flex items-center justify-center shrink-0 shadow-md",
                           template.color,
                         )}
                       >
@@ -537,7 +538,7 @@ export default function FlyerCreator() {
         )}
 
         {/* STEP 2: DETAILS */}
-        {step === 'details' && (
+        {step === "details" && (
           <div className="space-y-6 animate-in slide-in-from-right-4 duration-500 max-w-md mx-auto">
             <div className="space-y-1">
               <h2 className="text-xl font-bold">Detalhes do Evento</h2>
@@ -547,7 +548,7 @@ export default function FlyerCreator() {
             </div>
 
             <div className="space-y-4">
-              {selectedTemplate === 'event' && (
+              {selectedTemplate === "event" && (
                 <div className="space-y-2">
                   <Label>Nome do Evento</Label>
                   <Input
@@ -560,14 +561,14 @@ export default function FlyerCreator() {
                 </div>
               )}
 
-              {(selectedTemplate === 'matchup' ||
-                selectedTemplate === 'fight') && (
+              {(selectedTemplate === "matchup" ||
+                selectedTemplate === "fight") && (
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>
-                      {selectedTemplate === 'fight'
-                        ? 'Lutador A'
-                        : 'Time da Casa'}
+                      {selectedTemplate === "fight"
+                        ? "Lutador A"
+                        : "Time da Casa"}
                     </Label>
                     <Input
                       placeholder="Nome"
@@ -579,7 +580,7 @@ export default function FlyerCreator() {
                   </div>
                   <div className="space-y-2">
                     <Label>
-                      {selectedTemplate === 'fight' ? 'Lutador B' : 'Visitante'}
+                      {selectedTemplate === "fight" ? "Lutador B" : "Visitante"}
                     </Label>
                     <Input
                       placeholder="Nome"
@@ -592,7 +593,7 @@ export default function FlyerCreator() {
                 </div>
               )}
 
-              {selectedTemplate === 'event' && (
+              {selectedTemplate === "event" && (
                 <div className="space-y-2">
                   <Label>Categoria</Label>
                   <Input
@@ -655,14 +656,14 @@ export default function FlyerCreator() {
         )}
 
         {/* STEP 3: DESIGN (NEW) */}
-        {step === 'design' && (
+        {step === "design" && (
           <div className="flex flex-col md:flex-row gap-8 animate-in fade-in duration-500">
             {/* Preview Section */}
             <div className="flex-1 order-1 md:order-2">
               <div className="sticky top-20 mx-auto max-w-sm">
                 <div className="mb-2 flex items-center justify-between">
                   <h3 className="font-bold text-sm">Preview em Tempo Real</h3>
-                  {designData.imageSource === 'ai' && (
+                  {designData.imageSource === "ai" && (
                     <Badge variant="outline" className="text-[10px] gap-1">
                       <Wand2 className="h-3 w-3" /> Imagem IA
                     </Badge>
@@ -741,10 +742,10 @@ export default function FlyerCreator() {
                       <button
                         key={`primary-${color}`}
                         className={cn(
-                          'h-8 w-8 rounded-full border border-border transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+                          "h-8 w-8 rounded-full border border-border transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
                           designData.primaryColor === color
-                            ? 'ring-2 ring-primary ring-offset-2 scale-110'
-                            : '',
+                            ? "ring-2 ring-primary ring-offset-2 scale-110"
+                            : "",
                         )}
                         style={{ backgroundColor: color }}
                         onClick={() =>
@@ -795,10 +796,10 @@ export default function FlyerCreator() {
                       <button
                         key={`secondary-${color}`}
                         className={cn(
-                          'h-8 w-8 rounded-full border border-border transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+                          "h-8 w-8 rounded-full border border-border transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
                           designData.secondaryColor === color
-                            ? 'ring-2 ring-primary ring-offset-2 scale-110'
-                            : '',
+                            ? "ring-2 ring-primary ring-offset-2 scale-110"
+                            : "",
                         )}
                         style={{ backgroundColor: color }}
                         onClick={() =>
@@ -933,7 +934,7 @@ export default function FlyerCreator() {
                 className="w-full h-12 text-lg font-bold shadow-lg mt-8 gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-700"
                 onClick={handleGenerate}
               >
-                {designData.imageSource === 'ai' ? (
+                {designData.imageSource === "ai" ? (
                   <>
                     <Wand2 className="h-5 w-5" />
                     Gerar Flyer
@@ -950,7 +951,7 @@ export default function FlyerCreator() {
         )}
 
         {/* STEP 4: GENERATING */}
-        {step === 'generating' && (
+        {step === "generating" && (
           <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-8 animate-in zoom-in duration-500">
             <div className="relative">
               <div className="h-24 w-24 rounded-full border-4 border-muted flex items-center justify-center bg-secondary/30">
@@ -971,14 +972,14 @@ export default function FlyerCreator() {
         )}
 
         {/* STEP 5: RESULT */}
-        {step === 'result' && (
+        {step === "result" && (
           <div className="space-y-6 animate-in slide-in-from-bottom-8 duration-500 pb-10 max-w-md mx-auto">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold">Seu Flyer</h2>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setStep('design')}
+                onClick={() => setStep("design")}
               >
                 Editar Design
               </Button>
@@ -1006,11 +1007,11 @@ export default function FlyerCreator() {
               </Button>
             </div>
 
-            {designData.imageSource === 'ai' && (
+            {designData.imageSource === "ai" && (
               <Button
                 variant="ghost"
                 className="w-full text-xs text-muted-foreground gap-2"
-                onClick={() => setStep('generating')}
+                onClick={() => setStep("generating")}
               >
                 <RefreshCw className="h-3 w-3" />
                 Gerar nova imagem com IA

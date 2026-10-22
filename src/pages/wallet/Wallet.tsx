@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   Plus,
@@ -8,10 +8,10 @@ import {
   History,
   QrCode,
   Wallet as WalletIcon,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { Card, CardContent } from '@/components/ui/card'
-import { DigitalCard } from '@/components/DigitalCard'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Card, CardContent } from "@/components/ui/card"
+import { DigitalCard } from "@/components/DigitalCard"
 
 export default function Wallet() {
   const navigate = useNavigate()
@@ -90,7 +90,7 @@ export default function Wallet() {
 
           <Card
             className="hover:bg-secondary/20 cursor-pointer transition-colors border-none shadow-sm group active:scale-95 duration-200"
-            onClick={() => navigate('/financials/transactions')}
+            onClick={() => navigate("/financials/transactions")}
           >
             <CardContent className="p-4 flex flex-col items-center justify-center gap-2">
               <div className="p-3 rounded-full bg-orange-500/10 text-orange-600 group-hover:bg-orange-500 group-hover:text-white transition-colors">

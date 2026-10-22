@@ -5,8 +5,8 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
 import {
   MapPin,
   Loader2,
@@ -15,9 +15,9 @@ import {
   RefreshCw,
   X,
   Check,
-} from 'lucide-react'
-import { useState, useRef, useEffect } from 'react'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { useState, useRef, useEffect } from "react"
+import { cn } from "@/lib/utils"
 
 interface CheckInModalProps {
   open: boolean
@@ -30,13 +30,12 @@ interface CheckInModalProps {
 export function CheckInModal({
   open,
   onOpenChange,
-  venueName = 'Local do Evento',
+  venueName = "Local do Evento",
   points = 100,
   onSuccess,
 }: CheckInModalProps) {
-  const [step, setStep] = useState<
-    'idle' | 'camera' | 'preview' | 'loading' | 'success'
-  >('idle')
+  const [step, setStep] =
+    useState<"idle" | "camera" | "preview" | "loading" | "success">("idle")
   const [image, setImage] = useState<string | null>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -54,18 +53,18 @@ export function CheckInModal({
     setCameraError(null)
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user' },
+        video: { facingMode: "user" },
         audio: false,
       })
       streamRef.current = stream
       if (videoRef.current) {
         videoRef.current.srcObject = stream
       }
-      setStep('camera')
+      setStep("camera")
     } catch (err) {
-      console.error('Error accessing camera:', err)
+      console.error("Error accessing camera:", err)
       setCameraError(
-        'Não foi possível acessar a câmera. Verifique as permissões.',
+        "Não foi possível acessar a câmera. Verifique as permissões.",
       )
     }
   }
@@ -79,7 +78,7 @@ export function CheckInModal({
       canvas.width = video.videoWidth
       canvas.height = video.videoHeight
 
-      const ctx = canvas.getContext('2d')
+      const ctx = canvas.getContext("2d")
       if (ctx) {
         // Draw the current frame
         // Mirror effect for selfie if needed
@@ -88,9 +87,9 @@ export function CheckInModal({
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
 
         // Convert to data URL
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.8)
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.8)
         setImage(dataUrl)
-        setStep('preview')
+        setStep("preview")
         stopCamera()
       }
     }
@@ -102,17 +101,17 @@ export function CheckInModal({
   }
 
   const handleConfirm = () => {
-    setStep('loading')
+    setStep("loading")
     // Simulate upload/API
     setTimeout(() => {
-      setStep('success')
+      setStep("success")
       onSuccess?.()
     }, 1500)
   }
 
   const handleInternalClose = () => {
     stopCamera()
-    setStep('idle')
+    setStep("idle")
     setImage(null)
     setCameraError(null)
     onOpenChange(false)
@@ -129,7 +128,7 @@ export function CheckInModal({
   useEffect(() => {
     if (!open) {
       stopCamera()
-      setStep('idle')
+      setStep("idle")
       setImage(null)
       setCameraError(null)
     }
@@ -139,42 +138,42 @@ export function CheckInModal({
     <Dialog open={open} onOpenChange={handleInternalClose}>
       <DialogContent
         className={cn(
-          'sm:max-w-md text-center p-0 overflow-hidden gap-0 bg-background transition-all duration-300',
-          step === 'camera' ? 'h-[80vh] sm:h-auto border-0 sm:border' : '',
+          "sm:max-w-md text-center p-0 overflow-hidden gap-0 bg-background transition-all duration-300",
+          step === "camera" ? "h-[80vh] sm:h-auto border-0 sm:border" : "",
         )}
       >
         {/* Header - Hidden in Camera mode for full screen effect */}
-        {step !== 'camera' && (
+        {step !== "camera" && (
           <DialogHeader className="p-6 pb-2">
             <DialogTitle className="text-center">
               Check-in: {venueName}
             </DialogTitle>
             <DialogDescription className="text-center">
-              {step === 'idle' && 'Confirme sua presença com uma selfie.'}
-              {step === 'preview' && 'Como ficou a foto?'}
-              {step === 'success' && 'Parabéns! Pontos recebidos.'}
+              {step === "idle" && "Confirme sua presença com uma selfie."}
+              {step === "preview" && "Como ficou a foto?"}
+              {step === "success" && "Parabéns! Pontos recebidos."}
             </DialogDescription>
           </DialogHeader>
         )}
 
         <div
           className={cn(
-            'flex flex-col items-center justify-center transition-all',
-            step === 'camera' ? 'h-full w-full bg-black relative' : 'p-6 py-4',
+            "flex flex-col items-center justify-center transition-all",
+            step === "camera" ? "h-full w-full bg-black relative" : "p-6 py-4",
           )}
         >
           {/* Hidden Canvas for capture */}
           <canvas ref={canvasRef} className="hidden" />
 
           {/* IDLE STATE */}
-          {step === 'idle' && (
+          {step === "idle" && (
             <div className="flex flex-col items-center gap-6 py-4 animate-in fade-in zoom-in-95">
               <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center text-primary animate-pulse">
                 <Camera className="h-10 w-10" />
               </div>
               <div className="space-y-2">
                 <p className="text-sm text-muted-foreground">
-                  Para validar seu check-in e ganhar{' '}
+                  Para validar seu check-in e ganhar{" "}
                   <span className="font-bold text-primary">
                     +{points} pontos
                   </span>
@@ -190,7 +189,7 @@ export function CheckInModal({
           )}
 
           {/* CAMERA STATE */}
-          {step === 'camera' && (
+          {step === "camera" && (
             <div className="relative w-full h-full flex flex-col bg-black animate-in fade-in">
               <video
                 ref={videoRef}
@@ -198,7 +197,7 @@ export function CheckInModal({
                 playsInline
                 muted
                 className="w-full h-full object-cover flex-1"
-                style={{ transform: 'scaleX(-1)' }}
+                style={{ transform: "scaleX(-1)" }}
               />
 
               {/* Camera Overlay Controls */}
@@ -226,7 +225,7 @@ export function CheckInModal({
           )}
 
           {/* PREVIEW STATE */}
-          {step === 'preview' && image && (
+          {step === "preview" && image && (
             <div className="flex flex-col gap-4 w-full animate-in fade-in slide-in-from-bottom-4">
               <div className="relative aspect-[3/4] w-full max-w-[240px] mx-auto rounded-xl overflow-hidden shadow-lg border-2 border-primary/20">
                 <img
@@ -246,7 +245,7 @@ export function CheckInModal({
           )}
 
           {/* LOADING STATE */}
-          {step === 'loading' && (
+          {step === "loading" && (
             <div className="py-8 flex flex-col items-center gap-4 animate-in fade-in">
               <div className="relative">
                 <div className="h-20 w-20 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
@@ -261,7 +260,7 @@ export function CheckInModal({
           )}
 
           {/* SUCCESS STATE */}
-          {step === 'success' && (
+          {step === "success" && (
             <div className="py-6 flex flex-col items-center gap-4 animate-in zoom-in duration-300">
               <div className="h-24 w-24 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 shadow-sm animate-bounce">
                 <CheckCircle className="h-12 w-12" />
@@ -271,7 +270,7 @@ export function CheckInModal({
                   Check-in Realizado!
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  Você ganhou{' '}
+                  Você ganhou{" "}
                   <span className="font-bold text-foreground">
                     +{points} pontos
                   </span>
@@ -288,9 +287,9 @@ export function CheckInModal({
         </div>
 
         {/* Footer */}
-        {step !== 'camera' && (
+        {step !== "camera" && (
           <DialogFooter className="p-6 pt-0 sm:justify-center gap-2">
-            {step === 'idle' && (
+            {step === "idle" && (
               <Button
                 onClick={startCamera}
                 className="w-full gap-2 text-base h-12 rounded-xl shadow-md"
@@ -300,7 +299,7 @@ export function CheckInModal({
               </Button>
             )}
 
-            {step === 'preview' && (
+            {step === "preview" && (
               <div className="flex gap-3 w-full">
                 <Button
                   variant="outline"
@@ -320,7 +319,7 @@ export function CheckInModal({
               </div>
             )}
 
-            {step === 'success' && (
+            {step === "success" && (
               <Button
                 onClick={handleInternalClose}
                 className="w-full bg-secondary hover:bg-secondary/80 text-secondary-foreground h-11 rounded-xl"
@@ -329,7 +328,7 @@ export function CheckInModal({
               </Button>
             )}
 
-            {step === 'loading' && (
+            {step === "loading" && (
               <Button disabled className="w-full h-11 rounded-xl">
                 Processando...
               </Button>

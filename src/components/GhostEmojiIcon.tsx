@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils'
-import * as React from 'react'
+import { cn } from "@/lib/utils"
+import * as React from "react"
 
 interface GhostEmojiIconProps extends React.SVGProps<SVGSVGElement> {
   active?: boolean
@@ -13,10 +13,10 @@ export function GhostEmojiIcon({
   return (
     <svg
       viewBox="0 0 24 24"
-      fill={active ? 'currentColor' : 'none'}
+      fill={active ? "currentColor" : "none"}
       stroke="currentColor"
-      strokeWidth={active ? '0' : '1.5'}
-      className={cn('shrink-0', className)}
+      strokeWidth={active ? "0" : "1.5"}
+      className={cn("shrink-0", className)}
       {...props}
     >
       <path
@@ -28,19 +28,19 @@ export function GhostEmojiIcon({
         cx="9"
         cy="10"
         r="1.5"
-        fill={active ? 'hsl(var(--background))' : 'currentColor'}
+        fill={active ? "hsl(var(--background))" : "currentColor"}
         stroke="none"
       />
       <circle
         cx="15"
         cy="10"
         r="1.5"
-        fill={active ? 'hsl(var(--background))' : 'currentColor'}
+        fill={active ? "hsl(var(--background))" : "currentColor"}
         stroke="none"
       />
       <path
         d="M10 14c.5 1 3.5 1 4 0"
-        stroke={active ? 'hsl(var(--background))' : 'currentColor'}
+        stroke={active ? "hsl(var(--background))" : "currentColor"}
         strokeWidth="1.5"
         strokeLinecap="round"
         fill="none"

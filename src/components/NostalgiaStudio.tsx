@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef } from "react"
 import {
   Upload,
   Camera,
@@ -16,15 +16,15 @@ import {
   Loader2,
   CassetteTape,
   Terminal,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { NostalgiaFilter } from '@/components/NostalgiaFilter'
-import { NostalgiaPreset, useNostalgiaStore } from '@/stores/useNostalgiaStore'
-import { cn } from '@/lib/utils'
-import { toast } from 'sonner'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Card } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { NostalgiaFilter } from "@/components/NostalgiaFilter"
+import { NostalgiaPreset, useNostalgiaStore } from "@/stores/useNostalgiaStore"
+import { cn } from "@/lib/utils"
+import { toast } from "sonner"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Card } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface PresetOption {
   id: NostalgiaPreset
@@ -32,89 +32,89 @@ interface PresetOption {
   description: string
   icon: React.ElementType
   color: string
-  category: 'classic' | 'iconic'
+  category: "classic" | "iconic"
 }
 
 const presets: PresetOption[] = [
   {
-    id: 'cassette',
-    name: 'Fita K7',
-    description: 'Estilo Cassete',
+    id: "cassette",
+    name: "Fita K7",
+    description: "Estilo Cassete",
     icon: CassetteTape,
-    color: 'text-orange-600',
-    category: 'classic',
+    color: "text-orange-600",
+    category: "classic",
   },
   {
-    id: 'digital',
-    name: 'Retro Digital',
-    description: 'Interface PC Antiga',
+    id: "digital",
+    name: "Retro Digital",
+    description: "Interface PC Antiga",
     icon: Terminal,
-    color: 'text-green-500',
-    category: 'classic',
+    color: "text-green-500",
+    category: "classic",
   },
   {
-    id: 'pele',
-    name: 'Futebol 80s',
-    description: 'Estilo TV broadcast',
+    id: "pele",
+    name: "Futebol 80s",
+    description: "Estilo TV broadcast",
     icon: Trophy,
-    color: 'text-yellow-500',
-    category: 'iconic',
+    color: "text-yellow-500",
+    category: "iconic",
   },
   {
-    id: 'ali',
-    name: 'Boxe Vintage',
-    description: 'Cinemático P&B',
+    id: "ali",
+    name: "Boxe Vintage",
+    description: "Cinemático P&B",
     icon: Swords,
-    color: 'text-zinc-200',
-    category: 'iconic',
+    color: "text-zinc-200",
+    category: "iconic",
   },
   {
-    id: 'retro',
-    name: 'Retrô',
-    description: 'Estilo clássico',
+    id: "retro",
+    name: "Retrô",
+    description: "Estilo clássico",
     icon: Film,
-    color: 'text-amber-500',
-    category: 'classic',
+    color: "text-amber-500",
+    category: "classic",
   },
   {
-    id: 'vhs',
-    name: 'VHS',
-    description: 'Fita magnética',
+    id: "vhs",
+    name: "VHS",
+    description: "Fita magnética",
     icon: Tv,
-    color: 'text-red-500',
-    category: 'classic',
+    color: "text-red-500",
+    category: "classic",
   },
   {
-    id: 'grain',
-    name: 'Granulado',
-    description: 'Preto e branco',
+    id: "grain",
+    name: "Granulado",
+    description: "Preto e branco",
     icon: ImageIcon,
-    color: 'text-gray-400',
-    category: 'classic',
+    color: "text-gray-400",
+    category: "classic",
   },
   {
-    id: '90s',
-    name: 'Anos 90',
-    description: 'Vibrante e pop',
+    id: "90s",
+    name: "Anos 90",
+    description: "Vibrante e pop",
     icon: Sparkles,
-    color: 'text-blue-500',
-    category: 'classic',
+    color: "text-blue-500",
+    category: "classic",
   },
   {
-    id: 'analog',
-    name: 'Analógico',
-    description: 'Filme 35mm',
+    id: "analog",
+    name: "Analógico",
+    description: "Filme 35mm",
     icon: Aperture,
-    color: 'text-orange-500',
-    category: 'classic',
+    color: "text-orange-500",
+    category: "classic",
   },
   {
-    id: 'polaroid',
-    name: 'Polaroid',
-    description: 'Instantânea',
+    id: "polaroid",
+    name: "Polaroid",
+    description: "Instantânea",
     icon: Camera,
-    color: 'text-yellow-500',
-    category: 'classic',
+    color: "text-yellow-500",
+    category: "classic",
   },
 ]
 
@@ -126,12 +126,12 @@ export function NostalgiaStudio() {
     isEnabled,
   } = useNostalgiaStore()
   const [activePreset, setActivePreset] = useState<NostalgiaPreset>(
-    globalPreset || 'retro',
+    globalPreset || "retro",
   )
   const [mediaUrl, setMediaUrl] = useState<string>(
-    'https://img.usecurling.com/p/800/800?q=sports%20portrait&dpr=2',
+    "https://img.usecurling.com/p/800/800?q=sports%20portrait&dpr=2",
   )
-  const [mediaType, setMediaType] = useState<'image' | 'video'>('image')
+  const [mediaType, setMediaType] = useState<"image" | "video">("image")
   const [isProcessing, setIsProcessing] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -142,9 +142,9 @@ export function NostalgiaStudio() {
       setTimeout(() => {
         const url = URL.createObjectURL(file)
         setMediaUrl(url)
-        setMediaType(file.type.startsWith('video') ? 'video' : 'image')
+        setMediaType(file.type.startsWith("video") ? "video" : "image")
         setIsProcessing(false)
-        toast.success('Mídia carregada com sucesso!')
+        toast.success("Mídia carregada com sucesso!")
       }, 1500)
     }
   }
@@ -152,7 +152,7 @@ export function NostalgiaStudio() {
   const handleApplyGlobal = () => {
     setGlobalPreset(activePreset)
     toggle(true)
-    toast.success('Tema aplicado globalmente!', {
+    toast.success("Tema aplicado globalmente!", {
       description: `O estilo ${activePreset.toUpperCase()} está ativo em todo o app.`,
       icon: <Sparkles className="w-4 h-4 text-gold" />,
     })
@@ -160,12 +160,12 @@ export function NostalgiaStudio() {
 
   const handleDisableGlobal = () => {
     toggle(false)
-    toast.info('Modo Nostalgia desativado')
+    toast.info("Modo Nostalgia desativado")
   }
 
   const handleSave = () => {
-    toast.success('Salvo na galeria', {
-      description: 'Sua mídia com estilo AI foi salva.',
+    toast.success("Salvo na galeria", {
+      description: "Sua mídia com estilo AI foi salva.",
       icon: <Download className="w-4 h-4" />,
     })
   }
@@ -222,12 +222,12 @@ export function NostalgiaStudio() {
                 </div>
               )}
 
-              {mediaType === 'video' ? (
+              {mediaType === "video" ? (
                 <video
                   src={mediaUrl}
                   className={cn(
-                    'w-full h-full object-cover transition-all duration-500',
-                    activePreset === '90s' && 'aspect-[4/3] object-contain',
+                    "w-full h-full object-cover transition-all duration-500",
+                    activePreset === "90s" && "aspect-[4/3] object-contain",
                   )}
                   autoPlay
                   loop
@@ -239,13 +239,13 @@ export function NostalgiaStudio() {
                   src={mediaUrl}
                   alt="Preview"
                   className={cn(
-                    'w-full h-full object-cover transition-all duration-500',
-                    activePreset === 'polaroid' && 'p-8 pb-24 bg-white',
-                    activePreset === '90s' && 'aspect-[4/3] object-contain',
-                    (activePreset === 'ali' || activePreset === 'grain') &&
-                      'grayscale',
-                    activePreset === 'pele' &&
-                      'contrast-[1.1] saturate-[1.3] brightness-105',
+                    "w-full h-full object-cover transition-all duration-500",
+                    activePreset === "polaroid" && "p-8 pb-24 bg-white",
+                    activePreset === "90s" && "aspect-[4/3] object-contain",
+                    (activePreset === "ali" || activePreset === "grain") &&
+                      "grayscale",
+                    activePreset === "pele" &&
+                      "contrast-[1.1] saturate-[1.3] brightness-105",
                   )}
                 />
               )}
@@ -253,8 +253,8 @@ export function NostalgiaStudio() {
               {/* Filter Overlay */}
               <div
                 className={cn(
-                  'absolute inset-0 pointer-events-none',
-                  activePreset === 'polaroid' ? 'inset-[20px] bottom-24' : '',
+                  "absolute inset-0 pointer-events-none",
+                  activePreset === "polaroid" ? "inset-[20px] bottom-24" : "",
                 )}
               >
                 <NostalgiaFilter forceEnable manualPreset={activePreset} />
@@ -279,7 +279,7 @@ export function NostalgiaStudio() {
                   setIsProcessing(true)
                   setTimeout(() => {
                     setMediaUrl(
-                      `https://img.usecurling.com/p/800/800?q=sports%20${['action', 'portrait', 'stadium'][Math.floor(Math.random() * 3)]}&dpr=2&seed=${Date.now()}`,
+                      `https://img.usecurling.com/p/800/800?q=sports%20${["action", "portrait", "stadium"][Math.floor(Math.random() * 3)]}&dpr=2&seed=${Date.now()}`,
                     )
                     setIsProcessing(false)
                   }, 1000)
@@ -310,10 +310,10 @@ export function NostalgiaStudio() {
             </Button>
             <Button
               className={cn(
-                'h-12 rounded-xl font-bold shadow-lg transition-all',
+                "h-12 rounded-xl font-bold shadow-lg transition-all",
                 isEnabled && globalPreset === activePreset
-                  ? 'bg-green-600 hover:bg-green-700 text-white shadow-green-900/20'
-                  : 'bg-gold text-black hover:bg-gold/90 shadow-gold/20',
+                  ? "bg-green-600 hover:bg-green-700 text-white shadow-green-900/20"
+                  : "bg-gold text-black hover:bg-gold/90 shadow-gold/20",
               )}
               onClick={handleApplyGlobal}
               disabled={isProcessing}
@@ -343,7 +343,7 @@ export function NostalgiaStudio() {
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
                   {presets
-                    .filter((p) => p.category === 'iconic')
+                    .filter((p) => p.category === "iconic")
                     .map((preset) => {
                       const isActive = activePreset === preset.id
                       return (
@@ -351,18 +351,18 @@ export function NostalgiaStudio() {
                           key={preset.id}
                           onClick={() => handlePresetSelect(preset.id)}
                           className={cn(
-                            'flex flex-col items-start p-4 rounded-2xl transition-all duration-300 border text-left group relative overflow-hidden',
+                            "flex flex-col items-start p-4 rounded-2xl transition-all duration-300 border text-left group relative overflow-hidden",
                             isActive
-                              ? 'bg-gradient-to-br from-primary/10 to-gold/10 border-primary ring-1 ring-primary'
-                              : 'bg-secondary/50 hover:bg-secondary border-transparent hover:border-border',
+                              ? "bg-gradient-to-br from-primary/10 to-gold/10 border-primary ring-1 ring-primary"
+                              : "bg-secondary/50 hover:bg-secondary border-transparent hover:border-border",
                           )}
                         >
                           <div
                             className={cn(
-                              'p-2 rounded-xl mb-3 transition-colors',
+                              "p-2 rounded-xl mb-3 transition-colors",
                               isActive
-                                ? 'bg-primary text-primary-foreground'
-                                : 'bg-background shadow-sm',
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-background shadow-sm",
                               preset.color,
                             )}
                           >
@@ -395,7 +395,7 @@ export function NostalgiaStudio() {
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
                   {presets
-                    .filter((p) => p.category === 'classic')
+                    .filter((p) => p.category === "classic")
                     .map((preset) => {
                       const isActive = activePreset === preset.id
                       return (
@@ -403,18 +403,18 @@ export function NostalgiaStudio() {
                           key={preset.id}
                           onClick={() => handlePresetSelect(preset.id)}
                           className={cn(
-                            'flex flex-col items-start p-4 rounded-2xl transition-all duration-300 border text-left group relative overflow-hidden',
+                            "flex flex-col items-start p-4 rounded-2xl transition-all duration-300 border text-left group relative overflow-hidden",
                             isActive
-                              ? 'bg-primary/5 border-primary ring-1 ring-primary'
-                              : 'bg-secondary/50 hover:bg-secondary border-transparent hover:border-border',
+                              ? "bg-primary/5 border-primary ring-1 ring-primary"
+                              : "bg-secondary/50 hover:bg-secondary border-transparent hover:border-border",
                           )}
                         >
                           <div
                             className={cn(
-                              'p-2 rounded-xl mb-3 transition-colors',
+                              "p-2 rounded-xl mb-3 transition-colors",
                               isActive
-                                ? 'bg-primary text-primary-foreground'
-                                : 'bg-background shadow-sm',
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-background shadow-sm",
                               preset.color,
                             )}
                           >

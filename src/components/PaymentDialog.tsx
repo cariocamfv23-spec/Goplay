@@ -4,10 +4,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   CheckCircle2,
   Wallet,
@@ -15,12 +15,12 @@ import {
   Trophy,
   AlertCircle,
   Coins,
-} from 'lucide-react'
-import { useState } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { cn } from '@/lib/utils'
-import { mockFinancialSummary } from '@/lib/data'
-import { toast } from 'sonner'
+} from "lucide-react"
+import { useState } from "react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { cn } from "@/lib/utils"
+import { mockFinancialSummary } from "@/lib/data"
+import { toast } from "sonner"
 
 interface PaymentDialogProps {
   children: React.ReactNode
@@ -38,8 +38,8 @@ export function PaymentDialog({
   onSuccess,
 }: PaymentDialogProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [step, setStep] = useState<'form' | 'processing' | 'success'>('form')
-  const [paymentMethod, setPaymentMethod] = useState('credit-card')
+  const [step, setStep] = useState<"form" | "processing" | "success">("form")
+  const [paymentMethod, setPaymentMethod] = useState("credit-card")
 
   const userBalance = mockFinancialSummary.balance
   const userPoints = mockFinancialSummary.pointsBalance
@@ -48,22 +48,22 @@ export function PaymentDialog({
     e.preventDefault()
 
     if (
-      paymentMethod === 'goplay-points' &&
+      paymentMethod === "goplay-points" &&
       pointsPrice &&
       userPoints < pointsPrice
     ) {
-      toast.error('Saldo de pontos insuficiente.')
+      toast.error("Saldo de pontos insuficiente.")
       return
     }
 
-    if (paymentMethod === 'balance' && userBalance < price) {
-      toast.error('Saldo em carteira insuficiente.')
+    if (paymentMethod === "balance" && userBalance < price) {
+      toast.error("Saldo em carteira insuficiente.")
       return
     }
 
-    setStep('processing')
+    setStep("processing")
     setTimeout(() => {
-      setStep('success')
+      setStep("success")
       if (onSuccess) onSuccess()
     }, 2000)
   }
@@ -71,7 +71,7 @@ export function PaymentDialog({
   const handleClose = () => {
     setIsOpen(false)
     setTimeout(() => {
-      setStep('form')
+      setStep("form")
     }, 300)
   }
 
@@ -81,11 +81,11 @@ export function PaymentDialog({
       <DialogContent className="sm:max-w-md bg-background border border-border">
         <DialogHeader>
           <DialogTitle className="text-center">
-            {step === 'success' ? 'Compra Realizada!' : 'Pagamento Seguro'}
+            {step === "success" ? "Compra Realizada!" : "Pagamento Seguro"}
           </DialogTitle>
         </DialogHeader>
 
-        {step === 'form' && (
+        {step === "form" && (
           <div className="pt-2">
             <div className="bg-secondary/30 p-4 rounded-xl flex justify-between items-center mb-6 border border-border/50">
               <div className="flex flex-col">
@@ -274,11 +274,11 @@ export function PaymentDialog({
           </div>
         )}
 
-        {step === 'processing' && (
+        {step === "processing" && (
           <div className="flex flex-col items-center justify-center py-8 space-y-4">
             <div
               className={cn(
-                'w-12 h-12 border-4 border-t-transparent rounded-full animate-spin border-primary',
+                "w-12 h-12 border-4 border-t-transparent rounded-full animate-spin border-primary",
               )}
             />
             <p className="text-muted-foreground animate-pulse">
@@ -287,7 +287,7 @@ export function PaymentDialog({
           </div>
         )}
 
-        {step === 'success' && (
+        {step === "success" && (
           <div className="flex flex-col items-center justify-center py-4 space-y-4 animate-in zoom-in duration-300">
             <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center">
               <CheckCircle2 className="h-10 w-10 text-green-500" />

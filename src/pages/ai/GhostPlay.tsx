@@ -1,11 +1,11 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Ghost, Upload, Play, Sparkles, ChevronLeft } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { useState, useRef } from 'react'
-import { Post3DGenerator } from '@/components/Post3DGenerator'
-import { GhostViewMode } from '@/components/Ghost3DViewer'
-import { toast } from 'sonner'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Ghost, Upload, Play, Sparkles, ChevronLeft } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { useState, useRef } from "react"
+import { Post3DGenerator } from "@/components/Post3DGenerator"
+import { GhostViewMode } from "@/components/Ghost3DViewer"
+import { toast } from "sonner"
 
 export default function GhostPlay() {
   const navigate = useNavigate()
@@ -15,8 +15,8 @@ export default function GhostPlay() {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      if (!file.type.startsWith('video/')) {
-        toast.error('Por favor, selecione um arquivo de vídeo.')
+      if (!file.type.startsWith("video/")) {
+        toast.error("Por favor, selecione um arquivo de vídeo.")
         return
       }
       setVideoFile(file)
@@ -24,7 +24,7 @@ export default function GhostPlay() {
   }
 
   const handle3DConfirm = (mode: GhostViewMode) => {
-    toast.success('Replay Salvo na Galeria!', {
+    toast.success("Replay Salvo na Galeria!", {
       description: `Modo salvo: ${mode.toUpperCase()}. Você pode usá-lo em seus posts.`,
     })
     setVideoFile(null)

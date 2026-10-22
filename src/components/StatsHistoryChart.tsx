@@ -1,28 +1,28 @@
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from "@/components/ui/card"
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart'
-import { StatsHistoryPoint } from '@/lib/data'
-import { TrendingUp, Activity } from 'lucide-react'
+} from "@/components/ui/chart"
+import { StatsHistoryPoint } from "@/lib/data"
+import { TrendingUp, Activity } from "lucide-react"
 
 const chartConfig = {
   rating: {
-    label: 'Nota Média',
-    color: 'hsl(var(--primary))',
+    label: "Nota Média",
+    color: "hsl(var(--primary))",
   },
   matches: {
-    label: 'Partidas',
-    color: 'hsl(var(--chart-2))',
+    label: "Partidas",
+    color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig
 
@@ -55,10 +55,14 @@ export function StatsHistoryChart({ data }: StatsHistoryChartProps) {
             </CardDescription>
           </div>
           <div
-            className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${ratingTrend >= 0 ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}
+            className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${
+              ratingTrend >= 0
+                ? "bg-green-500/10 text-green-500"
+                : "bg-red-500/10 text-red-500"
+            }`}
           >
             <TrendingUp className="h-3 w-3" />
-            {ratingTrend > 0 ? '+' : ''}
+            {ratingTrend > 0 ? "+" : ""}
             {ratingTrend.toFixed(1)}%
           </div>
         </div>
@@ -121,12 +125,12 @@ export function StatsHistoryChart({ data }: StatsHistoryChartProps) {
                 fillOpacity={0.4}
                 stroke="var(--color-rating)"
                 strokeWidth={2}
-                dot={{ r: 4, fill: 'var(--color-rating)', strokeWidth: 0 }}
+                dot={{ r: 4, fill: "var(--color-rating)", strokeWidth: 0 }}
                 activeDot={{
                   r: 6,
-                  fill: 'var(--color-rating)',
+                  fill: "var(--color-rating)",
                   strokeWidth: 2,
-                  stroke: '#fff',
+                  stroke: "#fff",
                 }}
               />
             </AreaChart>

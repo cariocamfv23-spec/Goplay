@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import useSoundStore from '@/stores/useSoundStore'
+import { useState } from "react"
+import useSoundStore from "@/stores/useSoundStore"
 
 export interface LikeablePost {
   content?: string
@@ -21,60 +21,60 @@ export function useLikeInteraction(
     setLikeCount(newIsLiked ? likeCount + 1 : likeCount - 1)
 
     if (newIsLiked) {
-      let soundCategory = 'like_generic'
-      const content = (post.content || '').toLowerCase()
+      let soundCategory = "like_generic"
+      const content = (post.content || "").toLowerCase()
       const hashtags = (post.hashtags || []).map((h: string) => h.toLowerCase())
-      const fullText = content + ' ' + hashtags.join(' ')
+      const fullText = content + " " + hashtags.join(" ")
 
       if (
-        fullText.includes('futebol') ||
-        fullText.includes('soccer') ||
-        fullText.includes('gol') ||
-        fullText.includes('chute')
+        fullText.includes("futebol") ||
+        fullText.includes("soccer") ||
+        fullText.includes("gol") ||
+        fullText.includes("chute")
       ) {
-        soundCategory = 'like_football'
+        soundCategory = "like_football"
       } else if (
-        fullText.includes('futsal') ||
-        fullText.includes('quadra') ||
-        fullText.includes('salao')
+        fullText.includes("futsal") ||
+        fullText.includes("quadra") ||
+        fullText.includes("salao")
       ) {
-        soundCategory = 'like_futsal'
+        soundCategory = "like_futsal"
       } else if (
-        fullText.includes('basquete') ||
-        fullText.includes('basketball') ||
-        fullText.includes('basket') ||
-        fullText.includes('dunk') ||
-        fullText.includes('cesta')
+        fullText.includes("basquete") ||
+        fullText.includes("basketball") ||
+        fullText.includes("basket") ||
+        fullText.includes("dunk") ||
+        fullText.includes("cesta")
       ) {
-        soundCategory = 'like_basketball'
+        soundCategory = "like_basketball"
       } else if (
-        fullText.includes('volei') ||
-        fullText.includes('volleyball') ||
-        fullText.includes('manchete') ||
-        fullText.includes('saque')
+        fullText.includes("volei") ||
+        fullText.includes("volleyball") ||
+        fullText.includes("manchete") ||
+        fullText.includes("saque")
       ) {
-        soundCategory = 'like_volleyball'
+        soundCategory = "like_volleyball"
       } else if (
-        fullText.includes('tennis') ||
-        fullText.includes('tenis') ||
-        fullText.includes('raquete')
+        fullText.includes("tennis") ||
+        fullText.includes("tenis") ||
+        fullText.includes("raquete")
       ) {
-        soundCategory = 'like_tennis'
+        soundCategory = "like_tennis"
       } else if (
-        fullText.includes('treino') ||
-        fullText.includes('gym') ||
-        fullText.includes('academia') ||
-        fullText.includes('workout') ||
-        fullText.includes('crossfit')
+        fullText.includes("treino") ||
+        fullText.includes("gym") ||
+        fullText.includes("academia") ||
+        fullText.includes("workout") ||
+        fullText.includes("crossfit")
       ) {
-        soundCategory = 'like_workout'
+        soundCategory = "like_workout"
       } else if (
-        fullText.includes('parceiro') ||
-        fullText.includes('partner') ||
-        fullText.includes('nutri') ||
-        fullText.includes('fisioterapeuta')
+        fullText.includes("parceiro") ||
+        fullText.includes("partner") ||
+        fullText.includes("nutri") ||
+        fullText.includes("fisioterapeuta")
       ) {
-        soundCategory = 'like_partner'
+        soundCategory = "like_partner"
       }
 
       // @ts-expect-error - Dynamic sound category

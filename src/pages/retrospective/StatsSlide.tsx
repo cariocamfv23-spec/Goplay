@@ -1,7 +1,7 @@
-import { mockRetrospective } from '@/lib/data'
-import { Trophy, Clock, PlayCircle } from 'lucide-react'
-import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
-import { cn } from '@/lib/utils'
+import { mockRetrospective } from "@/lib/data"
+import { Trophy, Clock, PlayCircle } from "lucide-react"
+import { useRetrospectiveStore } from "@/stores/useRetrospectiveStore"
+import { cn } from "@/lib/utils"
 
 export default function StatsSlide() {
   const { getTheme } = useRetrospectiveStore()
@@ -26,7 +26,7 @@ export default function StatsSlide() {
             </div>
             <div
               className={cn(
-                'w-12 h-12 bg-white rounded-full flex items-center justify-center',
+                "w-12 h-12 bg-white rounded-full flex items-center justify-center",
                 currentTheme.icon,
               )}
             >
@@ -41,7 +41,7 @@ export default function StatsSlide() {
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-black/20 backdrop-blur-sm p-5 rounded-3xl animate-in slide-in-from-bottom-8 fade-in duration-700 delay-400">
             <PlayCircle
-              className={cn('w-8 h-8 mb-3 opacity-80', currentTheme.icon)}
+              className={cn("w-8 h-8 mb-3 opacity-80", currentTheme.icon)}
             />
             <p className="text-3xl font-bold">
               {mockRetrospective.stats.videosWatched}
@@ -50,7 +50,7 @@ export default function StatsSlide() {
           </div>
           <div className="bg-black/20 backdrop-blur-sm p-5 rounded-3xl animate-in slide-in-from-bottom-8 fade-in duration-700 delay-500">
             <Clock
-              className={cn('w-8 h-8 mb-3 opacity-80', currentTheme.icon)}
+              className={cn("w-8 h-8 mb-3 opacity-80", currentTheme.icon)}
             />
             <p className="text-3xl font-bold">
               {mockRetrospective.stats.hoursWatched}h

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   User,
@@ -23,29 +23,29 @@ import {
   Loader2,
   FileText,
   ShieldCheck,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { Separator } from '@/components/ui/separator'
-import { useTheme } from 'next-themes'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Separator } from "@/components/ui/separator"
+import { useTheme } from "next-themes"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Switch } from '@/components/ui/switch'
-import { useWeatherStore } from '@/stores/useWeatherStore'
-import { useScholarshipStore } from '@/stores/useScholarshipStore'
-import { Label } from '@/components/ui/label'
-import { useNostalgiaStore, NostalgiaPreset } from '@/stores/useNostalgiaStore'
-import { useDepthStore } from '@/stores/useDepthStore'
-import { cn } from '@/lib/utils'
-import { Badge } from '@/components/ui/badge'
-import { Slider } from '@/components/ui/slider'
-import useSoundStore from '@/stores/useSoundStore'
-import { useAuth } from '@/hooks/use-auth'
-import { useAuthStore } from '@/stores/useAuthStore'
-import { toast } from 'sonner'
+} from "@/components/ui/dropdown-menu"
+import { Switch } from "@/components/ui/switch"
+import { useWeatherStore } from "@/stores/useWeatherStore"
+import { useScholarshipStore } from "@/stores/useScholarshipStore"
+import { Label } from "@/components/ui/label"
+import { useNostalgiaStore, NostalgiaPreset } from "@/stores/useNostalgiaStore"
+import { useDepthStore } from "@/stores/useDepthStore"
+import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
+import { Slider } from "@/components/ui/slider"
+import useSoundStore from "@/stores/useSoundStore"
+import { useAuth } from "@/hooks/use-auth"
+import { useAuthStore } from "@/stores/useAuthStore"
+import { toast } from "sonner"
 
 export default function Settings() {
   const navigate = useNavigate()
@@ -98,12 +98,12 @@ export default function Settings() {
     label: string
     icon: any
   }[] = [
-    { id: 'grain', label: 'Granulado', icon: Film },
-    { id: 'retro', label: 'Retro Tones', icon: Camera },
-    { id: 'vhs', label: 'VHS', icon: Tv },
-    { id: '90s', label: 'Anos 90', icon: Zap },
-    { id: 'analog', label: 'Analógico', icon: Camera },
-    { id: 'polaroid', label: 'Polaroid', icon: ImageIcon },
+    { id: "grain", label: "Granulado", icon: Film },
+    { id: "retro", label: "Retro Tones", icon: Camera },
+    { id: "vhs", label: "VHS", icon: Tv },
+    { id: "90s", label: "Anos 90", icon: Zap },
+    { id: "analog", label: "Analógico", icon: Camera },
+    { id: "polaroid", label: "Polaroid", icon: ImageIcon },
   ]
 
   if (isLoading) {
@@ -133,30 +133,30 @@ export default function Settings() {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="w-full justify-between">
                   <span className="flex items-center gap-2">
-                    {theme === 'light' && <Sun className="h-4 w-4" />}
-                    {theme === 'dark' && <Moon className="h-4 w-4" />}
-                    {theme === 'system' && <Laptop className="h-4 w-4" />}
+                    {theme === "light" && <Sun className="h-4 w-4" />}
+                    {theme === "dark" && <Moon className="h-4 w-4" />}
+                    {theme === "system" && <Laptop className="h-4 w-4" />}
                     Tema
                   </span>
                   <span className="capitalize text-muted-foreground">
-                    {theme === 'system'
-                      ? 'Automático'
-                      : theme === 'dark'
-                        ? 'Escuro'
-                        : 'Claro'}
+                    {theme === "system"
+                      ? "Automático"
+                      : theme === "dark"
+                        ? "Escuro"
+                        : "Claro"}
                   </span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem onClick={() => setTheme('light')}>
+                <DropdownMenuItem onClick={() => setTheme("light")}>
                   <Sun className="mr-2 h-4 w-4" />
                   Claro
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme('dark')}>
+                <DropdownMenuItem onClick={() => setTheme("dark")}>
                   <Moon className="mr-2 h-4 w-4" />
                   Escuro
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme('system')}>
+                <DropdownMenuItem onClick={() => setTheme("system")}>
                   <Laptop className="mr-2 h-4 w-4" />
                   Automático (Sistema)
                 </DropdownMenuItem>
@@ -232,11 +232,11 @@ export default function Settings() {
                 {nostalgiaPresets.map((p) => (
                   <Button
                     key={p.id}
-                    variant={nostalgiaPreset === p.id ? 'default' : 'outline'}
+                    variant={nostalgiaPreset === p.id ? "default" : "outline"}
                     size="sm"
                     className={cn(
-                      'justify-start h-10',
-                      nostalgiaPreset === p.id && 'border-primary',
+                      "justify-start h-10",
+                      nostalgiaPreset === p.id && "border-primary",
                     )}
                     onClick={() => setNostalgiaPreset(p.id)}
                   >
@@ -332,7 +332,7 @@ export default function Settings() {
                   </div>
                   <Switch
                     checked={preferences.storm}
-                    onCheckedChange={(c) => toggleType('storm', c)}
+                    onCheckedChange={(c) => toggleType("storm", c)}
                   />
                 </div>
 
@@ -343,7 +343,7 @@ export default function Settings() {
                   </div>
                   <Switch
                     checked={preferences.heavyRain}
-                    onCheckedChange={(c) => toggleType('heavyRain', c)}
+                    onCheckedChange={(c) => toggleType("heavyRain", c)}
                   />
                 </div>
 
@@ -354,7 +354,7 @@ export default function Settings() {
                   </div>
                   <Switch
                     checked={preferences.intenseCold}
-                    onCheckedChange={(c) => toggleType('intenseCold', c)}
+                    onCheckedChange={(c) => toggleType("intenseCold", c)}
                   />
                 </div>
               </div>
@@ -371,7 +371,7 @@ export default function Settings() {
           <Button
             variant="ghost"
             className="w-full justify-start h-12 gap-3 text-base font-normal"
-            onClick={() => navigate('/settings/pwa')}
+            onClick={() => navigate("/settings/pwa")}
           >
             <Smartphone className="h-5 w-5" /> Configurações do PWA
           </Button>
@@ -386,7 +386,7 @@ export default function Settings() {
           <Button
             variant="ghost"
             className="w-full justify-start h-12 gap-3 text-base font-normal"
-            onClick={() => navigate('/profile/me')}
+            onClick={() => navigate("/profile/me")}
           >
             <User className="h-5 w-5" /> Editar Meu Perfil & Dados
           </Button>
@@ -399,7 +399,7 @@ export default function Settings() {
           <Button
             variant="ghost"
             className="w-full justify-start h-12 gap-3 text-base font-normal"
-            onClick={() => navigate('/settings/privacy')}
+            onClick={() => navigate("/settings/privacy")}
           >
             <Lock className="h-5 w-5" /> Privacidade, Segurança e Biometria
           </Button>
@@ -414,14 +414,14 @@ export default function Settings() {
           <Button
             variant="ghost"
             className="w-full justify-start h-12 gap-3 text-base font-normal"
-            onClick={() => navigate('/terms')}
+            onClick={() => navigate("/terms")}
           >
             <FileText className="h-5 w-5 text-primary" /> Termos de Uso
           </Button>
           <Button
             variant="ghost"
             className="w-full justify-start h-12 gap-3 text-base font-normal"
-            onClick={() => navigate('/privacy')}
+            onClick={() => navigate("/privacy")}
           >
             <ShieldCheck className="h-5 w-5 text-emerald-500" /> Política de
             Privacidade (LGPD)
@@ -443,19 +443,19 @@ export default function Settings() {
             try {
               // Deactivate push notifications on this device before signing out
               const { pushNotificationService } = await import(
-                '@/services/push-notifications'
+                "@/services/push-notifications"
               )
               await pushNotificationService.handleLogout(user?.id)
             } catch {
               /* non-blocking push cleanup */
             }
             try {
-              await signOut({ scope: 'local' })
+              await signOut({ scope: "local" })
             } catch {
               logout()
             }
-            toast.success('Você saiu da sua conta.')
-            navigate('/login', { replace: true })
+            toast.success("Você saiu da sua conta.")
+            navigate("/login", { replace: true })
           }}
         >
           <LogOut className="h-5 w-5" /> Sair da Conta

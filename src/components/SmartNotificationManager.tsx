@@ -1,13 +1,13 @@
-import { useEffect } from 'react'
-import { usePassportStore } from '@/stores/usePassportStore'
-import useNotificationStore from '@/stores/useNotificationStore'
-import { useSmartNotificationState } from '@/stores/useSmartNotificationState'
-import { usePrivacyStore } from '@/stores/usePrivacyStore'
-import { toast } from 'sonner'
-import { useNavigate } from 'react-router-dom'
-import { Crown, Eye, Handshake, UserPlus } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { mockCurrentUser, mockProfiles } from '@/lib/data'
+import { useEffect } from "react"
+import { usePassportStore } from "@/stores/usePassportStore"
+import useNotificationStore from "@/stores/useNotificationStore"
+import { useSmartNotificationState } from "@/stores/useSmartNotificationState"
+import { usePrivacyStore } from "@/stores/usePrivacyStore"
+import { toast } from "sonner"
+import { useNavigate } from "react-router-dom"
+import { Crown, Eye, Handshake, UserPlus } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { mockCurrentUser, mockProfiles } from "@/lib/data"
 
 export function SmartNotificationManager() {
   const { competitions, goals, certifications, verifyCertification } =
@@ -20,7 +20,7 @@ export function SmartNotificationManager() {
 
   // Helper to parse DD/MM/YYYY
   const parseDate = (dateStr: string) => {
-    const [day, month, year] = dateStr.split('/')
+    const [day, month, year] = dateStr.split("/")
     return new Date(Number(year), Number(month) - 1, Number(day))
   }
 
@@ -29,34 +29,34 @@ export function SmartNotificationManager() {
     const simulateVipView = () => {
       const visitorsPool = [
         {
-          id: 'vis-scout-1',
-          name: 'Carlos Meneghel',
-          role: 'Scout Chefe / RB Bragantino',
-          type: 'scout',
-          avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=88',
-          title: 'Um olheiro visualizou seu perfil',
+          id: "vis-scout-1",
+          name: "Carlos Meneghel",
+          role: "Scout Chefe / RB Bragantino",
+          type: "scout",
+          avatar: "https://img.usecurling.com/ppl/medium?gender=male&seed=88",
+          title: "Um olheiro visualizou seu perfil",
           message:
-            'Carlos Meneghel (Scout Chefe) está analisando seus lances e gols recentes!',
+            "Carlos Meneghel (Scout Chefe) está analisando seus lances e gols recentes!",
         },
         {
-          id: 'vis-uni-1',
-          name: 'Marcus Vance',
-          role: 'Recrutador / University of Florida',
-          type: 'university',
-          avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=62',
-          title: 'Um recrutador de faculdade/bolsa de estudos viu seu perfil',
+          id: "vis-uni-1",
+          name: "Marcus Vance",
+          role: "Recrutador / University of Florida",
+          type: "university",
+          avatar: "https://img.usecurling.com/ppl/medium?gender=male&seed=62",
+          title: "Um recrutador de faculdade/bolsa de estudos viu seu perfil",
           message:
-            'University of Florida avaliou seu histórico para bolsa esportiva 100%.',
+            "University of Florida avaliou seu histórico para bolsa esportiva 100%.",
         },
         {
-          id: 'vis-team-1',
-          name: 'Comissão Técnica Sub-21',
-          role: 'Palmeiras FC Scouting',
-          type: 'team',
-          avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=44',
-          title: 'Um time está de olho em você',
+          id: "vis-team-1",
+          name: "Comissão Técnica Sub-21",
+          role: "Palmeiras FC Scouting",
+          type: "team",
+          avatar: "https://img.usecurling.com/ppl/medium?gender=male&seed=44",
+          title: "Um time está de olho em você",
           message:
-            'O Palmeiras FC visitou seu perfil para analisar estatísticas de desempenho.',
+            "O Palmeiras FC visitou seu perfil para analisar estatísticas de desempenho.",
         },
       ]
 
@@ -68,16 +68,16 @@ export function SmartNotificationManager() {
       if (canNotifyVip(visitor.id, now)) {
         recordVipView(visitor.id, now)
 
-        const isScout = visitor.type === 'scout'
-        const isUni = visitor.type === 'university'
+        const isScout = visitor.type === "scout"
+        const isUni = visitor.type === "university"
         const NotificationIcon = isScout ? Eye : isUni ? Crown : Eye
 
         addNotification({
           title: visitor.title,
           message: visitor.message,
-          type: isUni ? 'scholarship' : 'verification',
-          priority: 'high',
-          link: '/profile/views',
+          type: isUni ? "scholarship" : "verification",
+          priority: "high",
+          link: "/profile/views",
           user: {
             id: visitor.id,
             name: visitor.name,
@@ -91,12 +91,12 @@ export function SmartNotificationManager() {
             <div className="flex w-full items-center gap-3 rounded-2xl border-2 border-primary/30 bg-background/95 p-3 shadow-2xl backdrop-blur-xl animate-in slide-in-from-top-4 duration-300">
               <div
                 className={cn(
-                  'flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-opacity-20',
+                  "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-opacity-20",
                   isScout
-                    ? 'bg-blue-500/20 text-blue-500'
+                    ? "bg-blue-500/20 text-blue-500"
                     : isUni
-                      ? 'bg-amber-500/20 text-amber-500'
-                      : 'bg-emerald-500/20 text-emerald-500',
+                      ? "bg-amber-500/20 text-amber-500"
+                      : "bg-emerald-500/20 text-emerald-500",
                 )}
               >
                 <NotificationIcon className="h-6 w-6" />
@@ -112,7 +112,7 @@ export function SmartNotificationManager() {
               <button
                 onClick={() => {
                   toast.dismiss(t)
-                  navigate('/profile/views')
+                  navigate("/profile/views")
                 }}
                 className="shrink-0 rounded-xl bg-primary px-3 py-2 text-xs font-bold text-primary-foreground transition-all hover:scale-105 active:scale-95 shadow-md shadow-primary/20"
               >
@@ -120,7 +120,7 @@ export function SmartNotificationManager() {
               </button>
             </div>
           ),
-          { duration: 6000, position: 'top-center' },
+          { duration: 6000, position: "top-center" },
         )
       }
     }
@@ -143,11 +143,13 @@ export function SmartNotificationManager() {
           const notificationId = `event-reminder-${comp.id}`
           if (!hasNotified(notificationId)) {
             addNotification({
-              title: 'Lembrete de Evento',
-              message: `Faltam ${diffDays === 0 ? 'poucas horas' : diffDays + ' dias'} para ${comp.name}. Prepare-se!`,
-              type: 'event_reminder',
-              priority: 'high',
-              link: '/profile/passport',
+              title: "Lembrete de Evento",
+              message: `Faltam ${
+                diffDays === 0 ? "poucas horas" : diffDays + " dias"
+              } para ${comp.name}. Prepare-se!`,
+              type: "event_reminder",
+              priority: "high",
+              link: "/profile/passport",
             })
             addNotifiedId(notificationId)
           }
@@ -165,7 +167,7 @@ export function SmartNotificationManager() {
       const today = new Date()
 
       goals.forEach((goal) => {
-        if (goal.status === 'achieved') return
+        if (goal.status === "achieved") return
 
         const deadlineDate = parseDate(goal.targetDate)
         const diffTime = deadlineDate.getTime() - today.getTime()
@@ -175,11 +177,11 @@ export function SmartNotificationManager() {
           const notificationId = `goal-deadline-${goal.id}`
           if (!hasNotified(notificationId)) {
             addNotification({
-              title: 'Prazo da Meta Próximo',
+              title: "Prazo da Meta Próximo",
               message: `Atenção! Faltam ${diffDays} dias para atingir sua meta: "${goal.title}".`,
-              type: 'goal_deadline',
-              priority: 'medium',
-              link: '/profile/passport',
+              type: "goal_deadline",
+              priority: "medium",
+              link: "/profile/passport",
             })
             addNotifiedId(notificationId)
           }
@@ -187,11 +189,11 @@ export function SmartNotificationManager() {
           const notificationId = `goal-expired-${goal.id}`
           if (!hasNotified(notificationId)) {
             addNotification({
-              title: 'Prazo da Meta Expirado',
+              title: "Prazo da Meta Expirado",
               message: `O prazo para "${goal.title}" encerrou. Atualize seu status.`,
-              type: 'goal_deadline',
-              priority: 'medium',
-              link: '/profile/passport',
+              type: "goal_deadline",
+              priority: "medium",
+              link: "/profile/passport",
             })
             addNotifiedId(notificationId)
           }
@@ -215,19 +217,19 @@ export function SmartNotificationManager() {
           verifyCertification(pendingCert.id)
 
           addNotification({
-            title: 'Verificação Concluída',
+            title: "Verificação Concluída",
             message: `Sua certificação "${pendingCert.name}" foi validada com sucesso!`,
-            type: 'verification',
-            priority: 'high',
-            link: '/profile/passport',
+            type: "verification",
+            priority: "high",
+            link: "/profile/passport",
           })
           addNotifiedId(notificationId)
 
-          toast.success('Documento Verificado!', {
+          toast.success("Documento Verificado!", {
             description: `${pendingCert.name} agora consta como oficial no seu passaporte.`,
             action: {
-              label: 'Ver Passaporte',
-              onClick: () => navigate('/profile/passport'),
+              label: "Ver Passaporte",
+              onClick: () => navigate("/profile/passport"),
             },
           })
         }
@@ -283,9 +285,9 @@ export function SmartNotificationManager() {
         if (!hasNotified(notificationId)) {
           addNotification({
             title: friend.name,
-            message: `Tem interesses semelhantes aos seus! Gosta de ${shared.slice(0, 2).join(' e ')}.`,
-            type: 'friend_suggestion',
-            priority: 'medium',
+            message: `Tem interesses semelhantes aos seus! Gosta de ${shared.slice(0, 2).join(" e ")}.`,
+            type: "friend_suggestion",
+            priority: "medium",
             link: `/profile/${friend.id}`,
             user: {
               id: String(friend.id),
@@ -321,7 +323,7 @@ export function SmartNotificationManager() {
                 </button>
               </div>
             ),
-            { duration: 6000, position: 'top-center' },
+            { duration: 6000, position: "top-center" },
           )
         }
       }

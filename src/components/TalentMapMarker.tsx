@@ -1,16 +1,16 @@
-import { ProfileData } from '@/lib/data'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { cn } from '@/lib/utils'
-import { Star, Trophy, Sparkles } from 'lucide-react'
+import { ProfileData } from "@/lib/data"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { cn } from "@/lib/utils"
+import { Star, Trophy, Sparkles } from "lucide-react"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover'
-import { TalentPreviewCard } from '@/components/TalentPreviewCard'
+} from "@/components/ui/popover"
+import { TalentPreviewCard } from "@/components/TalentPreviewCard"
 
 interface TalentMapMarkerProps {
-  talent: ProfileData & { x: number; y: number }
+  talent: ProfileData & { x: number y: number }
   isTopTalent: boolean
 }
 
@@ -22,8 +22,8 @@ export function TalentMapMarker({ talent, isTopTalent }: TalentMapMarkerProps) {
       <PopoverTrigger asChild>
         <button
           className={cn(
-            'absolute transform -translate-x-1/2 -translate-y-1/2 group transition-all duration-300 hover:scale-125 hover:z-50',
-            isTopTalent || isDiscovered ? 'z-20' : 'z-10',
+            "absolute transform -translate-x-1/2 -translate-y-1/2 group transition-all duration-300 hover:scale-125 hover:z-50",
+            isTopTalent || isDiscovered ? "z-20" : "z-10",
           )}
           style={{
             left: `${talent.x}%`,
@@ -35,7 +35,7 @@ export function TalentMapMarker({ talent, isTopTalent }: TalentMapMarkerProps) {
             <>
               <div
                 className="absolute inset-0 rounded-full bg-cyan-400/30 animate-ping"
-                style={{ animationDuration: '3s' }}
+                style={{ animationDuration: "3s" }}
               />
               <div className="absolute -inset-2 rounded-full border border-cyan-400/50 animate-pulse" />
             </>
@@ -49,12 +49,12 @@ export function TalentMapMarker({ talent, isTopTalent }: TalentMapMarkerProps) {
           {/* Marker Container */}
           <div
             className={cn(
-              'relative h-10 w-10 rounded-full border-2 flex items-center justify-center shadow-lg overflow-hidden bg-background transition-colors',
+              "relative h-10 w-10 rounded-full border-2 flex items-center justify-center shadow-lg overflow-hidden bg-background transition-colors",
               isDiscovered
-                ? 'border-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.6)]'
+                ? "border-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.6)]"
                 : isTopTalent
-                  ? 'border-gold shadow-[0_0_15px_rgba(255,215,0,0.5)]'
-                  : 'border-white/50 hover:border-primary',
+                  ? "border-gold shadow-[0_0_15px_rgba(255,215,0,0.5)]"
+                  : "border-white/50 hover:border-primary",
             )}
           >
             <Avatar className="h-full w-full">

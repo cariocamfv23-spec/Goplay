@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { mockCurrentUser, referralLevels } from '@/lib/data'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { mockCurrentUser, referralLevels } from "@/lib/data"
 import {
   ArrowLeft,
   Copy,
@@ -9,23 +9,23 @@ import {
   MessageCircle,
   TrendingUp,
   Award,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { ShareDialog } from '@/components/ShareDialog'
-import { useState, useEffect } from 'react'
-import { toast } from 'sonner'
-import { ReferralLevelProgress } from '@/components/ReferralLevelProgress'
-import useNotificationStore from '@/stores/useNotificationStore'
-import { ReferralStatusList } from '@/components/ReferralStatusList'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { ShareDialog } from "@/components/ShareDialog"
+import { useState, useEffect } from "react"
+import { toast } from "sonner"
+import { ReferralLevelProgress } from "@/components/ReferralLevelProgress"
+import useNotificationStore from "@/stores/useNotificationStore"
+import { ReferralStatusList } from "@/components/ReferralStatusList"
 import {
   mockReferrals,
   Referral,
   mockPromotions,
   Promotion,
-} from '@/lib/referral-data'
-import { ActivePromotions } from '@/components/ActivePromotions'
-import { isWithinInterval } from 'date-fns'
-import { useAlbumStore } from '@/stores/useAlbumStore'
+} from "@/lib/referral-data"
+import { ActivePromotions } from "@/components/ActivePromotions"
+import { isWithinInterval } from "date-fns"
+import { useAlbumStore } from "@/stores/useAlbumStore"
 
 export default function ReferralProgram() {
   const navigate = useNavigate()
@@ -43,22 +43,22 @@ export default function ReferralProgram() {
   )
 
   // Track previous level to show notifications on level up
-  const [prevLevelId, setPrevLevelId] = useState<string>('')
+  const [prevLevelId, setPrevLevelId] = useState<string>("")
 
-  const referralCode = mockCurrentUser.referralCode || 'GOPLAY2024'
+  const referralCode = mockCurrentUser.referralCode || "GOPLAY2024"
   const inviteLink = `https://goplay.app/invite/${referralCode}`
   const inviteMessage = `Baixe o Goplay com meu código ${referralCode} e ganhe 500 pontos na hora! ${inviteLink}`
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(referralCode)
     setCopied(true)
-    toast.success('Código copiado!')
+    toast.success("Código copiado!")
     setTimeout(() => setCopied(false), 2000)
   }
 
   const handleWhatsappShare = () => {
     const text = encodeURIComponent(inviteMessage)
-    window.open(`https://wa.me/?text=${text}`, '_blank')
+    window.open(`https://wa.me/?text=${text}`, "_blank")
   }
 
   // Calculate Current Level ID
@@ -70,7 +70,7 @@ export default function ReferralProgram() {
         (!nextLevel || count < nextLevel.minReferrals)
       )
     })
-    return referralLevels[levelIndex]?.id || 'rookie'
+    return referralLevels[levelIndex]?.id || "rookie"
   }
 
   // Effect to check for level up
@@ -96,16 +96,16 @@ export default function ReferralProgram() {
       if (newLevel && newLevelIndex > oldLevelIndex) {
         // Level Up!
         toast.success(`Parabéns! Você alcançou o nível ${newLevel.name}!`, {
-          description: 'Novos benefícios foram desbloqueados em sua conta.',
+          description: "Novos benefícios foram desbloqueados em sua conta.",
           icon: <Award className="h-5 w-5 text-gold" />,
           duration: 5000,
         })
 
         addNotification({
-          title: 'Novo Nível Alcançado!',
+          title: "Novo Nível Alcançado!",
           message: `Você agora é nível ${newLevel.name} no programa de indicação. Aproveite seus novos benefícios!`,
-          type: 'system',
-          priority: 'high',
+          type: "system",
+          priority: "high",
         })
       }
       setPrevLevelId(currentLevelId)
@@ -132,7 +132,7 @@ export default function ReferralProgram() {
       0,
     )
     const totalPoints = basePoints + bonusPoints
-    const activePromoNames = activePromotions.map((p) => p.title).join(', ')
+    const activePromoNames = activePromotions.map((p) => p.title).join(", ")
 
     // 2. Update count and points
     setReferralsCount((prev) => prev + 1)
@@ -141,10 +141,10 @@ export default function ReferralProgram() {
     // 3. Add new referral to list
     const newReferral: Referral = {
       id: Math.random().toString(36).substr(2, 9),
-      name: 'Novo Usuário',
+      name: "Novo Usuário",
       avatar: `https://img.usecurling.com/ppl/thumbnail?gender=male&seed=${Math.floor(Math.random() * 100)}`,
-      status: 'registered',
-      date: 'Agora',
+      status: "registered",
+      date: "Agora",
       pointsEarned: totalPoints,
       bonusApplied: activePromoNames || undefined,
     }
@@ -159,7 +159,7 @@ export default function ReferralProgram() {
       })
     } else {
       toast.success(`+${totalPoints} Pontos Recebidos!`, {
-        description: 'Nova indicação confirmada.',
+        description: "Nova indicação confirmada.",
         icon: <TrendingUp className="h-4 w-4 text-green-500" />,
       })
     }
@@ -167,14 +167,14 @@ export default function ReferralProgram() {
     // 5. Album Pack Reward Logic
     useAlbumStore.getState().addPack()
     addNotification({
-      title: 'Pacote de Figurinhas Recebido!',
+      title: "Pacote de Figurinhas Recebido!",
       message:
-        'Um amigo entrou no GoPlay usando seu link! Você recebeu um pacote com 7 figurinhas para o seu Álbum da Copa de 2026.',
-      type: 'system',
-      priority: 'high',
-      link: '/album',
+        "Um amigo entrou no GoPlay usando seu link! Você recebeu um pacote com 7 figurinhas para o seu Álbum da Copa de 2026.",
+      type: "system",
+      priority: "high",
+      link: "/album",
     })
-    toast.success('Você ganhou 1 Pacote de Figurinhas!', {
+    toast.success("Você ganhou 1 Pacote de Figurinhas!", {
       icon: <Award className="h-5 w-5 text-green-500" />,
     })
   }

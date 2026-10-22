@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useContractStore, ContractMetric } from '@/stores/useContractStore'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useContractStore, ContractMetric } from "@/stores/useContractStore"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Card, CardContent } from '@/components/ui/card'
+} from "@/components/ui/select"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   ArrowLeft,
   Plus,
@@ -20,31 +20,30 @@ import {
   Target,
   DollarSign,
   User,
-} from 'lucide-react'
-import { toast } from 'sonner'
-import { mockTalents } from '@/lib/data'
+} from "lucide-react"
+import { toast } from "sonner"
+import { mockTalents } from "@/lib/data"
 
 export default function CreateContract() {
   const navigate = useNavigate()
   const { addContract } = useContractStore()
 
   // Form State
-  const [title, setTitle] = useState('')
-  const [athleteName, setAthleteName] = useState('')
-  const [baseValue, setBaseValue] = useState('')
-  const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
-  const [metrics, setMetrics] = useState<
-    Omit<ContractMetric, 'id' | 'currentValue'>[]
-  >([])
+  const [title, setTitle] = useState("")
+  const [athleteName, setAthleteName] = useState("")
+  const [baseValue, setBaseValue] = useState("")
+  const [startDate, setStartDate] = useState("")
+  const [endDate, setEndDate] = useState("")
+  const [metrics, setMetrics] =
+    useState<Omit<ContractMetric, "id" | "currentValue">[]>([])
 
   // Metric Builder State
   const [newMetric, setNewMetric] = useState({
-    label: '',
-    targetValue: '',
-    unit: '',
-    impactValue: '',
-    type: 'linear' as 'linear' | 'milestone',
+    label: "",
+    targetValue: "",
+    unit: "",
+    impactValue: "",
+    type: "linear" as "linear" | "milestone",
   })
 
   const handleAddMetric = () => {
@@ -54,7 +53,7 @@ export default function CreateContract() {
       !newMetric.unit ||
       !newMetric.impactValue
     ) {
-      toast.error('Preencha todos os campos da métrica')
+      toast.error("Preencha todos os campos da métrica")
       return
     }
 
@@ -71,11 +70,11 @@ export default function CreateContract() {
 
     // Reset metric form
     setNewMetric({
-      label: '',
-      targetValue: '',
-      unit: '',
-      impactValue: '',
-      type: 'linear',
+      label: "",
+      targetValue: "",
+      unit: "",
+      impactValue: "",
+      type: "linear",
     })
   }
 
@@ -87,23 +86,23 @@ export default function CreateContract() {
 
   const handleSubmit = () => {
     if (!title || !athleteName || !baseValue || !startDate || !endDate) {
-      toast.error('Preencha as informações básicas do contrato')
+      toast.error("Preencha as informações básicas do contrato")
       return
     }
 
     if (metrics.length === 0) {
-      toast.error('Adicione pelo menos uma métrica de performance')
+      toast.error("Adicione pelo menos uma métrica de performance")
       return
     }
 
     addContract({
       title,
-      proposerName: 'Minha Organização', // Mock
-      proposerLogo: 'https://img.usecurling.com/i?q=organization&color=blue', // Mock
+      proposerName: "Minha Organização", // Mock
+      proposerLogo: "https://img.usecurling.com/i?q=organization&color=blue", // Mock
       athleteName,
       baseValue: Number(baseValue),
-      currency: 'R$',
-      status: 'pending',
+      currency: "R$",
+      status: "pending",
       startDate,
       endDate,
       metrics: metrics.map((m) => ({
@@ -113,8 +112,8 @@ export default function CreateContract() {
       })),
     })
 
-    toast.success('Proposta enviada com sucesso!')
-    navigate('/contracts')
+    toast.success("Proposta enviada com sucesso!")
+    navigate("/contracts")
   }
 
   return (
@@ -328,7 +327,7 @@ export default function CreateContract() {
                       + R$ {metric.impactValue}
                     </span>
                     <span className="block text-[9px] text-muted-foreground uppercase">
-                      {metric.type === 'linear' ? 'Proporcional' : 'Fixo'}
+                      {metric.type === "linear" ? "Proporcional" : "Fixo"}
                     </span>
                   </div>
                   <button
@@ -354,7 +353,7 @@ export default function CreateContract() {
           <div className="flex justify-between items-center text-sm mt-1">
             <span className="text-green-600">Potencial Extra:</span>
             <span className="font-bold text-green-600">
-              + R${' '}
+              + R${" "}
               {metrics
                 .reduce((acc, m) => acc + Number(m.impactValue), 0)
                 .toLocaleString()}
@@ -363,7 +362,7 @@ export default function CreateContract() {
           <div className="border-t border-primary/10 mt-3 pt-3 flex justify-between items-center">
             <span className="font-bold">Valor Total Possível:</span>
             <span className="font-bold text-lg text-primary">
-              R${' '}
+              R${" "}
               {(
                 Number(baseValue || 0) +
                 metrics.reduce((acc, m) => acc + Number(m.impactValue), 0)

@@ -1,19 +1,19 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Search, Calendar, MapPin, X, PlusCircle, Loader2 } from 'lucide-react'
-import { mockEvents } from '@/lib/data'
-import { useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import { eventsService, type EventItem } from '@/services/events'
-import { useAuth } from '@/hooks/use-auth'
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Search, Calendar, MapPin, X, PlusCircle, Loader2 } from "lucide-react"
+import { mockEvents } from "@/lib/data"
+import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { eventsService, type EventItem } from "@/services/events"
+import { useAuth } from "@/hooks/use-auth"
 
 export default function EventsList() {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const [search, setSearch] = useState('')
-  const [selectedType, setSelectedType] = useState<'all' | 'tryout' | 'event'>(
-    'all',
+  const [search, setSearch] = useState("")
+  const [selectedType, setSelectedType] = useState<"all" | "tryout" | "event">(
+    "all",
   )
   const [realEvents, setRealEvents] = useState<EventItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -34,15 +34,15 @@ export default function EventsList() {
   const mappedRealEvents = realEvents.map((e) => ({
     id: e.id,
     title: e.title,
-    date: `${new Date(e.eventDate).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}, ${e.eventTime}`,
+    date: `${new Date(e.eventDate).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}, ${e.eventTime}`,
     location: `${e.locationName} - ${e.city}, ${e.state}`,
     attendees: e.registrationsCount || 0,
-    price: e.price === 0 ? 'Gratuito' : `R$ ${e.price.toFixed(2)}`,
+    price: e.price === 0 ? "Gratuito" : `R$ ${e.price.toFixed(2)}`,
     image:
-      e.bannerUrl || 'https://img.usecurling.com/p/800/400?q=sports%20stadium',
+      e.bannerUrl || "https://img.usecurling.com/p/800/400?q=sports%20stadium",
     sport: e.sport,
     rawType: e.type,
-    type: e.type === 'tryout' ? 'Peneira Oficial' : 'Torneio Oficial',
+    type: e.type === "tryout" ? "Peneira Oficial" : "Torneio Oficial",
     isRegistered: e.isRegistered,
     isReal: true,
   }))
@@ -52,21 +52,21 @@ export default function EventsList() {
 
   const filtered = allDisplayEvents.filter((e: any) => {
     const matchesSearch =
-      (e.title || '').toLowerCase().includes(search.toLowerCase()) ||
-      (e.sport || '').toLowerCase().includes(search.toLowerCase()) ||
-      (e.location || '').toLowerCase().includes(search.toLowerCase())
+      (e.title || "").toLowerCase().includes(search.toLowerCase()) ||
+      (e.sport || "").toLowerCase().includes(search.toLowerCase()) ||
+      (e.location || "").toLowerCase().includes(search.toLowerCase())
 
     const isTryout =
-      e.rawType === 'tryout' ||
-      (typeof e.type === 'string' &&
-        (e.type.toLowerCase().includes('peneira') ||
-          e.type.toLowerCase().includes('seletiva') ||
-          e.type.toLowerCase().includes('tryout')))
+      e.rawType === "tryout" ||
+      (typeof e.type === "string" &&
+        (e.type.toLowerCase().includes("peneira") ||
+          e.type.toLowerCase().includes("seletiva") ||
+          e.type.toLowerCase().includes("tryout")))
 
     const matchesType =
-      selectedType === 'all'
+      selectedType === "all"
         ? true
-        : selectedType === 'tryout'
+        : selectedType === "tryout"
           ? isTryout
           : !isTryout
 
@@ -88,7 +88,7 @@ export default function EventsList() {
           <Button
             size="sm"
             className="rounded-full gap-1.5 text-xs bg-primary text-white shadow-sm"
-            onClick={() => navigate('/organizer/create')}
+            onClick={() => navigate("/organizer/create")}
           >
             <PlusCircle className="w-4 h-4" />
             Criar Evento
@@ -99,25 +99,25 @@ export default function EventsList() {
         <div className="flex items-center gap-2 mb-3">
           <Button
             size="sm"
-            variant={selectedType === 'all' ? 'default' : 'outline'}
+            variant={selectedType === "all" ? "default" : "outline"}
             className="h-7 text-xs rounded-full"
-            onClick={() => setSelectedType('all')}
+            onClick={() => setSelectedType("all")}
           >
             Todos
           </Button>
           <Button
             size="sm"
-            variant={selectedType === 'tryout' ? 'default' : 'outline'}
+            variant={selectedType === "tryout" ? "default" : "outline"}
             className="h-7 text-xs rounded-full border-amber-500/50 text-amber-500 hover:bg-amber-500/10"
-            onClick={() => setSelectedType('tryout')}
+            onClick={() => setSelectedType("tryout")}
           >
             ⭐ Peneiras Oficiais
           </Button>
           <Button
             size="sm"
-            variant={selectedType === 'event' ? 'default' : 'outline'}
+            variant={selectedType === "event" ? "default" : "outline"}
             className="h-7 text-xs rounded-full"
-            onClick={() => setSelectedType('event')}
+            onClick={() => setSelectedType("event")}
           >
             Torneios
           </Button>
@@ -134,7 +134,7 @@ export default function EventsList() {
           />
           {search && (
             <button
-              onClick={() => setSearch('')}
+              onClick={() => setSearch("")}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             >
               <X className="w-4 h-4" />
@@ -162,7 +162,7 @@ export default function EventsList() {
                 <img
                   src={
                     event.image ||
-                    'https://img.usecurling.com/p/800/400?q=sports%20event'
+                    "https://img.usecurling.com/p/800/400?q=sports%20event"
                   }
                   alt={event.title}
                   className="w-full h-full object-cover"
@@ -180,10 +180,10 @@ export default function EventsList() {
                     <Badge
                       variant="outline"
                       className={
-                        event.type.includes('Peneira') ||
-                        event.rawType === 'tryout'
-                          ? 'backdrop-blur-md bg-amber-500/25 border-amber-500 text-amber-500 font-bold shadow-xs'
-                          : 'backdrop-blur-md bg-background/80'
+                        event.type.includes("Peneira") ||
+                        event.rawType === "tryout"
+                          ? "backdrop-blur-md bg-amber-500/25 border-amber-500 text-amber-500 font-bold shadow-xs"
+                          : "backdrop-blur-md bg-background/80"
                       }
                     >
                       {event.type}
@@ -220,7 +220,7 @@ export default function EventsList() {
                     {event.attendees || 0} inscritos
                   </span>
                   <span className="font-semibold text-primary">
-                    {event.price || 'Gratuito'}
+                    {event.price || "Gratuito"}
                   </span>
                 </div>
               </CardContent>

@@ -1,32 +1,32 @@
-import { useState, useRef } from 'react'
-import { foodCategories, mockFoodPosts } from './mockData'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import { Utensils, Image as ImageIcon, Send, X } from 'lucide-react'
-import { FoodHighlights } from '@/components/food-sport/FoodHighlights'
-import { FoodPostCard } from '@/components/food-sport/FoodPostCard'
-import { CreateFoodPostFab } from '@/components/food-sport/CreateFoodPostFab'
-import { Card, CardContent } from '@/components/ui/card'
-import { Textarea } from '@/components/ui/textarea'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { toast } from 'sonner'
+import { useState, useRef } from "react"
+import { foodCategories, mockFoodPosts } from "./mockData"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { Utensils, Image as ImageIcon, Send, X } from "lucide-react"
+import { FoodHighlights } from "@/components/food-sport/FoodHighlights"
+import { FoodPostCard } from "@/components/food-sport/FoodPostCard"
+import { CreateFoodPostFab } from "@/components/food-sport/CreateFoodPostFab"
+import { Card, CardContent } from "@/components/ui/card"
+import { Textarea } from "@/components/ui/textarea"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { toast } from "sonner"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from "@/components/ui/select"
 
 export default function FoodSport() {
-  const [activeCategory, setActiveCategory] = useState('Todos')
+  const [activeCategory, setActiveCategory] = useState("Todos")
   const [posts, setPosts] = useState(mockFoodPosts)
 
-  const [newPostContent, setNewPostContent] = useState('')
+  const [newPostContent, setNewPostContent] = useState("")
   const [newPostImage, setNewPostImage] = useState<string | null>(null)
   const [newPostCategory, setNewPostCategory] = useState<string>(
-    'Alimentação saudável',
+    "Alimentação saudável",
   )
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -39,21 +39,21 @@ export default function FoodSport() {
 
   const handlePost = () => {
     if (!newPostContent.trim() && !newPostImage) {
-      toast.error('Adicione texto ou uma foto para publicar.')
+      toast.error("Adicione texto ou uma foto para publicar.")
       return
     }
 
     const newPost = {
       id: Date.now(),
-      type: newPostImage ? 'image' : 'text',
+      type: newPostImage ? "image" : "text",
       user: {
-        id: 'me',
-        name: 'Você',
-        type: 'Atleta',
-        avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99',
+        id: "me",
+        name: "Você",
+        type: "Atleta",
+        avatar: "https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99",
       },
       template: newPostCategory,
-      categories: ['Todos', newPostCategory],
+      categories: ["Todos", newPostCategory],
       content: newPostContent,
       image: newPostImage || undefined,
       hashtags: [],
@@ -62,29 +62,29 @@ export default function FoodSport() {
       shares: 0,
       saves: 0,
       favorites: 0,
-      time: 'Agora',
+      time: "Agora",
       liked: false,
       saved: false,
     }
 
     setPosts([newPost, ...posts])
-    setNewPostContent('')
+    setNewPostContent("")
     setNewPostImage(null)
-    toast.success('Refeição compartilhada com sucesso!')
+    toast.success("Refeição compartilhada com sucesso!")
   }
 
   const handleFabPost = (data: any) => {
     const newPost = {
       id: Date.now(),
-      type: 'image',
+      type: "image",
       user: {
-        id: 'me',
-        name: 'Você',
-        type: 'Atleta',
-        avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99',
+        id: "me",
+        name: "Você",
+        type: "Atleta",
+        avatar: "https://img.usecurling.com/ppl/thumbnail?gender=male&seed=99",
       },
-      template: data.template || 'Alimentação saudável',
-      categories: ['Todos', data.template || 'Alimentação saudável'],
+      template: data.template || "Alimentação saudável",
+      categories: ["Todos", data.template || "Alimentação saudável"],
       content: data.content,
       image: data.image,
       hashtags: [],
@@ -93,12 +93,12 @@ export default function FoodSport() {
       shares: 0,
       saves: 0,
       favorites: 0,
-      time: 'Agora',
+      time: "Agora",
       liked: false,
       saved: false,
     }
     setPosts([newPost, ...posts])
-    toast.success('Refeição compartilhada com sucesso!')
+    toast.success("Refeição compartilhada com sucesso!")
   }
 
   const handleDeletePost = (id: number) => {
@@ -107,7 +107,7 @@ export default function FoodSport() {
 
   const filteredPosts = posts.filter(
     (post) =>
-      activeCategory === 'Todos' ||
+      activeCategory === "Todos" ||
       (post.categories && post.categories.includes(activeCategory)) ||
       post.template === activeCategory,
   )
@@ -133,13 +133,13 @@ export default function FoodSport() {
             {foodCategories.map((cat) => (
               <Button
                 key={cat}
-                variant={activeCategory === cat ? 'default' : 'secondary'}
+                variant={activeCategory === cat ? "default" : "secondary"}
                 size="sm"
                 className={cn(
-                  'rounded-full text-xs font-semibold h-8 border shadow-sm transition-all',
+                  "rounded-full text-xs font-semibold h-8 border shadow-sm transition-all",
                   activeCategory === cat
-                    ? 'bg-orange-600 hover:bg-orange-700 text-white border-transparent'
-                    : 'bg-secondary/50 border-border/50 text-muted-foreground hover:text-foreground',
+                    ? "bg-orange-600 hover:bg-orange-700 text-white border-transparent"
+                    : "bg-secondary/50 border-border/50 text-muted-foreground hover:text-foreground",
                 )}
                 onClick={() => setActiveCategory(cat)}
               >
@@ -154,7 +154,7 @@ export default function FoodSport() {
       {/* Main Content Area */}
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
         {/* Highlights Section */}
-        {activeCategory === 'Todos' && <FoodHighlights />}
+        {activeCategory === "Todos" && <FoodHighlights />}
 
         {/* Feed Area */}
         <div className="px-4 mt-2 max-w-2xl mx-auto space-y-6">
@@ -177,7 +177,7 @@ export default function FoodSport() {
                       </SelectTrigger>
                       <SelectContent className="max-h-[200px]">
                         {foodCategories
-                          .filter((c) => c !== 'Todos')
+                          .filter((c) => c !== "Todos")
                           .map((cat) => (
                             <SelectItem
                               key={cat}

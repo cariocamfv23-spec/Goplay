@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo } from "react"
 import {
   Dialog,
   DialogContent,
@@ -6,19 +6,19 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
+} from "@/components/ui/select"
+import { Badge } from "@/components/ui/badge"
 import {
   Loader2,
   Upload,
@@ -28,21 +28,21 @@ import {
   X,
   Search,
   Sparkles,
-} from 'lucide-react'
-import { toast } from 'sonner'
+} from "lucide-react"
+import { toast } from "sonner"
 import {
   profileService,
   type ProfileRow,
   type AccountType,
-} from '@/services/profiles'
-import { useAuth } from '@/hooks/use-auth'
+} from "@/services/profiles"
+import { useAuth } from "@/hooks/use-auth"
 import {
   SPORTS_CATALOG,
   BRAZILIAN_STATES,
   CLUB_CATEGORIES_OPTIONS,
   COACH_SPECIALTIES_OPTIONS,
   COACH_CERTIFICATIONS_OPTIONS,
-} from '@/lib/sports-catalog'
+} from "@/lib/sports-catalog"
 
 interface EditProfileDialogProps {
   open: boolean
@@ -62,51 +62,51 @@ export function EditProfileDialog({
   const [uploadingAvatar, setUploadingAvatar] = useState(false)
 
   // Form states
-  const [fullName, setFullName] = useState('')
-  const [accountType, setAccountType] = useState<AccountType>('athlete')
-  const [sport, setSport] = useState('')
-  const [sportSearch, setSportSearch] = useState('')
-  const [position, setPosition] = useState('')
-  const [customPosition, setCustomPosition] = useState('')
-  const [city, setCity] = useState('')
-  const [cityInput, setCityInput] = useState('')
-  const [state, setState] = useState('')
-  const [birthDate, setBirthDate] = useState('')
-  const [bio, setBio] = useState('')
-  const [experience, setExperience] = useState('')
-  const [previousClubs, setPreviousClubs] = useState('')
-  const [sportsGoals, setSportsGoals] = useState('')
-  const [clubName, setClubName] = useState('')
-  const [institutionalDescription, setInstitutionalDescription] = useState('')
-  const [categories, setCategories] = useState('')
-  const [contactInfo, setContactInfo] = useState('')
-  const [specialties, setSpecialties] = useState('')
-  const [certifications, setCertifications] = useState('')
-  const [avatarUrl, setAvatarUrl] = useState('')
+  const [fullName, setFullName] = useState("")
+  const [accountType, setAccountType] = useState<AccountType>("athlete")
+  const [sport, setSport] = useState("")
+  const [sportSearch, setSportSearch] = useState("")
+  const [position, setPosition] = useState("")
+  const [customPosition, setCustomPosition] = useState("")
+  const [city, setCity] = useState("")
+  const [cityInput, setCityInput] = useState("")
+  const [state, setState] = useState("")
+  const [birthDate, setBirthDate] = useState("")
+  const [bio, setBio] = useState("")
+  const [experience, setExperience] = useState("")
+  const [previousClubs, setPreviousClubs] = useState("")
+  const [sportsGoals, setSportsGoals] = useState("")
+  const [clubName, setClubName] = useState("")
+  const [institutionalDescription, setInstitutionalDescription] = useState("")
+  const [categories, setCategories] = useState("")
+  const [contactInfo, setContactInfo] = useState("")
+  const [specialties, setSpecialties] = useState("")
+  const [certifications, setCertifications] = useState("")
+  const [avatarUrl, setAvatarUrl] = useState("")
 
   // Sync state whenever profile prop or dialog open changes
   useEffect(() => {
     if (profile) {
-      setFullName(profile.full_name || '')
-      setAccountType(profile.account_type || 'athlete')
-      setSport(profile.sport || '')
-      setPosition(profile.position || '')
-      setCustomPosition('')
-      setCity(profile.city || '')
-      setCityInput(profile.city || '')
-      setState(profile.state ? profile.state.toUpperCase() : '')
-      setBirthDate(profile.birth_date || '')
-      setBio(profile.bio || '')
-      setExperience(profile.experience || '')
-      setPreviousClubs(profile.previous_clubs || '')
-      setSportsGoals(profile.sports_goals || '')
-      setClubName(profile.club_name || '')
-      setInstitutionalDescription(profile.institutional_description || '')
-      setCategories(profile.categories || '')
-      setContactInfo(profile.contact_info || '')
-      setSpecialties(profile.specialties || '')
-      setCertifications(profile.certifications || '')
-      setAvatarUrl(profile.avatar_url || '')
+      setFullName(profile.full_name || "")
+      setAccountType(profile.account_type || "athlete")
+      setSport(profile.sport || "")
+      setPosition(profile.position || "")
+      setCustomPosition("")
+      setCity(profile.city || "")
+      setCityInput(profile.city || "")
+      setState(profile.state ? profile.state.toUpperCase() : "")
+      setBirthDate(profile.birth_date || "")
+      setBio(profile.bio || "")
+      setExperience(profile.experience || "")
+      setPreviousClubs(profile.previous_clubs || "")
+      setSportsGoals(profile.sports_goals || "")
+      setClubName(profile.club_name || "")
+      setInstitutionalDescription(profile.institutional_description || "")
+      setCategories(profile.categories || "")
+      setContactInfo(profile.contact_info || "")
+      setSpecialties(profile.specialties || "")
+      setCertifications(profile.certifications || "")
+      setAvatarUrl(profile.avatar_url || "")
     }
   }, [profile, open])
 
@@ -142,7 +142,7 @@ export function EditProfileDialog({
     if (!file || !user?.id) return
 
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('A imagem deve ter no máximo 5MB.')
+      toast.error("A imagem deve ter no máximo 5MB.")
       return
     }
 
@@ -150,13 +150,13 @@ export function EditProfileDialog({
     try {
       const { url, error } = await profileService.uploadAvatar(user.id, file)
       if (error) {
-        toast.error('Erro ao enviar imagem: ' + error.message)
+        toast.error("Erro ao enviar imagem: " + error.message)
       } else if (url) {
         setAvatarUrl(url)
-        toast.success('Foto enviada com sucesso!')
+        toast.success("Foto enviada com sucesso!")
       }
     } catch {
-      toast.error('Erro ao processar imagem.')
+      toast.error("Erro ao processar imagem.")
     } finally {
       setUploadingAvatar(false)
     }
@@ -169,7 +169,7 @@ export function EditProfileDialog({
     const newSportObj = SPORTS_CATALOG.find((s) => s.id === newSport)
     if (newSportObj) {
       if (!newSportObj.positions.includes(position)) {
-        setPosition('')
+        setPosition("")
       }
     }
   }
@@ -179,8 +179,8 @@ export function EditProfileDialog({
     setState(newUf)
     const stateObj = BRAZILIAN_STATES.find((s) => s.uf === newUf)
     if (stateObj && city && !stateObj.majorCities.includes(city)) {
-      setCity('')
-      setCityInput('')
+      setCity("")
+      setCityInput("")
     }
   }
 
@@ -188,7 +188,7 @@ export function EditProfileDialog({
     e.preventDefault()
 
     if (!user?.id) {
-      toast.error('Você precisa estar autenticado para salvar.')
+      toast.error("Você precisa estar autenticado para salvar.")
       return
     }
 
@@ -198,8 +198,8 @@ export function EditProfileDialog({
 
     try {
       const finalPosition =
-        customPosition.trim() !== '' ? customPosition.trim() : position.trim()
-      const finalCity = cityInput.trim() !== '' ? cityInput.trim() : city.trim()
+        customPosition.trim() !== "" ? customPosition.trim() : position.trim()
+      const finalCity = cityInput.trim() !== "" ? cityInput.trim() : city.trim()
 
       const updates = {
         full_name: fullName.trim() || null,
@@ -229,20 +229,20 @@ export function EditProfileDialog({
       )
 
       if (error) {
-        toast.error('Não foi possível salvar o perfil: ' + error.message)
+        toast.error("Não foi possível salvar o perfil: " + error.message)
         return
       }
 
       if (data) {
         await refreshProfile()
-        toast.success('Perfil atualizado com sucesso no Supabase!')
+        toast.success("Perfil atualizado com sucesso no Supabase!")
         if (onSuccess) {
           onSuccess(data)
         }
         onOpenChange(false)
       }
     } catch (err: any) {
-      toast.error(err?.message || 'Erro inesperado ao salvar perfil.')
+      toast.error(err?.message || "Erro inesperado ao salvar perfil.")
     } finally {
       setSaving(false)
     }
@@ -318,7 +318,7 @@ export function EditProfileDialog({
                       variant="ghost"
                       size="sm"
                       className="h-8 text-xs text-muted-foreground hover:text-destructive"
-                      onClick={() => setAvatarUrl('')}
+                      onClick={() => setAvatarUrl("")}
                     >
                       <X className="h-3.5 w-3.5 mr-1" /> Remover
                     </Button>
@@ -362,9 +362,9 @@ export function EditProfileDialog({
           {/* Common fields: Name */}
           <div className="space-y-2">
             <Label htmlFor="full_name" className="font-semibold">
-              {accountType === 'club'
-                ? 'Nome do Clube / Entidade Esportiva'
-                : 'Nome Completo'}{' '}
+              {accountType === "club"
+                ? "Nome do Clube / Entidade Esportiva"
+                : "Nome Completo"}{" "}
               <span className="text-destructive">*</span>
             </Label>
             <Input
@@ -405,7 +405,7 @@ export function EditProfileDialog({
               {sportSearch && (
                 <button
                   type="button"
-                  onClick={() => setSportSearch('')}
+                  onClick={() => setSportSearch("")}
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
                   <X className="h-3.5 w-3.5" />
@@ -424,8 +424,8 @@ export function EditProfileDialog({
                     onClick={() => handleSelectSport(s.id)}
                     className={`text-xs px-2.5 py-1 rounded-md transition-all flex items-center gap-1 border ${
                       isSelected
-                        ? 'bg-primary text-primary-foreground border-primary font-bold shadow-sm'
-                        : 'bg-secondary/60 hover:bg-secondary text-foreground border-border/50'
+                        ? "bg-primary text-primary-foreground border-primary font-bold shadow-sm"
+                        : "bg-secondary/60 hover:bg-secondary text-foreground border-border/50"
                     }`}
                   >
                     {isSelected && <Check className="h-3 w-3" />}
@@ -441,20 +441,20 @@ export function EditProfileDialog({
                 htmlFor="position"
                 className="text-xs font-semibold mb-1 block"
               >
-                {accountType === 'club'
-                  ? 'Divisão ou Categoria Principal'
-                  : accountType === 'coach'
-                    ? 'Especialidade / Função na Modalidade'
-                    : `Posição ou Função em ${sport || 'Esporte'}`}
+                {accountType === "club"
+                  ? "Divisão ou Categoria Principal"
+                  : accountType === "coach"
+                    ? "Especialidade / Função na Modalidade"
+                    : `Posição ou Função em ${sport || "Esporte"}`}
               </Label>
 
-              {availablePositions.length > 0 && accountType === 'athlete' ? (
+              {availablePositions.length > 0 && accountType === "athlete" ? (
                 <div className="space-y-2">
                   <Select
                     value={position}
                     onValueChange={(val) => {
                       setPosition(val)
-                      setCustomPosition('')
+                      setCustomPosition("")
                     }}
                   >
                     <SelectTrigger id="position" className="bg-background">
@@ -472,7 +472,7 @@ export function EditProfileDialog({
                     </SelectContent>
                   </Select>
 
-                  {position === '__custom__' && (
+                  {position === "__custom__" && (
                     <Input
                       placeholder="Informe sua posição personalizada"
                       value={customPosition}
@@ -490,11 +490,11 @@ export function EditProfileDialog({
                     setCustomPosition(e.target.value)
                   }}
                   placeholder={
-                    accountType === 'club'
-                      ? 'Ex: Série A, Divisão de Acesso, Categoria Sub-20'
-                      : accountType === 'coach'
-                        ? 'Ex: Treinador Principal, Preparador Físico, Técnico de Base'
-                        : 'Ex: Atacante, Meio-Campo, Armador, Nadador Velocista'
+                    accountType === "club"
+                      ? "Ex: Série A, Divisão de Acesso, Categoria Sub-20"
+                      : accountType === "coach"
+                        ? "Ex: Treinador Principal, Preparador Físico, Técnico de Base"
+                        : "Ex: Atacante, Meio-Campo, Armador, Nadador Velocista"
                   }
                   className="bg-background"
                 />
@@ -526,7 +526,7 @@ export function EditProfileDialog({
             {/* Cidade assistida */}
             <div className="space-y-1.5">
               <Label htmlFor="city_input" className="text-xs font-semibold">
-                Cidade {state ? `(${state})` : ''}
+                Cidade {state ? `(${state})` : ""}
               </Label>
               {suggestedCities.length > 0 ? (
                 <div className="space-y-1.5">
@@ -552,10 +552,10 @@ export function EditProfileDialog({
                     </SelectContent>
                   </Select>
 
-                  {city === '__custom_city__' && (
+                  {city === "__custom_city__" && (
                     <Input
                       placeholder="Digite o nome da cidade"
-                      value={cityInput === '__custom_city__' ? '' : cityInput}
+                      value={cityInput === "__custom_city__" ? "" : cityInput}
                       onChange={(e) => setCityInput(e.target.value)}
                       className="bg-background text-xs"
                     />
@@ -577,7 +577,7 @@ export function EditProfileDialog({
           </div>
 
           {/* Athlete Specific Fields */}
-          {accountType === 'athlete' && (
+          {accountType === "athlete" && (
             <div className="space-y-3 border-t pt-3">
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
@@ -644,7 +644,7 @@ export function EditProfileDialog({
           )}
 
           {/* Club Specific Fields */}
-          {accountType === 'club' && (
+          {accountType === "club" && (
             <div className="space-y-3 border-t pt-3">
               <div className="space-y-1.5">
                 <Label
@@ -663,7 +663,7 @@ export function EditProfileDialog({
                         onClick={() => {
                           let nextCategories = categories
                             ? categories
-                                .split(',')
+                                .split(",")
                                 .map((c) => c.trim())
                                 .filter(Boolean)
                             : []
@@ -674,15 +674,15 @@ export function EditProfileDialog({
                           } else {
                             nextCategories.push(cat)
                           }
-                          setCategories(nextCategories.join(', '))
+                          setCategories(nextCategories.join(", "))
                         }}
                         className={`text-[11px] px-2 py-0.5 rounded-full border transition-all ${
                           isIncluded
-                            ? 'bg-primary text-primary-foreground border-primary font-semibold'
-                            : 'bg-secondary/60 hover:bg-secondary text-muted-foreground border-border/60'
+                            ? "bg-primary text-primary-foreground border-primary font-semibold"
+                            : "bg-secondary/60 hover:bg-secondary text-muted-foreground border-border/60"
                         }`}
                       >
-                        {isIncluded ? '✓ ' : '+ '}
+                        {isIncluded ? "✓ " : "+ "}
                         {cat}
                       </button>
                     )
@@ -730,7 +730,7 @@ export function EditProfileDialog({
           )}
 
           {/* Coach Specific Fields */}
-          {accountType === 'coach' && (
+          {accountType === "coach" && (
             <div className="space-y-3 border-t pt-3">
               <div className="space-y-1.5">
                 <Label
@@ -749,7 +749,7 @@ export function EditProfileDialog({
                         onClick={() => {
                           let next = specialties
                             ? specialties
-                                .split(',')
+                                .split(",")
                                 .map((s) => s.trim())
                                 .filter(Boolean)
                             : []
@@ -758,15 +758,15 @@ export function EditProfileDialog({
                           } else {
                             next.push(spec)
                           }
-                          setSpecialties(next.join(', '))
+                          setSpecialties(next.join(", "))
                         }}
                         className={`text-[11px] px-2 py-0.5 rounded-full border transition-all ${
                           isIncluded
-                            ? 'bg-primary text-primary-foreground border-primary font-semibold'
-                            : 'bg-secondary/60 hover:bg-secondary text-muted-foreground border-border/60'
+                            ? "bg-primary text-primary-foreground border-primary font-semibold"
+                            : "bg-secondary/60 hover:bg-secondary text-muted-foreground border-border/60"
                         }`}
                       >
-                        {isIncluded ? '✓ ' : '+ '}
+                        {isIncluded ? "✓ " : "+ "}
                         {spec}
                       </button>
                     )
@@ -798,7 +798,7 @@ export function EditProfileDialog({
                         onClick={() => {
                           let next = certifications
                             ? certifications
-                                .split(',')
+                                .split(",")
                                 .map((s) => s.trim())
                                 .filter(Boolean)
                             : []
@@ -807,15 +807,15 @@ export function EditProfileDialog({
                           } else {
                             next.push(cert)
                           }
-                          setCertifications(next.join(', '))
+                          setCertifications(next.join(", "))
                         }}
                         className={`text-[11px] px-2 py-0.5 rounded-full border transition-all ${
                           isIncluded
-                            ? 'bg-primary text-primary-foreground border-primary font-semibold'
-                            : 'bg-secondary/60 hover:bg-secondary text-muted-foreground border-border/60'
+                            ? "bg-primary text-primary-foreground border-primary font-semibold"
+                            : "bg-secondary/60 hover:bg-secondary text-muted-foreground border-border/60"
                         }`}
                       >
-                        {isIncluded ? '✓ ' : '+ '}
+                        {isIncluded ? "✓ " : "+ "}
                         {cert}
                       </button>
                     )
@@ -880,7 +880,7 @@ export function EditProfileDialog({
                   Salvando no Supabase...
                 </>
               ) : (
-                'Salvar Alterações'
+                "Salvar Alterações"
               )}
             </Button>
           </DialogFooter>

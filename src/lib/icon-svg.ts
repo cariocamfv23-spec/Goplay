@@ -1,9 +1,9 @@
-import { SeasonalTheme } from './seasonal-utils'
+import { SeasonalTheme } from "./seasonal-utils"
 
 export function getGoplayIconInnerSvg(theme: SeasonalTheme | null): string {
-  let seasonalElements = ''
+  let seasonalElements = ""
 
-  if (theme === 'christmas') {
+  if (theme === "christmas") {
     seasonalElements = `
       <g filter="url(#hat-shadow)">
         <path d="M 125 95 L 195 105 C 180 20, 90 10, 60 50 C 50 70, 90 80, 125 95" fill="url(#goplay-holiday-red)" stroke="#7f1d1d" stroke-width="0.5" />
@@ -12,7 +12,7 @@ export function getGoplayIconInnerSvg(theme: SeasonalTheme | null): string {
         <path d="M 135 85 Q 160 50 170 90" stroke="white" stroke-width="3" stroke-opacity="0.2" fill="none" stroke-linecap="round" />
       </g>
     `
-  } else if (theme === 'carnival') {
+  } else if (theme === "carnival") {
     seasonalElements = `
       <g filter="url(#seasonal-glow)">
         <path d="M 100 400 Q 150 350 120 300 Q 90 250 140 200" fill="none" stroke="#d946ef" stroke-width="5" stroke-linecap="round" opacity="0.9" />
@@ -24,7 +24,7 @@ export function getGoplayIconInnerSvg(theme: SeasonalTheme | null): string {
         <circle cx="450" cy="200" r="5" fill="#fbbf24" />
       </g>
     `
-  } else if (theme === 'easter') {
+  } else if (theme === "easter") {
     seasonalElements = `
       <g filter="url(#seasonal-glow)">
         <path d="M 230 64 Q 210 10 230 0 Q 250 10 240 64" fill="white" opacity="0.9" stroke="#f3f4f6" stroke-width="1" />
@@ -32,7 +32,7 @@ export function getGoplayIconInnerSvg(theme: SeasonalTheme | null): string {
         <ellipse cx="480" cy="270" rx="14" ry="18" fill="#f472b6" transform="rotate(15 480 270)" stroke="white" stroke-width="2" />
       </g>
     `
-  } else if (theme === 'world-cup') {
+  } else if (theme === "world-cup") {
     seasonalElements = `
       <g filter="url(#seasonal-glow)">
         <circle cx="445" cy="290" r="18" fill="url(#goplay-gold-metallic)" stroke="white" stroke-width="2" />
@@ -41,7 +41,7 @@ export function getGoplayIconInnerSvg(theme: SeasonalTheme | null): string {
         <path d="M 100 435 Q 256 515 412 435" fill="none" stroke="#16a34a" stroke-width="8" stroke-linecap="round" opacity="0.7" />
       </g>
     `
-  } else if (theme === 'commemorative') {
+  } else if (theme === "commemorative") {
     seasonalElements = `
       <g filter="url(#seasonal-glow)">
         <g transform="translate(100, 100) scale(1.5)">

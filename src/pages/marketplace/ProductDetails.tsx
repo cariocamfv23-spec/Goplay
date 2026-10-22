@@ -1,6 +1,6 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { mockProducts } from '@/lib/data'
-import { Button } from '@/components/ui/button'
+import { useParams, useNavigate } from "react-router-dom"
+import { mockProducts } from "@/lib/data"
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   ShoppingCart,
@@ -11,15 +11,15 @@ import {
   Trophy,
   ImageOff,
   AlertCircle,
-} from 'lucide-react'
+} from "lucide-react"
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-} from '@/components/ui/carousel'
-import { Badge } from '@/components/ui/badge'
-import { PaymentDialog } from '@/components/PaymentDialog'
-import { useCartStore } from '@/stores/useCartStore'
+} from "@/components/ui/carousel"
+import { Badge } from "@/components/ui/badge"
+import { PaymentDialog } from "@/components/PaymentDialog"
+import { useCartStore } from "@/stores/useCartStore"
 
 export default function ProductDetails() {
   const { id } = useParams()
@@ -39,7 +39,7 @@ export default function ProductDetails() {
         <p className="text-muted-foreground mb-6">
           O produto que você está procurando não existe ou foi removido.
         </p>
-        <Button onClick={() => navigate('/marketplace')}>
+        <Button onClick={() => navigate("/marketplace")}>
           Voltar para Loja
         </Button>
       </div>
@@ -69,7 +69,7 @@ export default function ProductDetails() {
             variant="secondary"
             size="icon"
             className="rounded-full shadow-md bg-background/80 backdrop-blur-md border border-white/10 hover:bg-background"
-            onClick={() => navigate('/marketplace/cart')}
+            onClick={() => navigate("/marketplace/cart")}
           >
             <ShoppingCart className="h-5 w-5" />
           </Button>
@@ -88,9 +88,9 @@ export default function ProductDetails() {
                       alt={product.name}
                       className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal transition-opacity duration-300"
                       onError={(e) => {
-                        e.currentTarget.style.display = 'none'
+                        e.currentTarget.style.display = "none"
                         e.currentTarget.nextElementSibling?.classList.remove(
-                          'hidden',
+                          "hidden",
                         )
                       }}
                     />
@@ -135,7 +135,7 @@ export default function ProductDetails() {
             </div>
             <h1 className="text-2xl font-bold leading-tight">{product.name}</h1>
             <p className="text-muted-foreground text-sm">
-              Vendido por{' '}
+              Vendido por{" "}
               <span className="font-medium text-foreground">
                 {product.seller}
               </span>
@@ -176,13 +176,13 @@ export default function ProductDetails() {
           </div>
           <Badge
             variant={
-              product.availability === 'in_stock' ? 'outline' : 'destructive'
+              product.availability === "in_stock" ? "outline" : "destructive"
             }
             className="text-[10px] py-1.5 px-3"
           >
-            {product.availability === 'in_stock'
-              ? 'Em Estoque'
-              : 'Poucas Unidades'}
+            {product.availability === "in_stock"
+              ? "Em Estoque"
+              : "Poucas Unidades"}
           </Badge>
         </div>
 

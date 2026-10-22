@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button'
-import { Loader2 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { Button } from "@/components/ui/button"
+import { Loader2 } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface GoogleSignInButtonProps {
   onClick: () => void | Promise<void>
@@ -15,14 +15,14 @@ export function GoogleSignInButton({
   loading = false,
   disabled = false,
   className,
-  text = 'Continuar com Google',
+  text = "Continuar com Google",
 }: GoogleSignInButtonProps) {
   return (
     <Button
       variant="outline"
       type="button"
       className={cn(
-        'w-full h-11 gap-3 font-semibold border-border hover:bg-secondary/60 hover:border-primary/40 transition-all text-sm shadow-sm',
+        "w-full h-11 gap-3 font-semibold border-border hover:bg-secondary/60 hover:border-primary/40 transition-all text-sm shadow-sm",
         className,
       )}
       onClick={onClick}

@@ -1,8 +1,8 @@
-import { Users, Lock, Globe } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { useNavigate } from 'react-router-dom'
-import { Tribe } from '@/stores/useNexusStore'
-import { mockUser } from '@/lib/data'
+import { Users, Lock, Globe } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { useNavigate } from "react-router-dom"
+import { Tribe } from "@/stores/useNexusStore"
+import { mockUser } from "@/lib/data"
 
 interface TribeCardProps {
   tribe: Tribe

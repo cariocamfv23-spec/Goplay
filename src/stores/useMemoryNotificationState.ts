@@ -1,5 +1,5 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 interface MemoryNotificationState {
   lastNotifiedDate: string | null
@@ -13,7 +13,7 @@ export const useMemoryNotificationState = create<MemoryNotificationState>()(
       setLastNotifiedDate: (date) => set({ lastNotifiedDate: date }),
     }),
     {
-      name: 'goplay-memory-notifications-storage',
+      name: "goplay-memory-notifications-storage",
     },
   ),
 )

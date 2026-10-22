@@ -1,21 +1,21 @@
-import { useState, useRef, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useTimeCapsuleStore } from '@/stores/useTimeCapsuleStore'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import { ArrowLeft, Video, FileText, Lock, Calendar } from 'lucide-react'
+import { useState, useRef, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import { useTimeCapsuleStore } from "@/stores/useTimeCapsuleStore"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import { ArrowLeft, Video, FileText, Lock, Calendar } from "lucide-react"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { toast } from 'sonner'
-import { Card, CardContent } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/select"
+import { toast } from "sonner"
+import { Card, CardContent } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 
 const calculateOpenDate = (months: number) => {
   const d = new Date()
@@ -27,13 +27,13 @@ export default function CreateCapsule() {
   const navigate = useNavigate()
   const { addCapsule } = useTimeCapsuleStore()
 
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [type, setType] = useState<'video' | 'text'>('text')
-  const [content, setContent] = useState('')
+  const [title, setTitle] = useState("")
+  const [description, setDescription] = useState("")
+  const [type, setType] = useState<"video" | "text">("text")
+  const [content, setContent] = useState("")
   const [videoFile, setVideoFile] = useState<File | null>(null)
-  const [openPeriod, setOpenPeriod] = useState('6') // months
-  const [customDate, setCustomDate] = useState('')
+  const [openPeriod, setOpenPeriod] = useState("6") // months
+  const [customDate, setCustomDate] = useState("")
   const [isSealing, setIsSealing] = useState(false)
   const [sealProgress, setSealProgress] = useState(0)
 
@@ -42,8 +42,8 @@ export default function CreateCapsule() {
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      if (!file.type.startsWith('video/')) {
-        toast.error('Selecione um arquivo de vídeo válido.')
+      if (!file.type.startsWith("video/")) {
+        toast.error("Selecione um arquivo de vídeo válido.")
         return
       }
       setVideoFile(file)
@@ -52,22 +52,22 @@ export default function CreateCapsule() {
 
   const handleSubmit = () => {
     if (!title || !description) {
-      toast.error('Preencha o título e a descrição.')
+      toast.error("Preencha o título e a descrição.")
       return
     }
 
-    if (type === 'text' && !content) {
-      toast.error('Escreva sua mensagem.')
+    if (type === "text" && !content) {
+      toast.error("Escreva sua mensagem.")
       return
     }
 
-    if (type === 'video' && !videoFile) {
-      toast.error('Anexe o vídeo da sua cápsula.')
+    if (type === "video" && !videoFile) {
+      toast.error("Anexe o vídeo da sua cápsula.")
       return
     }
 
-    if (openPeriod === 'custom' && !customDate) {
-      toast.error('Selecione a data de abertura.')
+    if (openPeriod === "custom" && !customDate) {
+      toast.error("Selecione a data de abertura.")
       return
     }
 
@@ -93,7 +93,7 @@ export default function CreateCapsule() {
     if (sealProgress >= 100) {
       const timer = setTimeout(() => {
         const finalOpenDate =
-          openPeriod === 'custom'
+          openPeriod === "custom"
             ? new Date(customDate).toISOString()
             : calculateOpenDate(Number(openPeriod))
 
@@ -102,12 +102,12 @@ export default function CreateCapsule() {
           description,
           type,
           content:
-            type === 'video'
-              ? 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' // mock URL
+            type === "video"
+              ? "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" // mock URL
               : content,
           openAt: finalOpenDate,
         })
-        navigate('/timecapsule')
+        navigate("/timecapsule")
       }, 500)
       return () => clearTimeout(timer)
     }
@@ -123,7 +123,7 @@ export default function CreateCapsule() {
     navigate,
   ])
 
-  const today = new Date().toISOString().split('T')[0]
+  const today = new Date().toISOString().split("T")[0]
 
   if (isSealing) {
     return (
@@ -213,29 +213,29 @@ export default function CreateCapsule() {
           </Label>
           <div className="grid grid-cols-2 gap-3">
             <Button
-              variant={type === 'text' ? 'default' : 'outline'}
+              variant={type === "text" ? "default" : "outline"}
               className={cn(
-                'h-12 border-2 font-bold',
-                type === 'text' && 'bg-primary border-primary text-white',
+                "h-12 border-2 font-bold",
+                type === "text" && "bg-primary border-primary text-white",
               )}
-              onClick={() => setType('text')}
+              onClick={() => setType("text")}
             >
               <FileText className="mr-2 h-5 w-5" /> Texto
             </Button>
             <Button
-              variant={type === 'video' ? 'default' : 'outline'}
+              variant={type === "video" ? "default" : "outline"}
               className={cn(
-                'h-12 border-2 font-bold',
-                type === 'video' && 'bg-primary border-primary text-white',
+                "h-12 border-2 font-bold",
+                type === "video" && "bg-primary border-primary text-white",
               )}
-              onClick={() => setType('video')}
+              onClick={() => setType("video")}
             >
               <Video className="mr-2 h-5 w-5" /> Vídeo
             </Button>
           </div>
         </div>
 
-        {type === 'text' ? (
+        {type === "text" ? (
           <div className="space-y-2 animate-in fade-in">
             <div className="flex justify-between">
               <Label className="text-foreground font-semibold">
@@ -243,10 +243,10 @@ export default function CreateCapsule() {
               </Label>
               <span
                 className={cn(
-                  'text-xs font-medium',
+                  "text-xs font-medium",
                   content.length >= 500
-                    ? 'text-red-500 font-bold'
-                    : 'text-slate-500 dark:text-slate-400',
+                    ? "text-red-500 font-bold"
+                    : "text-slate-500 dark:text-slate-400",
                 )}
               >
                 {content.length}/500
@@ -267,10 +267,10 @@ export default function CreateCapsule() {
             </Label>
             <div
               className={cn(
-                'border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors',
+                "border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors",
                 videoFile
-                  ? 'border-primary bg-primary/5'
-                  : 'border-border hover:border-primary/50 hover:bg-secondary/50',
+                  ? "border-primary bg-primary/5"
+                  : "border-border hover:border-primary/50 hover:bg-secondary/50",
               )}
               onClick={() => fileInputRef.current?.click()}
             >
@@ -283,8 +283,8 @@ export default function CreateCapsule() {
               />
               <Video
                 className={cn(
-                  'w-10 h-10 mx-auto mb-3',
-                  videoFile ? 'text-foreground' : 'text-muted-foreground/50',
+                  "w-10 h-10 mx-auto mb-3",
+                  videoFile ? "text-foreground" : "text-muted-foreground/50",
                 )}
               />
               {videoFile ? (
@@ -326,7 +326,7 @@ export default function CreateCapsule() {
             </SelectContent>
           </Select>
 
-          {openPeriod === 'custom' && (
+          {openPeriod === "custom" && (
             <div className="pt-2 animate-in slide-in-from-top-2">
               <Input
                 type="date"

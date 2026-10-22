@@ -1,7 +1,7 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import { mockCurrentUser, Scholarship } from '@/lib/data'
-import useNotificationStore from '@/stores/useNotificationStore'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
+import { mockCurrentUser, Scholarship } from "@/lib/data"
+import useNotificationStore from "@/stores/useNotificationStore"
 
 interface ScholarshipPreferences {
   notifications: boolean
@@ -44,11 +44,11 @@ export const useScholarshipStore = create<ScholarshipState>()(
         if (isMatch) {
           // Add notification
           useNotificationStore.getState().addNotification({
-            title: 'Nova Bolsa Compatível!',
+            title: "Nova Bolsa Compatível!",
             message: `Nova oportunidade de bolsa para ${scholarship.sport} na ${scholarship.university}.`,
-            type: 'scholarship',
+            type: "scholarship",
             link: `/explore/scholarships/${scholarship.id}`,
-            priority: 'high',
+            priority: "high",
           })
 
           // Mark as notified to avoid duplicates
@@ -57,7 +57,7 @@ export const useScholarshipStore = create<ScholarshipState>()(
       },
     }),
     {
-      name: 'goplay-scholarship-storage',
+      name: "goplay-scholarship-storage",
     },
   ),
 )

@@ -1,6 +1,6 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { mockOrders } from '@/lib/mock-orders'
-import { Button } from '@/components/ui/button'
+import { useParams, useNavigate } from "react-router-dom"
+import { mockOrders } from "@/lib/mock-orders"
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   Package,
@@ -9,12 +9,12 @@ import {
   CreditCard,
   CheckCircle2,
   HelpCircle,
-} from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import { Badge } from '@/components/ui/badge'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { Badge } from "@/components/ui/badge"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { cn } from "@/lib/utils"
 
 export default function OrderDetails() {
   const { id } = useParams()
@@ -32,27 +32,27 @@ export default function OrderDetails() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'delivered':
-        return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800'
-      case 'shipped':
-        return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800'
-      case 'cancelled':
-        return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800'
+      case "delivered":
+        return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800"
+      case "shipped":
+        return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800"
+      case "cancelled":
+        return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800"
       default:
-        return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800'
+        return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800"
     }
   }
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'delivered':
-        return 'Pedido Entregue'
-      case 'shipped':
-        return 'Em Trânsito'
-      case 'cancelled':
-        return 'Pedido Cancelado'
+      case "delivered":
+        return "Pedido Entregue"
+      case "shipped":
+        return "Em Trânsito"
+      case "cancelled":
+        return "Pedido Cancelado"
       default:
-        return 'Processando'
+        return "Processando"
     }
   }
 
@@ -86,7 +86,7 @@ export default function OrderDetails() {
               <Badge
                 variant="outline"
                 className={cn(
-                  'px-3 py-1 text-xs border',
+                  "px-3 py-1 text-xs border",
                   getStatusColor(order.status),
                 )}
               >
@@ -194,7 +194,7 @@ export default function OrderDetails() {
                 <span>Frete</span>
                 <span>
                   {order.shippingCost === 0
-                    ? 'Grátis'
+                    ? "Grátis"
                     : `R$ ${order.shippingCost.toFixed(2)}`}
                 </span>
               </div>

@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
-import { cn } from '@/lib/utils'
-import { Flag, Coins, Split, Home, Users } from 'lucide-react'
-import type { PaymentResponsibility } from '@/lib/matchmaking-data'
-import { toast } from 'sonner'
+import { useState } from "react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+import { cn } from "@/lib/utils"
+import { Flag, Coins, Split, Home, Users } from "lucide-react"
+import type { PaymentResponsibility } from "@/lib/matchmaking-data"
+import { toast } from "sonner"
 
 export interface MatchConfigState {
   hasReferee: boolean
@@ -59,13 +59,13 @@ export function MatchConfigCard({ config, onChange }: MatchConfigCardProps) {
           <div className="flex items-center gap-2">
             <span
               className={cn(
-                'text-[10px] font-black uppercase',
+                "text-[10px] font-black uppercase",
                 localConfig.hasReferee
-                  ? 'text-green-500'
-                  : 'text-muted-foreground',
+                  ? "text-green-500"
+                  : "text-muted-foreground",
               )}
             >
-              {localConfig.hasReferee ? 'Sim' : 'Não'}
+              {localConfig.hasReferee ? "Sim" : "Não"}
             </span>
             <Switch
               checked={localConfig.hasReferee}
@@ -119,14 +119,14 @@ export function MatchConfigCard({ config, onChange }: MatchConfigCardProps) {
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => {
-                update({ paymentResponsibility: 'split' })
-                toast.success('Pagamento dividido entre as equipes')
+                update({ paymentResponsibility: "split" })
+                toast.success("Pagamento dividido entre as equipes")
               }}
               className={cn(
-                'flex flex-col items-center gap-1 p-2.5 rounded-xl border transition-all',
-                localConfig.paymentResponsibility === 'split'
-                  ? 'border-primary bg-primary/10 shadow-sm'
-                  : 'border-border/30 bg-secondary/20 hover:border-border/60',
+                "flex flex-col items-center gap-1 p-2.5 rounded-xl border transition-all",
+                localConfig.paymentResponsibility === "split"
+                  ? "border-primary bg-primary/10 shadow-sm"
+                  : "border-border/30 bg-secondary/20 hover:border-border/60",
               )}
             >
               <Split className="w-4 h-4 text-primary" />
@@ -139,14 +139,14 @@ export function MatchConfigCard({ config, onChange }: MatchConfigCardProps) {
             </button>
             <button
               onClick={() => {
-                update({ paymentResponsibility: 'home' })
-                toast.success('Pagamento responsabilidade do Mandante')
+                update({ paymentResponsibility: "home" })
+                toast.success("Pagamento responsabilidade do Mandante")
               }}
               className={cn(
-                'flex flex-col items-center gap-1 p-2.5 rounded-xl border transition-all',
-                localConfig.paymentResponsibility === 'home'
-                  ? 'border-primary bg-primary/10 shadow-sm'
-                  : 'border-border/30 bg-secondary/20 hover:border-border/60',
+                "flex flex-col items-center gap-1 p-2.5 rounded-xl border transition-all",
+                localConfig.paymentResponsibility === "home"
+                  ? "border-primary bg-primary/10 shadow-sm"
+                  : "border-border/30 bg-secondary/20 hover:border-border/60",
               )}
             >
               <Home className="w-4 h-4 text-primary" />

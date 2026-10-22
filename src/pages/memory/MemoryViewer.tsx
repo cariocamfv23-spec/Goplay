@@ -1,21 +1,21 @@
-import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { X, History, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { mockDailyMemories, mockUser } from '@/lib/data'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { cn } from '@/lib/utils'
+import { useEffect, useState } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import { X, History, ChevronLeft, ChevronRight } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { mockDailyMemories, mockUser } from "@/lib/data"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { cn } from "@/lib/utils"
 
 export default function MemoryViewer() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const memoryData = mockDailyMemories[id as string]
+  const memoryData = mockDailyMemories[(id as string)]
   const [currentIndex, setCurrentIndex] = useState(0)
 
   // Redirect if memory not found
   useEffect(() => {
     if (!memoryData) {
-      navigate('/')
+      navigate("/")
     }
   }, [memoryData, navigate])
 
@@ -42,7 +42,7 @@ export default function MemoryViewer() {
     <div className="fixed inset-0 z-[200] bg-black text-white overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-500">
       {/* Background Blur Effect for Immersive Feel */}
       <div className="absolute inset-0 z-0">
-        {currentItem.type === 'video' ? (
+        {currentItem.type === "video" ? (
           <div className="w-full h-full bg-zinc-900" />
         ) : (
           <img
@@ -90,16 +90,16 @@ export default function MemoryViewer() {
           >
             <div
               className={cn(
-                'h-full bg-white transition-all duration-300',
+                "h-full bg-white transition-all duration-300",
                 idx < currentIndex
-                  ? 'w-full'
+                  ? "w-full"
                   : idx === currentIndex
-                    ? 'w-full animate-[progress_5s_linear]' // Assuming 5s per slide
-                    : 'w-0',
+                    ? "w-full animate-[progress_5s_linear]" // Assuming 5s per slide
+                    : "w-0",
               )}
               style={
                 idx === currentIndex
-                  ? { animationPlayState: 'running' }
+                  ? { animationPlayState: "running" }
                   : undefined
               }
               onAnimationEnd={() => {
@@ -114,7 +114,7 @@ export default function MemoryViewer() {
       <div className="relative z-10 flex-1 flex items-center justify-center w-full px-2 py-4">
         {/* Memory Frame with Glassmorphism */}
         <div className="relative w-full max-w-sm aspect-[9/16] rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-black/40 backdrop-blur-sm">
-          {currentItem.type === 'video' ? (
+          {currentItem.type === "video" ? (
             <video
               src={currentItem.url}
               className="w-full h-full object-cover"
@@ -140,7 +140,7 @@ export default function MemoryViewer() {
               </span>
               <span className="text-xs font-bold uppercase tracking-wider text-white">
                 Há {currentItem.yearsAgo} ano
-                {currentItem.yearsAgo > 1 ? 's' : ''}
+                {currentItem.yearsAgo > 1 ? "s" : ""}
               </span>
             </div>
           </div>

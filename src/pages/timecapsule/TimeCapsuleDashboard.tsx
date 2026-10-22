@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useTimeCapsuleStore, TimeCapsule } from '@/stores/useTimeCapsuleStore'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useTimeCapsuleStore, TimeCapsule } from "@/stores/useTimeCapsuleStore"
+import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Lock,
   Hourglass,
@@ -13,44 +13,44 @@ import {
   FileText,
   Calendar,
   Archive,
-} from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
-import { formatDistanceToNow, format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
-import { cn } from '@/lib/utils'
-import { toast } from 'sonner'
+} from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { formatDistanceToNow, format } from "date-fns"
+import { ptBR } from "date-fns/locale"
+import { cn } from "@/lib/utils"
+import { toast } from "sonner"
 
 export default function TimeCapsuleDashboard() {
   const navigate = useNavigate()
   const { capsules, checkReleases, archiveCapsule } = useTimeCapsuleStore()
-  const [activeTab, setActiveTab] = useState('sealed')
+  const [activeTab, setActiveTab] = useState("sealed")
 
   useEffect(() => {
     checkReleases()
   }, [checkReleases])
 
-  const sealed = capsules.filter((c) => c.status === 'sealed')
-  const waiting = capsules.filter((c) => c.status === 'waiting')
-  const released = capsules.filter((c) => c.status === 'released')
+  const sealed = capsules.filter((c) => c.status === "sealed")
+  const waiting = capsules.filter((c) => c.status === "waiting")
+  const released = capsules.filter((c) => c.status === "released")
 
   const handleArchive = (id: string, e: React.MouseEvent) => {
     e.stopPropagation()
     archiveCapsule(id)
-    toast.success('Cápsula arquivada com sucesso.')
+    toast.success("Cápsula arquivada com sucesso.")
   }
 
   const renderCapsuleCard = (capsule: TimeCapsule) => {
-    const isReleased = capsule.status === 'released'
-    const isWaiting = capsule.status === 'waiting'
+    const isReleased = capsule.status === "released"
+    const isWaiting = capsule.status === "waiting"
 
     return (
       <Card
         key={capsule.id}
         className={cn(
-          'mb-4 overflow-hidden transition-all duration-300 group',
+          "mb-4 overflow-hidden transition-all duration-300 group",
           isReleased
-            ? 'cursor-pointer hover:border-gold/50 bg-gradient-to-br from-card to-gold/5'
-            : 'opacity-90',
+            ? "cursor-pointer hover:border-gold/50 bg-gradient-to-br from-card to-gold/5"
+            : "opacity-90",
         )}
         onClick={() => {
           if (isReleased) navigate(`/timecapsule/${capsule.id}`)
@@ -61,15 +61,15 @@ export default function TimeCapsuleDashboard() {
             <div className="flex items-center gap-2">
               <div
                 className={cn(
-                  'p-2 rounded-lg flex items-center justify-center',
+                  "p-2 rounded-lg flex items-center justify-center",
                   isReleased
-                    ? 'bg-gold/20 text-gold'
+                    ? "bg-gold/20 text-gold"
                     : isWaiting
-                      ? 'bg-orange-500/20 text-orange-500'
-                      : 'bg-primary/20 text-foreground',
+                      ? "bg-orange-500/20 text-orange-500"
+                      : "bg-primary/20 text-foreground",
                 )}
               >
-                {capsule.type === 'video' ? (
+                {capsule.type === "video" ? (
                   <Video className="w-5 h-5" />
                 ) : (
                   <FileText className="w-5 h-5" />
@@ -78,15 +78,15 @@ export default function TimeCapsuleDashboard() {
               <div>
                 <h3
                   className={cn(
-                    'font-bold text-base line-clamp-1',
-                    isReleased ? 'text-gold' : 'text-foreground',
+                    "font-bold text-base line-clamp-1",
+                    isReleased ? "text-gold" : "text-foreground",
                   )}
                 >
                   {capsule.title}
                 </h3>
                 <p className="text-xs text-slate-600 dark:text-slate-300 flex items-center gap-1 font-medium">
-                  <Calendar className="w-3 h-3" /> Criada em{' '}
-                  {format(new Date(capsule.createdAt), 'dd/MM/yyyy', {
+                  <Calendar className="w-3 h-3" /> Criada em{" "}
+                  {format(new Date(capsule.createdAt), "dd/MM/yyyy", {
                     locale: ptBR,
                   })}
                 </p>
@@ -111,12 +111,12 @@ export default function TimeCapsuleDashboard() {
 
           <div
             className={cn(
-              'flex items-center justify-between p-3 rounded-xl border',
+              "flex items-center justify-between p-3 rounded-xl border",
               isReleased
-                ? 'bg-gold/10 border-gold/20'
+                ? "bg-gold/10 border-gold/20"
                 : isWaiting
-                  ? 'bg-orange-500/10 border-orange-500/20'
-                  : 'bg-primary/10 border-primary/30',
+                  ? "bg-orange-500/10 border-orange-500/20"
+                  : "bg-primary/10 border-primary/30",
             )}
           >
             <div className="flex items-center gap-2">
@@ -129,22 +129,22 @@ export default function TimeCapsuleDashboard() {
               )}
               <span
                 className={cn(
-                  'text-xs font-bold uppercase tracking-wider',
+                  "text-xs font-bold uppercase tracking-wider",
                   isReleased
-                    ? 'text-gold'
+                    ? "text-gold"
                     : isWaiting
-                      ? 'text-orange-500'
-                      : 'text-foreground',
+                      ? "text-orange-500"
+                      : "text-foreground",
                 )}
               >
-                {isReleased ? 'Liberada' : isWaiting ? 'Quase lá' : 'Selada'}
+                {isReleased ? "Liberada" : isWaiting ? "Quase lá" : "Selada"}
               </span>
             </div>
 
             <div className="text-xs font-bold bg-background/90 px-3 py-1.5 rounded shadow-sm border border-border/50 text-foreground">
               {isReleased ? (
                 <span>
-                  Aberta{' '}
+                  Aberta{" "}
                   {formatDistanceToNow(new Date(capsule.openAt), {
                     locale: ptBR,
                     addSuffix: true,
@@ -152,7 +152,7 @@ export default function TimeCapsuleDashboard() {
                 </span>
               ) : (
                 <span>
-                  Abre em{' '}
+                  Abre em{" "}
                   {formatDistanceToNow(new Date(capsule.openAt), {
                     locale: ptBR,
                   })}
@@ -173,7 +173,7 @@ export default function TimeCapsuleDashboard() {
           variant="ghost"
           size="icon"
           className="absolute left-4 top-5"
-          onClick={() => navigate('/profile/me')}
+          onClick={() => navigate("/profile/me")}
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
@@ -253,7 +253,7 @@ export default function TimeCapsuleDashboard() {
       {/* FAB to create new capsule */}
       <Button
         className="fixed bottom-6 right-4 h-14 w-14 rounded-full shadow-[0_0_20px_rgba(var(--gold),0.3)] z-40 bg-gold hover:bg-gold/90 text-black animate-in zoom-in duration-300"
-        onClick={() => navigate('/timecapsule/create')}
+        onClick={() => navigate("/timecapsule/create")}
       >
         <Plus className="h-6 w-6" />
       </Button>

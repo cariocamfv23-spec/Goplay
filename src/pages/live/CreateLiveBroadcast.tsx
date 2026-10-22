@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { mockFeedUsers } from '@/lib/data'
-import { useToast } from '@/hooks/use-toast'
+import { useState, useEffect, useRef } from "react"
+import { useNavigate } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { mockFeedUsers } from "@/lib/data"
+import { useToast } from "@/hooks/use-toast"
 import {
   X,
   Radio,
@@ -26,25 +26,28 @@ import {
   UserPlus,
   BarChart2,
   Plus,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { useReplayStore } from '@/stores/useReplayStore'
+} from "lucide-react"
+import { cn } from "@/lib/utils"
+import { useReplayStore } from "@/stores/useReplayStore"
 
 export default function CreateLiveBroadcast() {
   const navigate = useNavigate()
   const { addReplay } = useReplayStore()
   const { toast } = useToast()
-  const [status, setStatus] = useState<'preview' | 'live' | 'summary'>(
-    'preview',
+  const [status, setStatus] = useState<"preview" | "live" | "summary">(
+    "preview",
   )
   const videoRef = useRef<HTMLVideoElement>(null)
 
   const [duration, setDuration] = useState(0)
   const [viewers, setViewers] = useState(0)
   const [peakViewers, setPeakViewers] = useState(0)
-  const [comments, setComments] = useState<
-    { id: number; user: string; text: string; avatar: string }[]
-  >([])
+  const [comments, setComments] = useState<{
+    id: number
+    user: string
+    text: string
+    avatar: string
+  }[]>([])
 
   const [hasVideo, setHasVideo] = useState(true)
   const [hasAudio, setHasAudio] = useState(true)
@@ -62,26 +65,28 @@ export default function CreateLiveBroadcast() {
   const [inviteModalOpen, setInviteModalOpen] = useState(false)
 
   const [pollModalOpen, setPollModalOpen] = useState(false)
-  const [pollQuestion, setPollQuestion] = useState('')
-  const [pollOptions, setPollOptions] = useState(['', ''])
+  const [pollQuestion, setPollQuestion] = useState("")
+  const [pollOptions, setPollOptions] = useState(["", ""])
   const [activePoll, setActivePoll] = useState<{
     question: string
-    options: { text: string; votes: number }[]
+    options: { text: string votes: number }[]
     totalVotes: number
     isActive: boolean
   } | null>(null)
 
   // Floating reactions
-  const [reactions, setReactions] = useState<
-    { id: number; type: string; left: number }[]
-  >([])
+  const [reactions, setReactions] = useState<{
+    id: number
+    type: string
+    left: number
+  }[]>([])
 
   // Init camera
   useEffect(() => {
     const initCamera = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'user' },
+          video: { facingMode: "user" },
           audio: true,
         })
         streamRef.current = stream
@@ -89,11 +94,11 @@ export default function CreateLiveBroadcast() {
           videoRef.current.srcObject = stream
         }
       } catch (err) {
-        console.error('Failed to get media devices', err)
+        console.error("Failed to get media devices", err)
       }
     }
 
-    if (status === 'preview' || status === 'live') {
+    if (status === "preview" || status === "live") {
       initCamera()
     }
 
@@ -114,7 +119,7 @@ export default function CreateLiveBroadcast() {
     let commentsInterval: NodeJS.Timeout
     let reactionsInterval: NodeJS.Timeout
 
-    if (status === 'live') {
+    if (status === "live") {
       timerInterval = setInterval(() => {
         setDuration((prev) => prev + 1)
       }, 1000)
@@ -129,21 +134,21 @@ export default function CreateLiveBroadcast() {
       }, 3000)
 
       const mockUsers = [
-        'alex_silva',
-        'mari.sports',
-        'carlos_edu',
-        'bia_lima',
-        'pedro_santos',
-        'juca_gol',
+        "alex_silva",
+        "mari.sports",
+        "carlos_edu",
+        "bia_lima",
+        "pedro_santos",
+        "juca_gol",
       ]
       const mockTexts = [
-        'Bora!!',
-        'Pra cima 🔥',
-        'Show de bola',
-        'Manda um salve',
-        'Acompanhando aqui',
-        'Boa transmissão!',
-        'Incrível!',
+        "Bora!!",
+        "Pra cima 🔥",
+        "Show de bola",
+        "Manda um salve",
+        "Acompanhando aqui",
+        "Boa transmissão!",
+        "Incrível!",
       ]
 
       commentsInterval = setInterval(() => {
@@ -166,7 +171,7 @@ export default function CreateLiveBroadcast() {
         }
       }, 2000)
 
-      const reactionTypes = ['heart', 'flame', 'trophy']
+      const reactionTypes = ["heart", "flame", "trophy"]
       reactionsInterval = setInterval(() => {
         if (Math.random() > 0.4) {
           setReactions((prev) =>
@@ -197,7 +202,7 @@ export default function CreateLiveBroadcast() {
   useEffect(() => {
     let pollTimeout: NodeJS.Timeout
 
-    if (status === 'live' && activePoll?.isActive) {
+    if (status === "live" && activePoll?.isActive) {
       pollTimeout = setTimeout(() => {
         setActivePoll((prev) => {
           if (!prev || !prev.isActive) return prev
@@ -278,19 +283,19 @@ export default function CreateLiveBroadcast() {
           }
         }
       } catch (err: any) {
-        console.error('Screen sharing failed', err)
-        const errorMessage = err?.message || ''
+        console.error("Screen sharing failed", err)
+        const errorMessage = err?.message || ""
         const isPermissionPolicyDenied =
-          errorMessage.includes('disallowed by permissions policy') ||
-          errorMessage.includes('display-capture') ||
-          err?.name === 'NotAllowedError' ||
-          err?.name === 'NotFoundError'
+          errorMessage.includes("disallowed by permissions policy") ||
+          errorMessage.includes("display-capture") ||
+          err?.name === "NotAllowedError" ||
+          err?.name === "NotFoundError"
 
         toast({
-          title: 'Permissão negada',
+          title: "Permissão negada",
           description:
-            'Não foi possível iniciar o compartilhamento de tela devido a restrições de permissão do navegador.',
-          variant: 'destructive',
+            "Não foi possível iniciar o compartilhamento de tela devido a restrições de permissão do navegador.",
+          variant: "destructive",
         })
 
         setIsScreenSharing(false)
@@ -309,20 +314,20 @@ export default function CreateLiveBroadcast() {
     setInviteModalOpen(false)
     toast({
       title: `Convite enviado para ${user.name}`,
-      description: 'Aguardando resposta...',
+      description: "Aguardando resposta...",
     })
 
     setTimeout(() => {
       setCoHost(user)
       toast({
         title: `${user.name} entrou na transmissão!`,
-        className: 'bg-green-600 text-white border-none',
+        className: "bg-green-600 text-white border-none",
       })
     }, 4000)
   }
 
   const handleCreatePoll = () => {
-    const validOptions = pollOptions.filter((o) => o.trim() !== '')
+    const validOptions = pollOptions.filter((o) => o.trim() !== "")
     if (!pollQuestion.trim() || validOptions.length < 2) return
 
     setActivePoll({
@@ -332,42 +337,42 @@ export default function CreateLiveBroadcast() {
       isActive: true,
     })
     setPollModalOpen(false)
-    setPollQuestion('')
-    setPollOptions(['', ''])
+    setPollQuestion("")
+    setPollOptions(["", ""])
 
     toast({
-      title: 'Enquete iniciada!',
-      description: 'Seus espectadores já podem votar.',
+      title: "Enquete iniciada!",
+      description: "Seus espectadores já podem votar.",
     })
   }
 
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60)
       .toString()
-      .padStart(2, '0')
-    const s = (seconds % 60).toString().padStart(2, '0')
+      .padStart(2, "0")
+    const s = (seconds % 60).toString().padStart(2, "0")
     return `${m}:${s}`
   }
 
   const handleEndBroadcast = () => {
-    setStatus('summary')
+    setStatus("summary")
     addReplay({
       id: `rep-${Date.now()}`,
-      title: 'Minha Transmissão Ao Vivo',
-      championship: 'Transmissão Pessoal',
-      modality: 'outros',
-      city: 'Local',
-      status: 'ended',
+      title: "Minha Transmissão Ao Vivo",
+      championship: "Transmissão Pessoal",
+      modality: "outros",
+      city: "Local",
+      status: "ended",
       viewers: `${peakViewers}`,
-      image: 'https://img.usecurling.com/p/800/400?q=live%20stream%20recording',
+      image: "https://img.usecurling.com/p/800/400?q=live%20stream%20recording",
       videoUrl:
-        'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
       duration: formatTime(duration),
-      date: 'Hoje',
+      date: "Hoje",
     })
   }
 
-  if (status === 'summary') {
+  if (status === "summary") {
     return (
       <div className="fixed inset-0 bg-zinc-950 flex flex-col items-center justify-center p-6 text-white z-50">
         <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mb-6">
@@ -409,7 +414,7 @@ export default function CreateLiveBroadcast() {
         </div>
 
         <Button
-          onClick={() => navigate('/')}
+          onClick={() => navigate("/")}
           className="w-full max-w-sm h-14 rounded-full font-bold text-lg bg-primary hover:bg-primary/90"
         >
           Voltar para Home
@@ -427,11 +432,11 @@ export default function CreateLiveBroadcast() {
         playsInline
         muted
         className={cn(
-          'absolute object-cover transition-all duration-500 z-0',
-          !hasVideo && !isScreenSharing && 'opacity-0',
+          "absolute object-cover transition-all duration-500 z-0",
+          !hasVideo && !isScreenSharing && "opacity-0",
           coHost
-            ? 'top-0 left-0 w-full h-1/2 md:w-1/2 md:h-full'
-            : 'inset-0 w-full h-full',
+            ? "top-0 left-0 w-full h-1/2 md:w-1/2 md:h-full"
+            : "inset-0 w-full h-full",
         )}
       />
       {!hasVideo && !isScreenSharing && (
@@ -446,10 +451,10 @@ export default function CreateLiveBroadcast() {
       {isScreenSharing && !screenStreamRef.current && (
         <div
           className={cn(
-            'absolute bg-zinc-900 flex flex-col items-center justify-center z-[1] border-2 border-primary/50',
+            "absolute bg-zinc-900 flex flex-col items-center justify-center z-[1] border-2 border-primary/50",
             coHost
-              ? 'top-0 left-0 w-full h-1/2 md:w-1/2 md:h-full'
-              : 'inset-0 w-full h-full',
+              ? "top-0 left-0 w-full h-1/2 md:w-1/2 md:h-full"
+              : "inset-0 w-full h-full",
           )}
         >
           <MonitorUp className="w-20 h-20 text-white/30 mb-4 animate-pulse" />
@@ -489,7 +494,7 @@ export default function CreateLiveBroadcast() {
 
       {/* Top Bar */}
       <div className="absolute top-0 left-0 right-0 p-4 pt-safe flex items-start justify-between z-10">
-        {status === 'preview' ? (
+        {status === "preview" ? (
           <>
             <Button
               variant="ghost"
@@ -555,7 +560,7 @@ export default function CreateLiveBroadcast() {
       </div>
 
       {/* Top Bar Indicator for Screen Sharing */}
-      {isScreenSharing && status === 'live' && (
+      {isScreenSharing && status === "live" && (
         <div className="absolute top-16 left-1/2 -translate-x-1/2 z-20 bg-primary/90 text-white px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg animate-in slide-in-from-top-4">
           <MonitorUp className="w-4 h-4" />
           Compartilhando Tela
@@ -563,7 +568,7 @@ export default function CreateLiveBroadcast() {
       )}
 
       {/* Preview Center Content */}
-      {status === 'preview' && (
+      {status === "preview" && (
         <div className="absolute inset-0 flex flex-col items-center justify-end pb-24 z-10 pointer-events-none">
           <div className="pointer-events-auto flex flex-col items-center animate-in slide-in-from-bottom-8 duration-500">
             <h2 className="text-white text-2xl font-bold mb-2 drop-shadow-lg text-center px-4">
@@ -573,7 +578,7 @@ export default function CreateLiveBroadcast() {
               Ajuste sua câmera e microfone
             </p>
             <Button
-              onClick={() => setStatus('live')}
+              onClick={() => setStatus("live")}
               className="bg-red-600 hover:bg-red-700 text-white rounded-full h-16 px-10 text-lg font-bold shadow-[0_0_20px_rgba(220,38,38,0.5)] flex items-center gap-3 transition-transform active:scale-95"
             >
               <Radio className="w-6 h-6 animate-pulse" />
@@ -584,7 +589,7 @@ export default function CreateLiveBroadcast() {
       )}
 
       {/* Live Content */}
-      {status === 'live' && (
+      {status === "live" && (
         <>
           {/* Comments Area */}
           <div className="absolute bottom-4 left-4 right-20 h-64 flex flex-col justify-end z-[4] mask-gradient-to-t pointer-events-none">
@@ -619,13 +624,13 @@ export default function CreateLiveBroadcast() {
                 className="absolute bottom-20 animate-float-up-fade"
                 style={{ left: `${reaction.left}%` }}
               >
-                {reaction.type === 'heart' && (
+                {reaction.type === "heart" && (
                   <Heart className="w-7 h-7 text-red-500 fill-red-500" />
                 )}
-                {reaction.type === 'flame' && (
+                {reaction.type === "flame" && (
                   <Flame className="w-7 h-7 text-orange-500 fill-orange-500" />
                 )}
-                {reaction.type === 'trophy' && (
+                {reaction.type === "trophy" && (
                   <Trophy className="w-7 h-7 text-yellow-400 fill-yellow-400" />
                 )}
               </div>
@@ -638,10 +643,10 @@ export default function CreateLiveBroadcast() {
               variant="ghost"
               size="icon"
               className={cn(
-                'rounded-full h-12 w-12 border shadow-lg transition-colors',
+                "rounded-full h-12 w-12 border shadow-lg transition-colors",
                 isScreenSharing
-                  ? 'bg-primary border-primary hover:bg-primary/90 text-primary-foreground'
-                  : 'bg-black/40 backdrop-blur-md text-white border-white/10 hover:bg-black/60',
+                  ? "bg-primary border-primary hover:bg-primary/90 text-primary-foreground"
+                  : "bg-black/40 backdrop-blur-md text-white border-white/10 hover:bg-black/60",
               )}
               onClick={toggleScreenShare}
             >
@@ -652,10 +657,10 @@ export default function CreateLiveBroadcast() {
               variant="ghost"
               size="icon"
               className={cn(
-                'bg-black/40 backdrop-blur-md text-white rounded-full h-12 w-12 border shadow-lg transition-colors',
+                "bg-black/40 backdrop-blur-md text-white rounded-full h-12 w-12 border shadow-lg transition-colors",
                 coHost
-                  ? 'border-primary text-primary hover:bg-black/60'
-                  : 'border-white/10 hover:bg-black/60',
+                  ? "border-primary text-primary hover:bg-black/60"
+                  : "border-white/10 hover:bg-black/60",
               )}
               onClick={() => setInviteModalOpen(true)}
               disabled={!!coHost}
@@ -667,10 +672,10 @@ export default function CreateLiveBroadcast() {
               variant="ghost"
               size="icon"
               className={cn(
-                'rounded-full h-12 w-12 border shadow-lg transition-colors',
+                "rounded-full h-12 w-12 border shadow-lg transition-colors",
                 activePoll
-                  ? 'bg-primary border-primary hover:bg-primary/90 text-primary-foreground'
-                  : 'bg-black/40 backdrop-blur-md text-white border-white/10 hover:bg-black/60',
+                  ? "bg-primary border-primary hover:bg-primary/90 text-primary-foreground"
+                  : "bg-black/40 backdrop-blur-md text-white border-white/10 hover:bg-black/60",
               )}
               onClick={() => setPollModalOpen(true)}
               disabled={!!activePoll?.isActive}
@@ -709,7 +714,7 @@ export default function CreateLiveBroadcast() {
           <div className="flex justify-between items-start mb-4">
             <h4 className="text-white font-bold text-sm bg-primary/20 text-primary px-2.5 py-1 rounded-md flex items-center gap-1.5">
               <BarChart2 className="w-4 h-4" />
-              {activePoll.isActive ? 'Enquete Ao Vivo' : 'Enquete Encerrada'}
+              {activePoll.isActive ? "Enquete Ao Vivo" : "Enquete Encerrada"}
             </h4>
             {!activePoll.isActive && (
               <Button
@@ -859,7 +864,7 @@ export default function CreateLiveBroadcast() {
                     variant="ghost"
                     size="sm"
                     className="text-primary w-full mt-2 hover:bg-primary/20 hover:text-primary rounded-xl"
-                    onClick={() => setPollOptions([...pollOptions, ''])}
+                    onClick={() => setPollOptions([...pollOptions, ""])}
                   >
                     <Plus className="w-4 h-4 mr-2" /> Adicionar Opção
                   </Button>

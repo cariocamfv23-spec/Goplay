@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo } from "react"
 import {
   Search,
   Newspaper,
@@ -10,24 +10,24 @@ import {
   CalendarDays,
   Tv,
   Calendar,
-} from 'lucide-react'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import { mockArenaArticles, type ArenaArticle } from '@/lib/data'
+} from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { mockArenaArticles, type ArenaArticle } from "@/lib/data"
 
 const categories = [
-  'Todos',
-  'Futebol',
-  'Basquete',
-  'MMA',
-  'Tênis',
-  'Surfe',
-  'eSports',
-  'Corrida',
+  "Todos",
+  "Futebol",
+  "Basquete",
+  "MMA",
+  "Tênis",
+  "Surfe",
+  "eSports",
+  "Corrida",
 ]
 
 function ArticleDetail({
@@ -93,7 +93,7 @@ function ArticleDetail({
                 </span>
                 <span className="text-muted-foreground">•</span>
                 <span>
-                  {article.eventDate?.split('-').reverse().join('/')} às{' '}
+                  {article.eventDate?.split("-").reverse().join("/")} às{" "}
                   {article.eventTime}
                 </span>
               </div>
@@ -110,7 +110,7 @@ function ArticleDetail({
         </div>
 
         <div className="max-w-none text-foreground/90 leading-relaxed text-base space-y-6 mt-8">
-          {article.content.split('\n\n').map((paragraph, i) => (
+          {article.content.split("\n\n").map((paragraph, i) => (
             <p key={i} className="leading-relaxed">
               {paragraph}
             </p>
@@ -122,10 +122,10 @@ function ArticleDetail({
 }
 
 export default function ArenaGo() {
-  const [search, setSearch] = useState('')
-  const [activeCategory, setActiveCategory] = useState('Todos')
-  const [dateFilter, setDateFilter] = useState('')
-  const [broadcasterFilter, setBroadcasterFilter] = useState('all')
+  const [search, setSearch] = useState("")
+  const [activeCategory, setActiveCategory] = useState("Todos")
+  const [dateFilter, setDateFilter] = useState("")
+  const [broadcasterFilter, setBroadcasterFilter] = useState("all")
   const [selectedArticleId, setSelectedArticleId] = useState<number | null>(
     null,
   )
@@ -143,10 +143,10 @@ export default function ArenaGo() {
         article.title.toLowerCase().includes(search.toLowerCase()) ||
         article.summary.toLowerCase().includes(search.toLowerCase())
       const matchesCategory =
-        activeCategory === 'Todos' || article.category === activeCategory
+        activeCategory === "Todos" || article.category === activeCategory
       const matchesDate = !dateFilter || article.eventDate === dateFilter
       const matchesBroadcaster =
-        broadcasterFilter === 'all' || article.broadcaster === broadcasterFilter
+        broadcasterFilter === "all" || article.broadcaster === broadcasterFilter
 
       return (
         matchesSearch && matchesCategory && matchesDate && matchesBroadcaster
@@ -248,12 +248,12 @@ export default function ArenaGo() {
             {categories.map((cat) => (
               <Badge
                 key={cat}
-                variant={activeCategory === cat ? 'default' : 'secondary'}
+                variant={activeCategory === cat ? "default" : "secondary"}
                 className={cn(
-                  'cursor-pointer px-4 py-1.5 rounded-full text-xs transition-all',
+                  "cursor-pointer px-4 py-1.5 rounded-full text-xs transition-all",
                   activeCategory === cat
-                    ? 'bg-purple-600 hover:bg-purple-700 text-white shadow-md'
-                    : 'hover:bg-secondary/80 text-muted-foreground',
+                    ? "bg-purple-600 hover:bg-purple-700 text-white shadow-md"
+                    : "hover:bg-secondary/80 text-muted-foreground",
                 )}
                 onClick={() => setActiveCategory(cat)}
               >
@@ -280,10 +280,10 @@ export default function ArenaGo() {
               variant="outline"
               className="mt-2 rounded-xl text-purple-600 border-purple-600/30 hover:bg-purple-600/10"
               onClick={() => {
-                setSearch('')
-                setActiveCategory('Todos')
-                setDateFilter('')
-                setBroadcasterFilter('all')
+                setSearch("")
+                setActiveCategory("Todos")
+                setDateFilter("")
+                setBroadcasterFilter("all")
               }}
             >
               Limpar Filtros
@@ -343,7 +343,7 @@ export default function ArenaGo() {
                         </span>
                       </div>
                       <div className="text-[11px] font-bold text-muted-foreground">
-                        {article.eventDate?.split('-').reverse().join('/')} às{' '}
+                        {article.eventDate?.split("-").reverse().join("/")} às{" "}
                         {article.eventTime}
                       </div>
                     </div>

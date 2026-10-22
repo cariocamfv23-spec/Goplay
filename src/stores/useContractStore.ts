@@ -1,12 +1,7 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
-export type ContractStatus =
-  | 'draft'
-  | 'pending'
-  | 'active'
-  | 'completed'
-  | 'rejected'
+export type ContractStatus = "draft" | "pending" | "active" | "completed" | "rejected"
 
 export interface ContractMetric {
   id: string
@@ -15,7 +10,7 @@ export interface ContractMetric {
   targetValue: number
   unit: string
   impactValue: number // The value added to the contract if target is met (or scaled)
-  type: 'milestone' | 'linear' // Milestone: All or nothing. Linear: Proportional.
+  type: "milestone" | "linear" // Milestone: All or nothing. Linear: Proportional.
 }
 
 export interface LiveContract {
@@ -35,7 +30,7 @@ export interface LiveContract {
 
 interface ContractState {
   contracts: LiveContract[]
-  addContract: (contract: Omit<LiveContract, 'id' | 'createdAt'>) => void
+  addContract: (contract: Omit<LiveContract, "id" | "createdAt">) => void
   updateContractStatus: (id: string, status: ContractStatus) => void
   updateMetricProgress: (
     contractId: string,
@@ -48,67 +43,67 @@ interface ContractState {
 // Mock initial data
 const initialContracts: LiveContract[] = [
   {
-    id: 'c1',
-    title: 'Patrocínio Master 2024',
-    proposerName: 'Red Bull',
-    proposerLogo: 'https://img.usecurling.com/i?q=red%20bull%20logo&color=red',
-    athleteName: 'Alex Silva',
+    id: "c1",
+    title: "Patrocínio Master 2024",
+    proposerName: "Red Bull",
+    proposerLogo: "https://img.usecurling.com/i?q=red%20bull%20logo&color=red",
+    athleteName: "Alex Silva",
     baseValue: 1500,
-    currency: 'R$',
-    status: 'active',
-    startDate: '2024-01-01',
-    endDate: '2024-12-31',
+    currency: "R$",
+    status: "active",
+    startDate: "2024-01-01",
+    endDate: "2024-12-31",
     metrics: [
       {
-        id: 'm1',
-        label: 'Gols na Temporada',
+        id: "m1",
+        label: "Gols na Temporada",
         currentValue: 12,
         targetValue: 20,
-        unit: 'gols',
+        unit: "gols",
         impactValue: 500,
-        type: 'linear',
+        type: "linear",
       },
       {
-        id: 'm2',
-        label: 'Posts no Instagram',
+        id: "m2",
+        label: "Posts no Instagram",
         currentValue: 5,
         targetValue: 10,
-        unit: 'posts',
+        unit: "posts",
         impactValue: 300,
-        type: 'milestone',
+        type: "milestone",
       },
       {
-        id: 'm3',
-        label: 'Partidas Jogadas',
+        id: "m3",
+        label: "Partidas Jogadas",
         currentValue: 15,
         targetValue: 30,
-        unit: 'jogos',
+        unit: "jogos",
         impactValue: 200,
-        type: 'linear',
+        type: "linear",
       },
     ],
     createdAt: new Date().toISOString(),
   },
   {
-    id: 'c2',
-    title: 'Embaixador da Marca',
-    proposerName: 'Nike',
-    proposerLogo: 'https://img.usecurling.com/i?q=nike%20logo&color=black',
-    athleteName: 'Alex Silva',
+    id: "c2",
+    title: "Embaixador da Marca",
+    proposerName: "Nike",
+    proposerLogo: "https://img.usecurling.com/i?q=nike%20logo&color=black",
+    athleteName: "Alex Silva",
     baseValue: 2000,
-    currency: 'R$',
-    status: 'pending',
-    startDate: '2024-06-01',
-    endDate: '2025-06-01',
+    currency: "R$",
+    status: "pending",
+    startDate: "2024-06-01",
+    endDate: "2025-06-01",
     metrics: [
       {
-        id: 'm1',
-        label: 'Seguidores Novos',
+        id: "m1",
+        label: "Seguidores Novos",
         currentValue: 0,
         targetValue: 5000,
-        unit: 'followers',
+        unit: "followers",
         impactValue: 1000,
-        type: 'linear',
+        type: "linear",
       },
     ],
     createdAt: new Date().toISOString(),
@@ -155,11 +150,11 @@ export const useContractStore = create<ContractState>()(
       getContractValue: (contract) => {
         let total = contract.baseValue
         contract.metrics.forEach((m) => {
-          if (m.type === 'milestone') {
+          if (m.type === "milestone") {
             if (m.currentValue >= m.targetValue) {
               total += m.impactValue
             }
-          } else if (m.type === 'linear') {
+          } else if (m.type === "linear") {
             const progress = Math.min(1, m.currentValue / m.targetValue)
             total += m.impactValue * progress
           }
@@ -168,7 +163,7 @@ export const useContractStore = create<ContractState>()(
       },
     }),
     {
-      name: 'goplay-live-contracts',
+      name: "goplay-live-contracts",
     },
   ),
 )

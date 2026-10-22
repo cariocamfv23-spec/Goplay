@@ -1,17 +1,17 @@
-import { useEffect, useState } from 'react'
-import { useTimeShiftStore, SportType } from '@/stores/useTimeShiftStore'
-import { TimelineSwitcher } from '@/components/timeshift/TimelineSwitcher'
-import { TimeShiftVisualizer } from '@/components/timeshift/TimeShiftVisualizer'
-import { Button } from '@/components/ui/button'
+import { useEffect, useState } from "react"
+import { useTimeShiftStore, SportType } from "@/stores/useTimeShiftStore"
+import { TimelineSwitcher } from "@/components/timeshift/TimelineSwitcher"
+import { TimeShiftVisualizer } from "@/components/timeshift/TimeShiftVisualizer"
+import { Button } from "@/components/ui/button"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { ArrowLeft, Clock, Info, Share2, Sparkles, Upload } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+} from "@/components/ui/select"
+import { ArrowLeft, Clock, Info, Share2, Sparkles, Upload } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 import {
   Dialog,
   DialogContent,
@@ -19,8 +19,8 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog'
-import { toast } from 'sonner'
+} from "@/components/ui/dialog"
+import { toast } from "sonner"
 
 export default function TimeShift() {
   const navigate = useNavigate()
@@ -28,10 +28,10 @@ export default function TimeShift() {
   const [showPublisher, setShowPublisher] = useState(false)
 
   // Demo sports list
-  const sports: { id: SportType; label: string }[] = [
-    { id: 'football', label: 'Futebol' },
-    { id: 'martial_arts', label: 'Artes Marciais' },
-    { id: 'swimming', label: 'Natação' },
+  const sports: { id: SportType label: string }[] = [
+    { id: "football", label: "Futebol" },
+    { id: "martial_arts", label: "Artes Marciais" },
+    { id: "swimming", label: "Natação" },
   ]
 
   return (
@@ -153,9 +153,9 @@ export default function TimeShift() {
               className="bg-indigo-600 hover:bg-indigo-500 text-white"
               onClick={() => {
                 setShowPublisher(false)
-                toast.success('Vídeo enviado para processamento!', {
+                toast.success("Vídeo enviado para processamento!", {
                   description:
-                    'Aguarde a notificação quando o Time Shift estiver pronto.',
+                    "Aguarde a notificação quando o Time Shift estiver pronto.",
                 })
               }}
             >

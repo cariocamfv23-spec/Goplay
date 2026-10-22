@@ -1,20 +1,20 @@
-import { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Search, Radar, Target, Trophy } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { useState, useMemo } from "react"
+import { useNavigate } from "react-router-dom"
+import { ArrowLeft, Search, Radar, Target, Trophy } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { mockTalents } from '@/lib/data'
-import { TalentMapMarker } from '@/components/TalentMapMarker'
-import { Toggle } from '@/components/ui/toggle'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/select"
+import { Badge } from "@/components/ui/badge"
+import { mockTalents } from "@/lib/data"
+import { TalentMapMarker } from "@/components/TalentMapMarker"
+import { Toggle } from "@/components/ui/toggle"
+import { cn } from "@/lib/utils"
 
 // Helper to generate consistent coordinates based on ID
 const generateCoordinates = (id: string | number) => {
@@ -31,10 +31,10 @@ const generateCoordinates = (id: string | number) => {
 
 export default function InvisibleTalentMap() {
   const navigate = useNavigate()
-  const [search, setSearch] = useState('')
-  const [sportFilter, setSportFilter] = useState('all')
-  const [positionFilter, setPositionFilter] = useState('all')
-  const [ratingFilter, setRatingFilter] = useState('all')
+  const [search, setSearch] = useState("")
+  const [sportFilter, setSportFilter] = useState("all")
+  const [positionFilter, setPositionFilter] = useState("all")
+  const [ratingFilter, setRatingFilter] = useState("all")
   const [showDiscoveriesOnly, setShowDiscoveriesOnly] = useState(false)
 
   // Initialize talents with coordinates
@@ -53,15 +53,15 @@ export default function InvisibleTalentMap() {
       talent.location.toLowerCase().includes(search.toLowerCase())
 
     const matchesSport =
-      sportFilter === 'all' ||
+      sportFilter === "all" ||
       talent.sport?.toLowerCase() === sportFilter.toLowerCase()
 
     const matchesPosition =
-      positionFilter === 'all' ||
+      positionFilter === "all" ||
       talent.position?.toLowerCase().includes(positionFilter.toLowerCase())
 
     const matchesRating =
-      ratingFilter === 'all' || (talent.rating || 0) >= parseFloat(ratingFilter)
+      ratingFilter === "all" || (talent.rating || 0) >= parseFloat(ratingFilter)
 
     const matchesDiscovery =
       !showDiscoveriesOnly || talent.isDiscovered === true
@@ -144,10 +144,10 @@ export default function InvisibleTalentMap() {
             pressed={showDiscoveriesOnly}
             onPressedChange={setShowDiscoveriesOnly}
             className={cn(
-              'h-8 rounded-full border border-white/10 text-xs px-3 gap-1.5 transition-all',
+              "h-8 rounded-full border border-white/10 text-xs px-3 gap-1.5 transition-all",
               showDiscoveriesOnly
-                ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/50 shadow-[0_0_10px_rgba(6,182,212,0.3)]'
-                : 'bg-black/40 text-white hover:bg-white/10',
+                ? "bg-cyan-500/20 text-cyan-400 border-cyan-500/50 shadow-[0_0_10px_rgba(6,182,212,0.3)]"
+                : "bg-black/40 text-white hover:bg-white/10",
             )}
           >
             <Trophy className="w-3.5 h-3.5" />
@@ -161,7 +161,7 @@ export default function InvisibleTalentMap() {
             <SelectContent className="bg-slate-900 border-white/10 text-white">
               <SelectItem value="all">Todos Esportes</SelectItem>
               {sports.map((s) => (
-                <SelectItem key={s} value={s || 'unknown'}>
+                <SelectItem key={s} value={s || "unknown"}>
                   {s}
                 </SelectItem>
               ))}
@@ -175,7 +175,7 @@ export default function InvisibleTalentMap() {
             <SelectContent className="bg-slate-900 border-white/10 text-white">
               <SelectItem value="all">Todas Posições</SelectItem>
               {positions.map((p) => (
-                <SelectItem key={p} value={p || 'unknown'}>
+                <SelectItem key={p} value={p || "unknown"}>
                   {p}
                 </SelectItem>
               ))}
@@ -199,10 +199,10 @@ export default function InvisibleTalentMap() {
             size="sm"
             className="h-8 rounded-full bg-primary/20 text-primary hover:bg-primary/30 border border-primary/20 text-xs px-3"
             onClick={() => {
-              setSportFilter('all')
-              setPositionFilter('all')
-              setRatingFilter('all')
-              setSearch('')
+              setSportFilter("all")
+              setPositionFilter("all")
+              setRatingFilter("all")
+              setSearch("")
               setShowDiscoveriesOnly(false)
             }}
           >
@@ -252,8 +252,8 @@ export default function InvisibleTalentMap() {
             >
               <Target
                 className={cn(
-                  'h-5 w-5 transition-transform',
-                  showDiscoveriesOnly && 'scale-110',
+                  "h-5 w-5 transition-transform",
+                  showDiscoveriesOnly && "scale-110",
                 )}
               />
             </Button>

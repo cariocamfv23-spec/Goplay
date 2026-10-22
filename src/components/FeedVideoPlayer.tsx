@@ -1,8 +1,8 @@
-import { useRef, useState, useEffect } from 'react'
-import { Play, Volume2, VolumeX, Loader2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import { NostalgiaFilter } from '@/components/NostalgiaFilter'
+import { useRef, useState, useEffect } from "react"
+import { Play, Volume2, VolumeX, Loader2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { NostalgiaFilter } from "@/components/NostalgiaFilter"
 
 interface FeedVideoPlayerProps {
   url: string
@@ -16,7 +16,7 @@ interface FeedVideoPlayerProps {
 export function FeedVideoPlayer({
   url,
   thumbnail,
-  aspectRatio = 'aspect-video',
+  aspectRatio = "aspect-video",
   onClick,
   autoPlayThreshold = 0.6,
   className,
@@ -98,7 +98,7 @@ export function FeedVideoPlayer({
     <div
       ref={containerRef}
       className={cn(
-        'relative w-full overflow-hidden bg-black group rounded-xl',
+        "relative w-full overflow-hidden bg-black group rounded-xl",
         aspectRatio,
         className,
       )}
@@ -144,7 +144,7 @@ export function FeedVideoPlayer({
 
       {/* Controls Overlay */}
       <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/80 to-transparent z-30 flex items-end justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <div className="flex-1" />{' '}
+        <div className="flex-1" />{" "}
         {/* Spacer to push mute button to right if needed */}
         <Button
           size="icon"

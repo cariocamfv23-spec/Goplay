@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   ArrowLeft,
   Navigation,
@@ -8,48 +8,49 @@ import {
   MapPin,
   CheckCircle,
   Star,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { useNavigate, useParams } from 'react-router-dom'
-import { mockRideRequests } from '@/lib/data'
-import { useState } from 'react'
-import { toast } from 'sonner'
+} from "lucide-react"
+import { cn } from "@/lib/utils"
+import { useNavigate, useParams } from "react-router-dom"
+import { mockRideRequests } from "@/lib/data"
+import { useState } from "react"
+import { toast } from "sonner"
 
 export default function ActiveRide() {
   const navigate = useNavigate()
   const { id } = useParams()
   const request =
     mockRideRequests.find((r) => r.id === id) || mockRideRequests[0]
-  const [status, setStatus] = useState<
-    'going_to_pickup' | 'arrived' | 'in_progress' | 'completed'
-  >('going_to_pickup')
+  const [status, setStatus] =
+    useState<"going_to_pickup" | "arrived" | "in_progress" | "completed">(
+      "going_to_pickup",
+    )
 
   const handleAction = () => {
-    if (status === 'going_to_pickup') {
-      setStatus('arrived')
-      toast.info('Notificamos o passageiro que você chegou.')
-    } else if (status === 'arrived') {
-      setStatus('in_progress')
-      toast.success('Corrida iniciada!')
-    } else if (status === 'in_progress') {
-      setStatus('completed')
-      toast.success('Corrida finalizada!', {
+    if (status === "going_to_pickup") {
+      setStatus("arrived")
+      toast.info("Notificamos o passageiro que você chegou.")
+    } else if (status === "arrived") {
+      setStatus("in_progress")
+      toast.success("Corrida iniciada!")
+    } else if (status === "in_progress") {
+      setStatus("completed")
+      toast.success("Corrida finalizada!", {
         description: `Você recebeu ${request.price}`,
       })
-      setTimeout(() => navigate('/driver/dashboard'), 2000)
+      setTimeout(() => navigate("/driver/dashboard"), 2000)
     }
   }
 
   const getStatusLabel = () => {
     switch (status) {
-      case 'going_to_pickup':
-        return 'Indo buscar passageiro'
-      case 'arrived':
-        return 'Aguardando passageiro'
-      case 'in_progress':
-        return 'Em rota para destino'
-      case 'completed':
-        return 'Corrida finalizada'
+      case "going_to_pickup":
+        return "Indo buscar passageiro"
+      case "arrived":
+        return "Aguardando passageiro"
+      case "in_progress":
+        return "Em rota para destino"
+      case "completed":
+        return "Corrida finalizada"
     }
   }
 
@@ -89,7 +90,7 @@ export default function ActiveRide() {
             <div>
               <h3 className="font-bold">{request.passenger.name}</h3>
               <p className="text-xs text-muted-foreground flex items-center gap-1">
-                <Star className="h-3 w-3 fill-gold text-gold" />{' '}
+                <Star className="h-3 w-3 fill-gold text-gold" />{" "}
                 {request.passenger.rating}
               </p>
             </div>
@@ -114,18 +115,18 @@ export default function ActiveRide() {
 
         <Button
           className={cn(
-            'w-full h-14 rounded-full font-bold text-lg shadow-lg transition-all',
-            status === 'completed'
-              ? 'bg-green-600 hover:bg-green-700'
-              : 'bg-primary',
+            "w-full h-14 rounded-full font-bold text-lg shadow-lg transition-all",
+            status === "completed"
+              ? "bg-green-600 hover:bg-green-700"
+              : "bg-primary",
           )}
           onClick={handleAction}
-          disabled={status === 'completed'}
+          disabled={status === "completed"}
         >
-          {status === 'going_to_pickup' && 'Cheguei no Local'}
-          {status === 'arrived' && 'Iniciar Corrida'}
-          {status === 'in_progress' && 'Finalizar Corrida'}
-          {status === 'completed' && (
+          {status === "going_to_pickup" && "Cheguei no Local"}
+          {status === "arrived" && "Iniciar Corrida"}
+          {status === "in_progress" && "Finalizar Corrida"}
+          {status === "completed" && (
             <span className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5" /> Finalizado
             </span>

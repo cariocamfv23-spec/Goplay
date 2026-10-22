@@ -3,21 +3,21 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Send, Heart } from 'lucide-react'
-import { useState, useEffect } from 'react'
-import { cn } from '@/lib/utils'
-import useNotificationStore from '@/stores/useNotificationStore'
-import { useAuth } from '@/hooks/use-auth'
-import { feedService, type PostCommentItem } from '@/services/feed'
-import { useRealtimeComments } from '@/hooks/useRealtimeFeed'
-import { toast } from 'sonner'
-import { Trash2, Loader2, Radio, ShieldAlert } from 'lucide-react'
-import { ReportDialog } from '@/components/moderation/ReportDialog'
+} from "@/components/ui/sheet"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Send, Heart } from "lucide-react"
+import { useState, useEffect } from "react"
+import { cn } from "@/lib/utils"
+import useNotificationStore from "@/stores/useNotificationStore"
+import { useAuth } from "@/hooks/use-auth"
+import { feedService, type PostCommentItem } from "@/services/feed"
+import { useRealtimeComments } from "@/hooks/useRealtimeFeed"
+import { toast } from "sonner"
+import { Trash2, Loader2, Radio, ShieldAlert } from "lucide-react"
+import { ReportDialog } from "@/components/moderation/ReportDialog"
 
 interface Comment {
   id: string
@@ -43,86 +43,86 @@ interface CommentsSheetProps {
 
 const MOCK_COMMENTS: Comment[] = [
   {
-    id: '1',
+    id: "1",
     user: {
-      name: 'João Silva',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
+      name: "João Silva",
+      avatar: "https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1",
     },
-    text: 'Que jogada incrível! 🔥',
-    time: '2min',
+    text: "Que jogada incrível! 🔥",
+    time: "2min",
     likes: 24,
   },
   {
-    id: '2',
+    id: "2",
     user: {
-      name: 'Maria Souza',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=2',
+      name: "Maria Souza",
+      avatar: "https://img.usecurling.com/ppl/thumbnail?gender=female&seed=2",
     },
-    text: 'A técnica do chute foi perfeita.',
-    time: '5min',
+    text: "A técnica do chute foi perfeita.",
+    time: "5min",
     likes: 12,
   },
   {
-    id: '3',
+    id: "3",
     user: {
-      name: 'Coach Pedro',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=3',
+      name: "Coach Pedro",
+      avatar: "https://img.usecurling.com/ppl/thumbnail?gender=male&seed=3",
     },
-    text: 'Precisamos treinar essa movimentação amanhã.',
-    time: '1h',
+    text: "Precisamos treinar essa movimentação amanhã.",
+    time: "1h",
     likes: 56,
   },
   {
-    id: '4',
+    id: "4",
     user: {
-      name: 'Ana Clara',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=4',
+      name: "Ana Clara",
+      avatar: "https://img.usecurling.com/ppl/thumbnail?gender=female&seed=4",
     },
-    text: 'Onde foi esse jogo?',
-    time: '3h',
+    text: "Onde foi esse jogo?",
+    time: "3h",
     likes: 2,
   },
 ]
 
 const DEFAULT_FALLBACK_COMMENTS: Comment[] = [
   {
-    id: 'mock-1',
+    id: "mock-1",
     user: {
-      name: 'Lucas Silva',
+      name: "Lucas Silva",
       avatar: null,
     },
-    text: 'Que jogada incrível! 🔥',
-    time: '2min',
+    text: "Que jogada incrível! 🔥",
+    time: "2min",
     likes: 24,
   },
   {
-    id: 'mock-2',
+    id: "mock-2",
     user: {
-      name: 'Camila Oliveira',
+      name: "Camila Oliveira",
       avatar: null,
     },
-    text: 'A técnica do chute foi perfeita.',
-    time: '5min',
+    text: "A técnica do chute foi perfeita.",
+    time: "5min",
     likes: 12,
   },
   {
-    id: 'mock-3',
+    id: "mock-3",
     user: {
-      name: 'Prof. Marcelo Prado',
+      name: "Prof. Marcelo Prado",
       avatar: null,
     },
-    text: 'Precisamos treinar essa movimentação amanhã.',
-    time: '1h',
+    text: "Precisamos treinar essa movimentação amanhã.",
+    time: "1h",
     likes: 56,
   },
   {
-    id: 'mock-4',
+    id: "mock-4",
     user: {
-      name: 'Beatriz Mendes',
+      name: "Beatriz Mendes",
       avatar: null,
     },
-    text: 'Onde foi esse jogo?',
-    time: '3h',
+    text: "Onde foi esse jogo?",
+    time: "3h",
     likes: 2,
   },
 ]
@@ -133,7 +133,7 @@ export function CommentsSheet({
   postId,
 }: CommentsSheetProps) {
   const { user, profile } = useAuth()
-  const [newComment, setNewComment] = useState('')
+  const [newComment, setNewComment] = useState("")
   const [submitting, setSubmitting] = useState(false)
   const [reportingComment, setReportingComment] = useState<{
     id: string
@@ -146,7 +146,7 @@ export function CommentsSheet({
   )
 
   const isSupabasePost =
-    typeof postId === 'string' &&
+    typeof postId === "string" &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
       postId,
     )
@@ -170,7 +170,7 @@ export function CommentsSheet({
     if (email) {
       return email.slice(0, 2).toUpperCase()
     }
-    return 'GP'
+    return "GP"
   }
 
   // Map real comments to sheet display format
@@ -210,14 +210,14 @@ export function CommentsSheet({
       setSubmitting(false)
 
       if (error || !data) {
-        toast.error('Não foi possível enviar o comentário.')
+        toast.error("Não foi possível enviar o comentário.")
         return
       }
 
       // Add locally for instant UI update; realtime listener will gracefully deduplicate by ID
       addLocalComment(data)
-      setNewComment('')
-      toast.success('Comentário publicado!')
+      setNewComment("")
+      toast.success("Comentário publicado!")
     } else {
       // Mock fallback
       const comment: Comment = {
@@ -225,16 +225,16 @@ export function CommentsSheet({
         userId: user?.id,
         user: {
           id: user?.id,
-          name: profile?.full_name || 'Você',
+          name: profile?.full_name || "Você",
           avatar: profile?.avatar_url || null,
         },
         text: newComment,
-        time: 'Agora',
+        time: "Agora",
         likes: 0,
         isMine: true,
       }
       setMockComments([comment, ...mockComments])
-      setNewComment('')
+      setNewComment("")
     }
   }
 
@@ -247,10 +247,10 @@ export function CommentsSheet({
     removeLocalComment(commentId)
     const { error } = await feedService.deleteComment(commentId, user.id)
     if (error) {
-      toast.error('Erro ao excluir comentário.')
+      toast.error("Erro ao excluir comentário.")
       return
     }
-    toast.success('Comentário excluído.')
+    toast.success("Comentário excluído.")
   }
 
   const toggleLike = (id: string) => {
@@ -366,7 +366,7 @@ export function CommentsSheet({
                 {profile?.avatar_url ? (
                   <AvatarImage
                     src={profile.avatar_url}
-                    alt={profile.full_name || 'Seu perfil'}
+                    alt={profile.full_name || "Seu perfil"}
                     className="object-cover"
                   />
                 ) : null}
@@ -380,7 +380,7 @@ export function CommentsSheet({
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Adicione um comentário..."
                   className="bg-zinc-800 border-none text-white pr-10 focus-visible:ring-primary/50"
-                  onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                  onKeyDown={(e) => e.key === "Enter" && handleSend()}
                 />
                 <Button
                   size="icon"

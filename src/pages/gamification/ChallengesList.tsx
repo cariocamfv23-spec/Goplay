@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { mockChallenges, Challenge } from '@/lib/data'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Clock, Trophy, Users, ChevronRight, Gift } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { formatDistanceToNow } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { useState } from "react"
+import { mockChallenges, Challenge } from "@/lib/data"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Clock, Trophy, Users, ChevronRight, Gift } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { formatDistanceToNow } from "date-fns"
+import { ptBR } from "date-fns/locale"
 
 interface ChallengesListProps {
   onSelectChallenge: (id: string) => void
@@ -15,35 +15,35 @@ interface ChallengesListProps {
 export default function ChallengesList({
   onSelectChallenge,
 }: ChallengesListProps) {
-  const [filter, setFilter] = useState<'all' | 'active' | 'upcoming' | 'ended'>(
-    'all',
+  const [filter, setFilter] = useState<"all" | "active" | "upcoming" | "ended">(
+    "all",
   )
 
   const filteredChallenges = mockChallenges.filter(
-    (c) => filter === 'all' || c.status === filter,
+    (c) => filter === "all" || c.status === filter,
   )
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active':
-        return 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20'
-      case 'upcoming':
-        return 'text-blue-500 bg-blue-500/10 border-blue-500/20'
-      case 'ended':
-        return 'text-muted-foreground bg-muted border-muted-foreground/20'
+      case "active":
+        return "text-emerald-500 bg-emerald-500/10 border-emerald-500/20"
+      case "upcoming":
+        return "text-blue-500 bg-blue-500/10 border-blue-500/20"
+      case "ended":
+        return "text-muted-foreground bg-muted border-muted-foreground/20"
       default:
-        return 'text-muted-foreground'
+        return "text-muted-foreground"
     }
   }
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'active':
-        return 'Em Andamento'
-      case 'upcoming':
-        return 'Em Breve'
-      case 'ended':
-        return 'Encerrado'
+      case "active":
+        return "Em Andamento"
+      case "upcoming":
+        return "Em Breve"
+      case "ended":
+        return "Encerrado"
       default:
         return status
     }
@@ -52,21 +52,21 @@ export default function ChallengesList({
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-        {['all', 'active', 'upcoming', 'ended'].map((f) => (
+        {["all", "active", "upcoming", "ended"].map((f) => (
           <Button
             key={f}
-            variant={filter === f ? 'default' : 'outline'}
+            variant={filter === f ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter(f as any)}
             className="rounded-full h-8 text-xs font-medium capitalize"
           >
-            {f === 'all'
-              ? 'Todos'
-              : f === 'active'
-                ? 'Ativos'
-                : f === 'upcoming'
-                  ? 'Breve'
-                  : 'Fim'}
+            {f === "all"
+              ? "Todos"
+              : f === "active"
+                ? "Ativos"
+                : f === "upcoming"
+                  ? "Breve"
+                  : "Fim"}
           </Button>
         ))}
       </div>
@@ -88,7 +88,7 @@ export default function ChallengesList({
               <div className="absolute bottom-3 left-3 z-20">
                 <Badge
                   className={cn(
-                    'mb-2 border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider',
+                    "mb-2 border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
                     getStatusColor(challenge.status),
                   )}
                 >
@@ -104,12 +104,12 @@ export default function ChallengesList({
                 <div className="flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5 text-primary" />
                   <span>
-                    {challenge.status === 'active'
-                      ? 'Termina em '
-                      : 'Inicia em '}
+                    {challenge.status === "active"
+                      ? "Termina em "
+                      : "Inicia em "}
                     {formatDistanceToNow(
                       new Date(
-                        challenge.status === 'upcoming'
+                        challenge.status === "upcoming"
                           ? challenge.startDate
                           : challenge.endDate,
                       ),

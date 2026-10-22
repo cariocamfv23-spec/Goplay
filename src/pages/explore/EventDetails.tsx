@@ -1,9 +1,9 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { mockEvents } from '@/lib/data'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { useParams, useNavigate } from "react-router-dom"
+import { mockEvents } from "@/lib/data"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Calendar,
   MapPin,
@@ -22,18 +22,18 @@ import {
   ExternalLink,
   ShieldCheck,
   Search,
-} from 'lucide-react'
-import { useState, useEffect } from 'react'
+} from "lucide-react"
+import { useState, useEffect } from "react"
 import {
   eventsService,
   type EventItem,
   type RegistrationItem,
   type RegistrationStatus,
-} from '@/services/events'
-import { useAuth } from '@/hooks/use-auth'
-import { analyticsService } from '@/services/analytics'
-import { ShareDialog } from '@/components/ShareDialog'
-import { toast } from 'sonner'
+} from "@/services/events"
+import { useAuth } from "@/hooks/use-auth"
+import { analyticsService } from "@/services/analytics"
+import { ShareDialog } from "@/components/ShareDialog"
+import { toast } from "sonner"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,7 +43,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
+} from "@/components/ui/alert-dialog"
 
 export default function EventDetails() {
   const { id } = useParams<{ id: string }>()
@@ -57,28 +57,27 @@ export default function EventDetails() {
   const [isRegistered, setIsRegistered] = useState(false)
   const [actionRegistration, setActionRegistration] = useState<{
     item: RegistrationItem
-    action: 'approved' | 'rejected'
+    action: "approved" | "rejected"
   } | null>(null)
   const [actionLoading, setActionLoading] = useState(false)
-  const [regFilter, setRegFilter] = useState<
-    'all' | 'pending' | 'approved' | 'rejected'
-  >('all')
+  const [regFilter, setRegFilter] =
+    useState<"all" | "pending" | "approved" | "rejected">("all")
   const [isShareOpen, setIsShareOpen] = useState(false)
 
   // Check if ?share=1 is present in URL to trigger share dialog automatically
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    if (params.get('share') === '1') {
+    if (params.get("share") === "1") {
       setIsShareOpen(true)
     }
   }, [])
 
   const isSupabaseId =
-    typeof id === 'string' &&
+    typeof id === "string" &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
 
   const mockEvent = !isSupabaseId
-    ? (mockEvents.find((e) => String(e.id) === String(id)) as any)
+    ? mockEvents.find((e) => String(e.id) === String(id)) as any
     : null
 
   useEffect(() => {
@@ -87,7 +86,7 @@ export default function EventDetails() {
       eventsService.getEventById(id, user?.id).then(({ data, error }) => {
         setLoading(false)
         if (error || !data) {
-          toast.error('Evento não encontrado.')
+          toast.error("Evento não encontrado.")
           return
         }
         setRealEvent(data)
@@ -115,10 +114,10 @@ export default function EventDetails() {
     }
 
     if (!user?.id) {
-      toast.info('Faça login para concluir sua inscrição no evento.', {
-        description: 'Você retornará diretamente para este evento.',
+      toast.info("Faça login para concluir sua inscrição no evento.", {
+        description: "Você retornará diretamente para este evento.",
         action: {
-          label: 'Fazer Login',
+          label: "Fazer Login",
           onClick: () =>
             navigate(
               `/login?redirect=${encodeURIComponent(window.location.pathname)}`,
@@ -145,7 +144,7 @@ export default function EventDetails() {
 
       // Record successful registration completion metric
       analyticsService.trackEvent({
-        eventName: 'registration_completed',
+        eventName: "registration_completed",
         userId: user.id,
         targetId: id,
         metadata: {
@@ -154,9 +153,9 @@ export default function EventDetails() {
         },
       })
 
-      toast.success('Inscrição confirmada com sucesso!', {
+      toast.success("Inscrição confirmada com sucesso!", {
         description:
-          'Verifique suas notificações e compareça no horário indicado.',
+          "Verifique suas notificações e compareça no horário indicado.",
       })
       if (realEvent) {
         setRealEvent({
@@ -166,25 +165,25 @@ export default function EventDetails() {
       }
     } else {
       setIsRegistered(true)
-      toast.success('Inscrição confirmada!')
+      toast.success("Inscrição confirmada!")
     }
   }
 
   const handleCancelRegistration = async () => {
     if (!user?.id || !isSupabaseId || !id) return
-    if (!confirm('Deseja realmente cancelar sua inscrição?')) return
+    if (!confirm("Deseja realmente cancelar sua inscrição?")) return
 
     setSubmitting(true)
     const { error } = await eventsService.cancelRegistration(id, user.id)
     setSubmitting(false)
 
     if (error) {
-      toast.error('Erro ao cancelar inscrição.')
+      toast.error("Erro ao cancelar inscrição.")
       return
     }
 
     setIsRegistered(false)
-    toast.success('Inscrição cancelada com sucesso.')
+    toast.success("Inscrição cancelada com sucesso.")
     if (realEvent) {
       setRealEvent({
         ...realEvent,
@@ -217,7 +216,7 @@ export default function EventDetails() {
     : false
 
   const isClosed =
-    realEvent?.status === 'closed' || realEvent?.status === 'canceled'
+    realEvent?.status === "closed" || realEvent?.status === "canceled"
 
   const event = realEvent
     ? {
@@ -225,21 +224,21 @@ export default function EventDetails() {
         description: realEvent.description,
         image:
           realEvent.bannerUrl ||
-          'https://img.usecurling.com/p/800/400?q=stadium%20field',
+          "https://img.usecurling.com/p/800/400?q=stadium%20field",
         sport: realEvent.sport,
-        type: realEvent.type === 'tryout' ? 'Peneira Oficial' : 'Campeonato',
-        date: new Date(realEvent.eventDate).toLocaleDateString('pt-BR', {
-          weekday: 'long',
-          day: '2-digit',
-          month: 'long',
-          year: 'numeric',
+        type: realEvent.type === "tryout" ? "Peneira Oficial" : "Campeonato",
+        date: new Date(realEvent.eventDate).toLocaleDateString("pt-BR", {
+          weekday: "long",
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
         }),
         time: realEvent.eventTime,
         location: `${realEvent.locationName} - ${realEvent.city}, ${realEvent.state}`,
         address: realEvent.address,
         price:
           realEvent.price === 0
-            ? 'Gratuito'
+            ? "Gratuito"
             : `R$ ${realEvent.price.toFixed(2)}`,
         attendees: realEvent.registrationsCount || 0,
         maxAttendees: realEvent.maxParticipants || null,
@@ -249,7 +248,7 @@ export default function EventDetails() {
         deadline: realEvent.registrationDeadline
           ? new Date(
               `${realEvent.registrationDeadline}T00:00:00`,
-            ).toLocaleDateString('pt-BR')
+            ).toLocaleDateString("pt-BR")
           : null,
         isCreator: user?.id && realEvent.creatorId === user.id,
       }
@@ -259,15 +258,15 @@ export default function EventDetails() {
           description: mockEvent.description,
           image: mockEvent.image,
           sport: mockEvent.sport,
-          type: 'Evento',
+          type: "Evento",
           date: mockEvent.date,
-          time: '09:00',
+          time: "09:00",
           location: mockEvent.location,
           address: undefined,
           price: mockEvent.price,
           attendees: mockEvent.attendees,
           maxAttendees: 50,
-          creator: { name: 'Organizador Oficial', avatar: '', type: 'club' },
+          creator: { name: "Organizador Oficial", avatar: "", type: "club" },
           requirements: undefined,
           instructions: undefined,
           deadline: null,
@@ -279,7 +278,7 @@ export default function EventDetails() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
         <h2 className="text-xl font-bold mb-2">Evento não encontrado</h2>
-        <Button onClick={() => navigate('/events')}>Voltar para a lista</Button>
+        <Button onClick={() => navigate("/events")}>Voltar para a lista</Button>
       </div>
     )
   }
@@ -303,7 +302,7 @@ export default function EventDetails() {
               if (window.history.length > 1) {
                 navigate(-1)
               } else {
-                navigate('/explore')
+                navigate("/explore")
               }
             }}
           >
@@ -328,9 +327,9 @@ export default function EventDetails() {
             <Badge
               variant="outline"
               className={
-                event.type.includes('Peneira')
-                  ? 'bg-amber-500/90 text-black border-amber-400 font-extrabold'
-                  : 'bg-background/80 backdrop-blur-md'
+                event.type.includes("Peneira")
+                  ? "bg-amber-500/90 text-black border-amber-400 font-extrabold"
+                  : "bg-background/80 backdrop-blur-md"
               }
             >
               {event.type}
@@ -351,16 +350,16 @@ export default function EventDetails() {
           <div className="flex items-center gap-3 py-2 border-b border-border/40">
             <Avatar className="w-10 h-10 border border-border">
               <AvatarImage src={event.creator?.avatar} />
-              <AvatarFallback>{event.creator?.name?.[0] || 'O'}</AvatarFallback>
+              <AvatarFallback>{event.creator?.name?.[0] || "O"}</AvatarFallback>
             </Avatar>
             <div>
               <p className="text-sm font-semibold">
-                {event.creator?.name || 'Organizador Goplay'}
+                {event.creator?.name || "Organizador Goplay"}
               </p>
               <p className="text-xs text-muted-foreground capitalize">
-                {event.creator?.type === 'club'
-                  ? 'Clube Oficial'
-                  : 'Organizador Autorizado'}
+                {event.creator?.type === "club"
+                  ? "Clube Oficial"
+                  : "Organizador Autorizado"}
               </p>
             </div>
           </div>
@@ -455,7 +454,7 @@ export default function EventDetails() {
         <div className="space-y-2">
           <h3 className="text-base font-bold">Sobre o Evento</h3>
           <p className="text-sm text-muted-foreground whitespace-pre-line leading-relaxed">
-            {event.description || 'Nenhuma descrição detalhada informada.'}
+            {event.description || "Nenhuma descrição detalhada informada."}
           </p>
         </div>
 
@@ -510,7 +509,7 @@ export default function EventDetails() {
                   size="sm"
                   variant="outline"
                   className="h-7 text-[11px] border-primary/40 text-primary gap-1"
-                  onClick={() => navigate('/organizer')}
+                  onClick={() => navigate("/organizer")}
                 >
                   <ExternalLink className="w-3 h-3" />
                   Painel Geral do Clube
@@ -525,43 +524,43 @@ export default function EventDetails() {
             <div className="flex items-center gap-1.5 pt-1">
               <Button
                 size="sm"
-                variant={regFilter === 'all' ? 'default' : 'outline'}
+                variant={regFilter === "all" ? "default" : "outline"}
                 className="h-6 text-[10px] px-2 rounded-full"
-                onClick={() => setRegFilter('all')}
+                onClick={() => setRegFilter("all")}
               >
                 Todas ({registrations.length})
               </Button>
               <Button
                 size="sm"
-                variant={regFilter === 'pending' ? 'default' : 'outline'}
+                variant={regFilter === "pending" ? "default" : "outline"}
                 className="h-6 text-[10px] px-2 rounded-full border-amber-500/50 text-amber-500 hover:bg-amber-500/10"
-                onClick={() => setRegFilter('pending')}
+                onClick={() => setRegFilter("pending")}
               >
                 Pendentes (
-                {registrations.filter((r) => r.status === 'pending').length})
+                {registrations.filter((r) => r.status === "pending").length})
               </Button>
               <Button
                 size="sm"
-                variant={regFilter === 'approved' ? 'default' : 'outline'}
+                variant={regFilter === "approved" ? "default" : "outline"}
                 className="h-6 text-[10px] px-2 rounded-full border-emerald-500/50 text-emerald-500 hover:bg-emerald-500/10"
-                onClick={() => setRegFilter('approved')}
+                onClick={() => setRegFilter("approved")}
               >
                 Aprovadas (
                 {
                   registrations.filter(
-                    (r) => r.status === 'approved' || r.status === 'confirmed',
+                    (r) => r.status === "approved" || r.status === "confirmed",
                   ).length
                 }
                 )
               </Button>
               <Button
                 size="sm"
-                variant={regFilter === 'rejected' ? 'default' : 'outline'}
+                variant={regFilter === "rejected" ? "default" : "outline"}
                 className="h-6 text-[10px] px-2 rounded-full border-red-500/50 text-red-500 hover:bg-red-500/10"
-                onClick={() => setRegFilter('rejected')}
+                onClick={() => setRegFilter("rejected")}
               >
                 Recusadas (
-                {registrations.filter((r) => r.status === 'rejected').length})
+                {registrations.filter((r) => r.status === "rejected").length})
               </Button>
             </div>
 
@@ -573,11 +572,11 @@ export default function EventDetails() {
               <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
                 {registrations
                   .filter((r) => {
-                    if (regFilter === 'all') return true
-                    if (regFilter === 'pending') return r.status === 'pending'
-                    if (regFilter === 'approved')
-                      return r.status === 'approved' || r.status === 'confirmed'
-                    if (regFilter === 'rejected') return r.status === 'rejected'
+                    if (regFilter === "all") return true
+                    if (regFilter === "pending") return r.status === "pending"
+                    if (regFilter === "approved")
+                      return r.status === "approved" || r.status === "confirmed"
+                    if (regFilter === "rejected") return r.status === "rejected"
                     return true
                   })
                   .map((r) => (
@@ -592,7 +591,7 @@ export default function EventDetails() {
                         <Avatar className="w-8 h-8 border border-border">
                           <AvatarImage src={r.participant?.avatar} />
                           <AvatarFallback>
-                            {r.participant?.name?.[0] || 'A'}
+                            {r.participant?.name?.[0] || "A"}
                           </AvatarFallback>
                         </Avatar>
                         <div>
@@ -603,18 +602,18 @@ export default function EventDetails() {
                             <ExternalLink className="w-3 h-3 text-muted-foreground" />
                           </div>
                           <p className="text-[10px] text-muted-foreground">
-                            {r.participant?.sport || 'Atleta'}{' '}
+                            {r.participant?.sport || "Atleta"}{" "}
                             {r.participant?.position
                               ? `• ${r.participant.position}`
-                              : ''}{' '}
-                            • {r.participant?.city || 'Brasil'}
+                              : ""}{" "}
+                            • {r.participant?.city || "Brasil"}
                             {r.participant?.state
                               ? `/${r.participant.state}`
-                              : ''}
+                              : ""}
                           </p>
                           <span className="text-[10px] text-muted-foreground/80">
-                            Inscrito em{' '}
-                            {new Date(r.createdAt).toLocaleDateString('pt-BR')}
+                            Inscrito em{" "}
+                            {new Date(r.createdAt).toLocaleDateString("pt-BR")}
                           </span>
                         </div>
                       </div>
@@ -623,37 +622,37 @@ export default function EventDetails() {
                         <Badge
                           variant="outline"
                           className={
-                            r.status === 'approved' || r.status === 'confirmed'
-                              ? 'text-[10px] text-emerald-600 border-emerald-500/40 bg-emerald-500/10'
-                              : r.status === 'rejected'
-                                ? 'text-[10px] text-red-600 border-red-500/40 bg-red-500/10'
-                                : 'text-[10px] text-amber-500 border-amber-500/40 bg-amber-500/10'
+                            r.status === "approved" || r.status === "confirmed"
+                              ? "text-[10px] text-emerald-600 border-emerald-500/40 bg-emerald-500/10"
+                              : r.status === "rejected"
+                                ? "text-[10px] text-red-600 border-red-500/40 bg-red-500/10"
+                                : "text-[10px] text-amber-500 border-amber-500/40 bg-amber-500/10"
                           }
                         >
-                          {r.status === 'approved'
-                            ? 'Aprovado'
-                            : r.status === 'confirmed'
-                              ? 'Confirmado'
-                              : r.status === 'rejected'
-                                ? 'Recusado'
-                                : 'Pendente'}
+                          {r.status === "approved"
+                            ? "Aprovado"
+                            : r.status === "confirmed"
+                              ? "Confirmado"
+                              : r.status === "rejected"
+                                ? "Recusado"
+                                : "Pendente"}
                         </Badge>
 
                         {/* Action buttons */}
-                        {r.status !== 'canceled' && (
+                        {r.status !== "canceled" && (
                           <div className="flex items-center gap-1">
                             <Button
                               size="sm"
                               variant="ghost"
                               disabled={
-                                r.status === 'approved' ||
-                                r.status === 'confirmed'
+                                r.status === "approved" ||
+                                r.status === "confirmed"
                               }
                               className="h-7 px-2 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 font-medium"
                               onClick={() =>
                                 setActionRegistration({
                                   item: r,
-                                  action: 'approved',
+                                  action: "approved",
                                 })
                               }
                             >
@@ -663,12 +662,12 @@ export default function EventDetails() {
                             <Button
                               size="sm"
                               variant="ghost"
-                              disabled={r.status === 'rejected'}
+                              disabled={r.status === "rejected"}
                               className="h-7 px-2 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30 font-medium"
                               onClick={() =>
                                 setActionRegistration({
                                   item: r,
-                                  action: 'rejected',
+                                  action: "rejected",
                                 })
                               }
                             >
@@ -694,21 +693,21 @@ export default function EventDetails() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {actionRegistration?.action === 'approved'
-                ? 'Confirmar Aprovação da Inscrição'
-                : 'Confirmar Recusa da Inscrição'}
+              {actionRegistration?.action === "approved"
+                ? "Confirmar Aprovação da Inscrição"
+                : "Confirmar Recusa da Inscrição"}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              {actionRegistration?.action === 'approved' ? (
+              {actionRegistration?.action === "approved" ? (
                 <>
-                  Deseja realmente aprovar a inscrição de{' '}
+                  Deseja realmente aprovar a inscrição de{" "}
                   <strong>{actionRegistration?.item.participant?.name}</strong>?
                   O atleta receberá uma notificação oficial de aprovação e sua
                   vaga será confirmada.
                 </>
               ) : (
                 <>
-                  Deseja realmente recusar a inscrição de{' '}
+                  Deseja realmente recusar a inscrição de{" "}
                   <strong>{actionRegistration?.item.participant?.name}</strong>?
                   O atleta será notificado de maneira respeitosa sobre o
                   resultado da seletiva. O registro será mantido com status
@@ -724,9 +723,9 @@ export default function EventDetails() {
             <AlertDialogAction
               disabled={actionLoading}
               className={
-                actionRegistration?.action === 'approved'
-                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                  : 'bg-destructive hover:bg-destructive/90 text-destructive-foreground'
+                actionRegistration?.action === "approved"
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                  : "bg-destructive hover:bg-destructive/90 text-destructive-foreground"
               }
               onClick={async (e) => {
                 e.preventDefault()
@@ -744,7 +743,7 @@ export default function EventDetails() {
                 if (error || !success) {
                   toast.error(
                     error?.message ||
-                      'Não foi possível atualizar o status da inscrição.',
+                      "Não foi possível atualizar o status da inscrição.",
                   )
                   return
                 }
@@ -763,17 +762,17 @@ export default function EventDetails() {
                 )
 
                 toast.success(
-                  actionRegistration.action === 'approved'
-                    ? 'Inscrição aprovada com sucesso! O atleta foi notificado.'
-                    : 'Inscrição recusada com sucesso. O atleta foi notificado.',
+                  actionRegistration.action === "approved"
+                    ? "Inscrição aprovada com sucesso! O atleta foi notificado."
+                    : "Inscrição recusada com sucesso. O atleta foi notificado.",
                 )
 
                 // Track approval/rejection metrics
                 analyticsService.trackEvent({
                   eventName:
-                    actionRegistration.action === 'approved'
-                      ? 'registration_approved'
-                      : 'registration_rejected',
+                    actionRegistration.action === "approved"
+                      ? "registration_approved"
+                      : "registration_rejected",
                   userId: user?.id,
                   targetId: actionRegistration.item.id,
                   metadata: {
@@ -788,9 +787,9 @@ export default function EventDetails() {
               {actionLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin mr-1.5" />
               ) : null}
-              {actionRegistration?.action === 'approved'
-                ? 'Confirmar Aprovação'
-                : 'Confirmar Recusa'}
+              {actionRegistration?.action === "approved"
+                ? "Confirmar Aprovação"
+                : "Confirmar Recusa"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -820,12 +819,12 @@ export default function EventDetails() {
               </span>
               {realEvent?.maxParticipants && (
                 <span className="text-[11px] text-muted-foreground hidden sm:inline">
-                  •{' '}
+                  •{" "}
                   {Math.max(
                     0,
                     realEvent.maxParticipants -
                       (realEvent.registrationsCount || 0),
-                  )}{' '}
+                  )}{" "}
                   vagas restantes
                 </span>
               )}
@@ -885,7 +884,7 @@ export default function EventDetails() {
                   Inscrição em andamento...
                 </>
               ) : (
-                'Inscrever-se'
+                "Inscrever-se"
               )}
             </Button>
           )}
@@ -895,23 +894,23 @@ export default function EventDetails() {
         open={isShareOpen}
         onOpenChange={setIsShareOpen}
         title={
-          event.type?.includes('Peneira')
+          event.type?.includes("Peneira")
             ? `⭐ Peneira Oficial: ${event.title}`
             : event.title
         }
         description={
-          event.type?.includes('Peneira')
+          event.type?.includes("Peneira")
             ? `⚽ Seletiva/Peneira Oficial aberta: "${event.title}" (${event.sport}) no Goplay App! Local: ${event.location}. Vagas abertas, inscreva-se já pelo link:`
             : `🏆 Participe de "${event.title}" (${event.sport}) no Goplay App! Local: ${event.location}. Acesse e faça sua inscrição:`
         }
         url={
-          typeof window !== 'undefined'
+          typeof window !== "undefined"
             ? `${window.location.origin}/events/${id}`
             : undefined
         }
         onShareAction={(platform) => {
           if (id) {
-            analyticsService.trackEventShare(id, platform || 'native', user?.id)
+            analyticsService.trackEventShare(id, platform || "native", user?.id)
           }
         }}
       />

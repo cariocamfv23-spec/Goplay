@@ -4,8 +4,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
 import {
   Link as LinkIcon,
   MessageCircle,
@@ -15,9 +15,9 @@ import {
   Mail,
   MoreHorizontal,
   Check,
-} from 'lucide-react'
-import { useState, ReactNode } from 'react'
-import { useToast } from '@/hooks/use-toast'
+} from "lucide-react"
+import { useState, ReactNode } from "react"
+import { useToast } from "@/hooks/use-toast"
 
 interface ShareDialogProps {
   open: boolean
@@ -33,7 +33,7 @@ interface ShareDialogProps {
 export function ShareDialog({
   open,
   onOpenChange,
-  title = 'Compartilhar',
+  title = "Compartilhar",
   description,
   url,
   preview,
@@ -41,7 +41,7 @@ export function ShareDialog({
   videoTitle,
 }: ShareDialogProps) {
   const resolvedUrl =
-    url || (typeof window !== 'undefined' ? window.location.href : '')
+    url || (typeof window !== "undefined" ? window.location.href : "")
   const displayTitle = videoTitle ? `Compartilhar: ${videoTitle}` : title
   const [copied, setCopied] = useState(false)
   const { toast } = useToast()
@@ -53,11 +53,11 @@ export function ShareDialog({
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
     toast({
-      title: 'Link copiado!',
-      description: 'O link foi copiado para a área de transferência.',
+      title: "Link copiado!",
+      description: "O link foi copiado para a área de transferência.",
     })
     if (onShareAction) {
-      onShareAction('copy_link')
+      onShareAction("copy_link")
     }
   }
 
@@ -66,27 +66,27 @@ export function ShareDialog({
     const fullText = description ? `${description} ${resolvedUrl}` : resolvedUrl
 
     try {
-      if (platform === 'WhatsApp') {
+      if (platform === "WhatsApp") {
         // WhatsApp Web / Mobile direct deep link
         const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(fullText)}`
-        window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
+        window.open(whatsappUrl, "_blank", "noopener,noreferrer")
         shared = true
-      } else if (platform === 'Facebook') {
+      } else if (platform === "Facebook") {
         window.open(
           `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(resolvedUrl)}`,
-          '_blank',
+          "_blank",
         )
         shared = true
-      } else if (platform === 'Twitter') {
+      } else if (platform === "Twitter") {
         window.open(
           `https://twitter.com/intent/tweet?text=${encodeURIComponent(description || title)}&url=${encodeURIComponent(resolvedUrl)}`,
-          '_blank',
+          "_blank",
         )
         shared = true
-      } else if (platform === 'Email') {
+      } else if (platform === "Email") {
         window.location.href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(fullText)}`
         shared = true
-      } else if (platform === 'Outros') {
+      } else if (platform === "Outros") {
         if (navigator?.share) {
           await navigator.share({ title, text: description, url: resolvedUrl })
           shared = true
@@ -95,19 +95,19 @@ export function ShareDialog({
           handleCopy()
           return
         }
-      } else if (platform === 'Instagram') {
+      } else if (platform === "Instagram") {
         if (navigator?.clipboard?.writeText) {
           navigator.clipboard.writeText(fullText)
         }
         toast({
-          title: 'Link copiado!',
+          title: "Link copiado!",
           description:
-            'O Instagram não permite links diretos. Cole no app para compartilhar.',
+            "O Instagram não permite links diretos. Cole no app para compartilhar.",
         })
         shared = true
       }
     } catch (err: any) {
-      if (err?.name !== 'AbortError') {
+      if (err?.name !== "AbortError") {
         console.error(err)
       }
     }
@@ -119,30 +119,30 @@ export function ShareDialog({
 
   const shareOptions = [
     {
-      id: 'WhatsApp',
+      id: "WhatsApp",
       icon: MessageCircle,
-      label: 'WhatsApp',
-      color: 'bg-[#25D366]',
+      label: "WhatsApp",
+      color: "bg-[#25D366]",
     },
     {
-      id: 'Instagram',
+      id: "Instagram",
       icon: Instagram,
-      label: 'Instagram',
-      color: 'bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888]',
+      label: "Instagram",
+      color: "bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888]",
     },
     {
-      id: 'Facebook',
+      id: "Facebook",
       icon: Facebook,
-      label: 'Facebook',
-      color: 'bg-[#1877F2]',
+      label: "Facebook",
+      color: "bg-[#1877F2]",
     },
-    { id: 'Twitter', icon: Twitter, label: 'Twitter', color: 'bg-[#1DA1F2]' },
-    { id: 'Email', icon: Mail, label: 'Email', color: 'bg-zinc-600' },
+    { id: "Twitter", icon: Twitter, label: "Twitter", color: "bg-[#1DA1F2]" },
+    { id: "Email", icon: Mail, label: "Email", color: "bg-zinc-600" },
     {
-      id: 'Outros',
+      id: "Outros",
       icon: MoreHorizontal,
-      label: 'Outros',
-      color: 'bg-zinc-800',
+      label: "Outros",
+      color: "bg-zinc-800",
     },
   ]
 
@@ -194,7 +194,7 @@ export function ShareDialog({
               ) : (
                 <LinkIcon className="w-4 h-4 mr-1" />
               )}
-              {copied ? 'Copiado' : 'Copiar'}
+              {copied ? "Copiado" : "Copiar"}
             </Button>
           </div>
         </div>

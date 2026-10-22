@@ -1,9 +1,9 @@
-import { Tribe } from '@/stores/useNexusStore'
-import { useNexusStore } from '@/stores/useNexusStore'
-import { mockFeedUsers } from '@/lib/data'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Check, X, ShieldAlert } from 'lucide-react'
+import { Tribe } from "@/stores/useNexusStore"
+import { useNexusStore } from "@/stores/useNexusStore"
+import { mockFeedUsers } from "@/lib/data"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Check, X, ShieldAlert } from "lucide-react"
 
 export function TribeAdminTab({ tribe }: { tribe: Tribe }) {
   const { approveRequest, declineRequest } = useNexusStore()
@@ -12,8 +12,8 @@ export function TribeAdminTab({ tribe }: { tribe: Tribe }) {
     (id) =>
       mockFeedUsers.find((u) => u.id === id) || {
         id,
-        name: 'Usuário Desconhecido',
-        avatar: '',
+        name: "Usuário Desconhecido",
+        avatar: "",
       },
   )
 

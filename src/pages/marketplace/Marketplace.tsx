@@ -1,8 +1,8 @@
-import { mockProducts, mockFinancialSummary } from '@/lib/data'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
+import { mockProducts, mockFinancialSummary } from "@/lib/data"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
 import {
   Search,
   ShoppingCart,
@@ -13,51 +13,51 @@ import {
   ImageOff,
   X,
   CheckCircle2,
-} from 'lucide-react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import { cn } from '@/lib/utils'
-import { useBolaoStore } from '@/stores/useBolaoStore'
+} from "lucide-react"
+import { useNavigate, useSearchParams } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { cn } from "@/lib/utils"
+import { useBolaoStore } from "@/stores/useBolaoStore"
 
 export default function Marketplace() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { claimPrize } = useBolaoStore()
 
-  const isRedeeming = searchParams.get('redeem') === 'true'
-  const redeemTeam = searchParams.get('team')
+  const isRedeeming = searchParams.get("redeem") === "true"
+  const redeemTeam = searchParams.get("team")
 
-  const [search, setSearch] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('Todos')
-  const [selectedModality, setSelectedModality] = useState('Todos')
+  const [search, setSearch] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState("Todos")
+  const [selectedModality, setSelectedModality] = useState("Todos")
 
   useEffect(() => {
     if (isRedeeming) {
-      setSelectedCategory('Vestuário')
-      setSelectedModality('Futebol')
+      setSelectedCategory("Vestuário")
+      setSelectedModality("Futebol")
       if (redeemTeam) {
-        setSearch('Camisa')
+        setSearch("Camisa")
       }
     }
   }, [isRedeeming, redeemTeam])
 
   const categories = [
-    'Todos',
-    'Vestuário',
-    'Calçados',
-    'Equipamentos',
-    'Suplementos',
-    'Acessórios',
+    "Todos",
+    "Vestuário",
+    "Calçados",
+    "Equipamentos",
+    "Suplementos",
+    "Acessórios",
   ]
 
   const modalities = [
-    'Todos',
-    'Futebol',
-    'Basquete',
-    'Fitness',
-    'Corrida',
-    'Vôlei',
-    'Lutas',
+    "Todos",
+    "Futebol",
+    "Basquete",
+    "Fitness",
+    "Corrida",
+    "Vôlei",
+    "Lutas",
   ]
 
   const filteredProducts = mockProducts.filter((product) => {
@@ -65,9 +65,9 @@ export default function Marketplace() {
     const matchesSearch =
       !search || product.name.toLowerCase().includes(searchLower)
     const matchesCategory =
-      selectedCategory === 'Todos' || product.category === selectedCategory
+      selectedCategory === "Todos" || product.category === selectedCategory
     const matchesModality =
-      selectedModality === 'Todos' || product.modality === selectedModality
+      selectedModality === "Todos" || product.modality === selectedModality
 
     return matchesSearch && matchesCategory && matchesModality
   })
@@ -76,16 +76,16 @@ export default function Marketplace() {
   const mockPrizeProduct =
     isRedeeming && redeemTeam
       ? {
-          id: 'prize-1',
+          id: "prize-1",
           name: `Camiseta Oficial - ${redeemTeam}`,
-          category: 'Vestuário',
-          modality: 'Futebol',
+          category: "Vestuário",
+          modality: "Futebol",
           price: 0,
           pointsPrice: 0,
           rating: 5.0,
           isPremium: true,
           image: `https://img.usecurling.com/p/400/400?q=soccer%20jersey%20${encodeURIComponent(redeemTeam)}`,
-          availability: 'in_stock',
+          availability: "in_stock",
         }
       : null
 
@@ -99,7 +99,7 @@ export default function Marketplace() {
   const handleClaim = (e: React.MouseEvent) => {
     e.stopPropagation()
     claimPrize()
-    navigate('/marketplace/cart')
+    navigate("/marketplace/cart")
   }
 
   return (
@@ -112,7 +112,7 @@ export default function Marketplace() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate('/marketplace/cart')}
+              onClick={() => navigate("/marketplace/cart")}
               className="relative"
             >
               <ShoppingCart className="h-6 w-6" />
@@ -147,7 +147,7 @@ export default function Marketplace() {
             />
             {search && (
               <button
-                onClick={() => setSearch('')}
+                onClick={() => setSearch("")}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
                 <X className="h-3 w-3" />
@@ -161,7 +161,7 @@ export default function Marketplace() {
           {categories.map((cat) => (
             <Button
               key={cat}
-              variant={selectedCategory === cat ? 'default' : 'outline'}
+              variant={selectedCategory === cat ? "default" : "outline"}
               size="sm"
               onClick={() => setSelectedCategory(cat)}
               className="rounded-full text-xs h-8 whitespace-nowrap"
@@ -176,14 +176,14 @@ export default function Marketplace() {
           {modalities.map((mod) => (
             <Button
               key={mod}
-              variant={selectedModality === mod ? 'secondary' : 'ghost'}
+              variant={selectedModality === mod ? "secondary" : "ghost"}
               size="sm"
               onClick={() => setSelectedModality(mod)}
               className={cn(
-                'rounded-full text-xs h-7 whitespace-nowrap',
+                "rounded-full text-xs h-7 whitespace-nowrap",
                 selectedModality === mod
-                  ? 'bg-secondary font-bold'
-                  : 'text-muted-foreground',
+                  ? "bg-secondary font-bold"
+                  : "text-muted-foreground",
               )}
             >
               {mod}
@@ -204,8 +204,8 @@ export default function Marketplace() {
                 <CheckCircle2 className="h-4 w-4 text-green-900" />
               </h3>
               <p className="text-xs font-bold opacity-90 leading-snug mt-0.5">
-                Você ganhou uma camiseta oficial da seleção{' '}
-                {redeemTeam ? `(${redeemTeam})` : ''} + Frete Gratuito
+                Você ganhou uma camiseta oficial da seleção{" "}
+                {redeemTeam ? `(${redeemTeam})` : ""} + Frete Gratuito
               </p>
             </div>
           </div>
@@ -216,8 +216,8 @@ export default function Marketplace() {
       )}
 
       {/* Banners - Only show on 'All' view */}
-      {selectedCategory === 'Todos' &&
-        selectedModality === 'Todos' &&
+      {selectedCategory === "Todos" &&
+        selectedModality === "Todos" &&
         !search &&
         !isRedeeming && (
           <div className="p-4 overflow-x-auto whitespace-nowrap scrollbar-hide -mx-4 px-8 pb-2">
@@ -258,14 +258,14 @@ export default function Marketplace() {
           <Card
             key={product.id}
             className={cn(
-              'border-none shadow-sm overflow-hidden group cursor-pointer transition-all hover:shadow-md active:scale-[0.98]',
-              product.isPremium ? 'ring-1 ring-[hsl(var(--gold))/0.5]' : '',
-              product.id === 'prize-1'
-                ? 'ring-2 ring-[hsl(var(--gold))] shadow-[0_0_15px_hsl(var(--gold)/0.3)] scale-[1.02] transform origin-bottom'
-                : '',
+              "border-none shadow-sm overflow-hidden group cursor-pointer transition-all hover:shadow-md active:scale-[0.98]",
+              product.isPremium ? "ring-1 ring-[hsl(var(--gold))/0.5]" : "",
+              product.id === "prize-1"
+                ? "ring-2 ring-[hsl(var(--gold))] shadow-[0_0_15px_hsl(var(--gold)/0.3)] scale-[1.02] transform origin-bottom"
+                : "",
             )}
             onClick={() => {
-              if (product.id === 'prize-1') {
+              if (product.id === "prize-1") {
                 handleClaim({ stopPropagation: () => {} } as any)
               } else {
                 navigate(`/marketplace/product/${product.id}`)
@@ -278,8 +278,8 @@ export default function Marketplace() {
                 alt={product.name}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 onError={(e) => {
-                  e.currentTarget.style.display = 'none'
-                  e.currentTarget.nextElementSibling?.classList.remove('hidden')
+                  e.currentTarget.style.display = "none"
+                  e.currentTarget.nextElementSibling?.classList.remove("hidden")
                 }}
               />
               {/* Fallback container hidden by default */}
@@ -287,7 +287,7 @@ export default function Marketplace() {
                 <ImageOff className="h-8 w-8 text-muted-foreground/30" />
               </div>
 
-              {product.id === 'prize-1' && (
+              {product.id === "prize-1" && (
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
               )}
 
@@ -296,7 +296,7 @@ export default function Marketplace() {
                 <span className="text-[10px] font-bold">{product.rating}</span>
               </div>
 
-              {product.id === 'prize-1' ? (
+              {product.id === "prize-1" ? (
                 <div className="absolute top-2 left-2 bg-[hsl(var(--gold))] text-black rounded px-1.5 py-0.5 text-[10px] font-black uppercase tracking-widest z-20 shadow-sm flex items-center gap-1">
                   <Trophy className="w-3 h-3" /> Prêmio
                 </div>
@@ -308,7 +308,7 @@ export default function Marketplace() {
                 )
               )}
 
-              {product.id === 'prize-1' && (
+              {product.id === "prize-1" && (
                 <div className="absolute bottom-2 left-0 right-0 flex justify-center z-20">
                   <Badge className="bg-green-500 text-white border-none text-[10px] font-black uppercase tracking-widest px-2 py-0.5 shadow-md">
                     Frete Grátis
@@ -320,15 +320,15 @@ export default function Marketplace() {
               <div className="flex justify-between items-center mb-1">
                 <span
                   className={cn(
-                    'text-[10px] uppercase tracking-wider font-medium',
-                    product.id === 'prize-1'
-                      ? 'text-[hsl(var(--gold))]'
-                      : 'text-muted-foreground',
+                    "text-[10px] uppercase tracking-wider font-medium",
+                    product.id === "prize-1"
+                      ? "text-[hsl(var(--gold))]"
+                      : "text-muted-foreground",
                   )}
                 >
                   {product.category}
                 </span>
-                {product.availability === 'low_stock' && (
+                {product.availability === "low_stock" && (
                   <span className="text-[9px] text-red-500 font-bold uppercase">
                     Últimas un.
                   </span>
@@ -341,18 +341,18 @@ export default function Marketplace() {
                 <div className="flex items-center justify-between">
                   <span
                     className={cn(
-                      'font-black text-sm',
-                      product.id === 'prize-1'
-                        ? 'text-green-500'
-                        : 'text-primary',
+                      "font-black text-sm",
+                      product.id === "prize-1"
+                        ? "text-green-500"
+                        : "text-primary",
                     )}
                   >
                     {product.price === 0
-                      ? 'GRÁTIS'
+                      ? "GRÁTIS"
                       : `R$ ${(product.price ?? 0).toFixed(2)}`}
                   </span>
 
-                  {product.id === 'prize-1' ? (
+                  {product.id === "prize-1" ? (
                     <Button
                       size="sm"
                       className="h-7 text-[10px] font-black uppercase tracking-widest bg-[hsl(var(--gold))] text-black hover:bg-[hsl(var(--gold))/80] shadow-sm"
@@ -375,7 +375,7 @@ export default function Marketplace() {
                 </div>
                 {product.pointsPrice > 0 && (
                   <div className="text-[10px] text-muted-foreground flex items-center gap-1">
-                    ou{' '}
+                    ou{" "}
                     <span className="font-bold text-[hsl(var(--gold))]">
                       {product.pointsPrice} pts
                     </span>
@@ -397,11 +397,11 @@ export default function Marketplace() {
             <Button
               variant="outline"
               onClick={() => {
-                setSelectedCategory('Todos')
-                setSelectedModality('Todos')
-                setSearch('')
+                setSelectedCategory("Todos")
+                setSelectedModality("Todos")
+                setSearch("")
                 if (isRedeeming) {
-                  navigate('/marketplace')
+                  navigate("/marketplace")
                 }
               }}
             >

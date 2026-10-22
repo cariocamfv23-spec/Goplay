@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Referral, ReferralStatus } from '@/lib/referral-data'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Referral, ReferralStatus } from "@/lib/referral-data"
 import {
   Mail,
   Smartphone,
@@ -10,8 +10,8 @@ import {
   Users,
   Plus,
   Zap,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface ReferralStatusListProps {
   referrals: Referral[]
@@ -19,36 +19,36 @@ interface ReferralStatusListProps {
 
 const getStatusConfig = (status: ReferralStatus) => {
   switch (status) {
-    case 'registered':
+    case "registered":
       return {
-        label: 'Cadastro Completo',
+        label: "Cadastro Completo",
         icon: UserCheck,
         color:
-          'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800',
-        iconColor: 'text-green-600',
+          "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800",
+        iconColor: "text-green-600",
       }
-    case 'downloaded':
+    case "downloaded":
       return {
-        label: 'App Instalado',
+        label: "App Instalado",
         icon: Smartphone,
         color:
-          'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800',
-        iconColor: 'text-amber-600',
+          "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800",
+        iconColor: "text-amber-600",
       }
-    case 'sent':
+    case "sent":
       return {
-        label: 'Convite Enviado',
+        label: "Convite Enviado",
         icon: Mail,
         color:
-          'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700',
-        iconColor: 'text-slate-500',
+          "bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700",
+        iconColor: "text-slate-500",
       }
     default:
       return {
-        label: 'Desconhecido',
+        label: "Desconhecido",
         icon: Clock,
-        color: 'bg-gray-100',
-        iconColor: 'text-gray-500',
+        color: "bg-gray-100",
+        iconColor: "text-gray-500",
       }
   }
 }
@@ -111,10 +111,10 @@ export function ReferralStatusList({ referrals }: ReferralStatusListProps) {
                         <Badge
                           variant="secondary"
                           className={cn(
-                            'h-5 px-1.5 text-[10px] gap-0.5',
+                            "h-5 px-1.5 text-[10px] gap-0.5",
                             hasBonus
-                              ? 'bg-primary/10 text-primary hover:bg-primary/20'
-                              : 'bg-green-500/10 text-green-600 hover:bg-green-500/20',
+                              ? "bg-primary/10 text-primary hover:bg-primary/20"
+                              : "bg-green-500/10 text-green-600 hover:bg-green-500/20",
                           )}
                         >
                           <Plus className="h-2.5 w-2.5" />
@@ -131,7 +131,7 @@ export function ReferralStatusList({ referrals }: ReferralStatusListProps) {
                   <div className="flex flex-col items-end gap-1">
                     <div
                       className={cn(
-                        'flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide border',
+                        "flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide border",
                         statusConfig.color,
                       )}
                     >

@@ -1,13 +1,13 @@
-import { Button } from '@/components/ui/button'
-import { useNavigate } from 'react-router-dom'
-import { Logo } from '@/components/Logo'
-import { AppIcon } from '@/components/AppIcon'
-import { ArrowRight, Trophy, Users, Activity } from 'lucide-react'
-import { useEffect } from 'react'
-import { useInvisiblePresenceStore } from '@/stores/useInvisiblePresenceStore'
-import { useAuthStore } from '@/stores/useAuthStore'
-import { PageLoader } from '@/components/PageLoader'
-import { SportsWallpaper } from '@/components/SportsWallpaper'
+import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom"
+import { Logo } from "@/components/Logo"
+import { AppIcon } from "@/components/AppIcon"
+import { ArrowRight, Trophy, Users, Activity } from "lucide-react"
+import { useEffect } from "react"
+import { useInvisiblePresenceStore } from "@/stores/useInvisiblePresenceStore"
+import { useAuthStore } from "@/stores/useAuthStore"
+import { PageLoader } from "@/components/PageLoader"
+import { SportsWallpaper } from "@/components/SportsWallpaper"
 
 export default function Index() {
   const navigate = useNavigate()
@@ -21,9 +21,9 @@ export default function Index() {
 
   const handleAction = () => {
     if (isAuthenticated) {
-      navigate('/home', { replace: true })
+      navigate("/home", { replace: true })
     } else {
-      navigate('/login', { replace: true })
+      navigate("/login", { replace: true })
     }
   }
 
@@ -72,9 +72,9 @@ export default function Index() {
           {/* Value Props / Features Preview */}
           <div className="grid grid-cols-3 gap-3 w-full pt-4">
             {[
-              { icon: Trophy, label: 'Compita' },
-              { icon: Users, label: 'Conecte' },
-              { icon: Activity, label: 'Evolua' },
+              { icon: Trophy, label: "Compita" },
+              { icon: Users, label: "Conecte" },
+              { icon: Activity, label: "Evolua" },
             ].map((item, i) => (
               <div
                 key={i}

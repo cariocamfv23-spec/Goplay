@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react'
-import { Button } from '@/components/ui/button'
+import { useState, useMemo } from "react"
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   Crown,
@@ -12,47 +12,47 @@ import {
   Shield,
   Star,
   Zap,
-} from 'lucide-react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { mockCurrentUser, mockChallenges } from '@/lib/data'
-import { getRankings } from '@/lib/ranking-utils'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { cn } from '@/lib/utils'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+} from "lucide-react"
+import { useNavigate, useSearchParams } from "react-router-dom"
+import { mockCurrentUser, mockChallenges } from "@/lib/data"
+import { getRankings } from "@/lib/ranking-utils"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { cn } from "@/lib/utils"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from "@/components/ui/select"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@/components/ui/tooltip'
-import ChallengesList from './ChallengesList'
-import ChallengeRanking from './ChallengeRanking'
-import EmotionalRanking from './EmotionalRanking'
+} from "@/components/ui/tooltip"
+import ChallengesList from "./ChallengesList"
+import ChallengeRanking from "./ChallengeRanking"
+import EmotionalRanking from "./EmotionalRanking"
 
-type TimeRange = 'daily' | 'weekly' | 'monthly' | 'all_time'
-type MetricType = 'points' | 'matches' | 'wins' | 'assists'
-type ViewMode = 'global' | 'challenges' | 'emotional'
+type TimeRange = "daily" | "weekly" | "monthly" | "all_time"
+type MetricType = "points" | "matches" | "wins" | "assists"
+type ViewMode = "global" | "challenges" | "emotional"
 
 export default function Ranking() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const initialTab = (searchParams.get('tab') as TimeRange) || 'weekly'
+  const initialTab = searchParams.get("tab") as TimeRange || "weekly"
   const initialMode =
-    (searchParams.get('mode') as ViewMode) ||
-    (searchParams.get('challengeId') ? 'challenges' : 'global')
+    searchParams.get("mode") as ViewMode ||
+    (searchParams.get("challengeId") ? "challenges" : "global")
 
   const [timeRange, setTimeRange] = useState<TimeRange>(initialTab)
-  const [metric, setMetric] = useState<MetricType>('points')
+  const [metric, setMetric] = useState<MetricType>("points")
   const [viewMode, setViewMode] = useState<ViewMode>(initialMode)
   const [selectedChallengeId, setSelectedChallengeId] = useState<string | null>(
-    searchParams.get('challengeId') || null,
+    searchParams.get("challengeId") || null,
   )
 
   // Use the shared deterministic logic for Global Ranking
@@ -62,16 +62,16 @@ export default function Ranking() {
 
   const getMetricUnit = () => {
     switch (metric) {
-      case 'points':
-        return 'pts'
-      case 'matches':
-        return 'jogos'
-      case 'wins':
-        return 'vits'
-      case 'assists':
-        return 'asts'
+      case "points":
+        return "pts"
+      case "matches":
+        return "jogos"
+      case "wins":
+        return "vits"
+      case "assists":
+        return "asts"
       default:
-        return 'pts'
+        return "pts"
     }
   }
 
@@ -79,21 +79,21 @@ export default function Ranking() {
 
   const handleChallengeSelect = (id: string) => {
     setSelectedChallengeId(id)
-    setSearchParams({ mode: 'challenges', challengeId: id })
+    setSearchParams({ mode: "challenges", challengeId: id })
   }
 
   const handleBackToChallenges = () => {
     setSelectedChallengeId(null)
-    setSearchParams({ mode: 'challenges' })
+    setSearchParams({ mode: "challenges" })
   }
 
   const handleModeChange = (mode: string) => {
     setViewMode(mode as ViewMode)
-    if (mode === 'global' || mode === 'emotional') {
+    if (mode === "global" || mode === "emotional") {
       setSelectedChallengeId(null)
       setSearchParams({ tab: timeRange, mode })
     } else {
-      setSearchParams({ mode: 'challenges' })
+      setSearchParams({ mode: "challenges" })
     }
   }
 
@@ -104,13 +104,13 @@ export default function Ranking() {
   // Sub-components helpers for Global Ranking Item
   const getAchievementIcon = (type: string) => {
     switch (type) {
-      case 'mvp':
+      case "mvp":
         return Star
-      case 'streak':
+      case "streak":
         return Flame
-      case 'veteran':
+      case "veteran":
         return Shield
-      case 'rising_star':
+      case "rising_star":
         return Zap
       default:
         return Star
@@ -119,31 +119,31 @@ export default function Ranking() {
 
   const getAchievementColor = (type: string) => {
     switch (type) {
-      case 'mvp':
-        return 'text-yellow-500'
-      case 'streak':
-        return 'text-orange-500'
-      case 'veteran':
-        return 'text-blue-500'
-      case 'rising_star':
-        return 'text-purple-500'
+      case "mvp":
+        return "text-yellow-500"
+      case "streak":
+        return "text-orange-500"
+      case "veteran":
+        return "text-blue-500"
+      case "rising_star":
+        return "text-purple-500"
       default:
-        return 'text-primary'
+        return "text-primary"
     }
   }
 
   const getAchievementBg = (type: string) => {
     switch (type) {
-      case 'mvp':
-        return 'bg-yellow-500/10 border-yellow-500/30'
-      case 'streak':
-        return 'bg-orange-500/10 border-orange-500/30'
-      case 'veteran':
-        return 'bg-blue-500/10 border-blue-500/30'
-      case 'rising_star':
-        return 'bg-purple-500/10 border-purple-500/30'
+      case "mvp":
+        return "bg-yellow-500/10 border-yellow-500/30"
+      case "streak":
+        return "bg-orange-500/10 border-orange-500/30"
+      case "veteran":
+        return "bg-blue-500/10 border-blue-500/30"
+      case "rising_star":
+        return "bg-purple-500/10 border-purple-500/30"
       default:
-        return ''
+        return ""
     }
   }
 
@@ -199,7 +199,7 @@ export default function Ranking() {
           </Tabs>
         </div>
 
-        {viewMode === 'global' && (
+        {viewMode === "global" && (
           <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
             {/* Period Tabs */}
             <div className="bg-background/60 p-1 rounded-xl backdrop-blur-md shadow-sm border border-white/20 dark:border-white/5">
@@ -207,7 +207,7 @@ export default function Ranking() {
                 value={timeRange}
                 onValueChange={(v) => {
                   setTimeRange(v as TimeRange)
-                  setSearchParams({ tab: v as string, mode: 'global' })
+                  setSearchParams({ tab: v as string, mode: "global" })
                 }}
                 className="w-full"
               >
@@ -270,7 +270,7 @@ export default function Ranking() {
                 </span>
                 <div className="flex items-baseline gap-0.5">
                   <span className="text-lg font-bold">
-                    #{myRank?.position || '-'}
+                    #{myRank?.position || "-"}
                   </span>
                 </div>
               </div>
@@ -281,7 +281,7 @@ export default function Ranking() {
 
       {/* Main Content Area */}
       <div className="flex-1 bg-background rounded-t-[2rem] -mt-6 px-4 pt-8 pb-4 shadow-[0_-8px_30px_rgba(0,0,0,0.04)] z-20 overflow-visible min-h-[500px]">
-        {viewMode === 'challenges' ? (
+        {viewMode === "challenges" ? (
           selectedChallenge ? (
             <ChallengeRanking
               challenge={selectedChallenge}
@@ -290,7 +290,7 @@ export default function Ranking() {
           ) : (
             <ChallengesList onSelectChallenge={handleChallengeSelect} />
           )
-        ) : viewMode === 'emotional' ? (
+        ) : viewMode === "emotional" ? (
           <EmotionalRanking />
         ) : (
           /* Global Ranking List */
@@ -302,7 +302,7 @@ export default function Ranking() {
 
               const achievementStyle = achievement
                 ? getAchievementBg(achievement.type)
-                : ''
+                : ""
               const Icon = achievement
                 ? getAchievementIcon(achievement.type)
                 : null
@@ -311,22 +311,22 @@ export default function Ranking() {
                 <div
                   key={rank.id}
                   className={cn(
-                    'relative flex items-center gap-4 p-3 pr-4 rounded-2xl border transition-all duration-300 group',
+                    "relative flex items-center gap-4 p-3 pr-4 rounded-2xl border transition-all duration-300 group",
                     isTop3
-                      ? 'bg-gradient-to-r from-card to-background border-border/60 shadow-sm'
-                      : 'bg-card border-border/30 hover:border-border/60',
+                      ? "bg-gradient-to-r from-card to-background border-border/60 shadow-sm"
+                      : "bg-card border-border/30 hover:border-border/60",
                     isMe &&
-                      'bg-primary/5 border-primary/40 shadow-[0_0_15px_rgba(var(--primary),0.1)] scale-[1.02] z-10',
+                      "bg-primary/5 border-primary/40 shadow-[0_0_15px_rgba(var(--primary),0.1)] scale-[1.02] z-10",
                     achievement && !isMe && achievementStyle,
                     achievement &&
                       isMe &&
-                      'ring-1 ring-offset-1 ring-offset-background ring-primary/50',
+                      "ring-1 ring-offset-1 ring-offset-background ring-primary/50",
                   )}
                 >
                   <div
                     className={cn(
-                      'flex flex-col items-center justify-center w-8 shrink-0',
-                      isTop3 ? 'scale-110' : '',
+                      "flex flex-col items-center justify-center w-8 shrink-0",
+                      isTop3 ? "scale-110" : "",
                     )}
                   >
                     {rank.position === 1 ? (
@@ -355,23 +355,23 @@ export default function Ranking() {
                   <div className="relative">
                     <Avatar
                       className={cn(
-                        'h-12 w-12 border-2 transition-transform group-hover:scale-105',
+                        "h-12 w-12 border-2 transition-transform group-hover:scale-105",
                         rank.position === 1
-                          ? 'border-yellow-500 ring-2 ring-yellow-500/20'
+                          ? "border-yellow-500 ring-2 ring-yellow-500/20"
                           : rank.position === 2
-                            ? 'border-slate-400'
+                            ? "border-slate-400"
                             : rank.position === 3
-                              ? 'border-orange-700'
-                              : 'border-transparent bg-muted',
-                        isMe && 'border-primary ring-2 ring-primary/20',
+                              ? "border-orange-700"
+                              : "border-transparent bg-muted",
+                        isMe && "border-primary ring-2 ring-primary/20",
                         achievement &&
                           !isMe &&
                           !isTop3 &&
                           cn(
-                            'border-opacity-50',
+                            "border-opacity-50",
                             getAchievementColor(achievement.type).replace(
-                              'text-',
-                              'border-',
+                              "text-",
+                              "border-",
                             ),
                           ),
                       )}
@@ -390,7 +390,7 @@ export default function Ranking() {
                     {achievement && (
                       <div
                         className={cn(
-                          'absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center border border-white shadow-sm bg-background',
+                          "absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center border border-white shadow-sm bg-background",
                           getAchievementColor(achievement.type),
                         )}
                       >
@@ -403,11 +403,11 @@ export default function Ranking() {
                     <div className="flex items-center gap-2">
                       <p
                         className={cn(
-                          'font-bold text-sm truncate leading-tight',
-                          isMe && 'text-primary',
+                          "font-bold text-sm truncate leading-tight",
+                          isMe && "text-primary",
                         )}
                       >
-                        {isMe ? 'Você' : rank.user.name}
+                        {isMe ? "Você" : rank.user.name}
                       </p>
 
                       {achievement && Icon && (
@@ -415,7 +415,7 @@ export default function Ranking() {
                           <TooltipTrigger asChild>
                             <div
                               className={cn(
-                                'cursor-help p-0.5 rounded-full hover:bg-muted transition-colors',
+                                "cursor-help p-0.5 rounded-full hover:bg-muted transition-colors",
                                 getAchievementColor(achievement.type),
                               )}
                             >
@@ -432,15 +432,15 @@ export default function Ranking() {
                       )}
                     </div>
                     <p className="text-xs text-muted-foreground truncate leading-tight mt-0.5">
-                      {rank.user.team || 'Atleta Independente'}
+                      {rank.user.team || "Atleta Independente"}
                     </p>
                   </div>
 
                   <div className="text-right flex flex-col items-end">
                     <p
                       className={cn(
-                        'font-bold text-lg leading-none',
-                        isMe ? 'text-primary' : 'text-foreground',
+                        "font-bold text-lg leading-none",
+                        isMe ? "text-primary" : "text-foreground",
                       )}
                     >
                       {rank.points}
@@ -450,30 +450,30 @@ export default function Ranking() {
                     </p>
 
                     <div className="flex items-center gap-1 mt-1 bg-muted/50 px-1.5 py-0.5 rounded-full">
-                      {rank.trend === 'up' && (
+                      {rank.trend === "up" && (
                         <TrendingUp className="h-3 w-3 text-emerald-500" />
                       )}
-                      {rank.trend === 'down' && (
+                      {rank.trend === "down" && (
                         <TrendingDown className="h-3 w-3 text-rose-500" />
                       )}
-                      {rank.trend === 'same' && (
+                      {rank.trend === "same" && (
                         <Minus className="h-3 w-3 text-muted-foreground" />
                       )}
                       <span
                         className={cn(
-                          'text-[10px] font-medium',
-                          rank.trend === 'up'
-                            ? 'text-emerald-600'
-                            : rank.trend === 'down'
-                              ? 'text-rose-600'
-                              : 'text-muted-foreground',
+                          "text-[10px] font-medium",
+                          rank.trend === "up"
+                            ? "text-emerald-600"
+                            : rank.trend === "down"
+                              ? "text-rose-600"
+                              : "text-muted-foreground",
                         )}
                       >
-                        {rank.trend === 'up'
-                          ? 'Subiu'
-                          : rank.trend === 'down'
-                            ? 'Caiu'
-                            : '-'}
+                        {rank.trend === "up"
+                          ? "Subiu"
+                          : rank.trend === "down"
+                            ? "Caiu"
+                            : "-"}
                       </span>
                     </div>
                   </div>

@@ -1,15 +1,15 @@
-import { mockCalls } from '@/lib/mock-calls'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { mockCalls } from "@/lib/mock-calls"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   Phone,
   PhoneIncoming,
   PhoneMissed,
   PhoneOutgoing,
   Video,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { cn } from "@/lib/utils"
 
 export function CallHistory() {
   const navigate = useNavigate()
@@ -20,7 +20,7 @@ export function CallHistory() {
     e: React.MouseEvent,
   ) => {
     e.stopPropagation()
-    navigate(`/messages/${userId}?action=${isVideo ? 'video' : 'voice'}`)
+    navigate(`/messages/${userId}?action=${isVideo ? "video" : "voice"}`)
   }
 
   if (mockCalls.length === 0) {
@@ -53,7 +53,7 @@ export function CallHistory() {
               <AvatarImage src={call.user.avatar} />
               <AvatarFallback>{call.user.name[0]}</AvatarFallback>
             </Avatar>
-            {call.type === 'missed' && (
+            {call.type === "missed" && (
               <span className="absolute -bottom-1 -right-1 h-5 w-5 bg-background rounded-full flex items-center justify-center">
                 <PhoneMissed className="h-3 w-3 text-red-500 fill-red-500/20" />
               </span>
@@ -64,8 +64,8 @@ export function CallHistory() {
             <div className="flex justify-between items-baseline mb-0.5">
               <h3
                 className={cn(
-                  'font-semibold text-sm truncate',
-                  call.type === 'missed' ? 'text-red-500' : 'text-foreground',
+                  "font-semibold text-sm truncate",
+                  call.type === "missed" ? "text-red-500" : "text-foreground",
                 )}
               >
                 {call.user.name}
@@ -75,17 +75,17 @@ export function CallHistory() {
               </span>
             </div>
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              {call.type === 'outgoing' && (
+              {call.type === "outgoing" && (
                 <PhoneOutgoing className="h-3 w-3" />
               )}
-              {call.type === 'incoming' && (
+              {call.type === "incoming" && (
                 <PhoneIncoming className="h-3 w-3" />
               )}
-              {call.type === 'missed' && (
+              {call.type === "missed" && (
                 <span className="text-red-500/80 font-medium">Perdida</span>
               )}
 
-              {call.type !== 'missed' && <span>• {call.duration}</span>}
+              {call.type !== "missed" && <span>• {call.duration}</span>}
 
               {call.isVideo && (
                 <>

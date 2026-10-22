@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils'
-import * as React from 'react'
+import { cn } from "@/lib/utils"
+import * as React from "react"
 
 export function Replay3DIcon({
   className,
@@ -13,7 +13,7 @@ export function Replay3DIcon({
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn('w-6 h-6', className)}
+      className={cn("w-6 h-6", className)}
       {...props}
     >
       <path d="M12.89 4.58a7 7 0 1 1-8.58 6.94" />

@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { mockFinancialSummary, mockFinancialHistory } from '@/lib/data'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { mockFinancialSummary, mockFinancialHistory } from "@/lib/data"
 import {
   ArrowLeft,
   Wallet,
@@ -16,11 +16,11 @@ import {
   CheckCircle2,
   XCircle,
   ArrowRightLeft,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { cn } from '@/lib/utils'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { cn } from "@/lib/utils"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
 export default function FinancialStatement() {
   const navigate = useNavigate()
@@ -36,37 +36,37 @@ export default function FinancialStatement() {
   )
   const pointsBalance = Number(summaryData?.pointsBalance ?? 0)
   const pointsEarned = Number(summaryData?.pointsEarned ?? 0)
-  const conversionRate = summaryData?.conversionRate ?? '1:1'
-  const marketplaceStatus = summaryData?.marketplaceStatus ?? 'Ativo'
+  const conversionRate = summaryData?.conversionRate ?? "1:1"
+  const marketplaceStatus = summaryData?.marketplaceStatus ?? "Ativo"
 
   const getTransactionIcon = (type: string) => {
     switch (type) {
-      case 'gain':
-      case 'payment':
+      case "gain":
+      case "payment":
         return <ArrowUpRight className="h-5 w-5" />
-      case 'spend':
+      case "spend":
         return <ArrowDownLeft className="h-5 w-5" />
-      case 'bonus':
+      case "bonus":
         return <Star className="h-5 w-5" />
-      case 'invite':
+      case "invite":
         return <UserPlus className="h-5 w-5" />
-      case 'marketing':
+      case "marketing":
         return <Megaphone className="h-5 w-5" />
-      case 'marketplace':
+      case "marketplace":
         return <ShoppingBag className="h-5 w-5" />
       default:
         return <ArrowRightLeft className="h-5 w-5" />
     }
   }
 
-  const getTransactionColor = (type: string, currency: 'BRL' | 'PTS') => {
-    if (type === 'spend' || type === 'marketplace') return 'text-red-500'
-    return currency === 'BRL' ? 'text-green-500' : 'text-gold'
+  const getTransactionColor = (type: string, currency: "BRL" | "PTS") => {
+    if (type === "spend" || type === "marketplace") return "text-red-500"
+    return currency === "BRL" ? "text-green-500" : "text-gold"
   }
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'confirmed':
+      case "confirmed":
         return (
           <Badge
             variant="outline"
@@ -75,7 +75,7 @@ export default function FinancialStatement() {
             <CheckCircle2 className="h-3 w-3" /> Confirmado
           </Badge>
         )
-      case 'pending':
+      case "pending":
         return (
           <Badge
             variant="outline"
@@ -84,7 +84,7 @@ export default function FinancialStatement() {
             <Clock className="h-3 w-3" /> Pendente
           </Badge>
         )
-      case 'expired':
+      case "expired":
         return (
           <Badge
             variant="outline"
@@ -231,7 +231,7 @@ export default function FinancialStatement() {
               <ScrollArea className="h-[400px] pr-4">
                 <div className="space-y-3">
                   {(mockFinancialHistory || [])
-                    .filter((t) => t.currency === 'BRL')
+                    .filter((t) => t.currency === "BRL")
                     .map((transaction) => (
                       <TransactionItem
                         key={transaction.id}
@@ -242,7 +242,7 @@ export default function FinancialStatement() {
                       />
                     ))}
                   {(!mockFinancialHistory ||
-                    mockFinancialHistory.filter((t) => t.currency === 'BRL')
+                    mockFinancialHistory.filter((t) => t.currency === "BRL")
                       .length === 0) && (
                     <div className="text-center py-10 text-muted-foreground text-sm">
                       Nenhuma movimentação em dinheiro.
@@ -256,7 +256,7 @@ export default function FinancialStatement() {
               <ScrollArea className="h-[400px] pr-4">
                 <div className="space-y-3">
                   {(mockFinancialHistory || [])
-                    .filter((t) => t.currency === 'PTS')
+                    .filter((t) => t.currency === "PTS")
                     .map((transaction) => (
                       <TransactionItem
                         key={transaction.id}
@@ -267,7 +267,7 @@ export default function FinancialStatement() {
                       />
                     ))}
                   {(!mockFinancialHistory ||
-                    mockFinancialHistory.filter((t) => t.currency === 'PTS')
+                    mockFinancialHistory.filter((t) => t.currency === "PTS")
                       .length === 0) && (
                     <div className="text-center py-10 text-muted-foreground text-sm">
                       Nenhuma movimentação em pontos.
@@ -291,7 +291,7 @@ function TransactionItem({
 }: {
   transaction: any
   getIcon: (type: string) => React.ReactNode
-  getColor: (type: string, currency: 'BRL' | 'PTS') => string
+  getColor: (type: string, currency: "BRL" | "PTS") => string
   getBadge: (status: string) => React.ReactNode
 }) {
   // Defensive check for transaction object
@@ -299,18 +299,18 @@ function TransactionItem({
 
   // Ensure safe values for rendering
   const value = Number(transaction.value ?? 0)
-  const currency = transaction.currency ?? 'BRL'
-  const type = transaction.type ?? 'unknown'
-  const status = transaction.status ?? 'pending'
-  const description = transaction.description ?? 'Sem descrição'
-  const date = transaction.date ?? '-'
+  const currency = transaction.currency ?? "BRL"
+  const type = transaction.type ?? "unknown"
+  const status = transaction.status ?? "pending"
+  const description = transaction.description ?? "Sem descrição"
+  const date = transaction.date ?? "-"
 
   return (
     <div className="flex items-center justify-between p-4 rounded-xl bg-card border border-border/50 shadow-sm hover:shadow-md transition-all duration-200 group">
       <div className="flex items-center gap-4">
         <div
           className={cn(
-            'h-12 w-12 rounded-full flex items-center justify-center bg-muted group-hover:bg-background border border-transparent group-hover:border-border transition-colors',
+            "h-12 w-12 rounded-full flex items-center justify-center bg-muted group-hover:bg-background border border-transparent group-hover:border-border transition-colors",
             getColor(type, currency),
           )}
         >
@@ -325,19 +325,19 @@ function TransactionItem({
         </div>
       </div>
       <div className="text-right">
-        <span className={cn('block font-bold', getColor(type, currency))}>
-          {value > 0 ? '+' : ''}
-          {currency === 'BRL'
-            ? `R$ ${Math.abs(value).toFixed(2).replace('.', ',')}`
+        <span className={cn("block font-bold", getColor(type, currency))}>
+          {value > 0 ? "+" : ""}
+          {currency === "BRL"
+            ? `R$ ${Math.abs(value).toFixed(2).replace(".", ",")}`
             : `${Math.abs(value)} pts`}
         </span>
         <span className="text-[10px] uppercase text-muted-foreground font-medium tracking-wider">
-          {type === 'spend'
-            ? 'Gasto'
-            : type === 'gain'
-              ? 'Ganho'
-              : type === 'bonus'
-                ? 'Bônus'
+          {type === "spend"
+            ? "Gasto"
+            : type === "gain"
+              ? "Ganho"
+              : type === "bonus"
+                ? "Bônus"
                 : type}
         </span>
       </div>

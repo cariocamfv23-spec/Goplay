@@ -3,12 +3,12 @@ import {
   DialogContent,
   DialogClose,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
-import { Badge } from '@/components/ui/badge'
+} from "@/components/ui/dialog"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
+import { Badge } from "@/components/ui/badge"
 import {
   Heart,
   MessageCircle,
@@ -23,14 +23,14 @@ import {
   Music,
   ExternalLink,
   Disc3,
-} from 'lucide-react'
-import { Link } from 'react-router-dom'
-import { useLikeInteraction } from '@/hooks/useLikeInteraction'
-import { cn } from '@/lib/utils'
-import { useState, useEffect } from 'react'
-import { mockComments } from '@/lib/data'
-import { SoundWaveVisualizer } from '@/components/SoundWaveVisualizer'
-import useSoundStore from '@/stores/useSoundStore'
+} from "lucide-react"
+import { Link } from "react-router-dom"
+import { useLikeInteraction } from "@/hooks/useLikeInteraction"
+import { cn } from "@/lib/utils"
+import { useState, useEffect } from "react"
+import { mockComments } from "@/lib/data"
+import { SoundWaveVisualizer } from "@/components/SoundWaveVisualizer"
+import useSoundStore from "@/stores/useSoundStore"
 
 interface PostDetailDialogProps {
   post: any
@@ -66,7 +66,7 @@ export function PostDetailDialog({
   // Auto-play sound/narration on open if applicable
   useEffect(() => {
     if (open && post) {
-      if (post.type === 'video') {
+      if (post.type === "video") {
         setIsPlaying(true)
       }
       // Optional: Play a subtle open sound effect here
@@ -103,20 +103,20 @@ export function PostDetailDialog({
 
         {/* Media Section */}
         <div className="flex-1 bg-black relative flex items-center justify-center overflow-hidden min-h-[40vh]">
-          {post.type === 'video' ? (
+          {post.type === "video" ? (
             <div className="relative w-full h-full flex items-center justify-center group">
               <img
                 src={post.media?.[0]}
                 alt="Video content"
                 className={cn(
-                  'w-full h-full object-contain transition-opacity duration-300',
-                  isPlaying ? 'opacity-100' : 'opacity-60',
+                  "w-full h-full object-contain transition-opacity duration-300",
+                  isPlaying ? "opacity-100" : "opacity-60",
                 )}
               />
               <div
                 className={cn(
-                  'absolute inset-0 flex items-center justify-center bg-black/20 transition-opacity',
-                  isPlaying ? 'opacity-0 hover:opacity-100' : 'opacity-100',
+                  "absolute inset-0 flex items-center justify-center bg-black/20 transition-opacity",
+                  isPlaying ? "opacity-0 hover:opacity-100" : "opacity-100",
                 )}
               >
                 <Button
@@ -127,8 +127,8 @@ export function PostDetailDialog({
                 >
                   <Play
                     className={cn(
-                      'h-8 w-8 text-white fill-white ml-1',
-                      isPlaying && 'opacity-0',
+                      "h-8 w-8 text-white fill-white ml-1",
+                      isPlaying && "opacity-0",
                     )}
                   />
                 </Button>
@@ -265,7 +265,7 @@ export function PostDetailDialog({
                       <Music className="w-4 h-4 text-primary shrink-0" />
                       <div className="min-w-0">
                         <p className="font-semibold text-foreground truncate">
-                          {post.musicLink.title || 'Música Compartilhada'}
+                          {post.musicLink.title || "Música Compartilhada"}
                         </p>
                         <p className="text-[10px] text-muted-foreground truncate">
                           {post.musicLink.artist || post.musicLink.url}
@@ -322,15 +322,15 @@ export function PostDetailDialog({
                   variant="ghost"
                   size="icon"
                   className={cn(
-                    'hover:bg-red-500/10 hover:text-red-500 transition-colors',
-                    isLiked ? 'text-red-500' : 'text-muted-foreground',
+                    "hover:bg-red-500/10 hover:text-red-500 transition-colors",
+                    isLiked ? "text-red-500" : "text-muted-foreground",
                   )}
                   onClick={handleLike}
                 >
                   <Heart
                     className={cn(
-                      'h-6 w-6 transition-transform',
-                      isLiked && 'fill-current scale-110',
+                      "h-6 w-6 transition-transform",
+                      isLiked && "fill-current scale-110",
                     )}
                   />
                 </Button>

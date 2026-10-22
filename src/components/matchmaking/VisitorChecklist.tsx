@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react'
-import { cn } from '@/lib/utils'
-import { MapPin, Clock, CheckCircle2, Circle } from 'lucide-react'
-import { toast } from 'sonner'
+import { useState, useCallback } from "react"
+import { cn } from "@/lib/utils"
+import { MapPin, Clock, CheckCircle2, Circle } from "lucide-react"
+import { toast } from "sonner"
 
 export interface VisitorChecklistState {
   arrived: boolean
@@ -27,11 +27,11 @@ export function VisitorChecklist({
       const next = { ...state, [key]: !state[key] }
       setState(next)
       onChange?.(next)
-      if (key === 'arrived' && next.arrived) {
-        toast.success('Equipe visitante confirmou comparecimento!')
+      if (key === "arrived" && next.arrived) {
+        toast.success("Equipe visitante confirmou comparecimento!")
       }
-      if (key === 'onTime' && next.onTime) {
-        toast.success('Chegada no horário confirmada!')
+      if (key === "onTime" && next.onTime) {
+        toast.success("Chegada no horário confirmada!")
       }
     },
     [state, onChange],
@@ -42,8 +42,8 @@ export function VisitorChecklist({
     label: string
     icon: typeof MapPin
   }[] = [
-    { key: 'arrived', label: 'Equipe compareceu ao local?', icon: MapPin },
-    { key: 'onTime', label: 'Chegada no horário correto?', icon: Clock },
+    { key: "arrived", label: "Equipe compareceu ao local?", icon: MapPin },
+    { key: "onTime", label: "Chegada no horário correto?", icon: Clock },
   ]
 
   return (
@@ -59,22 +59,22 @@ export function VisitorChecklist({
             key={item.key}
             onClick={() => toggle(item.key)}
             className={cn(
-              'w-full flex items-center gap-2 p-2 rounded-lg border transition-all text-left',
+              "w-full flex items-center gap-2 p-2 rounded-lg border transition-all text-left",
               checked
-                ? 'border-green-500/30 bg-green-500/10'
-                : 'border-border/20 bg-background/30 hover:bg-secondary/20',
+                ? "border-green-500/30 bg-green-500/10"
+                : "border-border/20 bg-background/30 hover:bg-secondary/20",
             )}
           >
             <Icon
               className={cn(
-                'w-4 h-4 shrink-0',
-                checked ? 'text-green-500' : 'text-muted-foreground',
+                "w-4 h-4 shrink-0",
+                checked ? "text-green-500" : "text-muted-foreground",
               )}
             />
             <span
               className={cn(
-                'flex-1 text-[11px] font-bold',
-                checked ? 'text-green-500' : 'text-foreground',
+                "flex-1 text-[11px] font-bold",
+                checked ? "text-green-500" : "text-foreground",
               )}
             >
               {item.label}

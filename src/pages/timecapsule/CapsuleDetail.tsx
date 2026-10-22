@@ -1,7 +1,7 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { useTimeCapsuleStore } from '@/stores/useTimeCapsuleStore'
-import { mockCurrentUser } from '@/lib/data'
-import { Button } from '@/components/ui/button'
+import { useParams, useNavigate } from "react-router-dom"
+import { useTimeCapsuleStore } from "@/stores/useTimeCapsuleStore"
+import { mockCurrentUser } from "@/lib/data"
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   Trophy,
@@ -10,12 +10,12 @@ import {
   Swords,
   Calendar,
   LockOpen,
-} from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
-import { FeedVideoPlayer } from '@/components/FeedVideoPlayer'
-import { toast } from 'sonner'
+} from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { format } from "date-fns"
+import { ptBR } from "date-fns/locale"
+import { FeedVideoPlayer } from "@/components/FeedVideoPlayer"
+import { toast } from "sonner"
 
 export default function CapsuleDetail() {
   const { id } = useParams()
@@ -24,7 +24,7 @@ export default function CapsuleDetail() {
 
   const capsule = capsules.find((c) => c.id === id)
 
-  if (!capsule || capsule.status !== 'released') {
+  if (!capsule || capsule.status !== "released") {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
         <LockOpen className="w-16 h-16 text-muted-foreground/30 mb-4" />
@@ -38,12 +38,12 @@ export default function CapsuleDetail() {
   }
 
   const handlePublish = () => {
-    toast.success('Publicado no Feed com sucesso!')
-    navigate('/feed')
+    toast.success("Publicado no Feed com sucesso!")
+    navigate("/feed")
   }
 
   const handleHighlight = () => {
-    toast.success('Adicionado aos Destaques do Perfil.')
+    toast.success("Adicionado aos Destaques do Perfil.")
   }
 
   return (
@@ -75,15 +75,15 @@ export default function CapsuleDetail() {
           </h2>
           <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground mt-3 font-medium">
             <span className="flex items-center gap-1">
-              <Calendar className="w-4 h-4" /> Selada:{' '}
-              {format(new Date(capsule.createdAt), 'dd MMM yyyy', {
+              <Calendar className="w-4 h-4" /> Selada:{" "}
+              {format(new Date(capsule.createdAt), "dd MMM yyyy", {
                 locale: ptBR,
               })}
             </span>
             <span>→</span>
             <span className="flex items-center gap-1 font-bold text-foreground">
-              <Calendar className="w-4 h-4" /> Aberta:{' '}
-              {format(new Date(capsule.openAt), 'dd MMM yyyy', {
+              <Calendar className="w-4 h-4" /> Aberta:{" "}
+              {format(new Date(capsule.openAt), "dd MMM yyyy", {
                 locale: ptBR,
               })}
             </span>
@@ -92,7 +92,7 @@ export default function CapsuleDetail() {
 
         {/* Content Section */}
         <div className="relative">
-          {capsule.type === 'video' ? (
+          {capsule.type === "video" ? (
             <div className="rounded-2xl overflow-hidden shadow-lg border border-border">
               <FeedVideoPlayer
                 url={capsule.content}

@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   ArrowLeft,
   Search,
@@ -8,17 +8,17 @@ import {
   Star,
   Globe,
   CheckCircle2,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
-import { mockAgencies } from '@/lib/data'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
+import { mockAgencies } from "@/lib/data"
+import { cn } from "@/lib/utils"
 
 export default function AgenciesList() {
   const navigate = useNavigate()
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("")
 
   const filteredAgencies = mockAgencies.filter(
     (agency) =>
@@ -36,7 +36,7 @@ export default function AgenciesList() {
             variant="ghost"
             size="icon"
             className="-ml-2 hover:bg-secondary/50 rounded-full"
-            onClick={() => navigate('/explore')}
+            onClick={() => navigate("/explore")}
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
@@ -98,7 +98,7 @@ export default function AgenciesList() {
 
                 <div className="absolute top-3 right-3">
                   <Badge className="bg-sky-500 hover:bg-sky-600 text-white border-none shadow-lg">
-                    {agency.rating}{' '}
+                    {agency.rating}{" "}
                     <Star className="h-3 w-3 ml-1 fill-current" />
                   </Badge>
                 </div>

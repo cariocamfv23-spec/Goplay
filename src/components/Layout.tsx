@@ -1,23 +1,23 @@
-import { Outlet, useLocation } from 'react-router-dom'
-import { TopBar } from '@/components/TopBar'
-import { BottomNav } from '@/components/BottomNav'
-import { RankingAlertManager } from '@/components/RankingAlertManager'
-import { SmartNotificationManager } from '@/components/SmartNotificationManager'
-import { ScholarshipAlertManager } from '@/components/ScholarshipAlertManager'
-import { WeatherAlertManager } from '@/components/WeatherAlertManager'
-import { LiveStreamManager } from '@/components/LiveStreamManager'
-import { MemoryNotificationManager } from '@/components/MemoryNotificationManager'
-import { Toaster } from '@/components/ui/toaster'
-import { cn } from '@/lib/utils'
-import { NostalgiaFilter } from '@/components/NostalgiaFilter'
-import { SportsWallpaper } from '@/components/SportsWallpaper'
-import { useNostalgiaStore } from '@/stores/useNostalgiaStore'
-import { useEffect, useRef, useState } from 'react'
-import { useInvisiblePresenceStore } from '@/stores/useInvisiblePresenceStore'
-import { InvisiblePresenceOverlay } from '@/components/InvisiblePresenceOverlay'
-import { useDepthStore } from '@/stores/useDepthStore'
-import { useAuthStore } from '@/stores/useAuthStore'
-import { WifiOff } from 'lucide-react'
+import { Outlet, useLocation } from "react-router-dom"
+import { TopBar } from "@/components/TopBar"
+import { BottomNav } from "@/components/BottomNav"
+import { RankingAlertManager } from "@/components/RankingAlertManager"
+import { SmartNotificationManager } from "@/components/SmartNotificationManager"
+import { ScholarshipAlertManager } from "@/components/ScholarshipAlertManager"
+import { WeatherAlertManager } from "@/components/WeatherAlertManager"
+import { LiveStreamManager } from "@/components/LiveStreamManager"
+import { MemoryNotificationManager } from "@/components/MemoryNotificationManager"
+import { Toaster } from "@/components/ui/toaster"
+import { cn } from "@/lib/utils"
+import { NostalgiaFilter } from "@/components/NostalgiaFilter"
+import { SportsWallpaper } from "@/components/SportsWallpaper"
+import { useNostalgiaStore } from "@/stores/useNostalgiaStore"
+import { useEffect, useRef, useState } from "react"
+import { useInvisiblePresenceStore } from "@/stores/useInvisiblePresenceStore"
+import { InvisiblePresenceOverlay } from "@/components/InvisiblePresenceOverlay"
+import { useDepthStore } from "@/stores/useDepthStore"
+import { useAuthStore } from "@/stores/useAuthStore"
+import { WifiOff } from "lucide-react"
 
 export default function Layout() {
   const location = useLocation()
@@ -34,12 +34,12 @@ export default function Layout() {
     const handleOffline = () => setIsOffline(true)
     const handleOnline = () => setIsOffline(false)
 
-    window.addEventListener('offline', handleOffline)
-    window.addEventListener('online', handleOnline)
+    window.addEventListener("offline", handleOffline)
+    window.addEventListener("online", handleOnline)
 
     return () => {
-      window.removeEventListener('offline', handleOffline)
-      window.removeEventListener('online', handleOnline)
+      window.removeEventListener("offline", handleOffline)
+      window.removeEventListener("online", handleOnline)
     }
   }, [])
 
@@ -63,8 +63,8 @@ export default function Layout() {
     }
 
     // Add listener to the scroll container
-    container.addEventListener('scroll', handleScroll, { passive: true })
-    return () => container.removeEventListener('scroll', handleScroll)
+    container.addEventListener("scroll", handleScroll, { passive: true })
+    return () => container.removeEventListener("scroll", handleScroll)
   }, [isDepthEnabled])
 
   // Apply Global Theme Classes to Body
@@ -72,56 +72,56 @@ export default function Layout() {
     const root = document.body
     // Remove all nostalgia classes
     root.classList.remove(
-      'theme-nostalgia-vhs',
-      'theme-nostalgia-90s',
-      'theme-nostalgia-retro',
-      'theme-nostalgia-pele',
-      'theme-nostalgia-ali',
-      'theme-nostalgia-cassette',
-      'theme-nostalgia-digital',
-      'theme-nostalgia-analog',
+      "theme-nostalgia-vhs",
+      "theme-nostalgia-90s",
+      "theme-nostalgia-retro",
+      "theme-nostalgia-pele",
+      "theme-nostalgia-ali",
+      "theme-nostalgia-cassette",
+      "theme-nostalgia-digital",
+      "theme-nostalgia-analog",
     )
 
     if (isEnabled) {
-      if (preset === 'vhs') {
-        root.classList.add('theme-nostalgia-vhs')
-      } else if (preset === '90s') {
-        root.classList.add('theme-nostalgia-90s')
-      } else if (preset === 'retro') {
-        root.classList.add('theme-nostalgia-retro')
-      } else if (preset === 'pele') {
-        root.classList.add('theme-nostalgia-pele')
-      } else if (preset === 'ali') {
-        root.classList.add('theme-nostalgia-ali')
-      } else if (preset === 'cassette') {
-        root.classList.add('theme-nostalgia-cassette')
-      } else if (preset === 'digital') {
-        root.classList.add('theme-nostalgia-digital')
-      } else if (preset === 'analog') {
-        root.classList.add('theme-nostalgia-retro') // Reuse retro for analog
+      if (preset === "vhs") {
+        root.classList.add("theme-nostalgia-vhs")
+      } else if (preset === "90s") {
+        root.classList.add("theme-nostalgia-90s")
+      } else if (preset === "retro") {
+        root.classList.add("theme-nostalgia-retro")
+      } else if (preset === "pele") {
+        root.classList.add("theme-nostalgia-pele")
+      } else if (preset === "ali") {
+        root.classList.add("theme-nostalgia-ali")
+      } else if (preset === "cassette") {
+        root.classList.add("theme-nostalgia-cassette")
+      } else if (preset === "digital") {
+        root.classList.add("theme-nostalgia-digital")
+      } else if (preset === "analog") {
+        root.classList.add("theme-nostalgia-retro") // Reuse retro for analog
       }
     }
 
     return () => {
       root.classList.remove(
-        'theme-nostalgia-vhs',
-        'theme-nostalgia-90s',
-        'theme-nostalgia-retro',
-        'theme-nostalgia-pele',
-        'theme-nostalgia-ali',
-        'theme-nostalgia-cassette',
-        'theme-nostalgia-digital',
-        'theme-nostalgia-analog',
+        "theme-nostalgia-vhs",
+        "theme-nostalgia-90s",
+        "theme-nostalgia-retro",
+        "theme-nostalgia-pele",
+        "theme-nostalgia-ali",
+        "theme-nostalgia-cassette",
+        "theme-nostalgia-digital",
+        "theme-nostalgia-analog",
       )
     }
   }, [isEnabled, preset])
 
-  const isLandingPage = location.pathname === '/'
+  const isLandingPage = location.pathname === "/"
   const isMessageRoute =
-    location.pathname.includes('/messages/') &&
-    location.pathname !== '/messages'
+    location.pathname.includes("/messages/") &&
+    location.pathname !== "/messages"
 
-  const isMoveRoute = location.pathname === '/move'
+  const isMoveRoute = location.pathname === "/move"
 
   // Conditional Layout Rendering based strictly on hydration and authentication state
   const showTopBar = hasHydrated && isAuthenticated && !isLandingPage
@@ -143,8 +143,8 @@ export default function Layout() {
         style={{
           transform: isDepthEnabled
             ? `translateY(${scrollY * 0.1 * depthIntensity}px)`
-            : 'none',
-          transition: 'transform 0.1s linear',
+            : "none",
+          transition: "transform 0.1s linear",
         }}
       >
         <div className="absolute top-[-20%] left-[-20%] w-[140%] h-[140%] opacity-[0.03] bg-[radial-gradient(circle_at_center,_var(--foreground)_1px,_transparent_1px)] bg-[length:40px_40px]" />
@@ -156,7 +156,7 @@ export default function Layout() {
         style={{
           transform: isDepthEnabled
             ? `translateY(${scrollY * 0.05 * depthIntensity}px)`
-            : 'none', // Slight parallax for wallpaper
+            : "none", // Slight parallax for wallpaper
         }}
       >
         <SportsWallpaper className="z-0" />
@@ -186,17 +186,17 @@ export default function Layout() {
       <div
         ref={scrollContainerRef}
         className={cn(
-          'flex-1 w-full relative z-10 scroll-smooth no-scrollbar',
+          "flex-1 w-full relative z-10 scroll-smooth no-scrollbar",
           // Disable vertical overflow on Move route to let the page handle snap scrolling
-          isMoveRoute ? 'overflow-hidden' : 'overflow-y-auto overflow-x-hidden',
+          isMoveRoute ? "overflow-hidden" : "overflow-y-auto overflow-x-hidden",
         )}
       >
         {/* Main Navigation - Sticky to ensure visibility during scroll */}
         {showTopBar && (
           <div
             className={cn(
-              'sticky z-50 depth-element translate-z-10',
-              isOffline ? 'top-7' : 'top-0',
+              "sticky z-50 depth-element translate-z-10",
+              isOffline ? "top-7" : "top-0",
             )}
           >
             <TopBar />
@@ -207,11 +207,11 @@ export default function Layout() {
         {/* Ensure main is z-10 to sit above the wallpaper (z-0) */}
         <main
           className={cn(
-            'flex-1 w-full transition-all duration-300 relative bg-transparent transform-style-3d flex flex-col',
-            showBottomNav ? 'pb-24 md:pb-0' : 'pb-0',
-            !showTopBar && isOffline ? 'pt-7' : 'pt-0',
+            "flex-1 w-full transition-all duration-300 relative bg-transparent transform-style-3d flex flex-col",
+            showBottomNav ? "pb-24 md:pb-0" : "pb-0",
+            !showTopBar && isOffline ? "pt-7" : "pt-0",
             // On Move route, remove padding to allow full immersive experience behind nav
-            isMoveRoute && 'h-[calc(100vh-64px)] pb-0',
+            isMoveRoute && "h-[calc(100vh-64px)] pb-0",
           )}
         >
           <Outlet />

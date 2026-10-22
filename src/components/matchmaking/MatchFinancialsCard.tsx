@@ -1,9 +1,9 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
-import { Coins, Flag, Split, Home } from 'lucide-react'
-import type { MatchConfigState } from './MatchConfigCard'
-import type { VisitorChecklistState } from './VisitorChecklist'
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
+import { Coins, Flag, Split, Home } from "lucide-react"
+import type { MatchConfigState } from "./MatchConfigCard"
+import type { VisitorChecklistState } from "./VisitorChecklist"
 
 interface MatchFinancialsCardProps {
   config: MatchConfigState
@@ -17,7 +17,7 @@ export function MatchFinancialsCard({
   const fieldFee = parseFloat(config.fieldFee) || 0
   const refFee = config.hasReferee ? parseFloat(config.refereeFee) || 0 : 0
   const total = fieldFee + refFee
-  const isSplit = config.paymentResponsibility === 'split'
+  const isSplit = config.paymentResponsibility === "split"
   const perTeam = total / 2
 
   return (
@@ -41,17 +41,17 @@ export function MatchFinancialsCard({
           </div>
           <div
             className={cn(
-              'rounded-lg border p-2.5',
+              "rounded-lg border p-2.5",
               config.hasReferee
-                ? 'bg-background/40 border-border/20'
-                : 'bg-secondary/20 border-border/10 opacity-50',
+                ? "bg-background/40 border-border/20"
+                : "bg-secondary/20 border-border/10 opacity-50",
             )}
           >
             <span className="text-[8px] font-bold text-muted-foreground uppercase flex items-center gap-1">
               <Flag className="w-2.5 h-2.5" /> Taxa do Árbitro
             </span>
             <span className="block text-sm font-black text-foreground">
-              {config.hasReferee ? `R$ ${refFee.toFixed(2)}` : '—'}
+              {config.hasReferee ? `R$ ${refFee.toFixed(2)}` : "—"}
             </span>
           </div>
         </div>
@@ -72,7 +72,7 @@ export function MatchFinancialsCard({
             <Home className="w-3.5 h-3.5 text-primary" />
           )}
           <span className="text-[10px] font-bold text-muted-foreground uppercase">
-            {isSplit ? 'Valor Dividido' : 'Conta do Mandante'}
+            {isSplit ? "Valor Dividido" : "Conta do Mandante"}
           </span>
           <Badge
             variant="outline"
@@ -91,24 +91,24 @@ export function MatchFinancialsCard({
           <Badge
             variant="outline"
             className={cn(
-              'text-[8px] uppercase font-bold',
+              "text-[8px] uppercase font-bold",
               visitorChecklist.arrived
-                ? 'border-green-500/30 text-green-500 bg-green-500/10'
-                : 'text-muted-foreground',
+                ? "border-green-500/30 text-green-500 bg-green-500/10"
+                : "text-muted-foreground",
             )}
           >
-            {visitorChecklist.arrived ? '✓ Compareceu' : '○ Pendente'}
+            {visitorChecklist.arrived ? "✓ Compareceu" : "○ Pendente"}
           </Badge>
           <Badge
             variant="outline"
             className={cn(
-              'text-[8px] uppercase font-bold',
+              "text-[8px] uppercase font-bold",
               visitorChecklist.onTime
-                ? 'border-green-500/30 text-green-500 bg-green-500/10'
-                : 'text-muted-foreground',
+                ? "border-green-500/30 text-green-500 bg-green-500/10"
+                : "text-muted-foreground",
             )}
           >
-            {visitorChecklist.onTime ? '✓ No horário' : '○ Pendente'}
+            {visitorChecklist.onTime ? "✓ No horário" : "○ Pendente"}
           </Badge>
         </div>
       </CardContent>

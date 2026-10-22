@@ -2,7 +2,7 @@ import {
   biometricService,
   bufferToBase64Url,
   base64UrlToBuffer,
-} from '@/services/biometrics'
+} from "@/services/biometrics"
 
 /**
  * Testes unitários / smoke tests locais da lógica e helpers de biometria.
@@ -33,21 +33,21 @@ export function runBiometricsUnitTests(): {
   }
 
   // Backup do localStorage original para restauração pós-teste
-  const originalData = localStorage.getItem('goplay_biometric_credential_v1')
+  const originalData = localStorage.getItem("goplay_biometric_credential_v1")
 
   try {
     // Teste 1: Conversão Base64URL
     const sampleBytes = new Uint8Array([1, 2, 3, 250, 255, 42, 100])
     const encoded = bufferToBase64Url(sampleBytes.buffer)
     assert(
-      typeof encoded === 'string' && encoded.length > 0,
-      'bufferToBase64Url gera string não vazia',
+      typeof encoded === "string" && encoded.length > 0,
+      "bufferToBase64Url gera string não vazia",
     )
     assert(
-      !encoded.includes('+') &&
-        !encoded.includes('/') &&
-        !encoded.includes('='),
-      'Base64Url não contém caracteres não seguros',
+      !encoded.includes("+") &&
+        !encoded.includes("/") &&
+        !encoded.includes("="),
+      "Base64Url não contém caracteres não seguros",
     )
 
     const decodedBuffer = base64UrlToBuffer(encoded)
@@ -55,146 +55,146 @@ export function runBiometricsUnitTests(): {
     assert(
       sampleBytes.length === decodedBytes.length &&
         sampleBytes.every((val, idx) => val === decodedBytes[idx]),
-      'base64UrlToBuffer reverte exatamente os bytes originais',
+      "base64UrlToBuffer reverte exatamente os bytes originais",
     )
 
     // Teste 2: Inicialmente limpo
     biometricService.disableBiometrics()
     assert(
       !biometricService.isEnrolled(),
-      'isEnrolled é false quando não há credencial',
+      "isEnrolled é false quando não há credencial",
     )
     assert(
       biometricService.getEnrolledCredential() === null,
-      'getEnrolledCredential retorna null',
+      "getEnrolledCredential retorna null",
     )
 
     // Teste 3: Simulação de credencial salva
     const fakeCred = {
-      credentialId: 'test-cred-id-123',
-      userId: 'user-uuid-1',
-      userEmail: 'atleta@goplay.test',
-      userName: 'Atleta Teste',
+      credentialId: "test-cred-id-123",
+      userId: "user-uuid-1",
+      userEmail: "atleta@goplay.test",
+      userName: "Atleta Teste",
       enrolledAt: new Date().toISOString(),
-      deviceName: 'Este Aparelho',
+      deviceName: "Este Aparelho",
       sessionToken: {
-        access_token: 'old_access_token',
-        refresh_token: 'old_refresh_token',
+        access_token: "old_access_token",
+        refresh_token: "old_refresh_token",
         expires_at: Math.floor(Date.now() / 1000) + 3600,
       },
     }
     localStorage.setItem(
-      'goplay_biometric_credential_v1',
+      "goplay_biometric_credential_v1",
       JSON.stringify(fakeCred),
     )
     assert(
       biometricService.isEnrolled(),
-      'isEnrolled é true após salvar credencial',
+      "isEnrolled é true após salvar credencial",
     )
     assert(
-      biometricService.getEnrolledCredential()?.userId === 'user-uuid-1',
-      'Recupera userId correto',
+      biometricService.getEnrolledCredential()?.userId === "user-uuid-1",
+      "Recupera userId correto",
     )
 
     // Teste 4: updateSavedSession atualiza tokens e limpa erro
-    biometricService.markNeedsReauth('session_revoked')
+    biometricService.markNeedsReauth("session_revoked")
     assert(
       biometricService.getEnrolledCredential()?.needsReauth === true,
-      'markNeedsReauth marca true',
+      "markNeedsReauth marca true",
     )
 
     biometricService.updateSavedSession({
-      access_token: 'new_access_token',
-      refresh_token: 'new_refresh_token',
+      access_token: "new_access_token",
+      refresh_token: "new_refresh_token",
       expires_at: Math.floor(Date.now() / 1000) + 7200,
     })
     const updated = biometricService.getEnrolledCredential()
     assert(
-      updated?.sessionToken?.access_token === 'new_access_token',
-      'updateSavedSession atualizou access_token',
+      updated?.sessionToken?.access_token === "new_access_token",
+      "updateSavedSession atualizou access_token",
     )
     assert(
-      updated?.sessionToken?.refresh_token === 'new_refresh_token',
-      'updateSavedSession atualizou refresh_token',
+      updated?.sessionToken?.refresh_token === "new_refresh_token",
+      "updateSavedSession atualizou refresh_token",
     )
     assert(
       updated?.needsReauth === false,
-      'updateSavedSession limpa needsReauth',
+      "updateSavedSession limpa needsReauth",
     )
     assert(
       updated?.lastError === undefined,
-      'updateSavedSession limpa lastError',
+      "updateSavedSession limpa lastError",
     )
 
     // Teste 5: syncSessionIfEnrolled com email case-insensitive e limpeza de needsReauth
-    biometricService.markNeedsReauth('expired')
+    biometricService.markNeedsReauth("expired")
     const synced = biometricService.syncSessionIfEnrolled(
       {
-        user: { id: 'user-uuid-1', email: 'ATLETA@GOPLAY.TEST' },
-        access_token: 'synced_access',
-        refresh_token: 'synced_refresh',
+        user: { id: "user-uuid-1", email: "ATLETA@GOPLAY.TEST" },
+        access_token: "synced_access",
+        refresh_token: "synced_refresh",
       },
-      'atleta@goplay.test',
+      "atleta@goplay.test",
     )
     assert(
       synced === true,
-      'syncSessionIfEnrolled retorna true para correspondência de email/id',
+      "syncSessionIfEnrolled retorna true para correspondência de email/id",
     )
     const postSync = biometricService.getEnrolledCredential()
     assert(
-      postSync?.sessionToken?.access_token === 'synced_access',
-      'Sessão sincronizada corretamente',
+      postSync?.sessionToken?.access_token === "synced_access",
+      "Sessão sincronizada corretamente",
     )
     assert(
       postSync?.needsReauth === false,
-      'syncSession limpa flag needsReauth',
+      "syncSession limpa flag needsReauth",
     )
 
     // Teste 6: syncSessionIfEnrolled com usuário divergente não deve sobrescrever
     const syncOtherUser = biometricService.syncSessionIfEnrolled(
       {
-        user: { id: 'other-user-uuid', email: 'outro@goplay.test' },
-        access_token: 'other_access',
-        refresh_token: 'other_refresh',
+        user: { id: "other-user-uuid", email: "outro@goplay.test" },
+        access_token: "other_access",
+        refresh_token: "other_refresh",
       },
-      'outro@goplay.test',
+      "outro@goplay.test",
     )
     assert(
       syncOtherUser === false,
-      'syncSessionIfEnrolled recusa usuário divergente',
+      "syncSessionIfEnrolled recusa usuário divergente",
     )
     const unchangedCred = biometricService.getEnrolledCredential()
     assert(
-      unchangedCred?.userId === 'user-uuid-1',
-      'Credencial original não foi adulterada',
+      unchangedCred?.userId === "user-uuid-1",
+      "Credencial original não foi adulterada",
     )
 
     // Teste 7: lock e unlock biométrico
     biometricService.lock()
-    assert(biometricService.isLocked(), 'lock marca isLocked como true')
+    assert(biometricService.isLocked(), "lock marca isLocked como true")
     biometricService.unlock()
-    assert(!biometricService.isLocked(), 'unlock reverte isLocked para false')
+    assert(!biometricService.isLocked(), "unlock reverte isLocked para false")
 
     // Teste 8: saveSessionBackup e getSessionBackup
     biometricService.saveSessionBackup({
-      access_token: 'backup_access',
-      refresh_token: 'backup_refresh',
+      access_token: "backup_access",
+      refresh_token: "backup_refresh",
     })
     const backup = biometricService.getSessionBackup()
     assert(
-      backup?.access_token === 'backup_access' &&
-        backup?.refresh_token === 'backup_refresh',
-      'saveSessionBackup e getSessionBackup funcionam corretamente',
+      backup?.access_token === "backup_access" &&
+        backup?.refresh_token === "backup_refresh",
+      "saveSessionBackup e getSessionBackup funcionam corretamente",
     )
 
     // Teste 9: disableBiometrics remove a chave, o lock e o backup de sessão
     biometricService.lock()
     biometricService.disableBiometrics()
-    assert(!biometricService.isEnrolled(), 'disableBiometrics limpou o storage')
-    assert(!biometricService.isLocked(), 'disableBiometrics limpou o lock')
+    assert(!biometricService.isEnrolled(), "disableBiometrics limpou o storage")
+    assert(!biometricService.isLocked(), "disableBiometrics limpou o lock")
     assert(
       biometricService.getSessionBackup() === null,
-      'disableBiometrics limpou o backup de sessão',
+      "disableBiometrics limpou o backup de sessão",
     )
   } catch (err: any) {
     failed++
@@ -202,9 +202,9 @@ export function runBiometricsUnitTests(): {
   } finally {
     // Restaura o localStorage
     if (originalData !== null) {
-      localStorage.setItem('goplay_biometric_credential_v1', originalData)
+      localStorage.setItem("goplay_biometric_credential_v1", originalData)
     } else {
-      localStorage.removeItem('goplay_biometric_credential_v1')
+      localStorage.removeItem("goplay_biometric_credential_v1")
     }
   }
 

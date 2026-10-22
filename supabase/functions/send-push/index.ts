@@ -1,10 +1,10 @@
-import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
-import { createClient } from 'npm:@supabase/supabase-js@2'
+import "jsr:@supabase/functions-js/edge-runtime.d.ts"
+import { createClient } from "npm:@supabase/supabase-js@2"
 import {
   sendPushNotification,
   WebPushError,
-} from 'npm:@mmmike/web-push@1.3.0/send'
-import { corsHeaders } from '../_shared/cors.ts'
+} from "npm:@mmmike/web-push@1.3.0/send"
+import { corsHeaders } from "../_shared/cors.ts"
 
 interface PushRequestPayload {
   userId: string
@@ -18,11 +18,11 @@ interface PushRequestPayload {
 }
 
 // Fallback high-compatibility official PNG icons for Android & Samsung OneUI
-const DEFAULT_ICON_PATH = '/icon-192.png'
+const DEFAULT_ICON_PATH = "/icon-192.png"
 
 Deno.serve(async (req: Request) => {
   // Handle CORS preflight
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     return new Response(null, {
       status: 200,
       headers: corsHeaders,
@@ -30,21 +30,21 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    if (req.method !== 'POST') {
-      return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+    if (req.method !== "POST") {
+      return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        headers: { "Content-Type": "application/json", ...corsHeaders },
       })
     }
 
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')
-    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")
 
     if (!supabaseUrl) {
-      return new Response(JSON.stringify({ error: 'Missing SUPABASE_URL' }), {
+      return new Response(JSON.stringify({ error: "Missing SUPABASE_URL" }), {
         status: 500,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        headers: { "Content-Type": "application/json", ...corsHeaders },
       })
     }
 
@@ -63,28 +63,28 @@ Deno.serve(async (req: Request) => {
 
     // 1. Verify caller authorization (must have valid JWT or service role)
     const authHeader =
-      req.headers.get('Authorization') || req.headers.get('authorization')
+      req.headers.get("Authorization") || req.headers.get("authorization")
     if (!authHeader) {
       return new Response(
         JSON.stringify({
-          error: 'Missing Authorization header',
-          code: 'UNAUTHORIZED_NO_HEADER',
+          error: "Missing Authorization header",
+          code: "UNAUTHORIZED_NO_HEADER",
         }),
         {
           status: 401,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+          headers: { "Content-Type": "application/json", ...corsHeaders },
         },
       )
     }
 
-    const token = authHeader.replace(/^Bearer\s+/i, '').trim()
-    let callerUser: { id: string; email?: string } | null = null
+    const token = authHeader.replace(/^Bearer\s+/i, "").trim()
+    let callerUser: { id: string email?: string } | null = null
 
     if (serviceRoleKey && token === serviceRoleKey) {
-      callerUser = { id: 'service-role', email: 'service@supabase.internal' }
+      callerUser = { id: "service-role", email: "service@supabase.internal" }
     } else {
       // Primary verification: getUser(token) via anon client
-      const authClient = createClient(supabaseUrl, supabaseAnonKey || '')
+      const authClient = createClient(supabaseUrl, supabaseAnonKey || "")
       const {
         data: { user },
         error: authError,
@@ -113,13 +113,13 @@ Deno.serve(async (req: Request) => {
         return new Response(
           JSON.stringify({
             error:
-              'Sua sessão de usuário expirou ou o token de autorização é inválido.',
-            details: authError?.message || 'Invalid or expired user session',
-            code: 'AUTH_INVALID_TOKEN',
+              "Sua sessão de usuário expirou ou o token de autorização é inválido.",
+            details: authError?.message || "Invalid or expired user session",
+            code: "AUTH_INVALID_TOKEN",
           }),
           {
             status: 401,
-            headers: { 'Content-Type': 'application/json', ...corsHeaders },
+            headers: { "Content-Type": "application/json", ...corsHeaders },
           },
         )
       }
@@ -127,10 +127,10 @@ Deno.serve(async (req: Request) => {
 
     if (!userId || !title) {
       return new Response(
-        JSON.stringify({ error: 'userId and title are required' }),
+        JSON.stringify({ error: "userId and title are required" }),
         {
           status: 400,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+          headers: { "Content-Type": "application/json", ...corsHeaders },
         },
       )
     }
@@ -139,17 +139,17 @@ Deno.serve(async (req: Request) => {
     // - If isTest is requested, caller MUST be testing their OWN account only
     if (
       isTest &&
-      callerUser.id !== 'service-role' &&
+      callerUser.id !== "service-role" &&
       callerUser.id !== userId
     ) {
       return new Response(
         JSON.stringify({
           error:
-            'Test push can only be triggered for your own authenticated device.',
+            "Test push can only be triggered for your own authenticated device.",
         }),
         {
           status: 403,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+          headers: { "Content-Type": "application/json", ...corsHeaders },
         },
       )
     }
@@ -160,20 +160,20 @@ Deno.serve(async (req: Request) => {
         JSON.stringify({
           success: true,
           skipped: true,
-          reason: 'Self-notifications are ignored',
+          reason: "Self-notifications are ignored",
           sentCount: 0,
         }),
         {
           status: 200,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+          headers: { "Content-Type": "application/json", ...corsHeaders },
         },
       )
     }
 
     // Retrieve and sanitize VAPID credentials from environment
-    const rawPublicKey = Deno.env.get('VAPID_PUBLIC_KEY')
-    const rawPrivateKey = Deno.env.get('VAPID_PRIVATE_KEY')
-    const rawSubject = Deno.env.get('VAPID_SUBJECT')
+    const rawPublicKey = Deno.env.get("VAPID_PUBLIC_KEY")
+    const rawPrivateKey = Deno.env.get("VAPID_PRIVATE_KEY")
+    const rawSubject = Deno.env.get("VAPID_SUBJECT")
 
     /**
      * Ultra-tolerant sanitizer for Base64/Base64URL keys.
@@ -181,20 +181,20 @@ Deno.serve(async (req: Request) => {
      * strips trailing '=' padding, and standardizes '+' -> '-' and '/' -> '_'.
      */
     const sanitizeVapidKey = (raw: string | undefined | null): string => {
-      if (!raw || typeof raw !== 'string') return ''
+      if (!raw || typeof raw !== "string") return ""
       let s = raw.trim()
       // Strip outer wrapping quotes/backticks/brackets if copied with code syntax
-      s = s.replace(/^["'`\[\(]+|["'`\]\)]+$/g, '')
+      s = s.replace(/^["'`\[\(]+|["'`\]\)]+$/g, "")
       // Strip outer punctuation like commas, semicolons
-      s = s.replace(/^[,;]+|[,;]+$/g, '')
+      s = s.replace(/^[,;]+|[,;]+$/g, "")
       // Remove any whitespace (spaces, tabs, newlines, non-breaking spaces)
-      s = s.replace(/\s+/g, '')
+      s = s.replace(/\s+/g, "")
       // Strip stray quotes, commas, semicolons that might have been pasted inside
-      s = s.replace(/["'`,;]/g, '')
+      s = s.replace(/["'`,;]/g, "")
       // Normalize standard Base64 characters to Base64URL (RFC 7515 / RFC 8292)
-      s = s.replace(/\+/g, '-').replace(/\//g, '_')
+      s = s.replace(/\+/g, "-").replace(/\//g, "_")
       // Remove Base64URL trailing '=' padding (Web Push standard requires unpadded base64url)
-      s = s.replace(/=+$/, '')
+      s = s.replace(/=+$/, "")
       return s
     }
 
@@ -202,13 +202,13 @@ Deno.serve(async (req: Request) => {
      * Tolerant sanitizer for VAPID_SUBJECT.
      */
     const sanitizeVapidSubject = (raw: string | undefined | null): string => {
-      if (!raw || typeof raw !== 'string') return 'mailto:contato@goplay.app'
+      if (!raw || typeof raw !== "string") return "mailto:contato@goplay.app"
       let s = raw.trim()
-      s = s.replace(/^["'`]+|["'`]+$/g, '').trim()
-      s = s.replace(/^[,;]+|[,;]+$/g, '').trim()
-      s = s.replace(/\s+/g, '')
-      if (!s) return 'mailto:contato@goplay.app'
-      if (!s.startsWith('mailto:') && !s.startsWith('https://')) {
+      s = s.replace(/^["'`]+|["'`]+$/g, "").trim()
+      s = s.replace(/^[,;]+|[,;]+$/g, "").trim()
+      s = s.replace(/\s+/g, "")
+      if (!s) return "mailto:contato@goplay.app"
+      if (!s.startsWith("mailto:") && !s.startsWith("https://")) {
         s = `mailto:${s}`
       }
       return s
@@ -221,7 +221,7 @@ Deno.serve(async (req: Request) => {
     const vapidSubject = sanitizeVapidSubject(rawSubject)
 
     // Detailed diagnostic logging for VAPID env (without exposing secret values)
-    console.log('[send-push] VAPID env diagnostics:', {
+    console.log("[send-push] VAPID env diagnostics:", {
       hasPublicKey: Boolean(rawPublicKey),
       rawPubLen: rawPublicKey?.length ?? 0,
       sanitizedPubLen: vapidPublicKey?.length ?? 0,
@@ -235,21 +235,17 @@ Deno.serve(async (req: Request) => {
       privHasComma: rawPrivateKey ? /,/.test(rawPrivateKey) : false,
       privHasWhitespace: rawPrivateKey ? /\s/.test(rawPrivateKey) : false,
       hasSubject: Boolean(rawSubject),
-      subjectScheme: vapidSubject.split(':')[0],
+      subjectScheme: vapidSubject.split(":")[0],
     })
 
-    const decodeBase64UrlBytes = (
-      str: string,
-      label: string,
-      rawLen: number,
-    ): {
+    const decodeBase64UrlBytes = (str: string, label: string, rawLen: number): {
       valid: boolean
       length: number
       bytes?: Uint8Array
       error?: string
     } => {
       try {
-        if (!str || typeof str !== 'string') {
+        if (!str || typeof str !== "string") {
           return {
             valid: false,
             length: 0,
@@ -266,8 +262,8 @@ Deno.serve(async (req: Request) => {
           }
         }
 
-        const padding = '='.repeat((4 - (str.length % 4)) % 4)
-        const base64 = (str + padding).replace(/-/g, '+').replace(/_/g, '/')
+        const padding = "=".repeat((4 - (str.length % 4)) % 4)
+        const base64 = (str + padding).replace(/-/g, "+").replace(/_/g, "/")
         const binaryString = atob(base64)
         const bytes = new Uint8Array(binaryString.length)
         for (let i = 0; i < binaryString.length; i++) {
@@ -278,7 +274,7 @@ Deno.serve(async (req: Request) => {
         return {
           valid: false,
           length: 0,
-          error: `${label}: falha ao decodificar Base64URL (${e?.message || 'atob falhou'}) — comprimento bruto: ${rawLen}, sanitizado: ${str.length}.`,
+          error: `${label}: falha ao decodificar Base64URL (${e?.message || "atob falhou"}) — comprimento bruto: ${rawLen}, sanitizado: ${str.length}.`,
         }
       }
     }
@@ -286,13 +282,13 @@ Deno.serve(async (req: Request) => {
     if (!vapidPublicKey || !vapidPrivateKey) {
       return new Response(
         JSON.stringify({
-          error: 'Credenciais VAPID não configuradas no servidor Supabase.',
-          code: 'VAPID_NOT_CONFIGURED',
+          error: "Credenciais VAPID não configuradas no servidor Supabase.",
+          code: "VAPID_NOT_CONFIGURED",
           configured: false,
         }),
         {
           status: 503,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+          headers: { "Content-Type": "application/json", ...corsHeaders },
         },
       )
     }
@@ -300,12 +296,12 @@ Deno.serve(async (req: Request) => {
     // Validate VAPID keys format and byte lengths locally before invoking @mmmike/web-push
     const pubValidation = decodeBase64UrlBytes(
       vapidPublicKey,
-      'VAPID_PUBLIC_KEY',
+      "VAPID_PUBLIC_KEY",
       rawPublicKey?.length ?? 0,
     )
     const privValidation = decodeBase64UrlBytes(
       vapidPrivateKey,
-      'VAPID_PRIVATE_KEY',
+      "VAPID_PRIVATE_KEY",
       rawPrivateKey?.length ?? 0,
     )
 
@@ -313,15 +309,15 @@ Deno.serve(async (req: Request) => {
       const errDetail =
         (!pubValidation.valid ? pubValidation.error : null) ||
         (!privValidation.valid ? privValidation.error : null) ||
-        'Falha ao decodificar base64url'
+        "Falha ao decodificar base64url"
       console.error(
-        '[send-push] Erro de validação base64 nas chaves VAPID:',
+        "[send-push] Erro de validação base64 nas chaves VAPID:",
         errDetail,
       )
       return new Response(
         JSON.stringify({
           error: `Erro nas chaves VAPID do servidor: ${errDetail}. Verifique os secrets VAPID no Supabase.`,
-          code: 'VAPID_BASE64_DECODE_ERROR',
+          code: "VAPID_BASE64_DECODE_ERROR",
           details: errDetail,
           diagnostics: {
             pubRawLength: rawPublicKey?.length ?? 0,
@@ -332,18 +328,18 @@ Deno.serve(async (req: Request) => {
         }),
         {
           status: 500,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+          headers: { "Content-Type": "application/json", ...corsHeaders },
         },
       )
     }
 
     if (pubValidation.length !== 65) {
       const msg = `VAPID_PUBLIC_KEY deve ter 65 bytes decodificados (P-256 não comprimido, iniciado em 0x04), porém foram encontrados ${pubValidation.length} bytes (comprimento bruto: ${rawPublicKey?.length ?? 0}, caracteres sanitizados: ${vapidPublicKey.length}). O secret VAPID_PUBLIC_KEY colado no Supabase provavelmente não é a chave pública correta.`
-      console.error('[send-push]', msg)
+      console.error("[send-push]", msg)
       return new Response(
         JSON.stringify({
           error: msg,
-          code: 'VAPID_PUBLIC_KEY_INVALID_LENGTH',
+          code: "VAPID_PUBLIC_KEY_INVALID_LENGTH",
           diagnostics: {
             pubRawLength: rawPublicKey?.length ?? 0,
             pubSanitizedLength: vapidPublicKey.length,
@@ -353,18 +349,18 @@ Deno.serve(async (req: Request) => {
         }),
         {
           status: 500,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+          headers: { "Content-Type": "application/json", ...corsHeaders },
         },
       )
     }
 
     if (privValidation.length !== 32) {
       const msg = `VAPID_PRIVATE_KEY deve ter 32 bytes decodificados (P-256 escalar privado), porém foram encontrados ${privValidation.length} bytes (comprimento bruto: ${rawPrivateKey?.length ?? 0}, caracteres sanitizados: ${vapidPrivateKey.length}). O secret VAPID_PRIVATE_KEY colado no Supabase provavelmente não é a chave privada correta.`
-      console.error('[send-push]', msg)
+      console.error("[send-push]", msg)
       return new Response(
         JSON.stringify({
           error: msg,
-          code: 'VAPID_PRIVATE_KEY_INVALID_LENGTH',
+          code: "VAPID_PRIVATE_KEY_INVALID_LENGTH",
           diagnostics: {
             privRawLength: rawPrivateKey?.length ?? 0,
             privSanitizedLength: vapidPrivateKey.length,
@@ -374,7 +370,7 @@ Deno.serve(async (req: Request) => {
         }),
         {
           status: 500,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+          headers: { "Content-Type": "application/json", ...corsHeaders },
         },
       )
     }
@@ -382,26 +378,26 @@ Deno.serve(async (req: Request) => {
     // Connect to Supabase using service-role key to fetch recipient's push subscriptions
     const adminDb = createClient(
       supabaseUrl,
-      serviceRoleKey || supabaseAnonKey || '',
+      serviceRoleKey || supabaseAnonKey || "",
       {
         auth: { persistSession: false },
       },
     )
 
     const { data: subscriptions, error: subError } = await adminDb
-      .from('push_subscriptions')
-      .select('id, endpoint, p256dh, auth, user_agent')
-      .eq('user_id', userId)
+      .from("push_subscriptions")
+      .select("id, endpoint, p256dh, auth, user_agent")
+      .eq("user_id", userId)
 
     if (subError) {
       return new Response(
         JSON.stringify({
-          error: 'Error fetching subscriptions',
+          error: "Error fetching subscriptions",
           details: subError.message,
         }),
         {
           status: 500,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+          headers: { "Content-Type": "application/json", ...corsHeaders },
         },
       )
     }
@@ -413,11 +409,11 @@ Deno.serve(async (req: Request) => {
           sentCount: 0,
           totalDevices: 0,
           message:
-            'Nenhuma assinatura push ativa encontrada para este usuário no banco.',
+            "Nenhuma assinatura push ativa encontrada para este usuário no banco.",
         }),
         {
           status: 200,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+          headers: { "Content-Type": "application/json", ...corsHeaders },
         },
       )
     }
@@ -435,24 +431,24 @@ Deno.serve(async (req: Request) => {
     // 2. User-Agent / Subscription origin if available
     // 3. Fallback to origin-relative '/icon-192.png' (which sw.js resolves against self.location.origin on the device)
     const callerOrigin =
-      req.headers.get('Origin') ||
-      req.headers.get('origin') ||
-      (req.headers.get('Referer')
+      req.headers.get("Origin") ||
+      req.headers.get("origin") ||
+      (req.headers.get("Referer")
         ? (() => {
             try {
-              return new URL(req.headers.get('Referer')!).origin
+              return new URL(req.headers.get("Referer")!).origin
             } catch {
-              return ''
+              return ""
             }
           })()
-        : '')
+        : "")
 
     // Resolve base icon path:
     let resolvedIcon = DEFAULT_ICON_PATH
-    if (icon && !icon.endsWith('.svg')) {
+    if (icon && !icon.endsWith(".svg")) {
       resolvedIcon = icon
     } else if (callerOrigin) {
-      resolvedIcon = `${callerOrigin.replace(/\/+$/, '')}/icon-192.png`
+      resolvedIcon = `${callerOrigin.replace(/\/+$/, "")}/icon-192.png`
     } else {
       // Relative path - sw.js on the client resolves new URL('/icon-192.png', self.location.origin)
       resolvedIcon = DEFAULT_ICON_PATH
@@ -465,9 +461,9 @@ Deno.serve(async (req: Request) => {
     // In sw.js, self.registration.showNotification(data.title, notificationOptions) receives these properties.
     const payload: Record<string, any> = {
       title,
-      body: messageBody || '',
-      url: url || '/',
-      tag: tag || (isTest ? `goplay-test-${Date.now()}` : 'goplay-alert'),
+      body: messageBody || "",
+      url: url || "/",
+      tag: tag || (isTest ? `goplay-test-${Date.now()}` : "goplay-alert"),
       icon: safeIcon,
     }
 
@@ -476,17 +472,17 @@ Deno.serve(async (req: Request) => {
     const deliveryReports: Array<{
       subId: string
       host: string
-      status: 'delivered' | 'failed' | 'pruned'
+      status: "delivered" | "failed" | "pruned"
       statusCode?: number
       error?: string
     }> = []
 
     for (const sub of subscriptions) {
-      let endpointHost = 'unknown'
+      let endpointHost = "unknown"
       try {
         endpointHost = new URL(sub.endpoint).host
       } catch {
-        endpointHost = 'invalid-url'
+        endpointHost = "invalid-url"
       }
 
       try {
@@ -500,12 +496,12 @@ Deno.serve(async (req: Request) => {
         // Pre-validate client subscription keys before invoking sendPushNotification
         const p256Validation = decodeBase64UrlBytes(
           cleanP256dh,
-          'p256dh',
+          "p256dh",
           sub.p256dh?.length ?? 0,
         )
         const authValidation = decodeBase64UrlBytes(
           cleanAuth,
-          'auth',
+          "auth",
           sub.auth?.length ?? 0,
         )
 
@@ -513,12 +509,12 @@ Deno.serve(async (req: Request) => {
           const keyErr =
             p256Validation.error ||
             authValidation.error ||
-            'Invalid client key base64'
+            "Invalid client key base64"
           deadSubIds.push(sub.id)
           deliveryReports.push({
             subId: sub.id,
             host: endpointHost,
-            status: 'pruned',
+            status: "pruned",
             statusCode: 400,
             error: `Chaves do cliente corrompidas no banco (${keyErr}). Assinatura limpa.`,
           })
@@ -535,7 +531,7 @@ Deno.serve(async (req: Request) => {
 
         const delivered = await sendPushNotification(subData, payload, vapid, {
           ttl: 86400, // 24 hours retention on FCM push service
-          urgency: 'high',
+          urgency: "high",
           vapidExpiration: 43200, // 12 hours JWT lifetime
         })
 
@@ -545,17 +541,17 @@ Deno.serve(async (req: Request) => {
           deliveryReports.push({
             subId: sub.id,
             host: endpointHost,
-            status: 'pruned',
+            status: "pruned",
             statusCode: 410,
             error:
-              'Assinatura expirada ou revogada pelo serviço push do Google (410 Gone)',
+              "Assinatura expirada ou revogada pelo serviço push do Google (410 Gone)",
           })
         } else {
           successCount++
           deliveryReports.push({
             subId: sub.id,
             host: endpointHost,
-            status: 'delivered',
+            status: "delivered",
             statusCode: 201, // RFC 8030 standard push service acceptance
           })
         }
@@ -564,7 +560,7 @@ Deno.serve(async (req: Request) => {
           sendErr?.statusCode ||
           sendErr?.status ||
           (sendErr instanceof WebPushError ? sendErr.statusCode : undefined)
-        const rawBody = sendErr?.body || ''
+        const rawBody = sendErr?.body || ""
         const errMsg = sendErr?.message || String(sendErr)
         console.error(`[send-push] Send error for sub ${sub.id}:`, {
           name: sendErr?.name,
@@ -579,16 +575,16 @@ Deno.serve(async (req: Request) => {
           deliveryReports.push({
             subId: sub.id,
             host: endpointHost,
-            status: 'pruned',
+            status: "pruned",
             statusCode,
             error:
-              'Endpoint desativado pelo serviço push do navegador (404/410). Assinatura removida.',
+              "Endpoint desativado pelo serviço push do navegador (404/410). Assinatura removida.",
           })
         } else if (statusCode === 401 || statusCode === 403) {
           deliveryReports.push({
             subId: sub.id,
             host: endpointHost,
-            status: 'failed',
+            status: "failed",
             statusCode,
             error: `Rejeição de credencial VAPID pelo FCM Google (${statusCode}): chave pública/privada não coincide com a assinatura registrada.`,
           })
@@ -596,12 +592,12 @@ Deno.serve(async (req: Request) => {
           deliveryReports.push({
             subId: sub.id,
             host: endpointHost,
-            status: 'failed',
+            status: "failed",
             statusCode,
             error:
               rawBody ||
               errMsg ||
-              'Falha de comunicação com o servidor de push da Google (FCM).',
+              "Falha de comunicação com o servidor de push da Google (FCM).",
           })
         }
       }
@@ -609,7 +605,7 @@ Deno.serve(async (req: Request) => {
 
     // Clean up expired or revoked subscriptions automatically
     if (deadSubIds.length > 0) {
-      await adminDb.from('push_subscriptions').delete().in('id', deadSubIds)
+      await adminDb.from("push_subscriptions").delete().in("id", deadSubIds)
     }
 
     // Always return 200 with delivery details for client clarity even if 0 succeeded,
@@ -629,7 +625,7 @@ Deno.serve(async (req: Request) => {
       }),
       {
         status: 200,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        headers: { "Content-Type": "application/json", ...corsHeaders },
       },
     )
   } catch (error: any) {
@@ -637,12 +633,12 @@ Deno.serve(async (req: Request) => {
       JSON.stringify({
         error:
           error?.message ||
-          'Erro interno no servidor Supabase ao processar o push Web.',
-        code: 'EDGE_FUNCTION_EXCEPTION',
+          "Erro interno no servidor Supabase ao processar o push Web.",
+        code: "EDGE_FUNCTION_EXCEPTION",
       }),
       {
         status: 500,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        headers: { "Content-Type": "application/json", ...corsHeaders },
       },
     )
   }

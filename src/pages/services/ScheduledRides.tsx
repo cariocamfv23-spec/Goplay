@@ -1,19 +1,19 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { ArrowLeft, Calendar, MapPin, Clock } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
-import { toast } from 'sonner'
-import { useState } from 'react'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { ArrowLeft, Calendar, MapPin, Clock } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { format } from "date-fns"
+import { ptBR } from "date-fns/locale"
+import { toast } from "sonner"
+import { useState } from "react"
 
 const mockScheduledRidesData = [
   {
-    id: 'ride-1',
+    id: "ride-1",
     date: new Date(Date.now() + 86400000).toISOString(),
-    pickup: 'Av. Paulista, 1000 - Bela Vista',
-    dropoff: 'Allianz Parque - Barra Funda',
-    price: 'R$ 42,50',
+    pickup: "Av. Paulista, 1000 - Bela Vista",
+    dropoff: "Allianz Parque - Barra Funda",
+    price: "R$ 42,50",
   },
 ]
 
@@ -23,7 +23,7 @@ export default function ScheduledRides() {
 
   const handleCancel = (id: string) => {
     setRides((prev) => prev.filter((r) => r.id !== id))
-    toast.success('Agendamento cancelado com sucesso.')
+    toast.success("Agendamento cancelado com sucesso.")
   }
 
   return (
@@ -53,7 +53,7 @@ export default function ScheduledRides() {
                     </span>
                   </div>
                   <span className="text-sm font-bold bg-muted px-2 py-1 rounded">
-                    {format(new Date(ride.date), 'HH:mm')}
+                    {format(new Date(ride.date), "HH:mm")}
                   </span>
                 </div>
 
@@ -101,7 +101,7 @@ export default function ScheduledRides() {
         <Button
           className="w-full mt-4 border-dashed"
           variant="outline"
-          onClick={() => navigate('/home')}
+          onClick={() => navigate("/home")}
         >
           Voltar para Home
         </Button>

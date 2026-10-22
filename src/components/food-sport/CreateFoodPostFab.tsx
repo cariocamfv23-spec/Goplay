@@ -1,24 +1,24 @@
-import { Button } from '@/components/ui/button'
-import { Plus, Image as ImageIcon, Utensils } from 'lucide-react'
-import { toast } from 'sonner'
+import { Button } from "@/components/ui/button"
+import { Plus, Image as ImageIcon, Utensils } from "lucide-react"
+import { toast } from "sonner"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { useState, useRef } from 'react'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
+} from "@/components/ui/dialog"
+import { useState, useRef } from "react"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { foodCategories } from '@/pages/food-sport/mockData'
+} from "@/components/ui/select"
+import { foodCategories } from "@/pages/food-sport/mockData"
 
 interface CreateFoodPostFabProps {
   onPost?: (postData: any) => void
@@ -26,13 +26,13 @@ interface CreateFoodPostFabProps {
 
 export function CreateFoodPostFab({ onPost }: CreateFoodPostFabProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [content, setContent] = useState('')
-  const [template, setTemplate] = useState('Alimentação saudável')
+  const [content, setContent] = useState("")
+  const [template, setTemplate] = useState("Alimentação saudável")
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handlePost = () => {
     if (!content.trim()) {
-      toast.error('Escreva algo para publicar.')
+      toast.error("Escreva algo para publicar.")
       return
     }
 
@@ -40,18 +40,18 @@ export function CreateFoodPostFab({ onPost }: CreateFoodPostFabProps) {
       onPost({
         content,
         template,
-        image: 'https://img.usecurling.com/p/800/800?q=food&color=orange&dpr=2',
+        image: "https://img.usecurling.com/p/800/800?q=food&color=orange&dpr=2",
       })
     } else {
-      toast.success('Publicação Food Sport enviada!', {
-        description: 'Sua receita/dica já está no feed.',
+      toast.success("Publicação Food Sport enviada!", {
+        description: "Sua receita/dica já está no feed.",
         icon: <Utensils className="w-4 h-4 text-orange-500" />,
       })
     }
 
     setIsOpen(false)
-    setContent('')
-    setTemplate('Alimentação saudável')
+    setContent("")
+    setTemplate("Alimentação saudável")
   }
 
   return (
@@ -85,7 +85,7 @@ export function CreateFoodPostFab({ onPost }: CreateFoodPostFabProps) {
               </SelectTrigger>
               <SelectContent className="max-h-[200px]">
                 {foodCategories
-                  .filter((c) => c !== 'Todos')
+                  .filter((c) => c !== "Todos")
                   .map((cat) => (
                     <SelectItem key={cat} value={cat}>
                       {cat}

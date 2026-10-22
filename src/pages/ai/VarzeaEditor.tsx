@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
-import { Slider } from '@/components/ui/slider'
-import { Label } from '@/components/ui/label'
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
+import { Slider } from "@/components/ui/slider"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from "@/components/ui/select"
 import {
   Card,
   CardContent,
@@ -17,8 +17,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+} from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import {
   ArrowLeft,
   Wand2,
@@ -32,51 +32,50 @@ import {
   Zap,
   Music,
   RotateCcw,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
-import { narrationStyles } from '@/lib/data'
-import { ShareDialog } from '@/components/ShareDialog'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
+import { narrationStyles } from "@/lib/data"
+import { ShareDialog } from "@/components/ShareDialog"
+import { cn } from "@/lib/utils"
 
 export default function VarzeaEditor() {
   const navigate = useNavigate()
-  const [step, setStep] = useState<
-    'select' | 'config' | 'processing' | 'result'
-  >('select')
+  const [step, setStep] =
+    useState<"select" | "config" | "processing" | "result">("select")
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
   const [processingMessage, setProcessingMessage] = useState(
-    'Iniciando motores...',
+    "Iniciando motores...",
   )
   const [showShare, setShowShare] = useState(false)
 
   // Configuration State
-  const [narrationStyle, setNarrationStyle] = useState('varzea')
+  const [narrationStyle, setNarrationStyle] = useState("varzea")
   const [effectIntensity, setEffectIntensity] = useState([50])
-  const [addMusic, setAddMusic] = useState('yes')
+  const [addMusic, setAddMusic] = useState("yes")
 
   const funnyMessages = [
-    'Calibrando a corneta...',
-    'Adicionando efeitos sonoros questionáveis...',
-    'Detectando jogadas duvidosas...',
-    'Aplicando filtro de habilidade...',
-    'Consultando o VAR...',
-    'Gerando memes automáticos...',
+    "Calibrando a corneta...",
+    "Adicionando efeitos sonoros questionáveis...",
+    "Detectando jogadas duvidosas...",
+    "Aplicando filtro de habilidade...",
+    "Consultando o VAR...",
+    "Gerando memes automáticos...",
   ]
 
   const handleFileSelect = () => {
     // Simulate file selection
-    toast.success('Vídeo carregado com sucesso!')
+    toast.success("Vídeo carregado com sucesso!")
     setSelectedVideo(
-      'https://img.usecurling.com/p/400/800?q=soccer%20fail&color=orange',
+      "https://img.usecurling.com/p/400/800?q=soccer%20fail&color=orange",
     )
-    setStep('config')
+    setStep("config")
   }
 
   const handleProcess = () => {
-    setStep('processing')
+    setStep("processing")
     setProgress(0)
 
     let currentProgress = 0
@@ -85,7 +84,7 @@ export default function VarzeaEditor() {
       if (currentProgress > 100) {
         currentProgress = 100
         clearInterval(interval)
-        setTimeout(() => setStep('result'), 500)
+        setTimeout(() => setStep("result"), 500)
       }
       setProgress(currentProgress)
       setProcessingMessage(
@@ -95,7 +94,7 @@ export default function VarzeaEditor() {
   }
 
   const handleReset = () => {
-    setStep('select')
+    setStep("select")
     setSelectedVideo(null)
     setProgress(0)
     setIsPlaying(false)
@@ -108,10 +107,10 @@ export default function VarzeaEditor() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => (step === 'select' ? navigate(-1) : handleReset())}
+          onClick={() => (step === "select" ? navigate(-1) : handleReset())}
           className="rounded-full"
         >
-          {step === 'select' ? (
+          {step === "select" ? (
             <ArrowLeft className="h-5 w-5" />
           ) : (
             <RotateCcw className="h-5 w-5" />
@@ -125,7 +124,7 @@ export default function VarzeaEditor() {
 
       <div className="flex-1 p-4 max-w-md mx-auto w-full flex flex-col justify-center">
         {/* STEP 1: SELECT */}
-        {step === 'select' && (
+        {step === "select" && (
           <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
             <div className="text-center space-y-2">
               <h2 className="text-2xl font-bold">Escolha seu Highlight</h2>
@@ -177,7 +176,7 @@ export default function VarzeaEditor() {
         )}
 
         {/* STEP 2: CONFIG */}
-        {step === 'config' && selectedVideo && (
+        {step === "config" && selectedVideo && (
           <div className="space-y-6 animate-in slide-in-from-right-4 duration-500">
             <div className="aspect-[9/16] max-h-[40vh] bg-black rounded-2xl overflow-hidden relative shadow-xl mx-auto border border-border/50">
               <img
@@ -266,7 +265,7 @@ export default function VarzeaEditor() {
         )}
 
         {/* STEP 3: PROCESSING */}
-        {step === 'processing' && (
+        {step === "processing" && (
           <div className="flex flex-col items-center justify-center space-y-8 animate-in zoom-in duration-500 py-10">
             <div className="relative">
               <div className="h-32 w-32 rounded-full border-4 border-muted flex items-center justify-center bg-secondary/30">
@@ -275,7 +274,7 @@ export default function VarzeaEditor() {
               <div
                 className="absolute inset-0 rounded-full border-4 border-primary border-t-transparent animate-spin"
                 style={{
-                  animationDuration: '1.5s',
+                  animationDuration: "1.5s",
                 }}
               />
               <div className="absolute inset-0 flex items-center justify-center">
@@ -306,7 +305,7 @@ export default function VarzeaEditor() {
         )}
 
         {/* STEP 4: RESULT */}
-        {step === 'result' && selectedVideo && (
+        {step === "result" && selectedVideo && (
           <div className="space-y-6 animate-in slide-in-from-bottom-8 duration-500 pb-8">
             <div className="text-center space-y-1">
               <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-orange-600">
@@ -358,7 +357,7 @@ export default function VarzeaEditor() {
               <Button
                 variant="outline"
                 className="h-14 rounded-xl gap-2 border-primary/20 hover:bg-primary/5 hover:text-primary transition-colors"
-                onClick={() => toast.success('Vídeo salvo na galeria!')}
+                onClick={() => toast.success("Vídeo salvo na galeria!")}
               >
                 <Download className="h-5 w-5" />
                 Salvar

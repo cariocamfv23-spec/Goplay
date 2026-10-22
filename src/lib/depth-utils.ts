@@ -1,11 +1,11 @@
-import { useState, useCallback, MouseEvent, CSSProperties } from 'react'
-import { useDepthStore } from '@/stores/useDepthStore'
+import { useState, useCallback, MouseEvent, CSSProperties } from "react"
+import { useDepthStore } from "@/stores/useDepthStore"
 
 export function useTilt3D(maxRotation = 5, scale = 1.02) {
   const { isEnabled, intensity } = useDepthStore()
   const [style, setStyle] = useState<CSSProperties>({
-    transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)',
-    transition: 'transform 0.1s ease-out',
+    transform: "perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)",
+    transition: "transform 0.1s ease-out",
   })
 
   // Calculate effective parameters based on global settings
@@ -28,7 +28,7 @@ export function useTilt3D(maxRotation = 5, scale = 1.02) {
 
       setStyle({
         transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${effectiveScale})`,
-        transition: 'none', // Disable transition for immediate response during movement
+        transition: "none", // Disable transition for immediate response during movement
       })
     },
     [isEnabled, effectiveRotation, effectiveScale],
@@ -36,8 +36,8 @@ export function useTilt3D(maxRotation = 5, scale = 1.02) {
 
   const onMouseLeave = useCallback(() => {
     setStyle({
-      transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)',
-      transition: 'transform 0.5s ease-out', // Smooth return
+      transform: "perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)",
+      transition: "transform 0.5s ease-out", // Smooth return
     })
   }, [])
 
@@ -45,8 +45,8 @@ export function useTilt3D(maxRotation = 5, scale = 1.02) {
   const finalStyle = isEnabled
     ? style
     : {
-        transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)',
-        transition: 'transform 0.5s ease-out',
+        transform: "perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)",
+        transition: "transform 0.5s ease-out",
       }
 
   return {

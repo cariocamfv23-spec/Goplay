@@ -1,20 +1,20 @@
-import { useState } from 'react'
-import { Navigation, MapPin, Car, ExternalLink } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { useState } from "react"
+import { Navigation, MapPin, Car, ExternalLink } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import {
   Drawer,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
   DrawerDescription,
-} from '@/components/ui/drawer'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/drawer"
+import { cn } from "@/lib/utils"
 import {
   getTransportUrl,
   type FieldLocation,
   type TransportApp,
-} from '@/lib/navigation-links'
-import { toast } from 'sonner'
+} from "@/lib/navigation-links"
+import { toast } from "sonner"
 
 interface TransportOption {
   id: TransportApp
@@ -26,32 +26,32 @@ interface TransportOption {
 
 const TRANSPORT_OPTIONS: TransportOption[] = [
   {
-    id: 'google-maps',
-    label: 'Google Maps',
-    description: 'Navegação completa com trânsito',
+    id: "google-maps",
+    label: "Google Maps",
+    description: "Navegação completa com trânsito",
     icon: MapPin,
-    color: 'text-blue-500',
+    color: "text-blue-500",
   },
   {
-    id: 'waze',
-    label: 'Waze',
-    description: 'Melhor rota em tempo real',
+    id: "waze",
+    label: "Waze",
+    description: "Melhor rota em tempo real",
     icon: Navigation,
-    color: 'text-cyan-500',
+    color: "text-cyan-500",
   },
   {
-    id: 'uber',
-    label: 'Uber',
-    description: 'Estimativa de preço e corrida',
+    id: "uber",
+    label: "Uber",
+    description: "Estimativa de preço e corrida",
     icon: Car,
-    color: 'text-gray-900 dark:text-white',
+    color: "text-gray-900 dark:text-white",
   },
   {
-    id: '99-taxi',
-    label: '99 Taxi',
-    description: 'Compare preços de corrida',
+    id: "99-taxi",
+    label: "99 Taxi",
+    description: "Compare preços de corrida",
     icon: Car,
-    color: 'text-orange-500',
+    color: "text-orange-500",
   },
 ]
 
@@ -63,14 +63,14 @@ interface TransportMenuProps {
 
 export function TransportMenu({
   location,
-  label = 'Como Chegar',
+  label = "Como Chegar",
   className,
 }: TransportMenuProps) {
   const [open, setOpen] = useState(false)
 
   const handleSelect = (app: TransportApp) => {
     const url = getTransportUrl(app, location)
-    window.open(url, '_blank', 'noopener,noreferrer')
+    window.open(url, "_blank", "noopener,noreferrer")
     setOpen(false)
     const option = TRANSPORT_OPTIONS.find((o) => o.id === app)
     toast.success(`Abrindo ${option?.label}...`, {
@@ -83,7 +83,7 @@ export function TransportMenu({
       <Button
         onClick={() => setOpen(true)}
         className={cn(
-          'w-full h-9 text-xs font-black uppercase tracking-widest',
+          "w-full h-9 text-xs font-black uppercase tracking-widest",
           className,
         )}
         size="sm"
@@ -105,7 +105,7 @@ export function TransportMenu({
                   {location.name}
                 </span>
               )}
-              {' — '}
+              {" — "}
               {location.address}
             </DrawerDescription>
           </DrawerHeader>
@@ -120,7 +120,7 @@ export function TransportMenu({
                   className="flex flex-col items-center gap-2 p-4 rounded-xl border border-border/30 bg-secondary/20 hover:bg-secondary/40 hover:border-primary/40 transition-all group"
                 >
                   <div className="w-12 h-12 rounded-full bg-secondary/40 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Icon className={cn('w-6 h-6', option.color)} />
+                    <Icon className={cn("w-6 h-6", option.color)} />
                   </div>
                   <span className="text-sm font-bold text-foreground">
                     {option.label}

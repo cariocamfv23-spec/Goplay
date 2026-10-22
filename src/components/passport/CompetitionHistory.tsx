@@ -1,6 +1,6 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Trophy,
   Calendar,
@@ -9,22 +9,22 @@ import {
   Plus,
   MoreVertical,
   Trash2,
-} from 'lucide-react'
+} from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { usePassportStore } from '@/stores/usePassportStore'
-import { toast } from 'sonner'
+} from "@/components/ui/dropdown-menu"
+import { usePassportStore } from "@/stores/usePassportStore"
+import { toast } from "sonner"
 
 export function CompetitionHistory() {
   const { competitions, removeCompetition } = usePassportStore()
 
   const handleDelete = (id: string) => {
     removeCompetition(id)
-    toast.success('Competição removida do histórico.')
+    toast.success("Competição removida do histórico.")
   }
 
   return (
@@ -84,7 +84,7 @@ export function CompetitionHistory() {
                         </Badge>
                         {comp.result && (
                           <span className="text-xs font-bold text-primary flex items-center gap-1">
-                            <Trophy className="h-3 w-3 text-gold" />{' '}
+                            <Trophy className="h-3 w-3 text-gold" />{" "}
                             {comp.result}
                           </span>
                         )}

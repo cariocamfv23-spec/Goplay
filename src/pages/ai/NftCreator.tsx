@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useRef, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   ArrowLeft,
   Upload,
@@ -29,35 +29,24 @@ import {
   Shirt,
   Music,
   Smile,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { Label } from '@/components/ui/label'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { Slider } from '@/components/ui/slider'
-import { Input } from '@/components/ui/input'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Switch } from '@/components/ui/switch'
-import { toast } from 'sonner'
-import { ShareDialog } from '@/components/ShareDialog'
-import { cn } from '@/lib/utils'
-import { NftCard, NftStyleConfig, Accessory } from '@/components/NftCard'
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Progress } from "@/components/ui/progress"
+import { Label } from "@/components/ui/label"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Slider } from "@/components/ui/slider"
+import { Input } from "@/components/ui/input"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Switch } from "@/components/ui/switch"
+import { toast } from "sonner"
+import { ShareDialog } from "@/components/ShareDialog"
+import { cn } from "@/lib/utils"
+import { NftCard, NftStyleConfig, Accessory } from "@/components/NftCard"
 
-type NftStyle =
-  | 'bored-ape'
-  | 'sticker-cultura'
-  | 'classic'
-  | 'cyberpunk'
-  | 'gold'
-  | 'holographic'
-  | 'pixel'
-  | '3d'
-  | 'pop'
-  | 'sketch'
-  | 'oil'
+type NftStyle = "bored-ape" | "sticker-cultura" | "classic" | "cyberpunk" | "gold" | "holographic" | "pixel" | "3d" | "pop" | "sketch" | "oil"
 
-type TextPosition = 'top' | 'center' | 'bottom'
+type TextPosition = "top" | "center" | "bottom"
 
 interface StyleConfig {
   id: NftStyle
@@ -77,9 +66,9 @@ interface StyleConfig {
 
 const styles: StyleConfig[] = [
   {
-    id: 'bored-ape',
-    name: 'Bored Ape',
-    color: 'from-lime-500 to-green-700',
+    id: "bored-ape",
+    name: "Bored Ape",
+    color: "from-lime-500 to-green-700",
     icon: Crown,
     defaults: {
       brightness: 110,
@@ -92,9 +81,9 @@ const styles: StyleConfig[] = [
     },
   },
   {
-    id: 'sticker-cultura',
-    name: 'Sticker Cultura',
-    color: 'from-purple-600 to-yellow-400',
+    id: "sticker-cultura",
+    name: "Sticker Cultura",
+    color: "from-purple-600 to-yellow-400",
     icon: Sticker,
     defaults: {
       brightness: 105,
@@ -107,9 +96,9 @@ const styles: StyleConfig[] = [
     },
   },
   {
-    id: 'classic',
-    name: 'Clássico',
-    color: 'from-slate-700 to-slate-900',
+    id: "classic",
+    name: "Clássico",
+    color: "from-slate-700 to-slate-900",
     icon: Gem,
     defaults: {
       brightness: 100,
@@ -122,9 +111,9 @@ const styles: StyleConfig[] = [
     },
   },
   {
-    id: 'cyberpunk',
-    name: 'Cyberpunk',
-    color: 'from-pink-500 to-cyan-500',
+    id: "cyberpunk",
+    name: "Cyberpunk",
+    color: "from-pink-500 to-cyan-500",
     icon: Zap,
     defaults: {
       brightness: 100,
@@ -137,9 +126,9 @@ const styles: StyleConfig[] = [
     },
   },
   {
-    id: 'gold',
-    name: 'Lendário',
-    color: 'from-yellow-400 to-yellow-600',
+    id: "gold",
+    name: "Lendário",
+    color: "from-yellow-400 to-yellow-600",
     icon: Star,
     defaults: {
       brightness: 100,
@@ -152,9 +141,9 @@ const styles: StyleConfig[] = [
     },
   },
   {
-    id: 'holographic',
-    name: 'Holográfico',
-    color: 'from-indigo-400 to-purple-400',
+    id: "holographic",
+    name: "Holográfico",
+    color: "from-indigo-400 to-purple-400",
     icon: Ghost,
     defaults: {
       brightness: 110,
@@ -167,9 +156,9 @@ const styles: StyleConfig[] = [
     },
   },
   {
-    id: 'pixel',
-    name: 'Retro Pixel',
-    color: 'from-green-500 to-emerald-700',
+    id: "pixel",
+    name: "Retro Pixel",
+    color: "from-green-500 to-emerald-700",
     icon: Monitor,
     defaults: {
       brightness: 90,
@@ -182,9 +171,9 @@ const styles: StyleConfig[] = [
     },
   },
   {
-    id: '3d',
-    name: 'Modern 3D',
-    color: 'from-blue-400 to-blue-600',
+    id: "3d",
+    name: "Modern 3D",
+    color: "from-blue-400 to-blue-600",
     icon: Box,
     defaults: {
       brightness: 105,
@@ -197,9 +186,9 @@ const styles: StyleConfig[] = [
     },
   },
   {
-    id: 'pop',
-    name: 'Pop Art',
-    color: 'from-rose-500 to-orange-500',
+    id: "pop",
+    name: "Pop Art",
+    color: "from-rose-500 to-orange-500",
     icon: Palette,
     defaults: {
       brightness: 110,
@@ -212,9 +201,9 @@ const styles: StyleConfig[] = [
     },
   },
   {
-    id: 'sketch',
-    name: 'Sketch',
-    color: 'from-stone-500 to-stone-700',
+    id: "sketch",
+    name: "Sketch",
+    color: "from-stone-500 to-stone-700",
     icon: Paintbrush,
     defaults: {
       brightness: 125,
@@ -227,9 +216,9 @@ const styles: StyleConfig[] = [
     },
   },
   {
-    id: 'oil',
-    name: 'Óleo',
-    color: 'from-amber-600 to-orange-700',
+    id: "oil",
+    name: "Óleo",
+    color: "from-amber-600 to-orange-700",
     icon: Layers,
     defaults: {
       brightness: 100,
@@ -245,52 +234,52 @@ const styles: StyleConfig[] = [
 
 const availableAccessories: Accessory[] = [
   {
-    id: 'glasses-1',
-    emoji: '🕶️',
-    label: 'VIP Shades',
-    position: { top: '35%', left: '50%', scale: 1.2, rotate: 0 },
+    id: "glasses-1",
+    emoji: "🕶️",
+    label: "VIP Shades",
+    position: { top: "35%", left: "50%", scale: 1.2, rotate: 0 },
   },
   {
-    id: 'glasses-2',
-    emoji: '👓',
-    label: 'Geek',
-    position: { top: '35%', left: '50%', scale: 1.2, rotate: 0 },
+    id: "glasses-2",
+    emoji: "👓",
+    label: "Geek",
+    position: { top: "35%", left: "50%", scale: 1.2, rotate: 0 },
   },
   {
-    id: 'hat-1',
-    emoji: '🧢',
-    label: 'Trucker',
-    position: { top: '15%', left: '50%', scale: 1.5, rotate: -5 },
+    id: "hat-1",
+    emoji: "🧢",
+    label: "Trucker",
+    position: { top: "15%", left: "50%", scale: 1.5, rotate: -5 },
   },
   {
-    id: 'hat-2',
-    emoji: '👑',
-    label: 'King',
-    position: { top: '12%', left: '50%', scale: 1.5, rotate: 0 },
+    id: "hat-2",
+    emoji: "👑",
+    label: "King",
+    position: { top: "12%", left: "50%", scale: 1.5, rotate: 0 },
   },
   {
-    id: 'chain',
-    emoji: '⛓️',
-    label: 'Chain',
-    position: { top: '75%', left: '50%', scale: 1.5, rotate: 0 },
+    id: "chain",
+    emoji: "⛓️",
+    label: "Chain",
+    position: { top: "75%", left: "50%", scale: 1.5, rotate: 0 },
   },
   {
-    id: 'earring',
-    emoji: '💎',
-    label: 'Ice',
-    position: { top: '40%', left: '30%', scale: 0.8, rotate: 0 },
+    id: "earring",
+    emoji: "💎",
+    label: "Ice",
+    position: { top: "40%", left: "30%", scale: 0.8, rotate: 0 },
   },
   {
-    id: 'smoke',
-    emoji: '🚬',
-    label: 'Chill',
-    position: { top: '55%', left: '60%', scale: 1, rotate: 15 },
+    id: "smoke",
+    emoji: "🚬",
+    label: "Chill",
+    position: { top: "55%", left: "60%", scale: 1, rotate: 15 },
   },
   {
-    id: 'music',
-    emoji: '🎧',
-    label: 'DJ',
-    position: { top: '35%', left: '50%', scale: 1.8, rotate: 0 },
+    id: "music",
+    emoji: "🎧",
+    label: "DJ",
+    position: { top: "35%", left: "50%", scale: 1.8, rotate: 0 },
   },
 ]
 
@@ -298,16 +287,16 @@ export default function NftCreator() {
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const [step, setStep] = useState<'upload' | 'processing' | 'result'>('upload')
+  const [step, setStep] = useState<"upload" | "processing" | "result">("upload")
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
-  const [processingStatus, setProcessingStatus] = useState('Iniciando IA...')
-  const [selectedStyle, setSelectedStyle] = useState<NftStyle>('bored-ape')
+  const [processingStatus, setProcessingStatus] = useState("Iniciando IA...")
+  const [selectedStyle, setSelectedStyle] = useState<NftStyle>("bored-ape")
   const [showShare, setShowShare] = useState(false)
 
   // Customization State
-  const [customText, setCustomText] = useState('')
-  const [textPosition, setTextPosition] = useState<TextPosition>('bottom')
+  const [customText, setCustomText] = useState("")
+  const [textPosition, setTextPosition] = useState<TextPosition>("bottom")
   const [filters, setFilters] = useState(styles[0].defaults)
   const [intensity, setIntensity] = useState(100)
   const [stickerMode, setStickerMode] = useState(false)
@@ -320,7 +309,7 @@ export default function NftCreator() {
       setFilters(style.defaults)
       setIntensity(100)
       // Auto enable sticker mode for certain styles
-      if (style.id === 'sticker-cultura') setStickerMode(true)
+      if (style.id === "sticker-cultura") setStickerMode(true)
     }
   }, [selectedStyle])
 
@@ -347,156 +336,159 @@ export default function NftCreator() {
 
   const handleGenerate = () => {
     if (!selectedImage) return
-    setStep('processing')
+    setStep("processing")
     setProgress(0)
-    setProcessingStatus('Enviando para o Oráculo...')
+    setProcessingStatus("Enviando para o Oráculo...")
 
     // Simulate specialized BAYC processing steps
-    const isBayc = selectedStyle === 'bored-ape'
+    const isBayc = selectedStyle === "bored-ape"
 
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        const next = prev + (isBayc ? 2 : 5)
+    const interval = setInterval(
+      () => {
+        setProgress((prev) => {
+          const next = prev + (isBayc ? 2 : 5)
 
-        // Update status text based on progress
-        if (next > 20 && next < 40)
-          setProcessingStatus(
-            isBayc ? 'Detectando traços faciais...' : 'Aplicando filtros...',
-          )
-        if (next > 40 && next < 60)
-          setProcessingStatus(
-            isBayc ? 'Vectorizando outlines...' : 'Ajustando iluminação...',
-          )
-        if (next > 60 && next < 80)
-          setProcessingStatus(
-            isBayc ? 'Gerando assets BAYC...' : 'Renderizando texturas...',
-          )
-        if (next > 80) setProcessingStatus('Finalizando arte...')
+          // Update status text based on progress
+          if (next > 20 && next < 40)
+            setProcessingStatus(
+              isBayc ? "Detectando traços faciais..." : "Aplicando filtros...",
+            )
+          if (next > 40 && next < 60)
+            setProcessingStatus(
+              isBayc ? "Vectorizando outlines..." : "Ajustando iluminação...",
+            )
+          if (next > 60 && next < 80)
+            setProcessingStatus(
+              isBayc ? "Gerando assets BAYC..." : "Renderizando texturas...",
+            )
+          if (next > 80) setProcessingStatus("Finalizando arte...")
 
-        if (next >= 100) {
-          clearInterval(interval)
-          setTimeout(() => setStep('result'), 500)
-          return 100
-        }
-        return next
-      })
-    }, 100)
+          if (next >= 100) {
+            clearInterval(interval)
+            setTimeout(() => setStep("result"), 500)
+            return 100
+          }
+          return next
+        })
+      },
+      100,
+    )
   }
 
   const handleDownload = () => {
-    toast.success('NFT salvo na galeria!', {
-      description: 'Imagem salva em alta resolução com personalizações.',
+    toast.success("NFT salvo na galeria!", {
+      description: "Imagem salva em alta resolução com personalizações.",
     })
   }
 
   const getNftStyles = (style: NftStyle): NftStyleConfig => {
     switch (style) {
-      case 'bored-ape':
+      case "bored-ape":
         return {
           container:
-            'bg-gradient-to-b from-lime-400 to-green-700 shadow-2xl border-4 border-black',
+            "bg-gradient-to-b from-lime-400 to-green-700 shadow-2xl border-4 border-black",
           overlay:
             'bg-[url("https://img.usecurling.com/p/100/100?q=noise&color=black")] opacity-10 mix-blend-overlay',
-          badge: 'bg-black text-yellow-400 border border-yellow-400',
-          border: 'border-4 border-black rounded-xl',
-          text: 'text-yellow-300 font-mono tracking-tighter drop-shadow-md',
+          badge: "bg-black text-yellow-400 border border-yellow-400",
+          border: "border-4 border-black rounded-xl",
+          text: "text-yellow-300 font-mono tracking-tighter drop-shadow-md",
         }
-      case 'sticker-cultura':
+      case "sticker-cultura":
         return {
           container:
-            'shadow-[0_10px_0_rgba(0,0,0,0.2)] bg-gradient-to-br from-purple-600 via-pink-500 to-yellow-400 rotate-1 scale-95 hover:scale-100 hover:rotate-0 transition-all',
+            "shadow-[0_10px_0_rgba(0,0,0,0.2)] bg-gradient-to-br from-purple-600 via-pink-500 to-yellow-400 rotate-1 scale-95 hover:scale-100 hover:rotate-0 transition-all",
           overlay:
             'bg-[url("https://img.usecurling.com/p/100/100?q=noise&color=white")] opacity-20 mix-blend-overlay',
           badge:
-            'bg-white text-black font-black uppercase -rotate-2 border-2 border-black shadow-[2px_2px_0_#000]',
-          border: 'border-[8px] border-white rounded-[2.5rem]',
-          text: 'text-white drop-shadow-[2px_2px_0_#000] font-black italic tracking-tighter',
+            "bg-white text-black font-black uppercase -rotate-2 border-2 border-black shadow-[2px_2px_0_#000]",
+          border: "border-[8px] border-white rounded-[2.5rem]",
+          text: "text-white drop-shadow-[2px_2px_0_#000] font-black italic tracking-tighter",
         }
-      case 'cyberpunk':
+      case "cyberpunk":
         return {
           container:
-            'border-cyan-500/50 shadow-[0_0_30px_rgba(6,182,212,0.3)] bg-slate-950',
+            "border-cyan-500/50 shadow-[0_0_30px_rgba(6,182,212,0.3)] bg-slate-950",
           overlay:
-            'bg-gradient-to-t from-cyan-900/80 via-transparent to-pink-500/20',
-          badge: 'bg-cyan-500 text-black',
-          border: 'border-2 border-cyan-400',
-          text: 'text-white',
+            "bg-gradient-to-t from-cyan-900/80 via-transparent to-pink-500/20",
+          badge: "bg-cyan-500 text-black",
+          border: "border-2 border-cyan-400",
+          text: "text-white",
         }
-      case 'gold':
+      case "gold":
         return {
           container:
-            'border-yellow-500/50 shadow-[0_0_30px_rgba(234,179,8,0.3)] bg-amber-950',
+            "border-yellow-500/50 shadow-[0_0_30px_rgba(234,179,8,0.3)] bg-amber-950",
           overlay:
-            'bg-gradient-to-t from-yellow-900/80 via-transparent to-yellow-500/10',
-          badge: 'bg-yellow-500 text-black',
-          border: 'border-4 border-yellow-500',
-          text: 'text-yellow-100',
+            "bg-gradient-to-t from-yellow-900/80 via-transparent to-yellow-500/10",
+          badge: "bg-yellow-500 text-black",
+          border: "border-4 border-yellow-500",
+          text: "text-yellow-100",
         }
-      case 'holographic':
+      case "holographic":
         return {
           container:
-            'border-indigo-500/50 shadow-[0_0_30px_rgba(99,102,241,0.3)] bg-slate-900',
+            "border-indigo-500/50 shadow-[0_0_30px_rgba(99,102,241,0.3)] bg-slate-900",
           overlay:
-            'bg-gradient-to-tr from-indigo-500/20 via-transparent to-purple-500/20 mix-blend-overlay',
-          badge: 'bg-indigo-500 text-white',
-          border: 'border-2 border-indigo-400',
-          text: 'text-white',
+            "bg-gradient-to-tr from-indigo-500/20 via-transparent to-purple-500/20 mix-blend-overlay",
+          badge: "bg-indigo-500 text-white",
+          border: "border-2 border-indigo-400",
+          text: "text-white",
         }
-      case 'pixel':
+      case "pixel":
         return {
           container:
-            'border-green-500/50 shadow-[0_0_20px_rgba(34,197,94,0.3)] bg-black',
+            "border-green-500/50 shadow-[0_0_20px_rgba(34,197,94,0.3)] bg-black",
           overlay:
             'bg-[url("https://img.usecurling.com/p/10/10?q=grid&color=green")] bg-repeat opacity-20 mix-blend-overlay',
-          badge: 'bg-green-500 text-black font-mono',
-          border: 'border-4 border-green-500 border-dashed',
-          text: 'text-green-400 font-mono tracking-widest',
+          badge: "bg-green-500 text-black font-mono",
+          border: "border-4 border-green-500 border-dashed",
+          text: "text-green-400 font-mono tracking-widest",
         }
-      case '3d':
+      case "3d":
         return {
           container:
-            'border-blue-400/30 shadow-2xl bg-gradient-to-br from-slate-800 to-slate-950',
-          overlay: 'bg-gradient-to-t from-black/60 via-transparent to-white/10',
-          badge: 'bg-blue-500 text-white shadow-lg',
-          border: 'border border-blue-400/50 rounded-3xl',
-          text: 'text-white drop-shadow-md',
+            "border-blue-400/30 shadow-2xl bg-gradient-to-br from-slate-800 to-slate-950",
+          overlay: "bg-gradient-to-t from-black/60 via-transparent to-white/10",
+          badge: "bg-blue-500 text-white shadow-lg",
+          border: "border border-blue-400/50 rounded-3xl",
+          text: "text-white drop-shadow-md",
         }
-      case 'pop':
+      case "pop":
         return {
           container:
-            'border-white shadow-[10px_10px_0px_0px_rgba(255,255,255,0.2)] bg-yellow-400',
+            "border-white shadow-[10px_10px_0px_0px_rgba(255,255,255,0.2)] bg-yellow-400",
           overlay:
-            'bg-gradient-to-br from-rose-500/30 to-blue-500/30 mix-blend-color-dodge',
+            "bg-gradient-to-br from-rose-500/30 to-blue-500/30 mix-blend-color-dodge",
           badge:
-            'bg-white text-black font-black uppercase border-2 border-black',
-          border: 'border-4 border-black',
-          text: 'text-white drop-shadow-[2px_2px_0px_#000]',
+            "bg-white text-black font-black uppercase border-2 border-black",
+          border: "border-4 border-black",
+          text: "text-white drop-shadow-[2px_2px_0px_#000]",
         }
-      case 'sketch':
+      case "sketch":
         return {
-          container: 'border-stone-400 shadow-xl bg-white',
-          overlay: 'bg-white/10 mix-blend-multiply',
-          badge: 'bg-black text-white font-serif',
-          border: 'border-2 border-black',
-          text: 'text-white mix-blend-difference font-serif',
+          container: "border-stone-400 shadow-xl bg-white",
+          overlay: "bg-white/10 mix-blend-multiply",
+          badge: "bg-black text-white font-serif",
+          border: "border-2 border-black",
+          text: "text-white mix-blend-difference font-serif",
         }
-      case 'oil':
+      case "oil":
         return {
-          container: 'border-amber-700/50 shadow-2xl bg-stone-900',
+          container: "border-amber-700/50 shadow-2xl bg-stone-900",
           overlay:
-            'bg-gradient-to-t from-black/50 via-amber-500/10 to-transparent',
-          badge: 'bg-amber-600 text-white',
-          border: 'border-8 border-double border-amber-800',
-          text: 'text-amber-100 font-serif italic',
+            "bg-gradient-to-t from-black/50 via-amber-500/10 to-transparent",
+          badge: "bg-amber-600 text-white",
+          border: "border-8 border-double border-amber-800",
+          text: "text-amber-100 font-serif italic",
         }
       default:
         return {
-          container: 'border-white/20 shadow-xl bg-black',
+          container: "border-white/20 shadow-xl bg-black",
           overlay:
-            'bg-gradient-to-t from-black/80 via-transparent to-transparent',
-          badge: 'bg-white text-black',
-          border: 'border border-white/20',
-          text: 'text-white',
+            "bg-gradient-to-t from-black/80 via-transparent to-transparent",
+          badge: "bg-white text-black",
+          border: "border border-white/20",
+          text: "text-white",
         }
     }
   }
@@ -511,20 +503,20 @@ export default function NftCreator() {
           variant="ghost"
           size="icon"
           onClick={() => {
-            if (step === 'upload') navigate(-1)
-            else if (step === 'processing') return
-            else setStep('upload')
+            if (step === "upload") navigate(-1)
+            else if (step === "processing") return
+            else setStep("upload")
           }}
           className="rounded-full"
         >
-          {step === 'result' ? (
+          {step === "result" ? (
             <RefreshCw className="h-5 w-5" />
           ) : (
             <ArrowLeft className="h-5 w-5" />
           )}
         </Button>
         <h1 className="text-lg font-bold flex items-center gap-2">
-          {step === 'result' && selectedStyle === 'bored-ape' ? (
+          {step === "result" && selectedStyle === "bored-ape" ? (
             <>
               <Crown className="h-5 w-5 text-yellow-500 fill-yellow-500" /> BAYC
               Creator
@@ -538,7 +530,7 @@ export default function NftCreator() {
       </div>
 
       <div className="flex-1 p-6 max-w-md mx-auto w-full flex flex-col">
-        {step === 'upload' && (
+        {step === "upload" && (
           <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500 flex-1 flex flex-col">
             {!selectedImage ? (
               <div className="text-center space-y-2">
@@ -649,15 +641,15 @@ export default function NftCreator() {
                               key={style.id}
                               onClick={() => setSelectedStyle(style.id)}
                               className={cn(
-                                'flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all min-w-[90px] relative overflow-hidden bg-card',
+                                "flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all min-w-[90px] relative overflow-hidden bg-card",
                                 selectedStyle === style.id
-                                  ? 'border-primary bg-primary/5'
-                                  : 'border-border hover:border-primary/50',
+                                  ? "border-primary bg-primary/5"
+                                  : "border-border hover:border-primary/50",
                               )}
                             >
                               <div
                                 className={cn(
-                                  'h-10 w-10 rounded-full bg-gradient-to-br flex items-center justify-center text-white shadow-sm',
+                                  "h-10 w-10 rounded-full bg-gradient-to-br flex items-center justify-center text-white shadow-sm",
                                   style.color,
                                 )}
                               >
@@ -684,10 +676,10 @@ export default function NftCreator() {
                               key={acc.id}
                               onClick={() => toggleAccessory(acc.id)}
                               className={cn(
-                                'flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all min-w-[80px] bg-card',
+                                "flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all min-w-[80px] bg-card",
                                 selectedAccessories.includes(acc.id)
-                                  ? 'border-primary bg-primary/5'
-                                  : 'border-border hover:border-primary/50',
+                                  ? "border-primary bg-primary/5"
+                                  : "border-border hover:border-primary/50",
                               )}
                             >
                               <div className="text-3xl filter drop-shadow-md">
@@ -736,7 +728,7 @@ export default function NftCreator() {
                           max={200}
                           step={5}
                           onValueChange={(val) =>
-                            updateFilter('brightness', val[0])
+                            updateFilter("brightness", val[0])
                           }
                         />
                       </div>
@@ -753,7 +745,7 @@ export default function NftCreator() {
                           max={200}
                           step={5}
                           onValueChange={(val) =>
-                            updateFilter('contrast', val[0])
+                            updateFilter("contrast", val[0])
                           }
                         />
                       </div>
@@ -797,10 +789,10 @@ export default function NftCreator() {
                         <div className="grid grid-cols-3 gap-2">
                           <Button
                             variant={
-                              textPosition === 'top' ? 'default' : 'outline'
+                              textPosition === "top" ? "default" : "outline"
                             }
                             size="sm"
-                            onClick={() => setTextPosition('top')}
+                            onClick={() => setTextPosition("top")}
                             className="h-9"
                           >
                             <AlignVerticalJustifyStart className="h-4 w-4 mr-2" />
@@ -808,10 +800,10 @@ export default function NftCreator() {
                           </Button>
                           <Button
                             variant={
-                              textPosition === 'center' ? 'default' : 'outline'
+                              textPosition === "center" ? "default" : "outline"
                             }
                             size="sm"
-                            onClick={() => setTextPosition('center')}
+                            onClick={() => setTextPosition("center")}
                             className="h-9"
                           >
                             <AlignVerticalJustifyCenter className="h-4 w-4 mr-2" />
@@ -819,10 +811,10 @@ export default function NftCreator() {
                           </Button>
                           <Button
                             variant={
-                              textPosition === 'bottom' ? 'default' : 'outline'
+                              textPosition === "bottom" ? "default" : "outline"
                             }
                             size="sm"
-                            onClick={() => setTextPosition('bottom')}
+                            onClick={() => setTextPosition("bottom")}
                             className="h-9"
                           >
                             <AlignVerticalJustifyEnd className="h-4 w-4 mr-2" />
@@ -847,11 +839,11 @@ export default function NftCreator() {
           </div>
         )}
 
-        {step === 'processing' && (
+        {step === "processing" && (
           <div className="flex-1 flex flex-col items-center justify-center space-y-8 animate-in zoom-in duration-500">
             <div className="relative">
               <div className="h-32 w-32 rounded-full border-4 border-muted flex items-center justify-center bg-secondary/30">
-                {selectedStyle === 'bored-ape' ? (
+                {selectedStyle === "bored-ape" ? (
                   <ScanFace className="h-16 w-16 text-muted-foreground/50 animate-pulse" />
                 ) : (
                   <Gem className="h-12 w-12 text-muted-foreground/20" />
@@ -859,7 +851,7 @@ export default function NftCreator() {
               </div>
               <div
                 className="absolute inset-0 rounded-full border-4 border-primary border-t-transparent animate-spin"
-                style={{ animationDuration: '2s' }}
+                style={{ animationDuration: "2s" }}
               />
               <div className="absolute inset-0 flex items-center justify-center">
                 <Sparkles className="h-8 w-8 text-primary animate-pulse" />
@@ -871,7 +863,7 @@ export default function NftCreator() {
               <p className="text-muted-foreground text-sm">
                 {processingStatus}
               </p>
-              {selectedStyle === 'bored-ape' && (
+              {selectedStyle === "bored-ape" && (
                 <Badge
                   variant="outline"
                   className="mt-2 border-yellow-500 text-yellow-600 bg-yellow-100 dark:bg-yellow-900/20"
@@ -891,7 +883,7 @@ export default function NftCreator() {
           </div>
         )}
 
-        {step === 'result' && selectedImage && (
+        {step === "result" && selectedImage && (
           <div className="flex-1 flex flex-col space-y-6 animate-in slide-in-from-bottom-8 duration-500 pb-6">
             <div className="text-center">
               <Badge

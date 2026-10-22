@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useState, useEffect, useCallback } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -7,11 +7,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+} from "@/components/ui/table"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Search,
   Shield,
@@ -31,20 +31,20 @@ import {
   ShieldAlert,
   Check,
   Loader2,
-} from 'lucide-react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { format } from 'date-fns'
-import { useAuth } from '@/hooks/use-auth'
-import { analyticsService } from '@/services/analytics'
-import { profileService, type ProfileRow } from '@/services/profiles'
+} from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { format } from "date-fns"
+import { useAuth } from "@/hooks/use-auth"
+import { analyticsService } from "@/services/analytics"
+import { profileService, type ProfileRow } from "@/services/profiles"
 import {
   moderationService,
   REPORT_REASONS,
   type ReportItem,
   type ReportStatus,
-} from '@/services/moderation'
-import { supabase } from '@/lib/supabase/client'
-import { toast } from 'sonner'
+} from "@/services/moderation"
+import { supabase } from "@/lib/supabase/client"
+import { toast } from "sonner"
 
 export default function AdminDashboard() {
   const { user: authUser, profile: authProfile } = useAuth()
@@ -54,15 +54,14 @@ export default function AdminDashboard() {
   const [metricsError, setMetricsError] = useState<string | null>(null)
 
   const [realProfiles, setRealProfiles] = useState<ProfileRow[]>([])
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState("")
   const [profilesLoading, setProfilesLoading] = useState(true)
 
   // Moderation state
   const [reports, setReports] = useState<ReportItem[]>([])
   const [reportsLoading, setReportsLoading] = useState(true)
-  const [reportFilter, setReportFilter] = useState<
-    'all' | 'pending' | 'resolved'
-  >('all')
+  const [reportFilter, setReportFilter] =
+    useState<"all" | "pending" | "resolved">("all")
   const [updatingReportId, setUpdatingReportId] = useState<string | null>(null)
 
   const isAdmin = Boolean(authProfile?.is_admin)
@@ -72,9 +71,9 @@ export default function AdminDashboard() {
     async function loadUsers() {
       setProfilesLoading(true)
       const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false })
+        .from("profiles")
+        .select("*")
+        .order("created_at", { ascending: false })
 
       if (data) {
         setRealProfiles(data as unknown as ProfileRow[])
@@ -137,25 +136,25 @@ export default function AdminDashboard() {
     setUpdatingReportId(null)
 
     if (error) {
-      toast.error('Erro ao atualizar denúncia: ' + error.message)
+      toast.error("Erro ao atualizar denúncia: " + error.message)
     } else {
       toast.success(
-        status === 'resolved'
-          ? 'Denúncia marcada como resolvida.'
-          : status === 'dismissed'
-            ? 'Denúncia arquivada/descartada.'
-            : 'Status atualizado.',
+        status === "resolved"
+          ? "Denúncia marcada como resolvida."
+          : status === "dismissed"
+            ? "Denúncia arquivada/descartada."
+            : "Status atualizado.",
       )
       loadReports()
     }
   }
 
   const filteredReports = reports.filter((r) => {
-    if (reportFilter === 'all') return true
-    if (reportFilter === 'pending')
-      return r.status === 'pending' || r.status === 'investigating'
-    if (reportFilter === 'resolved')
-      return r.status === 'resolved' || r.status === 'dismissed'
+    if (reportFilter === "all") return true
+    if (reportFilter === "pending")
+      return r.status === "pending" || r.status === "investigating"
+    if (reportFilter === "resolved")
+      return r.status === "resolved" || r.status === "dismissed"
     return true
   })
 
@@ -163,10 +162,10 @@ export default function AdminDashboard() {
     if (!searchQuery) return true
     const term = searchQuery.toLowerCase()
     return (
-      (u.full_name || '').toLowerCase().includes(term) ||
-      (u.sport || '').toLowerCase().includes(term) ||
-      (u.city || '').toLowerCase().includes(term) ||
-      (u.account_type || '').toLowerCase().includes(term)
+      (u.full_name || "").toLowerCase().includes(term) ||
+      (u.sport || "").toLowerCase().includes(term) ||
+      (u.city || "").toLowerCase().includes(term) ||
+      (u.account_type || "").toLowerCase().includes(term)
     )
   })
 
@@ -186,8 +185,8 @@ export default function AdminDashboard() {
           visualizar estes relatórios.
         </p>
         <div className="text-xs text-muted-foreground bg-secondary/50 p-3 rounded-lg border border-border/50 max-w-sm">
-          Usuário atual:{' '}
-          <strong>{authUser?.email || 'Visitante não logado'}</strong>
+          Usuário atual:{" "}
+          <strong>{authUser?.email || "Visitante não logado"}</strong>
           <br />
           Para testes administrativos, utilize uma conta com privilégios de
           gestão.
@@ -223,7 +222,7 @@ export default function AdminDashboard() {
           </span>
           <Button
             size="sm"
-            variant={periodDays === 7 ? 'default' : 'ghost'}
+            variant={periodDays === 7 ? "default" : "ghost"}
             className="h-8 text-xs font-semibold"
             onClick={() => setPeriodDays(7)}
           >
@@ -231,7 +230,7 @@ export default function AdminDashboard() {
           </Button>
           <Button
             size="sm"
-            variant={periodDays === 30 ? 'default' : 'ghost'}
+            variant={periodDays === 30 ? "default" : "ghost"}
             className="h-8 text-xs font-semibold"
             onClick={() => setPeriodDays(30)}
           >
@@ -249,9 +248,9 @@ export default function AdminDashboard() {
           <TabsTrigger value="reports" className="gap-2 text-xs font-semibold">
             <ShieldAlert className="w-4 h-4 text-amber-500" />
             Denúncias & Moderação
-            {reports.filter((r) => r.status === 'pending').length > 0 && (
+            {reports.filter((r) => r.status === "pending").length > 0 && (
               <Badge className="ml-1 px-1.5 py-0 h-4 bg-destructive text-white text-[10px]">
-                {reports.filter((r) => r.status === 'pending').length}
+                {reports.filter((r) => r.status === "pending").length}
               </Badge>
             )}
           </TabsTrigger>
@@ -281,12 +280,12 @@ export default function AdminDashboard() {
               <CardContent>
                 <div className="text-2xl font-bold">
                   {metricsLoading
-                    ? '...'
+                    ? "..."
                     : (metrics?.totalUsers ?? realProfiles.length)}
                 </div>
                 <p className="text-[11px] text-muted-foreground mt-1">
-                  {metrics?.totalAthletes ?? 0} atletas •{' '}
-                  {metrics?.totalClubs ?? 0} clubes •{' '}
+                  {metrics?.totalAthletes ?? 0} atletas •{" "}
+                  {metrics?.totalClubs ?? 0} clubes •{" "}
                   {metrics?.totalCoaches ?? 0} treinadores
                 </p>
               </CardContent>
@@ -302,7 +301,7 @@ export default function AdminDashboard() {
               <CardContent>
                 <div className="text-2xl font-bold text-emerald-500">
                   {metricsLoading
-                    ? '...'
+                    ? "..."
                     : (metrics?.athletesWithCompleteProfile ?? 0)}
                 </div>
                 <p className="text-[11px] text-muted-foreground mt-1">
@@ -320,7 +319,7 @@ export default function AdminDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {metricsLoading ? '...' : (metrics?.totalEvents ?? 0)}
+                  {metricsLoading ? "..." : (metrics?.totalEvents ?? 0)}
                 </div>
                 <p className="text-[11px] text-muted-foreground mt-1">
                   {metrics?.eventsInPeriod ?? 0} criados no período selecionado
@@ -338,7 +337,7 @@ export default function AdminDashboard() {
               <CardContent>
                 <div className="text-2xl font-bold text-blue-500">
                   {metricsLoading
-                    ? '...'
+                    ? "..."
                     : `${(metrics?.conversionRate ?? 0).toFixed(1)}%`}
                 </div>
                 <p className="text-[11px] text-muted-foreground mt-1">
@@ -364,50 +363,50 @@ export default function AdminDashboard() {
                     <Eye className="h-3.5 w-3.5" /> Visualizações de Eventos
                   </span>
                   <span className="font-bold text-foreground">
-                    {metricsLoading ? '...' : (metrics?.eventViewsCount ?? 0)}
+                    {metricsLoading ? "..." : (metrics?.eventViewsCount ?? 0)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center py-1.5 border-b border-border/30">
                   <span className="text-muted-foreground flex items-center gap-1.5">
-                    <TrendingUp className="h-3.5 w-3.5 text-amber-500" />{' '}
+                    <TrendingUp className="h-3.5 w-3.5 text-amber-500" />{" "}
                     Inícios de Inscrição
                   </span>
                   <span className="font-bold text-foreground">
                     {metricsLoading
-                      ? '...'
+                      ? "..."
                       : (metrics?.registrationsStartedCount ?? 0)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center py-1.5 border-b border-border/30">
                   <span className="text-muted-foreground flex items-center gap-1.5">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />{' '}
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />{" "}
                     Concluídas no Banco
                   </span>
                   <span className="font-bold text-emerald-500">
                     {metricsLoading
-                      ? '...'
+                      ? "..."
                       : (metrics?.registrationsCompletedCount ?? 0)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center py-1.5 border-b border-border/30">
                   <span className="text-muted-foreground flex items-center gap-1.5">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-blue-500" />{' '}
+                    <CheckCircle2 className="h-3.5 w-3.5 text-blue-500" />{" "}
                     Aprovadas pelo Clube
                   </span>
                   <span className="font-bold text-blue-500">
                     {metricsLoading
-                      ? '...'
+                      ? "..."
                       : (metrics?.registrationsApprovedCount ?? 0)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center py-1.5">
                   <span className="text-muted-foreground flex items-center gap-1.5">
-                    <XCircle className="h-3.5 w-3.5 text-destructive" />{' '}
+                    <XCircle className="h-3.5 w-3.5 text-destructive" />{" "}
                     Recusadas pelo Clube
                   </span>
                   <span className="font-bold text-destructive">
                     {metricsLoading
-                      ? '...'
+                      ? "..."
                       : (metrics?.registrationsRejectedCount ?? 0)}
                   </span>
                 </div>
@@ -434,7 +433,7 @@ export default function AdminDashboard() {
                   </div>
                   <span className="font-bold text-lg text-primary">
                     {metricsLoading
-                      ? '...'
+                      ? "..."
                       : (metrics?.profileSharesCount ?? 0)}
                   </span>
                 </div>
@@ -448,7 +447,7 @@ export default function AdminDashboard() {
                     </span>
                   </div>
                   <span className="font-bold text-lg text-primary">
-                    {metricsLoading ? '...' : (metrics?.eventSharesCount ?? 0)}
+                    {metricsLoading ? "..." : (metrics?.eventSharesCount ?? 0)}
                   </span>
                 </div>
                 <p className="text-[10px] text-muted-foreground leading-relaxed pt-1">
@@ -478,7 +477,7 @@ export default function AdminDashboard() {
                   </div>
                   <span className="font-bold text-lg text-foreground">
                     {metricsLoading
-                      ? '...'
+                      ? "..."
                       : (metrics?.activeUsersInPeriod ?? 0)}
                   </span>
                 </div>
@@ -493,7 +492,7 @@ export default function AdminDashboard() {
                   </div>
                   <span className="font-bold text-lg text-emerald-500">
                     {metricsLoading
-                      ? '...'
+                      ? "..."
                       : (metrics?.returningUsersCount ?? 0)}
                   </span>
                 </div>
@@ -524,24 +523,24 @@ export default function AdminDashboard() {
                 <div className="flex items-center gap-2">
                   <Button
                     size="sm"
-                    variant={reportFilter === 'all' ? 'default' : 'outline'}
+                    variant={reportFilter === "all" ? "default" : "outline"}
                     className="h-8 text-xs font-semibold"
-                    onClick={() => setReportFilter('all')}
+                    onClick={() => setReportFilter("all")}
                   >
                     Todas ({reports.length})
                   </Button>
                   <Button
                     size="sm"
-                    variant={reportFilter === 'pending' ? 'default' : 'outline'}
+                    variant={reportFilter === "pending" ? "default" : "outline"}
                     className="h-8 text-xs font-semibold"
-                    onClick={() => setReportFilter('pending')}
+                    onClick={() => setReportFilter("pending")}
                   >
                     Pendentes (
                     {
                       reports.filter(
                         (r) =>
-                          r.status === 'pending' ||
-                          r.status === 'investigating',
+                          r.status === "pending" ||
+                          r.status === "investigating",
                       ).length
                     }
                     )
@@ -549,16 +548,16 @@ export default function AdminDashboard() {
                   <Button
                     size="sm"
                     variant={
-                      reportFilter === 'resolved' ? 'default' : 'outline'
+                      reportFilter === "resolved" ? "default" : "outline"
                     }
                     className="h-8 text-xs font-semibold"
-                    onClick={() => setReportFilter('resolved')}
+                    onClick={() => setReportFilter("resolved")}
                   >
                     Resolvidas (
                     {
                       reports.filter(
                         (r) =>
-                          r.status === 'resolved' || r.status === 'dismissed',
+                          r.status === "resolved" || r.status === "dismissed",
                       ).length
                     }
                     )
@@ -607,8 +606,8 @@ export default function AdminDashboard() {
                           (o) => o.value === r.reason,
                         )
                         const isPending =
-                          r.status === 'pending' || r.status === 'investigating'
-                        const isMinorAlert = r.reason === 'minor_safety'
+                          r.status === "pending" || r.status === "investigating"
+                        const isMinorAlert = r.reason === "minor_safety"
 
                         return (
                           <TableRow key={r.id} className="hover:bg-muted/30">
@@ -616,9 +615,9 @@ export default function AdminDashboard() {
                               {r.createdAt
                                 ? format(
                                     new Date(r.createdAt),
-                                    'dd/MM/yyyy HH:mm',
+                                    "dd/MM/yyyy HH:mm",
                                   )
-                                : '—'}
+                                : "—"}
                             </TableCell>
                             <TableCell>
                               <div className="flex flex-col">
@@ -631,7 +630,7 @@ export default function AdminDashboard() {
                                   </span>
                                 ) : (
                                   <span className="text-[11px] text-muted-foreground font-mono">
-                                    ID: {r.contentId || 'Geral'}
+                                    ID: {r.contentId || "Geral"}
                                   </span>
                                 )}
                               </div>
@@ -642,8 +641,8 @@ export default function AdminDashboard() {
                                   variant="outline"
                                   className={`text-[10px] ${
                                     isMinorAlert
-                                      ? 'border-destructive text-destructive bg-destructive/10'
-                                      : 'border-amber-500/40 text-amber-500 bg-amber-500/10'
+                                      ? "border-destructive text-destructive bg-destructive/10"
+                                      : "border-amber-500/40 text-amber-500 bg-amber-500/10"
                                   }`}
                                 >
                                   {reasonObj?.label || r.reason}
@@ -659,24 +658,24 @@ export default function AdminDashboard() {
                                 )}
                               </p>
                               <span className="text-[10px] text-muted-foreground block">
-                                Por: {r.reporterName || 'Usuário'}
+                                Por: {r.reporterName || "Usuário"}
                               </span>
                             </TableCell>
                             <TableCell>
                               <Badge
                                 className={`text-[10px] ${
-                                  r.status === 'resolved'
-                                    ? 'bg-emerald-500 text-white'
-                                    : r.status === 'dismissed'
-                                      ? 'bg-muted text-muted-foreground'
-                                      : 'bg-amber-500 text-black font-bold'
+                                  r.status === "resolved"
+                                    ? "bg-emerald-500 text-white"
+                                    : r.status === "dismissed"
+                                      ? "bg-muted text-muted-foreground"
+                                      : "bg-amber-500 text-black font-bold"
                                 }`}
                               >
-                                {r.status === 'resolved'
-                                  ? 'Resolvida'
-                                  : r.status === 'dismissed'
-                                    ? 'Arquivada'
-                                    : 'Pendente'}
+                                {r.status === "resolved"
+                                  ? "Resolvida"
+                                  : r.status === "dismissed"
+                                    ? "Arquivada"
+                                    : "Pendente"}
                               </Badge>
                             </TableCell>
                             <TableCell className="text-right whitespace-nowrap">
@@ -688,7 +687,7 @@ export default function AdminDashboard() {
                                     className="h-7 text-[11px] border-emerald-500/40 text-emerald-500 hover:bg-emerald-500/10"
                                     disabled={updatingReportId === r.id}
                                     onClick={() =>
-                                      handleUpdateReport(r.id, 'resolved')
+                                      handleUpdateReport(r.id, "resolved")
                                     }
                                   >
                                     <Check className="w-3.5 h-3.5 mr-1" />
@@ -700,7 +699,7 @@ export default function AdminDashboard() {
                                     className="h-7 text-[11px] text-muted-foreground hover:text-foreground"
                                     disabled={updatingReportId === r.id}
                                     onClick={() =>
-                                      handleUpdateReport(r.id, 'dismissed')
+                                      handleUpdateReport(r.id, "dismissed")
                                     }
                                   >
                                     Arquivar
@@ -713,7 +712,7 @@ export default function AdminDashboard() {
                                   className="h-7 text-[11px] text-muted-foreground"
                                   disabled={updatingReportId === r.id}
                                   onClick={() =>
-                                    handleUpdateReport(r.id, 'pending')
+                                    handleUpdateReport(r.id, "pending")
                                   }
                                 >
                                   Reabrir
@@ -790,7 +789,7 @@ export default function AdminDashboard() {
                       </TableRow>
                     ) : (
                       filteredUsers.map((p) => {
-                        const isDemo = p.id.startsWith('11111111-')
+                        const isDemo = p.id.startsWith("11111111-")
                         return (
                           <TableRow
                             key={p.id}
@@ -799,14 +798,14 @@ export default function AdminDashboard() {
                             <TableCell>
                               <div className="flex items-center gap-2.5">
                                 <Avatar className="h-8 w-8 border border-border/50">
-                                  <AvatarImage src={p.avatar_url || ''} />
+                                  <AvatarImage src={p.avatar_url || ""} />
                                   <AvatarFallback>
-                                    {(p.full_name || 'U')[0]}
+                                    {(p.full_name || "U")[0]}
                                   </AvatarFallback>
                                 </Avatar>
                                 <div className="flex flex-col">
                                   <span className="font-semibold text-foreground flex items-center gap-1.5">
-                                    {p.full_name || 'Sem nome'}
+                                    {p.full_name || "Sem nome"}
                                     {isDemo && (
                                       <Badge
                                         variant="outline"
@@ -832,28 +831,28 @@ export default function AdminDashboard() {
                                 variant="secondary"
                                 className="capitalize text-[10px]"
                               >
-                                {p.account_type === 'athlete'
-                                  ? 'Atleta'
-                                  : p.account_type === 'club'
-                                    ? 'Clube'
-                                    : 'Treinador'}
+                                {p.account_type === "athlete"
+                                  ? "Atleta"
+                                  : p.account_type === "club"
+                                    ? "Clube"
+                                    : "Treinador"}
                               </Badge>
                             </TableCell>
                             <TableCell className="text-muted-foreground">
-                              {p.sport || '—'}{' '}
-                              {p.position ? `• ${p.position}` : ''}
+                              {p.sport || "—"}{" "}
+                              {p.position ? `• ${p.position}` : ""}
                             </TableCell>
                             <TableCell className="text-muted-foreground">
-                              {[p.city, p.state].filter(Boolean).join(', ') ||
-                                '—'}
+                              {[p.city, p.state].filter(Boolean).join(", ") ||
+                                "—"}
                             </TableCell>
                             <TableCell className="text-muted-foreground">
                               {p.created_at
                                 ? format(
                                     new Date(p.created_at),
-                                    'dd/MM/yyyy HH:mm',
+                                    "dd/MM/yyyy HH:mm",
                                   )
-                                : '—'}
+                                : "—"}
                             </TableCell>
                             <TableCell className="text-right">
                               <Button
@@ -861,7 +860,7 @@ export default function AdminDashboard() {
                                 size="sm"
                                 className="h-7 text-[11px]"
                                 onClick={() =>
-                                  window.open(`/passport/${p.id}`, '_blank')
+                                  window.open(`/passport/${p.id}`, "_blank")
                                 }
                               >
                                 Ver Passaporte

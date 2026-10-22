@@ -6,21 +6,21 @@ import {
   DrawerDescription,
   DrawerFooter,
   DrawerClose,
-} from '@/components/ui/drawer'
-import { Button } from '@/components/ui/button'
-import { Slider } from '@/components/ui/slider'
-import { Label } from '@/components/ui/label'
+} from "@/components/ui/drawer"
+import { Button } from "@/components/ui/button"
+import { Slider } from "@/components/ui/slider"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { useState, useEffect } from 'react'
-import { NarrationConfig, narrationStyles } from '@/lib/data'
-import { SoundWaveVisualizer } from './SoundWaveVisualizer'
-import useSoundStore from '@/stores/useSoundStore'
+} from "@/components/ui/select"
+import { useState, useEffect } from "react"
+import { NarrationConfig, narrationStyles } from "@/lib/data"
+import { SoundWaveVisualizer } from "./SoundWaveVisualizer"
+import useSoundStore from "@/stores/useSoundStore"
 import {
   Volume2,
   Wand2,
@@ -28,9 +28,9 @@ import {
   Pause,
   Save,
   Video as VideoIcon,
-} from 'lucide-react'
-import { toast } from 'sonner'
-import { AppIcon } from './AppIcon'
+} from "lucide-react"
+import { toast } from "sonner"
+import { AppIcon } from "./AppIcon"
 
 interface NarrationEditorProps {
   open: boolean
@@ -50,7 +50,7 @@ export function NarrationEditor({
   const [config, setConfig] = useState<NarrationConfig>(
     initialConfig || {
       hasNarration: true,
-      style: 'varzea',
+      style: "varzea",
       text: narrationStyles[0].previewText,
       volume: 0.8,
     },
@@ -80,8 +80,8 @@ export function NarrationEditor({
   const handleSave = () => {
     onSave(config)
     onOpenChange(false)
-    toast.success('Narração aplicada com sucesso!', {
-      description: 'Seu vídeo agora tem uma narração personalizada.',
+    toast.success("Narração aplicada com sucesso!", {
+      description: "Seu vídeo agora tem uma narração personalizada.",
     })
   }
 

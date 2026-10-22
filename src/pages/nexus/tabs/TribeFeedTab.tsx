@@ -1,6 +1,6 @@
-import { mockPosts } from '@/lib/data'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Heart, MessageCircle, Share2 } from 'lucide-react'
+import { mockPosts } from "@/lib/data"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Heart, MessageCircle, Share2 } from "lucide-react"
 
 export function TribeFeedTab() {
   return (

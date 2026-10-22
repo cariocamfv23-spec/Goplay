@@ -4,12 +4,12 @@ import {
   useEffect,
   useState,
   ReactNode,
-} from 'react'
-import type { User, Session } from '@supabase/supabase-js'
-import { supabase } from '@/lib/supabase/client'
-import { useAuthStore } from '@/stores/useAuthStore'
-import { profileService, type ProfileRow } from '@/services/profiles'
-import { biometricService } from '@/services/biometrics'
+} from "react"
+import type { User, Session } from "@supabase/supabase-js"
+import { supabase } from "@/lib/supabase/client"
+import { useAuthStore } from "@/stores/useAuthStore"
+import { profileService, type ProfileRow } from "@/services/profiles"
+import { biometricService } from "@/services/biometrics"
 
 interface AuthContextType {
   user: User | null
@@ -20,27 +20,27 @@ interface AuthContextType {
     password: string,
     metadata?: {
       full_name?: string
-      account_type?: 'athlete' | 'club' | 'coach'
+      account_type?: "athlete" | "club" | "coach"
     },
-  ) => Promise<{ data?: any; error: any }>
+  ) => Promise<{ data?: any error: any }>
   signIn: (
     email: string,
     password: string,
-  ) => Promise<{ data?: any; error: any }>
+  ) => Promise<{ data?: any error: any }>
   signInWithGoogle: (
     redirectPath?: string,
-  ) => Promise<{ data?: any; error: any }>
-  signOut: (options?: {
-    scope?: 'local' | 'global' | 'others'
-  }) => Promise<{ error: any }>
+  ) => Promise<{ data?: any error: any }>
+  signOut: (options?: { scope?: "local" | "global" | "others" }) => Promise<{
+    error: any
+  }>
   unlockWithBiometrics: (tokens?: {
     access_token: string
     refresh_token: string
-  }) => Promise<{ data?: any; error: any }>
+  }) => Promise<{ data?: any error: any }>
   restoreSessionWithTokens: (tokens: {
     access_token: string
     refresh_token: string
-  }) => Promise<{ data?: any; error: any }>
+  }) => Promise<{ data?: any error: any }>
   resetPasswordForEmail: (email: string) => Promise<{ error: any }>
   updateUserPassword: (password: string) => Promise<{ error: any }>
   refreshProfile: () => Promise<void>
@@ -51,7 +51,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const useAuth = () => {
   const context = useContext(AuthContext)
-  if (!context) throw new Error('useAuth must be used within an AuthProvider')
+  if (!context) throw new Error("useAuth must be used within an AuthProvider")
   return context
 }
 
@@ -80,17 +80,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const fullName =
           meta.full_name ||
           meta.name ||
-          currentUser.email?.split('@')[0] ||
-          'Atleta Goplay'
+          currentUser.email?.split("@")[0] ||
+          "Atleta Goplay"
         const avatarUrl = meta.avatar_url || meta.picture || null
-        const rawAccountType = (meta.account_type || 'athlete').toLowerCase()
+        const rawAccountType = (meta.account_type || "athlete").toLowerCase()
         const accountType =
-          rawAccountType === 'club' || rawAccountType === 'coach'
+          rawAccountType === "club" || rawAccountType === "coach"
             ? rawAccountType
-            : 'athlete'
+            : "athlete"
 
         const { data: created } = await supabase
-          .from('profiles')
+          .from("profiles")
           .insert({
             id: currentUser.id,
             full_name: fullName,
@@ -106,7 +106,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       }
     } catch (err) {
-      console.warn('Erro ao verificar/criar perfil após login:', err)
+      console.warn("Erro ao verificar/criar perfil após login:", err)
     }
   }
 
@@ -204,7 +204,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     password: string,
     metadata?: {
       full_name?: string
-      account_type?: 'athlete' | 'club' | 'coach'
+      account_type?: "athlete" | "club" | "coach"
     },
   ) => {
     const { data, error } = await supabase.auth.signUp({
@@ -245,14 +245,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const origin = window.location.origin
       const cleanPath = redirectPath
-        ? redirectPath.startsWith('/')
+        ? redirectPath.startsWith("/")
           ? redirectPath
           : `/${redirectPath}`
-        : '/home'
+        : "/home"
 
       // Store target in localStorage so any OAuth redirect fallback retains the original destination
       try {
-        localStorage.setItem('goplay_oauth_redirect', cleanPath)
+        localStorage.setItem("goplay_oauth_redirect", cleanPath)
       } catch {
         // Safe fallback if localStorage is restricted
       }
@@ -261,12 +261,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const callbackTarget = `${origin}/auth/callback?redirect=${encodeURIComponent(cleanPath)}`
 
       const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
+        provider: "google",
         options: {
           redirectTo: callbackTarget,
           queryParams: {
-            access_type: 'offline',
-            prompt: 'select_account',
+            access_type: "offline",
+            prompt: "select_account",
           },
         },
       })
@@ -327,7 +327,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         try {
           let { data: restored, error: restoreError } =
             await supabase.auth.setSession({
-              access_token: candidateTokens.access_token || '',
+              access_token: candidateTokens.access_token || "",
               refresh_token: candidateTokens.refresh_token,
             })
           if (restoreError || !restored?.session) {
@@ -363,10 +363,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       // Se de fato nenhuma sessão puder ser restaurada no aparelho
-      biometricService.markNeedsReauth('no_session_on_device')
+      biometricService.markNeedsReauth("no_session_on_device")
       return {
         data: null,
-        error: new Error('no_session_on_device'),
+        error: new Error("no_session_on_device"),
       }
     } catch (err: any) {
       return { data: null, error: err }
@@ -416,11 +416,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else if (error) {
         // Apenas marca needsReauth se for erro de autenticação irrecuperável e não falha transitória de rede
         const isNetworkErr =
-          error.message?.includes('network') ||
-          error.message?.includes('fetch') ||
+          error.message?.includes("network") ||
+          error.message?.includes("fetch") ||
           error.status === 0
         if (!isNetworkErr) {
-          biometricService.markNeedsReauth(error.message || 'invalid_token')
+          biometricService.markNeedsReauth(error.message || "invalid_token")
         }
       }
 
@@ -431,7 +431,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const signOut = async (options?: {
-    scope?: 'local' | 'global' | 'others'
+    scope?: "local" | "global" | "others"
   }) => {
     // Se a biometria estiver cadastrada neste aparelho, efetuamos o "bloqueio local":
     // a sessão é protegida no client e exigirá a confirmação pelo sensor físico (Face ID/Touch ID)
@@ -449,7 +449,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setProfile(null)
       useAuthStore.getState().logout()
     } else {
-      const scope = options?.scope ?? 'local'
+      const scope = options?.scope ?? "local"
       try {
         const res = await supabase.auth.signOut({ scope })
         error = res.error

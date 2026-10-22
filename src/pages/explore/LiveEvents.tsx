@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { mockLiveEvents } from '@/lib/data'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { mockLiveEvents } from "@/lib/data"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Search,
   ArrowLeft,
@@ -15,31 +15,31 @@ import {
   Radio,
   User,
   X,
-} from 'lucide-react'
+} from "lucide-react"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+} from "@/components/ui/select"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 const modalities = [
-  { id: 'all', label: 'Todos' },
-  { id: 'Football', label: 'Football' },
-  { id: 'Basketball', label: 'Basketball' },
-  { id: 'Volleyball', label: 'Volleyball' },
-  { id: 'MMA', label: 'MMA' },
-  { id: 'Tennis', label: 'Tennis' },
+  { id: "all", label: "Todos" },
+  { id: "Football", label: "Football" },
+  { id: "Basketball", label: "Basketball" },
+  { id: "Volleyball", label: "Volleyball" },
+  { id: "MMA", label: "MMA" },
+  { id: "Tennis", label: "Tennis" },
 ]
 
 export default function LiveEvents() {
   const navigate = useNavigate()
-  const [searchTerm, setSearchTerm] = useState('')
-  const [athleteSearch, setAthleteSearch] = useState('')
-  const [selectedModality, setSelectedModality] = useState<string>('all')
-  const [selectedCity, setSelectedCity] = useState<string>('all')
+  const [searchTerm, setSearchTerm] = useState("")
+  const [athleteSearch, setAthleteSearch] = useState("")
+  const [selectedModality, setSelectedModality] = useState<string>("all")
+  const [selectedCity, setSelectedCity] = useState<string>("all")
 
   // Get unique cities for filter
   const cities = Array.from(new Set(mockLiveEvents.map((e) => e.city))).sort()
@@ -49,10 +49,10 @@ export default function LiveEvents() {
       event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       event.championship.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesModality =
-      selectedModality === 'all' || event.modality === selectedModality
-    const matchesCity = selectedCity === 'all' || event.city === selectedCity
+      selectedModality === "all" || event.modality === selectedModality
+    const matchesCity = selectedCity === "all" || event.city === selectedCity
     const matchesAthlete =
-      athleteSearch === '' ||
+      athleteSearch === "" ||
       event.athletes?.some((a) =>
         a.toLowerCase().includes(athleteSearch.toLowerCase()),
       )
@@ -61,16 +61,16 @@ export default function LiveEvents() {
   })
 
   const hasActiveFilters =
-    searchTerm !== '' ||
-    athleteSearch !== '' ||
-    selectedModality !== 'all' ||
-    selectedCity !== 'all'
+    searchTerm !== "" ||
+    athleteSearch !== "" ||
+    selectedModality !== "all" ||
+    selectedCity !== "all"
 
   const handleClearFilters = () => {
-    setSearchTerm('')
-    setAthleteSearch('')
-    setSelectedModality('all')
-    setSelectedCity('all')
+    setSearchTerm("")
+    setAthleteSearch("")
+    setSelectedModality("all")
+    setSelectedCity("all")
   }
 
   return (
@@ -149,8 +149,8 @@ export default function LiveEvents() {
                         px-3 py-1.5 rounded-full text-xs font-medium transition-all
                         ${
                           selectedModality === m.id
-                            ? 'bg-primary text-primary-foreground shadow-sm'
-                            : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                            ? "bg-primary text-primary-foreground shadow-sm"
+                            : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                         }
                       `}
                   >
@@ -203,14 +203,14 @@ export default function LiveEvents() {
 
                 {/* Status Badge */}
                 <div className="absolute top-3 right-3">
-                  {event.status === 'live' ? (
+                  {event.status === "live" ? (
                     <Badge
                       variant="destructive"
                       className="animate-pulse shadow-lg font-bold"
                     >
                       AO VIVO • {event.viewers}
                     </Badge>
-                  ) : event.status === 'upcoming' ? (
+                  ) : event.status === "upcoming" ? (
                     <Badge
                       variant="secondary"
                       className="bg-black/50 text-white backdrop-blur-md"
@@ -248,14 +248,14 @@ export default function LiveEvents() {
 
                   {event.athletes && event.athletes.length > 0 && (
                     <p className="text-xs text-white/60 mt-1 line-clamp-1">
-                      Com: {event.athletes.join(', ')}
+                      Com: {event.athletes.join(", ")}
                     </p>
                   )}
                 </div>
               </div>
 
               {/* Score / Info Bar */}
-              {event.status !== 'upcoming' && event.score && (
+              {event.status !== "upcoming" && event.score && (
                 <CardContent className="p-3 bg-secondary/30 flex justify-between items-center">
                   <span className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
                     Placar

@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useMemo } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   ArrowLeft,
   ChevronDown,
@@ -19,11 +19,11 @@ import {
   Gift,
   CheckCircle,
   Ticket,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+} from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -31,14 +31,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from "@/components/ui/table"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from "@/components/ui/select"
 import {
   Radar,
   RadarChart,
@@ -49,35 +49,35 @@ import {
   XAxis,
   YAxis,
   Cell,
-} from 'recharts'
+} from "recharts"
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart'
+} from "@/components/ui/chart"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@/components/ui/collapsible'
+} from "@/components/ui/collapsible"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { useToast } from '@/components/ui/use-toast'
-import useNotificationStore from '@/stores/useNotificationStore'
-import { useBolaoStore } from '@/stores/useBolaoStore'
+} from "@/components/ui/dialog"
+import { useToast } from "@/components/ui/use-toast"
+import useNotificationStore from "@/stores/useNotificationStore"
+import { useBolaoStore } from "@/stores/useBolaoStore"
 
 type PlayerStat = {
   id: string
   name: string
   image: string
   stats: {
-    'Velocidade Máxima': string
-    'Precisão de Passe': string
+    "Velocidade Máxima": string
+    "Precisão de Passe": string
     Gols: number
     Assistências: number
   }
@@ -104,602 +104,602 @@ type TeamStat = {
 
 const SUMMARY_SCHEDULE = [
   {
-    id: 'm1',
-    date: '11 Jun 2026',
-    time: '15:00',
+    id: "m1",
+    date: "11 Jun 2026",
+    time: "15:00",
     team1: {
-      name: 'México',
-      flag: 'https://img.usecurling.com/p/100/100?q=mexico%20flag',
+      name: "México",
+      flag: "https://img.usecurling.com/p/100/100?q=mexico%20flag",
     },
     team2: {
-      name: 'Catar',
-      flag: 'https://img.usecurling.com/p/100/100?q=qatar%20flag',
+      name: "Catar",
+      flag: "https://img.usecurling.com/p/100/100?q=qatar%20flag",
     },
-    stadium: 'Estádio Azteca',
+    stadium: "Estádio Azteca",
   },
   {
-    id: 'm2',
-    date: '12 Jun 2026',
-    time: '16:00',
+    id: "m2",
+    date: "12 Jun 2026",
+    time: "16:00",
     team1: {
-      name: 'EUA',
-      flag: 'https://img.usecurling.com/p/100/100?q=usa%20flag',
+      name: "EUA",
+      flag: "https://img.usecurling.com/p/100/100?q=usa%20flag",
     },
     team2: {
-      name: 'País de Gales',
-      flag: 'https://img.usecurling.com/p/100/100?q=wales%20flag',
+      name: "País de Gales",
+      flag: "https://img.usecurling.com/p/100/100?q=wales%20flag",
     },
-    stadium: 'SoFi Stadium',
+    stadium: "SoFi Stadium",
   },
   {
-    id: 'm3',
-    date: '15 Jun 2026',
-    time: '13:00',
+    id: "m3",
+    date: "15 Jun 2026",
+    time: "13:00",
     team1: {
-      name: 'Brasil',
-      flag: 'https://img.usecurling.com/p/100/100?q=brazil%20flag',
+      name: "Brasil",
+      flag: "https://img.usecurling.com/p/100/100?q=brazil%20flag",
     },
     team2: {
-      name: 'Sérvia',
-      flag: 'https://img.usecurling.com/p/100/100?q=serbia%20flag',
+      name: "Sérvia",
+      flag: "https://img.usecurling.com/p/100/100?q=serbia%20flag",
     },
-    stadium: 'MetLife Stadium',
+    stadium: "MetLife Stadium",
   },
 ]
 
 const COMPLETED_MATCHES = [
   {
-    id: 'c1',
-    date: '10 Jun 2026',
-    stage: 'Abertura',
+    id: "c1",
+    date: "10 Jun 2026",
+    stage: "Abertura",
     team1: {
-      name: 'México',
-      flag: 'https://img.usecurling.com/p/100/100?q=mexico%20flag',
+      name: "México",
+      flag: "https://img.usecurling.com/p/100/100?q=mexico%20flag",
       score: 3,
     },
     team2: {
-      name: 'Catar',
-      flag: 'https://img.usecurling.com/p/100/100?q=qatar%20flag',
+      name: "Catar",
+      flag: "https://img.usecurling.com/p/100/100?q=qatar%20flag",
       score: 1,
     },
     motm: {
-      name: 'S. Giménez',
+      name: "S. Giménez",
       image:
-        'https://img.usecurling.com/p/100/100?q=santiago%20gimenez%20mexico%20football%20player%20portrait',
+        "https://img.usecurling.com/p/100/100?q=santiago%20gimenez%20mexico%20football%20player%20portrait",
     },
   },
   {
-    id: 'c2',
-    date: '11 Jun 2026',
-    stage: 'Fase de Grupos',
+    id: "c2",
+    date: "11 Jun 2026",
+    stage: "Fase de Grupos",
     team1: {
-      name: 'EUA',
-      flag: 'https://img.usecurling.com/p/100/100?q=usa%20flag',
+      name: "EUA",
+      flag: "https://img.usecurling.com/p/100/100?q=usa%20flag",
       score: 2,
     },
     team2: {
-      name: 'P. de Gales',
-      flag: 'https://img.usecurling.com/p/100/100?q=wales%20flag',
+      name: "P. de Gales",
+      flag: "https://img.usecurling.com/p/100/100?q=wales%20flag",
       score: 2,
     },
     motm: {
-      name: 'C. Pulisic',
+      name: "C. Pulisic",
       image:
-        'https://img.usecurling.com/p/100/100?q=christian%20pulisic%20usa%20football%20player%20portrait',
+        "https://img.usecurling.com/p/100/100?q=christian%20pulisic%20usa%20football%20player%20portrait",
     },
   },
   {
-    id: 'c3',
-    date: '12 Jun 2026',
-    stage: 'Fase de Grupos',
+    id: "c3",
+    date: "12 Jun 2026",
+    stage: "Fase de Grupos",
     team1: {
-      name: 'Brasil',
-      flag: 'https://img.usecurling.com/p/100/100?q=brazil%20flag',
+      name: "Brasil",
+      flag: "https://img.usecurling.com/p/100/100?q=brazil%20flag",
       score: 2,
     },
     team2: {
-      name: 'Sérvia',
-      flag: 'https://img.usecurling.com/p/100/100?q=serbia%20flag',
+      name: "Sérvia",
+      flag: "https://img.usecurling.com/p/100/100?q=serbia%20flag",
       score: 0,
     },
     motm: {
-      name: 'Neymar Jr.',
+      name: "Neymar Jr.",
       image:
-        'https://img.usecurling.com/p/256/256?q=neymar%20brazil%20football%20player%20portrait&dpr=2',
+        "https://img.usecurling.com/p/256/256?q=neymar%20brazil%20football%20player%20portrait&dpr=2",
     },
   },
 ]
 
 const BOLAO_MATCHES = [
   {
-    id: 'b0',
-    date: '14 Jun 2026',
-    time: 'Encerrado',
+    id: "b0",
+    date: "14 Jun 2026",
+    time: "Encerrado",
     team1: {
-      name: 'Alemanha',
-      flag: 'https://img.usecurling.com/p/100/100?q=germany%20flag',
+      name: "Alemanha",
+      flag: "https://img.usecurling.com/p/100/100?q=germany%20flag",
     },
     team2: {
-      name: 'Brasil',
-      flag: 'https://img.usecurling.com/p/100/100?q=brazil%20flag',
+      name: "Brasil",
+      flag: "https://img.usecurling.com/p/100/100?q=brazil%20flag",
     },
-    stadium: 'Allianz Arena',
-    mockResult: { t1: 1, t2: 3, scorer: 'Vini Jr.' },
+    stadium: "Allianz Arena",
+    mockResult: { t1: 1, t2: 3, scorer: "Vini Jr." },
     finalized: true,
   },
   {
-    id: 'b1',
-    date: '15 Jun 2026',
-    time: '16:00',
+    id: "b1",
+    date: "15 Jun 2026",
+    time: "16:00",
     team1: {
-      name: 'Brasil',
-      flag: 'https://img.usecurling.com/p/100/100?q=brazil%20flag',
+      name: "Brasil",
+      flag: "https://img.usecurling.com/p/100/100?q=brazil%20flag",
     },
     team2: {
-      name: 'França',
-      flag: 'https://img.usecurling.com/p/100/100?q=france%20flag',
+      name: "França",
+      flag: "https://img.usecurling.com/p/100/100?q=france%20flag",
     },
-    stadium: 'Maracanã',
-    mockResult: { t1: 2, t2: 0, scorer: 'Neymar Jr.' },
+    stadium: "Maracanã",
+    mockResult: { t1: 2, t2: 0, scorer: "Neymar Jr." },
   },
   {
-    id: 'b2',
-    date: '16 Jun 2026',
-    time: '20:00',
+    id: "b2",
+    date: "16 Jun 2026",
+    time: "20:00",
     team1: {
-      name: 'Argentina',
-      flag: 'https://img.usecurling.com/p/100/100?q=argentina%20flag',
+      name: "Argentina",
+      flag: "https://img.usecurling.com/p/100/100?q=argentina%20flag",
     },
     team2: {
-      name: 'Inglaterra',
-      flag: 'https://img.usecurling.com/p/100/100?q=england%20flag',
+      name: "Inglaterra",
+      flag: "https://img.usecurling.com/p/100/100?q=england%20flag",
     },
-    stadium: 'Wembley',
-    mockResult: { t1: 1, t2: 2, scorer: 'Harry Kane' },
+    stadium: "Wembley",
+    mockResult: { t1: 1, t2: 2, scorer: "Harry Kane" },
   },
 ]
 
 const RANKINGS = {
   scorers: [
-    { id: '1', name: 'Neymar Jr.', team: 'Brasil', value: 6, subtitle: 'Gols' },
+    { id: "1", name: "Neymar Jr.", team: "Brasil", value: 6, subtitle: "Gols" },
     {
-      id: '2',
-      name: 'Kylian Mbappé',
-      team: 'França',
+      id: "2",
+      name: "Kylian Mbappé",
+      team: "França",
       value: 5,
-      subtitle: 'Gols',
+      subtitle: "Gols",
     },
     {
-      id: '3',
-      name: 'Harry Kane',
-      team: 'Inglaterra',
+      id: "3",
+      name: "Harry Kane",
+      team: "Inglaterra",
       value: 4,
-      subtitle: 'Gols',
+      subtitle: "Gols",
     },
     {
-      id: '4',
-      name: 'Lamine Yamal',
-      team: 'Espanha',
+      id: "4",
+      name: "Lamine Yamal",
+      team: "Espanha",
       value: 3,
-      subtitle: 'Gols',
+      subtitle: "Gols",
     },
     {
-      id: '5',
-      name: 'Jude Bellingham',
-      team: 'Inglaterra',
+      id: "5",
+      name: "Jude Bellingham",
+      team: "Inglaterra",
       value: 3,
-      subtitle: 'Gols',
+      subtitle: "Gols",
     },
   ],
   tactical: [
-    { id: '4', name: 'Rodri', team: 'Espanha', value: 9.8, subtitle: 'Rating' },
+    { id: "4", name: "Rodri", team: "Espanha", value: 9.8, subtitle: "Rating" },
     {
-      id: '5',
-      name: 'Jude Bellingham',
-      team: 'Inglaterra',
+      id: "5",
+      name: "Jude Bellingham",
+      team: "Inglaterra",
       value: 9.6,
-      subtitle: 'Rating',
+      subtitle: "Rating",
     },
     {
-      id: '6',
-      name: 'Jamal Musiala',
-      team: 'Alemanha',
+      id: "6",
+      name: "Jamal Musiala",
+      team: "Alemanha",
       value: 9.4,
-      subtitle: 'Rating',
+      subtitle: "Rating",
     },
     {
-      id: '7',
-      name: 'Lionel Messi',
-      team: 'Argentina',
+      id: "7",
+      name: "Lionel Messi",
+      team: "Argentina",
       value: 9.2,
-      subtitle: 'Rating',
+      subtitle: "Rating",
     },
     {
-      id: '8',
-      name: 'Bruno Fernandes',
-      team: 'Portugal',
+      id: "8",
+      name: "Bruno Fernandes",
+      team: "Portugal",
       value: 9.1,
-      subtitle: 'Rating',
+      subtitle: "Rating",
     },
   ],
   goals: [
     {
-      id: '7',
-      name: 'Vini Jr.',
-      team: 'Brasil',
-      desc: 'Voleio de fora da área vs Sérvia',
-      value: '1º',
-      subtitle: 'Lugar',
+      id: "7",
+      name: "Vini Jr.",
+      team: "Brasil",
+      desc: "Voleio de fora da área vs Sérvia",
+      value: "1º",
+      subtitle: "Lugar",
     },
     {
-      id: '8',
-      name: 'Lamine Yamal',
-      team: 'Espanha',
-      desc: 'Chute colocado no ângulo vs Itália',
-      value: '2º',
-      subtitle: 'Lugar',
+      id: "8",
+      name: "Lamine Yamal",
+      team: "Espanha",
+      desc: "Chute colocado no ângulo vs Itália",
+      value: "2º",
+      subtitle: "Lugar",
     },
     {
-      id: '9',
-      name: 'Lionel Messi',
-      team: 'Argentina',
-      desc: 'Falta na gaveta vs Uruguai',
-      value: '3º',
-      subtitle: 'Lugar',
+      id: "9",
+      name: "Lionel Messi",
+      team: "Argentina",
+      desc: "Falta na gaveta vs Uruguai",
+      value: "3º",
+      subtitle: "Lugar",
     },
     {
-      id: '10',
-      name: 'Kylian Mbappé',
-      team: 'França',
-      desc: 'Arrancada do meio campo vs Holanda',
-      value: '4º',
-      subtitle: 'Lugar',
+      id: "10",
+      name: "Kylian Mbappé",
+      team: "França",
+      desc: "Arrancada do meio campo vs Holanda",
+      value: "4º",
+      subtitle: "Lugar",
     },
   ],
 }
 
 const TEAMS: TeamStat[] = [
   {
-    id: 'br',
-    name: 'Brasil',
+    id: "br",
+    name: "Brasil",
     probability: 18.5,
     strength: 94,
     athleteLevel: 96,
     stats: { Tático: 88, Físico: 90, Mental: 85, Técnico: 98, Velocidade: 92 },
     keyPlayers: [
       {
-        id: 'neymar',
-        name: 'Neymar Jr.',
+        id: "neymar",
+        name: "Neymar Jr.",
         image:
-          'https://img.usecurling.com/p/256/256?q=neymar%20brazil%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=neymar%20brazil%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '31.2 km/h',
-          'Precisão de Passe': '89%',
+          "Velocidade Máxima": "31.2 km/h",
+          "Precisão de Passe": "89%",
           Gols: 79,
           Assistências: 59,
         },
         impactAnalysis:
-          'Recém-convocado, Neymar traz sua genialidade, drible desconcertante e capacidade de decisão incomparável. É a referência técnica e o maestro que dita o ritmo do ataque brasileiro na busca pelo cobiçado hexacampeonato.',
+          "Recém-convocado, Neymar traz sua genialidade, drible desconcertante e capacidade de decisão incomparável. É a referência técnica e o maestro que dita o ritmo do ataque brasileiro na busca pelo cobiçado hexacampeonato.",
       },
       {
-        id: 'vini',
-        name: 'Vini Jr.',
+        id: "vini",
+        name: "Vini Jr.",
         image:
-          'https://img.usecurling.com/p/256/256?q=vinicius%20junior%20brazil%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=vinicius%20junior%20brazil%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '36.5 km/h',
-          'Precisão de Passe': '82%',
+          "Velocidade Máxima": "36.5 km/h",
+          "Precisão de Passe": "82%",
           Gols: 24,
           Assistências: 18,
         },
         impactAnalysis:
-          'Sua velocidade explosiva e drible desequilibrante pelas pontas quebram as defesas adversárias, criando os espaços necessários para o ataque brasileiro prosperar rumo ao título mundial.',
+          "Sua velocidade explosiva e drible desequilibrante pelas pontas quebram as defesas adversárias, criando os espaços necessários para o ataque brasileiro prosperar rumo ao título mundial.",
       },
       {
-        id: 'rodrygo',
-        name: 'Rodrygo',
+        id: "rodrygo",
+        name: "Rodrygo",
         image:
-          'https://img.usecurling.com/p/256/256?q=rodrygo%20brazil%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=rodrygo%20brazil%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '33.8 km/h',
-          'Precisão de Passe': '87%',
+          "Velocidade Máxima": "33.8 km/h",
+          "Precisão de Passe": "87%",
           Gols: 15,
           Assistências: 12,
         },
         impactAnalysis:
-          'Extremamente inteligente taticamente, atua em diversas posições do ataque, oferecendo fluidez e precisão no terço final do campo. Seu faro de gol em momentos decisivos é um trunfo indispensável.',
+          "Extremamente inteligente taticamente, atua em diversas posições do ataque, oferecendo fluidez e precisão no terço final do campo. Seu faro de gol em momentos decisivos é um trunfo indispensável.",
       },
     ],
     description:
-      'A quintessência do talento futebolístico. Alta habilidade técnica e enorme poder ofensivo.',
-    color: '#009c3b',
+      "A quintessência do talento futebolístico. Alta habilidade técnica e enorme poder ofensivo.",
+    color: "#009c3b",
   },
   {
-    id: 'fr',
-    name: 'França',
+    id: "fr",
+    name: "França",
     probability: 17.2,
     strength: 95,
     athleteLevel: 94,
     stats: { Tático: 90, Físico: 95, Mental: 88, Técnico: 92, Velocidade: 94 },
     keyPlayers: [
       {
-        id: 'mbappe',
-        name: 'Mbappé',
+        id: "mbappe",
+        name: "Mbappé",
         image:
-          'https://img.usecurling.com/p/256/256?q=kylian%20mbappe%20france%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=kylian%20mbappe%20france%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '38.0 km/h',
-          'Precisão de Passe': '83%',
+          "Velocidade Máxima": "38.0 km/h",
+          "Precisão de Passe": "83%",
           Gols: 46,
           Assistências: 31,
         },
         impactAnalysis:
-          'Sua velocidade alucinante em transições e capacidade de finalização letal o tornam praticamente imparável. É o ponto focal do ataque francês e a principal arma para a conquista de mais um título.',
+          "Sua velocidade alucinante em transições e capacidade de finalização letal o tornam praticamente imparável. É o ponto focal do ataque francês e a principal arma para a conquista de mais um título.",
       },
       {
-        id: 'griezmann',
-        name: 'Griezmann',
+        id: "griezmann",
+        name: "Griezmann",
         image:
-          'https://img.usecurling.com/p/256/256?q=antoine%20griezmann%20france%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=antoine%20griezmann%20france%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '31.5 km/h',
-          'Precisão de Passe': '91%',
+          "Velocidade Máxima": "31.5 km/h",
+          "Precisão de Passe": "91%",
           Gols: 44,
           Assistências: 38,
         },
         impactAnalysis:
-          'O cérebro tático do time. Dita o ritmo de jogo, conecta magistralmente o meio ao ataque e é incansável na recomposição defensiva. Sua visão de jogo refinada cria inúmeras chances de gol.',
+          "O cérebro tático do time. Dita o ritmo de jogo, conecta magistralmente o meio ao ataque e é incansável na recomposição defensiva. Sua visão de jogo refinada cria inúmeras chances de gol.",
       },
       {
-        id: 'camavinga',
-        name: 'Camavinga',
+        id: "camavinga",
+        name: "Camavinga",
         image:
-          'https://img.usecurling.com/p/256/256?q=eduardo%20camavinga%20france%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=eduardo%20camavinga%20france%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '34.2 km/h',
-          'Precisão de Passe': '89%',
+          "Velocidade Máxima": "34.2 km/h",
+          "Precisão de Passe": "89%",
           Gols: 2,
           Assistências: 6,
         },
         impactAnalysis:
-          'Traz enorme dinamismo e versatilidade ao meio-campo francês. Capaz de quebrar linhas defensivas com passes verticais e recuperar posses de bola cruciais. Vital para a estabilidade da equipe.',
+          "Traz enorme dinamismo e versatilidade ao meio-campo francês. Capaz de quebrar linhas defensivas com passes verticais e recuperar posses de bola cruciais. Vital para a estabilidade da equipe.",
       },
     ],
     description:
-      'Uma potência de atleticismo e disciplina tática, com atacantes explosivos.',
-    color: '#002395',
+      "Uma potência de atleticismo e disciplina tática, com atacantes explosivos.",
+    color: "#002395",
   },
   {
-    id: 'ar',
-    name: 'Argentina',
+    id: "ar",
+    name: "Argentina",
     probability: 15.8,
     strength: 92,
     athleteLevel: 91,
     stats: { Tático: 92, Físico: 85, Mental: 95, Técnico: 90, Velocidade: 84 },
     keyPlayers: [
       {
-        id: 'messi',
-        name: 'Messi',
+        id: "messi",
+        name: "Messi",
         image:
-          'https://img.usecurling.com/p/256/256?q=lionel%20messi%20argentina%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=lionel%20messi%20argentina%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '30.1 km/h',
-          'Precisão de Passe': '92%',
+          "Velocidade Máxima": "30.1 km/h",
+          "Precisão de Passe": "92%",
           Gols: 109,
           Assistências: 57,
         },
         impactAnalysis:
-          'Líder e principal criador de jogadas da seleção. Sua visão de jogo ímpar e passes cirúrgicos encontram espaços onde não existem, sendo a bússola moral e técnica da equipe rumo a mais um título.',
+          "Líder e principal criador de jogadas da seleção. Sua visão de jogo ímpar e passes cirúrgicos encontram espaços onde não existem, sendo a bússola moral e técnica da equipe rumo a mais um título.",
       },
       {
-        id: 'alvarez',
-        name: 'Julian Alvarez',
+        id: "alvarez",
+        name: "Julian Alvarez",
         image:
-          'https://img.usecurling.com/p/256/256?q=julian%20alvarez%20argentina%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=julian%20alvarez%20argentina%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '34.8 km/h',
-          'Precisão de Passe': '82%',
+          "Velocidade Máxima": "34.8 km/h",
+          "Precisão de Passe": "82%",
           Gols: 14,
           Assistências: 7,
         },
         impactAnalysis:
-          'Intensa pressão pós-perda e movimentação extremamente inteligente criam oportunidades constantes e incomodam as defesas rivais. Vital para a dinâmica e sufoco ofensivo no terço final.',
+          "Intensa pressão pós-perda e movimentação extremamente inteligente criam oportunidades constantes e incomodam as defesas rivais. Vital para a dinâmica e sufoco ofensivo no terço final.",
       },
       {
-        id: 'macallister',
-        name: 'Mac Allister',
+        id: "macallister",
+        name: "Mac Allister",
         image:
-          'https://img.usecurling.com/p/256/256?q=alexis%20mac%20allister%20argentina%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=alexis%20mac%20allister%20argentina%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '32.4 km/h',
-          'Precisão de Passe': '88%',
+          "Velocidade Máxima": "32.4 km/h",
+          "Precisão de Passe": "88%",
           Gols: 8,
           Assistências: 11,
         },
         impactAnalysis:
-          'Motor incansável do meio-campo argentino, dita o tempo de jogo e aparece frequentemente como elemento surpresa na área para finalizar. Garante transição rápida, sólida e muito eficiente.',
+          "Motor incansável do meio-campo argentino, dita o tempo de jogo e aparece frequentemente como elemento surpresa na área para finalizar. Garante transição rápida, sólida e muito eficiente.",
       },
     ],
     description:
-      'Atuais campeões do mundo com uma coesão de equipe inigualável e resiliência mental.',
-    color: '#74acdf',
+      "Atuais campeões do mundo com uma coesão de equipe inigualável e resiliência mental.",
+    color: "#74acdf",
   },
   {
-    id: 'en',
-    name: 'Inglaterra',
+    id: "en",
+    name: "Inglaterra",
     probability: 14.0,
     strength: 90,
     athleteLevel: 92,
     stats: { Tático: 87, Físico: 88, Mental: 82, Técnico: 89, Velocidade: 90 },
     keyPlayers: [
       {
-        id: 'bellingham',
-        name: 'Jude Bellingham',
+        id: "bellingham",
+        name: "Jude Bellingham",
         image:
-          'https://img.usecurling.com/p/256/256?q=jude%20bellingham%20england%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=jude%20bellingham%20england%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '33.9 km/h',
-          'Precisão de Passe': '89%',
+          "Velocidade Máxima": "33.9 km/h",
+          "Precisão de Passe": "89%",
           Gols: 22,
           Assistências: 14,
         },
         impactAnalysis:
-          'Um meio-campista absurdamente completo que avança com força física rara, criando jogadas e finalizando com precisão. É o pilar da nova geração inglesa para tentar romper o longo jejum.',
+          "Um meio-campista absurdamente completo que avança com força física rara, criando jogadas e finalizando com precisão. É o pilar da nova geração inglesa para tentar romper o longo jejum.",
       },
       {
-        id: 'kane',
-        name: 'Harry Kane',
+        id: "kane",
+        name: "Harry Kane",
         image:
-          'https://img.usecurling.com/p/256/256?q=harry%20kane%20england%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=harry%20kane%20england%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '31.2 km/h',
-          'Precisão de Passe': '84%',
+          "Velocidade Máxima": "31.2 km/h",
+          "Precisão de Passe": "84%",
           Gols: 68,
           Assistências: 21,
         },
         impactAnalysis:
-          'Atacante letal e capitão experiente que também atua como exímio armador recuado. Sua capacidade de reter a bola de costas, atrair a marcação e distribuir o jogo é fundamental para o sucesso.',
+          "Atacante letal e capitão experiente que também atua como exímio armador recuado. Sua capacidade de reter a bola de costas, atrair a marcação e distribuir o jogo é fundamental para o sucesso.",
       },
       {
-        id: 'saka',
-        name: 'Bukayo Saka',
+        id: "saka",
+        name: "Bukayo Saka",
         image:
-          'https://img.usecurling.com/p/256/256?q=bukayo%20saka%20england%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=bukayo%20saka%20england%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '35.4 km/h',
-          'Precisão de Passe': '86%',
+          "Velocidade Máxima": "35.4 km/h",
+          "Precisão de Passe": "86%",
           Gols: 18,
           Assistências: 15,
         },
         impactAnalysis:
-          'Pura alegria e criatividade imprevisível na ponta direita. Seus dribles curtos venenosos, cortes rápidos para o meio e capacidade de finalização desmontam totalmente as defesas rivais fechadas.',
+          "Pura alegria e criatividade imprevisível na ponta direita. Seus dribles curtos venenosos, cortes rápidos para o meio e capacidade de finalização desmontam totalmente as defesas rivais fechadas.",
       },
     ],
     description:
-      'Uma geração de ouro formidável que mistura energia jovem com liderança experiente.',
-    color: '#ce1124',
+      "Uma geração de ouro formidável que mistura energia jovem com liderança experiente.",
+    color: "#ce1124",
   },
   {
-    id: 'es',
-    name: 'Espanha',
+    id: "es",
+    name: "Espanha",
     probability: 12.5,
     strength: 89,
     athleteLevel: 90,
     stats: { Tático: 95, Físico: 82, Mental: 85, Técnico: 94, Velocidade: 86 },
     keyPlayers: [
       {
-        id: 'pedri',
-        name: 'Pedri',
+        id: "pedri",
+        name: "Pedri",
         image:
-          'https://img.usecurling.com/p/256/256?q=pedri%20spain%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=pedri%20spain%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '31.8 km/h',
-          'Precisão de Passe': '93%',
+          "Velocidade Máxima": "31.8 km/h",
+          "Precisão de Passe": "93%",
           Gols: 10,
           Assistências: 19,
         },
         impactAnalysis:
-          'Controle absoluto e sublime no meio-campo. Sua posse de bola colada aos pés, giros extremamente rápidos e passes verticais incisivos geram estabilidade, ditando perfeitamente o ritmo espanhol.',
+          "Controle absoluto e sublime no meio-campo. Sua posse de bola colada aos pés, giros extremamente rápidos e passes verticais incisivos geram estabilidade, ditando perfeitamente o ritmo espanhol.",
       },
       {
-        id: 'yamal',
-        name: 'Lamine Yamal',
+        id: "yamal",
+        name: "Lamine Yamal",
         image:
-          'https://img.usecurling.com/p/256/256?q=lamine%20yamal%20spain%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=lamine%20yamal%20spain%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '34.7 km/h',
-          'Precisão de Passe': '84%',
+          "Velocidade Máxima": "34.7 km/h",
+          "Precisão de Passe": "84%",
           Gols: 11,
           Assistências: 14,
         },
         impactAnalysis:
-          'Jovem prodígio mágico com extrema e abusada habilidade no 1 contra 1. Quebra com naturalidade sistemas defensivos muito retrancados, oferecendo uma arma aguda e super veloz na ponta.',
+          "Jovem prodígio mágico com extrema e abusada habilidade no 1 contra 1. Quebra com naturalidade sistemas defensivos muito retrancados, oferecendo uma arma aguda e super veloz na ponta.",
       },
       {
-        id: 'rodri',
-        name: 'Rodri',
+        id: "rodri",
+        name: "Rodri",
         image:
-          'https://img.usecurling.com/p/256/256?q=rodri%20spain%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=rodri%20spain%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '30.5 km/h',
-          'Precisão de Passe': '94%',
+          "Velocidade Máxima": "30.5 km/h",
+          "Precisão de Passe": "94%",
           Gols: 12,
           Assistências: 8,
         },
         impactAnalysis:
-          'O grande pivô tático da equipe e mestre de sua posição. Garante segurança defensiva primorosa e é a primeira peça indispensável na construção paciente de envolventes jogadas ofensivas.',
+          "O grande pivô tático da equipe e mestre de sua posição. Garante segurança defensiva primorosa e é a primeira peça indispensável na construção paciente de envolventes jogadas ofensivas.",
       },
     ],
     description:
-      'Mestres absolutos da posse de bola e do refinado jogo posicional, dominando adversários.',
-    color: '#aa151b',
+      "Mestres absolutos da posse de bola e do refinado jogo posicional, dominando adversários.",
+    color: "#aa151b",
   },
   {
-    id: 'de',
-    name: 'Alemanha',
+    id: "de",
+    name: "Alemanha",
     probability: 10.0,
     strength: 88,
     athleteLevel: 89,
     stats: { Tático: 89, Físico: 87, Mental: 90, Técnico: 88, Velocidade: 85 },
     keyPlayers: [
       {
-        id: 'musiala',
-        name: 'Jamal Musiala',
+        id: "musiala",
+        name: "Jamal Musiala",
         image:
-          'https://img.usecurling.com/p/256/256?q=jamal%20musiala%20germany%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=jamal%20musiala%20germany%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '34.2 km/h',
-          'Precisão de Passe': '87%',
+          "Velocidade Máxima": "34.2 km/h",
+          "Precisão de Passe": "87%",
           Gols: 16,
           Assistências: 14,
         },
         impactAnalysis:
-          'Drible em espaços minúsculos excepcional e pura imprevisibilidade. Ele arrasta marcações duplas e cria oportunidades cristalinas onde a olho nu parece não haver qualquer espaço disponível.',
+          "Drible em espaços minúsculos excepcional e pura imprevisibilidade. Ele arrasta marcações duplas e cria oportunidades cristalinas onde a olho nu parece não haver qualquer espaço disponível.",
       },
       {
-        id: 'wirtz',
-        name: 'Florian Wirtz',
+        id: "wirtz",
+        name: "Florian Wirtz",
         image:
-          'https://img.usecurling.com/p/256/256?q=florian%20wirtz%20germany%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=florian%20wirtz%20germany%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '33.5 km/h',
-          'Precisão de Passe': '89%',
+          "Velocidade Máxima": "33.5 km/h",
+          "Precisão de Passe": "89%",
           Gols: 14,
           Assistências: 18,
         },
         impactAnalysis:
-          'Visão de jogo periférica impressionante e rápida agilidade mental. Seus passes venenosos rompem linhas defensivas sólidas e aceleram drasticamente a mortal transição ofensiva germânica.',
+          "Visão de jogo periférica impressionante e rápida agilidade mental. Seus passes venenosos rompem linhas defensivas sólidas e aceleram drasticamente a mortal transição ofensiva germânica.",
       },
       {
-        id: 'kimmich',
-        name: 'Joshua Kimmich',
+        id: "kimmich",
+        name: "Joshua Kimmich",
         image:
-          'https://img.usecurling.com/p/256/256?q=joshua%20kimmich%20germany%20football%20player%20portrait&dpr=2',
+          "https://img.usecurling.com/p/256/256?q=joshua%20kimmich%20germany%20football%20player%20portrait&dpr=2",
         stats: {
-          'Velocidade Máxima': '31.1 km/h',
-          'Precisão de Passe': '91%',
+          "Velocidade Máxima": "31.1 km/h",
+          "Precisão de Passe": "91%",
           Gols: 10,
           Assistências: 42,
         },
         impactAnalysis:
-          'Versatilidade de classe mundial, liderança técnica e garra inabaláveis. Atuando na lateral ou organizando pelo meio, é essencial na criação de jogadas com seus cruzamentos milimétricos.',
+          "Versatilidade de classe mundial, liderança técnica e garra inabaláveis. Atuando na lateral ou organizando pelo meio, é essencial na criação de jogadas com seus cruzamentos milimétricos.",
       },
     ],
     description:
-      'Taticamente versátil e extremamente eficiente, passando por um poderoso renascimento.',
-    color: '#ffce00',
+      "Taticamente versátil e extremamente eficiente, passando por um poderoso renascimento.",
+    color: "#ffce00",
   },
 ]
 
 const goldPlayerIds = [
-  { id: 'neymar', rating: 9.9 },
-  { id: 'mbappe', rating: 9.7 },
-  { id: 'messi', rating: 9.5 },
-  { id: 'bellingham', rating: 9.3 },
-  { id: 'kane', rating: 9.0 },
-  { id: 'vini', rating: 8.8 },
-  { id: 'yamal', rating: 8.6 },
-  { id: 'musiala', rating: 8.5 },
+  { id: "neymar", rating: 9.9 },
+  { id: "mbappe", rating: 9.7 },
+  { id: "messi", rating: 9.5 },
+  { id: "bellingham", rating: 9.3 },
+  { id: "kane", rating: 9.0 },
+  { id: "vini", rating: 8.8 },
+  { id: "yamal", rating: 8.6 },
+  { id: "musiala", rating: 8.5 },
 ]
 
 const getPlayerFromTeams = (playerId: string) => {
@@ -738,7 +738,7 @@ function PlayerStatsDialog({
   children,
 }: {
   player: PlayerStat
-  team: Pick<TeamStat, 'name' | 'color'>
+  team: Pick<TeamStat, "name" | "color">
   children: React.ReactNode
 }) {
   return (
@@ -849,7 +849,7 @@ function PlayerStatsDialog({
   )
 }
 
-function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
+function TeamCard({ team, rank }: { team: TeamStat rank: number }) {
   const [isOpen, setIsOpen] = useState(false)
 
   const radarData = Object.entries(team.stats).map(([subject, value]) => ({
@@ -858,17 +858,17 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
   }))
 
   const chartConfig = {
-    value: { label: 'Pontuação', color: team.color },
+    value: { label: "Pontuação", color: team.color },
   }
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <Card
         className={cn(
-          'border-border/30 bg-secondary/10 backdrop-blur-md overflow-hidden relative group transition-all duration-300',
+          "border-border/30 bg-secondary/10 backdrop-blur-md overflow-hidden relative group transition-all duration-300",
           isOpen
-            ? 'border-border/60 shadow-lg shadow-black/20'
-            : 'hover:border-border/50',
+            ? "border-border/60 shadow-lg shadow-black/20"
+            : "hover:border-border/50",
         )}
       >
         <div
@@ -905,7 +905,7 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
                     variant="secondary"
                     className="px-1.5 py-0 text-[10px] bg-background/50 text-muted-foreground border-border/50 font-medium"
                   >
-                    TPI:{' '}
+                    TPI:{" "}
                     <span className="text-foreground ml-1 font-bold">
                       {team.strength}
                     </span>
@@ -928,8 +928,8 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
               </div>
               <div
                 className={cn(
-                  'p-1.5 rounded-full bg-secondary/50 transition-transform duration-300',
-                  isOpen && 'rotate-180',
+                  "p-1.5 rounded-full bg-secondary/50 transition-transform duration-300",
+                  isOpen && "rotate-180",
                 )}
               >
                 <ChevronDown className="w-4 h-4 text-muted-foreground" />
@@ -957,7 +957,7 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
                     <PolarAngleAxis
                       dataKey="subject"
                       tick={{
-                        fill: 'hsl(var(--muted-foreground))',
+                        fill: "hsl(var(--muted-foreground))",
                         fontSize: 10,
                         fontWeight: 600,
                       }}
@@ -1066,30 +1066,24 @@ function TeamCard({ team, rank }: { team: TeamStat; rank: number }) {
 export default function CopaStatsDashboard() {
   const navigate = useNavigate()
   const { toast } = useToast()
-  const [sortBy, setSortBy] = useState<'probability' | 'strength' | 'name'>(
-    'probability',
+  const [sortBy, setSortBy] = useState<"probability" | "strength" | "name">(
+    "probability",
   )
-  const [rankingTab, setRankingTab] = useState<
-    'scorers' | 'tactical' | 'goals'
-  >('scorers')
+  const [rankingTab, setRankingTab] =
+    useState<"scorers" | "tactical" | "goals">("scorers")
 
   // Bolão States
-  const [predictions, setPredictions] = useState<
-    Record<
-      string,
-      {
-        t1Score: number
-        t2Score: number
-        scorer: string
-        status: 'pending' | 'won' | 'lost'
-      }
-    >
-  >({
+  const [predictions, setPredictions] = useState<Record<string, {
+    t1Score: number
+    t2Score: number
+    scorer: string
+    status: "pending" | "won" | "lost"
+  }>>({
     b0: {
       t1Score: 1,
       t2Score: 3,
-      scorer: 'Vini Jr.',
-      status: 'won',
+      scorer: "Vini Jr.",
+      status: "won",
     },
   })
   const [selectedMatch, setSelectedMatch] = useState<any>(null)
@@ -1097,12 +1091,12 @@ export default function CopaStatsDashboard() {
 
   const [t1, setT1] = useState(0)
   const [t2, setT2] = useState(0)
-  const [scorer, setScorer] = useState('')
+  const [scorer, setScorer] = useState("")
 
   const sortedTeams = useMemo(() => {
     return [...TEAMS].sort((a, b) => {
-      if (sortBy === 'probability') return b.probability - a.probability
-      if (sortBy === 'strength') return b.strength - a.strength
+      if (sortBy === "probability") return b.probability - a.probability
+      if (sortBy === "strength") return b.strength - a.strength
       return a.name.localeCompare(b.name)
     })
   }, [sortBy])
@@ -1113,11 +1107,11 @@ export default function CopaStatsDashboard() {
 
   const elitePlayersData = useMemo(() => {
     const eliteIds = [
-      { teamId: 'br', playerId: 'neymar' },
-      { teamId: 'ar', playerId: 'messi' },
-      { teamId: 'fr', playerId: 'mbappe' },
-      { teamId: 'en', playerId: 'bellingham' },
-      { teamId: 'es', playerId: 'yamal' },
+      { teamId: "br", playerId: "neymar" },
+      { teamId: "ar", playerId: "messi" },
+      { teamId: "fr", playerId: "mbappe" },
+      { teamId: "en", playerId: "bellingham" },
+      { teamId: "es", playerId: "yamal" },
     ]
     return eliteIds.map((ep) => {
       const team = TEAMS.find((t) => t.id === ep.teamId)!
@@ -1132,7 +1126,7 @@ export default function CopaStatsDashboard() {
     setSelectedMatch(match)
     setT1(0)
     setT2(0)
-    setScorer('')
+    setScorer("")
   }
 
   const submitPrediction = () => {
@@ -1148,7 +1142,7 @@ export default function CopaStatsDashboard() {
       t1Score: t1,
       t2Score: t2,
       scorer,
-      status: isPerfect ? 'won' : 'pending',
+      status: isPerfect ? "won" : "pending",
     } as const
 
     setPredictions((prev) => ({
@@ -1160,17 +1154,17 @@ export default function CopaStatsDashboard() {
       setShowVoucher(selectedMatch)
       useBolaoStore.getState().setWon(selectedMatch.team1.name)
       useNotificationStore.getState().addNotification({
-        title: '🏆 Bolão GoPlay - Na Mosca!',
+        title: "🏆 Bolão GoPlay - Na Mosca!",
         message: `Você acertou o placar exato de ${selectedMatch.team1.name} x ${selectedMatch.team2.name}! Resgate agora sua camiseta oficial com frete grátis.`,
-        type: 'system',
+        type: "system",
         link: `/marketplace?redeem=true&team=${encodeURIComponent(selectedMatch.team1.name)}`,
-        priority: 'high',
+        priority: "high",
       })
     } else {
       toast({
-        title: 'Palpite Registrado!',
+        title: "Palpite Registrado!",
         description:
-          'Seu palpite foi salvo. (Como é uma simulação, apenas acertos exatos disparam o prêmio agora).',
+          "Seu palpite foi salvo. (Como é uma simulação, apenas acertos exatos disparam o prêmio agora).",
       })
     }
     setSelectedMatch(null)
@@ -1241,7 +1235,7 @@ export default function CopaStatsDashboard() {
                       style={{
                         top: `${pos.top}%`,
                         left: `${pos.left}%`,
-                        transform: 'translate(-50%, -50%)',
+                        transform: "translate(-50%, -50%)",
                       }}
                     >
                       <PlayerStatsDialog player={data.player} team={data.team}>
@@ -1376,12 +1370,12 @@ export default function CopaStatsDashboard() {
               <Card
                 key={match.id}
                 className={cn(
-                  'min-w-[280px] shrink-0 snap-center border-border/30 bg-secondary/10 backdrop-blur-md relative overflow-hidden transition-all',
-                  predictions[match.id]?.status === 'won' &&
-                    'border-[hsl(var(--gold)/0.5)] shadow-[0_0_15px_hsl(var(--gold)/0.2)]',
+                  "min-w-[280px] shrink-0 snap-center border-border/30 bg-secondary/10 backdrop-blur-md relative overflow-hidden transition-all",
+                  predictions[match.id]?.status === "won" &&
+                    "border-[hsl(var(--gold)/0.5)] shadow-[0_0_15px_hsl(var(--gold)/0.2)]",
                 )}
               >
-                {predictions[match.id]?.status === 'won' && (
+                {predictions[match.id]?.status === "won" && (
                   <>
                     <div className="absolute top-0 right-0 bg-gradient-to-r from-[hsl(var(--gold))] to-amber-600 text-black text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-bl-lg z-20 shadow-md">
                       Na Mosca!
@@ -1421,7 +1415,7 @@ export default function CopaStatsDashboard() {
                       {predictions[match.id] ? (
                         <div className="flex flex-col items-center">
                           <span className="text-2xl font-black text-foreground tabular-nums leading-none">
-                            {predictions[match.id].t1Score} -{' '}
+                            {predictions[match.id].t1Score} -{" "}
                             {predictions[match.id].t2Score}
                           </span>
                           {match.finalized && (
@@ -1462,7 +1456,7 @@ export default function CopaStatsDashboard() {
                             {predictions[match.id].scorer}
                           </span>
                         </div>
-                        {predictions[match.id].status === 'won' ? (
+                        {predictions[match.id].status === "won" ? (
                           <Button
                             onClick={() => setShowVoucher(match)}
                             size="sm"
@@ -1507,36 +1501,36 @@ export default function CopaStatsDashboard() {
 
           <div className="flex gap-2 bg-secondary/30 p-1.5 rounded-xl mb-4 border border-border/20">
             <button
-              onClick={() => setRankingTab('scorers')}
+              onClick={() => setRankingTab("scorers")}
               className={cn(
-                'flex-1 text-[11px] font-black uppercase tracking-wider py-2.5 rounded-lg transition-all flex items-center justify-center gap-1.5',
-                rankingTab === 'scorers'
-                  ? 'bg-primary text-primary-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground',
+                "flex-1 text-[11px] font-black uppercase tracking-wider py-2.5 rounded-lg transition-all flex items-center justify-center gap-1.5",
+                rankingTab === "scorers"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               <Target className="w-3.5 h-3.5" />
               Artilharia
             </button>
             <button
-              onClick={() => setRankingTab('tactical')}
+              onClick={() => setRankingTab("tactical")}
               className={cn(
-                'flex-1 text-[11px] font-black uppercase tracking-wider py-2.5 rounded-lg transition-all flex items-center justify-center gap-1.5',
-                rankingTab === 'tactical'
-                  ? 'bg-primary text-primary-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground',
+                "flex-1 text-[11px] font-black uppercase tracking-wider py-2.5 rounded-lg transition-all flex items-center justify-center gap-1.5",
+                rankingTab === "tactical"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               <Crosshair className="w-3.5 h-3.5" />
               Tático
             </button>
             <button
-              onClick={() => setRankingTab('goals')}
+              onClick={() => setRankingTab("goals")}
               className={cn(
-                'flex-1 text-[11px] font-black uppercase tracking-wider py-2.5 rounded-lg transition-all flex items-center justify-center gap-1.5',
-                rankingTab === 'goals'
-                  ? 'bg-[hsl(var(--gold))] text-black shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground',
+                "flex-1 text-[11px] font-black uppercase tracking-wider py-2.5 rounded-lg transition-all flex items-center justify-center gap-1.5",
+                rankingTab === "goals"
+                  ? "bg-[hsl(var(--gold))] text-black shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               <Flame className="w-3.5 h-3.5" />
@@ -1575,10 +1569,10 @@ export default function CopaStatsDashboard() {
                   <div className="flex flex-col items-end">
                     <span
                       className={cn(
-                        'text-lg font-black',
-                        rankingTab === 'goals'
-                          ? 'text-[hsl(var(--gold))]'
-                          : 'text-primary',
+                        "text-lg font-black",
+                        rankingTab === "goals"
+                          ? "text-[hsl(var(--gold))]"
+                          : "text-primary",
                       )}
                     >
                       {item.value}
@@ -1605,7 +1599,7 @@ export default function CopaStatsDashboard() {
             <CardContent className="pt-4">
               <div className="h-[220px] w-full">
                 <ChartContainer
-                  config={{ value: { label: 'Probabilidade %' } }}
+                  config={{ value: { label: "Probabilidade %" } }}
                   className="h-full w-full"
                 >
                   <BarChart
@@ -1621,22 +1615,22 @@ export default function CopaStatsDashboard() {
                       tickLine={false}
                       tick={{
                         fontSize: 11,
-                        fill: 'hsl(var(--foreground))',
+                        fill: "hsl(var(--foreground))",
                         fontWeight: 600,
                       }}
                       width={70}
                     />
                     <ChartTooltip
                       content={<ChartTooltipContent indicator="line" />}
-                      cursor={{ fill: 'hsl(var(--secondary)/0.3)' }}
+                      cursor={{ fill: "hsl(var(--secondary)/0.3)" }}
                     />
                     <Bar
                       dataKey="probability"
                       radius={[0, 4, 4, 0]}
                       barSize={20}
                       label={{
-                        position: 'right',
-                        fill: 'hsl(var(--muted-foreground))',
+                        position: "right",
+                        fill: "hsl(var(--muted-foreground))",
                         fontSize: 10,
                         fontWeight: 600,
                         formatter: (val: number) => `${val}%`,
@@ -1718,7 +1712,7 @@ export default function CopaStatsDashboard() {
               variant="outline"
               size="sm"
               className="text-xs bg-secondary/20 border-border/30 hover:bg-secondary/40 h-8 rounded-full px-4"
-              onClick={() => navigate('/album/stats/table')}
+              onClick={() => navigate("/album/stats/table")}
             >
               Ver Tabela
             </Button>
@@ -1748,7 +1742,7 @@ export default function CopaStatsDashboard() {
                     <TableRow
                       key={match.id}
                       className="border-border/20 hover:bg-secondary/20 cursor-pointer transition-colors"
-                      onClick={() => navigate('/album/stats/table')}
+                      onClick={() => navigate("/album/stats/table")}
                     >
                       <TableCell className="font-medium text-xs whitespace-nowrap">
                         <div className="flex items-center gap-1.5">
@@ -1965,7 +1959,7 @@ export default function CopaStatsDashboard() {
 
                 <div className="text-center space-y-1 relative z-10 w-full py-2">
                   <h3 className="text-lg md:text-xl font-black text-white uppercase tracking-wider leading-tight drop-shadow-md">
-                    Você acaba de ganhar uma camiseta oficial da{' '}
+                    Você acaba de ganhar uma camiseta oficial da{" "}
                     {showVoucher?.team1?.name}!
                   </h3>
                 </div>
@@ -1980,7 +1974,7 @@ export default function CopaStatsDashboard() {
                         GOPLAY-WIN-
                         {showVoucher?.team1?.name
                           ?.substring(0, 3)
-                          .toUpperCase() || 'BR'}
+                          .toUpperCase() || "BR"}
                         -26
                       </span>
                     </div>
@@ -1990,7 +1984,7 @@ export default function CopaStatsDashboard() {
                       className="h-8 w-8 text-white/50 hover:text-white"
                       onClick={() => {
                         navigator.clipboard.writeText(
-                          `GOPLAY-WIN-${showVoucher?.team1?.name?.substring(0, 3).toUpperCase() || 'BR'}-26`,
+                          `GOPLAY-WIN-${showVoucher?.team1?.name?.substring(0, 3).toUpperCase() || "BR"}-26`,
                         )
                       }}
                     >
@@ -2038,7 +2032,7 @@ export default function CopaStatsDashboard() {
                 onClick={() => {
                   setShowVoucher(null)
                   navigate(
-                    `/marketplace?redeem=true&team=${encodeURIComponent(showVoucher?.team1?.name || '')}`,
+                    `/marketplace?redeem=true&team=${encodeURIComponent(showVoucher?.team1?.name || "")}`,
                   )
                 }}
               >

@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
-import { supabase } from '@/lib/supabase/client'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Loader2, AtSign, X } from 'lucide-react'
-import type { PostMention } from '@/services/feed'
+import { useState, useEffect, useRef } from "react"
+import { supabase } from "@/lib/supabase/client"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Loader2, AtSign, X } from "lucide-react"
+import type { PostMention } from "@/services/feed"
 
 interface MentionAutocompleteProps {
   query: string
@@ -46,15 +46,15 @@ export function MentionAutocomplete({
     const fetchProfiles = async () => {
       try {
         let req = supabase
-          .from('profiles')
-          .select('id, full_name, avatar_url, account_type, sport')
+          .from("profiles")
+          .select("id, full_name, avatar_url, account_type, sport")
           .limit(8)
 
         const trimmed = query.trim()
         if (trimmed) {
-          req = req.ilike('full_name', `%${trimmed}%`)
+          req = req.ilike("full_name", `%${trimmed}%`)
         } else {
-          req = req.order('created_at', { ascending: false })
+          req = req.order("created_at", { ascending: false })
         }
 
         const { data, error } = await req
@@ -95,19 +95,19 @@ export function MentionAutocomplete({
       }
     }
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener("mousedown", handleClickOutside)
     }
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [isOpen, onClose])
 
   if (!isOpen) return null
 
   const formatAccountType = (type?: string | null) => {
-    if (type === 'club') return 'Clube'
-    if (type === 'coach') return 'Treinador'
-    return 'Atleta'
+    if (type === "club") return "Clube"
+    if (type === "coach") return "Treinador"
+    return "Atleta"
   }
 
   return (
@@ -118,7 +118,7 @@ export function MentionAutocomplete({
       <div className="flex items-center justify-between px-2 py-1 mb-1 border-b border-border/40 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
         <span className="flex items-center gap-1">
           <AtSign className="w-3 h-3 text-primary" />
-          Marcar perfil ({query ? `"${query}"` : 'sugestões'})
+          Marcar perfil ({query ? `"${query}"` : "sugestões"})
         </span>
         <button
           type="button"
@@ -140,7 +140,7 @@ export function MentionAutocomplete({
         <div className="py-4 text-center text-xs text-muted-foreground">
           {query
             ? `Nenhum usuário encontrado para "@${query}"`
-            : 'Nenhum usuário disponível para marcação'}
+            : "Nenhum usuário disponível para marcação"}
         </div>
       )}
 
@@ -153,9 +153,9 @@ export function MentionAutocomplete({
               onClick={() => {
                 onSelect({
                   id: cand.id,
-                  name: cand.full_name || 'Usuário',
+                  name: cand.full_name || "Usuário",
                   avatar: cand.avatar_url || null,
-                  accountType: cand.account_type || 'athlete',
+                  accountType: cand.account_type || "athlete",
                   sport: cand.sport || null,
                 })
               }}
@@ -169,14 +169,14 @@ export function MentionAutocomplete({
                   }
                 />
                 <AvatarFallback>
-                  {(cand.full_name || 'U').substring(0, 2).toUpperCase()}
+                  {(cand.full_name || "U").substring(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs font-semibold text-foreground group-hover:text-primary truncate">
-                    {cand.full_name || 'Usuário Goplay'}
+                    {cand.full_name || "Usuário Goplay"}
                   </span>
                   <Badge
                     variant="outline"

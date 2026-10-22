@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Eye,
   Crown,
@@ -13,15 +13,15 @@ import {
   Users,
   ChevronRight,
   TrendingUp,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { cn } from "@/lib/utils"
 import {
   mockProfileVisitors,
   VISITOR_STATS,
   ProfileVisitor,
-} from '@/lib/profile-views-data'
-import { usePrivacyStore } from '@/stores/usePrivacyStore'
-import { ProfileViewerPaywallModal } from '@/components/ProfileViewerPaywallModal'
+} from "@/lib/profile-views-data"
+import { usePrivacyStore } from "@/stores/usePrivacyStore"
+import { ProfileViewerPaywallModal } from "@/components/ProfileViewerPaywallModal"
 
 interface LinkedInProfileViewsCardProps {
   className?: string
@@ -44,7 +44,7 @@ export function LinkedInProfileViewsCard({
   }
 
   const handleOpenAll = () => {
-    navigate('/profile/views')
+    navigate("/profile/views")
   }
 
   // Pick top 4 visitors to display in avatar strip
@@ -55,8 +55,8 @@ export function LinkedInProfileViewsCard({
       <Card
         onClick={handleOpenAll}
         className={cn(
-          'relative overflow-hidden cursor-pointer border transition-all duration-300 group',
-          'bg-gradient-to-br from-primary/10 via-background to-amber-950/10 border-primary/20 hover:border-gold/40 shadow-sm hover:shadow-md',
+          "relative overflow-hidden cursor-pointer border transition-all duration-300 group",
+          "bg-gradient-to-br from-primary/10 via-background to-amber-950/10 border-primary/20 hover:border-gold/40 shadow-sm hover:shadow-md",
           className,
         )}
       >
@@ -92,7 +92,7 @@ export function LinkedInProfileViewsCard({
                 <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
                   <span className="font-bold text-foreground">
                     {VISITOR_STATS.viewsThisWeek} visualizações
-                  </span>{' '}
+                  </span>{" "}
                   esta semana
                   <span className="text-emerald-500 font-bold inline-flex items-center text-[11px] ml-1">
                     <TrendingUp className="w-3 h-3 mr-0.5" />
@@ -162,27 +162,27 @@ export function LinkedInProfileViewsCard({
                     type="button"
                     onClick={(e) => handleVisitorClick(v, e)}
                     className="relative rounded-full transition-transform hover:scale-110 hover:z-20 focus:outline-none"
-                    title={isPremium ? v.name : 'Clique para desbloquear'}
+                    title={isPremium ? v.name : "Clique para desbloquear"}
                   >
                     <Avatar className="w-10 h-10 border-2 border-background ring-2 ring-primary/40 shadow-sm">
                       <AvatarImage
                         src={v.avatar}
-                        className={cn(!isPremium && 'blur-[3px] grayscale')}
+                        className={cn(!isPremium && "blur-[3px] grayscale")}
                       />
                       <AvatarFallback>{v.name[0]}</AvatarFallback>
                     </Avatar>
 
-                    {v.type === 'scout' && (
+                    {v.type === "scout" && (
                       <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[8px] font-bold border border-background">
                         S
                       </span>
                     )}
-                    {v.type === 'university' && (
+                    {v.type === "university" && (
                       <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-amber-600 text-white flex items-center justify-center text-[8px] font-bold border border-background">
                         U
                       </span>
                     )}
-                    {v.type === 'team' && (
+                    {v.type === "team" && (
                       <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[8px] font-bold border border-background">
                         T
                       </span>
@@ -226,7 +226,7 @@ export function LinkedInProfileViewsCard({
                 <>
                   <strong className="text-foreground">
                     1 olheiro do RB Bragantino
-                  </strong>{' '}
+                  </strong>{" "}
                   e recrutadores de faculdades americanas viram você.
                   Desbloqueie o Premium para ver os nomes e contatos diretos.
                 </>

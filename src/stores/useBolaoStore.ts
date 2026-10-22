@@ -1,5 +1,5 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 interface BolaoState {
   hasWon: boolean
@@ -17,7 +17,7 @@ export const useBolaoStore = create<BolaoState>()(
       claimPrize: () => set({ hasWon: false, wonTeam: null }),
     }),
     {
-      name: 'goplay-bolao-storage',
+      name: "goplay-bolao-storage",
     },
   ),
 )

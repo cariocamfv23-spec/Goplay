@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from "react"
 import {
   Search,
   MapPin,
@@ -13,17 +13,17 @@ import {
   Filter,
   X,
   RotateCcw,
-} from 'lucide-react'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+} from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from "@/components/ui/select"
 import {
   exploreCategories,
   mockProfiles,
@@ -31,26 +31,25 @@ import {
   mockVenues,
   type ProfileData,
   type Event,
-} from '@/lib/data'
-import { TalentPreviewCard } from '@/components/TalentPreviewCard'
-import { MapEventCard } from '@/components/MapEventCard'
-import { useNavigate } from 'react-router-dom'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { cn } from '@/lib/utils'
-import { searchService } from '@/services/search'
-import { eventsService, type EventItem } from '@/services/events'
-import { useAuth } from '@/hooks/use-auth'
-import type { PublicProfileItem } from '@/services/profiles'
-import { SPORTS_CATALOG, BRAZILIAN_STATES } from '@/lib/sports-catalog'
+} from "@/lib/data"
+import { TalentPreviewCard } from "@/components/TalentPreviewCard"
+import { MapEventCard } from "@/components/MapEventCard"
+import { useNavigate } from "react-router-dom"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { cn } from "@/lib/utils"
+import { searchService } from "@/services/search"
+import { eventsService, type EventItem } from "@/services/events"
+import { useAuth } from "@/hooks/use-auth"
+import type { PublicProfileItem } from "@/services/profiles"
+import { SPORTS_CATALOG, BRAZILIAN_STATES } from "@/lib/sports-catalog"
 
 export default function Explore() {
-  const [search, setSearch] = useState('')
-  const [accountTypeFilter, setAccountTypeFilter] = useState<
-    'all' | 'athlete' | 'club' | 'coach'
-  >('all')
-  const [sportFilter, setSportFilter] = useState('Todos')
-  const [cityFilter, setCityFilter] = useState('')
-  const [stateFilter, setStateFilter] = useState('')
+  const [search, setSearch] = useState("")
+  const [accountTypeFilter, setAccountTypeFilter] =
+    useState<"all" | "athlete" | "club" | "coach">("all")
+  const [sportFilter, setSportFilter] = useState("Todos")
+  const [cityFilter, setCityFilter] = useState("")
+  const [stateFilter, setStateFilter] = useState("")
   const [showFilters, setShowFilters] = useState(false)
 
   const { user } = useAuth()
@@ -69,32 +68,32 @@ export default function Explore() {
   // Restore menus: Live Games, Jobs, Flyer Creator, Matchmaking
   const extraCategories = [
     {
-      id: 'live',
-      label: 'Jogos ao Vivo',
+      id: "live",
+      label: "Jogos ao Vivo",
       icon: Tv,
-      bg: 'bg-red-100 dark:bg-red-900/20',
-      color: 'text-red-600 dark:text-red-400',
+      bg: "bg-red-100 dark:bg-red-900/20",
+      color: "text-red-600 dark:text-red-400",
     },
     {
-      id: 'matchmaking',
-      label: 'Matchmaking',
+      id: "matchmaking",
+      label: "Matchmaking",
       icon: Zap,
-      bg: 'bg-amber-100 dark:bg-amber-900/20',
-      color: 'text-amber-600 dark:text-amber-400',
+      bg: "bg-amber-100 dark:bg-amber-900/20",
+      color: "text-amber-600 dark:text-amber-400",
     },
     {
-      id: 'jobs',
-      label: 'Vagas',
+      id: "jobs",
+      label: "Vagas",
       icon: Briefcase,
-      bg: 'bg-slate-100 dark:bg-slate-900/20',
-      color: 'text-slate-600 dark:text-slate-400',
+      bg: "bg-slate-100 dark:bg-slate-900/20",
+      color: "text-slate-600 dark:text-slate-400",
     },
     {
-      id: 'flyer',
-      label: 'Criar Flyer',
+      id: "flyer",
+      label: "Criar Flyer",
       icon: Paintbrush,
-      bg: 'bg-purple-100 dark:bg-purple-900/20',
-      color: 'text-purple-600 dark:text-purple-400',
+      bg: "bg-purple-100 dark:bg-purple-900/20",
+      color: "text-purple-600 dark:text-purple-400",
     },
   ]
 
@@ -103,18 +102,18 @@ export default function Explore() {
 
   const getCategoryPath = (id: string) => {
     switch (id) {
-      case 'contracts':
-        return '/contracts'
-      case 'jobs':
-        return '/explore/jobs'
-      case 'live':
-        return '/explore/live'
-      case 'flyer':
-        return '/explore/flyer-creator'
-      case 'matchmaking':
-        return '/matchmaking'
-      case 'map-events':
-        return '/explore/map-events'
+      case "contracts":
+        return "/contracts"
+      case "jobs":
+        return "/explore/jobs"
+      case "live":
+        return "/explore/live"
+      case "flyer":
+        return "/explore/flyer-creator"
+      case "matchmaking":
+        return "/matchmaking"
+      case "map-events":
+        return "/explore/map-events"
       default:
         return `/explore/${id}`
     }
@@ -122,28 +121,28 @@ export default function Explore() {
 
   // Filter Categories into Three Tiers: Amateur, Professional, Scouts
   const amateurIds = [
-    'events',
-    'venues',
-    'live',
-    'matchmaking',
-    'gyms',
-    'nutrition',
-    'clinics',
-    'flyer',
-    'photographers',
-    'kids',
-    'drivers',
-    'fuel',
+    "events",
+    "venues",
+    "live",
+    "matchmaking",
+    "gyms",
+    "nutrition",
+    "clinics",
+    "flyer",
+    "photographers",
+    "kids",
+    "drivers",
+    "fuel",
   ]
   const proIds = [
-    'sponsorship',
-    'contracts',
-    'scholarships',
-    'agencies',
-    'international',
-    'jobs',
+    "sponsorship",
+    "contracts",
+    "scholarships",
+    "agencies",
+    "international",
+    "jobs",
   ]
-  const scoutIds = ['talents']
+  const scoutIds = ["talents"]
 
   const amateurCategories = amateurIds
     .map((id) => allCategories.find((c) => c.id === id))
@@ -172,7 +171,7 @@ export default function Explore() {
         } = await searchService.searchProfiles({
           query: search,
           accountType: accountTypeFilter,
-          sport: sportFilter === 'Todos' ? undefined : sportFilter,
+          sport: sportFilter === "Todos" ? undefined : sportFilter,
           city: cityFilter,
           state: stateFilter,
           page: currentPage,
@@ -180,7 +179,7 @@ export default function Explore() {
         })
 
         if (error) {
-          setSearchError('Erro ao buscar perfis reais no banco de dados.')
+          setSearchError("Erro ao buscar perfis reais no banco de dados.")
           if (!append) setRealProfiles([])
         } else {
           setRealProfiles((prev) => (append ? [...prev, ...data] : data))
@@ -189,7 +188,7 @@ export default function Explore() {
           setPage(currentPage)
         }
       } catch (err: any) {
-        setSearchError('Falha na conexão ao carregar perfis.')
+        setSearchError("Falha na conexão ao carregar perfis.")
       } finally {
         setLoadingProfiles(false)
       }
@@ -222,18 +221,18 @@ export default function Explore() {
   }
 
   const handleClearFilters = () => {
-    setAccountTypeFilter('all')
-    setSportFilter('Todos')
-    setCityFilter('')
-    setStateFilter('')
-    setSearch('')
+    setAccountTypeFilter("all")
+    setSportFilter("Todos")
+    setCityFilter("")
+    setStateFilter("")
+    setSearch("")
   }
 
   // Convert real profile item to TalentPreviewCard shape
   const adaptRealProfileToCard = (rp: PublicProfileItem): ProfileData => {
-    const loc = [rp.city, rp.state].filter(Boolean).join(', ') || 'Brasil'
-    const name = rp.full_name || 'Usuário Sem Nome'
-    const username = name.toLowerCase().replace(/\s+/g, '')
+    const loc = [rp.city, rp.state].filter(Boolean).join(", ") || "Brasil"
+    const name = rp.full_name || "Usuário Sem Nome"
+    const username = name.toLowerCase().replace(/\s+/g, "")
     return {
       id: rp.id,
       name,
@@ -241,17 +240,17 @@ export default function Explore() {
       avatar:
         rp.avatar_url ||
         `https://img.usecurling.com/ppl/medium?seed=${rp.id.slice(0, 4)}`,
-      cover: 'https://img.usecurling.com/p/800/300?q=sports%20stadium',
-      sport: rp.sport || 'Atleta',
+      cover: "https://img.usecurling.com/p/800/300?q=sports%20stadium",
+      sport: rp.sport || "Atleta",
       position:
         rp.position ||
-        (rp.account_type === 'club'
-          ? 'Clube'
-          : rp.account_type === 'coach'
-            ? 'Coach'
-            : 'Esportista'),
+        (rp.account_type === "club"
+          ? "Clube"
+          : rp.account_type === "coach"
+            ? "Coach"
+            : "Esportista"),
       location: loc,
-      bio: rp.bio || '',
+      bio: rp.bio || "",
       type: rp.account_type,
       rating: 4.8,
       isDiscovered: false,
@@ -260,30 +259,30 @@ export default function Explore() {
   }
 
   // Map Supabase events to Event shape for MapEventCard
-  const mappedRealEvents: (Event & {
+  const mappedRealEvents: Event & {
     isRegistered?: boolean
     rawType?: string
-  })[] = realEvents.map((e) => ({
+  }[] = realEvents.map((e) => ({
     id: e.id,
     title: e.title,
-    category: e.type === 'tryout' ? 'Peneira Oficial' : 'Campeonato',
+    category: e.type === "tryout" ? "Peneira Oficial" : "Campeonato",
     modality: e.sport,
     rawType: e.type,
-    date: new Date(e.eventDate).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: 'short',
+    date: new Date(e.eventDate).toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "short",
     }),
     time: e.eventTime,
     location: e.locationName,
     city: e.city,
     state: e.state,
-    address: e.address || '',
+    address: e.address || "",
     image:
-      e.bannerUrl || 'https://img.usecurling.com/p/800/400?q=sports%20stadium',
+      e.bannerUrl || "https://img.usecurling.com/p/800/400?q=sports%20stadium",
     price: e.price,
     description: e.description,
-    organizer: e.creator?.name || 'Organizador Goplay',
-    level: e.type === 'tryout' ? 'Avançado' : 'Intermediário',
+    organizer: e.creator?.name || "Organizador Goplay",
+    level: e.type === "tryout" ? "Avançado" : "Intermediário",
     isRegistered: e.isRegistered,
   }))
 
@@ -291,9 +290,9 @@ export default function Explore() {
 
   const filteredEvents = allDisplayEvents.filter(
     (e) =>
-      (e.title || '').toLowerCase().includes(search.toLowerCase()) ||
-      (e.modality || '').toLowerCase().includes(search.toLowerCase()) ||
-      (e.city || '').toLowerCase().includes(search.toLowerCase()),
+      (e.title || "").toLowerCase().includes(search.toLowerCase()) ||
+      (e.modality || "").toLowerCase().includes(search.toLowerCase()) ||
+      (e.city || "").toLowerCase().includes(search.toLowerCase()),
   )
 
   const filteredVenues = mockVenues.filter(
@@ -322,7 +321,7 @@ export default function Explore() {
             {search && (
               <button
                 type="button"
-                onClick={() => setSearch('')}
+                onClick={() => setSearch("")}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
                 <X className="h-4 w-4" />
@@ -346,7 +345,7 @@ export default function Explore() {
 
           <Button
             type="button"
-            variant={showFilters ? 'default' : 'outline'}
+            variant={showFilters ? "default" : "outline"}
             size="icon"
             className="h-11 w-11 rounded-xl shrink-0"
             onClick={() => setShowFilters(!showFilters)}
@@ -420,9 +419,9 @@ export default function Explore() {
                   UF
                 </span>
                 <Select
-                  value={stateFilter || '__all__'}
+                  value={stateFilter || "__all__"}
                   onValueChange={(val) =>
-                    setStateFilter(val === '__all__' ? '' : val)
+                    setStateFilter(val === "__all__" ? "" : val)
                   }
                 >
                   <SelectTrigger className="h-9 bg-background text-xs">
@@ -491,11 +490,11 @@ export default function Explore() {
               >
                 <div
                   className={cn(
-                    'w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-active:scale-95 shadow-sm',
+                    "w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-active:scale-95 shadow-sm",
                     cat.bg,
                   )}
                 >
-                  <cat.icon className={cn('w-6 h-6', cat.color)} />
+                  <cat.icon className={cn("w-6 h-6", cat.color)} />
                 </div>
                 <span className="text-[10px] font-medium text-center leading-tight line-clamp-2 max-w-[60px] text-muted-foreground group-hover:text-foreground transition-colors">
                   {cat.label}
@@ -522,11 +521,11 @@ export default function Explore() {
               >
                 <div
                   className={cn(
-                    'w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-active:scale-95 shadow-sm',
+                    "w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-active:scale-95 shadow-sm",
                     cat.bg,
                   )}
                 >
-                  <cat.icon className={cn('w-6 h-6', cat.color)} />
+                  <cat.icon className={cn("w-6 h-6", cat.color)} />
                 </div>
                 <span className="text-[10px] font-medium text-center leading-tight line-clamp-2 max-w-[60px] text-muted-foreground group-hover:text-foreground transition-colors">
                   {cat.label}
@@ -554,11 +553,11 @@ export default function Explore() {
               >
                 <div
                   className={cn(
-                    'w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-active:scale-95 shadow-sm',
+                    "w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-active:scale-95 shadow-sm",
                     cat.bg,
                   )}
                 >
-                  <cat.icon className={cn('w-6 h-6', cat.color)} />
+                  <cat.icon className={cn("w-6 h-6", cat.color)} />
                 </div>
                 <span className="text-[10px] font-medium text-center leading-tight line-clamp-2 max-w-[60px] text-muted-foreground group-hover:text-foreground transition-colors">
                   {cat.label}
@@ -570,7 +569,7 @@ export default function Explore() {
           {/* Map Preview Banner - Grouped with Scouts */}
           <div
             className="relative h-32 rounded-2xl overflow-hidden bg-zinc-900 cursor-pointer group border border-border/50 shadow-md transition-transform active:scale-[0.98]"
-            onClick={() => navigate('/explore/talent-map')}
+            onClick={() => navigate("/explore/talent-map")}
           >
             <img
               src="https://img.usecurling.com/p/800/300?q=dark%20map&color=black"
@@ -612,10 +611,10 @@ export default function Explore() {
               <span>Perfis cadastrados no Supabase</span>
               {totalCount !== null && (
                 <span className="font-semibold text-primary">
-                  {totalCount}{' '}
+                  {totalCount}{" "}
                   {totalCount === 1
-                    ? 'perfil encontrado'
-                    : 'perfis encontrados'}
+                    ? "perfil encontrado"
+                    : "perfis encontrados"}
                 </span>
               )}
             </div>
@@ -658,7 +657,7 @@ export default function Explore() {
                         Carregando mais...
                       </>
                     ) : (
-                      'Carregar Mais Perfis'
+                      "Carregar Mais Perfis"
                     )}
                   </Button>
                 )}
@@ -679,7 +678,7 @@ export default function Explore() {
             <Button
               variant="outline"
               className="w-full"
-              onClick={() => navigate('/explore/talents')}
+              onClick={() => navigate("/explore/talents")}
             >
               Explorar Área de Recrutadores & Scouts
             </Button>
@@ -708,7 +707,7 @@ export default function Explore() {
             <Button
               variant="outline"
               className="w-full font-semibold"
-              onClick={() => navigate('/explore/events')}
+              onClick={() => navigate("/explore/events")}
             >
               Ver Todos os Eventos & Peneiras
             </Button>
@@ -764,7 +763,7 @@ export default function Explore() {
             <Button
               variant="outline"
               className="w-full"
-              onClick={() => navigate('/explore/venues')}
+              onClick={() => navigate("/explore/venues")}
             >
               Ver Todos os Locais
             </Button>

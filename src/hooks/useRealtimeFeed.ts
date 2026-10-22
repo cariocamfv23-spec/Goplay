@@ -1,19 +1,19 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { supabase } from '@/lib/supabase/client'
+import { useState, useEffect, useRef, useCallback } from "react"
+import { supabase } from "@/lib/supabase/client"
 import {
   feedService,
   type PostItem,
   type PostCommentItem,
-} from '@/services/feed'
-import { moderationService } from '@/services/moderation'
+} from "@/services/feed"
+import { moderationService } from "@/services/moderation"
 import {
   notificationService,
   type NotificationItem,
-} from '@/services/notifications'
-import useSoundStore from '@/stores/useSoundStore'
-import { useFeedStore } from '@/stores/useFeedStore'
-import { toast } from 'sonner'
-import type { RealtimeChannel } from '@supabase/supabase-js'
+} from "@/services/notifications"
+import useSoundStore from "@/stores/useSoundStore"
+import { useFeedStore } from "@/stores/useFeedStore"
+import { toast } from "sonner"
+import type { RealtimeChannel } from "@supabase/supabase-js"
 
 export interface RealtimeFeedState {
   posts: PostItem[]
@@ -113,14 +113,14 @@ export function useRealtimeFeed(
       channelRef.current = null
     }
 
-    const channelName = `realtime-feed-${currentUserId || 'anon'}-${Date.now()}`
+    const channelName = `realtime-feed-${currentUserId || "anon"}-${Date.now()}`
     const channel = supabase.channel(channelName)
 
     // 1. Listen for new posts, updates and deletions
     channel
       .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'posts' },
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "posts" },
         async (payload) => {
           const newRow = payload.new as any
           if (!newRow?.id) return
@@ -139,27 +139,27 @@ export function useRealtimeFeed(
           }
 
           // Fetch post author profile for complete rendering
-          let authorName = 'Usuário Goplay'
-          let authorAvatar = `https://img.usecurling.com/ppl/thumbnail?seed=${newRow.user_id?.slice(0, 4) || 'user'}`
-          let authorType = 'Atleta'
+          let authorName = "Usuário Goplay"
+          let authorAvatar = `https://img.usecurling.com/ppl/thumbnail?seed=${newRow.user_id?.slice(0, 4) || "user"}`
+          let authorType = "Atleta"
           let authorSport: string | null = null
 
           try {
             const { data: prof } = await supabase
-              .from('profiles')
-              .select('full_name, avatar_url, account_type, sport')
-              .eq('id', newRow.user_id)
+              .from("profiles")
+              .select("full_name, avatar_url, account_type, sport")
+              .eq("id", newRow.user_id)
               .maybeSingle()
 
             if (prof) {
               authorName = prof.full_name || authorName
               authorAvatar = prof.avatar_url || authorAvatar
               authorType =
-                prof.account_type === 'club'
-                  ? 'Clube'
-                  : prof.account_type === 'coach'
-                    ? 'Treinador'
-                    : 'Atleta'
+                prof.account_type === "club"
+                  ? "Clube"
+                  : prof.account_type === "coach"
+                    ? "Treinador"
+                    : "Atleta"
               authorSport = prof.sport || null
             }
           } catch {
@@ -176,9 +176,9 @@ export function useRealtimeFeed(
               type: authorType,
               sport: authorSport,
             },
-            content: newRow.content || '',
+            content: newRow.content || "",
             media: Array.isArray(newRow.media_urls) ? newRow.media_urls : [],
-            type: newRow.post_type || 'text',
+            type: newRow.post_type || "text",
             videoUrl: newRow.video_url || undefined,
             audioUrl: newRow.audio_url || null,
             musicLink: newRow.music_link || null,
@@ -187,7 +187,7 @@ export function useRealtimeFeed(
             commentsCount: 0,
             isLiked: false,
             createdAt: newRow.created_at,
-            timeAgo: 'Agora',
+            timeAgo: "Agora",
           }
 
           if (isMountedRef.current) {
@@ -196,8 +196,8 @@ export function useRealtimeFeed(
         },
       )
       .on(
-        'postgres_changes',
-        { event: 'DELETE', schema: 'public', table: 'posts' },
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: "posts" },
         (payload) => {
           const oldRow = payload.old as any
           if (!oldRow?.id) return
@@ -207,8 +207,8 @@ export function useRealtimeFeed(
         },
       )
       .on(
-        'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'posts' },
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "posts" },
         (payload) => {
           const updatedRow = payload.new as any
           if (!updatedRow?.id) return
@@ -239,8 +239,8 @@ export function useRealtimeFeed(
     // 2. Listen for like events
     channel
       .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'post_likes' },
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "post_likes" },
         (payload) => {
           const newLike = payload.new as any
           if (!newLike?.post_id) return
@@ -265,8 +265,8 @@ export function useRealtimeFeed(
         },
       )
       .on(
-        'postgres_changes',
-        { event: 'DELETE', schema: 'public', table: 'post_likes' },
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: "post_likes" },
         (payload) => {
           const oldLike = payload.old as any
           if (!oldLike?.post_id) return
@@ -294,8 +294,8 @@ export function useRealtimeFeed(
     // 3. Listen for comments additions and deletions
     channel
       .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'post_comments' },
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "post_comments" },
         (payload) => {
           const newComment = payload.new as any
           if (!newComment?.post_id) return
@@ -306,8 +306,8 @@ export function useRealtimeFeed(
         },
       )
       .on(
-        'postgres_changes',
-        { event: 'DELETE', schema: 'public', table: 'post_comments' },
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: "post_comments" },
         (payload) => {
           const oldComment = payload.old as any
           if (!oldComment?.post_id) return
@@ -321,9 +321,9 @@ export function useRealtimeFeed(
     // Subscribe and monitor connection status
     channel.subscribe((status) => {
       if (!isMountedRef.current) return
-      if (status === 'SUBSCRIBED') {
+      if (status === "SUBSCRIBED") {
         setIsLiveConnected(true)
-      } else if (status === 'CLOSED' || status === 'CHANNEL_ERROR') {
+      } else if (status === "CLOSED" || status === "CHANNEL_ERROR") {
         setIsLiveConnected(false)
       }
     })
@@ -369,7 +369,7 @@ export function useRealtimeComments(postId?: string | number) {
   const channelRef = useRef<RealtimeChannel | null>(null)
 
   const isSupabasePost =
-    typeof postId === 'string' &&
+    typeof postId === "string" &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
       postId,
     )
@@ -401,11 +401,11 @@ export function useRealtimeComments(postId?: string | number) {
 
     channel
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'post_comments',
+          event: "INSERT",
+          schema: "public",
+          table: "post_comments",
           filter: `post_id=eq.${postId}`,
         },
         async (payload) => {
@@ -417,13 +417,13 @@ export function useRealtimeComments(postId?: string | number) {
             if (prev.some((c) => c.id === newRow.id)) return prev
 
             // Fetch profile async and append
-            let userName = 'Usuário Goplay'
+            let userName = "Usuário Goplay"
             let userAvatar: string | null = null
 
             supabase
-              .from('profiles')
-              .select('full_name, avatar_url')
-              .eq('id', newRow.user_id)
+              .from("profiles")
+              .select("full_name, avatar_url")
+              .eq("id", newRow.user_id)
               .maybeSingle()
               .then(({ data: prof }) => {
                 if (prof && isMountedRef.current) {
@@ -434,7 +434,7 @@ export function useRealtimeComments(postId?: string | number) {
                             ...item,
                             user: {
                               id: newRow.user_id,
-                              name: prof.full_name || 'Usuário Goplay',
+                              name: prof.full_name || "Usuário Goplay",
                               avatar: prof.avatar_url || null,
                             },
                           }
@@ -450,7 +450,7 @@ export function useRealtimeComments(postId?: string | number) {
               userId: newRow.user_id,
               content: newRow.content,
               createdAt: newRow.created_at,
-              timeAgo: 'Agora',
+              timeAgo: "Agora",
               user: {
                 id: newRow.user_id,
                 name: userName,
@@ -463,11 +463,11 @@ export function useRealtimeComments(postId?: string | number) {
         },
       )
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: 'DELETE',
-          schema: 'public',
-          table: 'post_comments',
+          event: "DELETE",
+          schema: "public",
+          table: "post_comments",
           filter: `post_id=eq.${postId}`,
         },
         (payload) => {
@@ -553,11 +553,11 @@ export function useRealtimeNotifications(userId?: string | null) {
 
     channel
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'notifications',
+          event: "INSERT",
+          schema: "public",
+          table: "notifications",
           filter: `user_id=eq.${userId}`,
         },
         async (payload) => {
@@ -565,21 +565,19 @@ export function useRealtimeNotifications(userId?: string | null) {
           if (!newRow?.id) return
 
           // Fetch actor profile
-          let actorData:
-            | { id: string; name: string; avatar: string }
-            | undefined
+          let actorData: { id: string name: string avatar: string } | undefined
           if (newRow.actor_id) {
             try {
               const { data: prof } = await supabase
-                .from('profiles')
-                .select('id, full_name, avatar_url')
-                .eq('id', newRow.actor_id)
+                .from("profiles")
+                .select("id, full_name, avatar_url")
+                .eq("id", newRow.actor_id)
                 .maybeSingle()
               if (prof) {
                 actorData = {
                   id: prof.id,
-                  name: prof.full_name || 'Atleta',
-                  avatar: prof.avatar_url || '',
+                  name: prof.full_name || "Atleta",
+                  avatar: prof.avatar_url || "",
                 }
               }
             } catch {
@@ -591,19 +589,19 @@ export function useRealtimeNotifications(userId?: string | null) {
             id: newRow.id,
             userId: newRow.user_id,
             actorId: newRow.actor_id,
-            type: newRow.type || 'info',
-            title: newRow.title || 'Notificação',
-            message: newRow.message || '',
+            type: newRow.type || "info",
+            title: newRow.title || "Notificação",
+            message: newRow.message || "",
             link: newRow.link,
             read: Boolean(newRow.read),
             createdAt: newRow.created_at,
-            timeAgo: 'Agora',
+            timeAgo: "Agora",
             actor: actorData,
           }
 
           // Sound alert and toast
           try {
-            useSoundStore.getState().playTone('engagement')
+            useSoundStore.getState().playTone("engagement")
           } catch {
             // Ignore sound error
           }
@@ -621,11 +619,11 @@ export function useRealtimeNotifications(userId?: string | null) {
         },
       )
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'notifications',
+          event: "UPDATE",
+          schema: "public",
+          table: "notifications",
           filter: `user_id=eq.${userId}`,
         },
         (payload) => {
@@ -648,11 +646,11 @@ export function useRealtimeNotifications(userId?: string | null) {
         },
       )
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: 'DELETE',
-          schema: 'public',
-          table: 'notifications',
+          event: "DELETE",
+          schema: "public",
+          table: "notifications",
           filter: `user_id=eq.${userId}`,
         },
         (payload) => {

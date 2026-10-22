@@ -1,11 +1,11 @@
-import * as React from 'react'
-import { cn } from '@/lib/utils'
-import useBrandingStore, { defaultLogo } from '@/stores/useBrandingStore'
-import { useEffect, useState } from 'react'
-import { GoplayIcon } from '@/components/GoplayIcon'
+import * as React from "react"
+import { cn } from "@/lib/utils"
+import useBrandingStore, { defaultLogo } from "@/stores/useBrandingStore"
+import { useEffect, useState } from "react"
+import { GoplayIcon } from "@/components/GoplayIcon"
 
 interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'full' | 'icon' | 'text'
+  variant?: "full" | "icon" | "text"
   iconClassName?: string
   textClassName?: string
   enableSeasonal?: boolean
@@ -13,7 +13,7 @@ interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const Logo = ({
   className,
-  variant = 'full',
+  variant = "full",
   iconClassName,
   textClassName,
   enableSeasonal = false,
@@ -32,15 +32,15 @@ export const Logo = ({
     }
   }
 
-  const showIcon = variant === 'full' || variant === 'icon'
-  const showText = variant === 'full' || variant === 'text'
+  const showIcon = variant === "full" || variant === "icon"
+  const showText = variant === "full" || variant === "text"
   const isDefault = src === defaultLogo
 
   return (
     <div
       className={cn(
-        'flex items-center gap-2 select-none pointer-events-none',
-        !className?.includes('h-') && 'h-10',
+        "flex items-center gap-2 select-none pointer-events-none",
+        !className?.includes("h-") && "h-10",
         className,
       )}
       {...props}
@@ -50,7 +50,7 @@ export const Logo = ({
           {isDefault ? (
             <div
               className={cn(
-                'h-full aspect-square filter drop-shadow-sm',
+                "h-full aspect-square filter drop-shadow-sm",
                 iconClassName,
               )}
             >
@@ -63,7 +63,7 @@ export const Logo = ({
             <img
               src={src}
               alt="Goplay App Logo"
-              className={cn('object-contain h-full w-auto', iconClassName)}
+              className={cn("object-contain h-full w-auto", iconClassName)}
               onError={handleError}
             />
           )}
@@ -72,7 +72,7 @@ export const Logo = ({
       {showText && (
         <span
           className={cn(
-            'font-bold tracking-tighter leading-none text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary to-gold drop-shadow-sm',
+            "font-bold tracking-tighter leading-none text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary to-gold drop-shadow-sm",
             textClassName,
           )}
         >

@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { useState } from "react"
+import { useNavigate, Link } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Card,
   CardContent,
@@ -10,17 +10,17 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Logo } from '@/components/Logo'
-import { Loader2, Mail, ArrowLeft, CheckCircle2, Send } from 'lucide-react'
-import { toast } from 'sonner'
-import { SportsWallpaper } from '@/components/SportsWallpaper'
-import { useAuth } from '@/hooks/use-auth'
+} from "@/components/ui/card"
+import { Logo } from "@/components/Logo"
+import { Loader2, Mail, ArrowLeft, CheckCircle2, Send } from "lucide-react"
+import { toast } from "sonner"
+import { SportsWallpaper } from "@/components/SportsWallpaper"
+import { useAuth } from "@/hooks/use-auth"
 
 export default function ForgotPassword() {
   const navigate = useNavigate()
   const { resetPasswordForEmail } = useAuth()
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState("")
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
@@ -29,14 +29,14 @@ export default function ForgotPassword() {
     const cleanEmail = email.trim().toLowerCase()
 
     if (!cleanEmail) {
-      toast.error('Informe seu e-mail cadastrado.')
+      toast.error("Informe seu e-mail cadastrado.")
       return
     }
 
     // Basic email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(cleanEmail)) {
-      toast.error('Informe um endereço de e-mail válido.')
+      toast.error("Informe um endereço de e-mail válido.")
       return
     }
 
@@ -47,14 +47,14 @@ export default function ForgotPassword() {
 
       if (error) {
         // Prevent revealing internal error traces or account enumeration attacks
-        console.error('Password reset request error:', error)
+        console.error("Password reset request error:", error)
       }
 
       // Always show positive neutral message for security & privacy
       setSubmitted(true)
-      toast.success('Solicitação processada com sucesso!')
+      toast.success("Solicitação processada com sucesso!")
     } catch (err: any) {
-      console.error('Unexpected error during password reset:', err)
+      console.error("Unexpected error during password reset:", err)
       setSubmitted(true)
     } finally {
       setLoading(false)
@@ -77,8 +77,8 @@ export default function ForgotPassword() {
             </CardTitle>
             <CardDescription className="text-center text-xs leading-relaxed">
               {submitted
-                ? 'Verifique as instruções enviadas para a sua caixa de entrada'
-                : 'Digite seu e-mail cadastrado para receber o link oficial de redefinição de senha.'}
+                ? "Verifique as instruções enviadas para a sua caixa de entrada"
+                : "Digite seu e-mail cadastrado para receber o link oficial de redefinição de senha."}
             </CardDescription>
           </CardHeader>
 
@@ -93,7 +93,7 @@ export default function ForgotPassword() {
                     Link enviado com sucesso!
                   </p>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Se o e-mail{' '}
+                    Se o e-mail{" "}
                     <strong className="text-foreground">{email}</strong> estiver
                     cadastrado no Goplay App, você receberá um link seguro para
                     redefinir sua senha em instantes.
@@ -104,7 +104,7 @@ export default function ForgotPassword() {
                     </p>
                     <p className="leading-relaxed">
                       Caso o e-mail demore alguns minutos, verifique sua caixa
-                      de entrada e a pasta de{' '}
+                      de entrada e a pasta de{" "}
                       <strong>Spam / Lixo Eletrônico</strong>. Se você utiliza
                       provedores corporativos ou filtros rígidos, adicione o
                       domínio do Goplay aos remetentes confiáveis.
@@ -122,7 +122,7 @@ export default function ForgotPassword() {
                   </Button>
                   <Button
                     className="w-full font-bold bg-primary text-white"
-                    onClick={() => navigate('/login')}
+                    onClick={() => navigate("/login")}
                   >
                     Voltar ao Login
                   </Button>

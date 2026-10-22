@@ -5,10 +5,10 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-} from '@/components/ui/drawer'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
+} from "@/components/ui/drawer"
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import {
   Lock,
   AlertTriangle,
@@ -18,12 +18,12 @@ import {
   Mail,
   Phone,
   ShieldAlert,
-} from 'lucide-react'
-import { ProfileData } from '@/lib/data'
-import { useState } from 'react'
-import { PaymentDialog } from '@/components/PaymentDialog'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
+} from "lucide-react"
+import { ProfileData } from "@/lib/data"
+import { useState } from "react"
+import { PaymentDialog } from "@/components/PaymentDialog"
+import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 
 interface TalentUnlockDrawerProps {
   athlete: ProfileData | null
@@ -45,11 +45,11 @@ export function TalentUnlockDrawer({
 
   const handleUnlockSuccess = () => {
     setIsUnlocked(true)
-    toast.success('Acesso ao perfil liberado com sucesso!')
+    toast.success("Acesso ao perfil liberado com sucesso!")
   }
 
   const handleContactSupport = () => {
-    toast.info('Solicitação enviada ao suporte para validação de cláusulas.')
+    toast.info("Solicitação enviada ao suporte para validação de cláusulas.")
     onClose()
   }
 
@@ -76,7 +76,7 @@ export function TalentUnlockDrawer({
                 </div>
                 <DrawerDescription className="flex flex-col gap-1 mt-1">
                   <span className="flex items-center gap-1 text-primary font-medium">
-                    <Trophy className="w-3 h-3" /> {athlete.sport} •{' '}
+                    <Trophy className="w-3 h-3" /> {athlete.sport} •{" "}
                     {athlete.position}
                   </span>
                   <span className="flex items-center gap-1 text-xs">
@@ -107,7 +107,7 @@ export function TalentUnlockDrawer({
                 </div>
                 <div className="flex flex-col items-center p-2 bg-background rounded-lg flex-1 border border-border/50">
                   <span className="font-bold text-lg text-green-600">
-                    {athlete.rating || '-'}
+                    {athlete.rating || "-"}
                   </span>
                   <span className="text-[10px] uppercase text-muted-foreground">
                     Rating
@@ -161,7 +161,7 @@ export function TalentUnlockDrawer({
                         E-mail
                       </span>
                       <span className="text-sm font-medium select-all">
-                        {athlete.username.replace('@', '')}@email.com
+                        {athlete.username.replace("@", "")}@email.com
                       </span>
                     </div>
                   </div>

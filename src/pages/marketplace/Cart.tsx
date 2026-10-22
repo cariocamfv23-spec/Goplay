@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   Trash2,
@@ -8,42 +8,42 @@ import {
   Zap,
   Package,
   Clock,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { Card, CardContent } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import { PaymentDialog } from '@/components/PaymentDialog'
-import { useCartStore } from '@/stores/useCartStore'
-import { cn } from '@/lib/utils'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Label } from '@/components/ui/label'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Card, CardContent } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { PaymentDialog } from "@/components/PaymentDialog"
+import { useCartStore } from "@/stores/useCartStore"
+import { cn } from "@/lib/utils"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
 
 export default function Cart() {
   const navigate = useNavigate()
   const { cart, removeFromCart, clearCart, total, totalPoints } = useCartStore()
 
-  const [shippingMethod, setShippingMethod] = useState('standard')
+  const [shippingMethod, setShippingMethod] = useState("standard")
 
   const shippingOptions = [
     {
-      id: 'standard',
-      name: 'Frete Padrão',
+      id: "standard",
+      name: "Frete Padrão",
       price: 0,
-      time: '5-7 dias úteis',
+      time: "5-7 dias úteis",
       icon: Truck,
     },
     {
-      id: 'express',
-      name: 'Entrega Expressa',
+      id: "express",
+      name: "Entrega Expressa",
       price: 14.9,
-      time: '2-3 dias úteis',
+      time: "2-3 dias úteis",
       icon: Zap,
     },
     {
-      id: 'flash',
-      name: 'Entrega Flash',
+      id: "flash",
+      name: "Entrega Flash",
       price: 29.9,
-      time: 'Chega amanhã',
+      time: "Chega amanhã",
       icon: Package,
     },
   ]
@@ -71,7 +71,7 @@ export default function Cart() {
         </Button>
         <h1 className="text-xl font-bold">Carrinho</h1>
         <span className="text-sm text-muted-foreground ml-auto font-medium">
-          {cart.length} {cart.length === 1 ? 'item' : 'itens'}
+          {cart.length} {cart.length === 1 ? "item" : "itens"}
         </span>
       </div>
 
@@ -91,7 +91,7 @@ export default function Cart() {
               </p>
             </div>
             <Button
-              onClick={() => navigate('/marketplace')}
+              onClick={() => navigate("/marketplace")}
               className="rounded-full px-8 shadow-md"
             >
               Ir para a Loja
@@ -184,10 +184,10 @@ export default function Cart() {
                     key={option.id}
                     htmlFor={option.id}
                     className={cn(
-                      'flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all duration-200',
+                      "flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all duration-200",
                       shippingMethod === option.id
-                        ? 'border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20'
-                        : 'border-border/50 bg-card/30 hover:bg-card hover:border-primary/30',
+                        ? "border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20"
+                        : "border-border/50 bg-card/30 hover:bg-card hover:border-primary/30",
                     )}
                   >
                     <div className="flex items-center gap-4">
@@ -198,10 +198,10 @@ export default function Cart() {
                       />
                       <div
                         className={cn(
-                          'p-2.5 rounded-full transition-colors',
+                          "p-2.5 rounded-full transition-colors",
                           shippingMethod === option.id
-                            ? 'bg-primary text-primary-foreground'
-                            : 'bg-secondary text-muted-foreground',
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-secondary text-muted-foreground",
                         )}
                       >
                         <option.icon className="h-5 w-5" />
@@ -209,10 +209,10 @@ export default function Cart() {
                       <div className="space-y-0.5">
                         <p
                           className={cn(
-                            'font-semibold text-sm',
+                            "font-semibold text-sm",
                             shippingMethod === option.id
-                              ? 'text-foreground'
-                              : 'text-muted-foreground',
+                              ? "text-foreground"
+                              : "text-muted-foreground",
                           )}
                         >
                           {option.name}
@@ -226,14 +226,14 @@ export default function Cart() {
                     <div className="text-right">
                       <span
                         className={cn(
-                          'font-bold text-sm',
+                          "font-bold text-sm",
                           shippingMethod === option.id
-                            ? 'text-primary'
-                            : 'text-foreground',
+                            ? "text-primary"
+                            : "text-foreground",
                         )}
                       >
                         {option.price === 0
-                          ? 'Grátis'
+                          ? "Grátis"
                           : `R$ ${option.price.toFixed(2)}`}
                       </span>
                     </div>
@@ -256,14 +256,14 @@ export default function Cart() {
               <span className="text-muted-foreground">Frete</span>
               <span
                 className={cn(
-                  'font-medium',
+                  "font-medium",
                   selectedShipping.price === 0
-                    ? 'text-green-600'
-                    : 'text-foreground',
+                    ? "text-green-600"
+                    : "text-foreground",
                 )}
               >
                 {selectedShipping.price === 0
-                  ? 'Grátis'
+                  ? "Grátis"
                   : `R$ ${selectedShipping.price.toFixed(2)}`}
               </span>
             </div>
@@ -283,7 +283,9 @@ export default function Cart() {
             </div>
           </div>
           <PaymentDialog
-            title={`Compra de ${cart.length} ${cart.length === 1 ? 'item' : 'itens'}`}
+            title={`Compra de ${cart.length} ${
+              cart.length === 1 ? "item" : "itens"
+            }`}
             price={finalPrice}
             pointsPrice={finalPoints}
             onSuccess={clearCart}

@@ -6,53 +6,53 @@ export interface Sticker {
   position: string
   flag: string
   image: string
-  rarity: 'common' | 'rare' | 'legendary'
+  rarity: "common" | "rare" | "legendary"
 }
 
 const countriesData = [
-  { name: 'Brasil', flag: '🇧🇷', color: 'green' },
-  { name: 'USA', flag: '🇺🇸', color: 'blue' },
-  { name: 'México', flag: '🇲🇽', color: 'green' },
-  { name: 'Argentina', flag: '🇦🇷', color: 'blue' },
-  { name: 'França', flag: '🇫🇷', color: 'blue' },
-  { name: 'Espanha', flag: '🇪🇸', color: 'red' },
-  { name: 'Alemanha', flag: '🇩🇪', color: 'black' },
-  { name: 'Inglaterra', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', color: 'white' },
+  { name: "Brasil", flag: "🇧🇷", color: "green" },
+  { name: "USA", flag: "🇺🇸", color: "blue" },
+  { name: "México", flag: "🇲🇽", color: "green" },
+  { name: "Argentina", flag: "🇦🇷", color: "blue" },
+  { name: "França", flag: "🇫🇷", color: "blue" },
+  { name: "Espanha", flag: "🇪🇸", color: "red" },
+  { name: "Alemanha", flag: "🇩🇪", color: "black" },
+  { name: "Inglaterra", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", color: "white" },
 ]
 
-const positions = ['ATA', 'MEI', 'VOL', 'ZAG', 'LAT', 'GOL']
+const positions = ["ATA", "MEI", "VOL", "ZAG", "LAT", "GOL"]
 
 const names = [
-  'J. Silva',
-  'R. Santos',
-  'T. Adams',
-  'P. Gomez',
-  'L. Messi',
-  'K. Mbappé',
-  'A. Griezmann',
-  'V. Júnior',
-  'E. Haaland',
-  'J. Bellingham',
-  'H. Kane',
-  'C. Pulisic',
-  'G. Ochoa',
-  'R. Jiménez',
-  'A. Di María',
-  'O. Dembélé',
-  'Pedri',
-  'Gavi',
-  'T. Kroos',
-  'J. Musiala',
-  'B. Saka',
-  'P. Foden',
-  'N. Neymar',
-  'R. Rodrygo',
-  'W. McKennie',
-  'T. Weah',
-  'E. Álvarez',
-  'S. Giménez',
-  'E. Fernández',
-  'J. Álvarez',
+  "J. Silva",
+  "R. Santos",
+  "T. Adams",
+  "P. Gomez",
+  "L. Messi",
+  "K. Mbappé",
+  "A. Griezmann",
+  "V. Júnior",
+  "E. Haaland",
+  "J. Bellingham",
+  "H. Kane",
+  "C. Pulisic",
+  "G. Ochoa",
+  "R. Jiménez",
+  "A. Di María",
+  "O. Dembélé",
+  "Pedri",
+  "Gavi",
+  "T. Kroos",
+  "J. Musiala",
+  "B. Saka",
+  "P. Foden",
+  "N. Neymar",
+  "R. Rodrygo",
+  "W. McKennie",
+  "T. Weah",
+  "E. Álvarez",
+  "S. Giménez",
+  "E. Fernández",
+  "J. Álvarez",
 ]
 
 export const mockStickers: Sticker[] = Array.from({ length: 40 }).map(
@@ -71,7 +71,7 @@ export const mockStickers: Sticker[] = Array.from({ length: 40 }).map(
       position,
       flag: country.flag,
       image: `https://img.usecurling.com/p/300/400?q=soccer%20player%20${country.name}&color=${country.color}&dpr=2&seed=${i}`,
-      rarity: number % 5 === 0 ? 'rare' : 'common',
+      rarity: number % 5 === 0 ? "rare" : "common",
     }
   },
 )

@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   ArrowLeft,
   Search,
@@ -7,23 +7,23 @@ import {
   GraduationCap,
   Filter,
   CheckCircle2,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { mockScholarships } from '@/lib/data'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/dropdown-menu"
+import { mockScholarships } from "@/lib/data"
+import { cn } from "@/lib/utils"
 
 export default function Scholarships() {
   const navigate = useNavigate()
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("")
   const [filters, setFilters] = useState({
     country: [] as string[],
     city: [] as string[],
@@ -48,7 +48,7 @@ export default function Scholarships() {
     return matchesSearch && matchesCountry && matchesCity
   })
 
-  const toggleFilter = (type: 'country' | 'city', value: string) => {
+  const toggleFilter = (type: "country" | "city", value: string) => {
     setFilters((prev) => {
       const current = prev[type]
       const updated = current.includes(value)
@@ -67,7 +67,7 @@ export default function Scholarships() {
             variant="ghost"
             size="icon"
             className="-ml-2 hover:bg-secondary/50 rounded-full"
-            onClick={() => navigate('/explore')}
+            onClick={() => navigate("/explore")}
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
@@ -98,9 +98,9 @@ export default function Scholarships() {
                   variant="outline"
                   size="sm"
                   className={cn(
-                    'rounded-full text-xs h-8 border-dashed',
+                    "rounded-full text-xs h-8 border-dashed",
                     filters.country.length > 0 &&
-                      'bg-emerald-50 border-emerald-200 text-emerald-700 border-solid',
+                      "bg-emerald-50 border-emerald-200 text-emerald-700 border-solid",
                   )}
                 >
                   <Filter className="h-3 w-3 mr-1.5" />
@@ -117,7 +117,7 @@ export default function Scholarships() {
                   <DropdownMenuCheckboxItem
                     key={country}
                     checked={filters.country.includes(country)}
-                    onCheckedChange={() => toggleFilter('country', country)}
+                    onCheckedChange={() => toggleFilter("country", country)}
                   >
                     {country}
                   </DropdownMenuCheckboxItem>
@@ -131,9 +131,9 @@ export default function Scholarships() {
                   variant="outline"
                   size="sm"
                   className={cn(
-                    'rounded-full text-xs h-8 border-dashed',
+                    "rounded-full text-xs h-8 border-dashed",
                     filters.city.length > 0 &&
-                      'bg-emerald-50 border-emerald-200 text-emerald-700 border-solid',
+                      "bg-emerald-50 border-emerald-200 text-emerald-700 border-solid",
                   )}
                 >
                   <MapPin className="h-3 w-3 mr-1.5" />
@@ -150,7 +150,7 @@ export default function Scholarships() {
                   <DropdownMenuCheckboxItem
                     key={city}
                     checked={filters.city.includes(city)}
-                    onCheckedChange={() => toggleFilter('city', city)}
+                    onCheckedChange={() => toggleFilter("city", city)}
                   >
                     {city}
                   </DropdownMenuCheckboxItem>

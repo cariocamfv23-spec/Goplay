@@ -1,6 +1,6 @@
-import { mockRetrospective } from '@/lib/data'
-import { cn } from '@/lib/utils'
-import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
+import { mockRetrospective } from "@/lib/data"
+import { cn } from "@/lib/utils"
+import { useRetrospectiveStore } from "@/stores/useRetrospectiveStore"
 
 export default function MilestonesSlide() {
   const { getTheme } = useRetrospectiveStore()
@@ -20,13 +20,13 @@ export default function MilestonesSlide() {
           <div
             key={item.id}
             className={cn(
-              'flex items-center gap-6 animate-in slide-in-from-right fade-in duration-700 fill-mode-both',
+              "flex items-center gap-6 animate-in slide-in-from-right fade-in duration-700 fill-mode-both",
             )}
             style={{ animationDelay: `${index * 300 + 200}ms` }}
           >
             <div
               className={cn(
-                'w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-lg shrink-0 z-10',
+                "w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-lg shrink-0 z-10",
                 currentTheme.icon,
               )}
             >

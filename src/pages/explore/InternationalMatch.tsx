@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   Globe,
@@ -9,14 +9,14 @@ import {
   TrendingUp,
   TrendingDown,
   Minus,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { mockInternationalMatches, mockInternationalRanking } from '@/lib/data'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { mockInternationalMatches, mockInternationalRanking } from "@/lib/data"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { cn } from "@/lib/utils"
 
 export default function InternationalMatch() {
   const navigate = useNavigate()
@@ -58,13 +58,13 @@ export default function InternationalMatch() {
                   <div className="absolute top-2 left-2">
                     <Badge
                       variant={
-                        match.status === 'online' ? 'default' : 'secondary'
+                        match.status === "online" ? "default" : "secondary"
                       }
                       className={cn(
-                        'text-[10px] uppercase font-bold tracking-wider',
-                        match.status === 'online'
-                          ? 'bg-green-500 hover:bg-green-600'
-                          : 'bg-gray-500/50 text-white',
+                        "text-[10px] uppercase font-bold tracking-wider",
+                        match.status === "online"
+                          ? "bg-green-500 hover:bg-green-600"
+                          : "bg-gray-500/50 text-white",
                       )}
                     >
                       {match.status}
@@ -120,10 +120,10 @@ export default function InternationalMatch() {
                 <div
                   key={rank.id}
                   className={cn(
-                    'flex items-center gap-4 p-4 rounded-xl border transition-all hover:scale-[1.01] bg-card',
+                    "flex items-center gap-4 p-4 rounded-xl border transition-all hover:scale-[1.01] bg-card",
                     rank.position === 1
-                      ? 'border-gold/50 shadow-md shadow-gold/5'
-                      : 'border-border/50',
+                      ? "border-gold/50 shadow-md shadow-gold/5"
+                      : "border-border/50",
                   )}
                 >
                   <div className="font-bold text-lg text-muted-foreground w-8 text-center flex items-center justify-center">
@@ -136,10 +136,10 @@ export default function InternationalMatch() {
                   <div className="relative">
                     <Avatar
                       className={cn(
-                        'h-12 w-12 border-2',
+                        "h-12 w-12 border-2",
                         rank.position === 1
-                          ? 'border-gold'
-                          : 'border-transparent',
+                          ? "border-gold"
+                          : "border-transparent",
                       )}
                     >
                       <AvatarImage src={rank.avatar} />
@@ -162,13 +162,13 @@ export default function InternationalMatch() {
                   <div className="text-right">
                     <p className="font-bold text-primary">{rank.points}</p>
                     <div className="flex items-center justify-end text-xs gap-1">
-                      {rank.trend === 'up' && (
+                      {rank.trend === "up" && (
                         <TrendingUp className="h-3 w-3 text-green-500" />
                       )}
-                      {rank.trend === 'down' && (
+                      {rank.trend === "down" && (
                         <TrendingDown className="h-3 w-3 text-red-500" />
                       )}
-                      {rank.trend === 'same' && (
+                      {rank.trend === "same" && (
                         <Minus className="h-3 w-3 text-muted-foreground" />
                       )}
                     </div>

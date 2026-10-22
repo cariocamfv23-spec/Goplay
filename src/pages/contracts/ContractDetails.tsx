@@ -1,7 +1,7 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { useContractStore } from '@/stores/useContractStore'
-import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
+import { useParams, useNavigate } from "react-router-dom"
+import { useContractStore } from "@/stores/useContractStore"
+import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
 import {
   ArrowLeft,
   CheckCircle2,
@@ -10,10 +10,10 @@ import {
   Target,
   Calendar,
   AlertCircle,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { toast } from 'sonner'
-import { Slider } from '@/components/ui/slider'
+} from "lucide-react"
+import { cn } from "@/lib/utils"
+import { toast } from "sonner"
+import { Slider } from "@/components/ui/slider"
 
 export default function ContractDetails() {
   const { id } = useParams()
@@ -32,7 +32,7 @@ export default function ContractDetails() {
       <div className="min-h-screen flex items-center justify-center p-4 text-center">
         <div>
           <h2 className="text-xl font-bold mb-2">Contrato não encontrado</h2>
-          <Button onClick={() => navigate('/contracts')}>Voltar</Button>
+          <Button onClick={() => navigate("/contracts")}>Voltar</Button>
         </div>
       </div>
     )
@@ -42,16 +42,16 @@ export default function ContractDetails() {
   const maxValue =
     contract.baseValue +
     contract.metrics.reduce((acc, m) => acc + m.impactValue, 0)
-  const isLive = contract.status === 'active'
+  const isLive = contract.status === "active"
 
   const handleAccept = () => {
-    updateContractStatus(contract.id, 'active')
-    toast.success('Contrato aceito! O monitoramento começou.')
+    updateContractStatus(contract.id, "active")
+    toast.success("Contrato aceito! O monitoramento começou.")
   }
 
   const handleReject = () => {
-    updateContractStatus(contract.id, 'rejected')
-    toast.info('Proposta recusada.')
+    updateContractStatus(contract.id, "rejected")
+    toast.info("Proposta recusada.")
     navigate(-1)
   }
 
@@ -72,7 +72,7 @@ export default function ContractDetails() {
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground bg-secondary px-2 py-0.5 rounded">
-          {isLive ? 'Live Tracking' : 'Proposta'}
+          {isLive ? "Live Tracking" : "Proposta"}
         </span>
       </div>
 
@@ -93,7 +93,7 @@ export default function ContractDetails() {
           <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
             <Calendar className="w-3 h-3" />
             <span>
-              {new Date(contract.startDate).toLocaleDateString()} -{' '}
+              {new Date(contract.startDate).toLocaleDateString()} -{" "}
               {new Date(contract.endDate).toLocaleDateString()}
             </span>
           </div>
@@ -107,7 +107,7 @@ export default function ContractDetails() {
 
           <div className="relative z-10 text-center">
             <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">
-              Valor {isLive ? 'Atual do Contrato' : 'Proposto'}
+              Valor {isLive ? "Atual do Contrato" : "Proposto"}
             </p>
             <div className="flex items-center justify-center gap-1.5 mb-2">
               <span className="text-lg font-medium text-muted-foreground self-start mt-2">
@@ -172,7 +172,7 @@ export default function ContractDetails() {
                         {metric.label}
                       </span>
                       <span className="text-[10px] text-muted-foreground uppercase">
-                        {metric.type === 'linear' ? 'Escalável' : 'Milestone'}
+                        {metric.type === "linear" ? "Escalável" : "Milestone"}
                       </span>
                     </div>
                     <div className="text-right">
@@ -194,10 +194,10 @@ export default function ContractDetails() {
                     <Progress
                       value={progress}
                       className={cn(
-                        'h-2',
+                        "h-2",
                         isAchieved
-                          ? '[&>div]:bg-green-500'
-                          : '[&>div]:bg-primary',
+                          ? "[&>div]:bg-green-500"
+                          : "[&>div]:bg-primary",
                       )}
                     />
                   </div>
@@ -225,7 +225,7 @@ export default function ContractDetails() {
         </div>
 
         {/* Action Buttons */}
-        {contract.status === 'pending' && (
+        {contract.status === "pending" && (
           <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border/50 backdrop-blur-lg flex gap-3 z-40">
             <Button
               variant="outline"
@@ -245,7 +245,7 @@ export default function ContractDetails() {
           </div>
         )}
 
-        {contract.status === 'rejected' && (
+        {contract.status === "rejected" && (
           <div className="p-4 bg-red-500/10 text-red-600 rounded-xl text-center text-sm font-medium border border-red-500/20">
             <AlertCircle className="w-5 h-5 mx-auto mb-2" />
             Esta proposta foi recusada.

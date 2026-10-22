@@ -1,6 +1,6 @@
-import { ProfileData } from '@/lib/data'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { ProfileData } from "@/lib/data"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   MapPin,
   Star,
@@ -9,10 +9,10 @@ import {
   ShieldCheck,
   Clock,
   UserPlus,
-} from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
-import { useNavigate } from 'react-router-dom'
-import { Badge } from '@/components/ui/badge'
+} from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { useNavigate } from "react-router-dom"
+import { Badge } from "@/components/ui/badge"
 
 export default function DriverView({ profile }: { profile: ProfileData }) {
   const navigate = useNavigate()

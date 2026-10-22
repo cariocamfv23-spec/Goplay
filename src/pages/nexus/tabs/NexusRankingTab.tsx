@@ -1,14 +1,14 @@
-import { useState, useMemo } from 'react'
-import { useNexusStore } from '@/stores/useNexusStore'
-import { useNavigate } from 'react-router-dom'
-import { Trophy, Flame, Calendar, Medal } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
+import { useState, useMemo } from "react"
+import { useNexusStore } from "@/stores/useNexusStore"
+import { useNavigate } from "react-router-dom"
+import { Trophy, Flame, Calendar, Medal } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 
 export function NexusRankingTab() {
   const { tribes } = useNexusStore()
   const navigate = useNavigate()
-  const [metric, setMetric] = useState<'active' | 'events'>('active')
+  const [metric, setMetric] = useState<"active" | "events">("active")
 
   const rankedTribes = useMemo(() => {
     return tribes
@@ -26,7 +26,7 @@ export function NexusRankingTab() {
         }
       })
       .sort((a, b) =>
-        metric === 'events'
+        metric === "events"
           ? b.mockEvents - a.mockEvents
           : b.engagement - a.engagement,
       )
@@ -51,30 +51,30 @@ export function NexusRankingTab() {
     <div className="animate-fade-in space-y-6">
       <div className="flex bg-secondary/50 p-1.5 rounded-2xl w-full max-w-xs mx-auto shadow-inner">
         <button
-          onClick={() => setMetric('active')}
+          onClick={() => setMetric("active")}
           className={cn(
-            'flex-1 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2',
-            metric === 'active'
-              ? 'bg-background shadow-md text-primary'
-              : 'text-muted-foreground hover:text-foreground',
+            "flex-1 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2",
+            metric === "active"
+              ? "bg-background shadow-md text-primary"
+              : "text-muted-foreground hover:text-foreground",
           )}
         >
           <Flame
-            className={cn('w-4 h-4', metric === 'active' && 'text-orange-500')}
+            className={cn("w-4 h-4", metric === "active" && "text-orange-500")}
           />
           Mais Ativas
         </button>
         <button
-          onClick={() => setMetric('events')}
+          onClick={() => setMetric("events")}
           className={cn(
-            'flex-1 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2',
-            metric === 'events'
-              ? 'bg-background shadow-md text-primary'
-              : 'text-muted-foreground hover:text-foreground',
+            "flex-1 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2",
+            metric === "events"
+              ? "bg-background shadow-md text-primary"
+              : "text-muted-foreground hover:text-foreground",
           )}
         >
           <Calendar
-            className={cn('w-4 h-4', metric === 'events' && 'text-blue-500')}
+            className={cn("w-4 h-4", metric === "events" && "text-blue-500")}
           />
           Mais Eventos
         </button>
@@ -84,21 +84,21 @@ export function NexusRankingTab() {
         {rankedTribes.map((tribe, index) => {
           const rank = index + 1
           const metricValue =
-            metric === 'active' ? tribe.engagement : tribe.mockEvents
-          const metricLabel = metric === 'active' ? 'Engajamento' : 'Eventos'
+            metric === "active" ? tribe.engagement : tribe.mockEvents
+          const metricLabel = metric === "active" ? "Engajamento" : "Eventos"
 
           return (
             <div
               key={tribe.id}
               onClick={() => navigate(`/nexus/${tribe.id}`)}
               className={cn(
-                'relative flex items-center p-4 rounded-3xl border backdrop-blur-xl shadow-sm cursor-pointer transition-all hover:-translate-y-1',
+                "relative flex items-center p-4 rounded-3xl border backdrop-blur-xl shadow-sm cursor-pointer transition-all hover:-translate-y-1",
                 rank === 1 &&
-                  'bg-yellow-500/10 border-yellow-500/50 shadow-[0_4px_20px_rgba(234,179,8,0.15)]',
-                rank === 2 && 'bg-slate-300/10 border-slate-300/50',
-                rank === 3 && 'bg-amber-700/10 border-amber-700/50',
+                  "bg-yellow-500/10 border-yellow-500/50 shadow-[0_4px_20px_rgba(234,179,8,0.15)]",
+                rank === 2 && "bg-slate-300/10 border-slate-300/50",
+                rank === 3 && "bg-amber-700/10 border-amber-700/50",
                 rank > 3 &&
-                  'bg-card/60 border-border/50 hover:border-primary/40',
+                  "bg-card/60 border-border/50 hover:border-primary/40",
               )}
             >
               <div className="w-12 sm:w-16 flex justify-center flex-shrink-0">
@@ -119,9 +119,9 @@ export function NexusRankingTab() {
                 src={tribe.icon}
                 alt={tribe.name}
                 className={cn(
-                  'w-14 h-14 rounded-xl object-cover bg-secondary',
+                  "w-14 h-14 rounded-xl object-cover bg-secondary",
                   rank === 1 &&
-                    'ring-2 ring-yellow-500 ring-offset-2 ring-offset-background',
+                    "ring-2 ring-yellow-500 ring-offset-2 ring-offset-background",
                 )}
               />
 
@@ -132,9 +132,9 @@ export function NexusRankingTab() {
                 <Badge
                   variant="outline"
                   className={cn(
-                    'mt-1.5 text-[10px] px-2 py-0',
+                    "mt-1.5 text-[10px] px-2 py-0",
                     rank === 1 &&
-                      'border-yellow-500/30 text-yellow-600 dark:text-yellow-400',
+                      "border-yellow-500/30 text-yellow-600 dark:text-yellow-400",
                   )}
                 >
                   {tribe.category}
@@ -144,10 +144,10 @@ export function NexusRankingTab() {
               <div className="text-right ml-4 flex-shrink-0">
                 <p
                   className={cn(
-                    'font-black text-xl sm:text-2xl tabular-nums',
+                    "font-black text-xl sm:text-2xl tabular-nums",
                     rank === 1
-                      ? 'text-yellow-600 dark:text-yellow-400'
-                      : 'text-primary',
+                      ? "text-yellow-600 dark:text-yellow-400"
+                      : "text-primary",
                   )}
                 >
                   {metricValue}

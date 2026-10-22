@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, Video, Camera, Trophy, Share2 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, Video, Camera, Trophy, Share2 } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { useState } from "react"
 
 export default function ShadowChallenge() {
   const navigate = useNavigate()
@@ -56,11 +56,17 @@ export default function ShadowChallenge() {
           <div className="absolute bottom-8 left-0 right-0 flex justify-center">
             <Button
               size="lg"
-              className={`h-16 w-16 rounded-full border-4 border-white ${recording ? 'bg-red-500 animate-pulse' : 'bg-transparent hover:bg-white/10'}`}
+              className={`h-16 w-16 rounded-full border-4 border-white ${
+                recording
+                  ? "bg-red-500 animate-pulse"
+                  : "bg-transparent hover:bg-white/10"
+              }`}
               onClick={() => setRecording(!recording)}
             >
               <div
-                className={`h-full w-full rounded-full ${recording ? 'bg-transparent' : 'bg-red-500 scale-90'}`}
+                className={`h-full w-full rounded-full ${
+                  recording ? "bg-transparent" : "bg-red-500 scale-90"
+                }`}
               />
             </Button>
           </div>

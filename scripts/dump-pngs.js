@@ -1,6 +1,6 @@
 // Pure JS PNG encoder to generate 192x192, 512x512 and badge PNGs
-import zlib from 'node:zlib'
-import fs from 'node:fs'
+import zlib from "node:zlib"
+import fs from "node:fs"
 
 function crc32(buf) {
   let table = crc32.table
@@ -23,7 +23,7 @@ function crc32(buf) {
 }
 
 function createChunk(type, data) {
-  const typeBuf = Buffer.from(type, 'ascii')
+  const typeBuf = Buffer.from(type, "ascii")
   const len = data.length
   const chunk = Buffer.alloc(4 + 4 + len + 4)
   chunk.writeUInt32BE(len, 0)
@@ -46,7 +46,7 @@ function makePng(width, height, rgbaBuffer) {
   ihdrData[11] = 0
   ihdrData[12] = 0
 
-  const ihdrChunk = createChunk('IHDR', ihdrData)
+  const ihdrChunk = createChunk("IHDR", ihdrData)
 
   const rowLen = width * 4
   const rawData = Buffer.alloc((1 + rowLen) * height)
@@ -57,8 +57,8 @@ function makePng(width, height, rgbaBuffer) {
   }
 
   const compressedData = zlib.deflateSync(rawData, { level: 9 })
-  const idatChunk = createChunk('IDAT', compressedData)
-  const iendChunk = createChunk('IEND', Buffer.alloc(0))
+  const idatChunk = createChunk("IDAT", compressedData)
+  const iendChunk = createChunk("IEND", Buffer.alloc(0))
 
   return Buffer.concat([sig, ihdrChunk, idatChunk, iendChunk])
 }
@@ -223,18 +223,18 @@ export function renderBadgeIcon(size) {
 }
 
 const icon192 = renderGoplayIcon(192)
-fs.writeFileSync('public/icon-192.png', icon192)
+fs.writeFileSync("public/icon-192.png", icon192)
 
 const icon512 = renderGoplayIcon(512)
-fs.writeFileSync('public/icon-512.png', icon512)
+fs.writeFileSync("public/icon-512.png", icon512)
 
 const badge96 = renderBadgeIcon(96)
-fs.writeFileSync('public/notification-badge.png', badge96)
+fs.writeFileSync("public/notification-badge.png", badge96)
 
 const monochrome512 = renderBadgeIcon(512)
-fs.writeFileSync('public/icon-monochrome.png', monochrome512)
+fs.writeFileSync("public/icon-monochrome.png", monochrome512)
 
-console.log('BASE64_192:' + icon192.toString('base64'))
-console.log('BASE64_512:' + icon512.toString('base64'))
-console.log('BASE64_BADGE:' + badge96.toString('base64'))
-console.log('BASE64_MONOCHROME_512:' + monochrome512.toString('base64'))
+console.log("BASE64_192:" + icon192.toString("base64"))
+console.log("BASE64_512:" + icon512.toString("base64"))
+console.log("BASE64_BADGE:" + badge96.toString("base64"))
+console.log("BASE64_MONOCHROME_512:" + monochrome512.toString("base64"))

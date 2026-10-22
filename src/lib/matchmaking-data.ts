@@ -1,14 +1,9 @@
-export type Modality = 'futsal' | 'campo' | 'society'
-export type Category =
-  | 'competitivo'
-  | 'veterano'
-  | 'master'
-  | 'feminino'
-  | 'masculino'
-export type FieldType = 'sintetico' | 'terrao'
-export type MatchmakingMode = 'balanced' | 'random' | 'varied'
-export type PaymentResponsibility = 'split' | 'home'
-export type TeamRole = 'home' | 'visitor'
+export type Modality = "futsal" | "campo" | "society"
+export type Category = "competitivo" | "veterano" | "master" | "feminino" | "masculino"
+export type FieldType = "sintetico" | "terrao"
+export type MatchmakingMode = "balanced" | "random" | "varied"
+export type PaymentResponsibility = "split" | "home"
+export type TeamRole = "home" | "visitor"
 
 export interface VisitorChecklistState {
   arrived: boolean
@@ -35,7 +30,7 @@ export interface MatchTeam {
   region: string
   distanceKm: number
   logo: string
-  recentForm: ('W' | 'L' | 'D')[]
+  recentForm: ("W" | "L" | "D")[]
 }
 
 export interface MatchField {
@@ -62,7 +57,7 @@ export interface MatchHistoryEntry {
   fieldType: FieldType
   scoreTeam: number
   scoreOpponent: number
-  result: 'win' | 'loss' | 'draw'
+  result: "win" | "loss" | "draw"
   field: string
 }
 
@@ -80,262 +75,262 @@ export interface ScheduledMatch {
 }
 
 export const MY_TEAM: MatchTeam = {
-  id: 'my-team',
-  name: 'Red Wolves FC',
-  modality: 'society',
-  category: 'competitivo',
+  id: "my-team",
+  name: "Red Wolves FC",
+  modality: "society",
+  category: "competitivo",
   skillRating: 1820,
   wins: 24,
   losses: 8,
   draws: 6,
-  ageRange: '25-35',
-  region: 'Zona Sul - SP',
+  ageRange: "25-35",
+  region: "Zona Sul - SP",
   distanceKm: 0,
-  logo: 'https://img.usecurling.com/i?q=wolf%20logo&color=red',
-  recentForm: ['W', 'W', 'L', 'W', 'D'],
+  logo: "https://img.usecurling.com/i?q=wolf%20logo&color=red",
+  recentForm: ["W", "W", "L", "W", "D"],
 }
 
 export const MOCK_TEAMS: MatchTeam[] = [
   {
-    id: 't1',
-    name: 'Meninos da Vila FC',
-    modality: 'society',
-    category: 'veterano',
+    id: "t1",
+    name: "Meninos da Vila FC",
+    modality: "society",
+    category: "veterano",
     skillRating: 1790,
     wins: 22,
     losses: 9,
     draws: 5,
-    ageRange: '35-45',
-    region: 'Zona Sul - SP',
+    ageRange: "35-45",
+    region: "Zona Sul - SP",
     distanceKm: 2.4,
-    logo: 'https://img.usecurling.com/i?q=village%20house&color=green',
-    recentForm: ['W', 'L', 'W', 'W', 'W'],
+    logo: "https://img.usecurling.com/i?q=village%20house&color=green",
+    recentForm: ["W", "L", "W", "W", "W"],
   },
   {
-    id: 't2',
-    name: 'Galácticos Society',
-    modality: 'society',
-    category: 'competitivo',
+    id: "t2",
+    name: "Galácticos Society",
+    modality: "society",
+    category: "competitivo",
     skillRating: 1850,
     wins: 26,
     losses: 7,
     draws: 4,
-    ageRange: '25-35',
-    region: 'Centro - SP',
+    ageRange: "25-35",
+    region: "Centro - SP",
     distanceKm: 5.1,
-    logo: 'https://img.usecurling.com/i?q=galaxy%20star&color=blue',
-    recentForm: ['W', 'W', 'W', 'L', 'W'],
+    logo: "https://img.usecurling.com/i?q=galaxy%20star&color=blue",
+    recentForm: ["W", "W", "W", "L", "W"],
   },
   {
-    id: 't3',
-    name: 'Furacão Futsal',
-    modality: 'futsal',
-    category: 'masculino',
+    id: "t3",
+    name: "Furacão Futsal",
+    modality: "futsal",
+    category: "masculino",
     skillRating: 1750,
     wins: 18,
     losses: 11,
     draws: 7,
-    ageRange: '20-30',
-    region: 'Zona Oeste - SP',
+    ageRange: "20-30",
+    region: "Zona Oeste - SP",
     distanceKm: 7.8,
-    logo: 'https://img.usecurling.com/i?q=hurricane%20storm&color=red',
-    recentForm: ['L', 'W', 'D', 'W', 'L'],
+    logo: "https://img.usecurling.com/i?q=hurricane%20storm&color=red",
+    recentForm: ["L", "W", "D", "W", "L"],
   },
   {
-    id: 't4',
-    name: 'Real Campinas',
-    modality: 'campo',
-    category: 'competitivo',
+    id: "t4",
+    name: "Real Campinas",
+    modality: "campo",
+    category: "competitivo",
     skillRating: 1880,
     wins: 28,
     losses: 6,
     draws: 3,
-    ageRange: '25-35',
-    region: 'Campinas - SP',
+    ageRange: "25-35",
+    region: "Campinas - SP",
     distanceKm: 12.3,
-    logo: 'https://img.usecurling.com/i?q=crown%20royal&color=purple',
-    recentForm: ['W', 'W', 'W', 'W', 'D'],
+    logo: "https://img.usecurling.com/i?q=crown%20royal&color=purple",
+    recentForm: ["W", "W", "W", "W", "D"],
   },
   {
-    id: 't5',
-    name: 'Amazonas FC Feminino',
-    modality: 'futsal',
-    category: 'feminino',
+    id: "t5",
+    name: "Amazonas FC Feminino",
+    modality: "futsal",
+    category: "feminino",
     skillRating: 1800,
     wins: 21,
     losses: 8,
     draws: 6,
-    ageRange: '20-30',
-    region: 'Zona Leste - SP',
+    ageRange: "20-30",
+    region: "Zona Leste - SP",
     distanceKm: 9.5,
-    logo: 'https://img.usecurling.com/i?q=amazon%20river&color=green',
-    recentForm: ['W', 'D', 'W', 'W', 'L'],
+    logo: "https://img.usecurling.com/i?q=amazon%20river&color=green",
+    recentForm: ["W", "D", "W", "W", "L"],
   },
   {
-    id: 't6',
-    name: 'Velha Guarda EC',
-    modality: 'society',
-    category: 'master',
+    id: "t6",
+    name: "Velha Guarda EC",
+    modality: "society",
+    category: "master",
     skillRating: 1760,
     wins: 19,
     losses: 10,
     draws: 8,
-    ageRange: '45-55',
-    region: 'Zona Sul - SP',
+    ageRange: "45-55",
+    region: "Zona Sul - SP",
     distanceKm: 3.2,
-    logo: 'https://img.usecurling.com/i?q=shield%20castle&color=gray',
-    recentForm: ['D', 'W', 'L', 'W', 'D'],
+    logo: "https://img.usecurling.com/i?q=shield%20castle&color=gray",
+    recentForm: ["D", "W", "L", "W", "D"],
   },
   {
-    id: 't7',
-    name: 'Dragões do Norte',
-    modality: 'campo',
-    category: 'masculino',
+    id: "t7",
+    name: "Dragões do Norte",
+    modality: "campo",
+    category: "masculino",
     skillRating: 1830,
     wins: 25,
     losses: 8,
     draws: 5,
-    ageRange: '25-35',
-    region: 'Guarulhos - SP',
+    ageRange: "25-35",
+    region: "Guarulhos - SP",
     distanceKm: 15.0,
-    logo: 'https://img.usecurling.com/i?q=dragon%20fire&color=red',
-    recentForm: ['W', 'L', 'W', 'W', 'W'],
+    logo: "https://img.usecurling.com/i?q=dragon%20fire&color=red",
+    recentForm: ["W", "L", "W", "W", "W"],
   },
   {
-    id: 't8',
-    name: 'Palmeiras Amador',
-    modality: 'futsal',
-    category: 'competitivo',
+    id: "t8",
+    name: "Palmeiras Amador",
+    modality: "futsal",
+    category: "competitivo",
     skillRating: 1810,
     wins: 23,
     losses: 9,
     draws: 4,
-    ageRange: '25-35',
-    region: 'Centro - SP',
+    ageRange: "25-35",
+    region: "Centro - SP",
     distanceKm: 4.7,
-    logo: 'https://img.usecurling.com/i?q=trophy%20cup&color=green',
-    recentForm: ['W', 'W', 'D', 'L', 'W'],
+    logo: "https://img.usecurling.com/i?q=trophy%20cup&color=green",
+    recentForm: ["W", "W", "D", "L", "W"],
   },
   {
-    id: 't9',
-    name: 'Leões do Sul',
-    modality: 'society',
-    category: 'veterano',
+    id: "t9",
+    name: "Leões do Sul",
+    modality: "society",
+    category: "veterano",
     skillRating: 1770,
     wins: 20,
     losses: 11,
     draws: 6,
-    ageRange: '35-45',
-    region: 'Santo Amaro - SP',
+    ageRange: "35-45",
+    region: "Santo Amaro - SP",
     distanceKm: 6.0,
-    logo: 'https://img.usecurling.com/i?q=lion%20head&color=orange',
-    recentForm: ['L', 'W', 'W', 'D', 'L'],
+    logo: "https://img.usecurling.com/i?q=lion%20head&color=orange",
+    recentForm: ["L", "W", "W", "D", "L"],
   },
   {
-    id: 't10',
-    name: 'União Feminina',
-    modality: 'society',
-    category: 'feminino',
+    id: "t10",
+    name: "União Feminina",
+    modality: "society",
+    category: "feminino",
     skillRating: 1795,
     wins: 22,
     losses: 8,
     draws: 5,
-    ageRange: '25-35',
-    region: 'Zona Sul - SP',
+    ageRange: "25-35",
+    region: "Zona Sul - SP",
     distanceKm: 1.8,
-    logo: 'https://img.usecurling.com/i?q=flower%20bloom&color=pink',
-    recentForm: ['W', 'W', 'W', 'L', 'W'],
+    logo: "https://img.usecurling.com/i?q=flower%20bloom&color=pink",
+    recentForm: ["W", "W", "W", "L", "W"],
   },
 ]
 
 export const MOCK_FIELDS: MatchField[] = [
   {
-    id: 'f1',
-    name: 'Arena XP - Quadra 1',
-    fieldType: 'sintetico',
-    address: 'Av. Marques, 100 - Barra Funda, São Paulo',
-    region: 'Centro - SP',
+    id: "f1",
+    name: "Arena XP - Quadra 1",
+    fieldType: "sintetico",
+    address: "Av. Marques, 100 - Barra Funda, São Paulo",
+    region: "Centro - SP",
     distanceKm: 4.5,
     image:
-      'https://img.usecurling.com/p/600/400?q=soccer%20field%20synthetic%20grass&color=green&dpr=2',
-    startTime: '20:00',
-    pricePerHour: 'R$ 220/h',
-    amenities: ['Vestiário', 'Estacionamento', 'Iluminação', 'Bar'],
+      "https://img.usecurling.com/p/600/400?q=soccer%20field%20synthetic%20grass&color=green&dpr=2",
+    startTime: "20:00",
+    pricePerHour: "R$ 220/h",
+    amenities: ["Vestiário", "Estacionamento", "Iluminação", "Bar"],
     lat: -23.5273,
     lng: -46.6961,
   },
   {
-    id: 'f2',
-    name: 'Campo do Terrão',
-    fieldType: 'terrao',
-    address: 'Rua da Mooca, 300 - Mooca, São Paulo',
-    region: 'Zona Leste - SP',
+    id: "f2",
+    name: "Campo do Terrão",
+    fieldType: "terrao",
+    address: "Rua da Mooca, 300 - Mooca, São Paulo",
+    region: "Zona Leste - SP",
     distanceKm: 8.2,
     image:
-      'https://img.usecurling.com/p/600/400?q=dirt%20soccer%20field&color=orange&dpr=2',
-    startTime: '19:00',
-    pricePerHour: 'R$ 120/h',
-    amenities: ['Iluminação', 'Bebedouro'],
+      "https://img.usecurling.com/p/600/400?q=dirt%20soccer%20field&color=orange&dpr=2",
+    startTime: "19:00",
+    pricePerHour: "R$ 120/h",
+    amenities: ["Iluminação", "Bebedouro"],
     lat: -23.5505,
     lng: -46.6333,
   },
   {
-    id: 'f3',
-    name: 'Society Club - Campo A',
-    fieldType: 'sintetico',
-    address: 'Av. dos Bandeirantes, 2000 - Zona Sul, São Paulo',
-    region: 'Zona Sul - SP',
+    id: "f3",
+    name: "Society Club - Campo A",
+    fieldType: "sintetico",
+    address: "Av. dos Bandeirantes, 2000 - Zona Sul, São Paulo",
+    region: "Zona Sul - SP",
     distanceKm: 3.0,
     image:
-      'https://img.usecurling.com/p/600/400?q=society%20soccer%20field%20night&color=green&dpr=2',
-    startTime: '21:00',
-    pricePerHour: 'R$ 200/h',
-    amenities: ['Churrasqueira', 'Estacionamento', 'Bar', 'TV'],
+      "https://img.usecurling.com/p/600/400?q=society%20soccer%20field%20night&color=green&dpr=2",
+    startTime: "21:00",
+    pricePerHour: "R$ 200/h",
+    amenities: ["Churrasqueira", "Estacionamento", "Bar", "TV"],
     lat: -23.6105,
     lng: -46.7056,
   },
   {
-    id: 'f4',
-    name: 'Futsal Pro Arena',
-    fieldType: 'sintetico',
-    address: 'Rua Central, 50 - Centro, São Paulo',
-    region: 'Centro - SP',
+    id: "f4",
+    name: "Futsal Pro Arena",
+    fieldType: "sintetico",
+    address: "Rua Central, 50 - Centro, São Paulo",
+    region: "Centro - SP",
     distanceKm: 5.1,
     image:
-      'https://img.usecurling.com/p/600/400?q=futsal%20indoor%20court%20professional&color=blue&dpr=2',
-    startTime: '18:00',
-    pricePerHour: 'R$ 150/h',
-    amenities: ['Vestiário', 'Wi-Fi', 'Arquibancada', 'Placar Eletrônico'],
+      "https://img.usecurling.com/p/600/400?q=futsal%20indoor%20court%20professional&color=blue&dpr=2",
+    startTime: "18:00",
+    pricePerHour: "R$ 150/h",
+    amenities: ["Vestiário", "Wi-Fi", "Arquibancada", "Placar Eletrônico"],
     lat: -23.5475,
     lng: -46.6361,
   },
   {
-    id: 'f5',
-    name: 'Terrão do Bairro',
-    fieldType: 'terrao',
-    address: 'Rua das Oliveiras, 88 - Pinheiros, São Paulo',
-    region: 'Zona Oeste - SP',
+    id: "f5",
+    name: "Terrão do Bairro",
+    fieldType: "terrao",
+    address: "Rua das Oliveiras, 88 - Pinheiros, São Paulo",
+    region: "Zona Oeste - SP",
     distanceKm: 6.5,
     image:
-      'https://img.usecurling.com/p/600/400?q%20=dirt%20field%20sunset&color=yellow&dpr=2',
-    startTime: '19:30',
-    pricePerHour: 'R$ 90/h',
-    amenities: ['Iluminação', 'Área de Lazer'],
+      "https://img.usecurling.com/p/600/400?q%20=dirt%20field%20sunset&color=yellow&dpr=2",
+    startTime: "19:30",
+    pricePerHour: "R$ 90/h",
+    amenities: ["Iluminação", "Área de Lazer"],
     lat: -23.5675,
     lng: -46.6978,
   },
   {
-    id: 'f6',
-    name: 'Complexo Esportivo Sul',
-    fieldType: 'sintetico',
-    address: 'Av. Ibirapuera, 500 - Vila Mariana, São Paulo',
-    region: 'Zona Sul - SP',
+    id: "f6",
+    name: "Complexo Esportivo Sul",
+    fieldType: "sintetico",
+    address: "Av. Ibirapuera, 500 - Vila Mariana, São Paulo",
+    region: "Zona Sul - SP",
     distanceKm: 2.1,
     image:
-      'https://img.usecurling.com/p/600/400?q=sports%20complex%20modern%20field&color=cyan&dpr=2',
-    startTime: '20:30',
-    pricePerHour: 'R$ 250/h',
-    amenities: ['Vestiário', 'Wi-Fi', 'Bar', 'Lounge', 'Estacionamento'],
+      "https://img.usecurling.com/p/600/400?q=sports%20complex%20modern%20field&color=cyan&dpr=2",
+    startTime: "20:30",
+    pricePerHour: "R$ 250/h",
+    amenities: ["Vestiário", "Wi-Fi", "Bar", "Lounge", "Estacionamento"],
     lat: -23.6075,
     lng: -46.6611,
   },
@@ -343,128 +338,128 @@ export const MOCK_FIELDS: MatchField[] = [
 
 export const MOCK_MATCH_HISTORY: MatchHistoryEntry[] = [
   {
-    id: 'mh1',
-    date: '08 Jun 2026',
-    opponent: 'Galácticos Society',
-    opponentLogo: 'https://img.usecurling.com/i?q=galaxy%20star&color=blue',
-    modality: 'society',
-    fieldType: 'sintetico',
+    id: "mh1",
+    date: "08 Jun 2026",
+    opponent: "Galácticos Society",
+    opponentLogo: "https://img.usecurling.com/i?q=galaxy%20star&color=blue",
+    modality: "society",
+    fieldType: "sintetico",
     scoreTeam: 3,
     scoreOpponent: 2,
-    result: 'win',
-    field: 'Society Club - Campo A',
+    result: "win",
+    field: "Society Club - Campo A",
   },
   {
-    id: 'mh2',
-    date: '01 Jun 2026',
-    opponent: 'Furacão Futsal',
-    opponentLogo: 'https://img.usecurling.com/i?q=hurricane%20storm&color=red',
-    modality: 'futsal',
-    fieldType: 'sintetico',
+    id: "mh2",
+    date: "01 Jun 2026",
+    opponent: "Furacão Futsal",
+    opponentLogo: "https://img.usecurling.com/i?q=hurricane%20storm&color=red",
+    modality: "futsal",
+    fieldType: "sintetico",
     scoreTeam: 1,
     scoreOpponent: 4,
-    result: 'loss',
-    field: 'Futsal Pro Arena',
+    result: "loss",
+    field: "Futsal Pro Arena",
   },
   {
-    id: 'mh3',
-    date: '25 Mai 2026',
-    opponent: 'Meninos da Vila FC',
-    opponentLogo: 'https://img.usecurling.com/i?q=village%20house&color=green',
-    modality: 'society',
-    fieldType: 'terrao',
+    id: "mh3",
+    date: "25 Mai 2026",
+    opponent: "Meninos da Vila FC",
+    opponentLogo: "https://img.usecurling.com/i?q=village%20house&color=green",
+    modality: "society",
+    fieldType: "terrao",
     scoreTeam: 2,
     scoreOpponent: 2,
-    result: 'draw',
-    field: 'Terrão do Bairro',
+    result: "draw",
+    field: "Terrão do Bairro",
   },
   {
-    id: 'mh4',
-    date: '18 Mai 2026',
-    opponent: 'Leões do Sul',
-    opponentLogo: 'https://img.usecurling.com/i?q=lion%20head&color=orange',
-    modality: 'society',
-    fieldType: 'sintetico',
+    id: "mh4",
+    date: "18 Mai 2026",
+    opponent: "Leões do Sul",
+    opponentLogo: "https://img.usecurling.com/i?q=lion%20head&color=orange",
+    modality: "society",
+    fieldType: "sintetico",
     scoreTeam: 4,
     scoreOpponent: 1,
-    result: 'win',
-    field: 'Complexo Esportivo Sul',
+    result: "win",
+    field: "Complexo Esportivo Sul",
   },
   {
-    id: 'mh5',
-    date: '11 Mai 2026',
-    opponent: 'Dragões do Norte',
-    opponentLogo: 'https://img.usecurling.com/i?q=dragon%20fire&color=red',
-    modality: 'campo',
-    fieldType: 'terrao',
+    id: "mh5",
+    date: "11 Mai 2026",
+    opponent: "Dragões do Norte",
+    opponentLogo: "https://img.usecurling.com/i?q=dragon%20fire&color=red",
+    modality: "campo",
+    fieldType: "terrao",
     scoreTeam: 0,
     scoreOpponent: 3,
-    result: 'loss',
-    field: 'Campo do Terrão',
+    result: "loss",
+    field: "Campo do Terrão",
   },
   {
-    id: 'mh6',
-    date: '04 Mai 2026',
-    opponent: 'União Feminina',
-    opponentLogo: 'https://img.usecurling.com/i?q=flower%20bloom&color=pink',
-    modality: 'society',
-    fieldType: 'sintetico',
+    id: "mh6",
+    date: "04 Mai 2026",
+    opponent: "União Feminina",
+    opponentLogo: "https://img.usecurling.com/i?q=flower%20bloom&color=pink",
+    modality: "society",
+    fieldType: "sintetico",
     scoreTeam: 3,
     scoreOpponent: 0,
-    result: 'win',
-    field: 'Society Club - Campo A',
+    result: "win",
+    field: "Society Club - Campo A",
   },
 ]
 
 export const MOCK_SCHEDULED: ScheduledMatch[] = [
   {
-    id: 'sm1',
+    id: "sm1",
     teamA: MY_TEAM,
     teamB: MOCK_TEAMS[1],
     field: MOCK_FIELDS[2],
-    date: '15 Jun 2026',
-    startTime: '21:00',
-    modality: 'society',
-    category: 'competitivo',
+    date: "15 Jun 2026",
+    startTime: "21:00",
+    modality: "society",
+    category: "competitivo",
     config: {
       hasReferee: true,
-      fieldFee: '200',
-      refereeFee: '80',
-      paymentResponsibility: 'split',
+      fieldFee: "200",
+      refereeFee: "80",
+      paymentResponsibility: "split",
     },
     visitorChecklist: { arrived: true, onTime: true },
   },
   {
-    id: 'sm2',
+    id: "sm2",
     teamA: MY_TEAM,
     teamB: MOCK_TEAMS[0],
     field: MOCK_FIELDS[5],
-    date: '22 Jun 2026',
-    startTime: '20:30',
-    modality: 'society',
-    category: 'veterano',
+    date: "22 Jun 2026",
+    startTime: "20:30",
+    modality: "society",
+    category: "veterano",
     config: {
       hasReferee: false,
-      fieldFee: '250',
-      refereeFee: '0',
-      paymentResponsibility: 'home',
+      fieldFee: "250",
+      refereeFee: "0",
+      paymentResponsibility: "home",
     },
     visitorChecklist: { arrived: false, onTime: false },
   },
 ]
 
-export const MODALITIES: { id: Modality; label: string; sublabel: string }[] = [
-  { id: 'futsal', label: 'Futsal', sublabel: 'Futebol de Salão' },
-  { id: 'campo', label: 'Campo', sublabel: 'Futebol de Campo' },
-  { id: 'society', label: 'Society', sublabel: 'Futebol Society' },
+export const MODALITIES: { id: Modality label: string sublabel: string }[] = [
+  { id: "futsal", label: "Futsal", sublabel: "Futebol de Salão" },
+  { id: "campo", label: "Campo", sublabel: "Futebol de Campo" },
+  { id: "society", label: "Society", sublabel: "Futebol Society" },
 ]
 
-export const CATEGORIES: { id: Category; label: string; sublabel: string }[] = [
-  { id: 'competitivo', label: 'Competitivo', sublabel: 'Esporte' },
-  { id: 'veterano', label: 'Veterano', sublabel: '35+ anos' },
-  { id: 'master', label: 'Master', sublabel: '45+ anos' },
-  { id: 'feminino', label: 'Feminino', sublabel: 'Exclusivo' },
-  { id: 'masculino', label: 'Masculino', sublabel: 'Exclusivo' },
+export const CATEGORIES: { id: Category label: string sublabel: string }[] = [
+  { id: "competitivo", label: "Competitivo", sublabel: "Esporte" },
+  { id: "veterano", label: "Veterano", sublabel: "35+ anos" },
+  { id: "master", label: "Master", sublabel: "45+ anos" },
+  { id: "feminino", label: "Feminino", sublabel: "Exclusivo" },
+  { id: "masculino", label: "Masculino", sublabel: "Exclusivo" },
 ]
 
 export const MATCHMAKING_MODES: {
@@ -474,22 +469,22 @@ export const MATCHMAKING_MODES: {
   icon: string
 }[] = [
   {
-    id: 'balanced',
-    label: 'Balanceamento Pro',
-    description: 'Prioriza skill rating e histórico W/L similar',
-    icon: 'scale',
+    id: "balanced",
+    label: "Balanceamento Pro",
+    description: "Prioriza skill rating e histórico W/L similar",
+    icon: "scale",
   },
   {
-    id: 'random',
-    label: 'Aleatório',
-    description: 'Matchmaking randomizado por modalidade',
-    icon: 'shuffle',
+    id: "random",
+    label: "Aleatório",
+    description: "Matchmaking randomizado por modalidade",
+    icon: "shuffle",
   },
   {
-    id: 'varied',
-    label: 'Oponentes Variados',
-    description: 'Diversifica regiões e estilos de jogo',
-    icon: 'globe',
+    id: "varied",
+    label: "Oponentes Variados",
+    description: "Diversifica regiões e estilos de jogo",
+    icon: "globe",
   },
 ]
 
@@ -508,14 +503,14 @@ export function getMatchmakingScore(
   return Math.round(skillScore * 0.4 + distanceScore * 0.3 + winRateScore * 0.3)
 }
 
-export function getFormColor(result: 'W' | 'L' | 'D'): string {
+export function getFormColor(result: "W" | "L" | "D"): string {
   switch (result) {
-    case 'W':
-      return 'bg-green-500 text-white'
-    case 'L':
-      return 'bg-red-500 text-white'
-    case 'D':
-      return 'bg-yellow-500 text-black'
+    case "W":
+      return "bg-green-500 text-white"
+    case "L":
+      return "bg-red-500 text-white"
+    case "D":
+      return "bg-yellow-500 text-black"
   }
 }
 
@@ -525,7 +520,7 @@ export function getWinRate(team: MatchTeam): number {
 }
 
 export const TEAM_BUDGETS: Record<string, number> = {
-  'my-team': 250,
+  "my-team": 250,
   t1: 150,
   t2: 280,
   t3: 120,
@@ -542,7 +537,7 @@ export interface SuggestionResult {
   team: MatchTeam
   field: MatchField
   score: number
-  reasons: { label: string; detail: string }[]
+  reasons: { label: string detail: string }[]
   fieldFee: string
   refereeFee: string
 }
@@ -557,7 +552,7 @@ export function suggestOpponent(
   modality: Modality,
   maxDistance: number,
   maxBudget: number,
-  skillTolerance: 'precise' | 'balanced' | 'wide',
+  skillTolerance: "precise" | "balanced" | "wide",
 ): SuggestionResult | null {
   const tolerance = SKILL_TOLERANCE_MAP[skillTolerance] ?? 100
   const candidates = MOCK_TEAMS.filter((t) => t.modality === modality)
@@ -568,7 +563,7 @@ export function suggestOpponent(
   if (candidates.length === 0) return null
 
   const affordableFields = MOCK_FIELDS.filter((f) => {
-    const price = parseFloat(f.pricePerHour.replace(/[^\d]/g, ''))
+    const price = parseFloat(f.pricePerHour.replace(/[^\d]/g, ""))
     return price <= maxBudget
   })
 
@@ -579,22 +574,22 @@ export function suggestOpponent(
     const teamBudget = TEAM_BUDGETS[team.id] ?? 200
     const field = affordableFields
       .filter((f) => {
-        const price = parseFloat(f.pricePerHour.replace(/[^\d]/g, ''))
+        const price = parseFloat(f.pricePerHour.replace(/[^\d]/g, ""))
         return price <= teamBudget
       })
       .sort((a, b) => a.distanceKm - b.distanceKm)[0]
 
     if (!field) continue
 
-    const fieldPrice = parseFloat(field.pricePerHour.replace(/[^\d]/g, ''))
+    const fieldPrice = parseFloat(field.pricePerHour.replace(/[^\d]/g, ""))
     const reasons = [
       {
-        label: 'Nível Compatível',
+        label: "Nível Compatível",
         detail: `${team.skillRating} SR vs ${MY_TEAM.skillRating} SR`,
       },
-      { label: 'Próximo', detail: `${team.distanceKm} km de distância` },
+      { label: "Próximo", detail: `${team.distanceKm} km de distância` },
       {
-        label: 'Dentro do Orçamento',
+        label: "Dentro do Orçamento",
         detail: `Campo: R$ ${fieldPrice}/h`,
       },
     ]
@@ -606,7 +601,7 @@ export function suggestOpponent(
         score,
         reasons,
         fieldFee: String(fieldPrice),
-        refereeFee: '80',
+        refereeFee: "80",
       }
     }
   }

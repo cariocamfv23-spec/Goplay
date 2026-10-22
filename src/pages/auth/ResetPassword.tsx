@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { useState, useEffect } from "react"
+import { useNavigate, Link } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Card,
   CardContent,
@@ -10,8 +10,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Logo } from '@/components/Logo'
+} from "@/components/ui/card"
+import { Logo } from "@/components/Logo"
 import {
   Loader2,
   Lock,
@@ -20,18 +20,18 @@ import {
   ArrowRight,
   Eye,
   EyeOff,
-} from 'lucide-react'
-import { toast } from 'sonner'
-import { SportsWallpaper } from '@/components/SportsWallpaper'
-import { useAuth } from '@/hooks/use-auth'
-import { supabase } from '@/lib/supabase/client'
+} from "lucide-react"
+import { toast } from "sonner"
+import { SportsWallpaper } from "@/components/SportsWallpaper"
+import { useAuth } from "@/hooks/use-auth"
+import { supabase } from "@/lib/supabase/client"
 
 export default function ResetPassword() {
   const navigate = useNavigate()
   const { updateUserPassword } = useAuth()
 
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [checkingSession, setCheckingSession] = useState(true)
@@ -52,7 +52,7 @@ export default function ResetPassword() {
       // 2. Also inspect URL hash for Supabase Auth recovery tokens (#access_token=...&type=recovery)
       const hash = window.location.hash
       const isRecoveryHash =
-        hash.includes('type=recovery') || hash.includes('access_token=')
+        hash.includes("type=recovery") || hash.includes("access_token=")
 
       if (session || isRecoveryHash) {
         if (mounted) {
@@ -71,7 +71,7 @@ export default function ResetPassword() {
             } else {
               setHasValidSession(false)
               setSessionError(
-                'O link de recuperação expirou, é inválido ou já foi utilizado.',
+                "O link de recuperação expirou, é inválido ou já foi utilizado.",
               )
             }
             setCheckingSession(false)
@@ -88,7 +88,7 @@ export default function ResetPassword() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && session)) {
+      if (event === "PASSWORD_RECOVERY" || (event === "SIGNED_IN" && session)) {
         if (mounted) {
           setHasValidSession(true)
           setCheckingSession(false)
@@ -110,18 +110,18 @@ export default function ResetPassword() {
     const cleanConfirm = confirmPassword.trim()
 
     if (!cleanPass || !cleanConfirm) {
-      toast.error('Preencha os dois campos de senha.')
+      toast.error("Preencha os dois campos de senha.")
       return
     }
 
     if (cleanPass.length < 6) {
-      toast.error('A nova senha deve ter no mínimo 6 caracteres.')
+      toast.error("A nova senha deve ter no mínimo 6 caracteres.")
       return
     }
 
     if (cleanPass !== cleanConfirm) {
       toast.error(
-        'As senhas não coincidem. Digite a mesma senha em ambos os campos.',
+        "As senhas não coincidem. Digite a mesma senha em ambos os campos.",
       )
       return
     }
@@ -133,27 +133,27 @@ export default function ResetPassword() {
 
       if (error) {
         if (
-          error.message?.includes('expired') ||
-          error.message?.includes('invalid') ||
-          error.message?.includes('session')
+          error.message?.includes("expired") ||
+          error.message?.includes("invalid") ||
+          error.message?.includes("session")
         ) {
           toast.error(
-            'Sessão de recuperação expirada. Solicite um novo link de redefinição.',
+            "Sessão de recuperação expirada. Solicite um novo link de redefinição.",
           )
-          setSessionError('Link de recuperação expirado.')
+          setSessionError("Link de recuperação expirado.")
           setHasValidSession(false)
         } else {
-          toast.error(error.message || 'Erro ao redefinir senha.')
+          toast.error(error.message || "Erro ao redefinir senha.")
         }
         return
       }
 
       setSuccess(true)
-      toast.success('Senha atualizada com sucesso!', {
-        description: 'Você já pode entrar na sua conta com a nova senha.',
+      toast.success("Senha atualizada com sucesso!", {
+        description: "Você já pode entrar na sua conta com a nova senha.",
       })
     } catch (err: any) {
-      toast.error(err?.message || 'Erro inesperado ao salvar nova senha.')
+      toast.error(err?.message || "Erro inesperado ao salvar nova senha.")
     } finally {
       setLoading(false)
     }
@@ -175,8 +175,8 @@ export default function ResetPassword() {
             </CardTitle>
             <CardDescription className="text-center text-xs">
               {success
-                ? 'Sua senha foi redefinida com sucesso'
-                : 'Defina e confirme sua nova senha de acesso'}
+                ? "Sua senha foi redefinida com sucesso"
+                : "Defina e confirme sua nova senha de acesso"}
             </CardDescription>
           </CardHeader>
 
@@ -204,7 +204,7 @@ export default function ResetPassword() {
                 </div>
                 <Button
                   className="w-full font-bold bg-primary text-white h-11"
-                  onClick={() => navigate('/login', { replace: true })}
+                  onClick={() => navigate("/login", { replace: true })}
                 >
                   Ir para Login
                   <ArrowRight className="w-4 h-4 ml-1.5" />
@@ -221,20 +221,20 @@ export default function ResetPassword() {
                   </h3>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     {sessionError ||
-                      'O token de recuperação desta sessão já foi utilizado ou ultrapassou o tempo limite de segurança.'}
+                      "O token de recuperação desta sessão já foi utilizado ou ultrapassou o tempo limite de segurança."}
                   </p>
                 </div>
                 <div className="pt-2 flex flex-col gap-2">
                   <Button
                     className="w-full font-bold bg-primary text-white"
-                    onClick={() => navigate('/forgot-password')}
+                    onClick={() => navigate("/forgot-password")}
                   >
                     Solicitar Novo Link
                   </Button>
                   <Button
                     variant="outline"
                     className="w-full text-xs"
-                    onClick={() => navigate('/login')}
+                    onClick={() => navigate("/login")}
                   >
                     Voltar ao Login
                   </Button>
@@ -253,7 +253,7 @@ export default function ResetPassword() {
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="new-password"
-                      type={showPassword ? 'text' : 'password'}
+                      type={showPassword ? "text" : "password"}
                       placeholder="Mínimo 6 caracteres"
                       className="pl-9 pr-10"
                       value={password}
@@ -286,7 +286,7 @@ export default function ResetPassword() {
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="confirm-password"
-                      type={showPassword ? 'text' : 'password'}
+                      type={showPassword ? "text" : "password"}
                       placeholder="Repita a nova senha"
                       className="pl-9 pr-10"
                       value={confirmPassword}
@@ -307,7 +307,7 @@ export default function ResetPassword() {
                       Atualizando senha...
                     </>
                   ) : (
-                    'Salvar Nova Senha'
+                    "Salvar Nova Senha"
                   )}
                 </Button>
               </form>

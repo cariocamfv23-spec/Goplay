@@ -1,8 +1,8 @@
-import { referralLevels } from '@/lib/data'
-import { Progress } from '@/components/ui/progress'
-import { Card, CardContent } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
-import { CheckCircle2, Lock } from 'lucide-react'
+import { referralLevels } from "@/lib/data"
+import { Progress } from "@/components/ui/progress"
+import { Card, CardContent } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
+import { CheckCircle2, Lock } from "lucide-react"
 
 interface ReferralLevelProgressProps {
   currentReferrals: number
@@ -38,21 +38,21 @@ export function ReferralLevelProgress({
           <div className="flex items-center gap-3">
             <div
               className={cn(
-                'h-12 w-12 rounded-full flex items-center justify-center bg-secondary shadow-sm',
+                "h-12 w-12 rounded-full flex items-center justify-center bg-secondary shadow-sm",
                 currentLevel.color
-                  .replace('text-', 'bg-')
-                  .replace('600', '100'),
+                  .replace("text-", "bg-")
+                  .replace("600", "100"),
               )}
             >
               <currentLevel.icon
-                className={cn('h-6 w-6', currentLevel.color)}
+                className={cn("h-6 w-6", currentLevel.color)}
               />
             </div>
             <div>
               <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider">
                 Nível Atual
               </p>
-              <h3 className={cn('text-xl font-black', currentLevel.color)}>
+              <h3 className={cn("text-xl font-black", currentLevel.color)}>
                 {currentLevel.name}
               </h3>
             </div>
@@ -72,7 +72,7 @@ export function ReferralLevelProgress({
             <span className="text-muted-foreground">Progresso</span>
             {nextLevel ? (
               <span className="text-primary">
-                {nextLevel.minReferrals - currentReferrals} para{' '}
+                {nextLevel.minReferrals - currentReferrals} para{" "}
                 {nextLevel.name}
               </span>
             ) : (

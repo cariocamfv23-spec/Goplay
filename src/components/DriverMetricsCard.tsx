@@ -1,6 +1,6 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { LucideIcon } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { Card, CardContent } from "@/components/ui/card"
+import { LucideIcon } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface DriverMetricsCardProps {
   title: string
@@ -15,13 +15,13 @@ export function DriverMetricsCard({
   value,
   icon: Icon,
   description,
-  iconColor = 'text-primary',
+  iconColor = "text-primary",
 }: DriverMetricsCardProps) {
   return (
     <Card className="border-none shadow-sm">
       <CardContent className="p-4">
         <div className="flex justify-between items-start mb-2">
-          <div className={cn('p-2 rounded-lg bg-secondary/50', iconColor)}>
+          <div className={cn("p-2 rounded-lg bg-secondary/50", iconColor)}>
             <Icon className="h-4 w-4" />
           </div>
         </div>

@@ -1,38 +1,38 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Trophy, Users, Star, ArrowRight, Zap } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { SportsWallpaper } from '@/components/SportsWallpaper'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Trophy, Users, Star, ArrowRight, Zap } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { SportsWallpaper } from "@/components/SportsWallpaper"
 
 const steps = [
   {
     icon: Trophy,
-    title: 'Compita e Ganhe',
+    title: "Compita e Ganhe",
     description:
-      'Participe de campeonatos, suba no ranking e ganhe prêmios exclusivos.',
-    color: 'text-gold',
+      "Participe de campeonatos, suba no ranking e ganhe prêmios exclusivos.",
+    color: "text-gold",
   },
   {
     icon: Users,
-    title: 'Conecte-se',
-    description: 'Encontre atletas, times e oportunidades perto de você.',
-    color: 'text-primary',
+    title: "Conecte-se",
+    description: "Encontre atletas, times e oportunidades perto de você.",
+    color: "text-primary",
   },
   {
     icon: Star,
-    title: 'Seja Descoberto',
+    title: "Seja Descoberto",
     description:
-      'Mostre seu talento para olheiros e patrocinadores de todo o mundo.',
-    color: 'text-emerald-500',
+      "Mostre seu talento para olheiros e patrocinadores de todo o mundo.",
+    color: "text-emerald-500",
   },
   {
     icon: Zap,
-    title: 'Evolua seu Jogo',
+    title: "Evolua seu Jogo",
     description:
-      'Acesse treinos, dicas e ferramentas profissionais para melhorar sua performance.',
-    color: 'text-orange-500',
+      "Acesse treinos, dicas e ferramentas profissionais para melhorar sua performance.",
+    color: "text-orange-500",
   },
 ]
 
@@ -44,12 +44,12 @@ export default function Onboarding() {
     if (currentStep < steps.length - 1) {
       setCurrentStep((curr) => curr + 1)
     } else {
-      navigate('/profile-selection')
+      navigate("/profile-selection")
     }
   }
 
   const handleSkip = () => {
-    navigate('/profile-selection')
+    navigate("/profile-selection")
   }
 
   const StepIcon = steps[currentStep].icon
@@ -76,13 +76,13 @@ export default function Onboarding() {
             <div className="flex-1 flex flex-col items-center justify-center space-y-8 animate-in fade-in slide-in-from-right-8 duration-500 key={currentStep}">
               <div
                 className={cn(
-                  'w-32 h-32 rounded-full bg-secondary/50 flex items-center justify-center relative',
-                  'before:absolute before:inset-0 before:bg-gradient-to-tr before:from-transparent before:to-white/20 before:rounded-full',
+                  "w-32 h-32 rounded-full bg-secondary/50 flex items-center justify-center relative",
+                  "before:absolute before:inset-0 before:bg-gradient-to-tr before:from-transparent before:to-white/20 before:rounded-full",
                 )}
               >
                 <StepIcon
                   className={cn(
-                    'w-16 h-16 drop-shadow-lg',
+                    "w-16 h-16 drop-shadow-lg",
                     steps[currentStep].color,
                   )}
                 />
@@ -105,10 +105,10 @@ export default function Onboarding() {
                   <div
                     key={index}
                     className={cn(
-                      'h-2 rounded-full transition-all duration-300',
+                      "h-2 rounded-full transition-all duration-300",
                       index === currentStep
-                        ? 'w-8 bg-primary'
-                        : 'w-2 bg-secondary',
+                        ? "w-8 bg-primary"
+                        : "w-2 bg-secondary",
                     )}
                   />
                 ))}
@@ -119,7 +119,7 @@ export default function Onboarding() {
                 className="w-full h-12 text-base"
                 onClick={handleNext}
               >
-                {currentStep === steps.length - 1 ? 'Começar Agora' : 'Próximo'}
+                {currentStep === steps.length - 1 ? "Começar Agora" : "Próximo"}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </div>

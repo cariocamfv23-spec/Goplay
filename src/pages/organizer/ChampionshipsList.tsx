@@ -1,6 +1,6 @@
-import { useChampionshipStore } from '@/stores/useChampionshipStore'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { useChampionshipStore } from "@/stores/useChampionshipStore"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Plus,
   Trophy,
@@ -19,21 +19,21 @@ import {
   Loader2,
   Filter,
   MessageSquare,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { useState, useEffect, useCallback } from 'react'
-import { useAuth } from '@/hooks/use-auth'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { useState, useEffect, useCallback } from "react"
+import { useAuth } from "@/hooks/use-auth"
 import {
   eventsService,
   type EventItem,
   type RegistrationItem,
   type RegistrationStatus,
-} from '@/services/events'
-import { toast } from 'sonner'
+} from "@/services/events"
+import { toast } from "sonner"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,30 +43,27 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
+} from "@/components/ui/alert-dialog"
 
 export default function ChampionshipsList() {
   const { championships } = useChampionshipStore()
   const { user, profile } = useAuth()
   const navigate = useNavigate()
-  const [search, setSearch] = useState('')
-  const [activeTab, setActiveTab] = useState<
-    'events' | 'registrations' | 'tournaments'
-  >('events')
-  const [statusFilter, setStatusFilter] = useState<
-    'all' | 'pending' | 'approved' | 'rejected'
-  >('all')
+  const [search, setSearch] = useState("")
+  const [activeTab, setActiveTab] =
+    useState<"events" | "registrations" | "tournaments">("events")
+  const [statusFilter, setStatusFilter] =
+    useState<"all" | "pending" | "approved" | "rejected">("all")
 
   const [realEvents, setRealEvents] = useState<EventItem[]>([])
-  const [realRegistrations, setRealRegistrations] = useState<
-    RegistrationItem[]
-  >([])
+  const [realRegistrations, setRealRegistrations] =
+    useState<RegistrationItem[]>([])
   const [loading, setLoading] = useState(true)
 
   // Decision state for confirmation modal
   const [decisionItem, setDecisionItem] = useState<{
     item: RegistrationItem
-    action: 'approved' | 'rejected'
+    action: "approved" | "rejected"
   } | null>(null)
   const [decisionLoading, setDecisionLoading] = useState(false)
 
@@ -103,23 +100,23 @@ export default function ChampionshipsList() {
 
   const filteredRegistrations = realRegistrations.filter((r) => {
     const matchesSearch =
-      (r.participant?.name || '')
+      (r.participant?.name || "")
         .toLowerCase()
         .includes(search.toLowerCase()) ||
-      (r.eventTitle || '').toLowerCase().includes(search.toLowerCase()) ||
-      (r.participant?.sport || '')
+      (r.eventTitle || "").toLowerCase().includes(search.toLowerCase()) ||
+      (r.participant?.sport || "")
         .toLowerCase()
         .includes(search.toLowerCase()) ||
-      (r.participant?.city || '').toLowerCase().includes(search.toLowerCase())
+      (r.participant?.city || "").toLowerCase().includes(search.toLowerCase())
 
     const matchesStatus =
-      statusFilter === 'all'
+      statusFilter === "all"
         ? true
-        : statusFilter === 'pending'
-          ? r.status === 'pending'
-          : statusFilter === 'approved'
-            ? r.status === 'approved' || r.status === 'confirmed'
-            : r.status === 'rejected'
+        : statusFilter === "pending"
+          ? r.status === "pending"
+          : statusFilter === "approved"
+            ? r.status === "approved" || r.status === "confirmed"
+            : r.status === "rejected"
 
     return matchesSearch && matchesStatus
   })
@@ -128,13 +125,13 @@ export default function ChampionshipsList() {
   const totalEventsCount = realEvents.length
   const totalRegistrationsCount = realRegistrations.length
   const pendingCount = realRegistrations.filter(
-    (r) => r.status === 'pending',
+    (r) => r.status === "pending",
   ).length
   const approvedCount = realRegistrations.filter(
-    (r) => r.status === 'approved' || r.status === 'confirmed',
+    (r) => r.status === "approved" || r.status === "confirmed",
   ).length
   const rejectedCount = realRegistrations.filter(
-    (r) => r.status === 'rejected',
+    (r) => r.status === "rejected",
   ).length
 
   const handleDecisionConfirm = async () => {
@@ -148,7 +145,7 @@ export default function ChampionshipsList() {
     setDecisionLoading(false)
 
     if (error || !success) {
-      toast.error(error?.message || 'Erro ao processar decisão.')
+      toast.error(error?.message || "Erro ao processar decisão.")
       return
     }
 
@@ -161,36 +158,36 @@ export default function ChampionshipsList() {
     )
 
     toast.success(
-      decisionItem.action === 'approved'
-        ? 'Inscrição aprovada com sucesso! O atleta foi notificado.'
-        : 'Inscrição recusada com sucesso. O atleta foi notificado.',
+      decisionItem.action === "approved"
+        ? "Inscrição aprovada com sucesso! O atleta foi notificado."
+        : "Inscrição recusada com sucesso. O atleta foi notificado.",
     )
     setDecisionItem(null)
   }
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active':
-        return 'bg-green-500 hover:bg-green-600'
-      case 'completed':
-        return 'bg-zinc-500 hover:bg-zinc-600'
-      case 'open':
-        return 'bg-blue-500 hover:bg-blue-600'
+      case "active":
+        return "bg-green-500 hover:bg-green-600"
+      case "completed":
+        return "bg-zinc-500 hover:bg-zinc-600"
+      case "open":
+        return "bg-blue-500 hover:bg-blue-600"
       default:
-        return 'bg-yellow-500 hover:bg-yellow-600'
+        return "bg-yellow-500 hover:bg-yellow-600"
     }
   }
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'active':
-        return 'Em Andamento'
-      case 'completed':
-        return 'Finalizado'
-      case 'open':
-        return 'Inscrições'
+      case "active":
+        return "Em Andamento"
+      case "completed":
+        return "Finalizado"
+      case "open":
+        return "Inscrições"
       default:
-        return 'Rascunho'
+        return "Rascunho"
     }
   }
 
@@ -213,11 +210,11 @@ export default function ChampionshipsList() {
                     variant="outline"
                     className="text-[10px] uppercase font-bold border-primary/30 text-primary"
                   >
-                    {profile.account_type === 'club'
-                      ? 'Clube Oficial'
-                      : profile.account_type === 'coach'
-                        ? 'Treinador'
-                        : 'Atleta'}
+                    {profile.account_type === "club"
+                      ? "Clube Oficial"
+                      : profile.account_type === "coach"
+                        ? "Treinador"
+                        : "Atleta"}
                   </Badge>
                 )}
               </div>
@@ -230,7 +227,7 @@ export default function ChampionshipsList() {
         </div>
         <div className="flex items-center gap-2">
           <Button
-            onClick={() => navigate('/organizer/create')}
+            onClick={() => navigate("/organizer/create")}
             className="gap-2 bg-primary text-white shadow-md rounded-xl h-10 px-4 text-xs font-semibold"
           >
             <Plus className="h-4 w-4" /> Criar Evento / Peneira
@@ -239,10 +236,10 @@ export default function ChampionshipsList() {
       </div>
 
       {/* Helpful banner if user is currently logged in as athlete */}
-      {user && profile && profile.account_type === 'athlete' && (
+      {user && profile && profile.account_type === "athlete" && (
         <div className="mb-6 p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
           <div className="text-xs text-amber-800 dark:text-amber-200">
-            Você está conectado com o perfil de{' '}
+            Você está conectado com o perfil de{" "}
             <strong>{profile.full_name}</strong> (Atleta). Para gerenciar
             seletivas oficiais completas como Clube ou Treinador, você pode
             alterar seu tipo no perfil ou usar uma das contas demo oficiais.
@@ -251,7 +248,7 @@ export default function ChampionshipsList() {
             size="sm"
             variant="outline"
             className="text-xs border-amber-500/40 text-amber-600 hover:bg-amber-500/10 shrink-0 self-start sm:self-auto"
-            onClick={() => navigate('/profile/me')}
+            onClick={() => navigate("/profile/me")}
           >
             Editar Perfil
           </Button>
@@ -357,11 +354,11 @@ export default function ChampionshipsList() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder={
-              activeTab === 'registrations'
-                ? 'Buscar atleta pelo nome, modalidade, cidade ou evento...'
-                : activeTab === 'events'
-                  ? 'Buscar por título, modalidade ou cidade...'
-                  : 'Buscar campeonato...'
+              activeTab === "registrations"
+                ? "Buscar atleta pelo nome, modalidade, cidade ou evento..."
+                : activeTab === "events"
+                  ? "Buscar por título, modalidade ou cidade..."
+                  : "Buscar campeonato..."
             }
             className="pl-9 bg-secondary/50 border border-border/40 rounded-xl h-10 text-xs sm:text-sm"
             value={search}
@@ -385,8 +382,8 @@ export default function ChampionshipsList() {
                 <div>
                   <p className="font-semibold text-sm">
                     {search
-                      ? 'Nenhum evento encontrado para esta busca.'
-                      : 'Nenhum evento ou peneira criado ainda.'}
+                      ? "Nenhum evento encontrado para esta busca."
+                      : "Nenhum evento ou peneira criado ainda."}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     Crie sua primeira peneira oficial para receber inscrições de
@@ -394,7 +391,7 @@ export default function ChampionshipsList() {
                   </p>
                 </div>
                 <Button
-                  onClick={() => navigate('/organizer/create')}
+                  onClick={() => navigate("/organizer/create")}
                   className="bg-primary text-white text-xs"
                   size="sm"
                 >
@@ -413,7 +410,7 @@ export default function ChampionshipsList() {
                     <img
                       src={
                         ev.bannerUrl ||
-                        'https://img.usecurling.com/p/800/400?q=sports%20stadium'
+                        "https://img.usecurling.com/p/800/400?q=sports%20stadium"
                       }
                       alt={ev.title}
                       className="w-16 h-16 rounded-xl object-cover shrink-0 border border-border/40"
@@ -423,14 +420,14 @@ export default function ChampionshipsList() {
                         <Badge
                           variant="outline"
                           className={
-                            ev.type === 'tryout'
-                              ? 'bg-amber-500/10 text-amber-500 border-amber-500/30 text-[10px] font-bold'
-                              : 'bg-primary/10 text-primary border-primary/30 text-[10px]'
+                            ev.type === "tryout"
+                              ? "bg-amber-500/10 text-amber-500 border-amber-500/30 text-[10px] font-bold"
+                              : "bg-primary/10 text-primary border-primary/30 text-[10px]"
                           }
                         >
-                          {ev.type === 'tryout'
-                            ? '⭐ Peneira Oficial'
-                            : 'Torneio / Evento'}
+                          {ev.type === "tryout"
+                            ? "⭐ Peneira Oficial"
+                            : "Torneio / Evento"}
                         </Badge>
                         <Badge variant="secondary" className="text-[10px]">
                           {ev.sport}
@@ -446,7 +443,7 @@ export default function ChampionshipsList() {
                         {ev.title}
                       </h3>
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        {new Date(ev.eventDate).toLocaleDateString('pt-BR')} às{' '}
+                        {new Date(ev.eventDate).toLocaleDateString("pt-BR")} às{" "}
                         {ev.eventTime} • {ev.city}/{ev.state}
                       </p>
                     </div>
@@ -487,33 +484,33 @@ export default function ChampionshipsList() {
           <div className="flex flex-wrap items-center gap-1.5 pb-1">
             <Button
               size="sm"
-              variant={statusFilter === 'all' ? 'default' : 'outline'}
+              variant={statusFilter === "all" ? "default" : "outline"}
               className="h-7 text-xs rounded-full"
-              onClick={() => setStatusFilter('all')}
+              onClick={() => setStatusFilter("all")}
             >
               Todas ({realRegistrations.length})
             </Button>
             <Button
               size="sm"
-              variant={statusFilter === 'pending' ? 'default' : 'outline'}
+              variant={statusFilter === "pending" ? "default" : "outline"}
               className="h-7 text-xs rounded-full border-amber-500/40 text-amber-500 hover:bg-amber-500/10"
-              onClick={() => setStatusFilter('pending')}
+              onClick={() => setStatusFilter("pending")}
             >
               Pendentes ({pendingCount})
             </Button>
             <Button
               size="sm"
-              variant={statusFilter === 'approved' ? 'default' : 'outline'}
+              variant={statusFilter === "approved" ? "default" : "outline"}
               className="h-7 text-xs rounded-full border-emerald-500/40 text-emerald-500 hover:bg-emerald-500/10"
-              onClick={() => setStatusFilter('approved')}
+              onClick={() => setStatusFilter("approved")}
             >
               Aprovadas ({approvedCount})
             </Button>
             <Button
               size="sm"
-              variant={statusFilter === 'rejected' ? 'default' : 'outline'}
+              variant={statusFilter === "rejected" ? "default" : "outline"}
               className="h-7 text-xs rounded-full border-red-500/40 text-red-500 hover:bg-red-500/10"
-              onClick={() => setStatusFilter('rejected')}
+              onClick={() => setStatusFilter("rejected")}
             >
               Recusadas ({rejectedCount})
             </Button>
@@ -531,9 +528,9 @@ export default function ChampionshipsList() {
               <CardContent className="py-10 text-center space-y-2">
                 <Users className="h-10 w-10 mx-auto text-muted-foreground/30" />
                 <p className="font-semibold text-sm">
-                  {statusFilter !== 'all'
+                  {statusFilter !== "all"
                     ? `Nenhuma inscrição com status "${statusFilter}".`
-                    : 'Nenhuma inscrição registrada ainda.'}
+                    : "Nenhuma inscrição registrada ainda."}
                 </p>
                 <p className="text-xs text-muted-foreground max-w-sm mx-auto">
                   Quando atletas se inscreverem nas suas peneiras e torneios,
@@ -556,7 +553,7 @@ export default function ChampionshipsList() {
                     >
                       <AvatarImage src={r.participant?.avatar} />
                       <AvatarFallback>
-                        {r.participant?.name?.[0] || 'A'}
+                        {r.participant?.name?.[0] || "A"}
                       </AvatarFallback>
                     </Avatar>
                     <div className="min-w-0">
@@ -571,26 +568,26 @@ export default function ChampionshipsList() {
                         <Badge
                           variant="outline"
                           className={
-                            r.status === 'approved' || r.status === 'confirmed'
-                              ? 'text-[10px] text-emerald-600 border-emerald-500/40 bg-emerald-500/10'
-                              : r.status === 'rejected'
-                                ? 'text-[10px] text-red-600 border-red-500/40 bg-red-500/10'
-                                : 'text-[10px] text-amber-500 border-amber-500/40 bg-amber-500/10'
+                            r.status === "approved" || r.status === "confirmed"
+                              ? "text-[10px] text-emerald-600 border-emerald-500/40 bg-emerald-500/10"
+                              : r.status === "rejected"
+                                ? "text-[10px] text-red-600 border-red-500/40 bg-red-500/10"
+                                : "text-[10px] text-amber-500 border-amber-500/40 bg-amber-500/10"
                           }
                         >
-                          {r.status === 'approved'
-                            ? 'Aprovado'
-                            : r.status === 'confirmed'
-                              ? 'Confirmado'
-                              : r.status === 'rejected'
-                                ? 'Recusado'
-                                : 'Pendente'}
+                          {r.status === "approved"
+                            ? "Aprovado"
+                            : r.status === "confirmed"
+                              ? "Confirmado"
+                              : r.status === "rejected"
+                                ? "Recusado"
+                                : "Pendente"}
                         </Badge>
                       </div>
 
                       <p className="text-xs text-muted-foreground mt-0.5">
                         <strong className="text-foreground/80">
-                          {r.participant?.sport || 'Atleta'}
+                          {r.participant?.sport || "Atleta"}
                         </strong>
                         {r.participant?.position &&
                           ` • ${r.participant.position}`}
@@ -604,8 +601,8 @@ export default function ChampionshipsList() {
                         </span>
                         <span>•</span>
                         <span>
-                          Inscrição em{' '}
-                          {new Date(r.createdAt).toLocaleDateString('pt-BR')}
+                          Inscrição em{" "}
+                          {new Date(r.createdAt).toLocaleDateString("pt-BR")}
                         </span>
                       </div>
                     </div>
@@ -637,11 +634,11 @@ export default function ChampionshipsList() {
                       size="sm"
                       variant="default"
                       disabled={
-                        r.status === 'approved' || r.status === 'confirmed'
+                        r.status === "approved" || r.status === "confirmed"
                       }
                       className="h-8 px-3 text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
                       onClick={() =>
-                        setDecisionItem({ item: r, action: 'approved' })
+                        setDecisionItem({ item: r, action: "approved" })
                       }
                     >
                       <Check className="w-3.5 h-3.5 mr-1" />
@@ -651,10 +648,10 @@ export default function ChampionshipsList() {
                     <Button
                       size="sm"
                       variant="outline"
-                      disabled={r.status === 'rejected'}
+                      disabled={r.status === "rejected"}
                       className="h-8 px-3 text-xs text-red-600 border-red-500/30 hover:bg-red-500/10 font-semibold"
                       onClick={() =>
-                        setDecisionItem({ item: r, action: 'rejected' })
+                        setDecisionItem({ item: r, action: "rejected" })
                       }
                     >
                       <X className="w-3.5 h-3.5 mr-1" />
@@ -677,7 +674,7 @@ export default function ChampionshipsList() {
               size="sm"
               variant="outline"
               className="text-xs h-8"
-              onClick={() => navigate('/organizer/create')}
+              onClick={() => navigate("/organizer/create")}
             >
               Novo Torneio
             </Button>
@@ -720,7 +717,7 @@ export default function ChampionshipsList() {
                     {champ.startDate && (
                       <span className="flex items-center gap-1">
                         <Calendar className="h-3.5 w-3.5" />
-                        {new Date(champ.startDate).toLocaleDateString('pt-BR')}
+                        {new Date(champ.startDate).toLocaleDateString("pt-BR")}
                       </span>
                     )}
                   </div>
@@ -739,14 +736,14 @@ export default function ChampionshipsList() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {decisionItem?.action === 'approved'
-                ? 'Confirmar Aprovação do Atleta'
-                : 'Confirmar Recusa da Inscrição'}
+              {decisionItem?.action === "approved"
+                ? "Confirmar Aprovação do Atleta"
+                : "Confirmar Recusa da Inscrição"}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              {decisionItem?.action === 'approved' ? (
+              {decisionItem?.action === "approved" ? (
                 <>
-                  Deseja aprovar a inscrição de{' '}
+                  Deseja aprovar a inscrição de{" "}
                   <strong>{decisionItem?.item.participant?.name}</strong> no
                   evento <strong>"{decisionItem?.item.eventTitle}"</strong>?
                   <br />
@@ -755,7 +752,7 @@ export default function ChampionshipsList() {
                 </>
               ) : (
                 <>
-                  Deseja recusar a inscrição de{' '}
+                  Deseja recusar a inscrição de{" "}
                   <strong>{decisionItem?.item.participant?.name}</strong> no
                   evento <strong>"{decisionItem?.item.eventTitle}"</strong>?
                   <br />
@@ -772,9 +769,9 @@ export default function ChampionshipsList() {
             <AlertDialogAction
               disabled={decisionLoading}
               className={
-                decisionItem?.action === 'approved'
-                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                  : 'bg-destructive hover:bg-destructive/90 text-destructive-foreground'
+                decisionItem?.action === "approved"
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                  : "bg-destructive hover:bg-destructive/90 text-destructive-foreground"
               }
               onClick={(e) => {
                 e.preventDefault()
@@ -784,9 +781,9 @@ export default function ChampionshipsList() {
               {decisionLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin mr-1.5" />
               ) : null}
-              {decisionItem?.action === 'approved'
-                ? 'Confirmar Aprovação'
-                : 'Confirmar Recusa'}
+              {decisionItem?.action === "approved"
+                ? "Confirmar Aprovação"
+                : "Confirmar Recusa"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

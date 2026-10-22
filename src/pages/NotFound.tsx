@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
-import { useNavigate } from 'react-router-dom'
+import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom"
 
 const NotFound = () => {
   const navigate = useNavigate()
@@ -9,7 +9,7 @@ const NotFound = () => {
       <p className="text-xl text-muted-foreground mb-8">
         Página não encontrada
       </p>
-      <Button onClick={() => navigate('/home')}>Voltar para o Início</Button>
+      <Button onClick={() => navigate("/home")}>Voltar para o Início</Button>
     </div>
   )
 }

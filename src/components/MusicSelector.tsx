@@ -5,13 +5,13 @@ import {
   DrawerTitle,
   DrawerDescription,
   DrawerClose,
-} from '@/components/ui/drawer'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { mockMusicTracks, MusicTrack } from '@/lib/data'
-import { Search, Music, X, Play } from 'lucide-react'
-import { useState } from 'react'
+} from "@/components/ui/drawer"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { mockMusicTracks, MusicTrack } from "@/lib/data"
+import { Search, Music, X, Play } from "lucide-react"
+import { useState } from "react"
 
 interface MusicSelectorProps {
   open: boolean
@@ -26,7 +26,7 @@ export function MusicSelector({
   onSelect,
   selectedTrack,
 }: MusicSelectorProps) {
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("")
 
   const filteredTracks = mockMusicTracks.filter(
     (track) =>
@@ -81,8 +81,8 @@ export function MusicSelector({
                 onClick={() => handleSelect(track)}
                 className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors ${
                   selectedTrack?.id === track.id
-                    ? 'bg-primary/10 border border-primary/20'
-                    : 'hover:bg-secondary/50 bg-secondary/20'
+                    ? "bg-primary/10 border border-primary/20"
+                    : "hover:bg-secondary/50 bg-secondary/20"
                 }`}
               >
                 <div className="relative h-12 w-12 rounded-md overflow-hidden bg-muted shrink-0 group">
@@ -98,7 +98,7 @@ export function MusicSelector({
                 <div className="flex-1 min-w-0">
                   <h4
                     className={`font-semibold text-sm truncate ${
-                      selectedTrack?.id === track.id ? 'text-primary' : ''
+                      selectedTrack?.id === track.id ? "text-primary" : ""
                     }`}
                   >
                     {track.title}

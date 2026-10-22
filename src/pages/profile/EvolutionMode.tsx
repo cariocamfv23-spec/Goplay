@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   ArrowLeft,
   TrendingUp,
@@ -7,18 +7,18 @@ import {
   Minus,
   Calendar,
   Zap,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { mockRetrospectiveHistory, RetrospectiveYear } from '@/lib/data'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { mockRetrospectiveHistory, RetrospectiveYear } from "@/lib/data"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { useState } from 'react'
-import { EvolutionChart } from '@/components/EvolutionChart'
+} from "@/components/ui/select"
+import { useState } from "react"
+import { EvolutionChart } from "@/components/EvolutionChart"
 
 export default function EvolutionMode() {
   const navigate = useNavigate()
@@ -48,10 +48,10 @@ export default function EvolutionMode() {
   const renderTrendBadge = (growth: number) => {
     const color =
       growth > 0
-        ? 'text-green-600 bg-green-100 dark:bg-green-900/30'
+        ? "text-green-600 bg-green-100 dark:bg-green-900/30"
         : growth < 0
-          ? 'text-red-600 bg-red-100 dark:bg-red-900/30'
-          : 'text-gray-600 bg-gray-100 dark:bg-gray-800'
+          ? "text-red-600 bg-red-100 dark:bg-red-900/30"
+          : "text-gray-600 bg-gray-100 dark:bg-gray-800"
 
     return (
       <div
@@ -190,17 +190,17 @@ export default function EvolutionMode() {
           <CardContent className="p-6 text-center">
             <Zap className="h-8 w-8 mx-auto mb-2 text-gold fill-current" />
             <h3 className="font-bold text-lg">
-              {previousData ? 'Evolução Constante!' : 'Começando Forte!'}
+              {previousData ? "Evolução Constante!" : "Começando Forte!"}
             </h3>
             <p className="text-sm opacity-90 mb-4 mt-1">
               {previousData
                 ? `Você melhorou em ${Object.keys(currentData.stats).filter((k) => (currentData.stats as any)[k] > (previousData.stats as any)[k]).length} métricas comparado ao ano anterior.`
-                : 'Este é o início da sua jornada histórica. Continue assim para ver sua evolução ano que vem!'}
+                : "Este é o início da sua jornada histórica. Continue assim para ver sua evolução ano que vem!"}
             </p>
             <Button
               variant="secondary"
               className="w-full text-primary font-bold shadow-md"
-              onClick={() => navigate('/retrospective')}
+              onClick={() => navigate("/retrospective")}
             >
               Ver Retrospectiva Completa
             </Button>

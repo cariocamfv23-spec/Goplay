@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, Activity, AlertTriangle, CheckCircle2 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, Activity, AlertTriangle, CheckCircle2 } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
 
 export default function InjuryScanner() {
   const navigate = useNavigate()
@@ -84,7 +84,7 @@ export default function InjuryScanner() {
                 <Button
                   className="w-full mt-4"
                   variant="outline"
-                  onClick={() => navigate('/ai/library')}
+                  onClick={() => navigate("/ai/library")}
                 >
                   Ver Exercícios Preventivos
                 </Button>

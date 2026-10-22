@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from "react"
 import {
   Dialog,
   DialogContent,
@@ -6,20 +6,20 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import {
   moderationService,
   REPORT_REASONS,
   type ReportContentType,
   type ReportReason,
-} from '@/services/moderation'
-import { useAuth } from '@/hooks/use-auth'
-import { toast } from 'sonner'
-import { ShieldAlert, Loader2, CheckCircle2 } from 'lucide-react'
+} from "@/services/moderation"
+import { useAuth } from "@/hooks/use-auth"
+import { toast } from "sonner"
+import { ShieldAlert, Loader2, CheckCircle2 } from "lucide-react"
 
 interface ReportDialogProps {
   open: boolean
@@ -44,8 +44,8 @@ export function ReportDialog({
 }: ReportDialogProps) {
   const { user } = useAuth()
   const [selectedReason, setSelectedReason] =
-    useState<ReportReason>('offensive_content')
-  const [description, setDescription] = useState('')
+    useState<ReportReason>("offensive_content")
+  const [description, setDescription] = useState("")
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
@@ -55,8 +55,8 @@ export function ReportDialog({
       // Reset after closing animation
       setTimeout(() => {
         setSubmitted(false)
-        setDescription('')
-        setSelectedReason('offensive_content')
+        setDescription("")
+        setSelectedReason("offensive_content")
       }, 300)
     }
   }
@@ -65,7 +65,7 @@ export function ReportDialog({
     e.preventDefault()
 
     if (!user?.id) {
-      toast.error('Faça login para enviar uma denúncia.')
+      toast.error("Faça login para enviar uma denúncia.")
       return
     }
 
@@ -83,14 +83,14 @@ export function ReportDialog({
     setLoading(false)
 
     if (error) {
-      toast.error('Não foi possível registrar a denúncia: ' + error.message)
+      toast.error("Não foi possível registrar a denúncia: " + error.message)
       return
     }
 
     setSubmitted(true)
-    toast.success('Denúncia recebida com sucesso.', {
+    toast.success("Denúncia recebida com sucesso.", {
       description:
-        'Nossa equipe de moderação irá analisar o conteúdo para manter a comunidade segura.',
+        "Nossa equipe de moderação irá analisar o conteúdo para manter a comunidade segura.",
     })
 
     if (onReportSubmitted) {
@@ -100,18 +100,18 @@ export function ReportDialog({
 
   const getContentTypeLabel = () => {
     switch (contentType) {
-      case 'profile':
-        return 'perfil'
-      case 'post':
-        return 'publicação'
-      case 'comment':
-        return 'comentário'
-      case 'event':
-        return 'evento/peneira'
-      case 'passport':
-        return 'passaporte esportivo'
+      case "profile":
+        return "perfil"
+      case "post":
+        return "publicação"
+      case "comment":
+        return "comentário"
+      case "event":
+        return "evento/peneira"
+      case "passport":
+        return "passaporte esportivo"
       default:
-        return 'conteúdo'
+        return "conteúdo"
     }
   }
 
@@ -147,14 +147,14 @@ export function ReportDialog({
               <DialogDescription className="text-xs leading-relaxed">
                 {reportedUserName ? (
                   <>
-                    Conteúdo relacionado a{' '}
+                    Conteúdo relacionado a{" "}
                     <strong className="text-foreground">
                       {reportedUserName}
                     </strong>
                     . Selecione o motivo que melhor descreve o problema.
                   </>
                 ) : (
-                  'Selecione a categoria que melhor descreve a infração para avaliação da moderação.'
+                  "Selecione a categoria que melhor descreve a infração para avaliação da moderação."
                 )}
                 {contentTitle && (
                   <span className="block mt-1 italic text-muted-foreground truncate">
@@ -179,8 +179,8 @@ export function ReportDialog({
                     htmlFor={`reason-${r.value}`}
                     className={`flex items-start gap-3 p-2.5 rounded-xl border text-xs cursor-pointer transition-colors ${
                       selectedReason === r.value
-                        ? 'border-primary/60 bg-primary/5 text-foreground'
-                        : 'border-border/60 hover:bg-secondary/40 text-muted-foreground'
+                        ? "border-primary/60 bg-primary/5 text-foreground"
+                        : "border-border/60 hover:bg-secondary/40 text-muted-foreground"
                     }`}
                   >
                     <RadioGroupItem

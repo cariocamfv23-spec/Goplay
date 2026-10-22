@@ -23,11 +23,11 @@ import {
   Shield,
   ShieldCheck,
   FileText,
-} from 'lucide-react'
-import { useNavigate, useLocation, Link } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Logo } from '@/components/Logo'
+} from "lucide-react"
+import { useNavigate, useLocation, Link } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Logo } from "@/components/Logo"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,20 +38,20 @@ import {
   DropdownMenuSub,
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
-} from '@/components/ui/dropdown-menu'
-import { useTheme } from 'next-themes'
-import { useThemeStore } from '@/stores/useThemeStore'
-import { mockCurrentUser } from '@/lib/data'
-import { NotificationMenu } from '@/components/NotificationMenu'
-import { AthleteAura } from '@/components/AthleteAura'
-import { useNostalgiaStore, NostalgiaPreset } from '@/stores/useNostalgiaStore'
-import { cn } from '@/lib/utils'
-import { toast } from 'sonner'
-import { Badge } from '@/components/ui/badge'
-import { Switch } from '@/components/ui/switch'
-import { usePrivacyStore } from '@/stores/usePrivacyStore'
-import { useAuthStore } from '@/stores/useAuthStore'
-import { useAuth } from '@/hooks/use-auth'
+} from "@/components/ui/dropdown-menu"
+import { useTheme } from "next-themes"
+import { useThemeStore } from "@/stores/useThemeStore"
+import { mockCurrentUser } from "@/lib/data"
+import { NotificationMenu } from "@/components/NotificationMenu"
+import { AthleteAura } from "@/components/AthleteAura"
+import { useNostalgiaStore, NostalgiaPreset } from "@/stores/useNostalgiaStore"
+import { cn } from "@/lib/utils"
+import { toast } from "sonner"
+import { Badge } from "@/components/ui/badge"
+import { Switch } from "@/components/ui/switch"
+import { usePrivacyStore } from "@/stores/usePrivacyStore"
+import { useAuthStore } from "@/stores/useAuthStore"
+import { useAuth } from "@/hooks/use-auth"
 
 export function TopBar() {
   const navigate = useNavigate()
@@ -63,27 +63,27 @@ export function TopBar() {
   const { user, profile, signOut } = useAuth()
   const { logout } = useAuthStore()
 
-  const isMarket = location.pathname.includes('/marketplace')
-  const isMove = location.pathname === '/move'
+  const isMarket = location.pathname.includes("/marketplace")
+  const isMove = location.pathname === "/move"
 
   // Pages where we don't show the back button (Main tabs and Landing Page)
   const showBack =
-    location.pathname !== '/' &&
-    location.pathname !== '/home' &&
-    location.pathname !== '/move' &&
-    location.pathname !== '/explore' &&
-    location.pathname !== '/messages' &&
-    location.pathname !== '/jobs' &&
-    location.pathname !== '/marketplace' &&
-    location.pathname !== '/feed' &&
-    location.pathname !== '/infinity-hub'
+    location.pathname !== "/" &&
+    location.pathname !== "/home" &&
+    location.pathname !== "/move" &&
+    location.pathname !== "/explore" &&
+    location.pathname !== "/messages" &&
+    location.pathname !== "/jobs" &&
+    location.pathname !== "/marketplace" &&
+    location.pathname !== "/feed" &&
+    location.pathname !== "/infinity-hub"
 
   const handleSelectPreset = (newPreset: NostalgiaPreset) => {
     setPreset(newPreset)
     if (!isEnabled) {
       toggle(true)
     }
-    toast.success('Modo Nostalgia Aplicado', {
+    toast.success("Modo Nostalgia Aplicado", {
       description: `Filtro ${newPreset.toUpperCase()} ativo.`,
       icon: <Sparkles className="w-4 h-4 text-gold" />,
     })
@@ -91,31 +91,31 @@ export function TopBar() {
 
   const handleDisable = () => {
     toggle(false)
-    toast.info('Modo Nostalgia Desativado', {
-      description: 'Retornando ao estilo moderno.',
+    toast.info("Modo Nostalgia Desativado", {
+      description: "Retornando ao estilo moderno.",
     })
   }
 
   const handleLogout = async () => {
     try {
-      await signOut({ scope: 'local' })
+      await signOut({ scope: "local" })
     } catch {
       logout()
     }
-    navigate('/login', { replace: true })
-    toast.success('Você saiu da sua conta.')
+    navigate("/login", { replace: true })
+    toast.success("Você saiu da sua conta.")
   }
 
   const displayName =
-    profile?.full_name || user?.email?.split('@')[0] || mockCurrentUser.name
+    profile?.full_name || user?.email?.split("@")[0] || mockCurrentUser.name
   const displayEmail = user?.email || mockCurrentUser.username
 
   return (
     <div
       className={cn(
-        'sticky top-0 z-40 w-full h-16 bg-background/80 backdrop-blur-xl border-b border-border/40 flex items-center justify-between px-4 transition-all shadow-sm',
+        "sticky top-0 z-40 w-full h-16 bg-background/80 backdrop-blur-xl border-b border-border/40 flex items-center justify-between px-4 transition-all shadow-sm",
         isMove &&
-          'bg-black/90 border-white/10 text-white [&_*]:text-white/90 [&_.text-muted-foreground]:text-white/60',
+          "bg-black/90 border-white/10 text-white [&_*]:text-white/90 [&_.text-muted-foreground]:text-white/60",
       )}
     >
       <div className="flex items-center gap-3">
@@ -131,7 +131,7 @@ export function TopBar() {
         )}
 
         <Link
-          to={location.pathname === '/' ? '/' : '/home'}
+          to={location.pathname === "/" ? "/" : "/home"}
           className="flex items-center py-2 transition-opacity hover:opacity-80"
         >
           {/* Main Logo in TopBar has seasonal elements DISABLED to prevent leaking into internal UI */}
@@ -145,7 +145,7 @@ export function TopBar() {
             variant="ghost"
             size="icon"
             className="rounded-full hover:bg-secondary/50"
-            onClick={() => navigate('/marketplace/cart')}
+            onClick={() => navigate("/marketplace/cart")}
           >
             <ShoppingCart className="h-5 w-5" />
           </Button>
@@ -158,18 +158,18 @@ export function TopBar() {
               variant="ghost"
               size="icon"
               className={cn(
-                'rounded-full transition-all duration-500 relative group',
+                "rounded-full transition-all duration-500 relative group",
                 isEnabled
-                  ? 'bg-gold/10 text-gold hover:bg-gold/20'
-                  : 'hover:bg-secondary/50 text-muted-foreground hover:text-gold',
-                isMove && !isEnabled && 'text-white/70 hover:bg-white/10',
+                  ? "bg-gold/10 text-gold hover:bg-gold/20"
+                  : "hover:bg-secondary/50 text-muted-foreground hover:text-gold",
+                isMove && !isEnabled && "text-white/70 hover:bg-white/10",
               )}
               title="Modo Nostalgia"
             >
               <Sparkles
                 className={cn(
-                  'h-5 w-5 transition-transform duration-500',
-                  isEnabled ? 'rotate-12 scale-110' : 'group-hover:scale-110',
+                  "h-5 w-5 transition-transform duration-500",
+                  isEnabled ? "rotate-12 scale-110" : "group-hover:scale-110",
                 )}
               />
               {isEnabled && (
@@ -194,42 +194,42 @@ export function TopBar() {
               </>
             )}
 
-            <DropdownMenuItem onClick={() => handleSelectPreset('cassette')}>
+            <DropdownMenuItem onClick={() => handleSelectPreset("cassette")}>
               <CassetteTape className="mr-2 h-4 w-4" />
               <span>Fita K7</span>
-              {preset === 'cassette' && isEnabled && (
+              {preset === "cassette" && isEnabled && (
                 <Check className="ml-auto h-4 w-4" />
               )}
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={() => handleSelectPreset('vhs')}>
+            <DropdownMenuItem onClick={() => handleSelectPreset("vhs")}>
               <Tv className="mr-2 h-4 w-4" />
               <span>VHS Aesthetic</span>
-              {preset === 'vhs' && isEnabled && (
+              {preset === "vhs" && isEnabled && (
                 <Check className="ml-auto h-4 w-4" />
               )}
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={() => handleSelectPreset('90s')}>
+            <DropdownMenuItem onClick={() => handleSelectPreset("90s")}>
               <Sparkles className="mr-2 h-4 w-4" />
               <span>90s Pop</span>
-              {preset === '90s' && isEnabled && (
+              {preset === "90s" && isEnabled && (
                 <Check className="ml-auto h-4 w-4" />
               )}
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={() => handleSelectPreset('retro')}>
+            <DropdownMenuItem onClick={() => handleSelectPreset("retro")}>
               <Film className="mr-2 h-4 w-4" />
               <span>Câmera Clássica</span>
-              {preset === 'retro' && isEnabled && (
+              {preset === "retro" && isEnabled && (
                 <Check className="ml-auto h-4 w-4" />
               )}
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={() => handleSelectPreset('digital')}>
+            <DropdownMenuItem onClick={() => handleSelectPreset("digital")}>
               <Terminal className="mr-2 h-4 w-4" />
               <span>Retro Digital</span>
-              {preset === 'digital' && isEnabled && (
+              {preset === "digital" && isEnabled && (
                 <Check className="ml-auto h-4 w-4" />
               )}
             </DropdownMenuItem>
@@ -239,18 +239,18 @@ export function TopBar() {
               Temas Especiais
             </DropdownMenuLabel>
 
-            <DropdownMenuItem onClick={() => handleSelectPreset('pele')}>
+            <DropdownMenuItem onClick={() => handleSelectPreset("pele")}>
               <Trophy className="mr-2 h-4 w-4 text-yellow-500" />
               <span>Futebol 80s (Pelé)</span>
-              {preset === 'pele' && isEnabled && (
+              {preset === "pele" && isEnabled && (
                 <Check className="ml-auto h-4 w-4" />
               )}
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={() => handleSelectPreset('ali')}>
+            <DropdownMenuItem onClick={() => handleSelectPreset("ali")}>
               <Swords className="mr-2 h-4 w-4 text-zinc-500" />
               <span>Boxe Vintage (Ali)</span>
-              {preset === 'ali' && isEnabled && (
+              {preset === "ali" && isEnabled && (
                 <Check className="ml-auto h-4 w-4" />
               )}
             </DropdownMenuItem>
@@ -263,8 +263,8 @@ export function TopBar() {
               variant="ghost"
               size="icon"
               className={cn(
-                'rounded-full hover:bg-secondary/50',
-                isMove && 'hover:bg-white/10',
+                "rounded-full hover:bg-secondary/50",
+                isMove && "hover:bg-white/10",
               )}
               title="Aparência"
             >
@@ -274,15 +274,15 @@ export function TopBar() {
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>Aparência</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => setTheme('light')}>
+            <DropdownMenuItem onClick={() => setTheme("light")}>
               <Sun className="mr-2 h-4 w-4" />
               <span>Claro</span>
-              {theme === 'light' && <Check className="ml-auto h-4 w-4" />}
+              {theme === "light" && <Check className="ml-auto h-4 w-4" />}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme('dark')}>
+            <DropdownMenuItem onClick={() => setTheme("dark")}>
               <Moon className="mr-2 h-4 w-4" />
               <span>Escuro</span>
-              {theme === 'dark' && <Check className="ml-auto h-4 w-4" />}
+              {theme === "dark" && <Check className="ml-auto h-4 w-4" />}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuSub>
@@ -291,35 +291,35 @@ export function TopBar() {
                 <span>Mais cores disponíveis</span>
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent>
-                <DropdownMenuItem onClick={() => setColor('default')}>
+                <DropdownMenuItem onClick={() => setColor("default")}>
                   <div className="mr-2 h-4 w-4 rounded-full bg-[hsl(263.4,70%,50.4%)]" />
                   <span>Roxo Serenity</span>
-                  {color === 'default' && <Check className="ml-auto h-4 w-4" />}
+                  {color === "default" && <Check className="ml-auto h-4 w-4" />}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setColor('blue')}>
+                <DropdownMenuItem onClick={() => setColor("blue")}>
                   <div className="mr-2 h-4 w-4 rounded-full bg-blue-600" />
                   <span>Azul</span>
-                  {color === 'blue' && <Check className="ml-auto h-4 w-4" />}
+                  {color === "blue" && <Check className="ml-auto h-4 w-4" />}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setColor('green')}>
+                <DropdownMenuItem onClick={() => setColor("green")}>
                   <div className="mr-2 h-4 w-4 rounded-full bg-green-600" />
                   <span>Verde</span>
-                  {color === 'green' && <Check className="ml-auto h-4 w-4" />}
+                  {color === "green" && <Check className="ml-auto h-4 w-4" />}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setColor('orange')}>
+                <DropdownMenuItem onClick={() => setColor("orange")}>
                   <div className="mr-2 h-4 w-4 rounded-full bg-orange-600" />
                   <span>Laranja</span>
-                  {color === 'orange' && <Check className="ml-auto h-4 w-4" />}
+                  {color === "orange" && <Check className="ml-auto h-4 w-4" />}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setColor('red')}>
+                <DropdownMenuItem onClick={() => setColor("red")}>
                   <div className="mr-2 h-4 w-4 rounded-full bg-red-600" />
                   <span>Vermelho</span>
-                  {color === 'red' && <Check className="ml-auto h-4 w-4" />}
+                  {color === "red" && <Check className="ml-auto h-4 w-4" />}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setColor('rose')}>
+                <DropdownMenuItem onClick={() => setColor("rose")}>
                   <div className="mr-2 h-4 w-4 rounded-full bg-rose-600" />
                   <span>Rosa</span>
-                  {color === 'rose' && <Check className="ml-auto h-4 w-4" />}
+                  {color === "rose" && <Check className="ml-auto h-4 w-4" />}
                 </DropdownMenuItem>
               </DropdownMenuSubContent>
             </DropdownMenuSub>
@@ -333,8 +333,8 @@ export function TopBar() {
             <Button
               variant="ghost"
               className={cn(
-                'relative h-10 w-10 rounded-full ml-1',
-                isMove && 'hover:bg-white/10',
+                "relative h-10 w-10 rounded-full ml-1",
+                isMove && "hover:bg-white/10",
               )}
             >
               <AthleteAura
@@ -374,13 +374,12 @@ export function TopBar() {
             {/* Profile Views Entry with Admin Toggle */}
             <DropdownMenuItem
               onSelect={(e) => {
-                const target = (e as any).originalEvent?.target as
-                  | HTMLElement
-                  | undefined
-                if (target?.closest?.('.admin-switch-container')) {
+                const target = (e as any).originalEvent
+                  ?.target as HTMLElement | undefined
+                if (target?.closest?.(".admin-switch-container")) {
                   e.preventDefault()
                 } else {
-                  navigate('/profile/views')
+                  navigate("/profile/views")
                 }
               }}
               className="justify-between group cursor-pointer"
@@ -404,19 +403,19 @@ export function TopBar() {
               </div>
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={() => navigate('/profile/me')}>
+            <DropdownMenuItem onClick={() => navigate("/profile/me")}>
               <User className="mr-2 h-4 w-4" />
               <span>Meu Perfil</span>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate('/messages')}>
+            <DropdownMenuItem onClick={() => navigate("/messages")}>
               <MessageSquare className="mr-2 h-4 w-4" />
               <span>Mensagens</span>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate('/wallet')}>
+            <DropdownMenuItem onClick={() => navigate("/wallet")}>
               <CreditCard className="mr-2 h-4 w-4" />
               <span>Carteira</span>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate('/timecapsule')}>
+            <DropdownMenuItem onClick={() => navigate("/timecapsule")}>
               <Lock className="mr-2 h-4 w-4 text-gold" />
               <span className="font-bold text-foreground">Time Capsule</span>
               <Badge
@@ -426,7 +425,7 @@ export function TopBar() {
                 PRO
               </Badge>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate('/organizer')}>
+            <DropdownMenuItem onClick={() => navigate("/organizer")}>
               <Trophy className="mr-2 h-4 w-4 text-amber-500" />
               <span className="font-bold text-foreground">
                 Painel do Clube / Seletivas
@@ -438,7 +437,7 @@ export function TopBar() {
                 CLUBE
               </Badge>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate('/album')}>
+            <DropdownMenuItem onClick={() => navigate("/album")}>
               <Trophy className="mr-2 h-4 w-4 text-green-500" />
               <span className="font-bold text-foreground">Álbum Copa 2026</span>
               <Badge
@@ -448,24 +447,24 @@ export function TopBar() {
                 NOVO
               </Badge>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate('/app-map')}>
+            <DropdownMenuItem onClick={() => navigate("/app-map")}>
               <Map className="mr-2 h-4 w-4" />
               <span>Mapa do App</span>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate('/settings')}>
+            <DropdownMenuItem onClick={() => navigate("/settings")}>
               <Settings className="mr-2 h-4 w-4" />
               <span>Configurações</span>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate('/terms')}>
+            <DropdownMenuItem onClick={() => navigate("/terms")}>
               <FileText className="mr-2 h-4 w-4 text-muted-foreground" />
               <span>Termos de Uso</span>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate('/privacy')}>
+            <DropdownMenuItem onClick={() => navigate("/privacy")}>
               <ShieldCheck className="mr-2 h-4 w-4 text-emerald-500" />
               <span>Privacidade (LGPD)</span>
             </DropdownMenuItem>
             {profile?.is_admin && (
-              <DropdownMenuItem onClick={() => navigate('/admin')}>
+              <DropdownMenuItem onClick={() => navigate("/admin")}>
                 <Shield className="mr-2 h-4 w-4 text-primary" />
                 <span className="font-bold text-foreground">Painel Admin</span>
                 <Badge

@@ -1,8 +1,8 @@
-import { mockRetrospective } from '@/lib/data'
-import { Sparkles } from 'lucide-react'
-import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
-import { cn } from '@/lib/utils'
-import { AppIcon } from '@/components/AppIcon'
+import { mockRetrospective } from "@/lib/data"
+import { Sparkles } from "lucide-react"
+import { useRetrospectiveStore } from "@/stores/useRetrospectiveStore"
+import { cn } from "@/lib/utils"
+import { AppIcon } from "@/components/AppIcon"
 
 export default function IntroSlide() {
   const { getTheme } = useRetrospectiveStore()
@@ -30,7 +30,7 @@ export default function IntroSlide() {
       <div className="animate-in fade-in duration-1000 delay-1000 fill-mode-both">
         <div className="bg-white/20 backdrop-blur-md px-6 py-2 rounded-full border border-white/30 flex items-center gap-2">
           <Sparkles
-            className={cn('w-4 h-4 animate-pulse', currentTheme.icon)}
+            className={cn("w-4 h-4 animate-pulse", currentTheme.icon)}
           />
           <span className="font-semibold text-sm">Goplay Wrapped</span>
         </div>

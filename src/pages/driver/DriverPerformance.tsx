@@ -5,25 +5,25 @@ import {
   XAxis,
   YAxis,
   ResponsiveContainer,
-} from 'recharts'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+} from "recharts"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart'
-import { mockDriverStats } from '@/lib/data'
-import { ArrowLeft, Car, Clock, Star, Users } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { useNavigate } from 'react-router-dom'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { DriverMetricsCard } from '@/components/DriverMetricsCard'
+} from "@/components/ui/chart"
+import { mockDriverStats } from "@/lib/data"
+import { ArrowLeft, Car, Clock, Star, Users } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { DriverMetricsCard } from "@/components/DriverMetricsCard"
 
 const chartConfig = {
   rides: {
-    label: 'Corridas',
-    color: 'hsl(var(--primary))',
+    label: "Corridas",
+    color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig
 
@@ -92,7 +92,7 @@ export default function DriverPerformance() {
                   axisLine={false}
                   tickMargin={8}
                   fontSize={10}
-                  tickFormatter={(value) => value.split(' ')[0]}
+                  tickFormatter={(value) => value.split(" ")[0]}
                 />
                 <YAxis
                   tickLine={false}
@@ -132,7 +132,7 @@ export default function DriverPerformance() {
                   <h3 className="font-bold text-sm">{driver.name}</h3>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
-                      <Star className="h-3 w-3 fill-gold text-gold" />{' '}
+                      <Star className="h-3 w-3 fill-gold text-gold" />{" "}
                       {driver.rating}
                     </span>
                     <span>• {driver.rides} corridas</span>

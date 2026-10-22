@@ -1,8 +1,8 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   MessageCircle,
   Share2,
@@ -13,11 +13,11 @@ import {
   MoreHorizontal,
   Trash2,
   ChevronUp,
-} from 'lucide-react'
-import { useState, useMemo } from 'react'
-import { Link } from 'react-router-dom'
-import { cn } from '@/lib/utils'
-import { toast } from 'sonner'
+} from "lucide-react"
+import { useState, useMemo } from "react"
+import { Link } from "react-router-dom"
+import { cn } from "@/lib/utils"
+import { toast } from "sonner"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,18 +27,18 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
+} from "@/components/ui/alert-dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from "@/components/ui/dropdown-menu"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover'
+} from "@/components/ui/popover"
 
 interface FoodPostProps {
   post: any
@@ -48,20 +48,20 @@ interface FoodPostProps {
 // Comprehensive Food Emoji Library organized by categories
 const FOOD_EMOJI_CATEGORIES = [
   {
-    name: 'Proteínas & Carnes',
-    emojis: ['🥩', '🍗', '🍖', '🥓', '🥚', '🍳', '🍤', '🐟'],
+    name: "Proteínas & Carnes",
+    emojis: ["🥩", "🍗", "🍖", "🥓", "🥚", "🍳", "🍤", "🐟"],
   },
   {
-    name: 'Vegetais',
-    emojis: ['🥦', '🥕', '🍅', '🫑', '🌽', '🥑', '🥬', '🥒', '🥔', '🫛'],
+    name: "Vegetais",
+    emojis: ["🥦", "🥕", "🍅", "🫑", "🌽", "🥑", "🥬", "🥒", "🥔", "🫛"],
   },
   {
-    name: 'Frutas',
-    emojis: ['🍎', '🍌', '🍉', '🍇', '🍓', '🫐', '🍍', '🥭', '🍊'],
+    name: "Frutas",
+    emojis: ["🍎", "🍌", "🍉", "🍇", "🍓", "🫐", "🍍", "🥭", "🍊"],
   },
   {
-    name: 'Grãos & Outros',
-    emojis: ['🍞', '🥣', '🥗', '🥘', '🥜', '🫘'],
+    name: "Grãos & Outros",
+    emojis: ["🍞", "🥣", "🥗", "🥘", "🥜", "🫘"],
   },
 ]
 
@@ -70,12 +70,12 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
   const initialReactions = useMemo(() => {
     const counts: Record<string, number> = {}
     if (post.likes > 0) {
-      counts['🥩'] = Math.floor(post.likes * 0.25)
-      counts['🥦'] = Math.floor(post.likes * 0.2)
-      counts['🍓'] = Math.floor(post.likes * 0.2)
-      counts['🥑'] = Math.floor(post.likes * 0.15)
-      counts['🍳'] =
-        post.likes - (counts['🥩'] + counts['🥦'] + counts['🍓'] + counts['🥑'])
+      counts["🥩"] = Math.floor(post.likes * 0.25)
+      counts["🥦"] = Math.floor(post.likes * 0.2)
+      counts["🍓"] = Math.floor(post.likes * 0.2)
+      counts["🥑"] = Math.floor(post.likes * 0.15)
+      counts["🍳"] =
+        post.likes - (counts["🥩"] + counts["🥦"] + counts["🍓"] + counts["🥑"])
     }
     return counts
   }, [post.likes])
@@ -83,7 +83,7 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
   const [reactions, setReactions] =
     useState<Record<string, number>>(initialReactions)
   const [userReaction, setUserReaction] = useState<string | null>(
-    post.liked ? '🥩' : null,
+    post.liked ? "🥩" : null,
   )
   const [isReactionOpen, setIsReactionOpen] = useState(false)
 
@@ -119,14 +119,14 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
   }
 
   const handleComment = () => {
-    toast.success('Comentários abertos', {
-      description: 'Esta função abrirá a aba de comentários em breve.',
+    toast.success("Comentários abertos", {
+      description: "Esta função abrirá a aba de comentários em breve.",
     })
   }
 
   const handleShare = () => {
-    toast.success('Opções de compartilhamento', {
-      description: 'Link copiado para a área de transferência!',
+    toast.success("Opções de compartilhamento", {
+      description: "Link copiado para a área de transferência!",
     })
   }
 
@@ -178,19 +178,19 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          {post.user.id !== 'me' ? (
+          {post.user.id !== "me" ? (
             <>
               <Button
-                variant={isFollowing ? 'secondary' : 'outline'}
+                variant={isFollowing ? "secondary" : "outline"}
                 size="sm"
                 className={cn(
-                  'h-7 text-xs rounded-full px-4 transition-all duration-300',
+                  "h-7 text-xs rounded-full px-4 transition-all duration-300",
                   !isFollowing &&
-                    'text-primary border-primary/50 hover:bg-primary hover:text-white',
+                    "text-primary border-primary/50 hover:bg-primary hover:text-white",
                 )}
                 onClick={handleFollow}
               >
-                {isFollowing ? 'Seguindo' : 'Seguir'}
+                {isFollowing ? "Seguindo" : "Seguir"}
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -204,7 +204,7 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40 rounded-xl">
                   <DropdownMenuItem
-                    onClick={() => toast.success('Link copiado!')}
+                    onClick={() => toast.success("Link copiado!")}
                   >
                     Copiar Link
                   </DropdownMenuItem>
@@ -260,7 +260,7 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
               alt="Food post content"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
-            {post.type === 'video' && (
+            {post.type === "video" && (
               <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
                 <div className="h-12 w-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/50 shadow-xl group-hover:scale-110 transition-transform">
                   <Play className="h-5 w-5 text-white ml-1 fill-white" />
@@ -278,24 +278,24 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => handleReact(userReaction || '🥩')}
+                  onClick={() => handleReact(userReaction || "🥩")}
                   className={cn(
-                    'h-8 w-8 rounded-full transition-all duration-300 z-10',
+                    "h-8 w-8 rounded-full transition-all duration-300 z-10",
                     userReaction
-                      ? 'bg-orange-500/20 scale-105 shadow-sm ring-1 ring-orange-500/40'
-                      : 'hover:bg-orange-500/10 hover:scale-105',
+                      ? "bg-orange-500/20 scale-105 shadow-sm ring-1 ring-orange-500/40"
+                      : "hover:bg-orange-500/10 hover:scale-105",
                   )}
                 >
                   <span
                     className={cn(
-                      'text-[18px] leading-none transform transition-all duration-300',
+                      "text-[18px] leading-none transform transition-all duration-300",
                       !userReaction &&
-                        'opacity-50 grayscale scale-90 group-hover:scale-100 group-hover:grayscale-0',
+                        "opacity-50 grayscale scale-90 group-hover:scale-100 group-hover:grayscale-0",
                       userReaction &&
-                        'scale-110 animate-in zoom-in duration-300',
+                        "scale-110 animate-in zoom-in duration-300",
                     )}
                   >
-                    {userReaction || '🥩'}
+                    {userReaction || "🥩"}
                   </span>
                 </Button>
 
@@ -327,9 +327,9 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
                                 <button
                                   key={emoji}
                                   className={cn(
-                                    'h-10 w-10 text-2xl flex items-center justify-center rounded-full hover:bg-orange-500/10 transition-all duration-300 hover:scale-125 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500',
+                                    "h-10 w-10 text-2xl flex items-center justify-center rounded-full hover:bg-orange-500/10 transition-all duration-300 hover:scale-125 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
                                     userReaction === emoji &&
-                                      'bg-orange-500/20 scale-110 shadow-inner ring-1 ring-orange-500/50',
+                                      "bg-orange-500/20 scale-110 shadow-inner ring-1 ring-orange-500/50",
                                   )}
                                   onClick={() => handleReact(emoji)}
                                   title={`Reagir com ${emoji}`}
@@ -372,29 +372,29 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  'h-8 w-8 rounded-full transition-colors',
+                  "h-8 w-8 rounded-full transition-colors",
                   isFavorite
-                    ? 'text-yellow-500'
-                    : 'text-muted-foreground hover:text-yellow-400',
+                    ? "text-yellow-500"
+                    : "text-muted-foreground hover:text-yellow-400",
                 )}
                 onClick={() => setIsFavorite(!isFavorite)}
               >
-                <Star className={cn('h-5 w-5', isFavorite && 'fill-current')} />
+                <Star className={cn("h-5 w-5", isFavorite && "fill-current")} />
               </Button>
 
               <Button
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  'h-8 w-8 rounded-full transition-colors',
+                  "h-8 w-8 rounded-full transition-colors",
                   isSaved
-                    ? 'text-primary'
-                    : 'text-muted-foreground hover:text-primary',
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-primary",
                 )}
                 onClick={() => setIsSaved(!isSaved)}
               >
                 <Bookmark
-                  className={cn('h-5 w-5', isSaved && 'fill-current')}
+                  className={cn("h-5 w-5", isSaved && "fill-current")}
                 />
               </Button>
             </div>
@@ -417,8 +417,8 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
                   ))}
                 </div>
                 <span className="text-xs font-bold text-foreground">
-                  {totalReactions.toLocaleString()}{' '}
-                  {totalReactions === 1 ? 'reação' : 'reações'}
+                  {totalReactions.toLocaleString()}{" "}
+                  {totalReactions === 1 ? "reação" : "reações"}
                 </span>
               </div>
             ) : (
@@ -457,8 +457,8 @@ export function FoodPostCard({ post, onDelete }: FoodPostProps) {
               onClick={() => {
                 if (onDelete) {
                   onDelete(post.id)
-                  toast.success('Publicação excluída', {
-                    description: 'A publicação foi removida do Food Sport.',
+                  toast.success("Publicação excluída", {
+                    description: "A publicação foi removida do Food Sport.",
                   })
                 }
                 setShowDeleteDialog(false)

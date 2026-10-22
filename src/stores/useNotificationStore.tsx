@@ -1,10 +1,10 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 import {
   Notification as BaseNotification,
   mockNotificationsList,
-} from '@/lib/data'
-import useSoundStore from './useSoundStore'
+} from "@/lib/data"
+import useSoundStore from "./useSoundStore"
 
 export type Notification = BaseNotification & {
   avatarUrl?: string
@@ -16,7 +16,7 @@ interface NotificationState {
   notifications: Notification[]
   unreadCount: number
   addNotification: (
-    notification: Omit<Notification, 'id' | 'read' | 'date' | 'time'> & {
+    notification: Omit<Notification, "id" | "read" | "date" | "time"> & {
       time?: string
     },
   ) => string
@@ -27,7 +27,7 @@ interface NotificationState {
 // Enhance mock notifications with avatarUrl for friend suggestions
 const enhancedMockNotifications: Notification[] = mockNotificationsList.map(
   (not) => {
-    if (not.type === 'friend_suggestion') {
+    if (not.type === "friend_suggestion") {
       return {
         ...not,
         avatarUrl:
@@ -53,22 +53,22 @@ const useNotificationStore = create<NotificationState>()(
           const newNotification: Notification = {
             ...data,
             id,
-            time: data.time || 'Agora',
-            date: 'Hoje',
+            time: data.time || "Agora",
+            date: "Hoje",
             read: false,
           }
 
-          if (data.type === 'weather') {
-            useSoundStore.getState().playTone('weather')
+          if (data.type === "weather") {
+            useSoundStore.getState().playTone("weather")
           } else if (
-            data.type === 'system' ||
-            data.type === 'verification' ||
-            data.priority === 'critical' ||
-            data.priority === 'high'
+            data.type === "system" ||
+            data.type === "verification" ||
+            data.priority === "critical" ||
+            data.priority === "high"
           ) {
-            useSoundStore.getState().playTone('system')
+            useSoundStore.getState().playTone("system")
           } else {
-            useSoundStore.getState().playTone('engagement')
+            useSoundStore.getState().playTone("engagement")
           }
 
           const updatedNotifications = [newNotification, ...state.notifications]
@@ -102,7 +102,7 @@ const useNotificationStore = create<NotificationState>()(
         }),
     }),
     {
-      name: 'goplay-notifications-storage',
+      name: "goplay-notifications-storage",
       merge: (persistedState: any, currentState) => {
         const persisted = persistedState?.notifications || []
         const currentMocks = currentState.notifications || []

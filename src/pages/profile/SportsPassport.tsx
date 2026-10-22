@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   Share2,
@@ -13,23 +13,23 @@ import {
   Target,
   Trophy,
   ShieldAlert,
-} from 'lucide-react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { PassportCard } from '@/components/passport/PassportCard'
-import { CompetitionHistory } from '@/components/passport/CompetitionHistory'
-import { Certifications } from '@/components/passport/Certifications'
-import { GoalsTracker } from '@/components/passport/GoalsTracker'
-import { StrategicVisualPassport } from '@/components/passport/StrategicVisualPassport'
-import { EventLinkDialog } from '@/components/passport/EventLinkDialog'
-import { useState, useEffect } from 'react'
-import { ShareDialog } from '@/components/ShareDialog'
-import { mockCurrentUser } from '@/lib/data'
-import { useParams, useNavigate } from 'react-router-dom'
-import { useAuth } from '@/hooks/use-auth'
-import { profileService, type ProfileRow } from '@/services/profiles'
-import { feedService, type PostItem } from '@/services/feed'
-import { analyticsService } from '@/services/analytics'
-import { ReportDialog } from '@/components/moderation/ReportDialog'
+} from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { PassportCard } from "@/components/passport/PassportCard"
+import { CompetitionHistory } from "@/components/passport/CompetitionHistory"
+import { Certifications } from "@/components/passport/Certifications"
+import { GoalsTracker } from "@/components/passport/GoalsTracker"
+import { StrategicVisualPassport } from "@/components/passport/StrategicVisualPassport"
+import { EventLinkDialog } from "@/components/passport/EventLinkDialog"
+import { useState, useEffect } from "react"
+import { ShareDialog } from "@/components/ShareDialog"
+import { mockCurrentUser } from "@/lib/data"
+import { useParams, useNavigate } from "react-router-dom"
+import { useAuth } from "@/hooks/use-auth"
+import { profileService, type ProfileRow } from "@/services/profiles"
+import { feedService, type PostItem } from "@/services/feed"
+import { analyticsService } from "@/services/analytics"
+import { ReportDialog } from "@/components/moderation/ReportDialog"
 
 export default function SportsPassport() {
   const { id } = useParams<{ id?: string }>()
@@ -43,7 +43,7 @@ export default function SportsPassport() {
   const [targetProfile, setTargetProfile] = useState<ProfileRow | null>(null)
   const [targetPosts, setTargetPosts] = useState<PostItem[]>([])
 
-  const isMe = !id || id === 'me' || (authUser?.id && id === authUser.id)
+  const isMe = !id || id === "me" || (authUser?.id && id === authUser.id)
 
   useEffect(() => {
     let isMounted = true
@@ -96,7 +96,7 @@ export default function SportsPassport() {
   const athletePosition = activeProfile?.position || mockCurrentUser.position
   const athleteCityState = [activeProfile?.city, activeProfile?.state]
     .filter(Boolean)
-    .join(', ')
+    .join(", ")
   const publicShareUrl = activeProfile?.id
     ? `${window.location.origin}/passport/${activeProfile.id}`
     : window.location.href
@@ -105,7 +105,7 @@ export default function SportsPassport() {
     if (activeProfile?.id) {
       analyticsService.trackProfileShare(
         activeProfile.id,
-        platform || 'unknown',
+        platform || "unknown",
         authUser?.id,
       )
     }
@@ -315,7 +315,7 @@ export default function SportsPassport() {
                 Documento esportivo digital verificado via Goplay App.
               </p>
               <p className="text-[10px] text-muted-foreground/60 uppercase tracking-widest font-mono">
-                ID:{' '}
+                ID:{" "}
                 {(activeProfile?.id || mockCurrentUser.id)
                   .slice(0, 12)
                   .toUpperCase()}
@@ -354,7 +354,7 @@ export default function SportsPassport() {
         open={isShareOpen}
         onOpenChange={setIsShareOpen}
         title={`Passaporte Esportivo de ${athleteName}`}
-        description={`Confira o Passaporte Esportivo oficial de ${athleteName} (${athleteSport || 'Esporte'}) no Goplay App!`}
+        description={`Confira o Passaporte Esportivo oficial de ${athleteName} (${athleteSport || "Esporte"}) no Goplay App!`}
         url={publicShareUrl}
         onShareAction={handleShareAction}
       />

@@ -1,17 +1,17 @@
-import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from 'recharts'
+import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts"
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Target } from 'lucide-react'
+} from "@/components/ui/chart"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Target } from "lucide-react"
 
 const chartConfig = {
   value: {
-    label: 'Score',
-    color: 'hsl(var(--primary))',
+    label: "Score",
+    color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig
 
@@ -50,7 +50,7 @@ export function StatsRadarChart({ stats }: StatsRadarChartProps) {
               <PolarGrid stroke="#333" />
               <PolarAngleAxis
                 dataKey="subject"
-                tick={{ fill: '#9ca3af', fontSize: 12 }}
+                tick={{ fill: "#9ca3af", fontSize: 12 }}
               />
               <Radar
                 name="Performance"

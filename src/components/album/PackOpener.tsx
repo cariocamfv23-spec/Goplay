@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
-import { useAlbumStore } from '@/stores/useAlbumStore'
-import { mockStickers, Sticker } from '@/lib/album-data'
-import { Button } from '@/components/ui/button'
-import { X, Sparkles, Trophy } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { useState, useEffect } from "react"
+import { useAlbumStore } from "@/stores/useAlbumStore"
+import { mockStickers, Sticker } from "@/lib/album-data"
+import { Button } from "@/components/ui/button"
+import { X, Sparkles, Trophy } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface PackOpenerProps {
   onClose: () => void
@@ -14,14 +14,14 @@ export function PackOpener({ onClose }: PackOpenerProps) {
   const [cards, setCards] = useState<Sticker[]>([])
   const [currentIdx, setCurrentIdx] = useState<number>(0)
   const [isFlipped, setIsFlipped] = useState(false)
-  const [step, setStep] = useState<'pack' | 'reveal' | 'summary'>('pack')
+  const [step, setStep] = useState<"pack" | "reveal" | "summary">("pack")
   const [isTearing, setIsTearing] = useState(false)
 
   // Generate 7 random cards on mount
   useEffect(() => {
     // 6 common, 1 rare
-    const commons = mockStickers.filter((s) => s.rarity === 'common')
-    const rares = mockStickers.filter((s) => s.rarity === 'rare')
+    const commons = mockStickers.filter((s) => s.rarity === "common")
+    const rares = mockStickers.filter((s) => s.rarity === "rare")
 
     const randomCard = (arr: Sticker[]) =>
       arr[Math.floor(Math.random() * arr.length)]
@@ -39,7 +39,7 @@ export function PackOpener({ onClose }: PackOpenerProps) {
     if (isTearing) return
     setIsTearing(true)
     setTimeout(() => {
-      setStep('reveal')
+      setStep("reveal")
     }, 1000)
   }
 
@@ -52,13 +52,13 @@ export function PackOpener({ onClose }: PackOpenerProps) {
         setTimeout(() => setCurrentIdx((prev) => prev + 1), 150)
       } else {
         openPack(cards.map((c) => c.id))
-        setStep('summary')
+        setStep("summary")
       }
     }
   }
 
   const handleFinish = () => {
-    if (step !== 'summary') {
+    if (step !== "summary") {
       openPack(cards.map((c) => c.id))
     }
     onClose()
@@ -70,7 +70,7 @@ export function PackOpener({ onClose }: PackOpenerProps) {
 
   return (
     <div className="fixed inset-0 z-[200] bg-black/95 flex flex-col items-center justify-center p-4 animate-in fade-in duration-500">
-      {step !== 'summary' && (
+      {step !== "summary" && (
         <Button
           variant="ghost"
           size="icon"
@@ -81,15 +81,15 @@ export function PackOpener({ onClose }: PackOpenerProps) {
         </Button>
       )}
 
-      {step === 'pack' && (
+      {step === "pack" && (
         <div className="flex flex-col items-center justify-center space-y-8 animate-in zoom-in duration-500">
           <div
             onClick={handleOpenPack}
             className={cn(
-              'relative w-64 aspect-[3/4] rounded-xl cursor-pointer shadow-[0_0_50px_rgba(250,204,21,0.3)] transition-all',
+              "relative w-64 aspect-[3/4] rounded-xl cursor-pointer shadow-[0_0_50px_rgba(250,204,21,0.3)] transition-all",
               isTearing
-                ? 'animate-ping opacity-0 duration-1000 scale-110'
-                : 'hover:scale-105 hover:shadow-[0_0_60px_rgba(250,204,21,0.6)]',
+                ? "animate-ping opacity-0 duration-1000 scale-110"
+                : "hover:scale-105 hover:shadow-[0_0_60px_rgba(250,204,21,0.6)]",
             )}
           >
             <div className="absolute inset-0 bg-gradient-to-br from-red-600 via-red-500 to-red-800 rounded-xl border-4 border-yellow-400 overflow-hidden shadow-inner">
@@ -107,8 +107,8 @@ export function PackOpener({ onClose }: PackOpenerProps) {
           </div>
           <p
             className={cn(
-              'text-yellow-400 font-bold text-lg transition-opacity duration-300',
-              isTearing ? 'opacity-0' : 'animate-pulse',
+              "text-yellow-400 font-bold text-lg transition-opacity duration-300",
+              isTearing ? "opacity-0" : "animate-pulse",
             )}
           >
             Toque para rasgar o pacote!
@@ -116,7 +116,7 @@ export function PackOpener({ onClose }: PackOpenerProps) {
         </div>
       )}
 
-      {step === 'summary' && (
+      {step === "summary" && (
         <div className="w-full h-full flex flex-col items-center justify-center p-4 space-y-12 animate-in fade-in duration-500">
           <div className="text-center space-y-3">
             <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto shadow-[0_0_40px_rgba(34,197,94,0.5)] mb-4">
@@ -146,7 +146,7 @@ export function PackOpener({ onClose }: PackOpenerProps) {
                     transform: `rotate(${rotation}deg) translateY(${translateY}px) translateZ(${zIndex * 5}px)`,
                     zIndex,
                     animationDelay: `${i * 100}ms`,
-                    animationFillMode: 'both',
+                    animationFillMode: "both",
                   }}
                 >
                   <img
@@ -159,7 +159,7 @@ export function PackOpener({ onClose }: PackOpenerProps) {
                       {card.name}
                     </span>
                   </div>
-                  {card.rarity === 'rare' && (
+                  {card.rarity === "rare" && (
                     <div className="absolute inset-0 ring-2 ring-yellow-400 ring-inset shadow-[inset_0_0_15px_rgba(250,204,21,0.5)]" />
                   )}
                 </div>
@@ -176,14 +176,14 @@ export function PackOpener({ onClose }: PackOpenerProps) {
         </div>
       )}
 
-      {step === 'reveal' && (
+      {step === "reveal" && (
         <div className="w-full max-w-sm flex flex-col items-center gap-8 animate-in slide-in-from-bottom-10">
           <div className="text-center space-y-2">
             <h2 className="text-2xl font-black text-white">
-              {isFlipped ? `${currentIdx + 1} de 7` : 'Revelar Figurinha'}
+              {isFlipped ? `${currentIdx + 1} de 7` : "Revelar Figurinha"}
             </h2>
             <p className="text-sm text-zinc-400">
-              {isFlipped ? 'Toque para a próxima' : 'Toque para revelar'}
+              {isFlipped ? "Toque para a próxima" : "Toque para revelar"}
             </p>
           </div>
 
@@ -194,17 +194,17 @@ export function PackOpener({ onClose }: PackOpenerProps) {
           >
             <div
               className={cn(
-                'w-full h-full relative transition-transform duration-700 ease-out',
+                "w-full h-full relative transition-transform duration-700 ease-out",
                 isFlipped
-                  ? '[transform:rotateY(180deg)]'
-                  : 'group-hover:scale-105',
+                  ? "[transform:rotateY(180deg)]"
+                  : "group-hover:scale-105",
               )}
-              style={{ transformStyle: 'preserve-3d' }}
+              style={{ transformStyle: "preserve-3d" }}
             >
               {/* Back of Card */}
               <div
                 className="absolute inset-0 bg-gradient-to-br from-green-600 to-green-900 rounded-2xl border-4 border-white/20 shadow-2xl flex flex-col items-center justify-center"
-                style={{ backfaceVisibility: 'hidden' }}
+                style={{ backfaceVisibility: "hidden" }}
               >
                 <Trophy className="w-16 h-16 text-yellow-300 mb-4 opacity-90 drop-shadow-md" />
                 <span className="text-white font-black tracking-[0.2em] text-2xl">
@@ -218,14 +218,14 @@ export function PackOpener({ onClose }: PackOpenerProps) {
               {/* Front of Card */}
               <div
                 className={cn(
-                  'absolute inset-0 rounded-2xl border-4 overflow-hidden flex flex-col bg-zinc-900',
-                  currentCard?.rarity === 'rare'
-                    ? 'border-yellow-400 shadow-[0_0_50px_rgba(250,204,21,0.6)]'
-                    : 'border-zinc-200 shadow-2xl',
+                  "absolute inset-0 rounded-2xl border-4 overflow-hidden flex flex-col bg-zinc-900",
+                  currentCard?.rarity === "rare"
+                    ? "border-yellow-400 shadow-[0_0_50px_rgba(250,204,21,0.6)]"
+                    : "border-zinc-200 shadow-2xl",
                 )}
                 style={{
-                  backfaceVisibility: 'hidden',
-                  transform: 'rotateY(180deg)',
+                  backfaceVisibility: "hidden",
+                  transform: "rotateY(180deg)",
                 }}
               >
                 {currentCard && (
@@ -250,7 +250,7 @@ export function PackOpener({ onClose }: PackOpenerProps) {
                       </div>
 
                       {/* Rarity Badge */}
-                      {currentCard.rarity === 'rare' && (
+                      {currentCard.rarity === "rare" && (
                         <div className="absolute top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-yellow-300 to-yellow-600 text-black px-3 py-0.5 rounded-full text-xs font-black tracking-widest uppercase shadow-lg border border-yellow-200">
                           Rara
                         </div>
@@ -281,9 +281,9 @@ export function PackOpener({ onClose }: PackOpenerProps) {
           >
             {isFlipped
               ? currentIdx < 6
-                ? 'Próxima Figurinha'
-                : 'Ver Resumo'
-              : 'Revelar'}
+                ? "Próxima Figurinha"
+                : "Ver Resumo"
+              : "Revelar"}
           </Button>
         </div>
       )}

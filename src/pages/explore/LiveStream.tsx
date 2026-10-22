@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { mockLiveEvents } from '@/lib/data'
-import { Button } from '@/components/ui/button'
+import { useState, useEffect } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import { mockLiveEvents } from "@/lib/data"
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   Send,
@@ -12,29 +12,29 @@ import {
   BarChart2,
   CheckCircle2,
   X,
-} from 'lucide-react'
-import { Input } from '@/components/ui/input'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 
 export default function LiveStream() {
   const { id } = useParams()
   const navigate = useNavigate()
   const event = mockLiveEvents.find((e) => e.id === id) || mockLiveEvents[0]
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState("")
   const [messages, setMessages] = useState([
-    { id: 1, user: 'João Silva', text: 'Golaço!', time: 'Agora' },
-    { id: 2, user: 'Maria Souza', text: 'Vai timeeee!', time: '1min' },
-    { id: 3, user: 'Pedro Santos', text: 'Juiz tá roubando', time: '2min' },
+    { id: 1, user: "João Silva", text: "Golaço!", time: "Agora" },
+    { id: 2, user: "Maria Souza", text: "Vai timeeee!", time: "1min" },
+    { id: 3, user: "Pedro Santos", text: "Juiz tá roubando", time: "2min" },
   ])
 
   // Simulated advanced interactive states
   const [poll, setPoll] = useState<{
     id: string
     question: string
-    options: { id: number; text: string; votes: number }[]
+    options: { id: number text: string votes: number }[]
     totalVotes: number
     isActive: boolean
   } | null>(null)
@@ -48,11 +48,11 @@ export default function LiveStream() {
     // Simulate poll appearing after 4s
     const pollTimer = setTimeout(() => {
       setPoll({
-        id: 'poll-1',
-        question: 'Quem vai fazer o primeiro gol?',
+        id: "poll-1",
+        question: "Quem vai fazer o primeiro gol?",
         options: [
-          { id: 1, text: 'Red Wolves', votes: 120 },
-          { id: 2, text: 'Blue Sharks', votes: 85 },
+          { id: 1, text: "Red Wolves", votes: 120 },
+          { id: 2, text: "Blue Sharks", votes: 85 },
         ],
         totalVotes: 205,
         isActive: true,
@@ -62,8 +62,8 @@ export default function LiveStream() {
     // Simulate Co-host joining after 10s
     const coHostTimer = setTimeout(() => {
       setCoHost({
-        name: 'João Silva',
-        avatar: 'https://img.usecurling.com/ppl/medium?gender=male&seed=1',
+        name: "João Silva",
+        avatar: "https://img.usecurling.com/ppl/medium?gender=male&seed=1",
       })
     }, 10000)
 
@@ -96,10 +96,10 @@ export default function LiveStream() {
   const handleSendMessage = () => {
     if (!message.trim()) return
     setMessages([
-      { id: Date.now(), user: 'Você', text: message, time: 'Agora' },
+      { id: Date.now(), user: "Você", text: message, time: "Agora" },
       ...messages,
     ])
-    setMessage('')
+    setMessage("")
   }
 
   const handleVote = (optId: number) => {
@@ -151,15 +151,15 @@ export default function LiveStream() {
       {/* Video Area */}
       <div
         className={cn(
-          'relative w-full bg-zinc-900 mt-0 flex flex-col md:flex-row items-center justify-center group overflow-hidden transition-all duration-500',
-          coHost ? 'aspect-[4/5] md:aspect-video' : 'aspect-video',
+          "relative w-full bg-zinc-900 mt-0 flex flex-col md:flex-row items-center justify-center group overflow-hidden transition-all duration-500",
+          coHost ? "aspect-[4/5] md:aspect-video" : "aspect-video",
         )}
       >
         {/* Main Streamer Feed */}
         <div
           className={cn(
-            'relative w-full h-full',
-            coHost ? 'h-1/2 md:w-1/2 md:h-full' : '',
+            "relative w-full h-full",
+            coHost ? "h-1/2 md:w-1/2 md:h-full" : "",
           )}
         >
           <img
@@ -207,7 +207,7 @@ export default function LiveStream() {
             <div className="flex justify-between items-start mb-4">
               <h4 className="text-white font-bold text-sm bg-primary/20 text-primary px-2.5 py-1 rounded-md flex items-center gap-1.5">
                 <BarChart2 className="w-4 h-4" />
-                {poll.isActive ? 'Enquete Ao Vivo' : 'Enquete Encerrada'}
+                {poll.isActive ? "Enquete Ao Vivo" : "Enquete Encerrada"}
               </h4>
               {!poll.isActive && (
                 <Button
@@ -237,12 +237,12 @@ export default function LiveStream() {
                     onClick={() => handleVote(opt.id)}
                     disabled={votedOptionId !== null || !poll.isActive}
                     className={cn(
-                      'relative w-full text-left rounded-xl overflow-hidden p-3 flex justify-between items-center transition-all duration-200',
+                      "relative w-full text-left rounded-xl overflow-hidden p-3 flex justify-between items-center transition-all duration-200",
                       votedOptionId !== null || !poll.isActive
                         ? isSelected
-                          ? 'bg-primary/20 border border-primary/50'
-                          : 'bg-white/5 border border-transparent'
-                        : 'bg-white/10 hover:bg-white/20 border border-transparent cursor-pointer',
+                          ? "bg-primary/20 border border-primary/50"
+                          : "bg-white/5 border border-transparent"
+                        : "bg-white/10 hover:bg-white/20 border border-transparent cursor-pointer",
                     )}
                   >
                     {(votedOptionId !== null || !poll.isActive) && (
@@ -334,7 +334,7 @@ export default function LiveStream() {
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Digite sua mensagem..."
               className="bg-zinc-800 border-none text-white placeholder:text-gray-500 rounded-full pr-10 focus-visible:ring-1 focus-visible:ring-primary"
-              onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+              onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
             />
             <Button
               size="icon"

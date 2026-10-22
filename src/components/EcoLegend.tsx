@@ -4,10 +4,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog'
-import { EcoHumanoWaves } from '@/components/EcoHumanoWaves'
-import { Activity, Users, Zap, Waves } from 'lucide-react'
-import { EcoConfig } from '@/lib/eco-utils'
+} from "@/components/ui/dialog"
+import { EcoHumanoWaves } from "@/components/EcoHumanoWaves"
+import { Activity, Users, Zap, Waves } from "lucide-react"
+import { EcoConfig } from "@/lib/eco-utils"
 
 interface EcoLegendProps {
   open: boolean
@@ -22,43 +22,43 @@ export function EcoLegend({ open, onOpenChange }: EcoLegendProps) {
     config: Partial<EcoConfig>
   }[] = [
     {
-      title: 'Inspiração',
-      description: 'Ondas suaves geradas por consistência nos treinos e jogos.',
+      title: "Inspiração",
+      description: "Ondas suaves geradas por consistência nos treinos e jogos.",
       icon: Activity,
       config: {
         active: true,
         resonance: 30,
         frequency: 20,
         range: 30,
-        colorTheme: 'nature',
+        colorTheme: "nature",
         particles: false,
       },
     },
     {
-      title: 'Influência',
+      title: "Influência",
       description:
-        'Ondas frequentes de médio alcance geradas por engajamento social.',
+        "Ondas frequentes de médio alcance geradas por engajamento social.",
       icon: Users,
       config: {
         active: true,
         resonance: 60,
         frequency: 70,
         range: 60,
-        colorTheme: 'cyan',
+        colorTheme: "cyan",
         particles: false,
       },
     },
     {
-      title: 'Transformação',
+      title: "Transformação",
       description:
-        'Ondas intensas e partículas geradas por grandes superações e MVPs.',
+        "Ondas intensas e partículas geradas por grandes superações e MVPs.",
       icon: Zap,
       config: {
         active: true,
         resonance: 90,
         frequency: 80,
         range: 90,
-        colorTheme: 'gold',
+        colorTheme: "gold",
         particles: true,
       },
     },

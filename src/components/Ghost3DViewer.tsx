@@ -1,8 +1,8 @@
-import { cn } from '@/lib/utils'
-import { Video, Box, Cuboid } from 'lucide-react'
-import { useMemo } from 'react'
+import { cn } from "@/lib/utils"
+import { Video, Box, Cuboid } from "lucide-react"
+import { useMemo } from "react"
 
-export type GhostViewMode = 'original' | 'split' | 'ghost'
+export type GhostViewMode = "original" | "split" | "ghost"
 
 interface Ghost3DViewerProps {
   videoSrc: string | null
@@ -17,20 +17,20 @@ export function Ghost3DViewer({
   mode,
   isPlaying,
   className,
-  sport = 'futebol',
+  sport = "futebol",
 }: Ghost3DViewerProps) {
   // Determine asset based on sport
   const assetUrl = useMemo(() => {
     const s = sport.toLowerCase()
-    let query = 'trophy'
-    if (s.includes('futebol') || s.includes('soccer') || s.includes('futsal'))
-      query = 'soccer-ball'
-    else if (s.includes('basket') || s.includes('basquete'))
-      query = 'basketball'
-    else if (s.includes('tenis') || s.includes('tennis')) query = 'tennis-ball'
-    else if (s.includes('volei') || s.includes('volley')) query = 'volleyball'
-    else if (s.includes('americano') || s.includes('football'))
-      query = 'american-football'
+    let query = "trophy"
+    if (s.includes("futebol") || s.includes("soccer") || s.includes("futsal"))
+      query = "soccer-ball"
+    else if (s.includes("basket") || s.includes("basquete"))
+      query = "basketball"
+    else if (s.includes("tenis") || s.includes("tennis")) query = "tennis-ball"
+    else if (s.includes("volei") || s.includes("volley")) query = "volleyball"
+    else if (s.includes("americano") || s.includes("football"))
+      query = "american-football"
 
     // Using 'multicolor' for high-fidelity 3D sprite feel
     return `https://img.usecurling.com/i?q=${query}&color=multicolor`
@@ -39,25 +39,25 @@ export function Ghost3DViewer({
   return (
     <div
       className={cn(
-        'relative w-full h-full bg-black overflow-hidden',
+        "relative w-full h-full bg-black overflow-hidden",
         className,
       )}
     >
       {/* Container Layout based on Mode */}
       <div
         className={cn(
-          'absolute inset-0 transition-all duration-700 flex',
-          mode === 'split' ? 'flex-col md:flex-row' : 'flex-col',
+          "absolute inset-0 transition-all duration-700 flex",
+          mode === "split" ? "flex-col md:flex-row" : "flex-col",
         )}
-        style={{ transitionTimingFunction: 'cubic-bezier(0.25, 0.1, 0.25, 1)' }}
+        style={{ transitionTimingFunction: "cubic-bezier(0.25, 0.1, 0.25, 1)" }}
       >
         {/* ORIGINAL VIDEO LAYER */}
         <div
           className={cn(
-            'relative transition-all duration-700 overflow-hidden bg-zinc-950',
-            mode === 'ghost' ? 'w-0 h-0 opacity-0' : 'w-full h-full',
-            mode === 'split' &&
-              'h-1/2 md:h-full md:w-1/2 border-b md:border-b-0 md:border-r border-white/10',
+            "relative transition-all duration-700 overflow-hidden bg-zinc-950",
+            mode === "ghost" ? "w-0 h-0 opacity-0" : "w-full h-full",
+            mode === "split" &&
+              "h-1/2 md:h-full md:w-1/2 border-b md:border-b-0 md:border-r border-white/10",
           )}
         >
           {videoSrc ? (
@@ -86,9 +86,9 @@ export function Ghost3DViewer({
         {/* PREMIUM 3D VIEWPORT LAYER */}
         <div
           className={cn(
-            'relative transition-all duration-700 bg-black overflow-hidden perspective-[1200px]',
-            mode === 'original' ? 'w-0 h-0 opacity-0' : 'w-full h-full',
-            mode === 'split' && 'h-1/2 md:h-full md:w-1/2',
+            "relative transition-all duration-700 bg-black overflow-hidden perspective-[1200px]",
+            mode === "original" ? "w-0 h-0 opacity-0" : "w-full h-full",
+            mode === "split" && "h-1/2 md:h-full md:w-1/2",
           )}
         >
           {/* Advanced Lighting: Skybox & Environment */}
@@ -101,12 +101,12 @@ export function Ghost3DViewer({
           <div className="absolute inset-0 flex items-center justify-center transform-style-3d">
             <div
               className={cn(
-                'relative w-80 h-80 transform-style-3d transition-transform ease-linear',
+                "relative w-80 h-80 transform-style-3d transition-transform ease-linear",
                 isPlaying
-                  ? 'animate-[camera-orbit_20s_linear_infinite]'
-                  : 'rotate-x-[25deg] rotate-y-[35deg]',
+                  ? "animate-[camera-orbit_20s_linear_infinite]"
+                  : "rotate-x-[25deg] rotate-y-[35deg]",
               )}
-              style={{ transitionDuration: '2000ms' }}
+              style={{ transitionDuration: "2000ms" }}
             >
               {/* Premium Floor: Grid + Reflection + Glow */}
               <div
@@ -117,9 +117,9 @@ export function Ghost3DViewer({
                     linear-gradient(90deg, rgba(99, 102, 241, 0.15) 1px, transparent 1px),
                     radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 60%)
                   `,
-                  backgroundSize: '60px 60px, 60px 60px, 100% 100%',
+                  backgroundSize: "60px 60px, 60px 60px, 100% 100%",
                   maskImage:
-                    'radial-gradient(circle at 50% 50%, black 30%, transparent 70%)',
+                    "radial-gradient(circle at 50% 50%, black 30%, transparent 70%)",
                 }}
               />
 
@@ -131,8 +131,8 @@ export function Ghost3DViewer({
                 {/* Player Model Construction (Stylized Abstract Humanoid) */}
                 <div
                   className={cn(
-                    'relative transform-style-3d transition-transform duration-500',
-                    isPlaying && 'animate-[float_3s_ease-in-out_infinite]',
+                    "relative transform-style-3d transition-transform duration-500",
+                    isPlaying && "animate-[float_3s_ease-in-out_infinite]",
                   )}
                 >
                   {/* Head */}
@@ -150,38 +150,38 @@ export function Ghost3DViewer({
                   {/* Left Arm */}
                   <div
                     className={cn(
-                      'absolute -top-[60px] -left-[20px] w-6 h-24 bg-indigo-500/80 rounded-full origin-top transform-style-3d',
+                      "absolute -top-[60px] -left-[20px] w-6 h-24 bg-indigo-500/80 rounded-full origin-top transform-style-3d",
                       isPlaying
-                        ? 'animate-[arm-swing_1s_infinite_alternate]'
-                        : 'rotate-12',
+                        ? "animate-[arm-swing_1s_infinite_alternate]"
+                        : "rotate-12",
                     )}
                   />
                   {/* Right Arm */}
                   <div
                     className={cn(
-                      'absolute -top-[60px] -right-[20px] w-6 h-24 bg-indigo-500/80 rounded-full origin-top transform-style-3d',
+                      "absolute -top-[60px] -right-[20px] w-6 h-24 bg-indigo-500/80 rounded-full origin-top transform-style-3d",
                       isPlaying
-                        ? 'animate-[arm-swing_1s_infinite_alternate-reverse]'
-                        : '-rotate-12',
+                        ? "animate-[arm-swing_1s_infinite_alternate-reverse]"
+                        : "-rotate-12",
                     )}
                   />
 
                   {/* Left Leg */}
                   <div
                     className={cn(
-                      'absolute top-[30px] left-1 w-7 h-28 bg-indigo-700/80 rounded-full origin-top transform-style-3d',
+                      "absolute top-[30px] left-1 w-7 h-28 bg-indigo-700/80 rounded-full origin-top transform-style-3d",
                       isPlaying
-                        ? 'animate-[leg-run_0.8s_infinite_alternate]'
-                        : 'rotate-6',
+                        ? "animate-[leg-run_0.8s_infinite_alternate]"
+                        : "rotate-6",
                     )}
                   />
                   {/* Right Leg */}
                   <div
                     className={cn(
-                      'absolute top-[30px] right-1 w-7 h-28 bg-indigo-700/80 rounded-full origin-top transform-style-3d',
+                      "absolute top-[30px] right-1 w-7 h-28 bg-indigo-700/80 rounded-full origin-top transform-style-3d",
                       isPlaying
-                        ? 'animate-[leg-run_0.8s_infinite_alternate-reverse]'
-                        : '-rotate-6',
+                        ? "animate-[leg-run_0.8s_infinite_alternate-reverse]"
+                        : "-rotate-6",
                     )}
                   />
                 </div>
@@ -189,10 +189,10 @@ export function Ghost3DViewer({
                 {/* Realistic 3D Asset: Sports Object */}
                 <div
                   className={cn(
-                    'absolute w-16 h-16 bottom-[-100px] left-16 transition-all transform-style-3d',
-                    isPlaying && 'animate-[ball-orbit_3s_infinite_linear]',
+                    "absolute w-16 h-16 bottom-[-100px] left-16 transition-all transform-style-3d",
+                    isPlaying && "animate-[ball-orbit_3s_infinite_linear]",
                   )}
-                  style={{ transitionDuration: '2000ms' }}
+                  style={{ transitionDuration: "2000ms" }}
                 >
                   {/* Sprite Billboard - Always facing camera simulation or rotating with logic */}
                   <img
@@ -226,7 +226,7 @@ export function Ghost3DViewer({
                   stroke="url(#trace-gradient)"
                   strokeWidth="3"
                   strokeLinecap="round"
-                  className={cn(isPlaying && 'animate-pulse')}
+                  className={cn(isPlaying && "animate-pulse")}
                   filter="drop-shadow(0 0 8px rgba(99,102,241,0.8))"
                 />
               </svg>

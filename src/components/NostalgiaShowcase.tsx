@@ -1,15 +1,15 @@
-import { useState } from 'react'
+import { useState } from "react"
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@/components/ui/carousel'
-import { Button } from '@/components/ui/button'
-import { NostalgiaFilter } from '@/components/NostalgiaFilter'
-import { NostalgiaPreset, useNostalgiaStore } from '@/stores/useNostalgiaStore'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/carousel"
+import { Button } from "@/components/ui/button"
+import { NostalgiaFilter } from "@/components/NostalgiaFilter"
+import { NostalgiaPreset, useNostalgiaStore } from "@/stores/useNostalgiaStore"
+import { cn } from "@/lib/utils"
 import {
   Sparkles,
   Film,
@@ -22,8 +22,8 @@ import {
   Wand2,
   Trophy,
   Swords,
-} from 'lucide-react'
-import { toast } from 'sonner'
+} from "lucide-react"
+import { toast } from "sonner"
 
 interface ShowcaseItem {
   id: string
@@ -37,70 +37,70 @@ interface ShowcaseItem {
 
 const showcaseItems: ShowcaseItem[] = [
   {
-    id: 'pele',
-    name: 'Futebol 80s',
-    description: 'A era de ouro do futebol com cores vibrantes de TV.',
-    preset: 'pele',
+    id: "pele",
+    name: "Futebol 80s",
+    description: "A era de ouro do futebol com cores vibrantes de TV.",
+    preset: "pele",
     icon: Trophy,
-    imageQuery: 'soccer player vintage 80s',
+    imageQuery: "soccer player vintage 80s",
     premium: true,
   },
   {
-    id: 'ali',
-    name: 'Boxe Vintage',
-    description: 'Cinemático de alto contraste e granulação.',
-    preset: 'ali',
+    id: "ali",
+    name: "Boxe Vintage",
+    description: "Cinemático de alto contraste e granulação.",
+    preset: "ali",
     icon: Swords,
-    imageQuery: 'boxing match black and white',
+    imageQuery: "boxing match black and white",
     premium: true,
   },
   {
-    id: 'retro',
-    name: 'Tons Retrô',
-    description: 'Estética quente e nostálgica com tons sépia.',
-    preset: 'retro',
+    id: "retro",
+    name: "Tons Retrô",
+    description: "Estética quente e nostálgica com tons sépia.",
+    preset: "retro",
     icon: Film,
-    imageQuery: 'retro sunset sports',
+    imageQuery: "retro sunset sports",
   },
   {
-    id: 'vhs',
-    name: 'Efeito VHS',
-    description: 'Distorção de fita magnética com scanlines.',
-    preset: 'vhs',
+    id: "vhs",
+    name: "Efeito VHS",
+    description: "Distorção de fita magnética com scanlines.",
+    preset: "vhs",
     icon: Tv,
-    imageQuery: 'basketball action urban',
+    imageQuery: "basketball action urban",
   },
   {
-    id: 'grain',
-    name: 'Granulação',
-    description: 'Filme preto e branco clássico de alto contraste.',
-    preset: 'grain',
+    id: "grain",
+    name: "Granulação",
+    description: "Filme preto e branco clássico de alto contraste.",
+    preset: "grain",
     icon: ImageIcon,
-    imageQuery: 'athlete portrait black and white',
+    imageQuery: "athlete portrait black and white",
   },
   {
-    id: '90s',
-    name: 'Anos 90',
-    description: 'Cores vibrantes e saturadas estilo revista.',
-    preset: '90s',
+    id: "90s",
+    name: "Anos 90",
+    description: "Cores vibrantes e saturadas estilo revista.",
+    preset: "90s",
     icon: Sparkles,
-    imageQuery: 'skateboarding urban colorful',
+    imageQuery: "skateboarding urban colorful",
   },
   {
-    id: 'analog',
-    name: 'Analógico',
-    description: 'Vazamentos de luz e suavidade de lentes.',
-    preset: 'analog',
+    id: "analog",
+    name: "Analógico",
+    description: "Vazamentos de luz e suavidade de lentes.",
+    preset: "analog",
     icon: Aperture,
-    imageQuery: 'soccer field sunlight flare',
+    imageQuery: "soccer field sunlight flare",
   },
   {
-    id: 'polaroid',
-    name: 'Polaroid',
-    description: 'Moldura instantânea icônica com revelação única.',
-    preset: 'polaroid',
+    id: "polaroid",
+    name: "Polaroid",
+    description: "Moldura instantânea icônica com revelação única.",
+    preset: "polaroid",
     icon: Camera,
-    imageQuery: 'team celebration happy',
+    imageQuery: "team celebration happy",
   },
 ]
 
@@ -120,14 +120,14 @@ export function NostalgiaShowcase({ className }: NostalgiaShowcaseProps) {
   const handleActivate = (preset: NostalgiaPreset) => {
     setPreset(preset)
     toggle(true)
-    toast.success('Filtro ativado!', {
-      description: 'O modo nostalgia foi aplicado globalmente.',
+    toast.success("Filtro ativado!", {
+      description: "O modo nostalgia foi aplicado globalmente.",
       icon: <Wand2 className="w-4 h-4 text-gold" />,
     })
   }
 
   return (
-    <div className={cn('flex flex-col h-full w-full space-y-4', className)}>
+    <div className={cn("flex flex-col h-full w-full space-y-4", className)}>
       <div className="space-y-1 px-1">
         <h2 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-gold" />
@@ -156,8 +156,8 @@ export function NostalgiaShowcase({ className }: NostalgiaShowcaseProps) {
                       {/* Nostalgia Filter Layer */}
                       <div
                         className={cn(
-                          'absolute inset-0 transition-opacity duration-300',
-                          showOriginal ? 'opacity-0' : 'opacity-100',
+                          "absolute inset-0 transition-opacity duration-300",
+                          showOriginal ? "opacity-0" : "opacity-100",
                         )}
                       >
                         <NostalgiaFilter
@@ -204,8 +204,8 @@ export function NostalgiaShowcase({ className }: NostalgiaShowcaseProps) {
                         <div className="flex gap-3 pt-2">
                           <Button
                             className={cn(
-                              'flex-1 font-semibold backdrop-blur-md transition-all border shadow-lg h-12 rounded-xl',
-                              'bg-white/20 text-white border-white/20 hover:bg-white/30',
+                              "flex-1 font-semibold backdrop-blur-md transition-all border shadow-lg h-12 rounded-xl",
+                              "bg-white/20 text-white border-white/20 hover:bg-white/30",
                             )}
                             onMouseDown={() => setShowOriginal(true)}
                             onMouseUp={() => setShowOriginal(false)}
@@ -214,16 +214,16 @@ export function NostalgiaShowcase({ className }: NostalgiaShowcaseProps) {
                           >
                             <Eye className="w-4 h-4 mr-2" />
                             {showOriginal
-                              ? 'Solte para ver'
-                              : 'Segure para comparar'}
+                              ? "Solte para ver"
+                              : "Segure para comparar"}
                           </Button>
 
                           <Button
                             className={cn(
-                              'flex-1 font-bold h-12 rounded-xl shadow-lg transition-all',
+                              "flex-1 font-bold h-12 rounded-xl shadow-lg transition-all",
                               isActive
-                                ? 'bg-green-500 text-white hover:bg-green-600'
-                                : 'bg-gold text-black hover:bg-gold/90',
+                                ? "bg-green-500 text-white hover:bg-green-600"
+                                : "bg-gold text-black hover:bg-gold/90",
                             )}
                             onClick={() => handleActivate(item.preset)}
                             disabled={isActive}

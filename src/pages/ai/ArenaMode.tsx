@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   Scan,
@@ -9,16 +9,16 @@ import {
   RotateCcw,
   Timer,
   Zap,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { AppIcon } from '@/components/AppIcon'
-import { ArTarget, ArTargetData } from '@/components/ar/ArTarget'
-import useSoundStore from '@/stores/useSoundStore'
-import { toast } from 'sonner'
-import { cn } from '@/lib/utils'
-import { useAiCoachStore } from '@/stores/useAiCoachStore'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { useState, useEffect, useRef, useCallback } from "react"
+import { AppIcon } from "@/components/AppIcon"
+import { ArTarget, ArTargetData } from "@/components/ar/ArTarget"
+import useSoundStore from "@/stores/useSoundStore"
+import { toast } from "sonner"
+import { cn } from "@/lib/utils"
+import { useAiCoachStore } from "@/stores/useAiCoachStore"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function ArenaMode() {
   const navigate = useNavigate()
@@ -26,9 +26,8 @@ export default function ArenaMode() {
   const { preferences } = useAiCoachStore()
 
   // Game State
-  const [gameState, setGameState] = useState<
-    'scanning' | 'ready' | 'playing' | 'finished'
-  >('scanning')
+  const [gameState, setGameState] =
+    useState<"scanning" | "ready" | "playing" | "finished">("scanning")
   const [score, setScore] = useState(0)
   const [timeLeft, setTimeLeft] = useState(60)
   const [targets, setTargets] = useState<ArTargetData[]>([])
@@ -55,18 +54,18 @@ export default function ArenaMode() {
     if (!preferences.enabledInArena) return
 
     const tips = [
-      'Mantenha o foco nos alvos dourados!',
-      'Cuidado com as penalidades vermelhas!',
-      'Sua sequência está ótima, continue assim!',
-      'Respire fundo e mantenha o ritmo.',
-      'Olhos atentos nas bordas da tela!',
-      'Movimente-se para alcançar mais longe!',
+      "Mantenha o foco nos alvos dourados!",
+      "Cuidado com as penalidades vermelhas!",
+      "Sua sequência está ótima, continue assim!",
+      "Respire fundo e mantenha o ritmo.",
+      "Olhos atentos nas bordas da tela!",
+      "Movimente-se para alcançar mais longe!",
     ]
     const randomTip = tips[Math.floor(Math.random() * tips.length)]
     setCoachTip(randomTip)
     setTimeout(() => setCoachTip(null), 4000)
 
-    if (preferences.feedbackType !== 'visual' && preferences.voiceEnabled) {
+    if (preferences.feedbackType !== "visual" && preferences.voiceEnabled) {
       // Mock voice trigger if we had TTS in component (useSoundStore handles simple ones)
     }
   }, [preferences])
@@ -74,10 +73,10 @@ export default function ArenaMode() {
   // --- Functions ---
 
   const endGame = useCallback(() => {
-    setGameState('finished')
-    playSound('notification_points')
+    setGameState("finished")
+    playSound("notification_points")
     if (scoreRef.current > 0) {
-      toast.success('Treino Finalizado!', {
+      toast.success("Treino Finalizado!", {
         description: `Você fez ${scoreRef.current} pontos com um combo máximo de ${comboRef.current}x!`,
       })
     }
@@ -91,16 +90,16 @@ export default function ArenaMode() {
 
     // Determine type based on RNG
     const rng = Math.random()
-    let type: ArTargetData['type'] = 'standard'
+    let type: ArTargetData["type"] = "standard"
     let value = 100
     let duration = 4000
 
     if (rng > 0.9) {
-      type = 'bonus'
+      type = "bonus"
       value = 300
       duration = 2000 // Bonus expires faster
     } else if (rng < 0.1) {
-      type = 'hazard'
+      type = "hazard"
       value = -150
       duration = 5000
     }
@@ -140,7 +139,7 @@ export default function ArenaMode() {
       // Clean up expired targets
       setTargets((prev) => prev.filter((t) => t.expiresAt > Date.now()))
 
-      if (gameStateRef.current === 'playing') {
+      if (gameStateRef.current === "playing") {
         requestRef.current = requestAnimationFrame(gameLoop)
       }
     },
@@ -148,38 +147,38 @@ export default function ArenaMode() {
   )
 
   const startGame = () => {
-    setGameState('playing')
+    setGameState("playing")
     setScore(0)
     setTimeLeft(60)
     setTargets([])
     setCombo(0)
     lastSpawnTime.current = 0
     lastTipTime.current = 0
-    playSound('like_generic')
+    playSound("like_generic")
   }
 
   const handleInteraction = (
     id: string,
     value: number,
-    type: ArTargetData['type'],
+    type: ArTargetData["type"],
   ) => {
     // Remove target immediately visually
     setTargets((prev) => prev.filter((t) => t.id !== id))
 
-    if (type === 'hazard') {
+    if (type === "hazard") {
       // Penalty
       setScore((prev) => Math.max(0, prev + value))
       setCombo(0)
-      playSound('notification_store')
+      playSound("notification_store")
       // Trigger visual shake
-      const body = document.querySelector('body')
+      const body = document.querySelector("body")
       if (body) {
-        body.classList.add('animate-shake')
-        setTimeout(() => body.classList.remove('animate-shake'), 500)
+        body.classList.add("animate-shake")
+        setTimeout(() => body.classList.remove("animate-shake"), 500)
       }
       // Negative Tip
       if (preferences.enabledInArena) {
-        setCoachTip('Evite os alvos vermelhos!')
+        setCoachTip("Evite os alvos vermelhos!")
         setTimeout(() => setCoachTip(null), 3000)
       }
     } else {
@@ -190,10 +189,10 @@ export default function ArenaMode() {
       setScore((prev) => prev + finalPoints)
       setCombo((prev) => Math.min(prev + 1, 10))
 
-      if (type === 'bonus') {
-        playSound('notification_points')
+      if (type === "bonus") {
+        playSound("notification_points")
       } else {
-        playSound('like_generic')
+        playSound("like_generic")
       }
     }
   }
@@ -203,8 +202,8 @@ export default function ArenaMode() {
   useEffect(() => {
     // Initial Scanning Phase
     const timer = setTimeout(() => {
-      setGameState('ready')
-      playSound('notification_store') // Ready sound
+      setGameState("ready")
+      playSound("notification_store") // Ready sound
     }, 3000)
     return () => clearTimeout(timer)
   }, [playSound])
@@ -212,7 +211,7 @@ export default function ArenaMode() {
   useEffect(() => {
     let interval: NodeJS.Timeout
 
-    if (gameState === 'playing') {
+    if (gameState === "playing") {
       // Timer Logic
       interval = setInterval(() => {
         setTimeLeft((prev) => {
@@ -249,7 +248,7 @@ export default function ArenaMode() {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--primary),0.15)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--primary),0.15)_1px,transparent_1px)] bg-[size:80px_80px] opacity-30 [transform:perspective(1000px)_rotateX(20deg)] pointer-events-none" />
 
         {/* Field Lines Augmentation */}
-        {gameState !== 'scanning' && (
+        {gameState !== "scanning" && (
           <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden animate-pulse-slow">
             <div className="absolute top-[35%] left-[10%] w-[80%] h-[40%] border-2 border-primary/20 rounded-[40px] transform rotate-x-60"></div>
             <div className="absolute top-[25%] left-[40%] w-[20%] h-[10%] border border-gold/30 rounded-full"></div>
@@ -293,16 +292,16 @@ export default function ArenaMode() {
               </span>
               <span
                 className={cn(
-                  'w-2 h-2 rounded-full ml-1',
-                  gameState === 'playing'
-                    ? 'bg-green-500 animate-pulse'
-                    : 'bg-red-500',
+                  "w-2 h-2 rounded-full ml-1",
+                  gameState === "playing"
+                    ? "bg-green-500 animate-pulse"
+                    : "bg-red-500",
                 )}
               />
             </div>
 
             {/* Timer Display */}
-            {gameState === 'playing' && (
+            {gameState === "playing" && (
               <div className="mt-2 bg-black/40 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10 text-white font-mono text-sm flex items-center gap-2">
                 <Timer className="h-3 w-3 text-gold" />
                 {timeLeft}s
@@ -315,9 +314,9 @@ export default function ArenaMode() {
             size="icon"
             className="text-white hover:bg-white/10 rounded-full backdrop-blur-md bg-black/30 border border-white/10"
             onClick={() => {
-              toast.info('Toque nos alvos para marcar pontos!', {
+              toast.info("Toque nos alvos para marcar pontos!", {
                 description:
-                  'Evite os alvos vermelhos. Alvos dourados valem mais!',
+                  "Evite os alvos vermelhos. Alvos dourados valem mais!",
               })
             }}
           >
@@ -328,7 +327,7 @@ export default function ArenaMode() {
         {/* AI Coach Overlay */}
         {coachTip &&
           preferences.enabledInArena &&
-          preferences.feedbackType !== 'verbal' && (
+          preferences.feedbackType !== "verbal" && (
             <div className="absolute top-24 left-1/2 -translate-x-1/2 w-full max-w-xs animate-in slide-in-from-top-4 fade-in duration-300 pointer-events-none">
               <div className="bg-primary/90 backdrop-blur-lg p-3 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-3">
                 <div className="shrink-0 bg-white/20 p-2 rounded-full">
@@ -349,7 +348,7 @@ export default function ArenaMode() {
         {/* Center Content based on State */}
         <div className="flex-1 flex items-center justify-center pointer-events-auto">
           {/* Scanning State */}
-          {gameState === 'scanning' && (
+          {gameState === "scanning" && (
             <div className="relative w-64 h-64 border border-white/10 rounded-2xl animate-pulse">
               <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary shadow-[0_0_15px_hsl(var(--primary))]" />
               <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary shadow-[0_0_15px_hsl(var(--primary))]" />
@@ -369,7 +368,7 @@ export default function ArenaMode() {
           )}
 
           {/* Ready State */}
-          {gameState === 'ready' && (
+          {gameState === "ready" && (
             <div className="text-center animate-in zoom-in fade-in duration-500">
               <h1 className="text-4xl font-black text-white italic tracking-tighter mb-4 drop-shadow-[0_0_15px_rgba(0,0,0,0.8)]">
                 ARENA <span className="text-primary">PRONTA</span>
@@ -385,7 +384,7 @@ export default function ArenaMode() {
           )}
 
           {/* Finished State */}
-          {gameState === 'finished' && (
+          {gameState === "finished" && (
             <div className="bg-black/80 backdrop-blur-xl p-8 rounded-3xl border border-white/10 text-center animate-in zoom-in fade-in duration-500 max-w-sm w-full mx-4 shadow-2xl">
               <Trophy className="h-16 w-16 text-gold mx-auto mb-4 animate-bounce" />
               <h2 className="text-2xl font-bold text-white mb-1">
@@ -421,7 +420,7 @@ export default function ArenaMode() {
                 <Button
                   variant="outline"
                   className="w-full h-12 rounded-xl border-white/20 text-white hover:bg-white/10"
-                  onClick={() => navigate('/ai/reports')}
+                  onClick={() => navigate("/ai/reports")}
                 >
                   Ver Análise Detalhada
                 </Button>

@@ -1,12 +1,12 @@
-import { ProfileData } from '@/lib/data'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Eye, Heart, Trophy, Handshake, CheckCircle2 } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { useSponsorshipStore } from '@/stores/useSponsorshipStore'
-import { toast } from 'sonner'
+import { ProfileData } from "@/lib/data"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Eye, Heart, Trophy, Handshake, CheckCircle2 } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { useSponsorshipStore } from "@/stores/useSponsorshipStore"
+import { toast } from "sonner"
 
 interface ProfileMatchCardProps {
   profile: ProfileData
@@ -18,7 +18,7 @@ export function ProfileMatchCard({ profile }: ProfileMatchCardProps) {
 
   const handleMatch = () => {
     if (selectedCriteria.length === 0) {
-      toast.error('Selecione ao menos um critério de contrapartida.')
+      toast.error("Selecione ao menos um critério de contrapartida.")
       return
     }
     requestMatch(profile.id)
@@ -26,7 +26,7 @@ export function ProfileMatchCard({ profile }: ProfileMatchCardProps) {
   }
 
   const formatNumber = (num?: number) => {
-    if (!num) return '0'
+    if (!num) return "0"
     return num >= 1000 ? `${(num / 1000).toFixed(1)}k` : num.toString()
   }
 
@@ -51,7 +51,7 @@ export function ProfileMatchCard({ profile }: ProfileMatchCardProps) {
               variant="outline"
               className="text-[9px] h-4 px-1.5 border-primary/30 text-primary uppercase"
             >
-              {profile.type === 'team' ? 'Time' : 'Atleta'}
+              {profile.type === "team" ? "Time" : "Atleta"}
             </Badge>
           </div>
 
@@ -74,7 +74,7 @@ export function ProfileMatchCard({ profile }: ProfileMatchCardProps) {
                     <Trophy className="w-3 h-3 text-gold" /> Rank
                   </span>
                   <span className="font-bold text-xs">
-                    {profile.ranking ? `#${profile.ranking}` : '-'}
+                    {profile.ranking ? `#${profile.ranking}` : "-"}
                   </span>
                 </div>
                 <div className="flex flex-col items-center border-l border-border/30">
@@ -111,8 +111,8 @@ export function ProfileMatchCard({ profile }: ProfileMatchCardProps) {
                 <Button
                   size="sm"
                   className={cn(
-                    'w-full h-8 text-xs font-semibold shadow-sm transition-all active:scale-95',
-                    'bg-gradient-to-r from-primary to-primary/80 hover:to-primary',
+                    "w-full h-8 text-xs font-semibold shadow-sm transition-all active:scale-95",
+                    "bg-gradient-to-r from-primary to-primary/80 hover:to-primary",
                   )}
                   onClick={handleMatch}
                 >

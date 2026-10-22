@@ -1,10 +1,10 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { mockDrivers, mockCurrentUser } from '@/lib/data'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, MapPin, CreditCard, Clock, Navigation } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Card, CardContent } from '@/components/ui/card'
-import { toast } from 'sonner'
+import { useParams, useNavigate } from "react-router-dom"
+import { mockDrivers, mockCurrentUser } from "@/lib/data"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, MapPin, CreditCard, Clock, Navigation } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Card, CardContent } from "@/components/ui/card"
+import { toast } from "sonner"
 
 export default function RideRequest() {
   const { driverId } = useParams()
@@ -12,11 +12,11 @@ export default function RideRequest() {
   const driver = mockDrivers.find((d) => d.id === driverId) || mockDrivers[0]
 
   const handleRequest = () => {
-    toast.success('Corrida Solicitada!', {
+    toast.success("Corrida Solicitada!", {
       description: `Aguardando confirmação de ${driver.name}.`,
     })
     setTimeout(() => {
-      navigate('/home')
+      navigate("/home")
     }, 1500)
   }
 

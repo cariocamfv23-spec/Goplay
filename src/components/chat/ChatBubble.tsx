@@ -1,5 +1,5 @@
-import { ChatMessage } from '@/types/chat'
-import { cn } from '@/lib/utils'
+import { ChatMessage } from "@/types/chat"
+import { cn } from "@/lib/utils"
 import {
   Play,
   FileText,
@@ -12,13 +12,13 @@ import {
   Target,
   Maximize2,
   X,
-} from 'lucide-react'
-import { useState } from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
-import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
+} from "lucide-react"
+import { useState } from "react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
+import { Badge } from "@/components/ui/badge"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 
 interface ChatBubbleProps {
   message: ChatMessage
@@ -33,20 +33,20 @@ export function ChatBubble({
 }: ChatBubbleProps) {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
   const isMe = message.isMe
-  const isBot = message.sender === 'bot'
+  const isBot = message.sender === "bot"
 
   return (
     <div
       className={cn(
-        'flex w-full mb-4 animate-fade-in-up',
-        isMe ? 'justify-end' : 'justify-start',
+        "flex w-full mb-4 animate-fade-in-up",
+        isMe ? "justify-end" : "justify-start",
       )}
     >
       {!isMe && (
         <Avatar
           className={cn(
-            'h-8 w-8 mr-2 mt-1 shadow-sm',
-            isBot ? 'bg-zinc-900 border border-zinc-700' : '',
+            "h-8 w-8 mr-2 mt-1 shadow-sm",
+            isBot ? "bg-zinc-900 border border-zinc-700" : "",
           )}
         >
           {isBot ? (
@@ -64,12 +64,12 @@ export function ChatBubble({
 
       <div
         className={cn(
-          'max-w-[85%] md:max-w-[60%] rounded-2xl px-4 py-3 relative shadow-sm',
+          "max-w-[85%] md:max-w-[60%] rounded-2xl px-4 py-3 relative shadow-sm",
           isMe
-            ? 'bg-primary text-primary-foreground rounded-br-none'
+            ? "bg-primary text-primary-foreground rounded-br-none"
             : isBot
-              ? 'bg-zinc-900 text-zinc-100 rounded-bl-none border border-red-900/30'
-              : 'bg-white dark:bg-zinc-800 text-foreground rounded-bl-none border border-border',
+              ? "bg-zinc-900 text-zinc-100 rounded-bl-none border border-red-900/30"
+              : "bg-white dark:bg-zinc-800 text-foreground rounded-bl-none border border-border",
         )}
       >
         {!isMe && senderName && !isBot && (
@@ -84,14 +84,14 @@ export function ChatBubble({
         )}
 
         {/* Text Message */}
-        {message.type === 'text' && (
+        {message.type === "text" && (
           <p className="text-sm leading-relaxed whitespace-pre-wrap">
             {message.text}
           </p>
         )}
 
         {/* Evaluation Message */}
-        {message.type === 'evaluation' && message.evaluationData && (
+        {message.type === "evaluation" && message.evaluationData && (
           <div className="space-y-3 mt-1">
             <p className="text-sm leading-relaxed mb-2">{message.text}</p>
             <Card className="bg-black/40 border-red-500/30">
@@ -127,7 +127,7 @@ export function ChatBubble({
                   <p className="text-xs text-red-200 font-medium leading-relaxed">
                     <span className="font-bold text-red-500">
                       REALITY CHECK:
-                    </span>{' '}
+                    </span>{" "}
                     {message.evaluationData.realityCheck}
                   </p>
                 </div>
@@ -171,7 +171,7 @@ export function ChatBubble({
         )}
 
         {/* Image Message */}
-        {message.type === 'image' && (
+        {message.type === "image" && (
           <div className="space-y-1.5 my-1">
             <div
               className="rounded-lg overflow-hidden shadow-xs relative group cursor-pointer bg-black/5"
@@ -222,7 +222,7 @@ export function ChatBubble({
         )}
 
         {/* Video Message */}
-        {message.type === 'video' && (
+        {message.type === "video" && (
           <div className="rounded-lg overflow-hidden my-1 relative group cursor-pointer shadow-sm">
             <img
               src={message.mediaUrl}
@@ -238,7 +238,7 @@ export function ChatBubble({
         )}
 
         {/* Document Message */}
-        {message.type === 'document' && (
+        {message.type === "document" && (
           <div className="flex items-center gap-3 bg-background/10 rounded-xl p-3 border border-current/10">
             <div className="h-10 w-10 bg-background/20 rounded-lg flex items-center justify-center shrink-0">
               <FileText className="h-5 w-5" />
@@ -256,7 +256,7 @@ export function ChatBubble({
         )}
 
         {/* Audio Message */}
-        {message.type === 'audio' && (
+        {message.type === "audio" && (
           <div className="flex items-center gap-3 min-w-[180px] py-1">
             <button className="h-10 w-10 rounded-full bg-background/20 flex items-center justify-center shrink-0 hover:bg-background/30 transition-colors">
               <Play className="h-4 w-4 fill-current" />
@@ -273,12 +273,12 @@ export function ChatBubble({
 
         <div
           className={cn(
-            'text-[10px] mt-1 text-right w-full block',
+            "text-[10px] mt-1 text-right w-full block",
             isMe
-              ? 'text-primary-foreground/70'
+              ? "text-primary-foreground/70"
               : isBot
-                ? 'text-zinc-500'
-                : 'text-muted-foreground',
+                ? "text-zinc-500"
+                : "text-muted-foreground",
           )}
         >
           {message.time || message.timestamp}

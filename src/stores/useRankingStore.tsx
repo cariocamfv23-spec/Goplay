@@ -1,5 +1,5 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 interface RankingState {
   lastWeeklyRank: number
@@ -13,7 +13,7 @@ export const useRankingStore = create<RankingState>()(
       updateLastWeeklyRank: (rank) => set({ lastWeeklyRank: rank }),
     }),
     {
-      name: 'goplay-ranking-storage',
+      name: "goplay-ranking-storage",
     },
   ),
 )

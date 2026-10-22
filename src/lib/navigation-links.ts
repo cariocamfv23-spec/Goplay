@@ -5,7 +5,7 @@ export interface FieldLocation {
   name?: string
 }
 
-export type TransportApp = 'google-maps' | 'waze' | 'uber' | '99-taxi'
+export type TransportApp = "google-maps" | "waze" | "uber" | "99-taxi"
 
 export function getGoogleMapsUrl(loc: FieldLocation): string {
   if (loc.lat != null && loc.lng != null) {
@@ -22,9 +22,9 @@ export function getWazeUrl(loc: FieldLocation): string {
 }
 
 export function getUberUrl(loc: FieldLocation): string {
-  const action = 'setDestination'
+  const action = "setDestination"
   if (loc.lat != null && loc.lng != null) {
-    const dest = `{"latitude":${loc.lat},"longitude":${loc.lng},"nickname":"${encodeURIComponent(loc.name || 'Destination')}","formatted_address":"${encodeURIComponent(loc.address)}"}`
+    const dest = `{"latitude":${loc.lat},"longitude":${loc.lng},"nickname":"${encodeURIComponent(loc.name || "Destination")}","formatted_address":"${encodeURIComponent(loc.address)}"}`
     return `https://m.uber.com/ul/?action=${action}&pickup=my_location&dropoff=${dest}`
   }
   return `https://m.uber.com/ul/?action=${action}&pickup=my_location&dropoff[formatted_address]=${encodeURIComponent(loc.address)}`
@@ -39,13 +39,13 @@ export function get99TaxiUrl(loc: FieldLocation): string {
 
 export function getTransportUrl(app: TransportApp, loc: FieldLocation): string {
   switch (app) {
-    case 'google-maps':
+    case "google-maps":
       return getGoogleMapsUrl(loc)
-    case 'waze':
+    case "waze":
       return getWazeUrl(loc)
-    case 'uber':
+    case "uber":
       return getUberUrl(loc)
-    case '99-taxi':
+    case "99-taxi":
       return get99TaxiUrl(loc)
   }
 }

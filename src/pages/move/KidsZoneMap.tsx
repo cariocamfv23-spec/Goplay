@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   ArrowLeft,
   Map as MapIcon,
@@ -11,51 +11,51 @@ import {
   CheckCircle,
   AlertCircle,
   Baby,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Progress } from "@/components/ui/progress"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog'
-import { mockKidZones, KidZone } from '@/lib/data'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/dialog"
+import { mockKidZones, KidZone } from "@/lib/data"
+import { cn } from "@/lib/utils"
 
 export default function KidsZoneMap() {
   const navigate = useNavigate()
-  const [viewMode, setViewMode] = useState<'map' | 'list'>('map')
+  const [viewMode, setViewMode] = useState<"map" | "list">("map")
   const [selectedZone, setSelectedZone] = useState<KidZone | null>(null)
 
-  const getStatusColor = (status: KidZone['status']) => {
+  const getStatusColor = (status: KidZone["status"]) => {
     switch (status) {
-      case 'open':
-        return 'text-green-500 bg-green-500/10 border-green-500/20'
-      case 'full':
-        return 'text-red-500 bg-red-500/10 border-red-500/20'
-      case 'maintenance':
-        return 'text-yellow-500 bg-yellow-500/10 border-yellow-500/20'
-      case 'closed':
-        return 'text-gray-500 bg-gray-500/10 border-gray-500/20'
+      case "open":
+        return "text-green-500 bg-green-500/10 border-green-500/20"
+      case "full":
+        return "text-red-500 bg-red-500/10 border-red-500/20"
+      case "maintenance":
+        return "text-yellow-500 bg-yellow-500/10 border-yellow-500/20"
+      case "closed":
+        return "text-gray-500 bg-gray-500/10 border-gray-500/20"
       default:
-        return 'text-gray-500 bg-gray-500/10'
+        return "text-gray-500 bg-gray-500/10"
     }
   }
 
-  const getStatusLabel = (status: KidZone['status']) => {
+  const getStatusLabel = (status: KidZone["status"]) => {
     switch (status) {
-      case 'open':
-        return 'Disponível'
-      case 'full':
-        return 'Lotado'
-      case 'maintenance':
-        return 'Manutenção'
-      case 'closed':
-        return 'Fechado'
+      case "open":
+        return "Disponível"
+      case "full":
+        return "Lotado"
+      case "maintenance":
+        return "Manutenção"
+      case "closed":
+        return "Fechado"
       default:
         return status
     }
@@ -70,7 +70,7 @@ export default function KidsZoneMap() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate('/move')}
+              onClick={() => navigate("/move")}
               className="-ml-2 hover:bg-secondary/50 rounded-full"
             >
               <ArrowLeft className="h-5 w-5" />
@@ -88,12 +88,12 @@ export default function KidsZoneMap() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setViewMode('map')}
+              onClick={() => setViewMode("map")}
               className={cn(
-                'h-7 px-3 rounded-md transition-all',
-                viewMode === 'map'
-                  ? 'bg-background shadow-sm text-primary'
-                  : 'text-muted-foreground hover:text-foreground',
+                "h-7 px-3 rounded-md transition-all",
+                viewMode === "map"
+                  ? "bg-background shadow-sm text-primary"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               <MapIcon className="h-4 w-4 mr-1.5" />
@@ -102,12 +102,12 @@ export default function KidsZoneMap() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setViewMode('list')}
+              onClick={() => setViewMode("list")}
               className={cn(
-                'h-7 px-3 rounded-md transition-all',
-                viewMode === 'list'
-                  ? 'bg-background shadow-sm text-primary'
-                  : 'text-muted-foreground hover:text-foreground',
+                "h-7 px-3 rounded-md transition-all",
+                viewMode === "list"
+                  ? "bg-background shadow-sm text-primary"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               <List className="h-4 w-4 mr-1.5" />
@@ -119,7 +119,7 @@ export default function KidsZoneMap() {
 
       {/* Content */}
       <div className="flex-1 relative overflow-hidden flex flex-col">
-        {viewMode === 'map' ? (
+        {viewMode === "map" ? (
           <div className="flex-1 relative bg-secondary/30 overflow-hidden">
             {/* Mock Map Image */}
             <div
@@ -142,18 +142,18 @@ export default function KidsZoneMap() {
                   <div className="relative">
                     <div
                       className={cn(
-                        'w-10 h-10 rounded-full border-2 border-white shadow-xl flex items-center justify-center transition-colors',
-                        zone.status === 'open'
-                          ? 'bg-green-500'
-                          : zone.status === 'full'
-                            ? 'bg-red-500'
-                            : 'bg-gray-500',
+                        "w-10 h-10 rounded-full border-2 border-white shadow-xl flex items-center justify-center transition-colors",
+                        zone.status === "open"
+                          ? "bg-green-500"
+                          : zone.status === "full"
+                            ? "bg-red-500"
+                            : "bg-gray-500",
                       )}
                     >
                       <Baby className="h-6 w-6 text-white" />
                     </div>
                     {/* Pulsing effect for open zones */}
-                    {zone.status === 'open' && (
+                    {zone.status === "open" && (
                       <div className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-30 -z-10" />
                     )}
                     {/* Tooltip Label */}
@@ -164,12 +164,12 @@ export default function KidsZoneMap() {
                   {/* Pin tail */}
                   <div
                     className={cn(
-                      'absolute top-8 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px]',
-                      zone.status === 'open'
-                        ? 'border-t-green-500'
-                        : zone.status === 'full'
-                          ? 'border-t-red-500'
-                          : 'border-t-gray-500',
+                      "absolute top-8 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px]",
+                      zone.status === "open"
+                        ? "border-t-green-500"
+                        : zone.status === "full"
+                          ? "border-t-red-500"
+                          : "border-t-gray-500",
                     )}
                   />
                 </button>
@@ -219,7 +219,7 @@ export default function KidsZoneMap() {
                         <Badge
                           variant="outline"
                           className={cn(
-                            'text-[10px] px-1.5 py-0 h-5 font-medium border',
+                            "text-[10px] px-1.5 py-0 h-5 font-medium border",
                             getStatusColor(zone.status),
                           )}
                         >
@@ -267,16 +267,16 @@ export default function KidsZoneMap() {
                   className="absolute top-2 right-2 text-white hover:bg-white/20 rounded-full"
                   onClick={() => setSelectedZone(null)}
                 >
-                  <ArrowLeft className="h-6 w-6 rotate-180" />{' '}
+                  <ArrowLeft className="h-6 w-6 rotate-180" />{" "}
                   {/* Close icon visual using arrow for style or X */}
                 </Button>
                 <div className="absolute bottom-4 left-4 right-4">
                   <Badge
                     className={cn(
-                      'mb-2 border-0',
+                      "mb-2 border-0",
                       getStatusColor(selectedZone.status).replace(
-                        'border',
-                        'bg',
+                        "border",
+                        "bg",
                       ),
                     )}
                   >
@@ -307,11 +307,11 @@ export default function KidsZoneMap() {
                       className={cn(
                         selectedZone.capacity.current >=
                           selectedZone.capacity.max
-                          ? 'text-red-500'
-                          : 'text-green-500',
+                          ? "text-red-500"
+                          : "text-green-500",
                       )}
                     >
-                      {selectedZone.capacity.current} /{' '}
+                      {selectedZone.capacity.current} /{" "}
                       {selectedZone.capacity.max} crianças
                     </span>
                   </div>
@@ -380,7 +380,7 @@ export default function KidsZoneMap() {
                   <div className="flex items-center gap-2 text-xs text-muted-foreground bg-secondary/50 p-2 rounded-lg">
                     <AlertCircle className="h-4 w-4 shrink-0" />
                     <span>
-                      Monitores responsáveis: {selectedZone.monitors.join(', ')}
+                      Monitores responsáveis: {selectedZone.monitors.join(", ")}
                     </span>
                   </div>
                 </div>

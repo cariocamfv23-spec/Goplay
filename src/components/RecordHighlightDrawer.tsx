@@ -6,8 +6,8 @@ import {
   DrawerDescription,
   DrawerFooter,
   DrawerClose,
-} from '@/components/ui/drawer'
-import { Button } from '@/components/ui/button'
+} from "@/components/ui/drawer"
+import { Button } from "@/components/ui/button"
 import {
   Camera,
   History,
@@ -18,13 +18,13 @@ import {
   Mic,
   CheckCircle2,
   Sparkles,
-} from 'lucide-react'
-import { useState } from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { toast } from 'sonner'
-import { Progress } from '@/components/ui/progress'
-import { NarrationEditor } from './NarrationEditor'
-import { NarrationConfig } from '@/lib/data'
+} from "lucide-react"
+import { useState } from "react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { toast } from "sonner"
+import { Progress } from "@/components/ui/progress"
+import { NarrationEditor } from "./NarrationEditor"
+import { NarrationConfig } from "@/lib/data"
 
 interface RecordHighlightDrawerProps {
   open: boolean
@@ -35,21 +35,20 @@ interface RecordHighlightDrawerProps {
 export function RecordHighlightDrawer({
   open,
   onOpenChange,
-  venueName = 'Local',
+  venueName = "Local",
 }: RecordHighlightDrawerProps) {
-  const [step, setStep] = useState<
-    'record' | 'processing' | 'tagging' | 'narration'
-  >('record')
+  const [step, setStep] =
+    useState<"record" | "processing" | "tagging" | "narration">("record")
   const [duration, setDuration] = useState<10 | 20 | 30>(30)
   const [narrationConfig, setNarrationConfig] =
     useState<NarrationConfig | null>(null)
   const [showNarrationEditor, setShowNarrationEditor] = useState(false)
 
   const handleRecord = () => {
-    setStep('processing')
+    setStep("processing")
     // Simulate processing
     setTimeout(() => {
-      setStep('tagging')
+      setStep("tagging")
     }, 2000)
   }
 
@@ -58,17 +57,17 @@ export function RecordHighlightDrawer({
   }
 
   const handleFinalSave = () => {
-    toast.success('Highlight salvo com sucesso!', {
+    toast.success("Highlight salvo com sucesso!", {
       description: narrationConfig
-        ? 'Vídeo com narração AI gerado!'
-        : 'Disponível na sua biblioteca de Lances.',
+        ? "Vídeo com narração AI gerado!"
+        : "Disponível na sua biblioteca de Lances.",
       icon: narrationConfig ? (
         <Sparkles className="h-5 w-5 text-gold" />
       ) : undefined,
     })
     onOpenChange(false)
     setTimeout(() => {
-      setStep('record')
+      setStep("record")
       setNarrationConfig(null)
     }, 500)
   }
@@ -87,13 +86,13 @@ export function RecordHighlightDrawer({
           </DrawerHeader>
 
           <div className="p-4 px-6">
-            {step === 'record' && (
+            {step === "record" && (
               <div className="space-y-6">
                 <div className="flex justify-center gap-3">
                   {[10, 20, 30].map((sec) => (
                     <Button
                       key={sec}
-                      variant={duration === sec ? 'default' : 'outline'}
+                      variant={duration === sec ? "default" : "outline"}
                       onClick={() => setDuration(sec as any)}
                       className="rounded-full w-20"
                     >
@@ -112,13 +111,13 @@ export function RecordHighlightDrawer({
                   className="w-full h-14 rounded-full text-lg shadow-lg bg-red-600 hover:bg-red-700 text-white"
                   onClick={handleRecord}
                 >
-                  <History className="mr-2 h-6 w-6" /> Capturar Últimos{' '}
+                  <History className="mr-2 h-6 w-6" /> Capturar Últimos{" "}
                   {duration}s
                 </Button>
               </div>
             )}
 
-            {step === 'processing' && (
+            {step === "processing" && (
               <div className="flex flex-col items-center justify-center py-10 space-y-4">
                 <Loader2 className="h-12 w-12 animate-spin text-primary" />
                 <p className="font-medium text-lg">Processando replay...</p>
@@ -126,7 +125,7 @@ export function RecordHighlightDrawer({
               </div>
             )}
 
-            {step === 'tagging' && (
+            {step === "tagging" && (
               <div className="space-y-4 animate-fade-in">
                 <div className="aspect-video bg-black/90 rounded-xl relative overflow-hidden flex items-center justify-center">
                   <img
@@ -163,14 +162,14 @@ export function RecordHighlightDrawer({
                 <Button
                   size="lg"
                   className="w-full rounded-full"
-                  onClick={() => setStep('narration')}
+                  onClick={() => setStep("narration")}
                 >
                   Continuar
                 </Button>
               </div>
             )}
 
-            {step === 'narration' && (
+            {step === "narration" && (
               <div className="space-y-6 animate-fade-in text-center py-4">
                 <div className="bg-primary/5 p-6 rounded-2xl border border-primary/20">
                   <div className="h-16 w-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -204,7 +203,7 @@ export function RecordHighlightDrawer({
             )}
           </div>
 
-          {step !== 'narration' && (
+          {step !== "narration" && (
             <DrawerFooter className="pt-2">
               <DrawerClose asChild>
                 <Button variant="ghost">Cancelar</Button>

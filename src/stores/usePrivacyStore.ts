@@ -1,5 +1,5 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 interface PrivacyState {
   isInvisibleMode: boolean
@@ -25,7 +25,7 @@ export const usePrivacyStore = create<PrivacyState>()(
       setIsPreviewLocked: (locked) => set({ isPreviewLocked: locked }),
     }),
     {
-      name: 'goplay-privacy-storage',
+      name: "goplay-privacy-storage",
     },
   ),
 )

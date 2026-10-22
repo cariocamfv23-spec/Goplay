@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase/client'
+import { supabase } from "@/lib/supabase/client"
 
 const db = supabase as any
 
@@ -24,13 +24,13 @@ function formatRelativeTime(dateStr: string): string {
   try {
     const d = new Date(dateStr)
     const diff = Math.floor((Date.now() - d.getTime()) / 1000)
-    if (diff < 60) return 'Agora'
+    if (diff < 60) return "Agora"
     if (diff < 3600) return `${Math.floor(diff / 60)}min`
     if (diff < 86400) return `${Math.floor(diff / 3600)}h`
     if (diff < 604800) return `${Math.floor(diff / 86400)}d`
-    return d.toLocaleDateString('pt-BR')
+    return d.toLocaleDateString("pt-BR")
   } catch {
-    return 'Recente'
+    return "Recente"
   }
 }
 
@@ -43,10 +43,10 @@ export const notificationService = {
       if (!userId) return []
 
       const { data, error } = await db
-        .from('notifications')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false })
+        .from("notifications")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
         .limit(50)
 
       if (error || !data) return []
@@ -58,9 +58,9 @@ export const notificationService = {
       const profMap = new Map<string, any>()
       if (actorIds.length > 0) {
         const { data: actors } = await supabase
-          .from('profiles')
-          .select('id, full_name, avatar_url')
-          .in('id', actorIds)
+          .from("profiles")
+          .select("id, full_name, avatar_url")
+          .in("id", actorIds)
 
         actors?.forEach((a) => profMap.set(a.id, a))
       }
@@ -81,8 +81,8 @@ export const notificationService = {
           actor: actor
             ? {
                 id: actor.id,
-                name: actor.full_name || 'Atleta',
-                avatar: actor.avatar_url || '',
+                name: actor.full_name || "Atleta",
+                avatar: actor.avatar_url || "",
               }
             : undefined,
         }
@@ -98,10 +98,10 @@ export const notificationService = {
   async markAsRead(notificationId: string, userId: string): Promise<void> {
     try {
       await db
-        .from('notifications')
+        .from("notifications")
         .update({ read: true })
-        .eq('id', notificationId)
-        .eq('user_id', userId)
+        .eq("id", notificationId)
+        .eq("user_id", userId)
     } catch {
       /* intentionally ignored */
     }
@@ -113,9 +113,9 @@ export const notificationService = {
   async markAllAsRead(userId: string): Promise<void> {
     try {
       await db
-        .from('notifications')
+        .from("notifications")
         .update({ read: true })
-        .eq('user_id', userId)
+        .eq("user_id", userId)
     } catch {
       /* intentionally ignored */
     }

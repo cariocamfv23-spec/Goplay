@@ -1,5 +1,5 @@
-import { create } from 'zustand'
-import { LiveEvent, mockReplays } from '@/lib/data'
+import { create } from "zustand"
+import { LiveEvent, mockReplays } from "@/lib/data"
 
 interface ReplayState {
   replays: LiveEvent[]

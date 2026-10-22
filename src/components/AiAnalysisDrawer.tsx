@@ -5,17 +5,17 @@ import {
   DrawerTitle,
   DrawerDescription,
   DrawerClose,
-} from '@/components/ui/drawer'
-import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { X, Activity, Zap, Target } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
-import { Link } from 'react-router-dom'
-import { StatsHistoryChart } from './StatsHistoryChart'
-import { TrainingSuggestions } from './TrainingSuggestions'
-import { StatsRadarChart } from './StatsRadarChart'
+} from "@/components/ui/drawer"
+import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { X, Activity, Zap, Target } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
+import { Link } from "react-router-dom"
+import { StatsHistoryChart } from "./StatsHistoryChart"
+import { TrainingSuggestions } from "./TrainingSuggestions"
+import { StatsRadarChart } from "./StatsRadarChart"
 
 interface AiAnalysisDrawerProps {
   open: boolean
@@ -135,7 +135,7 @@ export function AiAnalysisDrawer({
                   </h4>
                   <p className="text-sm text-zinc-400 leading-relaxed">
                     {data.feedback ||
-                      'Sua técnica está excelente! Continue treinando para melhorar seus resultados.'}
+                      "Sua técnica está excelente! Continue treinando para melhorar seus resultados."}
                   </p>
                 </CardContent>
               </Card>

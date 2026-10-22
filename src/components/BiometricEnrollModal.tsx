@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react"
 import {
   Dialog,
   DialogContent,
@@ -6,16 +6,16 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Fingerprint, ShieldCheck, X } from 'lucide-react'
-import { biometricService } from '@/services/biometrics'
-import { useAuth } from '@/hooks/use-auth'
-import { useAuthStore } from '@/stores/useAuthStore'
-import { toast } from 'sonner'
-import { supabase } from '@/lib/supabase/client'
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Fingerprint, ShieldCheck, X } from "lucide-react"
+import { biometricService } from "@/services/biometrics"
+import { useAuth } from "@/hooks/use-auth"
+import { useAuthStore } from "@/stores/useAuthStore"
+import { toast } from "sonner"
+import { supabase } from "@/lib/supabase/client"
 
-const DISMISSED_KEY = 'goplay_biometric_invite_dismissed'
+const DISMISSED_KEY = "goplay_biometric_invite_dismissed"
 
 export function BiometricEnrollModal() {
   const { user, profile } = useAuth()
@@ -94,34 +94,34 @@ export function BiometricEnrollModal() {
       const displayName =
         profile?.full_name ||
         user.user_metadata?.full_name ||
-        user.email?.split('@')[0] ||
-        'Atleta Goplay'
+        user.email?.split("@")[0] ||
+        "Atleta Goplay"
 
-      toast.info('Aproxime o dedo ou use o Face ID no prompt do sistema...', {
+      toast.info("Aproxime o dedo ou use o Face ID no prompt do sistema...", {
         icon: <Fingerprint className="w-4 h-4 text-primary animate-pulse" />,
       })
 
       const res = await biometricService.enrollBiometrics({
         userId: user.id,
-        userEmail: user.email || '',
+        userEmail: user.email || "",
         userName: displayName,
         sessionTokens: tokens,
       })
 
       if (res.success) {
-        toast.success('Biometria ativada neste aparelho!', {
+        toast.success("Biometria ativada neste aparelho!", {
           description:
-            'No seu próximo acesso, você poderá entrar com um toque.',
+            "No seu próximo acesso, você poderá entrar com um toque.",
         })
         setIsOpen(false)
       } else {
-        toast.error('Não foi possível ativar a biometria', {
+        toast.error("Não foi possível ativar a biometria", {
           description: res.error,
         })
       }
     } catch (err: any) {
-      toast.error('Erro ao acionar sensor biométrico', {
-        description: err?.message || 'Tente novamente.',
+      toast.error("Erro ao acionar sensor biométrico", {
+        description: err?.message || "Tente novamente.",
       })
     } finally {
       setLoading(false)
@@ -161,7 +161,7 @@ export function BiometricEnrollModal() {
             className="w-full font-bold h-10 gap-2 shadow-md"
           >
             <Fingerprint className="w-4 h-4" />
-            {loading ? 'Aguardando sensor...' : 'Ativar Agora'}
+            {loading ? "Aguardando sensor..." : "Ativar Agora"}
           </Button>
           <Button
             variant="ghost"

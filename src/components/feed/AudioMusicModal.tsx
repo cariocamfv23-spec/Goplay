@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef } from "react"
 import {
   Dialog,
   DialogContent,
@@ -6,11 +6,11 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Music,
   Upload,
@@ -18,9 +18,9 @@ import {
   X,
   Check,
   Volume2,
-} from 'lucide-react'
-import { toast } from 'sonner'
-import type { PostMusicLink } from '@/services/feed'
+} from "lucide-react"
+import { toast } from "sonner"
+import type { PostMusicLink } from "@/services/feed"
 
 interface AudioMusicModalProps {
   open: boolean
@@ -39,20 +39,20 @@ export function AudioMusicModal({
   currentAudioFile,
   currentMusicLink,
 }: AudioMusicModalProps) {
-  const [activeTab, setActiveTab] = useState<'upload' | 'link'>(
-    currentMusicLink ? 'link' : 'upload',
+  const [activeTab, setActiveTab] = useState<"upload" | "link">(
+    currentMusicLink ? "link" : "upload",
   )
 
   // Local draft state
   const [selectedFile, setSelectedFile] = useState<File | null>(
     currentAudioFile,
   )
-  const [linkUrl, setLinkUrl] = useState<string>(currentMusicLink?.url || '')
+  const [linkUrl, setLinkUrl] = useState<string>(currentMusicLink?.url || "")
   const [linkTitle, setLinkTitle] = useState<string>(
-    currentMusicLink?.title || '',
+    currentMusicLink?.title || "",
   )
   const [linkArtist, setLinkArtist] = useState<string>(
-    currentMusicLink?.artist || '',
+    currentMusicLink?.artist || "",
   )
   const audioInputRef = useRef<HTMLInputElement>(null)
 
@@ -62,28 +62,28 @@ export function AudioMusicModal({
 
     // Limit ~15MB as requested in scope
     if (file.size > 15 * 1024 * 1024) {
-      toast.error('O arquivo de áudio deve ter no máximo 15MB.')
+      toast.error("O arquivo de áudio deve ter no máximo 15MB.")
       return
     }
 
     const validTypes = [
-      'audio/mpeg',
-      'audio/mp3',
-      'audio/wav',
-      'audio/x-wav',
-      'audio/m4a',
-      'audio/x-m4a',
-      'audio/aac',
-      'audio/ogg',
+      "audio/mpeg",
+      "audio/mp3",
+      "audio/wav",
+      "audio/x-wav",
+      "audio/m4a",
+      "audio/x-m4a",
+      "audio/aac",
+      "audio/ogg",
     ]
 
     const isAudioExt = /\.(mp3|m4a|wav|aac|ogg)$/i.test(file.name)
     if (
-      !file.type.startsWith('audio/') &&
+      !file.type.startsWith("audio/") &&
       !isAudioExt &&
       !validTypes.includes(file.type)
     ) {
-      toast.error('Formato inválido. Selecione um arquivo MP3, M4A ou WAV.')
+      toast.error("Formato inválido. Selecione um arquivo MP3, M4A ou WAV.")
       return
     }
 
@@ -92,7 +92,7 @@ export function AudioMusicModal({
   }
 
   const handleConfirm = () => {
-    if (activeTab === 'upload') {
+    if (activeTab === "upload") {
       onSaveAudio(selectedFile)
       // When audio file is kept, clear music link or keep both? Usually mutually exclusive in music slot
       if (selectedFile) {
@@ -106,14 +106,14 @@ export function AudioMusicModal({
         // Validate URL format
         try {
           const parsed = new URL(trimmedUrl)
-          let platform: 'spotify' | 'youtube' | 'apple' | 'other' = 'other'
-          if (parsed.hostname.includes('spotify.com')) platform = 'spotify'
+          let platform: "spotify" | "youtube" | "apple" | "other" = "other"
+          if (parsed.hostname.includes("spotify.com")) platform = "spotify"
           else if (
-            parsed.hostname.includes('youtube.com') ||
-            parsed.hostname.includes('youtu.be')
+            parsed.hostname.includes("youtube.com") ||
+            parsed.hostname.includes("youtu.be")
           )
-            platform = 'youtube'
-          else if (parsed.hostname.includes('apple.com')) platform = 'apple'
+            platform = "youtube"
+          else if (parsed.hostname.includes("apple.com")) platform = "apple"
 
           onSaveMusicLink({
             platform,
@@ -126,7 +126,7 @@ export function AudioMusicModal({
           }
         } catch {
           toast.error(
-            'Por favor, insira uma URL de música válida (https://...).',
+            "Por favor, insira uma URL de música válida (https://...).",
           )
           return
         }
@@ -138,9 +138,9 @@ export function AudioMusicModal({
 
   const handleClearAll = () => {
     setSelectedFile(null)
-    setLinkUrl('')
-    setLinkTitle('')
-    setLinkArtist('')
+    setLinkUrl("")
+    setLinkTitle("")
+    setLinkArtist("")
     onSaveAudio(null)
     onSaveMusicLink(null)
     onOpenChange(false)
@@ -162,7 +162,7 @@ export function AudioMusicModal({
 
         <Tabs
           value={activeTab}
-          onValueChange={(val) => setActiveTab(val as 'upload' | 'link')}
+          onValueChange={(val) => setActiveTab(val as "upload" | "link")}
           className="w-full mt-2"
         >
           <TabsList className="grid grid-cols-2 w-full">

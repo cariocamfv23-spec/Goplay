@@ -1,5 +1,5 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 import {
   Competition,
   Certification,
@@ -7,7 +7,7 @@ import {
   mockCompetitions,
   mockCertifications,
   mockPassportGoals,
-} from '@/lib/data'
+} from "@/lib/data"
 
 interface PassportState {
   competitions: Competition[]
@@ -75,11 +75,11 @@ export const usePassportStore = create<PassportState>()(
           goals: state.goals.map((g) => {
             if (g.id === id) {
               const nextStatus =
-                g.status === 'pending'
-                  ? 'in_progress'
-                  : g.status === 'in_progress'
-                    ? 'achieved'
-                    : 'pending'
+                g.status === "pending"
+                  ? "in_progress"
+                  : g.status === "in_progress"
+                    ? "achieved"
+                    : "pending"
               return { ...g, status: nextStatus }
             }
             return g
@@ -92,7 +92,7 @@ export const usePassportStore = create<PassportState>()(
         })),
     }),
     {
-      name: 'goplay-passport-storage',
+      name: "goplay-passport-storage",
     },
   ),
 )

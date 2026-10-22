@@ -1,21 +1,21 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { connectionService, type FollowUserItem } from '@/services/connections'
-import { useNavigate } from 'react-router-dom'
-import { Loader2, Users } from 'lucide-react'
+} from "@/components/ui/dialog"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { connectionService, type FollowUserItem } from "@/services/connections"
+import { useNavigate } from "react-router-dom"
+import { Loader2, Users } from "lucide-react"
 
 interface ConnectionsListDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   userId: string
-  mode: 'followers' | 'following'
+  mode: "followers" | "following"
   userName: string
 }
 
@@ -34,7 +34,7 @@ export function ConnectionsListDialog({
     if (!open || !userId) return
     setLoading(true)
     const fetcher =
-      mode === 'followers'
+      mode === "followers"
         ? connectionService.getFollowers(userId)
         : connectionService.getFollowing(userId)
 
@@ -50,7 +50,7 @@ export function ConnectionsListDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-base">
             <Users className="w-4 h-4 text-primary" />
-            {mode === 'followers'
+            {mode === "followers"
               ? `Seguidores de ${userName}`
               : `Perfis que ${userName} segue`}
           </DialogTitle>
@@ -66,9 +66,9 @@ export function ConnectionsListDialog({
             </div>
           ) : users.length === 0 ? (
             <div className="text-center py-8 text-xs text-muted-foreground">
-              {mode === 'followers'
-                ? 'Nenhum seguidor até o momento.'
-                : 'Ainda não está seguindo nenhum perfil.'}
+              {mode === "followers"
+                ? "Nenhum seguidor até o momento."
+                : "Ainda não está seguindo nenhum perfil."}
             </div>
           ) : (
             users.map((u) => (
@@ -93,7 +93,7 @@ export function ConnectionsListDialog({
                       <span>{u.sport || u.type}</span>
                       {(u.city || u.state) && (
                         <span>
-                          • {[u.city, u.state].filter(Boolean).join(', ')}
+                          • {[u.city, u.state].filter(Boolean).join(", ")}
                         </span>
                       )}
                     </div>
@@ -103,11 +103,11 @@ export function ConnectionsListDialog({
                   variant="secondary"
                   className="text-[10px] capitalize shrink-0"
                 >
-                  {u.type === 'club'
-                    ? 'Clube'
-                    : u.type === 'coach'
-                      ? 'Coach'
-                      : 'Atleta'}
+                  {u.type === "club"
+                    ? "Clube"
+                    : u.type === "coach"
+                      ? "Coach"
+                      : "Atleta"}
                 </Badge>
               </div>
             ))

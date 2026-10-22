@@ -1,6 +1,6 @@
-import { Event } from '@/lib/data'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Event } from "@/lib/data"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import {
   MapPin,
   Calendar,
@@ -10,9 +10,9 @@ import {
   Wind,
   Trophy,
   CheckCircle2,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { cn } from "@/lib/utils"
 
 interface MapEventCardProps {
   event: Event & { isRegistered?: boolean }
@@ -24,13 +24,13 @@ export function MapEventCard({ event, compact = false }: MapEventCardProps) {
 
   const getWeatherIcon = (condition?: string) => {
     switch (condition) {
-      case 'sunny':
+      case "sunny":
         return <Sun className="h-4 w-4 text-yellow-500" />
-      case 'rainy':
+      case "rainy":
         return <CloudRain className="h-4 w-4 text-blue-500" />
-      case 'windy':
+      case "windy":
         return <Wind className="h-4 w-4 text-gray-500" />
-      case 'cloudy':
+      case "cloudy":
       default:
         return <Cloud className="h-4 w-4 text-gray-400" />
     }
@@ -38,28 +38,28 @@ export function MapEventCard({ event, compact = false }: MapEventCardProps) {
 
   const getLevelColor = (level?: string) => {
     switch (level) {
-      case 'Iniciante':
-        return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-      case 'Intermediário':
-        return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
-      case 'Avançado':
-        return 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
-      case 'Profissional':
-        return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+      case "Iniciante":
+        return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+      case "Intermediário":
+        return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
+      case "Avançado":
+        return "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400"
+      case "Profissional":
+        return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
       default:
-        return 'bg-secondary text-muted-foreground'
+        return "bg-secondary text-muted-foreground"
     }
   }
 
   return (
     <Card
       className={cn(
-        'overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition-all active:scale-[0.98]',
-        compact ? 'bg-background' : 'bg-card',
+        "overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition-all active:scale-[0.98]",
+        compact ? "bg-background" : "bg-card",
       )}
       onClick={() => navigate(`/events/${event.id}`)}
     >
-      <div className={cn('relative', compact ? 'h-24' : 'h-36')}>
+      <div className={cn("relative", compact ? "h-24" : "h-36")}>
         <img
           src={event.image}
           className="w-full h-full object-cover"
@@ -84,12 +84,12 @@ export function MapEventCard({ event, compact = false }: MapEventCardProps) {
         )}
       </div>
 
-      <CardContent className={cn('p-3', compact ? 'p-2' : 'p-3')}>
+      <CardContent className={cn("p-3", compact ? "p-2" : "p-3")}>
         <div className="flex justify-between items-start mb-1">
           <h3
             className={cn(
-              'font-bold leading-tight line-clamp-1',
-              compact ? 'text-sm' : 'text-base',
+              "font-bold leading-tight line-clamp-1",
+              compact ? "text-sm" : "text-base",
             )}
           >
             {event.title}
@@ -116,7 +116,7 @@ export function MapEventCard({ event, compact = false }: MapEventCardProps) {
             <Badge
               variant="secondary"
               className={cn(
-                'text-[10px] h-5 px-1.5 font-medium border-0',
+                "text-[10px] h-5 px-1.5 font-medium border-0",
                 getLevelColor(event.level),
               )}
             >
@@ -124,7 +124,7 @@ export function MapEventCard({ event, compact = false }: MapEventCardProps) {
               {event.level}
             </Badge>
             <span className="text-sm font-bold text-primary">
-              {event.price === 0 ? 'Grátis' : `R$ ${event.price.toFixed(2)}`}
+              {event.price === 0 ? "Grátis" : `R$ ${event.price.toFixed(2)}`}
             </span>
           </div>
         )}

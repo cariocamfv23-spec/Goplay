@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { useState, useEffect, useRef } from "react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   MessageCircle,
   Share2,
@@ -11,20 +11,20 @@ import {
   Volume2,
   VolumeX,
   Loader2,
-} from 'lucide-react'
-import { AiAnalysisDrawer } from '@/components/AiAnalysisDrawer'
-import { CommentsSheet } from '@/components/CommentsSheet'
-import { ShareDialog } from '@/components/ShareDialog'
-import { toast } from 'sonner'
+} from "lucide-react"
+import { AiAnalysisDrawer } from "@/components/AiAnalysisDrawer"
+import { CommentsSheet } from "@/components/CommentsSheet"
+import { ShareDialog } from "@/components/ShareDialog"
+import { toast } from "sonner"
 import {
   mockAiAnalysis,
   mockStatsHistory,
   mockTrainingSuggestions,
-} from '@/lib/data'
-import { NostalgiaFilter } from '@/components/NostalgiaFilter'
-import { SportsReactionButton } from '@/components/move/SportsReactionButton'
-import { useLikeInteraction } from '@/hooks/useLikeInteraction'
-import { cn } from '@/lib/utils'
+} from "@/lib/data"
+import { NostalgiaFilter } from "@/components/NostalgiaFilter"
+import { SportsReactionButton } from "@/components/move/SportsReactionButton"
+import { useLikeInteraction } from "@/hooks/useLikeInteraction"
+import { cn } from "@/lib/utils"
 
 export interface VideoData {
   id: string
@@ -81,7 +81,7 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
             setIsPlaying(true)
           })
           .catch((error) => {
-            console.error('Autoplay prevented:', error)
+            console.error("Autoplay prevented:", error)
             setIsPlaying(false)
             // If failed (likely due to unmuted), try muted
             // We check videoRef.current.muted directly to avoid adding isMuted to dependency array
@@ -132,7 +132,7 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
     e.stopPropagation()
     setIsFollowing(!isFollowing)
     toast.success(
-      isFollowing ? 'Deixou de seguir' : `Você agora segue ${video.user.name}`,
+      isFollowing ? "Deixou de seguir" : `Você agora segue ${video.user.name}`,
     )
   }
 
@@ -156,9 +156,9 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
     ...mockAiAnalysis,
     score: Math.floor(Math.random() * (98 - 75) + 75),
     aiStats: [
-      { label: 'Velocidade', value: 28, max: 35, unit: 'km/h' },
-      { label: 'Força', value: 850, max: 1000, unit: 'N' },
-      { label: 'Técnica', value: 92, max: 100, unit: 'pts' },
+      { label: "Velocidade", value: 28, max: 35, unit: "km/h" },
+      { label: "Força", value: 850, max: 1000, unit: "N" },
+      { label: "Técnica", value: 92, max: 100, unit: "pts" },
     ],
     history: mockStatsHistory.length > 0 ? mockStatsHistory : [],
     suggestions:
@@ -177,7 +177,9 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
         className="absolute inset-0 w-full h-full object-cover bg-black"
         loop
         playsInline
-        muted={isMuted} // Controlled by state
+        muted={
+          isMuted // Controlled by state
+        }
         onClick={togglePlay}
         onTimeUpdate={handleTimeUpdate}
         onLoadStart={handleLoadStart}
@@ -280,7 +282,7 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
             {video.user.name}
           </h3>
           <p className="text-white/90 text-sm mb-3 line-clamp-2 drop-shadow-md leading-snug">
-            {video.title}{' '}
+            {video.title}{" "}
             <span className="text-white/70 font-normal">
               {video.description}
             </span>
@@ -332,8 +334,8 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
       <div className="absolute bottom-6 right-4 z-20 pointer-events-none">
         <div
           className={cn(
-            'w-10 h-10 rounded-full bg-black border-4 border-zinc-800 flex items-center justify-center',
-            isPlaying ? 'animate-[spin_5s_linear_infinite]' : '',
+            "w-10 h-10 rounded-full bg-black border-4 border-zinc-800 flex items-center justify-center",
+            isPlaying ? "animate-[spin_5s_linear_infinite]" : "",
           )}
         >
           <Avatar className="w-6 h-6">

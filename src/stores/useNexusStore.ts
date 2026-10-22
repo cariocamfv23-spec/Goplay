@@ -1,7 +1,7 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import { toast } from 'sonner'
-import { initialTribes } from '@/lib/mockNexusData'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
+import { toast } from "sonner"
+import { initialTribes } from "@/lib/mockNexusData"
 
 export interface NexusEvent {
   id: string
@@ -27,7 +27,7 @@ export interface Tribe {
 interface NexusState {
   tribes: Tribe[]
   createTribe: (
-    tribe: Omit<Tribe, 'id' | 'members' | 'pendingRequests' | 'events'>,
+    tribe: Omit<Tribe, "id" | "members" | "pendingRequests" | "events">,
   ) => void
   joinTribe: (tribeId: string, userId: string) => void
   approveRequest: (tribeId: string, userId: string) => void
@@ -48,11 +48,11 @@ export const useNexusStore = create<NexusState>()(
               pendingRequests: [],
               events: [],
             }
-            toast.success('Tribo criada com sucesso!')
+            toast.success("Tribo criada com sucesso!")
             return { tribes: [...state.tribes, newTribe] }
           } catch (error) {
             toast.error(
-              'Erro ao criar a tribo. Verifique os dados e tente novamente.',
+              "Erro ao criar a tribo. Verifique os dados e tente novamente.",
             )
             return state
           }
@@ -65,20 +65,20 @@ export const useNexusStore = create<NexusState>()(
                 if (t.id === tribeId) {
                   if (t.isPrivate) {
                     if (!t.pendingRequests.includes(userId)) {
-                      toast.success('Solicitação enviada ao administrador.')
+                      toast.success("Solicitação enviada ao administrador.")
                       return {
                         ...t,
                         pendingRequests: [...t.pendingRequests, userId],
                       }
                     } else {
-                      toast.info('Sua solicitação já está pendente.')
+                      toast.info("Sua solicitação já está pendente.")
                     }
                   } else {
                     if (!t.members.includes(userId)) {
-                      toast.success('Bem-vindo à tribo!')
+                      toast.success("Bem-vindo à tribo!")
                       return { ...t, members: [...t.members, userId] }
                     } else {
-                      toast.info('Você já é membro desta tribo.')
+                      toast.info("Você já é membro desta tribo.")
                     }
                   }
                 }
@@ -86,7 +86,7 @@ export const useNexusStore = create<NexusState>()(
               }),
             }
           } catch (error) {
-            toast.error('Erro ao entrar na tribo. Tente novamente mais tarde.')
+            toast.error("Erro ao entrar na tribo. Tente novamente mais tarde.")
             return state
           }
         }),
@@ -96,7 +96,7 @@ export const useNexusStore = create<NexusState>()(
             return {
               tribes: state.tribes.map((t) => {
                 if (t.id === tribeId) {
-                  toast.success('Membro aprovado!')
+                  toast.success("Membro aprovado!")
                   return {
                     ...t,
                     pendingRequests: t.pendingRequests.filter(
@@ -109,7 +109,7 @@ export const useNexusStore = create<NexusState>()(
               }),
             }
           } catch (error) {
-            toast.error('Erro ao aprovar o membro.')
+            toast.error("Erro ao aprovar o membro.")
             return state
           }
         }),
@@ -119,7 +119,7 @@ export const useNexusStore = create<NexusState>()(
             return {
               tribes: state.tribes.map((t) => {
                 if (t.id === tribeId) {
-                  toast.info('Solicitação recusada.')
+                  toast.info("Solicitação recusada.")
                   return {
                     ...t,
                     pendingRequests: t.pendingRequests.filter(
@@ -131,13 +131,13 @@ export const useNexusStore = create<NexusState>()(
               }),
             }
           } catch (error) {
-            toast.error('Erro ao recusar a solicitação.')
+            toast.error("Erro ao recusar a solicitação.")
             return state
           }
         }),
     }),
     {
-      name: 'goplay-nexus-storage',
+      name: "goplay-nexus-storage",
     },
   ),
 )

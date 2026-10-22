@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { RankingEntry, mockRankings, mockCurrentUser } from '@/lib/data'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { RankingEntry, mockRankings, mockCurrentUser } from "@/lib/data"
 import {
   Trophy,
   TrendingUp,
@@ -11,13 +11,13 @@ import {
   Flame,
   Shield,
   Zap,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { cn } from "@/lib/utils"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@/components/ui/tooltip'
+} from "@/components/ui/tooltip"
 
 export function RankingWidget() {
   const topRankings = mockRankings.filter((r) => r.position <= 3)
@@ -74,13 +74,13 @@ function RankingItem({
 
   const getAchievementIcon = (type: string) => {
     switch (type) {
-      case 'mvp':
+      case "mvp":
         return Star
-      case 'streak':
+      case "streak":
         return Flame
-      case 'veteran':
+      case "veteran":
         return Shield
-      case 'rising_star':
+      case "rising_star":
         return Zap
       default:
         return Star
@@ -89,16 +89,16 @@ function RankingItem({
 
   const getAchievementColor = (type: string) => {
     switch (type) {
-      case 'mvp':
-        return 'text-yellow-500'
-      case 'streak':
-        return 'text-orange-500'
-      case 'veteran':
-        return 'text-blue-500'
-      case 'rising_star':
-        return 'text-purple-500'
+      case "mvp":
+        return "text-yellow-500"
+      case "streak":
+        return "text-orange-500"
+      case "veteran":
+        return "text-blue-500"
+      case "rising_star":
+        return "text-purple-500"
       default:
-        return 'text-primary'
+        return "text-primary"
     }
   }
 
@@ -109,8 +109,8 @@ function RankingItem({
   return (
     <div
       className={cn(
-        'flex items-center gap-4 px-5 py-3 transition-colors hover:bg-secondary/30',
-        isMe && 'bg-primary/5 hover:bg-primary/10',
+        "flex items-center gap-4 px-5 py-3 transition-colors hover:bg-secondary/30",
+        isMe && "bg-primary/5 hover:bg-primary/10",
       )}
     >
       <div className="flex-shrink-0 w-8 text-center font-bold text-sm text-muted-foreground">
@@ -119,7 +119,7 @@ function RankingItem({
         ) : (
           <span
             className={cn(
-              rank.position <= 3 && 'text-foreground font-extrabold',
+              rank.position <= 3 && "text-foreground font-extrabold",
             )}
           >
             #{rank.position}
@@ -130,8 +130,8 @@ function RankingItem({
       <div className="relative">
         <Avatar
           className={cn(
-            'h-10 w-10 border-2',
-            isFirst ? 'border-gold' : 'border-border/50',
+            "h-10 w-10 border-2",
+            isFirst ? "border-gold" : "border-border/50",
           )}
         >
           <AvatarImage src={rank.user.avatar} />
@@ -148,18 +148,18 @@ function RankingItem({
         <div className="flex items-center gap-1.5">
           <p
             className={cn(
-              'font-semibold text-sm truncate',
-              isMe && 'text-primary',
+              "font-semibold text-sm truncate",
+              isMe && "text-primary",
             )}
           >
-            {isMe ? 'Você' : rank.user.name}
+            {isMe ? "Você" : rank.user.name}
           </p>
           {achievement && AchievementIcon && (
             <Tooltip>
               <TooltipTrigger>
                 <AchievementIcon
                   className={cn(
-                    'w-3 h-3',
+                    "w-3 h-3",
                     getAchievementColor(achievement.type),
                   )}
                 />
@@ -171,26 +171,26 @@ function RankingItem({
           )}
         </div>
         <p className="text-xs text-muted-foreground truncate">
-          {rank.user.team || 'Atleta'}
+          {rank.user.team || "Atleta"}
         </p>
       </div>
 
       <div className="text-right flex flex-col items-end">
         <span className="font-bold text-sm tabular-nums">{rank.points}</span>
         <div className="flex items-center text-[10px] gap-1">
-          {rank.trend === 'up' && (
+          {rank.trend === "up" && (
             <>
               <TrendingUp className="w-3 h-3 text-green-500" />
               <span className="text-green-500 font-medium">Subiu</span>
             </>
           )}
-          {rank.trend === 'down' && (
+          {rank.trend === "down" && (
             <>
               <TrendingDown className="w-3 h-3 text-red-500" />
               <span className="text-red-500 font-medium">Caiu</span>
             </>
           )}
-          {rank.trend === 'same' && (
+          {rank.trend === "same" && (
             <>
               <Minus className="w-3 h-3 text-muted-foreground" />
               <span className="text-muted-foreground">Igual</span>

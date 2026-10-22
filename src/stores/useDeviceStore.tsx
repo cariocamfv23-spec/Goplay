@@ -1,11 +1,11 @@
-import { create } from 'zustand'
+import { create } from "zustand"
 
 export interface Device {
   id: string
   name: string
-  type: 'watch' | 'band' | 'chest_strap'
+  type: "watch" | "band" | "chest_strap"
   battery: number
-  status: 'connected' | 'disconnected'
+  status: "connected" | "disconnected"
 }
 
 interface DeviceState {
@@ -40,7 +40,7 @@ const useDeviceStore = create<DeviceState>((set, get) => ({
 
   connectDevice: (device) => {
     set({
-      connectedDevice: { ...device, status: 'connected' },
+      connectedDevice: { ...device, status: "connected" },
       isScanning: false,
     })
   },

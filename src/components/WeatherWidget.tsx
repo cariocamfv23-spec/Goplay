@@ -1,6 +1,6 @@
-import { CloudSun, Droplets, Wind, MapPin, Sparkles } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
-import { useWeatherStore } from '@/stores/useWeatherStore'
+import { CloudSun, Droplets, Wind, MapPin, Sparkles } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { useWeatherStore } from "@/stores/useWeatherStore"
 
 export function WeatherWidget() {
   const { currentLocation } = useWeatherStore()
@@ -23,7 +23,7 @@ export function WeatherWidget() {
             <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-foreground/5 backdrop-blur-md border border-foreground/5 shadow-sm w-fit">
               <MapPin className="w-2.5 h-2.5 text-primary" />
               <span className="text-[9px] font-bold uppercase tracking-wider text-foreground/80 truncate max-w-[80px]">
-                {currentLocation.split(',')[0]}
+                {currentLocation.split(",")[0]}
               </span>
             </div>
             <div className="flex items-start gap-0.5 mt-2">
@@ -71,7 +71,7 @@ export function WeatherWidget() {
             <p className="text-[9px] leading-snug text-muted-foreground group-hover:text-foreground/90 transition-colors">
               <span className="font-bold text-emerald-600 dark:text-emerald-400">
                 Dica AI:
-              </span>{' '}
+              </span>{" "}
               Clima perfeito para HIIT ao ar livre. Mantenha-se hidratado.
             </p>
           </div>

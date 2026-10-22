@@ -1,6 +1,6 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Plus,
   CheckCircle,
@@ -8,17 +8,17 @@ import {
   TrendingUp,
   Clock,
   Trash2,
-} from 'lucide-react'
-import { usePassportStore } from '@/stores/usePassportStore'
-import { cn } from '@/lib/utils'
-import { toast } from 'sonner'
+} from "lucide-react"
+import { usePassportStore } from "@/stores/usePassportStore"
+import { cn } from "@/lib/utils"
+import { toast } from "sonner"
 
 export function GoalsTracker() {
   const { goals, updateGoalStatus, removeGoal } = usePassportStore()
 
   const handleDelete = (id: string) => {
     removeGoal(id)
-    toast.success('Objetivo removido.')
+    toast.success("Objetivo removido.")
   }
 
   return (
@@ -40,12 +40,12 @@ export function GoalsTracker() {
             <Card
               key={goal.id}
               className={cn(
-                'border-l-4 shadow-sm transition-all group',
-                goal.status === 'achieved'
-                  ? 'border-l-green-500 bg-green-500/5'
-                  : goal.status === 'in_progress'
-                    ? 'border-l-blue-500'
-                    : 'border-l-zinc-300',
+                "border-l-4 shadow-sm transition-all group",
+                goal.status === "achieved"
+                  ? "border-l-green-500 bg-green-500/5"
+                  : goal.status === "in_progress"
+                    ? "border-l-blue-500"
+                    : "border-l-zinc-300",
               )}
             >
               <CardContent className="p-4 flex items-center gap-3">
@@ -53,9 +53,9 @@ export function GoalsTracker() {
                   onClick={() => updateGoalStatus(goal.id)}
                   className="hover:scale-110 transition-transform"
                 >
-                  {goal.status === 'achieved' ? (
+                  {goal.status === "achieved" ? (
                     <CheckCircle className="h-6 w-6 text-green-500" />
-                  ) : goal.status === 'in_progress' ? (
+                  ) : goal.status === "in_progress" ? (
                     <TrendingUp className="h-6 w-6 text-blue-500" />
                   ) : (
                     <Circle className="h-6 w-6 text-muted-foreground" />
@@ -66,9 +66,9 @@ export function GoalsTracker() {
                   <div className="flex justify-between items-start">
                     <h4
                       className={cn(
-                        'font-bold text-sm',
-                        goal.status === 'achieved' &&
-                          'line-through text-muted-foreground',
+                        "font-bold text-sm",
+                        goal.status === "achieved" &&
+                          "line-through text-muted-foreground",
                       )}
                     >
                       {goal.title}

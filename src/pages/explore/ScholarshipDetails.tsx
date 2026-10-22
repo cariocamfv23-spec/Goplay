@@ -1,5 +1,5 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { mockScholarships } from '@/lib/data'
+import { useParams, useNavigate } from "react-router-dom"
+import { mockScholarships } from "@/lib/data"
 import {
   ArrowLeft,
   MapPin,
@@ -13,13 +13,13 @@ import {
   AlertCircle,
   Trophy,
   Send,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { PaymentDialog } from '@/components/PaymentDialog'
-import { toast } from 'sonner'
-import { useState, useEffect } from 'react'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { PaymentDialog } from "@/components/PaymentDialog"
+import { toast } from "sonner"
+import { useState, useEffect } from "react"
+import { cn } from "@/lib/utils"
 
 export default function ScholarshipDetails() {
   const { id } = useParams()
@@ -51,8 +51,8 @@ export default function ScholarshipDetails() {
 
   const handleUnlock = () => {
     setUnlocked(true)
-    toast.success('Acesso liberado!', {
-      description: 'Você agora tem acesso total aos candidatos desta bolsa.',
+    toast.success("Acesso liberado!", {
+      description: "Você agora tem acesso total aos candidatos desta bolsa.",
     })
   }
 
@@ -144,7 +144,7 @@ export default function ScholarshipDetails() {
             </h3>
             <div className="bg-secondary/20 p-4 rounded-xl border border-border/40">
               <ul className="text-sm text-muted-foreground space-y-2">
-                {scholarship.documentation.split(',').map((item, i) => (
+                {scholarship.documentation.split(",").map((item, i) => (
                   <li key={i} className="flex items-start gap-2">
                     <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
                     <span className="leading-snug">{item.trim()}</span>
@@ -160,7 +160,7 @@ export default function ScholarshipDetails() {
             </h3>
             <div className="bg-secondary/20 p-4 rounded-xl border border-border/40">
               <div className="flex items-center gap-2 text-sm text-muted-foreground font-medium flex-wrap">
-                {scholarship.process.split('>').map((step, i, arr) => (
+                {scholarship.process.split(">").map((step, i, arr) => (
                   <div key={i} className="contents">
                     <span className="text-center">{step.trim()}</span>
                     {i < arr.length - 1 && (
@@ -228,10 +228,10 @@ export default function ScholarshipDetails() {
         <Button
           size="lg"
           className={cn(
-            'w-full font-bold h-12 text-base rounded-xl transition-all',
+            "w-full font-bold h-12 text-base rounded-xl transition-all",
             isApplied
-              ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
-              : 'bg-primary hover:bg-primary/90 text-primary-foreground',
+              ? "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+              : "bg-primary hover:bg-primary/90 text-primary-foreground",
           )}
           onClick={() => {
             if (!isApplied) {

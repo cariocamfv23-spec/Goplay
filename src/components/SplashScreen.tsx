@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
-import { cn } from '@/lib/utils'
-import { GoplayIcon } from '@/components/GoplayIcon'
+import { useEffect, useState } from "react"
+import { cn } from "@/lib/utils"
+import { GoplayIcon } from "@/components/GoplayIcon"
 
 export function SplashScreen() {
   const [isVisible, setIsVisible] = useState(true)
@@ -8,7 +8,7 @@ export function SplashScreen() {
 
   useEffect(() => {
     // Prevent scrolling while splash screen is active
-    document.body.style.overflow = 'hidden'
+    document.body.style.overflow = "hidden"
 
     // Simulate initial application load
     const fadeOutTimer = setTimeout(() => {
@@ -17,13 +17,13 @@ export function SplashScreen() {
 
     const hideTimer = setTimeout(() => {
       setIsVisible(false)
-      document.body.style.overflow = ''
+      document.body.style.overflow = ""
     }, 2500) // 500ms duration for fade out
 
     return () => {
       clearTimeout(fadeOutTimer)
       clearTimeout(hideTimer)
-      document.body.style.overflow = ''
+      document.body.style.overflow = ""
     }
   }, [])
 
@@ -32,10 +32,10 @@ export function SplashScreen() {
   return (
     <div
       className={cn(
-        'fixed inset-0 z-[9999] flex flex-col items-center justify-center transition-opacity duration-500',
+        "fixed inset-0 z-[9999] flex flex-col items-center justify-center transition-opacity duration-500",
         // Force background color matching manifest initially
-        'bg-[#ffffff] dark:bg-background',
-        isFadingOut ? 'opacity-0 pointer-events-none' : 'opacity-100',
+        "bg-[#ffffff] dark:bg-background",
+        isFadingOut ? "opacity-0 pointer-events-none" : "opacity-100",
       )}
     >
       <div className="relative flex flex-col items-center justify-center">
@@ -59,15 +59,15 @@ export function SplashScreen() {
         <div className="relative z-10 mt-12 flex items-center justify-center space-x-2 animate-in fade-in duration-1000 delay-300 fill-mode-both">
           <div
             className="w-2.5 h-2.5 rounded-full bg-primary animate-bounce"
-            style={{ animationDelay: '0ms' }}
+            style={{ animationDelay: "0ms" }}
           />
           <div
             className="w-2.5 h-2.5 rounded-full bg-primary animate-bounce"
-            style={{ animationDelay: '150ms' }}
+            style={{ animationDelay: "150ms" }}
           />
           <div
             className="w-2.5 h-2.5 rounded-full bg-primary animate-bounce"
-            style={{ animationDelay: '300ms' }}
+            style={{ animationDelay: "300ms" }}
           />
         </div>
       </div>

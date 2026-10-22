@@ -1,9 +1,9 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Search, Dumbbell, Star, MapPin } from 'lucide-react'
-import { mockGyms } from '@/lib/data'
-import { useNavigate } from 'react-router-dom'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Search, Dumbbell, Star, MapPin } from "lucide-react"
+import { mockGyms } from "@/lib/data"
+import { useNavigate } from "react-router-dom"
 
 export default function GymsList() {
   const navigate = useNavigate()

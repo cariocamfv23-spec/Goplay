@@ -1,9 +1,9 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { mockClinics } from '@/lib/data'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, MapPin, CreditCard } from 'lucide-react'
-import { PaymentDialog } from '@/components/PaymentDialog'
-import { Badge } from '@/components/ui/badge'
+import { useParams, useNavigate } from "react-router-dom"
+import { mockClinics } from "@/lib/data"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, MapPin, CreditCard } from "lucide-react"
+import { PaymentDialog } from "@/components/PaymentDialog"
+import { Badge } from "@/components/ui/badge"
 
 export default function ClinicDetails() {
   const { id } = useParams()
@@ -24,9 +24,9 @@ export default function ClinicDetails() {
   // Helper to extract numeric price
   const getNumericPrice = (priceStr: string) => {
     if (!priceStr) return 0
-    let clean = priceStr.replace(/\./g, '')
-    clean = clean.replace(/[^0-9,]/g, '')
-    clean = clean.replace(',', '.')
+    let clean = priceStr.replace(/\./g, "")
+    clean = clean.replace(/[^0-9,]/g, "")
+    clean = clean.replace(",", ".")
     const value = parseFloat(clean)
     return isNaN(value) ? 0 : value
   }

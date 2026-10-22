@@ -1,32 +1,32 @@
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, Save, Volume2, Eye, Zap, Activity } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { Switch } from '@/components/ui/switch'
-import { Label } from '@/components/ui/label'
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, Save, Volume2, Eye, Zap, Activity } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Separator } from '@/components/ui/separator'
+} from "@/components/ui/select"
+import { Separator } from "@/components/ui/separator"
 import {
   FeedbackDetail,
   FeedbackFrequency,
   FeedbackType,
   useAiCoachStore,
-} from '@/stores/useAiCoachStore'
-import { toast } from 'sonner'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+} from "@/stores/useAiCoachStore"
+import { toast } from "sonner"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function AiCoachSettings() {
   const navigate = useNavigate()
   const { preferences, setPreference } = useAiCoachStore()
 
   const handleSave = () => {
-    toast.success('Configurações salvas', {
-      description: 'Suas preferências do AI Coach foram atualizadas.',
+    toast.success("Configurações salvas", {
+      description: "Suas preferências do AI Coach foram atualizadas.",
     })
     navigate(-1)
   }
@@ -65,7 +65,7 @@ export default function AiCoachSettings() {
                 <Select
                   value={preferences.feedbackType}
                   onValueChange={(v) =>
-                    setPreference('feedbackType', v as FeedbackType)
+                    setPreference("feedbackType", v as FeedbackType)
                   }
                 >
                   <SelectTrigger>
@@ -91,7 +91,7 @@ export default function AiCoachSettings() {
                 <Select
                   value={preferences.feedbackDetail}
                   onValueChange={(v) =>
-                    setPreference('feedbackDetail', v as FeedbackDetail)
+                    setPreference("feedbackDetail", v as FeedbackDetail)
                   }
                 >
                   <SelectTrigger>
@@ -113,7 +113,7 @@ export default function AiCoachSettings() {
                 <Select
                   value={preferences.feedbackFrequency}
                   onValueChange={(v) =>
-                    setPreference('feedbackFrequency', v as FeedbackFrequency)
+                    setPreference("feedbackFrequency", v as FeedbackFrequency)
                   }
                 >
                   <SelectTrigger>
@@ -159,7 +159,7 @@ export default function AiCoachSettings() {
                 </div>
                 <Switch
                   checked={preferences.enabledInArena}
-                  onCheckedChange={(c) => setPreference('enabledInArena', c)}
+                  onCheckedChange={(c) => setPreference("enabledInArena", c)}
                 />
               </div>
 
@@ -178,7 +178,7 @@ export default function AiCoachSettings() {
                 </div>
                 <Switch
                   checked={preferences.voiceEnabled}
-                  onCheckedChange={(c) => setPreference('voiceEnabled', c)}
+                  onCheckedChange={(c) => setPreference("voiceEnabled", c)}
                 />
               </div>
             </CardContent>

@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils'
-import { useEffect, useState } from 'react'
+import { cn } from "@/lib/utils"
+import { useEffect, useState } from "react"
 
 interface SoundWaveVisualizerProps {
   isPlaying: boolean
@@ -35,7 +35,7 @@ export function SoundWaveVisualizer({
   return (
     <div
       className={cn(
-        'flex items-center justify-center gap-[2px] h-12',
+        "flex items-center justify-center gap-[2px] h-12",
         className,
       )}
     >

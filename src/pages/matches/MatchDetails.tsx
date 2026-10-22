@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
-import { mockMatches, mockLightningChallenges } from '@/lib/data'
+import { Button } from "@/components/ui/button"
+import { mockMatches, mockLightningChallenges } from "@/lib/data"
 import {
   ArrowLeft,
   Calendar,
@@ -13,18 +13,18 @@ import {
   Car,
   Zap,
   Flag,
-} from 'lucide-react'
-import { TeamRoleBadge } from '@/components/matchmaking/TeamRoleBadge'
-import { useNavigate, useParams } from 'react-router-dom'
-import { Card, CardContent } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { useState, useEffect } from 'react'
-import { CheckInModal } from '@/components/CheckInModal'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { cn } from '@/lib/utils'
-import { LightningChallengeOverlay } from '@/components/LightningChallengeOverlay'
-import { TransportMenu } from '@/components/TransportMenu'
+} from "lucide-react"
+import { TeamRoleBadge } from "@/components/matchmaking/TeamRoleBadge"
+import { useNavigate, useParams } from "react-router-dom"
+import { Card, CardContent } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { useState, useEffect } from "react"
+import { CheckInModal } from "@/components/CheckInModal"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { cn } from "@/lib/utils"
+import { LightningChallengeOverlay } from "@/components/LightningChallengeOverlay"
+import { TransportMenu } from "@/components/TransportMenu"
 
 export default function MatchDetails() {
   const { id } = useParams()
@@ -45,7 +45,7 @@ export default function MatchDetails() {
   }, [id])
 
   const handleCheckInSuccess = () => {
-    setMatchStatus('approved')
+    setMatchStatus("approved")
   }
 
   const triggerRandomChallenge = () => {
@@ -58,25 +58,25 @@ export default function MatchDetails() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'confirmed':
-        return 'text-green-500'
-      case 'pending':
-        return 'text-yellow-500'
-      case 'absent':
-        return 'text-red-500'
+      case "confirmed":
+        return "text-green-500"
+      case "pending":
+        return "text-yellow-500"
+      case "absent":
+        return "text-red-500"
       default:
-        return 'text-muted-foreground'
+        return "text-muted-foreground"
     }
   }
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'confirmed':
-        return 'Confirmado'
-      case 'pending':
-        return 'Pendente'
-      case 'absent':
-        return 'Ausente'
+      case "confirmed":
+        return "Confirmado"
+      case "pending":
+        return "Pendente"
+      case "absent":
+        return "Ausente"
       default:
         return status
     }
@@ -129,7 +129,7 @@ export default function MatchDetails() {
               <Badge>{match.modality}</Badge>
             </div>
           </div>
-          {matchStatus === 'approved' && (
+          {matchStatus === "approved" && (
             <Badge className="mb-3 bg-gold text-white border-none shadow-lg animate-pulse">
               <ShieldCheck className="h-3 w-3 mr-1" /> Check-in OK
             </Badge>
@@ -214,7 +214,7 @@ export default function MatchDetails() {
 
         {/* Check-in Action */}
         <div className="bg-gradient-to-r from-zinc-900 to-zinc-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
-          {matchStatus === 'pending_checkin' || matchStatus === 'pending' ? (
+          {matchStatus === "pending_checkin" || matchStatus === "pending" ? (
             <>
               <h3 className="font-bold text-lg mb-2 flex items-center gap-2">
                 <QrCode className="h-5 w-5 text-gold" /> Check-in Obrigatório
@@ -271,7 +271,7 @@ export default function MatchDetails() {
                           <p className="font-semibold text-sm">{player.name}</p>
                           <div
                             className={cn(
-                              'text-xs flex items-center gap-1',
+                              "text-xs flex items-center gap-1",
                               getStatusColor(player.status),
                             )}
                           >
@@ -283,7 +283,7 @@ export default function MatchDetails() {
                       <div className="flex flex-col items-end">
                         {player.pointsEarned ? (
                           <span className="text-xs font-bold text-primary flex items-center gap-1">
-                            +{player.pointsEarned} pts{' '}
+                            +{player.pointsEarned} pts{" "}
                             <Trophy className="h-3 w-3" />
                           </span>
                         ) : (

@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
+import { useState } from "react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 import {
   CheckCircle2,
   Calendar,
@@ -9,16 +9,16 @@ import {
   MapPin,
   Handshake,
   Trophy,
-} from 'lucide-react'
-import { TransportMenu } from '@/components/TransportMenu'
-import { TeamRoleBadge } from '@/components/matchmaking/TeamRoleBadge'
-import { MatchFinancialsCard } from '@/components/matchmaking/MatchFinancialsCard'
+} from "lucide-react"
+import { TransportMenu } from "@/components/TransportMenu"
+import { TeamRoleBadge } from "@/components/matchmaking/TeamRoleBadge"
+import { MatchFinancialsCard } from "@/components/matchmaking/MatchFinancialsCard"
 import {
   VisitorChecklist,
   type VisitorChecklistState,
-} from '@/components/matchmaking/VisitorChecklist'
-import type { MatchConfigState } from '@/components/matchmaking/MatchConfigCard'
-import type { MatchTeam, MatchField } from '@/lib/matchmaking-data'
+} from "@/components/matchmaking/VisitorChecklist"
+import type { MatchConfigState } from "@/components/matchmaking/MatchConfigCard"
+import type { MatchTeam, MatchField } from "@/lib/matchmaking-data"
 
 export interface ConfirmedMatch {
   id: string
@@ -114,7 +114,7 @@ export function MatchConfirmationCard({ match }: { match: ConfirmedMatch }) {
           </div>
           <div className="flex items-center gap-1.5">
             <Badge variant="outline" className="text-[9px] uppercase font-bold">
-              {match.field.fieldType === 'sintetico' ? 'Sintético' : 'Terrão'}
+              {match.field.fieldType === "sintetico" ? "Sintético" : "Terrão"}
             </Badge>
             <Badge variant="outline" className="text-[9px] uppercase font-bold">
               {match.field.region}

@@ -1,5 +1,5 @@
-import { supabase } from '@/lib/supabase/client'
-import { pushNotificationService } from '@/services/push-notifications'
+import { supabase } from "@/lib/supabase/client"
+import { pushNotificationService } from "@/services/push-notifications"
 
 const db = supabase as any
 
@@ -8,7 +8,7 @@ export interface EventItem {
   creatorId: string
   title: string
   description: string
-  type: 'event' | 'tryout' | 'championship'
+  type: "event" | "tryout" | "championship"
   sport: string
   category: string
   eventDate: string
@@ -23,7 +23,7 @@ export interface EventItem {
   registrationDeadline?: string
   maxParticipants?: number
   price: number
-  status: 'open' | 'closed' | 'canceled'
+  status: "open" | "closed" | "canceled"
   createdAt: string
   creator?: {
     id: string
@@ -35,13 +35,7 @@ export interface EventItem {
   isRegistered?: boolean
 }
 
-export type RegistrationStatus =
-  | 'pending'
-  | 'approved'
-  | 'rejected'
-  | 'confirmed'
-  | 'canceled'
-  | 'waitlist'
+export type RegistrationStatus = "pending" | "approved" | "rejected" | "confirmed" | "canceled" | "waitlist"
 
 export interface RegistrationItem {
   id: string
@@ -80,25 +74,25 @@ export const eventsService = {
     type?: string
     sport?: string
     currentUserId?: string
-  }): Promise<{ data: EventItem[]; error: Error | null }> {
+  }): Promise<{ data: EventItem[] error: Error | null }> {
     try {
       let query = db
-        .from('events')
-        .select('*')
-        .order('event_date', { ascending: true })
+        .from("events")
+        .select("*")
+        .order("event_date", { ascending: true })
 
-      if (params?.type && params.type !== 'all') {
-        if (params.type === 'tryout') {
-          query = query.eq('type', 'tryout')
-        } else if (params.type === 'event') {
+      if (params?.type && params.type !== "all") {
+        if (params.type === "tryout") {
+          query = query.eq("type", "tryout")
+        } else if (params.type === "event") {
           // Both championships and tournaments or general events
-          query = query.in('type', ['event', 'championship'])
+          query = query.in("type", ["event", "championship"])
         } else {
-          query = query.eq('type', params.type)
+          query = query.eq("type", params.type)
         }
       }
-      if (params?.sport && params.sport !== 'Todos') {
-        query = query.ilike('sport', `%${params.sport}%`)
+      if (params?.sport && params.sport !== "Todos") {
+        query = query.ilike("sport", `%${params.sport}%`)
       }
 
       const { data: rawEvents, error } = await query
@@ -110,9 +104,9 @@ export const eventsService = {
         new Set(rawEvents.map((e: any) => e.creator_id)),
       )
       const { data: creators } = await db
-        .from('profiles')
-        .select('id, full_name, avatar_url, account_type')
-        .in('id', creatorIds)
+        .from("profiles")
+        .select("id, full_name, avatar_url, account_type")
+        .in("id", creatorIds)
 
       const creatorMap = new Map<string, any>()
       creators?.forEach((c: any) => creatorMap.set(c.id, c))
@@ -120,21 +114,21 @@ export const eventsService = {
       // Batch check registrations count and if current user is registered
       const eventIds = rawEvents.map((e: any) => e.id)
       const { data: regData } = await db
-        .from('event_registrations')
-        .select('event_id, user_id, status')
-        .in('event_id', eventIds)
+        .from("event_registrations")
+        .select("event_id, user_id, status")
+        .in("event_id", eventIds)
 
       const regCountMap = new Map<string, number>()
       const userRegSet = new Set<string>()
 
       regData?.forEach((r: any) => {
-        if (r.status !== 'canceled') {
+        if (r.status !== "canceled") {
           regCountMap.set(r.event_id, (regCountMap.get(r.event_id) || 0) + 1)
         }
         if (
           params?.currentUserId &&
           r.user_id === params.currentUserId &&
-          r.status !== 'canceled'
+          r.status !== "canceled"
         ) {
           userRegSet.add(r.event_id)
         }
@@ -146,8 +140,8 @@ export const eventsService = {
           id: e.id,
           creatorId: e.creator_id,
           title: e.title,
-          description: e.description || '',
-          type: (e.type as any) || 'event',
+          description: e.description || "",
+          type: e.type as any || "event",
           sport: e.sport,
           category: e.category,
           eventDate: e.event_date,
@@ -162,15 +156,15 @@ export const eventsService = {
           registrationDeadline: e.registration_deadline,
           maxParticipants: e.max_participants,
           price: Number(e.price) || 0,
-          status: (e.status as any) || 'open',
+          status: e.status as any || "open",
           createdAt: e.created_at,
           creator: {
             id: e.creator_id,
-            name: creator?.full_name || 'Organizador',
+            name: creator?.full_name || "Organizador",
             avatar:
               creator?.avatar_url ||
               `https://img.usecurling.com/ppl/thumbnail?seed=${e.creator_id.slice(0, 4)}`,
-            type: creator?.account_type || 'club',
+            type: creator?.account_type || "club",
           },
           registrationsCount: regCountMap.get(e.id) || 0,
           isRegistered: userRegSet.has(e.id),
@@ -189,41 +183,41 @@ export const eventsService = {
   /**
    * Fetches a single event by ID.
    */
-  async getEventById(
-    eventId: string,
-    currentUserId?: string,
-  ): Promise<{ data: EventItem | null; error: Error | null }> {
+  async getEventById(eventId: string, currentUserId?: string): Promise<{
+    data: EventItem | null
+    error: Error | null
+  }> {
     try {
       const { data: e, error } = await db
-        .from('events')
-        .select('*')
-        .eq('id', eventId)
+        .from("events")
+        .select("*")
+        .eq("id", eventId)
         .maybeSingle()
 
       if (error) throw error
-      if (!e) return { data: null, error: new Error('Evento não encontrado.') }
+      if (!e) return { data: null, error: new Error("Evento não encontrado.") }
 
       const { data: creator } = await db
-        .from('profiles')
-        .select('id, full_name, avatar_url, account_type')
-        .eq('id', e.creator_id)
+        .from("profiles")
+        .select("id, full_name, avatar_url, account_type")
+        .eq("id", e.creator_id)
         .maybeSingle()
 
       // Count
       const { count } = await db
-        .from('event_registrations')
-        .select('id', { count: 'exact', head: true })
-        .eq('event_id', eventId)
+        .from("event_registrations")
+        .select("id", { count: "exact", head: true })
+        .eq("event_id", eventId)
 
       let isRegistered = false
       if (currentUserId) {
         const { data: reg } = await db
-          .from('event_registrations')
-          .select('id, status')
-          .eq('event_id', eventId)
-          .eq('user_id', currentUserId)
+          .from("event_registrations")
+          .select("id, status")
+          .eq("event_id", eventId)
+          .eq("user_id", currentUserId)
           .maybeSingle()
-        isRegistered = !!reg && reg.status !== 'canceled'
+        isRegistered = !!reg && reg.status !== "canceled"
       }
 
       const item: EventItem = {
@@ -250,11 +244,11 @@ export const eventsService = {
         createdAt: e.created_at,
         creator: {
           id: e.creator_id,
-          name: creator?.full_name || 'Organizador',
+          name: creator?.full_name || "Organizador",
           avatar:
             creator?.avatar_url ||
-            'https://img.usecurling.com/ppl/thumbnail?seed=org',
-          type: creator?.account_type || 'club',
+            "https://img.usecurling.com/ppl/thumbnail?seed=org",
+          type: creator?.account_type || "club",
         },
         registrationsCount: count || 0,
         isRegistered,
@@ -276,7 +270,7 @@ export const eventsService = {
     creatorId?: string
     title: string
     description?: string
-    type: 'event' | 'tryout' | 'championship'
+    type: "event" | "tryout" | "championship"
     sport: string
     category?: string
     eventDate: string
@@ -291,7 +285,7 @@ export const eventsService = {
     registrationDeadline?: string
     maxParticipants?: number
     price?: number
-  }): Promise<{ data: EventItem | null; error: Error | null }> {
+  }): Promise<{ data: EventItem | null error: Error | null }> {
     try {
       // 1. Resolve active user session from Supabase client if not passed or to guarantee fresh session
       let activeUserId = params.creatorId
@@ -306,17 +300,17 @@ export const eventsService = {
 
       if (!activeUserId) {
         throw new Error(
-          'Sessão não identificada. Faça login para publicar a peneira/evento.',
+          "Sessão não identificada. Faça login para publicar a peneira/evento.",
         )
       }
       if (!params.title || !params.title.trim()) {
-        throw new Error('O título ou nome da peneira é obrigatório.')
+        throw new Error("O título ou nome da peneira é obrigatório.")
       }
       if (!params.sport || !params.sport.trim()) {
-        throw new Error('A modalidade esportiva é obrigatória.')
+        throw new Error("A modalidade esportiva é obrigatória.")
       }
       if (!params.eventDate) {
-        throw new Error('A data de realização da peneira é obrigatória.')
+        throw new Error("A data de realização da peneira é obrigatória.")
       }
       if (
         !params.city ||
@@ -324,7 +318,7 @@ export const eventsService = {
         !params.state ||
         !params.state.trim()
       ) {
-        throw new Error('Cidade e UF do evento são obrigatórios.')
+        throw new Error("Cidade e UF do evento são obrigatórios.")
       }
 
       // Sanitize price
@@ -337,15 +331,15 @@ export const eventsService = {
       const payload = {
         creator_id: activeUserId,
         title: params.title.trim(),
-        description: params.description?.trim() || '',
-        type: params.type || 'tryout',
+        description: params.description?.trim() || "",
+        type: params.type || "tryout",
         sport: params.sport.trim(),
-        category: params.category?.trim() || 'Livre',
+        category: params.category?.trim() || "Livre",
         event_date: params.eventDate,
-        event_time: params.eventTime?.trim() || '08:30',
+        event_time: params.eventTime?.trim() || "08:30",
         city: params.city.trim(),
         state: params.state.trim().toUpperCase().slice(0, 2),
-        location_name: params.locationName?.trim() || 'Local a definir',
+        location_name: params.locationName?.trim() || "Local a definir",
         address: params.address?.trim() || null,
         banner_url:
           params.bannerUrl ||
@@ -358,11 +352,11 @@ export const eventsService = {
             ? Math.floor(params.maxParticipants)
             : null,
         price: cleanPrice,
-        status: 'open',
+        status: "open",
       }
 
       const { data, error } = await db
-        .from('events')
+        .from("events")
         .insert(payload as any)
         .select()
         .single()
@@ -370,21 +364,21 @@ export const eventsService = {
       if (error) {
         // Detailed error parsing for friendly user feedback
         if (
-          error.code === '42501' ||
-          error.message?.includes('policy') ||
-          error.message?.includes('row-level security')
+          error.code === "42501" ||
+          error.message?.includes("policy") ||
+          error.message?.includes("row-level security")
         ) {
           throw new Error(
-            'Permissão negada pelo servidor. Verifique se você está conectado com uma conta ativa.',
+            "Permissão negada pelo servidor. Verifique se você está conectado com uma conta ativa.",
           )
         }
-        if (error.message?.includes('violates foreign key')) {
+        if (error.message?.includes("violates foreign key")) {
           throw new Error(
-            'Conta de criador inválida no banco de dados. Tente sair e entrar novamente.',
+            "Conta de criador inválida no banco de dados. Tente sair e entrar novamente.",
           )
         }
         throw new Error(
-          error.message || 'Erro ao gravar evento no banco de dados.',
+          error.message || "Erro ao gravar evento no banco de dados.",
         )
       }
 
@@ -427,29 +421,29 @@ export const eventsService = {
     eventId: string
     userId: string
     notes?: string
-  }): Promise<{ success: boolean; error: Error | null }> {
+  }): Promise<{ success: boolean error: Error | null }> {
     try {
       const { eventId, userId, notes } = params
       if (!userId)
-        throw new Error('Você precisa estar autenticado para se inscrever.')
+        throw new Error("Você precisa estar autenticado para se inscrever.")
 
       // Check event deadline & status
       const { data: ev, error: evErr } = await db
-        .from('events')
-        .select('title, status, registration_deadline, creator_id')
-        .eq('id', eventId)
+        .from("events")
+        .select("title, status, registration_deadline, creator_id")
+        .eq("id", eventId)
         .single()
 
-      if (evErr || !ev) throw new Error('Evento não encontrado.')
-      if (ev.status !== 'open')
-        throw new Error('Este evento não está aberto para inscrições.')
+      if (evErr || !ev) throw new Error("Evento não encontrado.")
+      if (ev.status !== "open")
+        throw new Error("Este evento não está aberto para inscrições.")
 
       if (ev.registration_deadline) {
         // Parse deadline set to end of day 23:59:59
         const deadline = new Date(`${ev.registration_deadline}T23:59:59`)
         if (new Date() > deadline) {
           throw new Error(
-            'Inscrições encerradas. O prazo para este evento expirou.',
+            "Inscrições encerradas. O prazo para este evento expirou.",
           )
         }
       }
@@ -457,50 +451,50 @@ export const eventsService = {
       // Check max participants if configured
       if (ev.max_participants) {
         const { count: currentCount } = await db
-          .from('event_registrations')
-          .select('id', { count: 'exact', head: true })
-          .eq('event_id', eventId)
-          .neq('status', 'canceled')
+          .from("event_registrations")
+          .select("id", { count: "exact", head: true })
+          .eq("event_id", eventId)
+          .neq("status", "canceled")
 
         if (currentCount && currentCount >= ev.max_participants) {
-          throw new Error('Não há mais vagas disponíveis para este evento.')
+          throw new Error("Não há mais vagas disponíveis para este evento.")
         }
       }
 
       // Upsert / Insert handling for re-registration after cancel
       const { data: existingReg } = await db
-        .from('event_registrations')
-        .select('id, status')
-        .eq('event_id', eventId)
-        .eq('user_id', userId)
+        .from("event_registrations")
+        .select("id, status")
+        .eq("event_id", eventId)
+        .eq("user_id", userId)
         .maybeSingle()
 
       let insErr: any = null
       if (existingReg) {
-        if (existingReg.status === 'confirmed') {
-          throw new Error('Você já está inscrito neste evento!')
+        if (existingReg.status === "confirmed") {
+          throw new Error("Você já está inscrito neste evento!")
         }
         const { error: updErr } = await db
-          .from('event_registrations')
+          .from("event_registrations")
           .update({
-            status: 'confirmed',
+            status: "confirmed",
             notes: notes?.trim() || null,
             created_at: new Date().toISOString(),
           })
-          .eq('id', existingReg.id)
+          .eq("id", existingReg.id)
         insErr = updErr
       } else {
-        const { error } = await db.from('event_registrations').insert({
+        const { error } = await db.from("event_registrations").insert({
           event_id: eventId,
           user_id: userId,
-          status: 'confirmed',
+          status: "confirmed",
           notes: notes?.trim() || null,
         })
         insErr = error
       }
       if (insErr) {
-        if (insErr.message.includes('duplicate') || insErr.code === '23505') {
-          throw new Error('Você já está inscrito neste evento!')
+        if (insErr.message.includes("duplicate") || insErr.code === "23505") {
+          throw new Error("Você já está inscrito neste evento!")
         }
         throw insErr
       }
@@ -508,27 +502,27 @@ export const eventsService = {
       // Automatically register a notification for the organizer and the athlete
       try {
         const { data: athleteProf } = await supabase
-          .from('profiles')
-          .select('full_name')
-          .eq('id', userId)
+          .from("profiles")
+          .select("full_name")
+          .eq("id", userId)
           .maybeSingle()
 
         // Notification for event organizer
         if (ev.creator_id && ev.creator_id !== userId) {
-          await db.from('notifications').insert({
+          await db.from("notifications").insert({
             user_id: ev.creator_id,
             actor_id: userId,
-            type: 'registration_received',
-            title: 'Nova Inscrição Recebida',
-            message: `${athleteProf?.full_name || 'Um atleta'} se inscreveu em "${ev.title}".`,
+            type: "registration_received",
+            title: "Nova Inscrição Recebida",
+            message: `${athleteProf?.full_name || "Um atleta"} se inscreveu em "${ev.title}".`,
             link: `/events/${eventId}`,
           })
 
           pushNotificationService
             .triggerServerPush({
               userId: ev.creator_id,
-              title: 'Nova Inscrição Recebida',
-              body: `${athleteProf?.full_name || 'Um atleta'} se inscreveu em "${ev.title}".`,
+              title: "Nova Inscrição Recebida",
+              body: `${athleteProf?.full_name || "Um atleta"} se inscreveu em "${ev.title}".`,
               url: `/events/${eventId}`,
               tag: `reg-received-${eventId}`,
             })
@@ -536,10 +530,10 @@ export const eventsService = {
         }
 
         // Notification confirmation for the athlete
-        await db.from('notifications').insert({
+        await db.from("notifications").insert({
           user_id: userId,
-          type: 'event_registration',
-          title: 'Inscrição Confirmada!',
+          type: "event_registration",
+          title: "Inscrição Confirmada!",
           message: `Sua vaga para "${ev.title}" está garantida. Bom treino!`,
           link: `/events/${eventId}`,
         })
@@ -559,25 +553,24 @@ export const eventsService = {
   /**
    * Cancels athlete's registration.
    */
-  async cancelRegistration(
-    eventId: string,
-    userId: string,
-  ): Promise<{ error: Error | null }> {
+  async cancelRegistration(eventId: string, userId: string): Promise<{
+    error: Error | null
+  }> {
     try {
       // Instead of hard deleting, set status to canceled so user can toggle, or delete if allowed
       const { error } = await db
-        .from('event_registrations')
-        .update({ status: 'canceled' })
-        .eq('event_id', eventId)
-        .eq('user_id', userId)
+        .from("event_registrations")
+        .update({ status: "canceled" })
+        .eq("event_id", eventId)
+        .eq("user_id", userId)
 
       if (error) {
         // Fallback to hard delete if update fails
         const { error: delErr } = await db
-          .from('event_registrations')
+          .from("event_registrations")
           .delete()
-          .eq('event_id', eventId)
-          .eq('user_id', userId)
+          .eq("event_id", eventId)
+          .eq("user_id", userId)
         if (delErr) throw delErr
       }
       return { error: null }
@@ -595,15 +588,15 @@ export const eventsService = {
   ): Promise<RegistrationItem[]> {
     try {
       let query = db
-        .from('event_registrations')
-        .select('*')
-        .eq('event_id', eventId)
+        .from("event_registrations")
+        .select("*")
+        .eq("event_id", eventId)
 
       if (!options?.includeCanceled) {
-        query = query.neq('status', 'canceled')
+        query = query.neq("status", "canceled")
       }
 
-      const { data, error } = await query.order('created_at', {
+      const { data, error } = await query.order("created_at", {
         ascending: false,
       })
 
@@ -611,11 +604,11 @@ export const eventsService = {
 
       const userIds = data.map((d: any) => d.user_id)
       const { data: profiles } = await db
-        .from('profiles')
+        .from("profiles")
         .select(
-          'id, full_name, avatar_url, sport, position, city, state, birth_date, experience',
+          "id, full_name, avatar_url, sport, position, city, state, birth_date, experience",
         )
-        .in('id', userIds)
+        .in("id", userIds)
 
       const profMap = new Map<string, any>()
       profiles?.forEach((p: any) => profMap.set(p.id, p))
@@ -631,7 +624,7 @@ export const eventsService = {
           createdAt: r.created_at,
           participant: {
             id: r.user_id,
-            name: prof?.full_name || 'Atleta',
+            name: prof?.full_name || "Atleta",
             avatar:
               prof?.avatar_url ||
               `https://img.usecurling.com/ppl/thumbnail?seed=${r.user_id.slice(0, 4)}`,
@@ -652,31 +645,34 @@ export const eventsService = {
   /**
    * Fetches all events created by an organizer.
    */
-  async getOrganizerEvents(
-    creatorId: string,
-  ): Promise<{ data: EventItem[]; error: Error | null }> {
+  async getOrganizerEvents(creatorId: string): Promise<{
+    data: EventItem[]
+    error: Error | null
+  }> {
     try {
       if (!creatorId) return { data: [], error: null }
 
       const { data: rawEvents, error } = await db
-        .from('events')
-        .select('*')
-        .eq('creator_id', creatorId)
-        .order('event_date', { ascending: false })
+        .from("events")
+        .select("*")
+        .eq("creator_id", creatorId)
+        .order("event_date", { ascending: false })
 
       if (error) throw error
       if (!rawEvents || rawEvents.length === 0) return { data: [], error: null }
 
       const eventIds = rawEvents.map((e: any) => e.id)
       const { data: regData } = await db
-        .from('event_registrations')
-        .select('event_id, status')
-        .in('event_id', eventIds)
+        .from("event_registrations")
+        .select("event_id, status")
+        .in("event_id", eventIds)
 
-      const countsMap = new Map<
-        string,
-        { total: number; pending: number; approved: number; rejected: number }
-      >()
+      const countsMap = new Map<string, {
+        total: number
+        pending: number
+        approved: number
+        rejected: number
+      }>()
 
       regData?.forEach((r: any) => {
         const curr = countsMap.get(r.event_id) || {
@@ -685,12 +681,12 @@ export const eventsService = {
           approved: 0,
           rejected: 0,
         }
-        if (r.status !== 'canceled') {
+        if (r.status !== "canceled") {
           curr.total += 1
-          if (r.status === 'pending') curr.pending += 1
-          else if (r.status === 'approved' || r.status === 'confirmed')
+          if (r.status === "pending") curr.pending += 1
+          else if (r.status === "approved" || r.status === "confirmed")
             curr.approved += 1
-          else if (r.status === 'rejected') curr.rejected += 1
+          else if (r.status === "rejected") curr.rejected += 1
         }
         countsMap.set(r.event_id, curr)
       })
@@ -701,8 +697,8 @@ export const eventsService = {
           id: e.id,
           creatorId: e.creator_id,
           title: e.title,
-          description: e.description || '',
-          type: (e.type as any) || 'event',
+          description: e.description || "",
+          type: e.type as any || "event",
           sport: e.sport,
           category: e.category,
           eventDate: e.event_date,
@@ -717,7 +713,7 @@ export const eventsService = {
           registrationDeadline: e.registration_deadline,
           maxParticipants: e.max_participants,
           price: Number(e.price) || 0,
-          status: (e.status as any) || 'open',
+          status: e.status as any || "open",
           createdAt: e.created_at,
           registrationsCount: counts.total,
         }
@@ -735,17 +731,18 @@ export const eventsService = {
   /**
    * Fetches all registrations across all events owned by an organizer.
    */
-  async getOrganizerAllRegistrations(
-    creatorId: string,
-  ): Promise<{ data: RegistrationItem[]; error: Error | null }> {
+  async getOrganizerAllRegistrations(creatorId: string): Promise<{
+    data: RegistrationItem[]
+    error: Error | null
+  }> {
     try {
       if (!creatorId) return { data: [], error: null }
 
       // Get event IDs owned by organizer
       const { data: myEvents, error: evErr } = await db
-        .from('events')
-        .select('id, title')
-        .eq('creator_id', creatorId)
+        .from("events")
+        .select("id, title")
+        .eq("creator_id", creatorId)
 
       if (evErr) throw evErr
       if (!myEvents || myEvents.length === 0) return { data: [], error: null }
@@ -755,10 +752,10 @@ export const eventsService = {
       const eventIds = myEvents.map((e: any) => e.id)
 
       const { data: rawRegs, error: regErr } = await db
-        .from('event_registrations')
-        .select('*')
-        .in('event_id', eventIds)
-        .order('created_at', { ascending: false })
+        .from("event_registrations")
+        .select("*")
+        .in("event_id", eventIds)
+        .order("created_at", { ascending: false })
 
       if (regErr) throw regErr
       if (!rawRegs || rawRegs.length === 0) return { data: [], error: null }
@@ -767,11 +764,11 @@ export const eventsService = {
         new Set(rawRegs.map((r: any) => r.user_id)),
       ) as string[]
       const { data: profiles } = await db
-        .from('profiles')
+        .from("profiles")
         .select(
-          'id, full_name, avatar_url, sport, position, city, state, birth_date, experience',
+          "id, full_name, avatar_url, sport, position, city, state, birth_date, experience",
         )
-        .in('id', userIds)
+        .in("id", userIds)
 
       const profMap = new Map<string, any>()
       profiles?.forEach((p: any) => profMap.set(p.id, p))
@@ -785,10 +782,10 @@ export const eventsService = {
           status: r.status as RegistrationStatus,
           notes: r.notes,
           createdAt: r.created_at,
-          eventTitle: eventMap.get(r.event_id) || 'Evento',
+          eventTitle: eventMap.get(r.event_id) || "Evento",
           participant: {
             id: r.user_id,
-            name: prof?.full_name || 'Atleta',
+            name: prof?.full_name || "Atleta",
             avatar:
               prof?.avatar_url ||
               `https://img.usecurling.com/ppl/thumbnail?seed=${r.user_id.slice(0, 4)}`,
@@ -817,7 +814,7 @@ export const eventsService = {
    */
   async updateRegistrationStatus(params: {
     registrationId: string
-    newStatus: 'approved' | 'rejected' | 'pending'
+    newStatus: "approved" | "rejected" | "pending"
     organizerId: string
   }): Promise<{
     success: boolean
@@ -826,11 +823,11 @@ export const eventsService = {
   }> {
     try {
       const { registrationId, newStatus, organizerId } = params
-      if (!organizerId) throw new Error('Organizador não autenticado.')
+      if (!organizerId) throw new Error("Organizador não autenticado.")
 
       // Call database secure RPC function first
       const { data: rpcRes, error: rpcErr } = await db.rpc(
-        'decide_event_registration',
+        "decide_event_registration",
         {
           p_registration_id: registrationId,
           p_new_status: newStatus,
@@ -841,37 +838,37 @@ export const eventsService = {
         const msg =
           rpcRes?.error ||
           rpcErr?.message ||
-          'Não foi possível atualizar o status da inscrição.'
+          "Não foi possível atualizar o status da inscrição."
         throw new Error(msg)
       }
 
       const athleteId = rpcRes?.user_id
       const eventId = rpcRes?.event_id
-      const eventTitle = rpcRes?.event_title || 'Evento / Peneira'
+      const eventTitle = rpcRes?.event_title || "Evento / Peneira"
 
       // Dispatch real Supabase notification to the athlete
       if (athleteId) {
         try {
-          const isApproval = newStatus === 'approved'
-          const isRejection = newStatus === 'rejected'
+          const isApproval = newStatus === "approved"
+          const isRejection = newStatus === "rejected"
 
           // Get organizer profile name
           const { data: orgProfile } = await supabase
-            .from('profiles')
-            .select('full_name, club_name')
-            .eq('id', organizerId)
+            .from("profiles")
+            .select("full_name, club_name")
+            .eq("id", organizerId)
             .maybeSingle()
 
           const orgName =
             orgProfile?.club_name ||
             orgProfile?.full_name ||
-            'O Clube / Organizador'
+            "O Clube / Organizador"
 
           const notifTitle = isApproval
-            ? 'Inscrição Aprovada! 🎉'
+            ? "Inscrição Aprovada! 🎉"
             : isRejection
-              ? 'Resultado da Inscrição'
-              : 'Status da Inscrição Atualizado'
+              ? "Resultado da Inscrição"
+              : "Status da Inscrição Atualizado"
 
           const notifMessage = isApproval
             ? `${orgName} aprovou sua inscrição na peneira/evento "${eventTitle}". Fique atento aos detalhes e horários!`
@@ -879,14 +876,14 @@ export const eventsService = {
               ? `${orgName} avaliou sua inscrição para "${eventTitle}". Desta vez a vaga não foi preenchida, mas continue treinando!`
               : `Sua inscrição em "${eventTitle}" voltou para análise pendente.`
 
-          await db.from('notifications').insert({
+          await db.from("notifications").insert({
             user_id: athleteId,
             actor_id: organizerId,
             type: isApproval
-              ? 'registration_approved'
+              ? "registration_approved"
               : isRejection
-                ? 'registration_rejected'
-                : 'event_registration',
+                ? "registration_rejected"
+                : "event_registration",
             title: notifTitle,
             message: notifMessage,
             link: `/events/${eventId}`,
@@ -904,7 +901,7 @@ export const eventsService = {
             .catch(() => {})
         } catch (notifErr) {
           // If notification dispatch fails, do not silently roll back the decision
-          console.warn('Falha ao enviar notificação de decisão:', notifErr)
+          console.warn("Falha ao enviar notificação de decisão:", notifErr)
         }
       }
 

@@ -1,21 +1,21 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Search, Edit, MessageSquare, Loader2, RefreshCw } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { CallHistory } from '@/pages/messages/CallHistory'
-import { useAuth } from '@/hooks/use-auth'
-import { chatService, ConversationSummary } from '@/services/chat'
+import { useState, useEffect, useCallback, useMemo } from "react"
+import { useNavigate } from "react-router-dom"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Search, Edit, MessageSquare, Loader2, RefreshCw } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { CallHistory } from "@/pages/messages/CallHistory"
+import { useAuth } from "@/hooks/use-auth"
+import { chatService, ConversationSummary } from "@/services/chat"
 
 export default function MessagesList() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const [conversations, setConversations] = useState<ConversationSummary[]>([])
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState("")
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
 
@@ -32,7 +32,7 @@ export default function MessagesList() {
         const list = await chatService.getMyConversations(user.id)
         setConversations(list)
       } catch (err) {
-        console.error('Falha ao carregar conversas:', err)
+        console.error("Falha ao carregar conversas:", err)
       } finally {
         setLoading(false)
         setRefreshing(false)
@@ -97,7 +97,7 @@ export default function MessagesList() {
                   variant="ghost"
                   size="icon"
                   className="rounded-full"
-                  onClick={() => navigate('/messages/new')}
+                  onClick={() => navigate("/messages/new")}
                   title="Nova conversa"
                 >
                   <Edit className="h-5 w-5" />
@@ -146,16 +146,16 @@ export default function MessagesList() {
                 </div>
                 <h3 className="font-bold text-base mb-1">
                   {searchQuery
-                    ? 'Nenhuma conversa encontrada'
-                    : 'Nenhuma conversa iniciada'}
+                    ? "Nenhuma conversa encontrada"
+                    : "Nenhuma conversa iniciada"}
                 </h3>
                 <p className="text-xs text-muted-foreground max-w-xs mb-5 leading-relaxed">
                   {searchQuery
-                    ? 'Tente buscar por outro termo ou nome de atleta/clube.'
-                    : 'Conecte-se com atletas e clubes no Goplay para iniciar uma conversa privada.'}
+                    ? "Tente buscar por outro termo ou nome de atleta/clube."
+                    : "Conecte-se com atletas e clubes no Goplay para iniciar uma conversa privada."}
                 </p>
                 <Button
-                  onClick={() => navigate('/messages/new')}
+                  onClick={() => navigate("/messages/new")}
                   className="rounded-full shadow-md text-xs font-semibold px-5"
                 >
                   <Edit className="w-3.5 h-3.5 mr-1.5" />
@@ -174,7 +174,7 @@ export default function MessagesList() {
                       <Avatar className="h-12 w-12 border border-border/50">
                         <AvatarImage src={chat.otherUser.avatar} />
                         <AvatarFallback>
-                          {chat.otherUser.name?.[0] || 'U'}
+                          {chat.otherUser.name?.[0] || "U"}
                         </AvatarFallback>
                       </Avatar>
                       {chat.otherUser.online && (
@@ -187,7 +187,7 @@ export default function MessagesList() {
                           <h3 className="font-semibold text-sm truncate">
                             {chat.otherUser.name}
                           </h3>
-                          {chat.otherUser.accountType === 'club' && (
+                          {chat.otherUser.accountType === "club" && (
                             <Badge
                               variant="secondary"
                               className="text-[9px] px-1 py-0 bg-primary/10 text-primary border-none"
@@ -204,11 +204,11 @@ export default function MessagesList() {
                         <p
                           className={`text-xs truncate pr-2 ${
                             chat.unreadCount > 0
-                              ? 'text-foreground font-semibold'
-                              : 'text-muted-foreground'
+                              ? "text-foreground font-semibold"
+                              : "text-muted-foreground"
                           }`}
                         >
-                          {chat.lastMessage || 'Conversa iniciada'}
+                          {chat.lastMessage || "Conversa iniciada"}
                         </p>
                         {chat.unreadCount > 0 && (
                           <Badge className="h-5 min-w-5 rounded-full px-1.5 flex items-center justify-center text-[10px] font-bold shadow-sm bg-primary text-white">

@@ -4,15 +4,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Search, Calendar, MapPin, CheckCircle } from 'lucide-react'
-import { useState } from 'react'
-import { mockEvents } from '@/lib/data'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { toast } from 'sonner'
-import { usePassportStore } from '@/stores/usePassportStore'
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Search, Calendar, MapPin, CheckCircle } from "lucide-react"
+import { useState } from "react"
+import { mockEvents } from "@/lib/data"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { toast } from "sonner"
+import { usePassportStore } from "@/stores/usePassportStore"
 
 interface EventLinkDialogProps {
   open: boolean
@@ -20,11 +20,11 @@ interface EventLinkDialogProps {
 }
 
 export function EventLinkDialog({ open, onOpenChange }: EventLinkDialogProps) {
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("")
   const [linked, setLinked] = useState<string | null>(null)
   const { addCompetition } = usePassportStore()
 
-  const handleLink = (event: (typeof mockEvents)[0]) => {
+  const handleLink = (event: typeof mockEvents[0]) => {
     setLinked(event.id)
 
     // Add to store
@@ -34,14 +34,14 @@ export function EventLinkDialog({ open, onOpenChange }: EventLinkDialogProps) {
       date: event.date,
       location: event.location,
       organizer: event.organizer,
-      role: 'Atleta',
-      result: 'Participante',
+      role: "Atleta",
+      result: "Participante",
       verified: true,
     })
 
     setTimeout(() => {
-      toast.success('Participação registrada!', {
-        description: 'O evento foi adicionado ao seu histórico e validado.',
+      toast.success("Participação registrada!", {
+        description: "O evento foi adicionado ao seu histórico e validado.",
       })
       onOpenChange(false)
       setLinked(null)
@@ -104,8 +104,8 @@ export function EventLinkDialog({ open, onOpenChange }: EventLinkDialogProps) {
                     size="sm"
                     className={
                       linked === event.id
-                        ? 'bg-green-600 hover:bg-green-700'
-                        : ''
+                        ? "bg-green-600 hover:bg-green-700"
+                        : ""
                     }
                     onClick={() => handleLink(event)}
                     disabled={linked !== null}
@@ -113,7 +113,7 @@ export function EventLinkDialog({ open, onOpenChange }: EventLinkDialogProps) {
                     {linked === event.id ? (
                       <CheckCircle className="h-4 w-4" />
                     ) : (
-                      'Vincular'
+                      "Vincular"
                     )}
                   </Button>
                 </div>

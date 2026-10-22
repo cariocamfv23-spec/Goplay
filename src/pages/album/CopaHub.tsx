@@ -1,5 +1,5 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React from "react"
+import { useNavigate } from "react-router-dom"
 import {
   Trophy,
   Target,
@@ -10,13 +10,13 @@ import {
   ArrowLeft,
   Sparkles,
   BarChart3,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { useAlbumStore } from '@/stores/useAlbumStore'
-import { mockStickers } from '@/lib/album-data'
-import { mockCurrentUser } from '@/lib/data'
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { useAlbumStore } from "@/stores/useAlbumStore"
+import { mockStickers } from "@/lib/album-data"
+import { mockCurrentUser } from "@/lib/data"
 
 export default function CopaHub() {
   const navigate = useNavigate()
@@ -47,7 +47,7 @@ export default function CopaHub() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => navigate('/home')}
+          onClick={() => navigate("/home")}
           className="text-white hover:bg-white/10 rounded-full"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -84,7 +84,7 @@ export default function CopaHub() {
       <div className="relative z-10 px-4 space-y-4">
         {/* Primary Featured Card: Power Index Stats */}
         <Card
-          onClick={() => navigate('/album/stats')}
+          onClick={() => navigate("/album/stats")}
           className="bg-zinc-900/60 border-zinc-800/50 backdrop-blur-xl p-5 rounded-3xl cursor-pointer hover:bg-zinc-800/80 transition-all border-l-4 border-l-[hsl(var(--gold))] shadow-lg group overflow-hidden relative"
         >
           <div className="absolute right-0 top-0 w-32 h-32 bg-[hsl(var(--gold))/0.1] rounded-full blur-2xl group-hover:bg-[hsl(var(--gold))/0.2] transition-colors" />
@@ -98,7 +98,7 @@ export default function CopaHub() {
             </div>
             <div className="flex-1">
               <h3 className="font-black text-lg text-white uppercase tracking-wider flex items-center gap-2">
-                Estatísticas{' '}
+                Estatísticas{" "}
                 <Sparkles className="w-3.5 h-3.5 text-[hsl(var(--gold))]" />
               </h3>
               <p className="text-[11px] text-zinc-400 mt-0.5 leading-tight">
@@ -120,7 +120,7 @@ export default function CopaHub() {
         <div className="grid grid-cols-2 gap-4">
           {/* Sticker Album */}
           <Card
-            onClick={() => navigate('/album/stickers')}
+            onClick={() => navigate("/album/stickers")}
             className="bg-zinc-900/60 border-zinc-800/50 backdrop-blur-xl p-4 rounded-3xl cursor-pointer hover:bg-zinc-800/80 transition-all shadow-lg group relative overflow-hidden"
           >
             <div className="flex flex-col gap-3">
@@ -154,7 +154,7 @@ export default function CopaHub() {
 
           {/* Bolão */}
           <Card
-            onClick={() => navigate('/album/stats')}
+            onClick={() => navigate("/album/stats")}
             className="bg-zinc-900/60 border-zinc-800/50 backdrop-blur-xl p-4 rounded-3xl cursor-pointer hover:bg-zinc-800/80 transition-all shadow-lg group relative overflow-hidden"
           >
             <div className="absolute top-3 right-3">
@@ -175,7 +175,7 @@ export default function CopaHub() {
                 </p>
               </div>
               <p className="text-[9px] text-rose-400/80 mt-2 font-bold uppercase tracking-wider flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />{' '}
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />{" "}
                 Partidas Hoje
               </p>
             </div>
@@ -184,7 +184,7 @@ export default function CopaHub() {
           {/* Vouchers & Rewards */}
           <Card
             onClick={() =>
-              navigate('/marketplace?category=jerseys&redeem=true')
+              navigate("/marketplace?category=jerseys&redeem=true")
             }
             className="bg-zinc-900/60 border-zinc-800/50 backdrop-blur-xl p-4 rounded-3xl cursor-pointer hover:bg-zinc-800/80 transition-all shadow-lg group relative overflow-hidden"
           >
@@ -210,7 +210,7 @@ export default function CopaHub() {
 
           {/* Match Schedule */}
           <Card
-            onClick={() => navigate('/album/stats/table')}
+            onClick={() => navigate("/album/stats/table")}
             className="bg-zinc-900/60 border-zinc-800/50 backdrop-blur-xl p-4 rounded-3xl cursor-pointer hover:bg-zinc-800/80 transition-all shadow-lg group relative overflow-hidden"
           >
             <div className="flex flex-col gap-3">

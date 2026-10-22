@@ -1,7 +1,7 @@
-import { mockCurrentUser, mockPosts, type MusicTrack } from '@/lib/data'
-import { ProfilePostsSection } from '@/components/profile/ProfilePostsSection'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { mockCurrentUser, mockPosts, type MusicTrack } from "@/lib/data"
+import { ProfilePostsSection } from "@/components/profile/ProfilePostsSection"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   MapPin,
   Grid,
@@ -38,28 +38,28 @@ import {
   Lock,
   Crown,
   Wand2,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { MusicSelector } from '@/components/MusicSelector'
-import { toast } from 'sonner'
-import { Card, CardContent } from '@/components/ui/card'
-import { ShareDialog } from '@/components/ShareDialog'
-import { AppIcon } from '@/components/AppIcon'
-import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
-import { RetrospectiveThemeSelector } from '@/components/RetrospectiveThemeSelector'
-import { cn } from '@/lib/utils'
-import { PostDetailDialog } from '@/components/PostDetailDialog'
-import { AthleteAura } from '@/components/AthleteAura'
-import { getAuraConfig } from '@/lib/aura-utils'
-import { AuraLegend } from '@/components/AuraLegend'
-import { EcoHumanoWaves } from '@/components/EcoHumanoWaves'
-import { EcoLegend } from '@/components/EcoLegend'
-import { Separator } from '@/components/ui/separator'
-import { Badge } from '@/components/ui/badge'
-import { getSportCoverImage } from '@/lib/sport-utils'
-import { DepthContainer } from '@/components/DepthContainer'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { MusicSelector } from "@/components/MusicSelector"
+import { toast } from "sonner"
+import { Card, CardContent } from "@/components/ui/card"
+import { ShareDialog } from "@/components/ShareDialog"
+import { AppIcon } from "@/components/AppIcon"
+import { useRetrospectiveStore } from "@/stores/useRetrospectiveStore"
+import { RetrospectiveThemeSelector } from "@/components/RetrospectiveThemeSelector"
+import { cn } from "@/lib/utils"
+import { PostDetailDialog } from "@/components/PostDetailDialog"
+import { AthleteAura } from "@/components/AthleteAura"
+import { getAuraConfig } from "@/lib/aura-utils"
+import { AuraLegend } from "@/components/AuraLegend"
+import { EcoHumanoWaves } from "@/components/EcoHumanoWaves"
+import { EcoLegend } from "@/components/EcoLegend"
+import { Separator } from "@/components/ui/separator"
+import { Badge } from "@/components/ui/badge"
+import { getSportCoverImage } from "@/lib/sport-utils"
+import { DepthContainer } from "@/components/DepthContainer"
 import {
   Camera,
   Award,
@@ -68,36 +68,36 @@ import {
   ShieldAlert,
   UserX,
   MoreVertical,
-} from 'lucide-react'
+} from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { ReportDialog } from '@/components/moderation/ReportDialog'
-import { BlockDialog } from '@/components/moderation/BlockDialog'
-import { moderationService } from '@/services/moderation'
-import { EditCoverDialog } from '@/components/profile/EditCoverDialog'
-import { NostalgiaFilter } from '@/components/NostalgiaFilter'
-import { useReplayStore } from '@/stores/useReplayStore'
-import { usePrivacyStore } from '@/stores/usePrivacyStore'
-import { PaymentDialog } from '@/components/PaymentDialog'
-import { GhostEmojiIcon } from '@/components/GhostEmojiIcon'
-import { LinkedInProfileViewsCard } from '@/components/LinkedInProfileViewsCard'
+} from "@/components/ui/dropdown-menu"
+import { ReportDialog } from "@/components/moderation/ReportDialog"
+import { BlockDialog } from "@/components/moderation/BlockDialog"
+import { moderationService } from "@/services/moderation"
+import { EditCoverDialog } from "@/components/profile/EditCoverDialog"
+import { NostalgiaFilter } from "@/components/NostalgiaFilter"
+import { useReplayStore } from "@/stores/useReplayStore"
+import { usePrivacyStore } from "@/stores/usePrivacyStore"
+import { PaymentDialog } from "@/components/PaymentDialog"
+import { GhostEmojiIcon } from "@/components/GhostEmojiIcon"
+import { LinkedInProfileViewsCard } from "@/components/LinkedInProfileViewsCard"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip'
-import { useMemorySimulation } from '@/hooks/useMemorySimulation'
-import { EditProfileDialog } from '@/components/profile/EditProfileDialog'
-import { connectionService } from '@/services/connections'
-import { ConnectionsListDialog } from '@/components/profile/ConnectionsListDialog'
-import { useAuth } from '@/hooks/use-auth'
-import { UserCheck, Loader2 } from 'lucide-react'
+} from "@/components/ui/tooltip"
+import { useMemorySimulation } from "@/hooks/useMemorySimulation"
+import { EditProfileDialog } from "@/components/profile/EditProfileDialog"
+import { connectionService } from "@/services/connections"
+import { ConnectionsListDialog } from "@/components/profile/ConnectionsListDialog"
+import { useAuth } from "@/hooks/use-auth"
+import { UserCheck, Loader2 } from "lucide-react"
 
 export default function AthleteView({
   user: initialUser = mockCurrentUser,
@@ -108,7 +108,7 @@ export default function AthleteView({
 }) {
   const navigate = useNavigate()
   const { user: authUser } = useAuth()
-  const [activeTab, setActiveTab] = useState('posts')
+  const [activeTab, setActiveTab] = useState("posts")
   const [user, setUser] = useState(initialUser)
   const [isMusicSelectorOpen, setIsMusicSelectorOpen] = useState(false)
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
@@ -125,8 +125,8 @@ export default function AthleteView({
   const [realFollowingCount, setRealFollowingCount] = useState<number>(0)
   const [connectionsDialog, setConnectionsDialog] = useState<{
     open: boolean
-    mode: 'followers' | 'following'
-  }>({ open: false, mode: 'followers' })
+    mode: "followers" | "following"
+  }>({ open: false, mode: "followers" })
 
   // Moderation state
   const { user: currentAuthUser } = useAuth()
@@ -150,7 +150,7 @@ export default function AthleteView({
   }, [isMe, currentAuthUser?.id, user?.id])
 
   const isSupabaseProfile =
-    typeof user.id === 'string' &&
+    typeof user.id === "string" &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
       user.id,
     )
@@ -172,7 +172,7 @@ export default function AthleteView({
 
   const handleToggleFollow = async () => {
     if (!authUser?.id) {
-      toast.error('Faça login para seguir outros perfis.')
+      toast.error("Faça login para seguir outros perfis.")
       return
     }
     if (!isSupabaseProfile) {
@@ -188,7 +188,7 @@ export default function AthleteView({
       )
       setFollowingLoading(false)
       if (error) {
-        toast.error('Erro ao deixar de seguir.')
+        toast.error("Erro ao deixar de seguir.")
         return
       }
       setIsFollowing(false)
@@ -201,7 +201,7 @@ export default function AthleteView({
       )
       setFollowingLoading(false)
       if (error) {
-        toast.error(error.message || 'Erro ao seguir.')
+        toast.error(error.message || "Erro ao seguir.")
         return
       }
       setIsFollowing(true)
@@ -246,7 +246,7 @@ export default function AthleteView({
   const customCoverUrl =
     user.rawProfile?.cover_url || (user as any).cover_url || null
   const customCoverType =
-    user.rawProfile?.cover_type || (user as any).cover_type || 'image'
+    user.rawProfile?.cover_type || (user as any).cover_type || "image"
   const coverPosX = user.rawProfile?.cover_position_x ?? 50
   const coverPosY = user.rawProfile?.cover_position_y ?? 50
   const coverZoom = user.rawProfile?.cover_zoom ?? 1
@@ -255,7 +255,7 @@ export default function AthleteView({
 
   const handleMusicSelect = (track: MusicTrack) => {
     setUser({ ...user, favoriteSong: track })
-    toast.success('Música do perfil atualizada!', {
+    toast.success("Música do perfil atualizada!", {
       description: `${track.title} - ${track.artist}`,
       icon: <Music className="h-4 w-4 text-primary" />,
     })
@@ -269,10 +269,10 @@ export default function AthleteView({
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in relative">
       {/* Cinematic Profile Background Contextual Aura */}
-      {auraConfig.type !== 'none' && (
+      {auraConfig.type !== "none" && (
         <div
           className="absolute inset-0 z-0 pointer-events-none overflow-hidden"
-          style={{ height: '600px' }}
+          style={{ height: "600px" }}
         >
           <div
             className="absolute top-0 inset-x-0 h-full opacity-10 mix-blend-screen transition-colors duration-1000"
@@ -291,7 +291,7 @@ export default function AthleteView({
 
       {/* High-Quality Sport Cover Image or Video Loop with Framed Persisted Position & Zoom */}
       <div className="h-64 bg-muted relative overflow-hidden group z-10 select-none">
-        {customCoverUrl && customCoverType === 'video' ? (
+        {customCoverUrl && customCoverType === "video" ? (
           <video
             src={customCoverUrl}
             className="w-full h-full object-cover opacity-90"
@@ -307,7 +307,7 @@ export default function AthleteView({
         ) : (
           <img
             src={activeCover}
-            alt={`Cover for ${user.sport || 'Athlete'}`}
+            alt={`Cover for ${user.sport || "Athlete"}`}
             className="w-full h-full object-cover opacity-90 transition-transform duration-700"
             style={{
               transform: `scale(${coverZoom})`,
@@ -315,7 +315,7 @@ export default function AthleteView({
             }}
             onError={(e) => {
               e.currentTarget.src =
-                'https://img.usecurling.com/p/800/400?q=abstract%20gradient&color=blue'
+                "https://img.usecurling.com/p/800/400?q=abstract%20gradient&color=blue"
             }}
           />
         )}
@@ -390,12 +390,12 @@ export default function AthleteView({
                   <>
                     <Button
                       size="sm"
-                      variant={isFollowing ? 'outline' : 'default'}
+                      variant={isFollowing ? "outline" : "default"}
                       className={cn(
-                        'shadow-md font-semibold transition-all',
+                        "shadow-md font-semibold transition-all",
                         isFollowing
-                          ? 'border-primary/40 text-primary bg-primary/5 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30'
-                          : 'bg-primary text-white',
+                          ? "border-primary/40 text-primary bg-primary/5 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
+                          : "bg-primary text-white",
                       )}
                       onClick={handleToggleFollow}
                       disabled={followingLoading}
@@ -407,7 +407,7 @@ export default function AthleteView({
                       ) : (
                         <UserPlus className="h-4 w-4 mr-1.5" />
                       )}
-                      {isFollowing ? 'Seguindo' : 'Seguir'}
+                      {isFollowing ? "Seguindo" : "Seguir"}
                     </Button>
                     <Button
                       size="sm"
@@ -451,7 +451,7 @@ export default function AthleteView({
                       className="text-destructive focus:text-destructive gap-2 cursor-pointer"
                     >
                       <UserX className="h-4 w-4" />
-                      {isBlockedByMe ? 'Desbloquear perfil' : 'Bloquear perfil'}
+                      {isBlockedByMe ? "Desbloquear perfil" : "Bloquear perfil"}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -502,7 +502,7 @@ export default function AthleteView({
               className="flex flex-col items-center flex-1 border-r border-border/50 cursor-pointer hover:bg-secondary/30 py-1 rounded transition-colors"
               onClick={() => {
                 if (isSupabaseProfile) {
-                  setConnectionsDialog({ open: true, mode: 'followers' })
+                  setConnectionsDialog({ open: true, mode: "followers" })
                 }
               }}
             >
@@ -517,7 +517,7 @@ export default function AthleteView({
               className="flex flex-col items-center flex-1 border-r border-border/50 cursor-pointer hover:bg-secondary/30 py-1 rounded transition-colors"
               onClick={() => {
                 if (isSupabaseProfile) {
-                  setConnectionsDialog({ open: true, mode: 'following' })
+                  setConnectionsDialog({ open: true, mode: "following" })
                 }
               }}
             >
@@ -611,7 +611,7 @@ export default function AthleteView({
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       e.currentTarget.src =
-                        'https://img.usecurling.com/p/200/200?q=music%20note'
+                        "https://img.usecurling.com/p/200/200?q=music%20note"
                     }}
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/20">
@@ -660,13 +660,13 @@ export default function AthleteView({
         {/* Retrospective Banner */}
         {isMe && (
           <div
-            onClick={() => navigate('/retrospective')}
+            onClick={() => navigate("/retrospective")}
             className="mb-6 relative group cursor-pointer overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] border border-white/10"
             style={currentTheme.customVars as React.CSSProperties}
           >
             <div
               className={cn(
-                'absolute inset-0 animate-gradient-xy transition-all duration-500',
+                "absolute inset-0 animate-gradient-xy transition-all duration-500",
                 currentTheme.cardGradient,
               )}
             />
@@ -679,7 +679,7 @@ export default function AthleteView({
             />
             <div
               className={cn(
-                'absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl animate-pulse transition-all duration-500',
+                "absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl animate-pulse transition-all duration-500",
                 currentTheme.glow,
               )}
             />
@@ -689,8 +689,8 @@ export default function AthleteView({
                 <div className="flex items-center gap-2 mb-2">
                   <div
                     className={cn(
-                      'backdrop-blur-md px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border flex items-center gap-1 transition-all duration-500',
-                      'bg-white/10 border-white/20',
+                      "backdrop-blur-md px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border flex items-center gap-1 transition-all duration-500",
+                      "bg-white/10 border-white/20",
                       currentTheme.accentText,
                     )}
                   >
@@ -699,10 +699,10 @@ export default function AthleteView({
                   </div>
                 </div>
                 <h3 className="text-white font-black text-xl italic tracking-tight drop-shadow-lg leading-none mb-1">
-                  SUA{' '}
+                  SUA{" "}
                   <span
                     className={cn(
-                      'transition-colors duration-500',
+                      "transition-colors duration-500",
                       currentTheme.accentText,
                     )}
                   >
@@ -738,7 +738,7 @@ export default function AthleteView({
                 </Button>
                 <div
                   className={cn(
-                    'h-11 w-11 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-500 border-2 border-white/20',
+                    "h-11 w-11 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-500 border-2 border-white/20",
                     currentTheme.cardGradient,
                   )}
                 >
@@ -769,7 +769,7 @@ export default function AthleteView({
               <div className="grid grid-cols-2 gap-3">
                 <Button
                   className="bg-secondary text-foreground hover:bg-secondary/80 justify-start h-auto py-3 px-4 shadow-sm"
-                  onClick={() => navigate('/profile/stats')}
+                  onClick={() => navigate("/profile/stats")}
                 >
                   <BarChart2 className="mr-3 h-5 w-5 text-primary" />
                   <div className="flex flex-col items-start">
@@ -781,7 +781,7 @@ export default function AthleteView({
                 </Button>
                 <Button
                   className="bg-secondary text-foreground hover:bg-secondary/80 justify-start h-auto py-3 px-4 shadow-sm"
-                  onClick={() => navigate('/ranking')}
+                  onClick={() => navigate("/ranking")}
                 >
                   <Trophy className="mr-3 h-5 w-5 text-gold" />
                   <div className="flex flex-col items-start">
@@ -793,7 +793,7 @@ export default function AthleteView({
                 </Button>
                 <Button
                   className="bg-secondary text-foreground hover:bg-secondary/80 justify-start h-auto py-3 px-4 shadow-sm"
-                  onClick={() => navigate('/profile/passport')}
+                  onClick={() => navigate("/profile/passport")}
                 >
                   <IdCard className="mr-3 h-5 w-5 text-blue-500" />
                   <div className="flex flex-col items-start">
@@ -805,7 +805,7 @@ export default function AthleteView({
                 </Button>
                 <Button
                   className="bg-secondary text-foreground hover:bg-secondary/80 justify-start h-auto py-3 px-4 shadow-sm"
-                  onClick={() => navigate('/profile/evolution')}
+                  onClick={() => navigate("/profile/evolution")}
                 >
                   <TrendingUp className="mr-3 h-5 w-5 text-green-500" />
                   <div className="flex flex-col items-start">
@@ -819,7 +819,7 @@ export default function AthleteView({
 
               <Button
                 className="w-full bg-gradient-to-r from-primary/10 to-gold/10 text-foreground hover:from-primary/20 border border-primary/20 justify-between shadow-sm font-bold mb-3 h-14"
-                onClick={() => navigate('/timecapsule')}
+                onClick={() => navigate("/timecapsule")}
               >
                 <span className="flex items-center text-base text-foreground">
                   <Lock className="mr-3 h-5 w-5 text-gold" />
@@ -836,7 +836,7 @@ export default function AthleteView({
               <Button
                 variant="ghost"
                 className="w-full justify-between hover:bg-secondary/30 text-muted-foreground"
-                onClick={() => navigate('/profile/timeline')}
+                onClick={() => navigate("/profile/timeline")}
               >
                 <span className="flex items-center">
                   <History className="mr-3 h-4 w-4" />
@@ -858,7 +858,7 @@ export default function AthleteView({
               <div className="grid grid-cols-2 gap-3">
                 <Button
                   className="bg-gradient-to-br from-red-600/10 to-red-900/10 text-red-600 dark:text-red-400 hover:from-red-600/20 border border-red-500/20 justify-start h-auto py-3 px-4 shadow-sm"
-                  onClick={() => navigate('/ai/bot-da-verdade')}
+                  onClick={() => navigate("/ai/bot-da-verdade")}
                 >
                   <Bot className="mr-3 h-5 w-5" />
                   <div className="flex flex-col items-start">
@@ -870,7 +870,7 @@ export default function AthleteView({
                 </Button>
                 <Button
                   className="bg-gradient-to-br from-primary/20 to-cyan-500/20 text-foreground hover:from-primary/30 hover:to-cyan-500/30 border border-primary/10 justify-start h-auto py-3 px-4 shadow-sm"
-                  onClick={() => navigate('/ai/avatar')}
+                  onClick={() => navigate("/ai/avatar")}
                 >
                   <Sparkles className="mr-3 h-5 w-5 text-primary" />
                   <div className="flex flex-col items-start">
@@ -894,7 +894,7 @@ export default function AthleteView({
               </div>
               <Button
                 className="w-full bg-gradient-to-r from-emerald-500/10 to-teal-500/10 text-emerald-600 dark:text-emerald-400 hover:from-emerald-500/20 border border-emerald-500/20 justify-between shadow-sm font-medium"
-                onClick={() => navigate('/profile/referral')}
+                onClick={() => navigate("/profile/referral")}
               >
                 <span className="flex items-center">
                   <Gift className="mr-3 h-5 w-5" />
@@ -912,7 +912,7 @@ export default function AthleteView({
                 <Button
                   variant="outline"
                   className="justify-start bg-secondary/20 hover:bg-secondary/40 border-border/50"
-                  onClick={() => navigate('/marketplace')}
+                  onClick={() => navigate("/marketplace")}
                 >
                   <ShoppingBag className="mr-2 h-4 w-4 text-muted-foreground" />
                   Loja Goplay
@@ -920,7 +920,7 @@ export default function AthleteView({
                 <Button
                   variant="outline"
                   className="justify-start bg-secondary/20 hover:bg-secondary/40 border-border/50"
-                  onClick={() => navigate('/marketplace/orders')}
+                  onClick={() => navigate("/marketplace/orders")}
                 >
                   <Package className="mr-2 h-4 w-4 text-muted-foreground" />
                   Meus Pedidos
@@ -930,7 +930,7 @@ export default function AthleteView({
               <Button
                 variant="ghost"
                 className="w-full justify-between hover:bg-secondary/30 text-muted-foreground"
-                onClick={() => navigate('/profile/financial-statement')}
+                onClick={() => navigate("/profile/financial-statement")}
               >
                 <span className="flex items-center">
                   <FileText className="mr-3 h-4 w-4" />
@@ -944,13 +944,13 @@ export default function AthleteView({
           <div className="grid grid-cols-2 gap-3 mb-6">
             <Button
               className="bg-secondary text-foreground hover:bg-secondary/80 justify-start shadow-sm"
-              onClick={() => navigate('/profile/stats')}
+              onClick={() => navigate("/profile/stats")}
             >
               <BarChart2 className="mr-2 h-4 w-4" /> Estatísticas
             </Button>
             <Button
               className="bg-secondary text-foreground hover:bg-secondary/80 justify-start shadow-sm"
-              onClick={() => navigate('/ranking')}
+              onClick={() => navigate("/ranking")}
             >
               <Trophy className="mr-2 h-4 w-4" /> Ranking
             </Button>
@@ -1007,7 +1007,7 @@ export default function AthleteView({
           >
             <div className="grid grid-cols-3 gap-1">
               {userPosts
-                .filter((p) => p.type === 'video')
+                .filter((p) => p.type === "video")
                 .map((post) => (
                   <DepthContainer
                     key={post.id}
@@ -1024,7 +1024,7 @@ export default function AthleteView({
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         onError={(e) => {
                           e.currentTarget.src =
-                            'https://img.usecurling.com/p/300/300?q=abstract&color=black'
+                            "https://img.usecurling.com/p/300/300?q=abstract&color=black"
                         }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
@@ -1041,12 +1041,12 @@ export default function AthleteView({
 
                       <div className="absolute bottom-2 left-2 flex items-center gap-1 text-white text-xs font-medium drop-shadow-md">
                         <Play className="h-3 w-3 fill-white" />
-                        {(post as any).totalViews || '1.2k'}
+                        {(post as any).totalViews || "1.2k"}
                       </div>
                     </div>
                   </DepthContainer>
                 ))}
-              {userPosts.filter((p) => p.type === 'video').length === 0 && (
+              {userPosts.filter((p) => p.type === "video").length === 0 && (
                 <div className="col-span-3 flex flex-col items-center justify-center py-10 text-muted-foreground">
                   <Video className="h-10 w-10 mb-2 opacity-20" />
                   <p>Nenhum vídeo ainda</p>
@@ -1195,7 +1195,7 @@ export default function AthleteView({
           <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg border border-white/10 group">
             <div
               className={cn(
-                'absolute inset-0 animate-gradient-xy',
+                "absolute inset-0 animate-gradient-xy",
                 currentTheme.cardGradient,
               )}
               style={currentTheme.customVars as React.CSSProperties}
@@ -1210,7 +1210,7 @@ export default function AthleteView({
             <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10">
               <div
                 className={cn(
-                  'backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border flex items-center gap-1.5 mb-3 shadow-sm bg-white/10 border-white/20',
+                  "backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border flex items-center gap-1.5 mb-3 shadow-sm bg-white/10 border-white/20",
                   currentTheme.accentText,
                 )}
               >
@@ -1222,9 +1222,9 @@ export default function AthleteView({
               </h3>
               <div className="flex items-center gap-2 justify-center">
                 <span
-                  className={cn('font-bold text-lg', currentTheme.accentText)}
+                  className={cn("font-bold text-lg", currentTheme.accentText)}
                 >
-                  {user.name.split(' ')[0]}
+                  {user.name.split(" ")[0]}
                 </span>
                 <span className="text-white/60 text-sm">•</span>
                 <span className="text-white/80 text-sm font-medium">
@@ -1269,7 +1269,7 @@ export default function AthleteView({
                 sport: updated.sport || prev.sport,
                 position: updated.position || prev.position,
                 location:
-                  [updated.city, updated.state].filter(Boolean).join(', ') ||
+                  [updated.city, updated.state].filter(Boolean).join(", ") ||
                   prev.location,
                 bio: updated.bio || prev.bio,
                 rawProfile: updated,

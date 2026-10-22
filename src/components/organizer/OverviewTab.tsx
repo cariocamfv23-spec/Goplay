@@ -1,18 +1,18 @@
-import { Championship } from '@/lib/data'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import { Championship } from "@/lib/data"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { useState } from 'react'
-import { useChampionshipStore } from '@/stores/useChampionshipStore'
-import { Save } from 'lucide-react'
+} from "@/components/ui/select"
+import { useState } from "react"
+import { useChampionshipStore } from "@/stores/useChampionshipStore"
+import { Save } from "lucide-react"
 
 interface OverviewTabProps {
   championship: Championship
@@ -23,7 +23,7 @@ export function OverviewTab({ championship }: OverviewTabProps) {
   const [formData, setFormData] = useState({
     name: championship.name,
     description: championship.description,
-    location: championship.location || '',
+    location: championship.location || "",
     status: championship.status,
     modality: championship.modality,
   })

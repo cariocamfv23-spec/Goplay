@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react'
-import { Logo } from '@/components/Logo'
-import { AppIcon } from '@/components/AppIcon'
+import { useState, useEffect } from "react"
+import { Logo } from "@/components/Logo"
+import { AppIcon } from "@/components/AppIcon"
 
 const phrases = [
-  'A grandeza exige tempo...',
-  'Preparando o seu palco...',
-  'O suor de hoje é a vitória de amanhã...',
-  'Entrando em campo...',
-  'Ajustando os detalhes finais...',
-  'O seu esporte, levado a sério...',
+  "A grandeza exige tempo...",
+  "Preparando o seu palco...",
+  "O suor de hoje é a vitória de amanhã...",
+  "Entrando em campo...",
+  "Ajustando os detalhes finais...",
+  "O seu esporte, levado a sério...",
 ]
 
 export const PageLoader = () => {
-  const [phrase, setPhrase] = useState('')
+  const [phrase, setPhrase] = useState("")
 
   useEffect(() => {
     setPhrase(phrases[Math.floor(Math.random() * phrases.length)])

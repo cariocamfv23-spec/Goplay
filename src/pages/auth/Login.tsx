@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Checkbox } from '@/components/ui/checkbox'
+import { useState, useEffect } from "react"
+import { useNavigate, Link } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Card,
   CardContent,
@@ -11,8 +11,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Logo } from '@/components/Logo'
+} from "@/components/ui/card"
+import { Logo } from "@/components/Logo"
 import {
   Loader2,
   User,
@@ -20,19 +20,19 @@ import {
   ArrowRight,
   Github,
   Fingerprint,
-} from 'lucide-react'
-import { toast } from 'sonner'
-import { SportsWallpaper } from '@/components/SportsWallpaper'
-import { useAuthStore } from '@/stores/useAuthStore'
-import { useAuth } from '@/hooks/use-auth'
-import { PageLoader } from '@/components/PageLoader'
-import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton'
+} from "lucide-react"
+import { toast } from "sonner"
+import { SportsWallpaper } from "@/components/SportsWallpaper"
+import { useAuthStore } from "@/stores/useAuthStore"
+import { useAuth } from "@/hooks/use-auth"
+import { PageLoader } from "@/components/PageLoader"
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton"
 import {
   biometricService,
   type BiometricCredentialData,
-} from '@/services/biometrics'
-import { AlertCircle, CheckCircle2, RefreshCw } from 'lucide-react'
-import { cn } from '@/lib/utils'
+} from "@/services/biometrics"
+import { AlertCircle, CheckCircle2, RefreshCw } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 export default function Login() {
   const navigate = useNavigate()
@@ -50,24 +50,24 @@ export default function Login() {
   const [isWebAuthnSupported, setIsWebAuthnSupported] = useState(false)
   const [enrolledBiometric, setEnrolledBiometric] =
     useState<BiometricCredentialData | null>(null)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [rememberMe, setRememberMe] = useState(false)
 
   // Redirect to home or redirect target if already authenticated, preventing the display of the guest UI
   useEffect(() => {
     if (hasHydrated && isAuthenticated) {
       const params = new URLSearchParams(window.location.search)
-      const redirectParam = params.get('redirect')
-      let target = '/home'
+      const redirectParam = params.get("redirect")
+      let target = "/home"
       if (redirectParam) {
         try {
           const decoded = decodeURIComponent(redirectParam)
-          if (decoded.startsWith('/')) {
+          if (decoded.startsWith("/")) {
             target = decoded
           }
         } catch {
-          if (redirectParam.startsWith('/')) {
+          if (redirectParam.startsWith("/")) {
             target = redirectParam
           }
         }
@@ -78,7 +78,7 @@ export default function Login() {
 
   const handleDemoLogin = (demoEmail: string) => {
     setEmail(demoEmail)
-    setPassword('Skip@Pass')
+    setPassword("Skip@Pass")
     toast.info(`Credenciais da conta de demonstração preenchidas.`, {
       description: 'Clique em "Entrar com E-mail" para acessar.',
     })
@@ -86,9 +86,9 @@ export default function Login() {
 
   // Load saved credentials and biometric status on mount
   useEffect(() => {
-    const savedEmail = localStorage.getItem('goplay_email')
-    const savedPassword = localStorage.getItem('goplay_password')
-    const savedRemember = localStorage.getItem('goplay_remember') === 'true'
+    const savedEmail = localStorage.getItem("goplay_email")
+    const savedPassword = localStorage.getItem("goplay_password")
+    const savedRemember = localStorage.getItem("goplay_remember") === "true"
 
     if (savedRemember && savedEmail) {
       setEmail(savedEmail)
@@ -114,12 +114,12 @@ export default function Login() {
     const cleanPassword = password.trim()
 
     if (!cleanEmail || !cleanPassword) {
-      toast.error('Preencha e-mail e senha para continuar')
+      toast.error("Preencha e-mail e senha para continuar")
       return
     }
 
     if (cleanPassword.length < 6) {
-      toast.error('A senha deve ter pelo menos 6 caracteres.')
+      toast.error("A senha deve ter pelo menos 6 caracteres.")
       return
     }
 
@@ -130,17 +130,17 @@ export default function Login() {
 
       if (error) {
         if (
-          error.message?.includes('Invalid login credentials') ||
-          error.message?.includes('invalid_grant')
+          error.message?.includes("Invalid login credentials") ||
+          error.message?.includes("invalid_grant")
         ) {
-          toast.error('Credenciais inválidas. Verifique seu e-mail e senha.')
-        } else if (error.message?.includes('Email not confirmed')) {
+          toast.error("Credenciais inválidas. Verifique seu e-mail e senha.")
+        } else if (error.message?.includes("Email not confirmed")) {
           toast.error(
-            'E-mail ainda não confirmado. Verifique sua caixa de entrada.',
+            "E-mail ainda não confirmado. Verifique sua caixa de entrada.",
           )
         } else {
           toast.error(
-            error.message || 'Erro ao realizar login. Tente novamente.',
+            error.message || "Erro ao realizar login. Tente novamente.",
           )
         }
         return
@@ -161,70 +161,70 @@ export default function Login() {
       }
 
       if (rememberMe) {
-        localStorage.setItem('goplay_email', cleanEmail)
-        localStorage.setItem('goplay_password', cleanPassword)
-        localStorage.setItem('goplay_remember', 'true')
+        localStorage.setItem("goplay_email", cleanEmail)
+        localStorage.setItem("goplay_password", cleanPassword)
+        localStorage.setItem("goplay_remember", "true")
       } else {
-        localStorage.removeItem('goplay_email')
-        localStorage.removeItem('goplay_password')
-        localStorage.removeItem('goplay_remember')
+        localStorage.removeItem("goplay_email")
+        localStorage.removeItem("goplay_password")
+        localStorage.removeItem("goplay_remember")
       }
 
-      toast.success('Login realizado com sucesso!')
+      toast.success("Login realizado com sucesso!")
       const params = new URLSearchParams(window.location.search)
-      const redirectParam = params.get('redirect')
-      let target = '/home'
+      const redirectParam = params.get("redirect")
+      let target = "/home"
       if (redirectParam) {
         try {
           const decoded = decodeURIComponent(redirectParam)
-          if (decoded.startsWith('/')) {
+          if (decoded.startsWith("/")) {
             target = decoded
           }
         } catch {
-          if (redirectParam.startsWith('/')) {
+          if (redirectParam.startsWith("/")) {
             target = redirectParam
           }
         }
       }
       navigate(target, { replace: true })
     } catch (err: any) {
-      toast.error(err?.message || 'Erro inesperado durante o login')
+      toast.error(err?.message || "Erro inesperado durante o login")
     } finally {
       setLoading(false)
     }
   }
 
   const handleForgotPassword = () => {
-    navigate('/forgot-password')
+    navigate("/forgot-password")
   }
 
   const handleGoogleLogin = async () => {
     setGoogleLoading(true)
     try {
       const params = new URLSearchParams(window.location.search)
-      const redirectUrl = params.get('redirect') || '/home'
+      const redirectUrl = params.get("redirect") || "/home"
       const { error } = await signInWithGoogle(redirectUrl)
 
       if (error) {
         if (
-          error.message?.includes('provider is not enabled') ||
-          error.message?.includes('Unsupported provider') ||
-          error.message?.includes('not supported')
+          error.message?.includes("provider is not enabled") ||
+          error.message?.includes("Unsupported provider") ||
+          error.message?.includes("not supported")
         ) {
           toast.error(
-            'O login com Google ainda não está ativado no painel do Supabase.',
+            "O login com Google ainda não está ativado no painel do Supabase.",
             {
               description:
-                'Acesse Authentication > Providers > Google no painel Supabase para configurar as credenciais Client ID e Secret do Google Cloud.',
+                "Acesse Authentication > Providers > Google no painel Supabase para configurar as credenciais Client ID e Secret do Google Cloud.",
               duration: 6000,
             },
           )
         } else {
-          toast.error(error.message || 'Erro ao iniciar login com Google.')
+          toast.error(error.message || "Erro ao iniciar login com Google.")
         }
       }
     } catch (err: any) {
-      toast.error('Não foi possível conectar com o Google no momento.')
+      toast.error("Não foi possível conectar com o Google no momento.")
     } finally {
       setGoogleLoading(false)
     }
@@ -237,7 +237,7 @@ export default function Login() {
         setSocialLoading(null)
         login()
         toast.success(`Login com ${provider} realizado com sucesso!`)
-        navigate('/home', { replace: true })
+        navigate("/home", { replace: true })
       }, 0)
     }, 1500)
   }
@@ -245,9 +245,9 @@ export default function Login() {
   const handleBiometricLogin = async () => {
     // 1. Checar se o navegador suporta WebAuthn
     if (!biometricService.isWebAuthnSupported()) {
-      toast.error('Navegador incompatível com biometria', {
+      toast.error("Navegador incompatível com biometria", {
         description:
-          'Seu navegador não suporta a Web Authentication API. Faça login com e-mail e senha.',
+          "Seu navegador não suporta a Web Authentication API. Faça login com e-mail e senha.",
       })
       return
     }
@@ -255,7 +255,7 @@ export default function Login() {
     // 2. Checar se há credencial biométrica cadastrada neste aparelho
     const enrolled = biometricService.getEnrolledCredential()
     if (!enrolled) {
-      toast.info('Biometria não ativada neste aparelho', {
+      toast.info("Biometria não ativada neste aparelho", {
         description:
           'Faça login com seu e-mail e senha uma vez e ative a "Entrada por Biometria" nas Configurações da sua conta.',
         duration: 5000,
@@ -270,10 +270,10 @@ export default function Login() {
       const result = await biometricService.authenticate()
 
       if (!result.success || !result.data) {
-        toast.error('Biometria não confirmada', {
+        toast.error("Biometria não confirmada", {
           description:
             result.error ||
-            'Não foi possível validar sua identidade biométrica. Tente novamente ou use e-mail e senha.',
+            "Não foi possível validar sua identidade biométrica. Tente novamente ou use e-mail e senha.",
         })
         return
       }
@@ -282,7 +282,7 @@ export default function Login() {
       // Agora restaura a sessão nativa do cliente Supabase.
       const candidateTokens = result.data.sessionToken?.refresh_token
         ? {
-            access_token: result.data.sessionToken.access_token || '',
+            access_token: result.data.sessionToken.access_token || "",
             refresh_token: result.data.sessionToken.refresh_token,
           }
         : undefined
@@ -292,16 +292,16 @@ export default function Login() {
 
       if (!activeSession?.user) {
         // Se de fato nenhuma sessão existir no aparelho (ex.: storage limpo manualmente)
-        biometricService.markNeedsReauth('no_session_on_device')
+        biometricService.markNeedsReauth("no_session_on_device")
         setEnrolledBiometric(biometricService.getEnrolledCredential())
 
         if (enrolled.userEmail) {
           setEmail(enrolled.userEmail)
         }
 
-        toast.error('Nenhuma sessão salva encontrada', {
+        toast.error("Nenhuma sessão salva encontrada", {
           description:
-            'Sua credencial biométrica é válida, mas a sessão precisa ser renovada com login convencional.',
+            "Sua credencial biométrica é válida, mas a sessão precisa ser renovada com login convencional.",
           duration: 6000,
         })
         return
@@ -313,32 +313,32 @@ export default function Login() {
       const userName =
         result.data.userName ||
         activeSession.user?.user_metadata?.full_name ||
-        result.data.userEmail.split('@')[0] ||
-        'Atleta'
+        result.data.userEmail.split("@")[0] ||
+        "Atleta"
 
       toast.success(`Identidade confirmada! Bem-vindo, ${userName}.`, {
-        description: 'Acesso seguro liberado via sensor biométrico.',
+        description: "Acesso seguro liberado via sensor biométrico.",
       })
 
       const params = new URLSearchParams(window.location.search)
-      const redirectParam = params.get('redirect')
-      let target = '/home'
+      const redirectParam = params.get("redirect")
+      let target = "/home"
       if (redirectParam) {
         try {
           const decoded = decodeURIComponent(redirectParam)
-          if (decoded.startsWith('/')) target = decoded
+          if (decoded.startsWith("/")) target = decoded
         } catch {
-          if (redirectParam.startsWith('/')) target = redirectParam
+          if (redirectParam.startsWith("/")) target = redirectParam
         }
       }
 
       navigate(target, { replace: true })
     } catch (err: any) {
-      console.error('Erro na autenticação biométrica:', err)
-      toast.error('Erro na biometria', {
+      console.error("Erro na autenticação biométrica:", err)
+      toast.error("Erro na biometria", {
         description:
           err?.message ||
-          'Falha inesperada ao tentar autenticar via biometria.',
+          "Falha inesperada ao tentar autenticar via biometria.",
       })
     } finally {
       setBiometricLoading(false)
@@ -465,7 +465,7 @@ export default function Login() {
                   variant="outline"
                   size="sm"
                   className="h-6 text-[10px] px-2 border-amber-500/40 text-amber-600 hover:bg-amber-500/10"
-                  onClick={() => handleDemoLogin('demo.clube@goplay.test')}
+                  onClick={() => handleDemoLogin("demo.clube@goplay.test")}
                   title="Clube Atlético Paulista (Admin / Organizador de Peneiras)"
                 >
                   🏢 Clube Atlético (Admin)
@@ -475,7 +475,7 @@ export default function Login() {
                   variant="outline"
                   size="sm"
                   className="h-6 text-[10px] px-2 border-primary/40 text-primary hover:bg-primary/10"
-                  onClick={() => handleDemoLogin('cariocamfv23@gmail.com')}
+                  onClick={() => handleDemoLogin("cariocamfv23@gmail.com")}
                   title="Administrador Principal do Goplay Beta"
                 >
                   🛡️ Admin Principal
@@ -485,7 +485,7 @@ export default function Login() {
                   variant="outline"
                   size="sm"
                   className="h-6 text-[10px] px-2 border-border text-muted-foreground hover:text-foreground"
-                  onClick={() => handleDemoLogin('demo.futebol@goplay.test')}
+                  onClick={() => handleDemoLogin("demo.futebol@goplay.test")}
                   title="Atleta Lucas Silva (Inscrições e Feed)"
                 >
                   ⚽ Atleta Lucas
@@ -522,9 +522,9 @@ export default function Login() {
                 <Button
                   variant="outline"
                   className={cn(
-                    'w-full gap-2 border-primary/25 hover:bg-primary/5 hover:text-primary transition-colors h-11 relative overflow-hidden',
+                    "w-full gap-2 border-primary/25 hover:bg-primary/5 hover:text-primary transition-colors h-11 relative overflow-hidden",
                     enrolledBiometric &&
-                      'border-primary/50 shadow-sm bg-primary/[0.02]',
+                      "border-primary/50 shadow-sm bg-primary/[0.02]",
                   )}
                   type="button"
                   onClick={handleBiometricLogin}
@@ -540,17 +540,17 @@ export default function Login() {
                   ) : (
                     <Fingerprint
                       className={cn(
-                        'h-4 w-4',
+                        "h-4 w-4",
                         enrolledBiometric
-                          ? 'text-primary'
-                          : 'text-muted-foreground',
+                          ? "text-primary"
+                          : "text-muted-foreground",
                       )}
                     />
                   )}
                   <span className="font-semibold">
                     {enrolledBiometric
-                      ? 'Entrar com Biometria (Touch ID / Face ID)'
-                      : 'Entrar com Biometria'}
+                      ? "Entrar com Biometria (Touch ID / Face ID)"
+                      : "Entrar com Biometria"}
                   </span>
                 </Button>
 
@@ -577,8 +577,8 @@ export default function Login() {
                 ) : (
                   <p className="text-[10.5px] text-center text-muted-foreground pt-0.5">
                     {isWebAuthnSupported
-                      ? 'Requer ativação prévia nas Configurações ou no aviso da Home.'
-                      : 'Biometria indisponível neste navegador.'}
+                      ? "Requer ativação prévia nas Configurações ou no aviso da Home."
+                      : "Biometria indisponível neste navegador."}
                   </p>
                 )}
               </div>
@@ -586,11 +586,11 @@ export default function Login() {
           </CardContent>
           <CardFooter className="flex flex-col items-center gap-3">
             <p className="text-sm text-muted-foreground">
-              Não tem uma conta?{' '}
+              Não tem uma conta?{" "}
               <Button
                 variant="link"
                 className="px-0 text-primary font-semibold"
-                onClick={() => navigate('/register')}
+                onClick={() => navigate("/register")}
               >
                 Criar conta
               </Button>

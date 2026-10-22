@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { ProfileData } from '@/lib/data'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { useState } from "react"
+import { ProfileData } from "@/lib/data"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   MapPin,
   Star,
@@ -14,18 +14,18 @@ import {
   Layers,
   FileText,
   Camera,
-} from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { ProfilePostsSection } from '@/components/profile/ProfilePostsSection'
-import { useNavigate } from 'react-router-dom'
-import { EditProfileDialog } from '@/components/profile/EditProfileDialog'
-import { EditCoverDialog } from '@/components/profile/EditCoverDialog'
-import { type ProfileRow } from '@/services/profiles'
-import { connectionService } from '@/services/connections'
-import { useAuth } from '@/hooks/use-auth'
-import { toast } from 'sonner'
-import { UserCheck, Loader2 } from 'lucide-react'
+} from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { ProfilePostsSection } from "@/components/profile/ProfilePostsSection"
+import { useNavigate } from "react-router-dom"
+import { EditProfileDialog } from "@/components/profile/EditProfileDialog"
+import { EditCoverDialog } from "@/components/profile/EditCoverDialog"
+import { type ProfileRow } from "@/services/profiles"
+import { connectionService } from "@/services/connections"
+import { useAuth } from "@/hooks/use-auth"
+import { toast } from "sonner"
+import { UserCheck, Loader2 } from "lucide-react"
 
 export default function ClubView({
   profile,
@@ -42,14 +42,14 @@ export default function ClubView({
   const [followLoading, setFollowLoading] = useState(false)
 
   const isSupabaseProfile =
-    typeof profile.id === 'string' &&
+    typeof profile.id === "string" &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
       profile.id,
     )
 
   const handleToggleFollow = async () => {
     if (!authUser?.id) {
-      toast.error('Faça login para seguir o clube.')
+      toast.error("Faça login para seguir o clube.")
       return
     }
     if (!isSupabaseProfile) {
@@ -65,27 +65,27 @@ export default function ClubView({
       )
       setFollowLoading(false)
       if (error) {
-        toast.error('Erro ao deixar de seguir.')
+        toast.error("Erro ao deixar de seguir.")
         return
       }
       setIsFollowing(false)
-      toast.success('Você deixou de seguir este clube.')
+      toast.success("Você deixou de seguir este clube.")
     } else {
       const { error } = await connectionService.follow(authUser.id, profile.id)
       setFollowLoading(false)
       if (error) {
-        toast.error(error.message || 'Erro ao seguir.')
+        toast.error(error.message || "Erro ao seguir.")
         return
       }
       setIsFollowing(true)
-      toast.success('Você agora está seguindo este clube!')
+      toast.success("Você agora está seguindo este clube!")
     }
   }
   const raw = profile.rawProfile
   const customCoverUrl =
     raw?.cover_url || (profile as any).cover_url || profile.cover || null
   const customCoverType =
-    raw?.cover_type || (profile as any).cover_type || 'image'
+    raw?.cover_type || (profile as any).cover_type || "image"
   const coverPosX = raw?.cover_position_x ?? 50
   const coverPosY = raw?.cover_position_y ?? 50
   const coverZoom = raw?.cover_zoom ?? 1
@@ -94,14 +94,14 @@ export default function ClubView({
   const institutionalDesc =
     raw?.institutional_description || raw?.bio || profile.bio
   const categoriesList = raw?.categories
-    ? raw.categories.split(',').map((c) => c.trim())
-    : ['Principal', 'Sub-20', 'Sub-17']
+    ? raw.categories.split(",").map((c) => c.trim())
+    : ["Principal", "Sub-20", "Sub-17"]
   const contactInfo = raw?.contact_info
 
   return (
     <div className="pb-8 animate-fade-in">
       <div className="relative h-48 w-full bg-muted overflow-hidden group">
-        {customCoverUrl && customCoverType === 'video' ? (
+        {customCoverUrl && customCoverType === "video" ? (
           <video
             src={customCoverUrl}
             className="w-full h-full object-cover opacity-90"
@@ -118,7 +118,7 @@ export default function ClubView({
           <img
             src={
               customCoverUrl ||
-              'https://img.usecurling.com/p/800/300?q=stadium%20field'
+              "https://img.usecurling.com/p/800/300?q=stadium%20field"
             }
             alt="Cover"
             className="w-full h-full object-cover"
@@ -164,11 +164,11 @@ export default function ClubView({
               <>
                 <Button
                   size="sm"
-                  variant={isFollowing ? 'outline' : 'default'}
+                  variant={isFollowing ? "outline" : "default"}
                   className={
                     isFollowing
-                      ? 'border-primary/40 text-primary'
-                      : 'bg-primary text-white shadow-md'
+                      ? "border-primary/40 text-primary"
+                      : "bg-primary text-white shadow-md"
                   }
                   onClick={handleToggleFollow}
                   disabled={followLoading}
@@ -180,7 +180,7 @@ export default function ClubView({
                   ) : (
                     <UserPlus className="h-4 w-4 mr-1" />
                   )}
-                  {isFollowing ? 'Seguindo' : 'Seguir'}
+                  {isFollowing ? "Seguindo" : "Seguir"}
                 </Button>
                 <Button
                   size="sm"
@@ -260,7 +260,7 @@ export default function ClubView({
               </div>
               <Button
                 size="sm"
-                onClick={() => navigate('/organizer')}
+                onClick={() => navigate("/organizer")}
                 className="bg-primary text-white shadow-md text-xs font-semibold gap-1.5 shrink-0"
               >
                 <Trophy className="w-3.5 h-3.5" />

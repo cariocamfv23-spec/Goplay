@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { useNavigate, useLocation, Link } from 'react-router-dom'
-import { analyticsService } from '@/services/analytics'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { useState } from "react"
+import { useNavigate, useLocation, Link } from "react-router-dom"
+import { analyticsService } from "@/services/analytics"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Card,
   CardContent,
@@ -11,8 +11,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Logo } from '@/components/Logo'
+} from "@/components/ui/card"
+import { Logo } from "@/components/Logo"
 import {
   Loader2,
   Mail,
@@ -20,11 +20,11 @@ import {
   User,
   ArrowRight,
   CheckCircle2,
-} from 'lucide-react'
-import { toast } from 'sonner'
-import { SportsWallpaper } from '@/components/SportsWallpaper'
-import { useAuth } from '@/hooks/use-auth'
-import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton'
+} from "lucide-react"
+import { toast } from "sonner"
+import { SportsWallpaper } from "@/components/SportsWallpaper"
+import { useAuth } from "@/hooks/use-auth"
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton"
 
 export default function Register() {
   const navigate = useNavigate()
@@ -32,9 +32,9 @@ export default function Register() {
   const { signUp, signInWithGoogle } = useAuth()
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [awaitingEmailConfirmation, setAwaitingEmailConfirmation] =
     useState(false)
 
@@ -42,33 +42,33 @@ export default function Register() {
     setGoogleLoading(true)
     try {
       const params = new URLSearchParams(location.search)
-      const redirectParam = params.get('redirect')
+      const redirectParam = params.get("redirect")
       const targetPath =
-        redirectParam && redirectParam.startsWith('/')
+        redirectParam && redirectParam.startsWith("/")
           ? redirectParam
-          : '/onboarding'
+          : "/onboarding"
 
       const { error } = await signInWithGoogle(targetPath)
       if (error) {
         if (
-          error.message?.includes('provider is not enabled') ||
-          error.message?.includes('Unsupported provider') ||
-          error.message?.includes('not supported')
+          error.message?.includes("provider is not enabled") ||
+          error.message?.includes("Unsupported provider") ||
+          error.message?.includes("not supported")
         ) {
           toast.error(
-            'O cadastro com Google ainda não está ativado no painel do Supabase.',
+            "O cadastro com Google ainda não está ativado no painel do Supabase.",
             {
               description:
-                'Acesse Authentication > Providers > Google no painel Supabase para configurar as credenciais Client ID e Secret do Google Cloud.',
+                "Acesse Authentication > Providers > Google no painel Supabase para configurar as credenciais Client ID e Secret do Google Cloud.",
               duration: 6000,
             },
           )
         } else {
-          toast.error(error.message || 'Erro ao iniciar cadastro com Google.')
+          toast.error(error.message || "Erro ao iniciar cadastro com Google.")
         }
       }
     } catch (err: any) {
-      toast.error('Não foi possível conectar com o Google no momento.')
+      toast.error("Não foi possível conectar com o Google no momento.")
     } finally {
       setGoogleLoading(false)
     }
@@ -81,12 +81,12 @@ export default function Register() {
     const cleanPassword = password.trim()
 
     if (!cleanName || !cleanEmail || !cleanPassword) {
-      toast.error('Preencha todos os campos')
+      toast.error("Preencha todos os campos")
       return
     }
 
     if (cleanPassword.length < 6) {
-      toast.error('A senha deve ter pelo menos 6 caracteres')
+      toast.error("A senha deve ter pelo menos 6 caracteres")
       return
     }
 
@@ -95,58 +95,58 @@ export default function Register() {
     try {
       const { data, error } = await signUp(cleanEmail, cleanPassword, {
         full_name: cleanName,
-        account_type: 'athlete',
+        account_type: "athlete",
       })
 
       if (error) {
         if (
-          error.message?.includes('User already registered') ||
-          error.message?.includes('already registered')
+          error.message?.includes("User already registered") ||
+          error.message?.includes("already registered")
         ) {
-          toast.error('Este e-mail já está cadastrado. Tente entrar.')
+          toast.error("Este e-mail já está cadastrado. Tente entrar.")
         } else {
-          toast.error(error.message || 'Erro ao criar conta. Tente novamente.')
+          toast.error(error.message || "Erro ao criar conta. Tente novamente.")
         }
         return
       }
 
       const params = new URLSearchParams(location.search)
-      const redirectUrl = params.get('redirect')
+      const redirectUrl = params.get("redirect")
 
       // Record signup telemetry event
       analyticsService.trackEvent({
-        eventName: 'user_signup_completed',
+        eventName: "user_signup_completed",
         userId: data?.user?.id || null,
         metadata: {
-          account_type: 'athlete',
+          account_type: "athlete",
           has_redirect: !!redirectUrl,
         },
       })
 
       // If user session is created immediately (e-mail confirmation disabled or confirmed)
       if (data?.session) {
-        toast.success('Conta criada com sucesso!')
-        if (redirectUrl && redirectUrl.startsWith('/')) {
+        toast.success("Conta criada com sucesso!")
+        if (redirectUrl && redirectUrl.startsWith("/")) {
           navigate(redirectUrl, { replace: true })
         } else {
-          navigate('/onboarding')
+          navigate("/onboarding")
         }
       } else if (data?.user && !data?.session) {
         // Confirmation email required
         setAwaitingEmailConfirmation(true)
-        toast.success('Cadastro realizado!', {
-          description: 'Enviamos um link de confirmação para o seu e-mail.',
+        toast.success("Cadastro realizado!", {
+          description: "Enviamos um link de confirmação para o seu e-mail.",
         })
       } else {
-        toast.success('Conta criada com sucesso!')
-        if (redirectUrl && redirectUrl.startsWith('/')) {
+        toast.success("Conta criada com sucesso!")
+        if (redirectUrl && redirectUrl.startsWith("/")) {
           navigate(redirectUrl, { replace: true })
         } else {
-          navigate('/onboarding')
+          navigate("/onboarding")
         }
       }
     } catch (err: any) {
-      toast.error(err?.message || 'Erro inesperado ao cadastrar')
+      toast.error(err?.message || "Erro inesperado ao cadastrar")
     } finally {
       setLoading(false)
     }
@@ -166,13 +166,13 @@ export default function Register() {
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">
               {awaitingEmailConfirmation
-                ? 'Confirme seu e-mail'
-                : 'Crie sua conta'}
+                ? "Confirme seu e-mail"
+                : "Crie sua conta"}
             </CardTitle>
             <CardDescription className="text-center">
               {awaitingEmailConfirmation
                 ? `Enviamos uma mensagem para ${email}. Verifique sua caixa de entrada e clique no link de ativação.`
-                : 'Comece sua jornada no maior ecossistema esportivo'}
+                : "Comece sua jornada no maior ecossistema esportivo"}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -186,7 +186,7 @@ export default function Register() {
                   com sua senha criada.
                 </p>
                 <Button
-                  onClick={() => navigate('/login')}
+                  onClick={() => navigate("/login")}
                   className="w-full mt-2 font-semibold"
                 >
                   Ir para Login
@@ -278,7 +278,7 @@ export default function Register() {
           </CardContent>
           <CardFooter className="flex flex-col items-center gap-3">
             <p className="text-[11px] text-muted-foreground text-center leading-relaxed max-w-sm px-2">
-              Ao criar a conta você concorda com os{' '}
+              Ao criar a conta você concorda com os{" "}
               <Link
                 to="/terms"
                 target="_blank"
@@ -286,8 +286,8 @@ export default function Register() {
                 className="text-primary hover:underline font-semibold"
               >
                 Termos de Uso
-              </Link>{' '}
-              e a{' '}
+              </Link>{" "}
+              e a{" "}
               <Link
                 to="/privacy"
                 target="_blank"
@@ -295,17 +295,17 @@ export default function Register() {
                 className="text-primary hover:underline font-semibold"
               >
                 Política de Privacidade
-              </Link>{' '}
+              </Link>{" "}
               (proteção a dados de atletas e menores de 18 anos conforme a
               LGPD).
             </p>
 
             <p className="text-sm text-muted-foreground">
-              Já tem uma conta?{' '}
+              Já tem uma conta?{" "}
               <Button
                 variant="link"
                 className="px-0 text-primary"
-                onClick={() => navigate('/login')}
+                onClick={() => navigate("/login")}
               >
                 Entrar
               </Button>

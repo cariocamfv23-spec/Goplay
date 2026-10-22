@@ -1,10 +1,10 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Search, Briefcase, MapPin } from 'lucide-react'
-import { mockJobs } from '@/lib/data'
-import { useNavigate } from 'react-router-dom'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Search, Briefcase, MapPin } from "lucide-react"
+import { mockJobs } from "@/lib/data"
+import { useNavigate } from "react-router-dom"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 
 export default function JobsList() {
   const navigate = useNavigate()

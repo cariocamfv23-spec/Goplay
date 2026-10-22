@@ -1,13 +1,13 @@
-import { useState } from 'react'
+import { useState } from "react"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Crown,
   Eye,
@@ -23,11 +23,11 @@ import {
   Trophy,
   ArrowRight,
   Send,
-} from 'lucide-react'
-import { ProfileVisitor } from '@/lib/profile-views-data'
-import { usePrivacyStore } from '@/stores/usePrivacyStore'
-import { toast } from 'sonner'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { ProfileVisitor } from "@/lib/profile-views-data"
+import { usePrivacyStore } from "@/stores/usePrivacyStore"
+import { toast } from "sonner"
+import { cn } from "@/lib/utils"
 
 interface ProfileViewerPaywallModalProps {
   visitor: ProfileVisitor | null
@@ -42,8 +42,8 @@ export function ProfileViewerPaywallModal({
 }: ProfileViewerPaywallModalProps) {
   const { isPremium, upgradeToPremium } = usePrivacyStore()
   const [isSimulatingUpgrade, setIsSimulatingUpgrade] = useState(false)
-  const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'annual'>(
-    'monthly',
+  const [selectedPlan, setSelectedPlan] = useState<"monthly" | "annual">(
+    "monthly",
   )
 
   if (!visitor) return null
@@ -53,29 +53,29 @@ export function ProfileViewerPaywallModal({
     setTimeout(() => {
       upgradeToPremium()
       setIsSimulatingUpgrade(false)
-      toast.success('Plano Goplay Premium Ativado!', {
+      toast.success("Plano Goplay Premium Ativado!", {
         description:
-          'Agora você tem acesso irrestrito a todos os visitantes e contatos diretos.',
+          "Agora você tem acesso irrestrito a todos os visitantes e contatos diretos.",
       })
     }, 1200)
   }
 
-  const getTypeBadge = (type: ProfileVisitor['type']) => {
+  const getTypeBadge = (type: ProfileVisitor["type"]) => {
     switch (type) {
-      case 'scout':
+      case "scout":
         return (
           <Badge className="bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30 gap-1">
             <Eye className="w-3 h-3" /> Olheiro Oficial / Scout
           </Badge>
         )
-      case 'university':
+      case "university":
         return (
           <Badge className="bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30 gap-1">
             <GraduationCap className="w-3 h-3" /> Recrutador de Faculdade &
             Bolsas
           </Badge>
         )
-      case 'team':
+      case "team":
         return (
           <Badge className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 gap-1">
             <Users className="w-3 h-3" /> Time / Clube de Futebol
@@ -102,7 +102,7 @@ export function ProfileViewerPaywallModal({
               </span>
               <div>
                 <DialogTitle className="text-lg font-black tracking-tight text-foreground flex items-center gap-2">
-                  Goplay Premium{' '}
+                  Goplay Premium{" "}
                   <span className="text-xs uppercase px-2 py-0.5 rounded-full bg-gold/20 text-gold font-bold">
                     VIP
                   </span>
@@ -140,7 +140,7 @@ export function ProfileViewerPaywallModal({
                   <AvatarImage
                     src={visitor.avatar}
                     className={cn(
-                      !isPremium && 'blur-md grayscale transition-all',
+                      !isPremium && "blur-md grayscale transition-all",
                     )}
                   />
                   <AvatarFallback className="font-bold text-lg">
@@ -178,11 +178,11 @@ export function ProfileViewerPaywallModal({
                 ) : (
                   <>
                     <h3 className="font-bold text-base text-foreground/90 select-none">
-                      {visitor.type === 'scout'
-                        ? 'Olheiro de Clube de Elite'
-                        : visitor.type === 'university'
-                          ? 'Recrutador Universitário (Bolsa de Estudos)'
-                          : 'Time Profissional / Rival de Liga'}
+                      {visitor.type === "scout"
+                        ? "Olheiro de Clube de Elite"
+                        : visitor.type === "university"
+                          ? "Recrutador Universitário (Bolsa de Estudos)"
+                          : "Time Profissional / Rival de Liga"}
                     </h3>
                     <div className="flex items-center gap-2">
                       <div className="h-4 w-36 bg-muted-foreground/20 rounded blur-[3px]" />
@@ -191,10 +191,10 @@ export function ProfileViewerPaywallModal({
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground pt-1">
-                      Visualizou seu perfil{' '}
+                      Visualizou seu perfil{" "}
                       <strong className="text-foreground">
                         {visitor.visitsCount} vezes
-                      </strong>{' '}
+                      </strong>{" "}
                       • {visitor.date}
                     </p>
                   </>
@@ -213,7 +213,7 @@ export function ProfileViewerPaywallModal({
                   <p className="text-muted-foreground">
                     {isPremium ? (
                       <span>
-                        Programa:{' '}
+                        Programa:{" "}
                         <strong>{visitor.scholarshipOffer.program}</strong> (
                         {visitor.scholarshipOffer.coverage})
                       </span>
@@ -254,14 +254,14 @@ export function ProfileViewerPaywallModal({
                   <p className="text-xs text-muted-foreground bg-background/50 p-2.5 rounded-lg border border-border/40">
                     <strong className="text-foreground">
                       Nota do visitante:
-                    </strong>{' '}
+                    </strong>{" "}
                     {visitor.notes}
                   </p>
                 )}
                 <Button
                   className="w-full mt-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold gap-2"
                   onClick={() => {
-                    toast.success('Mensagem direta aberta no Goplay Chat!')
+                    toast.success("Mensagem direta aberta no Goplay Chat!")
                     onClose()
                   }}
                 >
@@ -326,12 +326,12 @@ export function ProfileViewerPaywallModal({
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  onClick={() => setSelectedPlan('monthly')}
+                  onClick={() => setSelectedPlan("monthly")}
                   className={cn(
-                    'p-3.5 rounded-xl border text-left transition-all',
-                    selectedPlan === 'monthly'
-                      ? 'border-gold bg-gold/10 ring-1 ring-gold shadow-sm'
-                      : 'border-border bg-secondary/20 hover:border-border/80',
+                    "p-3.5 rounded-xl border text-left transition-all",
+                    selectedPlan === "monthly"
+                      ? "border-gold bg-gold/10 ring-1 ring-gold shadow-sm"
+                      : "border-border bg-secondary/20 hover:border-border/80",
                   )}
                 >
                   <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-bold">
@@ -350,12 +350,12 @@ export function ProfileViewerPaywallModal({
 
                 <button
                   type="button"
-                  onClick={() => setSelectedPlan('annual')}
+                  onClick={() => setSelectedPlan("annual")}
                   className={cn(
-                    'p-3.5 rounded-xl border text-left transition-all relative overflow-hidden',
-                    selectedPlan === 'annual'
-                      ? 'border-gold bg-gold/10 ring-1 ring-gold shadow-sm'
-                      : 'border-border bg-secondary/20 hover:border-border/80',
+                    "p-3.5 rounded-xl border text-left transition-all relative overflow-hidden",
+                    selectedPlan === "annual"
+                      ? "border-gold bg-gold/10 ring-1 ring-gold shadow-sm"
+                      : "border-border bg-secondary/20 hover:border-border/80",
                   )}
                 >
                   <div className="absolute top-0 right-0 bg-gold text-black text-[9px] font-black px-2 py-0.5 rounded-bl">

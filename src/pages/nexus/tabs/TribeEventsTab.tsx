@@ -1,6 +1,6 @@
-import { Tribe } from '@/stores/useNexusStore'
-import { Calendar, MapPin, ChevronRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Tribe } from "@/stores/useNexusStore"
+import { Calendar, MapPin, ChevronRight } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export function TribeEventsTab({ tribe }: { tribe: Tribe }) {
   if (!tribe.events || tribe.events.length === 0) {

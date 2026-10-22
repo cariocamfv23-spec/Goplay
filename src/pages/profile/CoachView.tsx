@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { ProfileData } from '@/lib/data'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { useState } from "react"
+import { ProfileData } from "@/lib/data"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   MapPin,
   Star,
@@ -17,19 +17,19 @@ import {
   CheckCircle2,
   Camera,
   Trophy,
-} from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { ProfilePostsSection } from '@/components/profile/ProfilePostsSection'
-import { cn } from '@/lib/utils'
-import { useNavigate } from 'react-router-dom'
-import { EditProfileDialog } from '@/components/profile/EditProfileDialog'
-import { EditCoverDialog } from '@/components/profile/EditCoverDialog'
-import { type ProfileRow } from '@/services/profiles'
-import { connectionService } from '@/services/connections'
-import { useAuth } from '@/hooks/use-auth'
-import { toast } from 'sonner'
-import { UserCheck, Loader2 } from 'lucide-react'
+} from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { ProfilePostsSection } from "@/components/profile/ProfilePostsSection"
+import { cn } from "@/lib/utils"
+import { useNavigate } from "react-router-dom"
+import { EditProfileDialog } from "@/components/profile/EditProfileDialog"
+import { EditCoverDialog } from "@/components/profile/EditCoverDialog"
+import { type ProfileRow } from "@/services/profiles"
+import { connectionService } from "@/services/connections"
+import { useAuth } from "@/hooks/use-auth"
+import { toast } from "sonner"
+import { UserCheck, Loader2 } from "lucide-react"
 
 export default function CoachView({
   profile,
@@ -46,14 +46,14 @@ export default function CoachView({
   const [followLoading, setFollowLoading] = useState(false)
 
   const isSupabaseProfile =
-    typeof profile.id === 'string' &&
+    typeof profile.id === "string" &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
       profile.id,
     )
 
   const handleToggleFollow = async () => {
     if (!authUser?.id) {
-      toast.error('Faça login para seguir o treinador.')
+      toast.error("Faça login para seguir o treinador.")
       return
     }
     if (!isSupabaseProfile) {
@@ -69,27 +69,27 @@ export default function CoachView({
       )
       setFollowLoading(false)
       if (error) {
-        toast.error('Erro ao deixar de seguir.')
+        toast.error("Erro ao deixar de seguir.")
         return
       }
       setIsFollowing(false)
-      toast.success('Você deixou de seguir este treinador.')
+      toast.success("Você deixou de seguir este treinador.")
     } else {
       const { error } = await connectionService.follow(authUser.id, profile.id)
       setFollowLoading(false)
       if (error) {
-        toast.error(error.message || 'Erro ao seguir.')
+        toast.error(error.message || "Erro ao seguir.")
         return
       }
       setIsFollowing(true)
-      toast.success('Você agora está seguindo este treinador!')
+      toast.success("Você agora está seguindo este treinador!")
     }
   }
   const raw = profile.rawProfile
   const customCoverUrl =
     raw?.cover_url || (profile as any).cover_url || profile.cover || null
   const customCoverType =
-    raw?.cover_type || (profile as any).cover_type || 'image'
+    raw?.cover_type || (profile as any).cover_type || "image"
   const coverPosX = raw?.cover_position_x ?? 50
   const coverPosY = raw?.cover_position_y ?? 50
   const coverZoom = raw?.cover_zoom ?? 1
@@ -98,14 +98,14 @@ export default function CoachView({
   const coachBio = raw?.bio || profile.bio
   const coachExperience = raw?.experience
   const coachSpecialties =
-    raw?.specialties || profile.playstyle || 'Treinamento Tático e Técnico'
+    raw?.specialties || profile.playstyle || "Treinamento Tático e Técnico"
   const coachCertifications =
-    raw?.certifications || profile.license || 'Licença Oficial'
+    raw?.certifications || profile.license || "Licença Oficial"
 
   return (
     <div className="pb-8 animate-fade-in relative bg-background min-h-screen">
       <div className="relative h-56 w-full bg-muted overflow-hidden group">
-        {customCoverUrl && customCoverType === 'video' ? (
+        {customCoverUrl && customCoverType === "video" ? (
           <video
             src={customCoverUrl}
             className="w-full h-full object-cover opacity-90"
@@ -122,7 +122,7 @@ export default function CoachView({
           <img
             src={
               customCoverUrl ||
-              'https://img.usecurling.com/p/800/300?q=coach%20stadium'
+              "https://img.usecurling.com/p/800/300?q=coach%20stadium"
             }
             alt="Cover"
             className="w-full h-full object-cover"
@@ -187,8 +187,8 @@ export default function CoachView({
             )}
           </div>
           <p className="text-primary font-bold text-sm flex items-center gap-1.5 mt-1">
-            <Briefcase className="w-4 h-4" /> Coach / Treinador{' '}
-            {raw?.sport ? `• ${raw.sport}` : ''}
+            <Briefcase className="w-4 h-4" /> Coach / Treinador{" "}
+            {raw?.sport ? `• ${raw.sport}` : ""}
           </p>
 
           <p className="text-sm mt-4 text-muted-foreground leading-relaxed">
@@ -200,8 +200,8 @@ export default function CoachView({
               <MapPin className="h-4 w-4 text-primary/70" /> {profile.location}
             </span>
             <span className="flex items-center gap-1.5 text-foreground">
-              <Star className="h-4 w-4 fill-gold text-gold" />{' '}
-              {profile.rating || '4.8'}
+              <Star className="h-4 w-4 fill-gold text-gold" />{" "}
+              {profile.rating || "4.8"}
             </span>
           </div>
 
@@ -209,10 +209,10 @@ export default function CoachView({
             <div className="flex gap-3 mt-6">
               <Button
                 className={cn(
-                  'flex-1 h-12 rounded-xl font-bold transition-all shadow-lg',
+                  "flex-1 h-12 rounded-xl font-bold transition-all shadow-lg",
                   isFollowing
-                    ? 'border-2 border-primary/40 bg-primary/10 text-primary hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30'
-                    : 'bg-gradient-to-r from-primary to-purple-600 hover:opacity-90 text-white shadow-primary/20',
+                    ? "border-2 border-primary/40 bg-primary/10 text-primary hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
+                    : "bg-gradient-to-r from-primary to-purple-600 hover:opacity-90 text-white shadow-primary/20",
                 )}
                 onClick={handleToggleFollow}
                 disabled={followLoading}
@@ -224,7 +224,7 @@ export default function CoachView({
                 ) : (
                   <UserPlus className="h-5 w-5 mr-2" />
                 )}
-                {isFollowing ? 'Seguindo' : 'Seguir / Conectar'}
+                {isFollowing ? "Seguindo" : "Seguir / Conectar"}
               </Button>
               <Button
                 variant="outline"
@@ -251,7 +251,7 @@ export default function CoachView({
                   Equipe Atual / Atuação
                 </p>
                 <p className="font-bold text-base">
-                  {profile.team || raw?.position || 'Independente'}
+                  {profile.team || raw?.position || "Independente"}
                 </p>
               </div>
             </div>
@@ -280,7 +280,7 @@ export default function CoachView({
             {coachExperience && (
               <div className="pt-3 border-t border-border/50">
                 <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider mb-1 flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-500" />{' '}
+                  <CheckCircle2 className="w-3 h-3 text-emerald-500" />{" "}
                   Experiência Profissional
                 </p>
                 <p className="text-xs text-foreground leading-relaxed">
@@ -311,7 +311,7 @@ export default function CoachView({
               </div>
               <Button
                 size="sm"
-                onClick={() => navigate('/organizer')}
+                onClick={() => navigate("/organizer")}
                 className="bg-primary text-white shadow-md text-xs font-semibold gap-1.5 shrink-0"
               >
                 <Trophy className="w-3.5 h-3.5" />

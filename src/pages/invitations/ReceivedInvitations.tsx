@@ -1,10 +1,10 @@
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, Calendar, MapPin, Check, X } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { mockInvitations } from '@/lib/data'
-import { Card, CardContent } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, Calendar, MapPin, Check, X } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { mockInvitations } from "@/lib/data"
+import { Card, CardContent } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 
 export default function ReceivedInvitations() {
   const navigate = useNavigate()

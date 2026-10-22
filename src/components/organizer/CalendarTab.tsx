@@ -1,24 +1,24 @@
-import { Championship } from '@/lib/data'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { useChampionshipStore } from '@/stores/useChampionshipStore'
-import { Calendar as CalendarIcon, MapPin, Clock, Trash2 } from 'lucide-react'
-import { useState } from 'react'
+import { Championship } from "@/lib/data"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { useChampionshipStore } from "@/stores/useChampionshipStore"
+import { Calendar as CalendarIcon, MapPin, Clock, Trash2 } from "lucide-react"
+import { useState } from "react"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from "@/components/ui/select"
 
 interface CalendarTabProps {
   championship: Championship
@@ -29,19 +29,19 @@ export function CalendarTab({ championship }: CalendarTabProps) {
     useChampionshipStore()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [newMatch, setNewMatch] = useState({
-    teamA: '',
-    teamB: '',
-    date: '',
-    time: '',
-    location: '',
-    round: '',
+    teamA: "",
+    teamB: "",
+    date: "",
+    time: "",
+    location: "",
+    round: "",
   })
 
   const champMatches = matches.filter(
     (m) => m.championshipId === championship.id,
   )
   const champParticipants = participants.filter(
-    (p) => p.championshipId === championship.id && p.status === 'approved',
+    (p) => p.championshipId === championship.id && p.status === "approved",
   )
 
   const handleAddMatch = () => {
@@ -60,12 +60,12 @@ export function CalendarTab({ championship }: CalendarTabProps) {
     })
     setIsDialogOpen(false)
     setNewMatch({
-      teamA: '',
-      teamB: '',
-      date: '',
-      time: '',
-      location: '',
-      round: '',
+      teamA: "",
+      teamB: "",
+      date: "",
+      time: "",
+      location: "",
+      round: "",
     })
   }
 
@@ -167,7 +167,7 @@ export function CalendarTab({ championship }: CalendarTabProps) {
               <CardContent className="p-4">
                 <div className="flex justify-between items-start mb-2">
                   <span className="text-xs font-bold text-muted-foreground uppercase tracking-wide">
-                    {match.round || 'Partida'}
+                    {match.round || "Partida"}
                   </span>
                   <button
                     onClick={() => deleteMatch(match.id)}

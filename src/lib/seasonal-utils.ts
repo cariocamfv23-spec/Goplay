@@ -3,13 +3,7 @@
  * Used to apply micro-thematic elements to the main app icon.
  */
 
-export type SeasonalTheme =
-  | 'christmas'
-  | 'carnival'
-  | 'easter'
-  | 'world-cup'
-  | 'commemorative'
-  | null
+export type SeasonalTheme = "christmas" | "carnival" | "easter" | "world-cup" | "commemorative" | null
 
 // Computes exact Easter Sunday date using Meeus/Jones/Butcher algorithm
 function getEasterDate(year: number): Date {
@@ -37,10 +31,10 @@ export function getSeasonalTheme(date: Date = new Date()): SeasonalTheme {
 
   // New Year (Commemorative): Dec 31 - Jan 6
   if ((month === 11 && day === 31) || (month === 0 && day <= 6))
-    return 'commemorative'
+    return "commemorative"
 
   // Carnival: Roughly February 10 to February 28
-  if (month === 1 && day >= 10 && day <= 28) return 'carnival'
+  if (month === 1 && day >= 10 && day <= 28) return "carnival"
 
   // Easter: 7 days before up to Easter day
   const easterDate = getEasterDate(year)
@@ -51,7 +45,7 @@ export function getSeasonalTheme(date: Date = new Date()): SeasonalTheme {
   const compareDate = new Date(year, month, day)
 
   if (compareDate >= easterStart && compareDate <= easterDate) {
-    return 'easter'
+    return "easter"
   }
 
   // World Cup: June/July in years like 2026, 2030 (year % 4 === 2)
@@ -61,12 +55,12 @@ export function getSeasonalTheme(date: Date = new Date()): SeasonalTheme {
       month === 6 || // All of July
       (month === 7 && day <= 19) // Up to mid July
     ) {
-      return 'world-cup'
+      return "world-cup"
     }
   }
 
   // Christmas: Dec 15 - Dec 26
-  if (month === 11 && day >= 15 && day <= 26) return 'christmas'
+  if (month === 11 && day >= 15 && day <= 26) return "christmas"
 
   // Default: No seasonal theme
   return null

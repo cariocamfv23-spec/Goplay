@@ -1,7 +1,7 @@
-import { create } from 'zustand'
-import type { Session, User } from '@supabase/supabase-js'
-import type { ProfileRow } from '@/services/profiles'
-import { supabase } from '@/lib/supabase/client'
+import { create } from "zustand"
+import type { Session, User } from "@supabase/supabase-js"
+import type { ProfileRow } from "@/services/profiles"
+import { supabase } from "@/lib/supabase/client"
 
 interface AuthState {
   isAuthenticated: boolean
@@ -10,7 +10,7 @@ interface AuthState {
   session: Session | null
   profile: ProfileRow | null
   login: () => void
-  logout: (options?: { scope?: 'local' | 'global' | 'others' }) => void
+  logout: (options?: { scope?: "local" | "global" | "others" }) => void
   setSession: (session: Session | null) => void
   setProfile: (profile: ProfileRow | null) => void
   setHasHydrated: (state: boolean) => void
@@ -29,7 +29,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     // O flag hasHydrated permanece true para que a tela de Login não fique em loop de PageLoader.
     try {
       // Limpa cache persistido do feed ao fazer logout para isolamento de dados
-      import('@/stores/useFeedStore').then(({ useFeedStore }) => {
+      import("@/stores/useFeedStore").then(({ useFeedStore }) => {
         useFeedStore.getState().clearFeed()
       })
     } catch {

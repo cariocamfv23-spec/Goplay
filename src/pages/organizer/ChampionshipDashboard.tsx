@@ -1,14 +1,14 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { useChampionshipStore } from '@/stores/useChampionshipStore'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, Share2 } from 'lucide-react'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { OverviewTab } from '@/components/organizer/OverviewTab'
-import { RegistrationsTab } from '@/components/organizer/RegistrationsTab'
-import { CalendarTab } from '@/components/organizer/CalendarTab'
-import { ResultsTab } from '@/components/organizer/ResultsTab'
-import { RulesTab } from '@/components/organizer/RulesTab'
-import { Badge } from '@/components/ui/badge'
+import { useParams, useNavigate } from "react-router-dom"
+import { useChampionshipStore } from "@/stores/useChampionshipStore"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, Share2 } from "lucide-react"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { OverviewTab } from "@/components/organizer/OverviewTab"
+import { RegistrationsTab } from "@/components/organizer/RegistrationsTab"
+import { CalendarTab } from "@/components/organizer/CalendarTab"
+import { ResultsTab } from "@/components/organizer/ResultsTab"
+import { RulesTab } from "@/components/organizer/RulesTab"
+import { Badge } from "@/components/ui/badge"
 
 export default function ChampionshipDashboard() {
   const { id } = useParams()
@@ -20,7 +20,7 @@ export default function ChampionshipDashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center flex-col gap-4">
         <p>Campeonato não encontrado.</p>
-        <Button onClick={() => navigate('/organizer')}>Voltar</Button>
+        <Button onClick={() => navigate("/organizer")}>Voltar</Button>
       </div>
     )
   }

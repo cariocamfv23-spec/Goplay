@@ -1,17 +1,17 @@
-import { useState, useRef, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { mockScholarships, mockCurrentUser } from '@/lib/data'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
+import { useState, useRef, useEffect } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import { mockScholarships, mockCurrentUser } from "@/lib/data"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from "@/components/ui/card"
 import {
   ArrowLeft,
   Upload,
@@ -21,9 +21,9 @@ import {
   FileText,
   X,
   Building2,
-} from 'lucide-react'
-import { toast } from 'sonner'
-import { Badge } from '@/components/ui/badge'
+} from "lucide-react"
+import { toast } from "sonner"
+import { Badge } from "@/components/ui/badge"
 
 export default function ScholarshipApplication() {
   const { id } = useParams()
@@ -35,9 +35,9 @@ export default function ScholarshipApplication() {
   const [isSuccess, setIsSuccess] = useState(false)
   const [formData, setFormData] = useState({
     fullName: mockCurrentUser.name,
-    email: 'alex.silva@email.com',
-    gpa: '',
-    statement: '',
+    email: "alex.silva@email.com",
+    gpa: "",
+    statement: "",
   })
   const [files, setFiles] = useState<File[]>([])
 
@@ -50,7 +50,7 @@ export default function ScholarshipApplication() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen text-muted-foreground p-4 text-center">
         <p className="mb-4">Bolsa não encontrada.</p>
-        <Button onClick={() => navigate('/explore/scholarships')}>
+        <Button onClick={() => navigate("/explore/scholarships")}>
           Voltar
         </Button>
       </div>
@@ -73,17 +73,20 @@ export default function ScholarshipApplication() {
     setIsLoading(true)
 
     // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false)
-      setIsSuccess(true)
+    setTimeout(
+      () => {
+        setIsLoading(false)
+        setIsSuccess(true)
 
-      // Save application state locally
-      localStorage.setItem(`applied_scholarship_${id}`, 'true')
+        // Save application state locally
+        localStorage.setItem(`applied_scholarship_${id}`, "true")
 
-      toast.success('Candidatura enviada com sucesso!', {
-        description: `Sua aplicação para ${scholarship.university} foi recebida.`,
-      })
-    }, 2000)
+        toast.success("Candidatura enviada com sucesso!", {
+          description: `Sua aplicação para ${scholarship.university} foi recebida.`,
+        })
+      },
+      2000,
+    )
   }
 
   if (isSuccess) {
@@ -301,7 +304,7 @@ export default function ScholarshipApplication() {
                   Enviando...
                 </>
               ) : (
-                'Enviar Candidatura'
+                "Enviar Candidatura"
               )}
             </Button>
           </div>

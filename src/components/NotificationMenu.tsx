@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover'
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
+} from "@/components/ui/popover"
+import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import {
   Bell,
   Trophy,
@@ -33,14 +33,14 @@ import {
   Eye,
   CheckCircle2,
   AlertCircle,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import useNotificationStore from '@/stores/useNotificationStore'
-import { useFlashbackStore } from '@/stores/useFlashbackStore'
-import { useBolaoStore } from '@/stores/useBolaoStore'
-import { useAuth } from '@/hooks/use-auth'
-import { useRealtimeNotifications } from '@/hooks/useRealtimeFeed'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import useNotificationStore from "@/stores/useNotificationStore"
+import { useFlashbackStore } from "@/stores/useFlashbackStore"
+import { useBolaoStore } from "@/stores/useBolaoStore"
+import { useAuth } from "@/hooks/use-auth"
+import { useRealtimeNotifications } from "@/hooks/useRealtimeFeed"
+import { cn } from "@/lib/utils"
 
 export function NotificationMenu() {
   const navigate = useNavigate()
@@ -66,10 +66,10 @@ export function NotificationMenu() {
     type: n.type,
     title: n.title,
     message: n.message,
-    date: 'Hoje',
+    date: "Hoje",
     time: n.timeAgo,
     read: n.read,
-    priority: 'medium' as const,
+    priority: "medium" as const,
     link: n.link || undefined,
     user: n.actor
       ? {
@@ -88,16 +88,16 @@ export function NotificationMenu() {
   const unreadCount = allNotifications.filter((n) => !n.read).length
 
   const hasUnreadMemory = allNotifications.some(
-    (n) => !n.read && (n.type === 'time_travel' || n.type === 'memory'),
+    (n) => !n.read && (n.type === "time_travel" || n.type === "memory"),
   )
 
   const handleItemClick = (notification: any) => {
     setOpen(false)
 
-    if (notification.type === 'time_travel' || notification.type === 'memory') {
+    if (notification.type === "time_travel" || notification.type === "memory") {
       const memoryId =
-        notification.link?.replace('modal:', '')?.replace('/memory/', '') ||
-        'today'
+        notification.link?.replace("modal:", "")?.replace("/memory/", "") ||
+        "today"
       openFlashback(memoryId, notification.id)
       return
     }
@@ -112,9 +112,9 @@ export function NotificationMenu() {
 
     if (notification.link) {
       navigate(notification.link)
-    } else if (notification.type === 'friend_suggestion') {
+    } else if (notification.type === "friend_suggestion") {
       const profileId =
-        notification.suggestedUserId || notification.id || 'new-friend'
+        notification.suggestedUserId || notification.id || "new-friend"
       navigate(`/profile/${profileId}`)
     }
   }
@@ -126,67 +126,67 @@ export function NotificationMenu() {
     markStoreAllAsRead()
   }
 
-  const getIcon = (type: string, title: string = '') => {
+  const getIcon = (type: string, title: string = "") => {
     switch (type) {
-      case 'challenge':
+      case "challenge":
         return <Trophy className="h-4 w-4 text-gold" />
-      case 'invite':
+      case "invite":
         return <Calendar className="h-4 w-4 text-blue-500" />
-      case 'like':
+      case "like":
         return <Heart className="h-4 w-4 text-red-500" />
-      case 'weather':
+      case "weather":
         return <CloudLightning className="h-4 w-4 text-yellow-500" />
-      case 'scholarship':
+      case "scholarship":
         return <GraduationCap className="h-4 w-4 text-emerald-500" />
-      case 'level_up':
+      case "level_up":
         return <Zap className="h-4 w-4 text-purple-500" />
-      case 'ranking':
+      case "ranking":
         if (
-          title.toLowerCase().includes('caiu') ||
-          title.toLowerCase().includes('desceu')
+          title.toLowerCase().includes("caiu") ||
+          title.toLowerCase().includes("desceu")
         ) {
           return <TrendingDown className="h-4 w-4 text-orange-500" />
         }
         return <TrendingUp className="h-4 w-4 text-green-500" />
-      case 'event_reminder':
+      case "event_reminder":
         return <Clock className="h-4 w-4 text-orange-500" />
-      case 'goal_deadline':
+      case "goal_deadline":
         return <Target className="h-4 w-4 text-red-500" />
-      case 'verification':
+      case "verification":
         if (
-          title.toLowerCase().includes('scout') ||
-          title.toLowerCase().includes('olheiro')
+          title.toLowerCase().includes("scout") ||
+          title.toLowerCase().includes("olheiro")
         ) {
           return <Eye className="h-4 w-4 text-blue-500" />
         }
         if (
-          title.toLowerCase().includes('time') ||
-          title.toLowerCase().includes('de olho')
+          title.toLowerCase().includes("time") ||
+          title.toLowerCase().includes("de olho")
         ) {
           return <Crown className="h-4 w-4 text-emerald-500" />
         }
-        if (title.toLowerCase().includes('vip')) {
+        if (title.toLowerCase().includes("vip")) {
           return <Crown className="h-4 w-4 text-gold" />
         }
         return <ShieldCheck className="h-4 w-4 text-blue-600" />
-      case 'sponsorship_match':
+      case "sponsorship_match":
         return <Handshake className="h-4 w-4 text-indigo-500" />
-      case 'kids_zone':
+      case "kids_zone":
         return <Baby className="h-4 w-4 text-pink-500" />
-      case 'comment':
+      case "comment":
         return <MessageCircle className="h-4 w-4 text-blue-500" />
-      case 'thread_comment':
+      case "thread_comment":
         return <MessageSquare className="h-4 w-4 text-blue-500" />
-      case 'system_update':
+      case "system_update":
         return <Megaphone className="h-4 w-4 text-primary" />
-      case 'memory':
-      case 'time_travel':
+      case "memory":
+      case "time_travel":
         return <History className="h-4 w-4 text-purple-500" />
-      case 'registration_approved':
+      case "registration_approved":
         return <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-      case 'registration_rejected':
+      case "registration_rejected":
         return <AlertCircle className="h-4 w-4 text-red-500" />
-      case 'event_registration':
+      case "event_registration":
         return <Calendar className="h-4 w-4 text-primary" />
       default:
         return <Info className="h-4 w-4 text-primary" />
@@ -205,10 +205,10 @@ export function NotificationMenu() {
           {unreadCount > 0 && (
             <span
               className={cn(
-                'absolute top-2 right-2 h-2.5 w-2.5 rounded-full border-2 border-background animate-pulse',
+                "absolute top-2 right-2 h-2.5 w-2.5 rounded-full border-2 border-background animate-pulse",
                 hasUnreadMemory
-                  ? 'bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.8)]'
-                  : 'bg-red-500',
+                  ? "bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.8)]"
+                  : "bg-red-500",
               )}
             />
           )}
@@ -235,7 +235,7 @@ export function NotificationMenu() {
             onClick={() => {
               setOpen(false)
               navigate(
-                `/marketplace?redeem=true&team=${encodeURIComponent(wonTeam || '')}`,
+                `/marketplace?redeem=true&team=${encodeURIComponent(wonTeam || "")}`,
               )
             }}
           >
@@ -262,43 +262,43 @@ export function NotificationMenu() {
                 <button
                   key={notification.id}
                   className={cn(
-                    'flex gap-3 p-4 text-left hover:bg-muted/50 transition-colors border-b last:border-0 relative w-full',
-                    notification.type === 'friend_suggestion'
-                      ? 'items-center'
-                      : 'items-start',
-                    !notification.read && 'bg-muted/30',
-                    notification.title.toLowerCase().includes('vip') &&
+                    "flex gap-3 p-4 text-left hover:bg-muted/50 transition-colors border-b last:border-0 relative w-full",
+                    notification.type === "friend_suggestion"
+                      ? "items-center"
+                      : "items-start",
+                    !notification.read && "bg-muted/30",
+                    notification.title.toLowerCase().includes("vip") &&
                       !notification.read &&
-                      'bg-gold/5',
-                    (notification.type === 'time_travel' ||
-                      notification.type === 'memory') &&
+                      "bg-gold/5",
+                    (notification.type === "time_travel" ||
+                      notification.type === "memory") &&
                       !notification.read &&
-                      'bg-purple-500/5',
+                      "bg-purple-500/5",
                   )}
                   onClick={() => handleItemClick(notification)}
                 >
                   {notification.user ||
                   notification.imageUrl ||
                   notification.avatarUrl ||
-                  notification.type === 'friend_suggestion' ? (
+                  notification.type === "friend_suggestion" ? (
                     <div
                       className={cn(
-                        'relative shrink-0',
-                        notification.type !== 'friend_suggestion' && 'mt-1',
+                        "relative shrink-0",
+                        notification.type !== "friend_suggestion" && "mt-1",
                       )}
                     >
                       <Avatar
                         className={cn(
-                          'ring-2 ring-offset-2 ring-offset-background',
-                          notification.type === 'friend_suggestion'
-                            ? 'h-10 w-10 ring-pink-500'
-                            : 'h-8 w-8',
-                          notification.type === 'live_stream'
-                            ? notification.link?.includes('/replay/')
-                              ? 'ring-primary'
-                              : 'ring-red-500 animate-pulse'
-                            : notification.type !== 'friend_suggestion' &&
-                                'ring-transparent border border-border',
+                          "ring-2 ring-offset-2 ring-offset-background",
+                          notification.type === "friend_suggestion"
+                            ? "h-10 w-10 ring-pink-500"
+                            : "h-8 w-8",
+                          notification.type === "live_stream"
+                            ? notification.link?.includes("/replay/")
+                              ? "ring-primary"
+                              : "ring-red-500 animate-pulse"
+                            : notification.type !== "friend_suggestion" &&
+                                "ring-transparent border border-border",
                         )}
                       >
                         {notification.user?.avatar ||
@@ -313,7 +313,7 @@ export function NotificationMenu() {
                             alt={
                               notification.user?.name ||
                               notification.title ||
-                              'Usuário'
+                              "Usuário"
                             }
                           />
                         ) : null}
@@ -321,27 +321,27 @@ export function NotificationMenu() {
                           {(
                             notification.user?.name ||
                             notification.title ||
-                            'U'
+                            "U"
                           )
                             .substring(0, 2)
                             .toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
-                      {notification.type === 'live_stream' &&
-                        !notification.link?.includes('/replay/') && (
+                      {notification.type === "live_stream" &&
+                        !notification.link?.includes("/replay/") && (
                           <span className="absolute -bottom-1 -right-1 h-2.5 w-2.5 bg-red-500 border-2 border-background rounded-full animate-pulse" />
                         )}
-                      {notification.type === 'comment' && (
+                      {notification.type === "comment" && (
                         <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-blue-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
                           <MessageCircle className="h-2 w-2 text-white" />
                         </div>
                       )}
-                      {notification.type === 'thread_comment' && (
+                      {notification.type === "thread_comment" && (
                         <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-blue-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
                           <MessageSquare className="h-2 w-2 text-white" />
                         </div>
                       )}
-                      {notification.type === 'friend_suggestion' && (
+                      {notification.type === "friend_suggestion" && (
                         <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-pink-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
                           <UserPlus className="h-2.5 w-2.5 text-white" />
                         </div>
@@ -350,17 +350,17 @@ export function NotificationMenu() {
                   ) : (
                     <div
                       className={cn(
-                        'mt-1 h-8 w-8 rounded-full flex items-center justify-center shrink-0 border',
+                        "mt-1 h-8 w-8 rounded-full flex items-center justify-center shrink-0 border",
                         !notification.read
-                          ? 'bg-background border-primary/20'
-                          : 'bg-muted border-transparent',
-                        notification.title.toLowerCase().includes('vip') &&
-                          'bg-gold/10 border-gold/30',
-                        notification.type === 'system_update' &&
-                          'bg-primary/10 border-primary/30',
-                        (notification.type === 'time_travel' ||
-                          notification.type === 'memory') &&
-                          'bg-purple-500/10 border-purple-500/30',
+                          ? "bg-background border-primary/20"
+                          : "bg-muted border-transparent",
+                        notification.title.toLowerCase().includes("vip") &&
+                          "bg-gold/10 border-gold/30",
+                        notification.type === "system_update" &&
+                          "bg-primary/10 border-primary/30",
+                        (notification.type === "time_travel" ||
+                          notification.type === "memory") &&
+                          "bg-purple-500/10 border-purple-500/30",
                       )}
                     >
                       {getIcon(notification.type, notification.title)}
@@ -369,21 +369,21 @@ export function NotificationMenu() {
                   <div className="flex-1 space-y-1 pr-4">
                     <p
                       className={cn(
-                        'text-sm font-medium leading-none',
-                        !notification.read && 'font-semibold',
-                        notification.title.toLowerCase().includes('vip') &&
-                          'text-gold',
-                        notification.type === 'live_stream' &&
-                          !notification.link?.includes('/replay/') &&
-                          'text-red-500',
-                        (notification.type === 'time_travel' ||
-                          notification.type === 'memory') &&
-                          'text-purple-600 dark:text-purple-400',
+                        "text-sm font-medium leading-none",
+                        !notification.read && "font-semibold",
+                        notification.title.toLowerCase().includes("vip") &&
+                          "text-gold",
+                        notification.type === "live_stream" &&
+                          !notification.link?.includes("/replay/") &&
+                          "text-red-500",
+                        (notification.type === "time_travel" ||
+                          notification.type === "memory") &&
+                          "text-purple-600 dark:text-purple-400",
                       )}
                     >
                       {notification.title}
                     </p>
-                    {notification.type === 'friend_suggestion' && (
+                    {notification.type === "friend_suggestion" && (
                       <p className="text-[10px] font-semibold text-pink-500 uppercase tracking-wider mb-0.5">
                         Sugestão de Amizade
                       </p>
@@ -392,8 +392,8 @@ export function NotificationMenu() {
                       {notification.message}
                     </p>
 
-                    {notification.type === 'live_stream' &&
-                    notification.link?.includes('/replay/') ? (
+                    {notification.type === "live_stream" &&
+                    notification.link?.includes("/replay/") ? (
                       <div className="flex items-center gap-2 pt-1">
                         <Badge
                           variant="secondary"
@@ -406,7 +406,7 @@ export function NotificationMenu() {
                         </span>
                       </div>
                     ) : (
-                      notification.type === 'live_stream' && (
+                      notification.type === "live_stream" && (
                         <div className="flex items-center gap-2 pt-1">
                           <Badge
                             variant="destructive"
@@ -428,13 +428,13 @@ export function NotificationMenu() {
                   {!notification.read && (
                     <div
                       className={cn(
-                        'absolute right-4 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full',
-                        notification.title.toLowerCase().includes('vip')
-                          ? 'bg-gold'
-                          : notification.type === 'time_travel' ||
-                              notification.type === 'memory'
-                            ? 'bg-purple-500'
-                            : 'bg-primary',
+                        "absolute right-4 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full",
+                        notification.title.toLowerCase().includes("vip")
+                          ? "bg-gold"
+                          : notification.type === "time_travel" ||
+                              notification.type === "memory"
+                            ? "bg-purple-500"
+                            : "bg-primary",
                       )}
                     />
                   )}
@@ -457,7 +457,7 @@ export function NotificationMenu() {
             className="w-full text-xs"
             onClick={() => {
               setOpen(false)
-              navigate('/notifications')
+              navigate("/notifications")
             }}
           >
             Ver todas as notificações

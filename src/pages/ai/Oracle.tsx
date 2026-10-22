@@ -1,11 +1,11 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from '@/components/ui/card'
+} from "@/components/ui/card"
 import {
   ArrowLeft,
   Sparkles,
@@ -15,40 +15,40 @@ import {
   Search,
   MessageSquare,
   Target,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart'
-import { XAxis, YAxis, ResponsiveContainer, Area, AreaChart } from 'recharts'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Input } from '@/components/ui/input'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Badge } from '@/components/ui/badge'
+} from "@/components/ui/chart"
+import { XAxis, YAxis, ResponsiveContainer, Area, AreaChart } from "recharts"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Input } from "@/components/ui/input"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Badge } from "@/components/ui/badge"
 
 // Local Mock Data for Oracle
 const MOCK_ORACLE_DATA = {
   potentialIndex: 92,
-  predictedPosition: 'Atacante de Elite',
+  predictedPosition: "Atacante de Elite",
   futureSkills: [
-    { name: 'Visão de Jogo', current: 75, projected: 90 },
-    { name: 'Finalização', current: 80, projected: 95 },
-    { name: 'Físico', current: 70, projected: 85 },
+    { name: "Visão de Jogo", current: 75, projected: 90 },
+    { name: "Finalização", current: 80, projected: 95 },
+    { name: "Físico", current: 70, projected: 85 },
   ],
   marketValueHistory: [
-    { year: '2022', value: 1000 },
-    { year: '2023', value: 2500 },
-    { year: '2024', value: 5000 },
-    { year: '2025', value: 12000 },
-    { year: '2026', value: 25000 },
+    { year: "2022", value: 1000 },
+    { year: "2023", value: 2500 },
+    { year: "2024", value: 5000 },
+    { year: "2025", value: 12000 },
+    { year: "2026", value: 25000 },
   ],
   comparisonData: [
-    { subject: 'Téc', A: 80, fullMark: 100 },
-    { subject: 'Tát', A: 70, fullMark: 100 },
-    { subject: 'Fís', A: 85, fullMark: 100 },
-    { subject: 'Men', A: 65, fullMark: 100 },
+    { subject: "Téc", A: 80, fullMark: 100 },
+    { subject: "Tát", A: 70, fullMark: 100 },
+    { subject: "Fís", A: 85, fullMark: 100 },
+    { subject: "Men", A: 65, fullMark: 100 },
   ],
 }
 
@@ -156,11 +156,11 @@ export default function Oracle() {
                       Sugestão do Oráculo
                     </h4>
                     <p className="text-sm text-indigo-100 mt-1 leading-relaxed">
-                      Para atingir seu potencial máximo como{' '}
+                      Para atingir seu potencial máximo como{" "}
                       <span className="font-bold text-white underline decoration-gold underline-offset-2">
                         {MOCK_ORACLE_DATA.predictedPosition}
                       </span>
-                      , foque em melhorar sua{' '}
+                      , foque em melhorar sua{" "}
                       <span className="font-bold">visão de jogo</span> nos
                       próximos 3 meses.
                     </p>
@@ -226,7 +226,7 @@ export default function Oracle() {
                 <div className="h-[250px] w-full">
                   <ChartContainer
                     config={{
-                      value: { label: 'Valor', color: 'hsl(var(--primary))' },
+                      value: { label: "Valor", color: "hsl(var(--primary))" },
                     }}
                   >
                     <ResponsiveContainer width="100%" height="100%">
@@ -335,7 +335,7 @@ export default function Oracle() {
                       </div>
                       <div className="bg-secondary rounded-2xl rounded-tl-none p-3 text-sm">
                         Com base na sua evolução atual (85% de melhoria física),
-                        suas chances aumentaram para{' '}
+                        suas chances aumentaram para{" "}
                         <span className="font-bold text-primary">
                           High Potential
                         </span>

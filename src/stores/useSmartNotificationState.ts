@@ -1,5 +1,5 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 interface SmartNotificationState {
   notifiedIds: string[]
@@ -40,7 +40,7 @@ export const useSmartNotificationState = create<SmartNotificationState>()(
       clearHistory: () => set({ notifiedIds: [], vipLastViewed: {} }),
     }),
     {
-      name: 'goplay-smart-notifications-storage',
+      name: "goplay-smart-notifications-storage",
     },
   ),
 )

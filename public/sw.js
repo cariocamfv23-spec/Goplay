@@ -1,21 +1,21 @@
 // Goplay App - Service Worker with Robust Web Push & Background Support
-// Version: 2026.10.22-v9 (monochrome 512 + clean favicon + origin-relative push notification icon)
+// Version: 2026.10.22-v10 (monochrome 512 + clean favicon + origin-relative push notification icon + autoUpdate)
 
 importScripts(
-  'https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js',
+  "https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js",
 )
 
 // High-compatibility official raster icons for Android & OneUI (origin-relative URL)
-const DEFAULT_NOTIFICATION_ICON = '/icon-192.png'
-const SW_VERSION = '2026.10.22-v9'
+const DEFAULT_NOTIFICATION_ICON = "/icon-192.png"
+const SW_VERSION = "2026.10.22-v10"
 
 // Automated update & lifecycle logic - immediate takeover
-self.addEventListener('install', (event) => {
+self.addEventListener("install", (event) => {
   // Immediately activate new service worker logic without waiting for reload
   self.skipWaiting()
 })
 
-self.addEventListener('activate', (event) => {
+self.addEventListener("activate", (event) => {
   event.waitUntil(
     Promise.all([
       self.clients.claim(),
@@ -25,7 +25,7 @@ self.addEventListener('activate', (event) => {
         .then((keys) =>
           Promise.all(
             keys
-              .filter((k) => k.startsWith('goplay-') && !k.endsWith('-v9'))
+              .filter((k) => k.startsWith("goplay-") && !k.endsWith("-v10"))
               .map((k) => caches.delete(k)),
           ),
         ),
@@ -34,8 +34,8 @@ self.addEventListener('activate', (event) => {
 })
 
 // Listen for explicit update/skip-waiting messages from the client
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting()
   }
 })
@@ -43,12 +43,12 @@ self.addEventListener('message', (event) => {
 // ==========================================
 // PUSH EVENT HANDLER (Web Push / Background)
 // ==========================================
-self.addEventListener('push', (event) => {
+self.addEventListener("push", (event) => {
   let data = {
-    title: 'Goplay App',
-    body: 'Você tem uma nova notificação no Goplay!',
-    url: '/',
-    tag: 'goplay-alert',
+    title: "Goplay App",
+    body: "Você tem uma nova notificação no Goplay!",
+    url: "/",
+    tag: "goplay-alert",
     icon: DEFAULT_NOTIFICATION_ICON,
   }
 
@@ -71,7 +71,7 @@ self.addEventListener('push', (event) => {
   // Ensure icons are valid PNG raster URLs for Android system tray & lockscreen.
   // Convert any origin-relative path to full absolute URL on the current client origin.
   let iconUrl = DEFAULT_NOTIFICATION_ICON
-  if (data.icon && !data.icon.endsWith('.svg')) {
+  if (data.icon && !data.icon.endsWith(".svg")) {
     try {
       iconUrl = new URL(data.icon, self.location.origin).href
     } catch {
@@ -84,11 +84,11 @@ self.addEventListener('push', (event) => {
   // Complete NotificationOptions compliant with Android Notification Drawer & Heads-up banners.
   // Note: badge is deliberately omitted so Android/OneUI does not render a secondary monochrome badge/symbol.
   const notificationOptions = {
-    body: data.body || '',
+    body: data.body || "",
     icon: iconUrl,
     tag: data.tag || `goplay-${Date.now()}`,
     data: {
-      url: data.url || '/',
+      url: data.url || "/",
       dateOfArrival: Date.now(),
       swVersion: SW_VERSION,
     },
@@ -112,7 +112,7 @@ self.addEventListener('push', (event) => {
         return self.registration.showNotification(data.title, {
           body: data.body,
           icon: fallbackIcon,
-          data: { url: data.url || '/' },
+          data: { url: data.url || "/" },
         })
       }),
   )
@@ -122,26 +122,26 @@ self.addEventListener('push', (event) => {
 // NOTIFICATION CLICK HANDLER
 // Focus existing window or open target URL
 // ==========================================
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener("notificationclick", (event) => {
   event.notification.close()
 
-  const rawUrl = event.notification.data?.url || '/'
+  const rawUrl = event.notification.data?.url || "/"
   const targetUrl = new URL(rawUrl, self.location.origin).href
 
   event.waitUntil(
     self.clients
-      .matchAll({ type: 'window', includeUncontrolled: true })
+      .matchAll({ type: "window", includeUncontrolled: true })
       .then((windowClients) => {
         // Look for an already open client on this origin
         for (const client of windowClients) {
-          if (client.url === targetUrl && 'focus' in client) {
+          if (client.url === targetUrl && "focus" in client) {
             return client.focus()
           }
         }
         // If an open window exists, navigate and focus it
-        if (windowClients.length > 0 && 'focus' in windowClients[0]) {
+        if (windowClients.length > 0 && "focus" in windowClients[0]) {
           const client = windowClients[0]
-          if ('navigate' in client) {
+          if ("navigate" in client) {
             client.navigate(targetUrl)
           }
           return client.focus()
@@ -157,34 +157,34 @@ self.addEventListener('notificationclick', (event) => {
 // ==========================================
 // WORKBOX ASSET ROUTING & CACHING
 // ==========================================
-if (typeof workbox !== 'undefined' && workbox) {
+if (typeof workbox !== "undefined" && workbox) {
   // Resource caching for specific extensions
   workbox.routing.registerRoute(
     ({ url }) => /\.(js|css|html|svg|png|ico|woff2)$/i.test(url.pathname),
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: 'goplay-assets-v9',
+      cacheName: "goplay-assets-v10",
     }),
   )
 
   // Cache index.html specifically for fallback
   workbox.routing.registerRoute(
-    ({ url }) => url.pathname === '/' || url.pathname === '/index.html',
+    ({ url }) => url.pathname === "/" || url.pathname === "/index.html",
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: 'goplay-index-v9',
+      cacheName: "goplay-index-v10",
     }),
   )
 
-  // Ensure application correctly handles navigation
+  // Ensure application correctly handles navigation with fallback to /index.html
   workbox.routing.registerRoute(
-    ({ request }) => request.mode === 'navigate',
+    ({ request }) => request.mode === "navigate",
     async ({ request }) => {
       try {
         const response = await fetch(request)
         return response
       } catch (error) {
-        const cache = await caches.open('goplay-index-v9')
+        const cache = await caches.open("goplay-index-v10")
         const cachedResponse =
-          (await cache.match('/index.html')) || (await cache.match('/'))
+          (await cache.match("/index.html")) || (await cache.match("/"))
         if (cachedResponse) {
           return cachedResponse
         }

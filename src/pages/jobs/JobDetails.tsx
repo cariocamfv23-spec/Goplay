@@ -1,8 +1,8 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { mockJobs } from '@/lib/data'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, Briefcase } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { useParams, useNavigate } from "react-router-dom"
+import { mockJobs } from "@/lib/data"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, Briefcase } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function JobDetails() {
   const { id } = useParams()

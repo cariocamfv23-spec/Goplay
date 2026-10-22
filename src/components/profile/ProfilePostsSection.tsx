@@ -1,12 +1,12 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { feedService, type PostItem } from '@/services/feed'
-import { PostCard } from '@/components/PostCard'
-import { useAuth } from '@/hooks/use-auth'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
+import { useState, useEffect, useRef, useCallback } from "react"
+import { feedService, type PostItem } from "@/services/feed"
+import { PostCard } from "@/components/PostCard"
+import { useAuth } from "@/hooks/use-auth"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import {
   ImagePlus,
   Send,
@@ -19,12 +19,12 @@ import {
   Video,
   AtSign,
   Music,
-} from 'lucide-react'
-import { toast } from 'sonner'
-import { supabase } from '@/lib/supabase/client'
-import { MentionAutocomplete } from '@/components/feed/MentionAutocomplete'
-import { AudioMusicModal } from '@/components/feed/AudioMusicModal'
-import type { PostMention, PostMusicLink } from '@/services/feed'
+} from "lucide-react"
+import { toast } from "sonner"
+import { supabase } from "@/lib/supabase/client"
+import { MentionAutocomplete } from "@/components/feed/MentionAutocomplete"
+import { AudioMusicModal } from "@/components/feed/AudioMusicModal"
+import type { PostMention, PostMusicLink } from "@/services/feed"
 
 interface ProfilePostsSectionProps {
   userId: string
@@ -36,7 +36,7 @@ interface ProfilePostsSectionProps {
 export function ProfilePostsSection({
   userId,
   isMe,
-  userName = 'Usuário',
+  userName = "Usuário",
   userAvatar,
 }: ProfilePostsSectionProps) {
   const { user: authUser, profile: authProfile } = useAuth()
@@ -47,14 +47,14 @@ export function ProfilePostsSection({
   const [error, setError] = useState<string | null>(null)
 
   // Composer state
-  const [content, setContent] = useState('')
+  const [content, setContent] = useState("")
   const [selectedMedia, setSelectedMedia] = useState<File | null>(null)
   const [mediaPreview, setMediaPreview] = useState<string | null>(null)
   const [selectedAudio, setSelectedAudio] = useState<File | null>(null)
   const [selectedMusicLink, setSelectedMusicLink] =
     useState<PostMusicLink | null>(null)
   const [mentions, setMentions] = useState<PostMention[]>([])
-  const [mentionQuery, setMentionQuery] = useState('')
+  const [mentionQuery, setMentionQuery] = useState("")
   const [isMentionOpen, setIsMentionOpen] = useState(false)
   const [isMusicModalOpen, setIsMusicModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -62,7 +62,7 @@ export function ProfilePostsSection({
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const isSupabaseAuthor =
-    typeof userId === 'string' &&
+    typeof userId === "string" &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
       userId,
     )
@@ -84,7 +84,7 @@ export function ProfilePostsSection({
     )
 
     if (fetchErr) {
-      setError('Não foi possível carregar as publicações. Tente novamente.')
+      setError("Não foi possível carregar as publicações. Tente novamente.")
     } else {
       setPosts(data || [])
     }
@@ -103,11 +103,11 @@ export function ProfilePostsSection({
     const channel = supabase
       .channel(channelName)
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: '*',
-          schema: 'public',
-          table: 'posts',
+          event: "*",
+          schema: "public",
+          table: "posts",
           filter: `user_id=eq.${userId}`,
         },
         () => {
@@ -128,7 +128,7 @@ export function ProfilePostsSection({
     if (!file) return
 
     if (file.size > 20 * 1024 * 1024) {
-      toast.error('Arquivo muito grande. O limite máximo é de 20MB.')
+      toast.error("Arquivo muito grande. O limite máximo é de 20MB.")
       return
     }
 
@@ -143,7 +143,7 @@ export function ProfilePostsSection({
       setMediaPreview(null)
     }
     if (fileInputRef.current) {
-      fileInputRef.current.value = ''
+      fileInputRef.current.value = ""
     }
   }
 
@@ -166,13 +166,13 @@ export function ProfilePostsSection({
 
   const handleSelectMention = (mention: PostMention) => {
     if (mentions.some((m) => m.id === mention.id)) {
-      toast.info('Perfil já adicionado às marcações.')
+      toast.info("Perfil já adicionado às marcações.")
       setIsMentionOpen(false)
       return
     }
 
     if (mentions.length >= 10) {
-      toast.error('Limite de até 10 marcações por publicação atingido.')
+      toast.error("Limite de até 10 marcações por publicação atingido.")
       setIsMentionOpen(false)
       return
     }
@@ -187,7 +187,7 @@ export function ProfilePostsSection({
       const textAfterCursor = content.slice(cursor)
       const replacedBefore = textBeforeCursor.replace(
         /@([a-zA-Z0-9_À-ÿ]*)$/,
-        '',
+        "",
       )
       setContent(`${replacedBefore}${textAfterCursor}`)
     }
@@ -202,19 +202,19 @@ export function ProfilePostsSection({
 
   const handleCreatePost = async () => {
     if (!authUser?.id) {
-      toast.error('Faça login para criar uma publicação.')
+      toast.error("Faça login para criar uma publicação.")
       return
     }
 
     const trimmed = content.trim()
     if (!trimmed && !selectedMedia && !selectedAudio && !selectedMusicLink) {
-      toast.error('Escreva uma mensagem ou adicione uma foto, vídeo ou música.')
+      toast.error("Escreva uma mensagem ou adicione uma foto, vídeo ou música.")
       return
     }
 
     setIsSubmitting(true)
-    const isVideo = selectedMedia?.type.startsWith('video/')
-    const postType = isVideo ? 'video' : selectedMedia ? 'image' : 'text'
+    const isVideo = selectedMedia?.type.startsWith("video/")
+    const postType = isVideo ? "video" : selectedMedia ? "image" : "text"
 
     const { data: created, error: createErr } = await feedService.createPost({
       userId: authUser.id,
@@ -230,18 +230,18 @@ export function ProfilePostsSection({
 
     if (createErr || !created) {
       toast.error(
-        'Erro ao publicar: ' + (createErr?.message || 'Falha de conexão.'),
+        "Erro ao publicar: " + (createErr?.message || "Falha de conexão."),
       )
       return
     }
 
     // Success feedback
-    toast.success('Publicação realizada com sucesso!', {
-      description: 'Seu post já está visível no seu perfil e no feed central.',
+    toast.success("Publicação realizada com sucesso!", {
+      description: "Seu post já está visível no seu perfil e no feed central.",
     })
 
     // Reset composer form
-    setContent('')
+    setContent("")
     handleClearMedia()
     setSelectedAudio(null)
     setSelectedMusicLink(null)
@@ -265,7 +265,7 @@ export function ProfilePostsSection({
     userAvatar ||
     (authUser?.id
       ? `https://img.usecurling.com/ppl/thumbnail?seed=${authUser.id.slice(0, 4)}`
-      : 'https://img.usecurling.com/ppl/thumbnail?seed=user')
+      : "https://img.usecurling.com/ppl/thumbnail?seed=user")
 
   return (
     <div className="space-y-4">
@@ -364,12 +364,12 @@ export function ProfilePostsSection({
                         <p className="font-semibold text-foreground truncate">
                           {selectedAudio
                             ? selectedAudio.name
-                            : selectedMusicLink?.title || 'Música Anexada'}
+                            : selectedMusicLink?.title || "Música Anexada"}
                         </p>
                         <p className="text-[10px] text-muted-foreground truncate">
                           {selectedAudio
                             ? `${(selectedAudio.size / (1024 * 1024)).toFixed(2)} MB • Áudio do dispositivo`
-                            : `${selectedMusicLink?.platform.toUpperCase() || 'LINK'}: ${selectedMusicLink?.url}`}
+                            : `${selectedMusicLink?.platform.toUpperCase() || "LINK"}: ${selectedMusicLink?.url}`}
                         </p>
                       </div>
                     </div>
@@ -392,7 +392,7 @@ export function ProfilePostsSection({
                 {/* Media Preview inside Composer */}
                 {mediaPreview && (
                   <div className="relative rounded-xl overflow-hidden border border-border/60 bg-black/5 max-h-56">
-                    {selectedMedia?.type.startsWith('video/') ? (
+                    {selectedMedia?.type.startsWith("video/") ? (
                       <video
                         src={mediaPreview}
                         className="w-full h-44 object-cover"
@@ -429,12 +429,12 @@ export function ProfilePostsSection({
                       disabled={isSubmitting}
                       className="h-8 text-xs gap-1.5 border-border/60 hover:bg-secondary/60"
                     >
-                      {selectedMedia?.type.startsWith('video/') ? (
+                      {selectedMedia?.type.startsWith("video/") ? (
                         <Video className="w-3.5 h-3.5 text-primary" />
                       ) : (
                         <ImagePlus className="w-3.5 h-3.5 text-primary" />
                       )}
-                      <span>{selectedMedia ? 'Mídia' : 'Foto/Vídeo'}</span>
+                      <span>{selectedMedia ? "Mídia" : "Foto/Vídeo"}</span>
                     </Button>
                     <input
                       ref={fileInputRef}
@@ -447,10 +447,10 @@ export function ProfilePostsSection({
                     {/* Tag / Mention Button */}
                     <Button
                       type="button"
-                      variant={mentions.length > 0 ? 'secondary' : 'outline'}
+                      variant={mentions.length > 0 ? "secondary" : "outline"}
                       size="sm"
                       onClick={() => {
-                        setMentionQuery('')
+                        setMentionQuery("")
                         setIsMentionOpen((prev) => !prev)
                       }}
                       disabled={isSubmitting}
@@ -460,7 +460,7 @@ export function ProfilePostsSection({
                       <span>
                         {mentions.length > 0
                           ? `Marcados (${mentions.length})`
-                          : 'Marcar'}
+                          : "Marcar"}
                       </span>
                     </Button>
 
@@ -469,8 +469,8 @@ export function ProfilePostsSection({
                       type="button"
                       variant={
                         selectedAudio || selectedMusicLink
-                          ? 'secondary'
-                          : 'outline'
+                          ? "secondary"
+                          : "outline"
                       }
                       size="sm"
                       onClick={() => setIsMusicModalOpen(true)}
@@ -480,8 +480,8 @@ export function ProfilePostsSection({
                       <Music className="w-3.5 h-3.5 text-primary" />
                       <span>
                         {selectedAudio || selectedMusicLink
-                          ? 'Música ✓'
-                          : 'Música'}
+                          ? "Música ✓"
+                          : "Música"}
                       </span>
                     </Button>
                   </div>
@@ -564,13 +564,13 @@ export function ProfilePostsSection({
           <div className="space-y-1">
             <h3 className="font-bold text-sm text-foreground">
               {isMe
-                ? 'Nenhuma publicação ainda'
+                ? "Nenhuma publicação ainda"
                 : `${userName} ainda não publicou`}
             </h3>
             <p className="text-xs text-muted-foreground max-w-sm mx-auto">
               {isMe
-                ? 'Use o campo acima para criar sua primeira postagem real. Ela aparecerá aqui e no Feed principal para todos os atletas!'
-                : 'Quando novas publicações forem compartilhadas, elas aparecerão aqui em tempo real.'}
+                ? "Use o campo acima para criar sua primeira postagem real. Ela aparecerá aqui e no Feed principal para todos os atletas!"
+                : "Quando novas publicações forem compartilhadas, elas aparecerão aqui em tempo real."}
             </p>
           </div>
         </div>
@@ -581,8 +581,8 @@ export function ProfilePostsSection({
         <div className="space-y-4">
           <div className="flex items-center justify-between px-1">
             <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              {posts.length}{' '}
-              {posts.length === 1 ? 'publicação real' : 'publicações reais'}
+              {posts.length}{" "}
+              {posts.length === 1 ? "publicação real" : "publicações reais"}
             </span>
             <Button
               variant="ghost"

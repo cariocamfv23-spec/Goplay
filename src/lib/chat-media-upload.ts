@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase/client'
+import { supabase } from "@/lib/supabase/client"
 
 export interface ImageCompressionOptions {
   maxWidth?: number
@@ -18,12 +18,12 @@ export async function compressImage(
   const { maxWidth = 1600, maxHeight = 1600, quality = 0.82 } = options
 
   // Se o arquivo não for imagem, retorna o próprio arquivo
-  if (!file.type.startsWith('image/')) {
+  if (!file.type.startsWith("image/")) {
     return file
   }
 
   // Se for GIF animado, não passa por canvas para não perder os frames de animação
-  if (file.type === 'image/gif') {
+  if (file.type === "image/gif") {
     return file
   }
 
@@ -54,23 +54,23 @@ export async function compressImage(
           height = Math.round(height * ratio)
         }
 
-        const canvas = document.createElement('canvas')
+        const canvas = document.createElement("canvas")
         canvas.width = width
         canvas.height = height
 
-        const ctx = canvas.getContext('2d')
+        const ctx = canvas.getContext("2d")
         if (!ctx) {
           resolve(file)
           return
         }
 
         ctx.imageSmoothingEnabled = true
-        ctx.imageSmoothingQuality = 'high'
+        ctx.imageSmoothingQuality = "high"
         ctx.drawImage(img, 0, 0, width, height)
 
         // Tenta WebP primeiro, fallback para JPEG
         const outputMime =
-          file.type === 'image/png' ? 'image/png' : 'image/jpeg'
+          file.type === "image/png" ? "image/png" : "image/jpeg"
 
         canvas.toBlob(
           (blob) => {
@@ -84,7 +84,7 @@ export async function compressImage(
           quality,
         )
       }
-      img.src = reader.result as string
+      img.src = (reader.result as string)
     }
     reader.readAsDataURL(file)
   })
@@ -93,7 +93,7 @@ export async function compressImage(
 export interface UploadChatMediaResult {
   url: string | null
   error: Error | null
-  mediaType: 'image' | 'video' | 'document'
+  mediaType: "image" | "video" | "document"
   fileName?: string
 }
 
@@ -104,50 +104,50 @@ export interface UploadChatMediaResult {
 export async function uploadChatMedia(
   file: File,
   userId: string,
-  onProgress?: (step: 'compressing' | 'uploading' | 'done') => void,
+  onProgress?: (step: "compressing" | "uploading" | "done") => void,
 ): Promise<UploadChatMediaResult> {
   try {
     if (!userId) {
-      throw new Error('Usuário não autenticado para upload.')
+      throw new Error("Usuário não autenticado para upload.")
     }
 
-    const isImage = file.type.startsWith('image/')
-    const isVideo = file.type.startsWith('video/')
-    const mediaType: 'image' | 'video' | 'document' = isImage
-      ? 'image'
+    const isImage = file.type.startsWith("image/")
+    const isVideo = file.type.startsWith("video/")
+    const mediaType: "image" | "video" | "document" = isImage
+      ? "image"
       : isVideo
-        ? 'video'
-        : 'document'
+        ? "video"
+        : "document"
 
     let uploadPayload: Blob | File = file
-    let ext = file.name.split('.').pop()?.toLowerCase() || 'bin'
+    let ext = file.name.split(".").pop()?.toLowerCase() || "bin"
 
     if (isImage) {
-      onProgress?.('compressing')
+      onProgress?.("compressing")
       uploadPayload = await compressImage(file, {
         maxWidth: 1600,
         maxHeight: 1600,
         quality: 0.82,
       })
       // Garante extensão condizente se foi convertido
-      if (!ext || ext === 'heic' || ext === 'heif') {
-        ext = 'jpg'
+      if (!ext || ext === "heic" || ext === "heif") {
+        ext = "jpg"
       }
     }
 
-    onProgress?.('uploading')
+    onProgress?.("uploading")
 
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_")
     const fileName = `chat_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${ext}`
     // Política do Supabase Storage exige que o primeiro folder seja o userId do auth: auth.uid()::text = (storage.foldername(name))[1]
     const filePath = `${userId}/${fileName}`
 
     const { error: uploadError } = await supabase.storage
-      .from('posts')
+      .from("posts")
       .upload(filePath, uploadPayload, {
         upsert: true,
         contentType:
-          uploadPayload.type || file.type || 'application/octet-stream',
+          uploadPayload.type || file.type || "application/octet-stream",
       })
 
     if (uploadError) {
@@ -155,10 +155,10 @@ export async function uploadChatMedia(
     }
 
     const { data: publicData } = supabase.storage
-      .from('posts')
+      .from("posts")
       .getPublicUrl(filePath)
 
-    onProgress?.('done')
+    onProgress?.("done")
 
     return {
       url: publicData.publicUrl,
@@ -167,15 +167,15 @@ export async function uploadChatMedia(
       fileName: safeName,
     }
   } catch (err: any) {
-    console.error('[uploadChatMedia] Erro:', err)
+    console.error("[uploadChatMedia] Erro:", err)
     return {
       url: null,
       error: err instanceof Error ? err : new Error(String(err)),
-      mediaType: file.type.startsWith('image/')
-        ? 'image'
-        : file.type.startsWith('video/')
-          ? 'video'
-          : 'document',
+      mediaType: file.type.startsWith("image/")
+        ? "image"
+        : file.type.startsWith("video/")
+          ? "video"
+          : "document",
       fileName: file.name,
     }
   }

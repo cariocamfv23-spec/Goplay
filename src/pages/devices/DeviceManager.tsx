@@ -1,12 +1,12 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { AppIcon } from '@/components/AppIcon'
+} from "@/components/ui/card"
+import { AppIcon } from "@/components/AppIcon"
 import {
   ArrowLeft,
   Watch,
@@ -17,34 +17,34 @@ import {
   CheckCircle2,
   X,
   Smartphone,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import useDeviceStore, { Device } from '@/stores/useDeviceStore'
-import { toast } from 'sonner'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import useDeviceStore, { Device } from "@/stores/useDeviceStore"
+import { toast } from "sonner"
+import { cn } from "@/lib/utils"
 
 const MOCK_FOUND_DEVICES: Device[] = [
   {
-    id: '1',
-    name: 'Goplay Band Pro',
-    type: 'band',
+    id: "1",
+    name: "Goplay Band Pro",
+    type: "band",
     battery: 85,
-    status: 'disconnected',
+    status: "disconnected",
   },
   {
-    id: '2',
-    name: 'Apple Watch Ultra',
-    type: 'watch',
+    id: "2",
+    name: "Apple Watch Ultra",
+    type: "watch",
     battery: 92,
-    status: 'disconnected',
+    status: "disconnected",
   },
   {
-    id: '3',
-    name: 'Garmin HRM',
-    type: 'chest_strap',
+    id: "3",
+    name: "Garmin HRM",
+    type: "chest_strap",
     battery: 40,
-    status: 'disconnected',
+    status: "disconnected",
   },
 ]
 
@@ -78,7 +78,7 @@ export default function DeviceManager() {
     connectDevice(device)
     toast.success(`${device.name} conectado com sucesso!`, {
       description:
-        'Os dados biométricos agora estão sincronizados com o Coach IA.',
+        "Os dados biométricos agora estão sincronizados com o Coach IA.",
     })
   }
 
@@ -177,7 +177,7 @@ export default function DeviceManager() {
               ) : (
                 <Bluetooth className="h-4 w-4" />
               )}
-              {isScanning ? 'Procurando...' : 'Buscar Dispositivos'}
+              {isScanning ? "Procurando..." : "Buscar Dispositivos"}
             </Button>
           </div>
         )}
@@ -197,7 +197,7 @@ export default function DeviceManager() {
                 <CardContent className="p-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 bg-secondary rounded-full flex items-center justify-center">
-                      {device.type === 'chest_strap' ? (
+                      {device.type === "chest_strap" ? (
                         <Activity className="h-5 w-5 text-primary" />
                       ) : (
                         <Watch className="h-5 w-5 text-primary" />
@@ -206,7 +206,7 @@ export default function DeviceManager() {
                     <div>
                       <h4 className="font-bold text-sm">{device.name}</h4>
                       <span className="text-xs text-muted-foreground capitalize">
-                        {device.type.replace('_', ' ')}
+                        {device.type.replace("_", " ")}
                       </span>
                     </div>
                   </div>

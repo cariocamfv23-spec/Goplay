@@ -1,8 +1,8 @@
-import { getGoplayIconFullSvg } from './icon-svg'
-import { SeasonalTheme } from './seasonal-utils'
+import { getGoplayIconFullSvg } from "./icon-svg"
+import { SeasonalTheme } from "./seasonal-utils"
 
 export function updateDynamicPWA(theme: SeasonalTheme | null) {
-  if (typeof document === 'undefined') return
+  if (typeof document === "undefined") return
 
   const svgString = getGoplayIconFullSvg(theme)
   // Base64 encode the SVG string safely for data URI
@@ -17,9 +17,9 @@ export function updateDynamicPWA(theme: SeasonalTheme | null) {
     "link[rel='icon'][type='image/svg+xml']",
   ) as HTMLLinkElement
   if (!iconLink) {
-    iconLink = document.createElement('link')
-    iconLink.rel = 'icon'
-    iconLink.type = 'image/svg+xml'
+    iconLink = document.createElement("link")
+    iconLink.rel = "icon"
+    iconLink.type = "image/svg+xml"
     document.head.appendChild(iconLink)
   }
   iconLink.href = `${svgDataUrl}?v=${v}`

@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   ArrowLeft,
   Filter,
@@ -8,30 +8,30 @@ import {
   Search,
   MapPin,
   Globe,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from "@/components/ui/select"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover'
-import { mockEvents } from '@/lib/data'
-import { MapEventCard } from '@/components/MapEventCard'
+} from "@/components/ui/popover"
+import { mockEvents } from "@/lib/data"
+import { MapEventCard } from "@/components/MapEventCard"
 
 export default function MapEvents() {
   const navigate = useNavigate()
-  const [viewMode, setViewMode] = useState<'map' | 'list'>('map')
-  const [search, setSearch] = useState('')
-  const [selectedModality, setSelectedModality] = useState('all')
-  const [selectedLocation, setSelectedLocation] = useState('all')
+  const [viewMode, setViewMode] = useState<"map" | "list">("map")
+  const [search, setSearch] = useState("")
+  const [selectedModality, setSelectedModality] = useState("all")
+  const [selectedLocation, setSelectedLocation] = useState("all")
 
   const modalities = Array.from(
     new Set(mockEvents.map((e) => e.modality).filter(Boolean)),
@@ -45,9 +45,9 @@ export default function MapEvents() {
       event.title.toLowerCase().includes(search.toLowerCase()) ||
       event.description.toLowerCase().includes(search.toLowerCase())
     const matchesModality =
-      selectedModality === 'all' || event.modality === selectedModality
+      selectedModality === "all" || event.modality === selectedModality
     const matchesLocation =
-      selectedLocation === 'all' || event.city === selectedLocation
+      selectedLocation === "all" || event.city === selectedLocation
     return matchesSearch && matchesModality && matchesLocation
   })
 
@@ -76,10 +76,10 @@ export default function MapEvents() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setViewMode(viewMode === 'map' ? 'list' : 'map')}
+            onClick={() => setViewMode(viewMode === "map" ? "list" : "map")}
             className="rounded-xl bg-secondary"
           >
-            {viewMode === 'map' ? (
+            {viewMode === "map" ? (
               <List className="h-5 w-5" />
             ) : (
               <MapIcon className="h-5 w-5" />
@@ -130,7 +130,7 @@ export default function MapEvents() {
 
       {/* Content */}
       <div className="flex-1 relative overflow-hidden flex flex-col">
-        {viewMode === 'map' ? (
+        {viewMode === "map" ? (
           <div className="absolute inset-0 bg-secondary/30">
             {/* Mock Map Image */}
             <div

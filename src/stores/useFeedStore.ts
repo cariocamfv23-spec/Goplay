@@ -1,6 +1,6 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import type { PostItem } from '@/services/feed'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
+import type { PostItem } from "@/services/feed"
 
 interface FeedState {
   posts: PostItem[]
@@ -79,7 +79,7 @@ export const useFeedStore = create<FeedState>()(
         }),
     }),
     {
-      name: 'goplay-feed-cache',
+      name: "goplay-feed-cache",
       partialize: (state) => ({
         posts: state.posts.slice(0, 30), // persist only latest posts for fast instant startup
         lastFetchedAt: state.lastFetchedAt,

@@ -1,10 +1,10 @@
-import { Championship } from '@/lib/data'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { useChampionshipStore } from '@/stores/useChampionshipStore'
-import { Trophy, Check } from 'lucide-react'
-import { useState } from 'react'
+import { Championship } from "@/lib/data"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { useChampionshipStore } from "@/stores/useChampionshipStore"
+import { Trophy, Check } from "lucide-react"
+import { useState } from "react"
 
 interface ResultsTabProps {
   championship: Championship
@@ -16,16 +16,16 @@ export function ResultsTab({ championship }: ResultsTabProps) {
     (m) => m.championshipId === championship.id,
   )
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [scores, setScores] = useState<{ a: string; b: string }>({
-    a: '',
-    b: '',
+  const [scores, setScores] = useState<{ a: string b: string }>({
+    a: "",
+    b: "",
   })
 
   const startEdit = (match: any) => {
     setEditingId(match.id)
     setScores({
-      a: match.scoreA?.toString() || '',
-      b: match.scoreB?.toString() || '',
+      a: match.scoreA?.toString() || "",
+      b: match.scoreB?.toString() || "",
     })
   }
 
@@ -33,7 +33,7 @@ export function ResultsTab({ championship }: ResultsTabProps) {
     updateMatch(matchId, {
       scoreA: parseInt(scores.a) || 0,
       scoreB: parseInt(scores.b) || 0,
-      status: 'completed',
+      status: "completed",
     })
     setEditingId(null)
   }
@@ -51,7 +51,7 @@ export function ResultsTab({ championship }: ResultsTabProps) {
             <Card key={match.id} className="border-none shadow-sm">
               <CardContent className="p-4">
                 <div className="text-xs text-center text-muted-foreground mb-2 uppercase">
-                  {match.round || 'Partida'} - {match.date}
+                  {match.round || "Partida"} - {match.date}
                 </div>
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex-1 text-right font-bold truncate">
@@ -88,11 +88,11 @@ export function ResultsTab({ championship }: ResultsTabProps) {
                     ) : (
                       <>
                         <span className="text-xl font-black">
-                          {match.scoreA ?? '-'}
+                          {match.scoreA ?? "-"}
                         </span>
                         <span className="text-xs text-muted-foreground">x</span>
                         <span className="text-xl font-black">
-                          {match.scoreB ?? '-'}
+                          {match.scoreB ?? "-"}
                         </span>
                       </>
                     )}

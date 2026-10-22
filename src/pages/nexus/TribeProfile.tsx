@@ -1,8 +1,8 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { useNexusStore } from '@/stores/useNexusStore'
-import { mockUser } from '@/lib/data'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Button } from '@/components/ui/button'
+import { useParams, useNavigate } from "react-router-dom"
+import { useNexusStore } from "@/stores/useNexusStore"
+import { mockUser } from "@/lib/data"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button"
 import {
   Users,
   Lock,
@@ -10,12 +10,12 @@ import {
   ArrowLeft,
   Shield,
   MessageSquare,
-} from 'lucide-react'
-import { TribeFeedTab } from './tabs/TribeFeedTab'
-import { TribeEventsTab } from './tabs/TribeEventsTab'
-import { TribeAdminTab } from './tabs/TribeAdminTab'
-import { TribeChatTab } from './tabs/TribeChatTab'
-import { Badge } from '@/components/ui/badge'
+} from "lucide-react"
+import { TribeFeedTab } from "./tabs/TribeFeedTab"
+import { TribeEventsTab } from "./tabs/TribeEventsTab"
+import { TribeAdminTab } from "./tabs/TribeAdminTab"
+import { TribeChatTab } from "./tabs/TribeChatTab"
+import { Badge } from "@/components/ui/badge"
 
 export default function TribeProfile() {
   const { id } = useParams()
@@ -89,7 +89,7 @@ export default function TribeProfile() {
                 onClick={handleJoin}
                 className="w-full md:w-auto font-bold shadow-lg shadow-primary/20 hover:-translate-y-1 transition-transform"
               >
-                {tribe.isPrivate ? 'Solicitar Entrada' : 'Entrar na Tribo'}
+                {tribe.isPrivate ? "Solicitar Entrada" : "Entrar na Tribo"}
               </Button>
             )}
           </div>

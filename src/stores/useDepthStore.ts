@@ -1,5 +1,5 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 interface DepthState {
   isEnabled: boolean
@@ -17,7 +17,7 @@ export const useDepthStore = create<DepthState>()(
       setIntensity: (intensity) => set({ intensity }),
     }),
     {
-      name: 'goplay-depth-storage',
+      name: "goplay-depth-storage",
     },
   ),
 )

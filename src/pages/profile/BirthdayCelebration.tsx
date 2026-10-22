@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react"
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Sparkles, PartyPopper } from 'lucide-react'
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Sparkles, PartyPopper } from "lucide-react"
 
 export function BirthdayCelebration({
   user,
@@ -16,21 +16,19 @@ export function BirthdayCelebration({
   isMe: boolean
 }) {
   const [isOpen, setIsOpen] = useState(false)
-  const [emojis, setEmojis] = useState<
-    {
-      id: number
-      left: number
-      delay: number
-      duration: number
-      char: string
-    }[]
-  >([])
+  const [emojis, setEmojis] = useState<{
+    id: number
+    left: number
+    delay: number
+    duration: number
+    char: string
+  }[]>([])
 
   useEffect(() => {
     if (!user || !isMe || !user.birthDate) return
 
     const today = new Date()
-    const [year, month, day] = user.birthDate.split('-').map(Number)
+    const [year, month, day] = user.birthDate.split("-").map(Number)
 
     const isBirthday = month === today.getMonth() + 1 && day === today.getDate()
 
@@ -44,7 +42,7 @@ export function BirthdayCelebration({
           left: Math.random() * 100,
           delay: Math.random() * 2,
           duration: 2.5 + Math.random() * 2,
-          char: ['🎉', '✨', '🏆', '💛', '🎊', '🎁'][
+          char: ["🎉", "✨", "🏆", "💛", "🎊", "🎁"][
             Math.floor(Math.random() * 6)
           ],
         }))
@@ -61,7 +59,7 @@ export function BirthdayCelebration({
     if (user?.birthDate) {
       sessionStorage.setItem(
         `bday_seen_${user.id}_${new Date().getFullYear()}`,
-        'true',
+        "true",
       )
     }
   }
@@ -122,7 +120,7 @@ export function BirthdayCelebration({
             FELIZ ANIVERSÁRIO!
           </h2>
           <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-            Hoje é o seu dia,{' '}
+            Hoje é o seu dia,{" "}
             <strong className="text-foreground">{user.name}</strong>! 🎈
             <br />A equipe GoPlay deseja que este novo ciclo seja de muita
             performance, conquistas e saúde. Continue quebrando recordes!

@@ -1,9 +1,9 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { mockHortifrutis } from '@/lib/data'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, Star, MapPin, ShoppingBag, CheckCircle } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { PaymentDialog } from '@/components/PaymentDialog'
+import { useParams, useNavigate } from "react-router-dom"
+import { mockHortifrutis } from "@/lib/data"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, Star, MapPin, ShoppingBag, CheckCircle } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { PaymentDialog } from "@/components/PaymentDialog"
 
 export default function HortifrutiDetails() {
   const { id } = useParams()
@@ -24,9 +24,9 @@ export default function HortifrutiDetails() {
   // Helper to extract numeric price
   const getNumericPrice = (priceStr: string) => {
     if (!priceStr) return 0
-    let clean = priceStr.replace(/\./g, '')
-    clean = clean.replace(/[^0-9,]/g, '')
-    clean = clean.replace(',', '.')
+    let clean = priceStr.replace(/\./g, "")
+    clean = clean.replace(/[^0-9,]/g, "")
+    clean = clean.replace(",", ".")
     const value = parseFloat(clean)
     return isNaN(value) ? 0 : value
   }

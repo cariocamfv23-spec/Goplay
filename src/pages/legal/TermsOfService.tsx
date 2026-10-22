@@ -1,4 +1,4 @@
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link } from "react-router-dom"
 import {
   ArrowLeft,
   FileText,
@@ -9,10 +9,10 @@ import {
   Scale,
   Mail,
   CheckCircle2,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
 
 export default function TermsOfService() {
   const navigate = useNavigate()
@@ -201,7 +201,7 @@ export default function TermsOfService() {
           <div className="text-xs sm:text-sm text-muted-foreground space-y-2 leading-relaxed pl-8">
             <p>
               O Goplay atua exclusivamente como plataforma de divulgação e
-              intermediação tecnológica.{' '}
+              intermediação tecnológica.{" "}
               <strong>
                 A realização física, organização técnica, estrutura de
                 segurança, atendimento médico, alvarás públicos e integridade do

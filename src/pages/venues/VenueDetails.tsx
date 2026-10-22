@@ -1,6 +1,6 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { mockVenues } from '@/lib/data'
-import { Button } from '@/components/ui/button'
+import { useParams, useNavigate } from "react-router-dom"
+import { mockVenues } from "@/lib/data"
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   MapPin,
@@ -11,12 +11,12 @@ import {
   CheckCircle2,
   Clock,
   Info,
-} from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { RecordHighlightDrawer } from '@/components/RecordHighlightDrawer'
-import { useState } from 'react'
-import { CheckInModal } from '@/components/CheckInModal'
-import { toast } from 'sonner'
+} from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { RecordHighlightDrawer } from "@/components/RecordHighlightDrawer"
+import { useState } from "react"
+import { CheckInModal } from "@/components/CheckInModal"
+import { toast } from "sonner"
 
 export default function VenueDetails() {
   const { id } = useParams()
@@ -35,7 +35,7 @@ export default function VenueDetails() {
         <p className="text-muted-foreground text-center">
           O local que você está procurando não existe ou foi removido.
         </p>
-        <Button onClick={() => navigate('/explore/venues')}>
+        <Button onClick={() => navigate("/explore/venues")}>
           Voltar para Lista
         </Button>
       </div>
@@ -43,8 +43,8 @@ export default function VenueDetails() {
   }
 
   const handleBooking = () => {
-    toast.success('Solicitação de reserva enviada!', {
-      description: 'O estabelecimento entrará em contato para confirmar.',
+    toast.success("Solicitação de reserva enviada!", {
+      description: "O estabelecimento entrará em contato para confirmar.",
     })
   }
 
@@ -73,7 +73,7 @@ export default function VenueDetails() {
             className="bg-background/50 backdrop-blur-md hover:bg-background/80 rounded-full text-foreground"
             onClick={() => {
               navigator.clipboard.writeText(window.location.href)
-              toast.info('Link copiado para a área de transferência')
+              toast.info("Link copiado para a área de transferência")
             }}
           >
             <Share2 className="h-5 w-5" />

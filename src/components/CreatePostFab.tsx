@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
 import {
   Plus,
   Ghost,
@@ -8,33 +8,33 @@ import {
   Box,
   AtSign,
   Music,
-} from 'lucide-react'
-import { toast } from 'sonner'
+} from "lucide-react"
+import { toast } from "sonner"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { useState, useRef } from 'react'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import { useNavigate } from 'react-router-dom'
-import { Separator } from '@/components/ui/separator'
-import { Post3DGenerator } from '@/components/Post3DGenerator'
-import { GhostViewMode } from '@/components/Ghost3DViewer'
-import { cn } from '@/lib/utils'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { MentionAutocomplete } from '@/components/feed/MentionAutocomplete'
-import { AudioMusicModal } from '@/components/feed/AudioMusicModal'
-import type { PostMention, PostMusicLink } from '@/services/feed'
+} from "@/components/ui/dialog"
+import { useState, useRef } from "react"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import { useNavigate } from "react-router-dom"
+import { Separator } from "@/components/ui/separator"
+import { Post3DGenerator } from "@/components/Post3DGenerator"
+import { GhostViewMode } from "@/components/Ghost3DViewer"
+import { cn } from "@/lib/utils"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { MentionAutocomplete } from "@/components/feed/MentionAutocomplete"
+import { AudioMusicModal } from "@/components/feed/AudioMusicModal"
+import type { PostMention, PostMusicLink } from "@/services/feed"
 
-import { useAuth } from '@/hooks/use-auth'
-import { feedService } from '@/services/feed'
-import { Loader2 } from 'lucide-react'
+import { useAuth } from "@/hooks/use-auth"
+import { feedService } from "@/services/feed"
+import { Loader2 } from "lucide-react"
 
 export function CreatePostFab({
   onPostCreated,
@@ -43,14 +43,14 @@ export function CreatePostFab({
 }) {
   const { user } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
-  const [content, setContent] = useState('')
+  const [content, setContent] = useState("")
   const [selectedMedia, setSelectedMedia] = useState<File | null>(null)
   const [mediaPreview, setMediaPreview] = useState<string | null>(null)
   const [selectedAudio, setSelectedAudio] = useState<File | null>(null)
   const [selectedMusicLink, setSelectedMusicLink] =
     useState<PostMusicLink | null>(null)
   const [mentions, setMentions] = useState<PostMention[]>([])
-  const [mentionQuery, setMentionQuery] = useState('')
+  const [mentionQuery, setMentionQuery] = useState("")
   const [isMentionOpen, setIsMentionOpen] = useState(false)
   const [isMusicModalOpen, setIsMusicModalOpen] = useState(false)
   const [show3DGenerator, setShow3DGenerator] = useState(false)
@@ -79,13 +79,13 @@ export function CreatePostFab({
 
   const handleSelectMention = (mention: PostMention) => {
     if (mentions.some((m) => m.id === mention.id)) {
-      toast.info('Perfil já adicionado às marcações.')
+      toast.info("Perfil já adicionado às marcações.")
       setIsMentionOpen(false)
       return
     }
 
     if (mentions.length >= 10) {
-      toast.error('Limite de até 10 marcações por publicação atingido.')
+      toast.error("Limite de até 10 marcações por publicação atingido.")
       setIsMentionOpen(false)
       return
     }
@@ -99,7 +99,7 @@ export function CreatePostFab({
       const textAfterCursor = content.slice(cursor)
       const replacedBefore = textBeforeCursor.replace(
         /@([a-zA-Z0-9_À-ÿ]*)$/,
-        '',
+        "",
       )
       setContent(`${replacedBefore}${textAfterCursor}`)
     }
@@ -130,28 +130,28 @@ export function CreatePostFab({
         audioFile: selectedAudio,
         musicLink: selectedMusicLink,
         mentions,
-        postType: selectedMedia?.type.startsWith('video/')
-          ? 'video'
+        postType: selectedMedia?.type.startsWith("video/")
+          ? "video"
           : selectedMedia
-            ? 'image'
-            : 'text',
+            ? "image"
+            : "text",
       })
       setIsSubmitting(false)
 
       if (error || !data) {
         toast.error(
-          'Erro ao publicar: ' + (error?.message || 'Falha de conexão.'),
+          "Erro ao publicar: " + (error?.message || "Falha de conexão."),
         )
         return
       }
 
-      toast.success('Publicação compartilhada com sucesso!', {
-        description: 'Seu post já está visível para a comunidade Goplay.',
+      toast.success("Publicação compartilhada com sucesso!", {
+        description: "Seu post já está visível para a comunidade Goplay.",
       })
       if (onPostCreated) onPostCreated()
     } else {
-      toast.success('Publicação enviada!', {
-        description: 'Seu post aparecerá no feed em instantes.',
+      toast.success("Publicação enviada!", {
+        description: "Seu post aparecerá no feed em instantes.",
       })
     }
 
@@ -160,7 +160,7 @@ export function CreatePostFab({
   }
 
   const resetForm = () => {
-    setContent('')
+    setContent("")
     setSelectedMedia(null)
     setMediaPreview(null)
     setSelectedAudio(null)
@@ -175,7 +175,7 @@ export function CreatePostFab({
     const file = e.target.files?.[0]
     if (file) {
       if (file.size > 20 * 1024 * 1024) {
-        toast.error('Arquivo muito grande. O limite é 20MB.')
+        toast.error("Arquivo muito grande. O limite é 20MB.")
         return
       }
       setSelectedMedia(file)
@@ -186,8 +186,8 @@ export function CreatePostFab({
   const handle3DConfirm = (mode: GhostViewMode) => {
     setGeneratedMode(mode)
     setShow3DGenerator(false)
-    toast.success('Replay 3D anexado!', {
-      description: 'Agora você pode finalizar sua publicação.',
+    toast.success("Replay 3D anexado!", {
+      description: "Agora você pode finalizar sua publicação.",
     })
   }
 
@@ -195,12 +195,12 @@ export function CreatePostFab({
     setSelectedMedia(null)
     setMediaPreview(null)
     setGeneratedMode(null)
-    if (fileInputRef.current) fileInputRef.current.value = ''
+    if (fileInputRef.current) fileInputRef.current.value = ""
   }
 
   const handleGhostPlayNavigation = () => {
     setIsOpen(false)
-    navigate('/ai/ghost-play')
+    navigate("/ai/ghost-play")
   }
 
   return (
@@ -305,7 +305,7 @@ export function CreatePostFab({
                         <p className="font-semibold text-foreground truncate">
                           {selectedAudio
                             ? selectedAudio.name
-                            : selectedMusicLink?.title || 'Música Anexada'}
+                            : selectedMusicLink?.title || "Música Anexada"}
                         </p>
                         <p className="text-[10px] text-muted-foreground truncate">
                           {selectedAudio
@@ -334,7 +334,7 @@ export function CreatePostFab({
               {/* Media Preview Area */}
               {mediaPreview && (
                 <div className="relative rounded-xl overflow-hidden bg-black/5 border border-border group">
-                  {selectedMedia?.type.startsWith('video/') ? (
+                  {selectedMedia?.type.startsWith("video/") ? (
                     <video
                       src={mediaPreview}
                       className="w-full h-48 object-cover opacity-80"
@@ -353,12 +353,12 @@ export function CreatePostFab({
                     <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
                       <div className="bg-primary/90 text-white px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg animate-in zoom-in">
                         <Box className="w-3 h-3" />
-                        Replay 3D:{' '}
-                        {generatedMode === 'split'
-                          ? 'Dividido'
-                          : generatedMode === 'ghost'
-                            ? 'Apenas 3D'
-                            : 'Original'}
+                        Replay 3D:{" "}
+                        {generatedMode === "split"
+                          ? "Dividido"
+                          : generatedMode === "ghost"
+                            ? "Apenas 3D"
+                            : "Original"}
                       </div>
                     </div>
                   )}
@@ -374,7 +374,7 @@ export function CreatePostFab({
 
                   {/* 3D Generation Trigger for videos */}
                   {!generatedMode &&
-                    selectedMedia?.type.startsWith('video/') && (
+                    selectedMedia?.type.startsWith("video/") && (
                       <div className="absolute bottom-2 left-2 right-2">
                         <Button
                           variant="default"
@@ -401,7 +401,7 @@ export function CreatePostFab({
                   >
                     <Video className="w-3.5 h-3.5 text-primary" />
                     <span className="truncate">
-                      {selectedMedia ? 'Mídia' : 'Foto/Vídeo'}
+                      {selectedMedia ? "Mídia" : "Foto/Vídeo"}
                     </span>
                   </Button>
                   <input
@@ -413,10 +413,10 @@ export function CreatePostFab({
                   />
 
                   <Button
-                    variant={mentions.length > 0 ? 'secondary' : 'outline'}
+                    variant={mentions.length > 0 ? "secondary" : "outline"}
                     className="w-full text-xs gap-1.5 px-2"
                     onClick={() => {
-                      setMentionQuery('')
+                      setMentionQuery("")
                       setIsMentionOpen((prev) => !prev)
                     }}
                     disabled={isSubmitting}
@@ -425,15 +425,15 @@ export function CreatePostFab({
                     <span className="truncate">
                       {mentions.length > 0
                         ? `Tags (${mentions.length})`
-                        : 'Marcar'}
+                        : "Marcar"}
                     </span>
                   </Button>
 
                   <Button
                     variant={
                       selectedAudio || selectedMusicLink
-                        ? 'secondary'
-                        : 'outline'
+                        ? "secondary"
+                        : "outline"
                     }
                     className="w-full text-xs gap-1.5 px-2"
                     onClick={() => setIsMusicModalOpen(true)}
@@ -442,8 +442,8 @@ export function CreatePostFab({
                     <Music className="w-3.5 h-3.5 text-primary" />
                     <span className="truncate">
                       {selectedAudio || selectedMusicLink
-                        ? 'Música ✓'
-                        : 'Música'}
+                        ? "Música ✓"
+                        : "Música"}
                     </span>
                   </Button>
                 </div>
@@ -484,7 +484,7 @@ export function CreatePostFab({
                     Publicando...
                   </>
                 ) : (
-                  'Publicar'
+                  "Publicar"
                 )}
               </Button>
             </div>

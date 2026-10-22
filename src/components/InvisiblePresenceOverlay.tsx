@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
-import { useInvisiblePresenceStore } from '@/stores/useInvisiblePresenceStore'
-import { cn } from '@/lib/utils'
-import { Logo } from '@/components/Logo'
-import { Sparkles } from 'lucide-react'
+import { useEffect, useState } from "react"
+import { useInvisiblePresenceStore } from "@/stores/useInvisiblePresenceStore"
+import { cn } from "@/lib/utils"
+import { Logo } from "@/components/Logo"
+import { Sparkles } from "lucide-react"
 
 export function InvisiblePresenceOverlay() {
   const { isActive, message, clearSession } = useInvisiblePresenceStore()
@@ -24,10 +24,10 @@ export function InvisiblePresenceOverlay() {
   return (
     <div
       className={cn(
-        'fixed inset-0 z-[200] flex flex-col items-center justify-center bg-background/95 backdrop-blur-xl transition-opacity duration-700',
+        "fixed inset-0 z-[200] flex flex-col items-center justify-center bg-background/95 backdrop-blur-xl transition-opacity duration-700",
         isVisible
-          ? 'opacity-100 pointer-events-auto'
-          : 'opacity-0 pointer-events-none',
+          ? "opacity-100 pointer-events-auto"
+          : "opacity-0 pointer-events-none",
       )}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-[hsl(var(--gold)/0.05)]" />
@@ -47,7 +47,7 @@ export function InvisiblePresenceOverlay() {
         </div>
 
         <h2 className="text-3xl font-black text-foreground leading-tight tracking-tight drop-shadow-sm">
-          {message || 'A grandeza exige tempo. Seu palco está sendo preparado.'}
+          {message || "A grandeza exige tempo. Seu palco está sendo preparado."}
         </h2>
 
         <div className="mt-8 flex gap-1.5">

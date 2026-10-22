@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react'
-import { Button } from '@/components/ui/button'
+import { useState, useEffect, useMemo } from "react"
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   Search,
@@ -7,22 +7,22 @@ import {
   Building2,
   User,
   Trophy,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { Input } from '@/components/ui/input'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
-import { useAuth } from '@/hooks/use-auth'
-import { supabase } from '@/lib/supabase/client'
-import { chatService } from '@/services/chat'
-import { toast } from 'sonner'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Input } from "@/components/ui/input"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
+import { useAuth } from "@/hooks/use-auth"
+import { supabase } from "@/lib/supabase/client"
+import { chatService } from "@/services/chat"
+import { toast } from "sonner"
 
 interface ContactProfile {
   id: string
   fullName: string
   avatarUrl: string
-  accountType: 'athlete' | 'club' | 'coach'
+  accountType: "athlete" | "club" | "coach"
   sport?: string
   position?: string
   city?: string
@@ -34,7 +34,7 @@ export default function NewChat() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const [profiles, setProfiles] = useState<ContactProfile[]>([])
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(true)
   const [startingChatWith, setStartingChatWith] = useState<string | null>(null)
 
@@ -43,11 +43,11 @@ export default function NewChat() {
       try {
         setLoading(true)
         const { data, error } = await (supabase as any)
-          .from('profiles')
+          .from("profiles")
           .select(
-            'id, full_name, avatar_url, account_type, sport, position, city, state, club_name',
+            "id, full_name, avatar_url, account_type, sport, position, city, state, club_name",
           )
-          .order('account_type', { ascending: false })
+          .order("account_type", { ascending: false })
           .limit(60)
 
         if (error) throw error
@@ -56,11 +56,11 @@ export default function NewChat() {
           .filter((p: any) => p.id !== user?.id)
           .map((p: any) => ({
             id: p.id,
-            fullName: p.club_name || p.full_name || 'Usuário Goplay',
+            fullName: p.club_name || p.full_name || "Usuário Goplay",
             avatarUrl:
               p.avatar_url ||
               `https://img.usecurling.com/ppl/medium?gender=male&seed=${p.id}`,
-            accountType: p.account_type || 'athlete',
+            accountType: p.account_type || "athlete",
             sport: p.sport,
             position: p.position,
             city: p.city,
@@ -70,7 +70,7 @@ export default function NewChat() {
 
         setProfiles(mapped)
       } catch (err) {
-        console.error('Erro ao buscar contatos:', err)
+        console.error("Erro ao buscar contatos:", err)
       } finally {
         setLoading(false)
       }
@@ -93,8 +93,8 @@ export default function NewChat() {
 
   const handleStartChat = async (targetUserId: string) => {
     if (!user) {
-      toast.error('Você precisa estar logado para iniciar uma conversa.')
-      navigate('/login')
+      toast.error("Você precisa estar logado para iniciar uma conversa.")
+      navigate("/login")
       return
     }
 
@@ -104,13 +104,13 @@ export default function NewChat() {
         await chatService.getOrCreateConversation(targetUserId)
 
       if (error || !conversationId) {
-        toast.error(error?.message || 'Não foi possível iniciar a conversa.')
+        toast.error(error?.message || "Não foi possível iniciar a conversa.")
         return
       }
 
       navigate(`/messages/${conversationId}`)
     } catch (err: any) {
-      toast.error(err?.message || 'Falha ao abrir conversa.')
+      toast.error(err?.message || "Falha ao abrir conversa.")
     } finally {
       setStartingChatWith(null)
     }
@@ -149,7 +149,7 @@ export default function NewChat() {
 
         <div className="flex items-center justify-between mb-3 px-1">
           <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-            {search ? 'Resultados' : 'Clubes & Atletas Disponíveis'}
+            {search ? "Resultados" : "Clubes & Atletas Disponíveis"}
           </h3>
           <span className="text-[11px] text-muted-foreground">
             {filtered.length} contatos
@@ -174,7 +174,7 @@ export default function NewChat() {
           <div className="space-y-2">
             {filtered.map((profile) => {
               const isStarting = startingChatWith === profile.id
-              const isClub = profile.accountType === 'club'
+              const isClub = profile.accountType === "club"
 
               return (
                 <Card
@@ -188,7 +188,7 @@ export default function NewChat() {
                         <Avatar className="h-11 w-11 border border-border">
                           <AvatarImage src={profile.avatarUrl} />
                           <AvatarFallback>
-                            {profile.fullName[0] || 'U'}
+                            {profile.fullName[0] || "U"}
                           </AvatarFallback>
                         </Avatar>
                         {isClub && (
@@ -207,17 +207,17 @@ export default function NewChat() {
                             variant="secondary"
                             className={`text-[9px] px-1 py-0 border-none ${
                               isClub
-                                ? 'bg-primary/10 text-primary font-bold'
-                                : 'bg-muted text-muted-foreground'
+                                ? "bg-primary/10 text-primary font-bold"
+                                : "bg-muted text-muted-foreground"
                             }`}
                           >
-                            {isClub ? 'Clube' : 'Atleta'}
+                            {isClub ? "Clube" : "Atleta"}
                           </Badge>
                         </div>
                         <p className="text-xs text-muted-foreground truncate">
-                          {profile.sport || 'Esportes'}
-                          {profile.position ? ` • ${profile.position}` : ''}
-                          {profile.city ? ` • ${profile.city}` : ''}
+                          {profile.sport || "Esportes"}
+                          {profile.position ? ` • ${profile.position}` : ""}
+                          {profile.city ? ` • ${profile.city}` : ""}
                         </p>
                       </div>
                     </div>

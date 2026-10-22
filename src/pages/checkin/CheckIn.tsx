@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { CheckInModal } from '@/components/CheckInModal'
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { CheckInModal } from "@/components/CheckInModal"
 import {
   MapPin,
   Search,
@@ -13,51 +13,50 @@ import {
   Building2,
   Dumbbell,
   Trophy,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 const nearbyVenues = [
   {
-    id: '1',
-    name: 'Arena Tatuapé',
-    distance: '0.5km',
-    type: 'Quadra',
+    id: "1",
+    name: "Arena Tatuapé",
+    distance: "0.5km",
+    type: "Quadra",
     points: 150,
-    address: 'R. Tuiuti, 123 - Tatuapé',
-    image: 'https://img.usecurling.com/p/200/200?q=soccer%20field&color=green',
+    address: "R. Tuiuti, 123 - Tatuapé",
+    image: "https://img.usecurling.com/p/200/200?q=soccer%20field&color=green",
     icon: Trophy,
   },
   {
-    id: '2',
-    name: 'Smart Fit - Anália Franco',
-    distance: '1.2km',
-    type: 'Academia',
+    id: "2",
+    name: "Smart Fit - Anália Franco",
+    distance: "1.2km",
+    type: "Academia",
     points: 100,
-    address: 'Av. Regente Feijó, 1230',
-    image: 'https://img.usecurling.com/p/200/200?q=gym&color=black',
+    address: "Av. Regente Feijó, 1230",
+    image: "https://img.usecurling.com/p/200/200?q=gym&color=black",
     icon: Dumbbell,
   },
   {
-    id: '3',
-    name: 'Complexo Esportivo Mooca',
-    distance: '2.5km',
-    type: 'Clube',
+    id: "3",
+    name: "Complexo Esportivo Mooca",
+    distance: "2.5km",
+    type: "Clube",
     points: 200,
-    address: 'Rua Taquari, 635',
-    image: 'https://img.usecurling.com/p/200/200?q=sports%20complex&color=blue',
+    address: "Rua Taquari, 635",
+    image: "https://img.usecurling.com/p/200/200?q=sports%20complex&color=blue",
     icon: Building2,
   },
 ]
 
 export default function CheckIn() {
   const navigate = useNavigate()
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedVenue, setSelectedVenue] = useState<
-    (typeof nearbyVenues)[0] | null
-  >(null)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedVenue, setSelectedVenue] =
+    useState<typeof nearbyVenues[0] | null>(null)
   const [showModal, setShowModal] = useState(false)
 
-  const handleCheckIn = (venue: (typeof nearbyVenues)[0]) => {
+  const handleCheckIn = (venue: typeof nearbyVenues[0]) => {
     setSelectedVenue(venue)
     setShowModal(true)
   }
@@ -78,7 +77,7 @@ export default function CheckIn() {
             variant="ghost"
             size="sm"
             className="text-xs text-primary font-medium"
-            onClick={() => navigate('/explore')}
+            onClick={() => navigate("/explore")}
           >
             Ver Mapa
           </Button>

@@ -1,9 +1,9 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
-export type FeedbackType = 'verbal' | 'visual' | 'all'
-export type FeedbackDetail = 'summary' | 'detailed'
-export type FeedbackFrequency = 'realtime' | 'end_of_set' | 'end_of_session'
+export type FeedbackType = "verbal" | "visual" | "all"
+export type FeedbackDetail = "summary" | "detailed"
+export type FeedbackFrequency = "realtime" | "end_of_set" | "end_of_session"
 
 interface AiCoachState {
   preferences: {
@@ -14,9 +14,9 @@ interface AiCoachState {
     voiceEnabled: boolean
     emotionDetectionEnabled: boolean
   }
-  setPreference: <K extends keyof AiCoachState['preferences']>(
+  setPreference: <K extends keyof AiCoachState["preferences"],>(
     key: K,
-    value: AiCoachState['preferences'][K],
+    value: AiCoachState["preferences"][K],
   ) => void
   resetPreferences: () => void
 }
@@ -25,9 +25,9 @@ export const useAiCoachStore = create<AiCoachState>()(
   persist(
     (set) => ({
       preferences: {
-        feedbackType: 'all',
-        feedbackDetail: 'detailed',
-        feedbackFrequency: 'realtime',
+        feedbackType: "all",
+        feedbackDetail: "detailed",
+        feedbackFrequency: "realtime",
         enabledInArena: true,
         voiceEnabled: true,
         emotionDetectionEnabled: true,
@@ -39,9 +39,9 @@ export const useAiCoachStore = create<AiCoachState>()(
       resetPreferences: () =>
         set({
           preferences: {
-            feedbackType: 'all',
-            feedbackDetail: 'detailed',
-            feedbackFrequency: 'realtime',
+            feedbackType: "all",
+            feedbackDetail: "detailed",
+            feedbackFrequency: "realtime",
             enabledInArena: true,
             voiceEnabled: true,
             emotionDetectionEnabled: true,
@@ -49,7 +49,7 @@ export const useAiCoachStore = create<AiCoachState>()(
         }),
     }),
     {
-      name: 'goplay-ai-coach-storage',
+      name: "goplay-ai-coach-storage",
     },
   ),
 )

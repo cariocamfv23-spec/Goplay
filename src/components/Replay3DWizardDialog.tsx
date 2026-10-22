@@ -1,16 +1,16 @@
-import { useState, useRef } from 'react'
+import { useState, useRef } from "react"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Post3DGenerator } from '@/components/Post3DGenerator'
-import { GhostViewMode } from '@/components/Ghost3DViewer'
-import { Upload, FileVideo, Sparkles, Box, ScanLine } from 'lucide-react'
-import { toast } from 'sonner'
-import { useNavigate } from 'react-router-dom'
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Post3DGenerator } from "@/components/Post3DGenerator"
+import { GhostViewMode } from "@/components/Ghost3DViewer"
+import { Upload, FileVideo, Sparkles, Box, ScanLine } from "lucide-react"
+import { toast } from "sonner"
+import { useNavigate } from "react-router-dom"
 
 interface Replay3DWizardDialogProps {
   open: boolean
@@ -28,8 +28,8 @@ export function Replay3DWizardDialog({
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      if (!file.type.startsWith('video/')) {
-        toast.error('Por favor, selecione um arquivo de vídeo.')
+      if (!file.type.startsWith("video/")) {
+        toast.error("Por favor, selecione um arquivo de vídeo.")
         return
       }
       setVideoFile(file)
@@ -37,7 +37,7 @@ export function Replay3DWizardDialog({
   }
 
   const handlePublish = (mode: GhostViewMode) => {
-    toast.success('Replay 3D Publicado!', {
+    toast.success("Replay 3D Publicado!", {
       description: `Sua reconstrução em modo ${mode.toUpperCase()} já está no feed.`,
       icon: <Box className="w-4 h-4 text-primary" />,
       duration: 5000,
@@ -45,7 +45,7 @@ export function Replay3DWizardDialog({
 
     onOpenChange(false)
     setVideoFile(null)
-    navigate('/feed')
+    navigate("/feed")
   }
 
   const reset = () => {

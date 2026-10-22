@@ -1,6 +1,6 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Play,
   Download,
@@ -11,8 +11,8 @@ import {
   Eye,
   Video,
   Award,
-} from 'lucide-react'
-import { mockCurrentUser } from '@/lib/data'
+} from "lucide-react"
+import { mockCurrentUser } from "@/lib/data"
 
 interface StrategicVisualPassportProps {
   profile?: any
@@ -29,11 +29,11 @@ export function StrategicVisualPassport({
   // Filter video posts if available
   const videoPosts = posts.filter(
     (p) =>
-      p.post_type === 'video' ||
+      p.post_type === "video" ||
       p.video_url ||
       (p.media_urls &&
         p.media_urls.some(
-          (u: string) => u.includes('video') || u.endsWith('.mp4'),
+          (u: string) => u.includes("video") || u.endsWith(".mp4"),
         )),
   )
 
@@ -41,55 +41,55 @@ export function StrategicVisualPassport({
     {
       id: 1,
       title: `Temporada 2025 — ${athleteName}`,
-      duration: '03:45',
-      type: 'Full Reel',
+      duration: "03:45",
+      type: "Full Reel",
       thumbnail:
-        'https://img.usecurling.com/p/800/450?q=soccer%20goal%20celebration&color=blue',
+        "https://img.usecurling.com/p/800/450?q=soccer%20goal%20celebration&color=blue",
       views: 1250,
-      tags: ['Goals', 'Assists', 'Skills', 'Playmaking'],
+      tags: ["Goals", "Assists", "Skills", "Playmaking"],
     },
   ]
 
   const smartCuts = [
     {
       id: 2,
-      title: 'Análise de Velocidade',
-      duration: '00:45',
+      title: "Análise de Velocidade",
+      duration: "00:45",
       thumbnail:
-        'https://img.usecurling.com/p/400/225?q=sprinter%20running&color=red',
+        "https://img.usecurling.com/p/400/225?q=sprinter%20running&color=red",
       aiScore: 92,
-      metric: '34.5 km/h Top Speed',
-      type: 'Physical',
+      metric: "34.5 km/h Top Speed",
+      type: "Physical",
     },
     {
       id: 3,
-      title: 'Inteligência Tática',
-      duration: '01:12',
+      title: "Inteligência Tática",
+      duration: "01:12",
       thumbnail:
-        'https://img.usecurling.com/p/400/225?q=soccer%20tactics%20board&color=green',
+        "https://img.usecurling.com/p/400/225?q=soccer%20tactics%20board&color=green",
       aiScore: 88,
-      metric: '95% Positioning',
-      type: 'Tactical',
+      metric: "95% Positioning",
+      type: "Tactical",
     },
     {
       id: 4,
-      title: 'Finalizações Precisas',
-      duration: '00:58',
+      title: "Finalizações Precisas",
+      duration: "00:58",
       thumbnail:
-        'https://img.usecurling.com/p/400/225?q=soccer%20kick%20ball&color=orange',
+        "https://img.usecurling.com/p/400/225?q=soccer%20kick%20ball&color=orange",
       aiScore: 90,
-      metric: '8/10 on Target',
-      type: 'Technical',
+      metric: "8/10 on Target",
+      type: "Technical",
     },
     {
       id: 5,
-      title: 'Duelos Defensivos',
-      duration: '01:05',
+      title: "Duelos Defensivos",
+      duration: "01:05",
       thumbnail:
-        'https://img.usecurling.com/p/400/225?q=soccer%20tackle&color=black',
+        "https://img.usecurling.com/p/400/225?q=soccer%20tackle&color=black",
       aiScore: 85,
-      metric: '70% Won Duels',
-      type: 'Defensive',
+      metric: "70% Won Duels",
+      type: "Defensive",
     },
   ]
 

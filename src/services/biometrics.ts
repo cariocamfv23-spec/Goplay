@@ -4,9 +4,9 @@
  * Armazenamento local por dispositivo (client-side scoped).
  */
 
-const STORAGE_KEY = 'goplay_biometric_credential_v1'
-const LOCK_KEY = 'goplay_biometric_locked_v1'
-const BACKUP_SESSION_KEY = 'goplay_biometric_session_backup_v1'
+const STORAGE_KEY = "goplay_biometric_credential_v1"
+const LOCK_KEY = "goplay_biometric_locked_v1"
+const BACKUP_SESSION_KEY = "goplay_biometric_session_backup_v1"
 
 export interface BiometricCredentialData {
   credentialId: string // Base64url encoded credential ID
@@ -27,17 +27,17 @@ export interface BiometricCredentialData {
 // Helpers para conversão de ArrayBuffer e Base64URL
 export function bufferToBase64Url(buffer: ArrayBuffer): string {
   const bytes = new Uint8Array(buffer)
-  let binary = ''
+  let binary = ""
   for (let i = 0; i < bytes.byteLength; i++) {
     binary += String.fromCharCode(bytes[i])
   }
-  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "")
 }
 
 export function base64UrlToBuffer(base64url: string): ArrayBuffer {
-  let base64 = base64url.replace(/-/g, '+').replace(/_/g, '/')
+  let base64 = base64url.replace(/-/g, "+").replace(/_/g, "/")
   while (base64.length % 4) {
-    base64 += '='
+    base64 += "="
   }
   const binary = atob(base64)
   const bytes = new Uint8Array(binary.length)
@@ -53,9 +53,9 @@ export const biometricService = {
    */
   isWebAuthnSupported(): boolean {
     return (
-      typeof window !== 'undefined' &&
+      typeof window !== "undefined" &&
       !!window.PublicKeyCredential &&
-      typeof window.PublicKeyCredential === 'function' &&
+      typeof window.PublicKeyCredential === "function" &&
       !!navigator.credentials
     )
   },
@@ -68,7 +68,7 @@ export const biometricService = {
     try {
       if (
         typeof window.PublicKeyCredential
-          .isUserVerifyingPlatformAuthenticatorAvailable === 'function'
+          .isUserVerifyingPlatformAuthenticatorAvailable === "function"
       ) {
         return await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()
       }
@@ -105,7 +105,7 @@ export const biometricService = {
   isLocked(): boolean {
     if (!this.isEnrolled()) return false
     try {
-      return localStorage.getItem(LOCK_KEY) === 'true'
+      return localStorage.getItem(LOCK_KEY) === "true"
     } catch {
       return false
     }
@@ -117,7 +117,7 @@ export const biometricService = {
   lock(): void {
     if (this.isEnrolled()) {
       try {
-        localStorage.setItem(LOCK_KEY, 'true')
+        localStorage.setItem(LOCK_KEY, "true")
       } catch {
         // no-op if localStorage is restricted
       }
@@ -197,11 +197,11 @@ export const biometricService = {
       refresh_token: string
       expires_at?: number
     }
-  }): Promise<{ success: boolean; error?: string }> {
+  }): Promise<{ success: boolean error?: string }> {
     if (!this.isWebAuthnSupported()) {
       return {
         success: false,
-        error: 'Este navegador não suporta a Web Authentication API.',
+        error: "Este navegador não suporta a Web Authentication API.",
       }
     }
 
@@ -218,10 +218,10 @@ export const biometricService = {
         publicKey: {
           challenge,
           rp: {
-            name: 'Goplay Sports App',
+            name: "Goplay Sports App",
             id:
-              window.location.hostname === 'localhost'
-                ? 'localhost'
+              window.location.hostname === "localhost"
+                ? "localhost"
                 : window.location.hostname,
           },
           user: {
@@ -230,16 +230,16 @@ export const biometricService = {
             displayName: params.userName || params.userEmail,
           },
           pubKeyCredParams: [
-            { type: 'public-key', alg: -7 }, // ES256 (standard WebAuthn)
-            { type: 'public-key', alg: -257 }, // RS256
+            { type: "public-key", alg: -7 }, // ES256 (standard WebAuthn)
+            { type: "public-key", alg: -257 }, // RS256
           ],
           authenticatorSelection: {
-            authenticatorAttachment: 'platform', // Exige Face ID, Touch ID, Android Biometrics, Windows Hello
-            userVerification: 'required', // Exige validação biométrica real ou PIN do aparelho
-            residentKey: 'preferred',
+            authenticatorAttachment: "platform", // Exige Face ID, Touch ID, Android Biometrics, Windows Hello
+            userVerification: "required", // Exige validação biométrica real ou PIN do aparelho
+            residentKey: "preferred",
           },
           timeout: 60000,
-          attestation: 'none',
+          attestation: "none",
         },
       }
 
@@ -250,7 +250,7 @@ export const biometricService = {
       if (!credential || !credential.id) {
         return {
           success: false,
-          error: 'Não foi possível registrar a biometria neste aparelho.',
+          error: "Não foi possível registrar a biometria neste aparelho.",
         }
       }
 
@@ -262,11 +262,11 @@ export const biometricService = {
         userEmail: params.userEmail,
         userName: params.userName,
         enrolledAt: new Date().toISOString(),
-        deviceName: navigator.userAgent.includes('iPhone')
-          ? 'iPhone (Face ID / Touch ID)'
-          : navigator.userAgent.includes('Android')
-            ? 'Android (Biometria)'
-            : 'Este Aparelho',
+        deviceName: navigator.userAgent.includes("iPhone")
+          ? "iPhone (Face ID / Touch ID)"
+          : navigator.userAgent.includes("Android")
+            ? "Android (Biometria)"
+            : "Este Aparelho",
         sessionToken: params.sessionTokens,
         needsReauth: false,
       }
@@ -279,32 +279,32 @@ export const biometricService = {
       return { success: true }
     } catch (err: any) {
       // Erros comuns de WebAuthn
-      if (err.name === 'NotAllowedError') {
+      if (err.name === "NotAllowedError") {
         return {
           success: false,
           error:
-            'A solicitação de biometria foi cancelada ou não foi autorizada.',
+            "A solicitação de biometria foi cancelada ou não foi autorizada.",
         }
       }
-      if (err.name === 'InvalidStateError') {
+      if (err.name === "InvalidStateError") {
         return {
           success: false,
           error:
-            'Esta biometria já foi registrada anteriormente neste aparelho.',
+            "Esta biometria já foi registrada anteriormente neste aparelho.",
         }
       }
-      if (err.name === 'NotSupportedError') {
+      if (err.name === "NotSupportedError") {
         return {
           success: false,
           error:
-            'Autenticador de biometria não encontrado ou não configurado no aparelho.',
+            "Autenticador de biometria não encontrado ou não configurado no aparelho.",
         }
       }
       return {
         success: false,
         error:
           err.message ||
-          'Falha ao acionar a verificação biométrica do sistema.',
+          "Falha ao acionar a verificação biométrica do sistema.",
       }
     }
   },
@@ -323,7 +323,7 @@ export const biometricService = {
     if (!this.isWebAuthnSupported()) {
       return {
         success: false,
-        error: 'WebAuthn não é suportado neste navegador.',
+        error: "WebAuthn não é suportado neste navegador.",
       }
     }
 
@@ -332,7 +332,7 @@ export const biometricService = {
       return {
         success: false,
         error:
-          'Nenhuma biometria cadastrada neste aparelho. Faça login normalmente e ative a biometria em Configurações.',
+          "Nenhuma biometria cadastrada neste aparelho. Faça login normalmente e ative a biometria em Configurações.",
       }
     }
 
@@ -347,15 +347,15 @@ export const biometricService = {
           challenge,
           timeout: 60000,
           rpId:
-            window.location.hostname === 'localhost'
-              ? 'localhost'
+            window.location.hostname === "localhost"
+              ? "localhost"
               : window.location.hostname,
-          userVerification: 'required', // Obriga o prompt de Face ID / Digital
+          userVerification: "required", // Obriga o prompt de Face ID / Digital
           allowCredentials: [
             {
               id: rawIdBuffer,
-              type: 'public-key',
-              transports: ['internal'],
+              type: "public-key",
+              transports: ["internal"],
             },
           ],
         },
@@ -368,7 +368,7 @@ export const biometricService = {
       if (!assertion) {
         return {
           success: false,
-          error: 'Biometria não confirmada pelo aparelho.',
+          error: "Biometria não confirmada pelo aparelho.",
         }
       }
 
@@ -377,24 +377,24 @@ export const biometricService = {
         data: enrolled,
       }
     } catch (err: any) {
-      if (err.name === 'NotAllowedError') {
+      if (err.name === "NotAllowedError") {
         return {
           success: false,
           error:
-            'Leitura biométrica cancelada ou não reconhecida pelo aparelho.',
+            "Leitura biométrica cancelada ou não reconhecida pelo aparelho.",
         }
       }
-      if (err.name === 'SecurityError') {
+      if (err.name === "SecurityError") {
         return {
           success: false,
-          error: 'Erro de segurança na verificação de biometria.',
+          error: "Erro de segurança na verificação de biometria.",
         }
       }
       return {
         success: false,
         error:
           err?.message ||
-          'Falha na confirmação biométrica. Tente e-mail e senha.',
+          "Falha na confirmação biométrica. Tente e-mail e senha.",
       }
     }
   },
@@ -403,7 +403,7 @@ export const biometricService = {
    * Marca a credencial biométrica como necessitando de reautenticação por e-mail/senha
    * (evita loops e re-tentativas com refresh tokens revogados).
    */
-  markNeedsReauth(reason = 'session_revoked'): void {
+  markNeedsReauth(reason = "session_revoked"): void {
     const enrolled = this.getEnrolledCredential()
     if (enrolled) {
       enrolled.needsReauth = true
@@ -464,7 +464,7 @@ export const biometricService = {
    */
   syncSessionIfEnrolled(
     session: {
-      user?: { id?: string; email?: string }
+      user?: { id?: string email?: string }
       access_token?: string
       refresh_token?: string
       expires_at?: number
@@ -476,10 +476,10 @@ export const biometricService = {
     if (!enrolled) return false
 
     const sessionUserId = session.user?.id
-    const sessionEmail = (session.user?.email || emailFallback || '')
+    const sessionEmail = (session.user?.email || emailFallback || "")
       .toLowerCase()
       .trim()
-    const enrolledEmail = (enrolled.userEmail || '').toLowerCase().trim()
+    const enrolledEmail = (enrolled.userEmail || "").toLowerCase().trim()
 
     const isMatch =
       !sessionUserId ||

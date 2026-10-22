@@ -1,17 +1,17 @@
-import { PostCard } from '@/components/PostCard'
-import { mockPosts } from '@/lib/data'
-import { StoriesRail } from '@/components/StoriesRail'
-import { CreatePostFab } from '@/components/CreatePostFab'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { DemoProfilesBanner } from '@/components/profile/DemoProfilesBanner'
+import { PostCard } from "@/components/PostCard"
+import { mockPosts } from "@/lib/data"
+import { StoriesRail } from "@/components/StoriesRail"
+import { CreatePostFab } from "@/components/CreatePostFab"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { DemoProfilesBanner } from "@/components/profile/DemoProfilesBanner"
 
-import { useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
-import { useAuth } from '@/hooks/use-auth'
-import { useRealtimeFeed } from '@/hooks/useRealtimeFeed'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { useEffect } from "react"
+import { useSearchParams } from "react-router-dom"
+import { useAuth } from "@/hooks/use-auth"
+import { useRealtimeFeed } from "@/hooks/useRealtimeFeed"
+import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 
 function PostCardSkeleton() {
   return (
@@ -42,7 +42,7 @@ function PostCardSkeleton() {
 export default function Feed() {
   const { user } = useAuth()
   const [searchParams] = useSearchParams()
-  const targetPostId = searchParams.get('post')
+  const targetPostId = searchParams.get("post")
 
   const {
     posts: realPosts,
@@ -59,10 +59,10 @@ export default function Feed() {
       const timer = setTimeout(() => {
         const el = document.getElementById(`post-${targetPostId}`)
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-          el.classList.add('ring-2', 'ring-primary', 'transition-all')
+          el.scrollIntoView({ behavior: "smooth", block: "center" })
+          el.classList.add("ring-2", "ring-primary", "transition-all")
           setTimeout(() => {
-            el.classList.remove('ring-2', 'ring-primary')
+            el.classList.remove("ring-2", "ring-primary")
           }, 3000)
         }
       }, 300)
@@ -100,12 +100,12 @@ export default function Feed() {
   // Merged feed: real Supabase posts displayed first, followed by legacy items
   const allPosts = [...formattedRealPosts, ...mockPosts]
   const socialPosts = [
-    ...formattedRealPosts.filter((p) => p.type !== 'article'),
-    ...mockPosts.filter((p) => p.type !== 'article' && p.type !== 'event'),
+    ...formattedRealPosts.filter((p) => p.type !== "article"),
+    ...mockPosts.filter((p) => p.type !== "article" && p.type !== "event"),
   ]
   const eventPosts = [
-    ...formattedRealPosts.filter((p) => p.type === 'article'),
-    ...mockPosts.filter((p) => p.type === 'article' || p.type === 'event'),
+    ...formattedRealPosts.filter((p) => p.type === "article"),
+    ...mockPosts.filter((p) => p.type === "article" || p.type === "event"),
   ]
 
   return (

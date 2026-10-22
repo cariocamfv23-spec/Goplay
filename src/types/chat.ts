@@ -8,10 +8,10 @@ export interface EvaluationData {
 
 export interface ChatMessage {
   id: string
-  sender: 'me' | 'them' | 'bot'
+  sender: "me" | "them" | "bot"
   text?: string
   time: string
-  type?: 'text' | 'image' | 'video' | 'audio' | 'document' | 'evaluation'
+  type?: "text" | "image" | "video" | "audio" | "document" | "evaluation"
   mediaUrl?: string
   fileName?: string
   isMe?: boolean

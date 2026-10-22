@@ -1,6 +1,6 @@
-import { useSponsorshipStore, CriteriaType } from '@/stores/useSponsorshipStore'
-import { Check, Megaphone, Shirt, Store, Tag } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { useSponsorshipStore, CriteriaType } from "@/stores/useSponsorshipStore"
+import { Check, Megaphone, Shirt, Store, Tag } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 export function CriteriaSelector() {
   const { selectedCriteria, toggleCriteria } = useSponsorshipStore()
@@ -12,28 +12,28 @@ export function CriteriaSelector() {
     color: string
   }[] = [
     {
-      id: 'brand',
-      label: 'Uso de Marca',
+      id: "brand",
+      label: "Uso de Marca",
       icon: Tag,
-      color: 'text-blue-500 bg-blue-500/10 border-blue-200',
+      color: "text-blue-500 bg-blue-500/10 border-blue-200",
     },
     {
-      id: 'posts',
-      label: 'Postagens',
+      id: "posts",
+      label: "Postagens",
       icon: Megaphone,
-      color: 'text-purple-500 bg-purple-500/10 border-purple-200',
+      color: "text-purple-500 bg-purple-500/10 border-purple-200",
     },
     {
-      id: 'uniform',
-      label: 'Uniforme',
+      id: "uniform",
+      label: "Uniforme",
       icon: Shirt,
-      color: 'text-orange-500 bg-orange-500/10 border-orange-200',
+      color: "text-orange-500 bg-orange-500/10 border-orange-200",
     },
     {
-      id: 'promo',
-      label: 'Ações Promo',
+      id: "promo",
+      label: "Ações Promo",
       icon: Store,
-      color: 'text-green-500 bg-green-500/10 border-green-200',
+      color: "text-green-500 bg-green-500/10 border-green-200",
     },
   ]
 
@@ -46,25 +46,25 @@ export function CriteriaSelector() {
             key={option.id}
             onClick={() => toggleCriteria(option.id)}
             className={cn(
-              'relative flex items-center gap-3 p-3 rounded-xl border transition-all duration-300 text-left group',
+              "relative flex items-center gap-3 p-3 rounded-xl border transition-all duration-300 text-left group",
               isSelected
-                ? 'bg-secondary/80 border-primary/50 shadow-sm'
-                : 'bg-background/50 border-border/50 hover:bg-secondary/40',
+                ? "bg-secondary/80 border-primary/50 shadow-sm"
+                : "bg-background/50 border-border/50 hover:bg-secondary/40",
             )}
           >
             <div
               className={cn(
-                'p-2 rounded-lg transition-transform group-hover:scale-110',
+                "p-2 rounded-lg transition-transform group-hover:scale-110",
                 option.color,
-                isSelected && 'ring-1 ring-inset ring-current',
+                isSelected && "ring-1 ring-inset ring-current",
               )}
             >
               <option.icon className="w-4 h-4" />
             </div>
             <span
               className={cn(
-                'text-xs font-semibold',
-                isSelected ? 'text-foreground' : 'text-muted-foreground',
+                "text-xs font-semibold",
+                isSelected ? "text-foreground" : "text-muted-foreground",
               )}
             >
               {option.label}

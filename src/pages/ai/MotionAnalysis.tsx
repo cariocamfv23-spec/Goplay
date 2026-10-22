@@ -1,17 +1,17 @@
-import { useState, useEffect, useRef } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { X, Play, RotateCcw, Camera, Settings2, Brain } from 'lucide-react'
-import { MotionAnalysisOverlay } from '@/components/MotionAnalysisOverlay'
+import { useState, useEffect, useRef } from "react"
+import { useNavigate, useLocation } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import { X, Play, RotateCcw, Camera, Settings2, Brain } from "lucide-react"
+import { MotionAnalysisOverlay } from "@/components/MotionAnalysisOverlay"
 import {
   RealTimeFeedback,
   FeedbackMessage,
-} from '@/components/RealTimeFeedback'
-import { Progress } from '@/components/ui/progress'
-import useSoundStore from '@/stores/useSoundStore'
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
-import { useAiCoachStore } from '@/stores/useAiCoachStore'
+} from "@/components/RealTimeFeedback"
+import { Progress } from "@/components/ui/progress"
+import useSoundStore from "@/stores/useSoundStore"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
+import { useAiCoachStore } from "@/stores/useAiCoachStore"
 
 interface Exercise {
   id: string
@@ -37,8 +37,8 @@ export default function MotionAnalysis() {
 
   const selectedExercise = (location.state as { exercise?: Exercise })
     ?.exercise || {
-    name: 'Agachamento Livre', // Default fallback
-    category: 'Fitness',
+    name: "Agachamento Livre", // Default fallback
+    category: "Fitness",
   }
 
   // Simulate analysis loop
@@ -58,16 +58,16 @@ export default function MotionAnalysis() {
           if (now - lastEmotionTime.current > 8000) {
             // Detect Confidence (High accuracy sustained)
             if (newAcc > 92 && Math.random() > 0.7) {
-              const msg = 'Confiança detectada! Ritmo excelente.'
+              const msg = "Confiança detectada! Ritmo excelente."
               setFeedback({
                 id: now.toString(),
-                type: 'emotion',
+                type: "emotion",
                 text: msg,
               })
               if (preferences.voiceEnabled) {
                 playNarration({
                   hasNarration: true,
-                  style: 'professional',
+                  style: "professional",
                   text: msg,
                   volume: 1,
                 })
@@ -76,16 +76,16 @@ export default function MotionAnalysis() {
             }
             // Detect Frustration (Low accuracy drop)
             else if (newAcc < 70 && Math.random() > 0.6) {
-              const msg = 'Frustração detectada. Respire e foque.'
+              const msg = "Frustração detectada. Respire e foque."
               setFeedback({
                 id: now.toString(),
-                type: 'emotion',
+                type: "emotion",
                 text: msg,
               })
               if (preferences.voiceEnabled) {
                 playNarration({
                   hasNarration: true,
-                  style: 'professional',
+                  style: "professional",
                   text: msg,
                   volume: 1,
                 })
@@ -102,11 +102,11 @@ export default function MotionAnalysis() {
       if (Math.random() > 0.8) {
         setReps((prev) => {
           const newReps = prev + 1
-          playSound('notification_points')
+          playSound("notification_points")
           setFeedback({
             id: Date.now().toString(),
-            type: 'success',
-            text: 'Movimento Perfeito!',
+            type: "success",
+            text: "Movimento Perfeito!",
           })
           return newReps
         })
@@ -114,8 +114,8 @@ export default function MotionAnalysis() {
         // Random corrective feedback
         setFeedback({
           id: Date.now().toString(),
-          type: 'warning',
-          text: 'Corrija a postura',
+          type: "warning",
+          text: "Corrija a postura",
         })
       }
     }, 2000)
@@ -127,9 +127,9 @@ export default function MotionAnalysis() {
     setIsActive(!isActive)
     if (!isActive) {
       setFeedback({
-        id: 'start',
-        type: 'info',
-        text: 'Posicione-se para começar...',
+        id: "start",
+        type: "info",
+        text: "Posicione-se para começar...",
       })
     }
   }
@@ -234,10 +234,10 @@ export default function MotionAnalysis() {
           <Button
             size="lg"
             className={cn(
-              'h-20 w-20 rounded-full shadow-2xl border-4 transition-all duration-300 transform hover:scale-105 active:scale-95',
+              "h-20 w-20 rounded-full shadow-2xl border-4 transition-all duration-300 transform hover:scale-105 active:scale-95",
               isActive
-                ? 'bg-red-500 border-red-200 hover:bg-red-600'
-                : 'bg-primary border-primary-foreground/20 hover:bg-primary/90',
+                ? "bg-red-500 border-red-200 hover:bg-red-600"
+                : "bg-primary border-primary-foreground/20 hover:bg-primary/90",
             )}
             onClick={handleToggle}
           >
@@ -252,7 +252,7 @@ export default function MotionAnalysis() {
             variant="outline"
             size="icon"
             className="h-12 w-12 rounded-full border-white/20 bg-black/40 text-white hover:bg-black/60 hover:text-white"
-            onClick={() => navigate('/ai/settings')}
+            onClick={() => navigate("/ai/settings")}
           >
             <Settings2 className="w-5 h-5" />
           </Button>

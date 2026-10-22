@@ -1,13 +1,13 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Search, Star, MapPin, CreditCard, CheckCircle } from 'lucide-react'
-import { mockNutrition, mockHortifrutis } from '@/lib/data'
-import { useNavigate } from 'react-router-dom'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { Button } from '@/components/ui/button'
-import { DigitalCard } from '@/components/DigitalCard'
-import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Search, Star, MapPin, CreditCard, CheckCircle } from "lucide-react"
+import { mockNutrition, mockHortifrutis } from "@/lib/data"
+import { useNavigate } from "react-router-dom"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button"
+import { DigitalCard } from "@/components/DigitalCard"
+import { Badge } from "@/components/ui/badge"
 
 export default function NutritionList() {
   const navigate = useNavigate()

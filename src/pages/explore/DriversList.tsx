@@ -1,16 +1,16 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Input } from '@/components/ui/input'
-import { Search, Car, Star, Navigation, ShieldCheck } from 'lucide-react'
-import { mockDrivers, mockCurrentUser } from '@/lib/data'
-import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
-import { Badge } from '@/components/ui/badge'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Input } from "@/components/ui/input"
+import { Search, Car, Star, Navigation, ShieldCheck } from "lucide-react"
+import { mockDrivers, mockCurrentUser } from "@/lib/data"
+import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+import { Badge } from "@/components/ui/badge"
 
 export default function DriversList() {
   const navigate = useNavigate()
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("")
 
   const filteredDrivers = mockDrivers.filter((d) =>
     d.name.toLowerCase().includes(search.toLowerCase()),
@@ -91,7 +91,7 @@ export default function DriversList() {
                         {driver.rating}
                       </div>
                       <span className="text-xs text-primary font-medium mt-1">
-                        {driver.distance || '0.5 km'}
+                        {driver.distance || "0.5 km"}
                       </span>
                     </div>
                   </div>

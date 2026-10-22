@@ -1,26 +1,26 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { X, Volume2, VolumeX, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import { mockRetrospective } from '@/lib/data'
-import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
-import { AppIcon } from '@/components/AppIcon'
+import { useState, useEffect, useRef, useCallback } from "react"
+import { useNavigate } from "react-router-dom"
+import { X, Volume2, VolumeX, ChevronLeft, ChevronRight } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { mockRetrospective } from "@/lib/data"
+import { useRetrospectiveStore } from "@/stores/useRetrospectiveStore"
+import { AppIcon } from "@/components/AppIcon"
 
-import IntroSlide from './IntroSlide'
-import StatsSlide from './StatsSlide'
-import MilestonesSlide from './MilestonesSlide'
-import AchievementsSlide from './AchievementsSlide'
-import EvolutionSlide from './EvolutionSlide'
-import OutroSlide from './OutroSlide'
+import IntroSlide from "./IntroSlide"
+import StatsSlide from "./StatsSlide"
+import MilestonesSlide from "./MilestonesSlide"
+import AchievementsSlide from "./AchievementsSlide"
+import EvolutionSlide from "./EvolutionSlide"
+import OutroSlide from "./OutroSlide"
 
 const SLIDES = [
-  { id: 'intro', component: IntroSlide },
-  { id: 'stats', component: StatsSlide },
-  { id: 'milestones', component: MilestonesSlide },
-  { id: 'achievements', component: AchievementsSlide },
-  { id: 'evolution', component: EvolutionSlide },
-  { id: 'outro', component: OutroSlide as React.ComponentType<any> },
+  { id: "intro", component: IntroSlide },
+  { id: "stats", component: StatsSlide },
+  { id: "milestones", component: MilestonesSlide },
+  { id: "achievements", component: AchievementsSlide },
+  { id: "evolution", component: EvolutionSlide },
+  { id: "outro", component: OutroSlide as React.ComponentType<any> },
 ]
 
 export default function Retrospective() {
@@ -39,7 +39,7 @@ export default function Retrospective() {
   // --- Audio Logic ---
   useEffect(() => {
     const audio = new Audio(
-      'https://assets.mixkit.co/music/preview/mixkit-uplifting-strings-and-piano-1341.mp3',
+      "https://assets.mixkit.co/music/preview/mixkit-uplifting-strings-and-piano-1341.mp3",
     )
     audio.loop = true
     audio.volume = 0.4
@@ -120,8 +120,8 @@ export default function Retrospective() {
 
   const toggleMute = () => setIsMuted(!isMuted)
   const togglePlay = () => setIsPlaying(!isPlaying)
-  const handleClose = () => navigate('/') // X Button -> Home
-  const handleFinish = () => navigate('/profile/me') // Continue Button -> Profile
+  const handleClose = () => navigate("/") // X Button -> Home
+  const handleFinish = () => navigate("/profile/me") // Continue Button -> Profile
 
   const ActiveComponent = SLIDES[currentSlide].component
 
@@ -133,7 +133,7 @@ export default function Retrospective() {
       {/* Dynamic Background based on Theme */}
       <div
         className={cn(
-          'absolute inset-0 transition-all duration-1000 ease-in-out',
+          "absolute inset-0 transition-all duration-1000 ease-in-out",
           currentTheme.gradient,
         )}
       />
@@ -152,10 +152,10 @@ export default function Retrospective() {
                 style={{
                   width:
                     index < currentSlide
-                      ? '100%'
+                      ? "100%"
                       : index === currentSlide
                         ? `${progress}%`
-                        : '0%',
+                        : "0%",
                 }}
               />
             </div>

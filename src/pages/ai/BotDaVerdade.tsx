@@ -1,11 +1,11 @@
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, Bot, Trash2, Zap } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { useBotDaVerdadeStore } from '@/stores/useBotDaVerdadeStore'
-import { ChatBubble } from '@/components/chat/ChatBubble'
-import { ChatInput } from '@/components/chat/ChatInput'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { useEffect, useRef } from 'react'
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, Bot, Trash2, Zap } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { useBotDaVerdadeStore } from "@/stores/useBotDaVerdadeStore"
+import { ChatBubble } from "@/components/chat/ChatBubble"
+import { ChatInput } from "@/components/chat/ChatInput"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { useEffect, useRef } from "react"
 
 export default function BotDaVerdade() {
   const navigate = useNavigate()
@@ -15,7 +15,7 @@ export default function BotDaVerdade() {
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: 'smooth' })
+      scrollRef.current.scrollIntoView({ behavior: "smooth" })
     }
   }, [messages, isTyping])
 

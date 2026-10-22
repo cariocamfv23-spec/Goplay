@@ -4,10 +4,10 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { AURA_CONFIGS, AuraType } from '@/lib/aura-utils'
-import { Trophy, Zap, Sparkles, Eye } from 'lucide-react'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/dialog"
+import { AURA_CONFIGS, AuraType } from "@/lib/aura-utils"
+import { Trophy, Zap, Sparkles, Eye } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface AuraLegendProps {
   open: boolean
@@ -16,18 +16,18 @@ interface AuraLegendProps {
 
 export function AuraLegend({ open, onOpenChange }: AuraLegendProps) {
   const auras = Object.entries(AURA_CONFIGS).filter(
-    ([key]) => key !== 'none',
+    ([key]) => key !== "none",
   ) as [AuraType, typeof AURA_CONFIGS.gold][]
 
   const getIcon = (type: AuraType) => {
     switch (type) {
-      case 'gold':
+      case "gold":
         return <Trophy className="w-5 h-5 text-yellow-100" />
-      case 'neon':
+      case "neon":
         return <Zap className="w-5 h-5 text-cyan-100" />
-      case 'nature':
+      case "nature":
         return <Sparkles className="w-5 h-5 text-emerald-100" />
-      case 'royal':
+      case "royal":
         return <Eye className="w-5 h-5 text-purple-100" />
       default:
         return null
@@ -68,9 +68,9 @@ export function AuraLegend({ open, onOpenChange }: AuraLegendProps) {
                 <div className="relative shrink-0">
                   <div
                     className={cn(
-                      'w-12 h-12 rounded-full flex items-center justify-center shadow-lg',
-                      type === 'gold' && 'animate-aura-pulse-fast',
-                      type === 'royal' && 'animate-aura-spin',
+                      "w-12 h-12 rounded-full flex items-center justify-center shadow-lg",
+                      type === "gold" && "animate-aura-pulse-fast",
+                      type === "royal" && "animate-aura-spin",
                     )}
                     style={{
                       background: `linear-gradient(135deg, ${config.colorStart}, ${config.colorEnd})`,

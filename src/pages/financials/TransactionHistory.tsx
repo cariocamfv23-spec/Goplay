@@ -1,9 +1,9 @@
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, ArrowUpRight, ArrowDownLeft, Filter } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { Card, CardContent } from '@/components/ui/card'
-import { mockFinancialHistory } from '@/lib/data'
-import { cn } from '@/lib/utils'
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, ArrowUpRight, ArrowDownLeft, Filter } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Card, CardContent } from "@/components/ui/card"
+import { mockFinancialHistory } from "@/lib/data"
+import { cn } from "@/lib/utils"
 
 export default function TransactionHistory() {
   const navigate = useNavigate()
@@ -24,9 +24,9 @@ export default function TransactionHistory() {
 
       <div className="p-4 space-y-4">
         {mockFinancialHistory.map((t) => {
-          const isNegative = t.value < 0 || t.type === 'spend'
-          const valueColor = isNegative ? 'text-red-500' : 'text-green-500'
-          const bgColor = isNegative ? 'bg-red-500/10' : 'bg-green-500/10'
+          const isNegative = t.value < 0 || t.type === "spend"
+          const valueColor = isNegative ? "text-red-500" : "text-green-500"
+          const bgColor = isNegative ? "bg-red-500/10" : "bg-green-500/10"
 
           return (
             <Card
@@ -37,7 +37,7 @@ export default function TransactionHistory() {
                 <div className="flex items-center gap-4">
                   <div
                     className={cn(
-                      'h-10 w-10 rounded-full flex items-center justify-center',
+                      "h-10 w-10 rounded-full flex items-center justify-center",
                       bgColor,
                       valueColor,
                     )}
@@ -54,10 +54,10 @@ export default function TransactionHistory() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className={cn('font-bold', valueColor)}>
-                    {t.value > 0 ? '+' : ''}
-                    {t.currency === 'BRL'
-                      ? `R$ ${Math.abs(t.value).toFixed(2).replace('.', ',')}`
+                  <p className={cn("font-bold", valueColor)}>
+                    {t.value > 0 ? "+" : ""}
+                    {t.currency === "BRL"
+                      ? `R$ ${Math.abs(t.value).toFixed(2).replace(".", ",")}`
                       : `${Math.abs(t.value)} pts`}
                   </p>
                   <p className="text-[10px] uppercase text-muted-foreground font-medium">

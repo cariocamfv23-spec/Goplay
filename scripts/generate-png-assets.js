@@ -1,6 +1,6 @@
-import fs from 'node:fs'
-import path from 'node:path'
-import zlib from 'node:zlib'
+import fs from "node:fs"
+import path from "node:path"
+import zlib from "node:zlib"
 
 // 1. Pure JS PNG encoder
 function crc32(buf) {
@@ -37,7 +37,7 @@ function makePng(width, height, rgbaBuffer) {
   ihdrData[11] = 0 // filter: 0
   ihdrData[12] = 0 // interlace: 0
 
-  const ihdrChunk = createChunk('IHDR', ihdrData)
+  const ihdrChunk = createChunk("IHDR", ihdrData)
 
   // Scanlines with filter type 0 (None)
   const rowLen = width * 4
@@ -49,14 +49,14 @@ function makePng(width, height, rgbaBuffer) {
   }
 
   const compressedData = zlib.deflateSync(rawData, { level: 9 })
-  const idatChunk = createChunk('IDAT', compressedData)
-  const iendChunk = createChunk('IEND', Buffer.alloc(0))
+  const idatChunk = createChunk("IDAT", compressedData)
+  const iendChunk = createChunk("IEND", Buffer.alloc(0))
 
   return Buffer.concat([sig, ihdrChunk, idatChunk, iendChunk])
 }
 
 function createChunk(type, data) {
-  const typeBuf = Buffer.from(type, 'ascii')
+  const typeBuf = Buffer.from(type, "ascii")
   const len = data.length
   const chunk = Buffer.alloc(4 + 4 + len + 4)
   chunk.writeUInt32BE(len, 0)
@@ -78,7 +78,7 @@ function pointInTriangle(px, py, x1, y1, x2, y2, x3, y3) {
 }
 
 function hexToRgb(hex) {
-  const c = parseInt(hex.replace('#', ''), 16)
+  const c = parseInt(hex.replace("#", ""), 16)
   return [(c >> 16) & 255, (c >> 8) & 255, c & 255]
 }
 
@@ -289,27 +289,27 @@ function makeIco(images) {
 }
 
 export function generateAssets(publicDir) {
-  console.log('Generating official PNG assets...')
+  console.log("Generating official PNG assets...")
 
   const icon192 = renderGoplayIcon(192)
-  fs.writeFileSync(path.join(publicDir, 'icon-192.png'), icon192)
-  console.log('Created public/icon-192.png (192x192), size:', icon192.length)
+  fs.writeFileSync(path.join(publicDir, "icon-192.png"), icon192)
+  console.log("Created public/icon-192.png (192x192), size:", icon192.length)
 
   const icon512 = renderGoplayIcon(512)
-  fs.writeFileSync(path.join(publicDir, 'icon-512.png'), icon512)
-  console.log('Created public/icon-512.png (512x512), size:', icon512.length)
+  fs.writeFileSync(path.join(publicDir, "icon-512.png"), icon512)
+  console.log("Created public/icon-512.png (512x512), size:", icon512.length)
 
   const badge96 = renderBadgeIcon(96)
-  fs.writeFileSync(path.join(publicDir, 'notification-badge.png'), badge96)
+  fs.writeFileSync(path.join(publicDir, "notification-badge.png"), badge96)
   console.log(
-    'Created public/notification-badge.png (96x96), size:',
+    "Created public/notification-badge.png (96x96), size:",
     badge96.length,
   )
 
   const monochrome512 = renderBadgeIcon(512)
-  fs.writeFileSync(path.join(publicDir, 'icon-monochrome.png'), monochrome512)
+  fs.writeFileSync(path.join(publicDir, "icon-monochrome.png"), monochrome512)
   console.log(
-    'Created public/icon-monochrome.png (512x512), size:',
+    "Created public/icon-monochrome.png (512x512), size:",
     monochrome512.length,
   )
 
@@ -317,22 +317,22 @@ export function generateAssets(publicDir) {
   const fav48 = renderGoplayIcon(48)
   const fav32 = renderGoplayIcon(32)
   const fav16 = renderGoplayIcon(16)
-  fs.writeFileSync(path.join(publicDir, 'favicon.png'), fav48)
-  console.log('Created public/favicon.png (48x48), size:', fav48.length)
+  fs.writeFileSync(path.join(publicDir, "favicon.png"), fav48)
+  console.log("Created public/favicon.png (48x48), size:", fav48.length)
 
   const icoBuf = makeIco([
     { width: 16, height: 16, buffer: fav16 },
     { width: 32, height: 32, buffer: fav32 },
     { width: 48, height: 48, buffer: fav48 },
   ])
-  fs.writeFileSync(path.join(publicDir, 'favicon.ico'), icoBuf)
-  console.log('Created public/favicon.ico (multi-res), size:', icoBuf.length)
+  fs.writeFileSync(path.join(publicDir, "favicon.ico"), icoBuf)
+  console.log("Created public/favicon.ico (multi-res), size:", icoBuf.length)
 
-  console.log('All PNG/ICO assets generated successfully!')
+  console.log("All PNG/ICO assets generated successfully!")
 }
 
 // Run immediately if executed via node
-if (process.argv[1] && process.argv[1].endsWith('generate-png-assets.js')) {
-  const publicDir = path.resolve(process.cwd(), 'public')
+if (process.argv[1] && process.argv[1].endsWith("generate-png-assets.js")) {
+  const publicDir = path.resolve(process.cwd(), "public")
   generateAssets(publicDir)
 }

@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   Send,
   Paperclip,
@@ -10,18 +10,18 @@ import {
   X,
   Loader2,
   Check,
-} from 'lucide-react'
-import { useState, useRef } from 'react'
+} from "lucide-react"
+import { useState, useRef } from "react"
 import {
   Drawer,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
   DrawerClose,
-} from '@/components/ui/drawer'
-import { ChatMessage } from '@/types/chat'
-import { toast } from 'sonner'
-import { uploadChatMedia } from '@/lib/chat-media-upload'
+} from "@/components/ui/drawer"
+import { ChatMessage } from "@/types/chat"
+import { toast } from "sonner"
+import { uploadChatMedia } from "@/lib/chat-media-upload"
 
 interface ChatInputProps {
   onSendMessage: (msg: Partial<ChatMessage>) => Promise<void> | void
@@ -34,16 +34,16 @@ export function ChatInput({
   currentUserId,
   disabled = false,
 }: ChatInputProps) {
-  const [text, setText] = useState('')
+  const [text, setText] = useState("")
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
   const [recordingTime, setRecordingTime] = useState(0)
   const [uploading, setUploading] = useState(false)
-  const [uploadStatus, setUploadStatus] = useState<string>('')
+  const [uploadStatus, setUploadStatus] = useState<string>("")
   const [stagedMedia, setStagedMedia] = useState<{
     file: File
     previewUrl: string
-    type: 'image' | 'video' | 'document'
+    type: "image" | "video" | "document"
   } | null>(null)
 
   const timerRef = useRef<NodeJS.Timeout | null>(null)
@@ -58,7 +58,7 @@ export function ChatInput({
     // Se houver mídia estagiada, faz upload real antes de disparar a mensagem
     if (stagedMedia) {
       if (!currentUserId) {
-        toast.error('Você precisa estar logado para enviar anexos.')
+        toast.error("Você precisa estar logado para enviar anexos.")
         return
       }
 
@@ -68,14 +68,14 @@ export function ChatInput({
           stagedMedia.file,
           currentUserId,
           (step) => {
-            if (step === 'compressing') setUploadStatus('Otimizando imagem...')
-            else if (step === 'uploading') setUploadStatus('Enviando...')
-            else setUploadStatus('')
+            if (step === "compressing") setUploadStatus("Otimizando imagem...")
+            else if (step === "uploading") setUploadStatus("Enviando...")
+            else setUploadStatus("")
           },
         )
 
         if (error || !url) {
-          throw error || new Error('Não foi possível enviar a imagem.')
+          throw error || new Error("Não foi possível enviar a imagem.")
         }
 
         const msg: Partial<ChatMessage> = {
@@ -84,8 +84,8 @@ export function ChatInput({
           fileName,
           text: text.trim() || undefined,
           timestamp: new Date().toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
+            hour: "2-digit",
+            minute: "2-digit",
           }),
         }
 
@@ -94,13 +94,13 @@ export function ChatInput({
         // Limpa estado após envio bem sucedido
         URL.revokeObjectURL(stagedMedia.previewUrl)
         setStagedMedia(null)
-        setText('')
+        setText("")
       } catch (err: any) {
-        console.error('[ChatInput] Erro ao enviar mídia:', err)
-        toast.error(err?.message || 'Erro ao carregar e enviar o arquivo.')
+        console.error("[ChatInput] Erro ao enviar mídia:", err)
+        toast.error(err?.message || "Erro ao carregar e enviar o arquivo.")
       } finally {
         setUploading(false)
-        setUploadStatus('')
+        setUploadStatus("")
       }
       return
     }
@@ -108,13 +108,13 @@ export function ChatInput({
     // Apenas mensagem de texto
     if (!text.trim()) return
     const msgText = text
-    setText('')
+    setText("")
     await onSendMessage({
-      type: 'text',
+      type: "text",
       text: msgText,
       timestamp: new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
+        hour: "2-digit",
+        minute: "2-digit",
       }),
     })
   }
@@ -122,28 +122,28 @@ export function ChatInput({
   // Manipulador de seleção de arquivo da galeria / câmera / documentos
   const handleFilePicked = (
     e: React.ChangeEvent<HTMLInputElement>,
-    expectedType: 'image' | 'video' | 'document',
+    expectedType: "image" | "video" | "document",
   ) => {
     const file = e.target.files?.[0]
     // Reseta o input para permitir selecionar o mesmo arquivo novamente se o usuário quiser
-    e.target.value = ''
+    e.target.value = ""
 
     if (!file) {
       return
     }
 
     // Validação de tamanho
-    const maxMb = expectedType === 'image' ? 25 : 30
+    const maxMb = expectedType === "image" ? 25 : 30
     if (file.size > maxMb * 1024 * 1024) {
       toast.error(`Arquivo muito grande. O limite máximo é de ${maxMb}MB.`)
       return
     }
 
-    const isImage = file.type.startsWith('image/')
-    const isVideo = file.type.startsWith('video/')
-    const resolvedType = isImage ? 'image' : isVideo ? 'video' : expectedType
+    const isImage = file.type.startsWith("image/")
+    const isVideo = file.type.startsWith("video/")
+    const resolvedType = isImage ? "image" : isVideo ? "video" : expectedType
 
-    const preview = isImage || isVideo ? URL.createObjectURL(file) : ''
+    const preview = isImage || isVideo ? URL.createObjectURL(file) : ""
 
     setStagedMedia({
       file,
@@ -169,10 +169,10 @@ export function ChatInput({
       setIsRecording(false)
       setRecordingTime(0)
       onSendMessage({
-        type: 'audio',
+        type: "audio",
         timestamp: new Date().toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit',
+          hour: "2-digit",
+          minute: "2-digit",
         }),
       })
     } else {
@@ -187,7 +187,7 @@ export function ChatInput({
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')}`
+    return `${mins}:${secs.toString().padStart(2, "0")}`
   }
 
   return (
@@ -199,8 +199,8 @@ export function ChatInput({
         type="file"
         accept="image/*"
         className="hidden"
-        style={{ display: 'none' }}
-        onChange={(e) => handleFilePicked(e, 'image')}
+        style={{ display: "none" }}
+        onChange={(e) => handleFilePicked(e, "image")}
       />
 
       {/* Vídeos */}
@@ -209,8 +209,8 @@ export function ChatInput({
         type="file"
         accept="video/mp4,video/webm,video/*"
         className="hidden"
-        style={{ display: 'none' }}
-        onChange={(e) => handleFilePicked(e, 'video')}
+        style={{ display: "none" }}
+        onChange={(e) => handleFilePicked(e, "video")}
       />
 
       {/* Documentos */}
@@ -219,21 +219,21 @@ export function ChatInput({
         type="file"
         accept="application/pdf,.pdf,.doc,.docx,.txt"
         className="hidden"
-        style={{ display: 'none' }}
-        onChange={(e) => handleFilePicked(e, 'document')}
+        style={{ display: "none" }}
+        onChange={(e) => handleFilePicked(e, "document")}
       />
 
       {/* Prévia da mídia selecionada antes do envio */}
       {stagedMedia && (
         <div className="p-3 bg-secondary/40 border-b flex items-center justify-between gap-3 animate-in slide-in-from-bottom-2">
           <div className="flex items-center gap-3 min-w-0">
-            {stagedMedia.type === 'image' && stagedMedia.previewUrl ? (
+            {stagedMedia.type === "image" && stagedMedia.previewUrl ? (
               <img
                 src={stagedMedia.previewUrl}
                 alt="Prévia da foto"
                 className="h-12 w-12 rounded-lg object-cover border border-border shadow-xs"
               />
-            ) : stagedMedia.type === 'video' ? (
+            ) : stagedMedia.type === "video" ? (
               <div className="h-12 w-12 rounded-lg bg-pink-500/10 text-pink-500 flex items-center justify-center border border-pink-500/20">
                 <Video className="h-6 w-6" />
               </div>
@@ -258,7 +258,7 @@ export function ChatInput({
               <div className="flex items-center gap-1.5 text-xs text-primary font-medium">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 <span className="hidden sm:inline">
-                  {uploadStatus || 'Enviando...'}
+                  {uploadStatus || "Enviando..."}
                 </span>
               </div>
             ) : (
@@ -318,14 +318,14 @@ export function ChatInput({
             </Button>
             <Input
               placeholder={
-                stagedMedia ? 'Adicione uma legenda...' : 'Mensagem...'
+                stagedMedia ? "Adicione uma legenda..." : "Mensagem..."
               }
               value={text}
               disabled={uploading || disabled}
               onChange={(e) => setText(e.target.value)}
               className="rounded-full bg-secondary border-none focus-visible:ring-1 focus-visible:ring-primary text-sm"
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
+                if (e.key === "Enter") {
                   e.preventDefault()
                   handleSend()
                 }

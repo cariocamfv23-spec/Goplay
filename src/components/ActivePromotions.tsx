@@ -1,10 +1,10 @@
-import { Promotion } from '@/lib/referral-data'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Clock, Gift, Sparkles, CalendarDays } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { formatDistanceToNow, isWithinInterval, parseISO } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { Promotion } from "@/lib/referral-data"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Clock, Gift, Sparkles, CalendarDays } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { formatDistanceToNow, isWithinInterval, parseISO } from "date-fns"
+import { ptBR } from "date-fns/locale"
 
 interface ActivePromotionsProps {
   promotions: Promotion[]
@@ -49,13 +49,13 @@ export function ActivePromotions({ promotions }: ActivePromotionsProps) {
             >
               <div
                 className={cn(
-                  'absolute inset-0 bg-gradient-to-r opacity-10 group-hover:opacity-15 transition-opacity',
+                  "absolute inset-0 bg-gradient-to-r opacity-10 group-hover:opacity-15 transition-opacity",
                   promo.color,
                 )}
               />
               <div
                 className={cn(
-                  'absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b',
+                  "absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b",
                   promo.color,
                 )}
               />
@@ -67,7 +67,7 @@ export function ActivePromotions({ promotions }: ActivePromotionsProps) {
                       <Badge
                         variant="secondary"
                         className={cn(
-                          'text-[10px] px-1.5 py-0 h-5 bg-gradient-to-r text-white border-0 font-bold tracking-wider',
+                          "text-[10px] px-1.5 py-0 h-5 bg-gradient-to-r text-white border-0 font-bold tracking-wider",
                           promo.color,
                         )}
                       >
@@ -104,9 +104,9 @@ export function ActivePromotions({ promotions }: ActivePromotionsProps) {
                 <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground bg-secondary/30 p-2 rounded-lg">
                   <CalendarDays className="h-4 w-4 shrink-0" />
                   <span>
-                    Válido de{' '}
-                    {new Date(promo.startDate).toLocaleDateString('pt-BR')} até{' '}
-                    {new Date(promo.endDate).toLocaleDateString('pt-BR')}
+                    Válido de{" "}
+                    {new Date(promo.startDate).toLocaleDateString("pt-BR")} até{" "}
+                    {new Date(promo.endDate).toLocaleDateString("pt-BR")}
                   </span>
                 </div>
               </CardContent>

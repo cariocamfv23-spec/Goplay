@@ -6,9 +6,9 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
-} from 'recharts'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { RetrospectiveYear } from '@/lib/data'
+} from "recharts"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { RetrospectiveYear } from "@/lib/data"
 
 interface EvolutionChartProps {
   data: RetrospectiveYear[]
@@ -60,12 +60,12 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#1a1a1a',
-                border: '1px solid #333',
-                borderRadius: '8px',
-                color: '#fff',
+                backgroundColor: "#1a1a1a",
+                border: "1px solid #333",
+                borderRadius: "8px",
+                color: "#fff",
               }}
-              cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+              cursor={{ fill: "rgba(255,255,255,0.05)" }}
             />
             <Bar
               yAxisId="left"

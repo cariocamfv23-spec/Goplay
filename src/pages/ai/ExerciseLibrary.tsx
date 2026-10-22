@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   ArrowLeft,
   Search,
@@ -15,20 +15,20 @@ import {
   Flame,
   PlayCircle,
   Video,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { cn } from "@/lib/utils"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog"
 
 interface Exercise {
   id: string
   name: string
-  category: 'fitness' | 'futebol' | 'basquete' | 'yoga'
-  difficulty: 'Iniciante' | 'Intermediário' | 'Avançado'
+  category: "fitness" | "futebol" | "basquete" | "yoga"
+  difficulty: "Iniciante" | "Intermediário" | "Avançado"
   image: string
   description: string
   duration: string
@@ -39,124 +39,124 @@ interface Exercise {
 const exercises: Exercise[] = [
   // Fitness
   {
-    id: 'fit1',
-    name: 'Agachamento Livre',
-    category: 'fitness',
-    difficulty: 'Iniciante',
-    image: 'https://img.usecurling.com/p/400/300?q=squat%20exercise&color=blue',
+    id: "fit1",
+    name: "Agachamento Livre",
+    category: "fitness",
+    difficulty: "Iniciante",
+    image: "https://img.usecurling.com/p/400/300?q=squat%20exercise&color=blue",
     description:
-      'Exercício fundamental para pernas e glúteos. Mantenha a postura ereta.',
-    duration: '10 min',
+      "Exercício fundamental para pernas e glúteos. Mantenha a postura ereta.",
+    duration: "10 min",
     calories: 80,
-    videoUrl: 'https://img.usecurling.com/p/800/450?q=squat%20video',
+    videoUrl: "https://img.usecurling.com/p/800/450?q=squat%20video",
   },
   {
-    id: 'fit2',
-    name: 'Flexão de Braço',
-    category: 'fitness',
-    difficulty: 'Intermediário',
-    image: 'https://img.usecurling.com/p/400/300?q=pushup%20exercise&color=red',
+    id: "fit2",
+    name: "Flexão de Braço",
+    category: "fitness",
+    difficulty: "Intermediário",
+    image: "https://img.usecurling.com/p/400/300?q=pushup%20exercise&color=red",
     description:
-      'Fortalece peitoral, ombros e tríceps. Mantenha o corpo alinhado.',
-    duration: '5 min',
+      "Fortalece peitoral, ombros e tríceps. Mantenha o corpo alinhado.",
+    duration: "5 min",
     calories: 45,
-    videoUrl: 'https://img.usecurling.com/p/800/450?q=pushup%20video',
+    videoUrl: "https://img.usecurling.com/p/800/450?q=pushup%20video",
   },
   {
-    id: 'fit3',
-    name: 'Burpees',
-    category: 'fitness',
-    difficulty: 'Avançado',
+    id: "fit3",
+    name: "Burpees",
+    category: "fitness",
+    difficulty: "Avançado",
     image:
-      'https://img.usecurling.com/p/400/300?q=burpee%20exercise&color=orange',
-    description: 'Exercício de corpo total de alta intensidade.',
-    duration: '8 min',
+      "https://img.usecurling.com/p/400/300?q=burpee%20exercise&color=orange",
+    description: "Exercício de corpo total de alta intensidade.",
+    duration: "8 min",
     calories: 120,
-    videoUrl: 'https://img.usecurling.com/p/800/450?q=burpee%20video',
+    videoUrl: "https://img.usecurling.com/p/800/450?q=burpee%20video",
   },
   // Futebol
   {
-    id: 'soc1',
-    name: 'Controle de Bola',
-    category: 'futebol',
-    difficulty: 'Iniciante',
+    id: "soc1",
+    name: "Controle de Bola",
+    category: "futebol",
+    difficulty: "Iniciante",
     image:
-      'https://img.usecurling.com/p/400/300?q=soccer%20dribbling&color=green',
-    description: 'Melhore seu domínio e toque curto com a bola.',
-    duration: '15 min',
+      "https://img.usecurling.com/p/400/300?q=soccer%20dribbling&color=green",
+    description: "Melhore seu domínio e toque curto com a bola.",
+    duration: "15 min",
     calories: 110,
     videoUrl:
-      'https://img.usecurling.com/p/800/450?q=soccer%20dribbling%20video',
+      "https://img.usecurling.com/p/800/450?q=soccer%20dribbling%20video",
   },
   {
-    id: 'soc2',
-    name: 'Chute de Precisão',
-    category: 'futebol',
-    difficulty: 'Intermediário',
-    image: 'https://img.usecurling.com/p/400/300?q=soccer%20kick&color=green',
-    description: 'Treino focado em acertar alvos específicos no gol.',
-    duration: '20 min',
+    id: "soc2",
+    name: "Chute de Precisão",
+    category: "futebol",
+    difficulty: "Intermediário",
+    image: "https://img.usecurling.com/p/400/300?q=soccer%20kick&color=green",
+    description: "Treino focado em acertar alvos específicos no gol.",
+    duration: "20 min",
     calories: 140,
-    videoUrl: 'https://img.usecurling.com/p/800/450?q=soccer%20kick%20video',
+    videoUrl: "https://img.usecurling.com/p/800/450?q=soccer%20kick%20video",
   },
   // Basquete
   {
-    id: 'bas1',
-    name: 'Arremesso Livre',
-    category: 'basquete',
-    difficulty: 'Iniciante',
+    id: "bas1",
+    name: "Arremesso Livre",
+    category: "basquete",
+    difficulty: "Iniciante",
     image:
-      'https://img.usecurling.com/p/400/300?q=basketball%20shot&color=orange',
-    description: 'Mecânica básica de arremesso para lances livres.',
-    duration: '15 min',
+      "https://img.usecurling.com/p/400/300?q=basketball%20shot&color=orange",
+    description: "Mecânica básica de arremesso para lances livres.",
+    duration: "15 min",
     calories: 90,
     videoUrl:
-      'https://img.usecurling.com/p/800/450?q=basketball%20shot%20video',
+      "https://img.usecurling.com/p/800/450?q=basketball%20shot%20video",
   },
   {
-    id: 'bas2',
-    name: 'Drible Cruzado',
-    category: 'basquete',
-    difficulty: 'Avançado',
+    id: "bas2",
+    name: "Drible Cruzado",
+    category: "basquete",
+    difficulty: "Avançado",
     image:
-      'https://img.usecurling.com/p/400/300?q=basketball%20dribble&color=orange',
-    description: 'Cross-over dribble para superar adversários.',
-    duration: '12 min',
+      "https://img.usecurling.com/p/400/300?q=basketball%20dribble&color=orange",
+    description: "Cross-over dribble para superar adversários.",
+    duration: "12 min",
     calories: 130,
     videoUrl:
-      'https://img.usecurling.com/p/800/450?q=basketball%20dribble%20video',
+      "https://img.usecurling.com/p/800/450?q=basketball%20dribble%20video",
   },
   // Yoga
   {
-    id: 'yog1',
-    name: 'Saudação ao Sol',
-    category: 'yoga',
-    difficulty: 'Iniciante',
+    id: "yog1",
+    name: "Saudação ao Sol",
+    category: "yoga",
+    difficulty: "Iniciante",
     image:
-      'https://img.usecurling.com/p/400/300?q=yoga%20sun%20salutation&color=purple',
-    description: 'Sequência clássica para aquecer e alongar o corpo.',
-    duration: '10 min',
+      "https://img.usecurling.com/p/400/300?q=yoga%20sun%20salutation&color=purple",
+    description: "Sequência clássica para aquecer e alongar o corpo.",
+    duration: "10 min",
     calories: 50,
     videoUrl:
-      'https://img.usecurling.com/p/800/450?q=yoga%20sun%20salutation%20video',
+      "https://img.usecurling.com/p/800/450?q=yoga%20sun%20salutation%20video",
   },
   {
-    id: 'yog2',
-    name: 'Postura do Guerreiro',
-    category: 'yoga',
-    difficulty: 'Intermediário',
-    image: 'https://img.usecurling.com/p/400/300?q=yoga%20warrior&color=purple',
-    description: 'Fortalece pernas e melhora o equilíbrio.',
-    duration: '8 min',
+    id: "yog2",
+    name: "Postura do Guerreiro",
+    category: "yoga",
+    difficulty: "Intermediário",
+    image: "https://img.usecurling.com/p/400/300?q=yoga%20warrior&color=purple",
+    description: "Fortalece pernas e melhora o equilíbrio.",
+    duration: "8 min",
     calories: 40,
-    videoUrl: 'https://img.usecurling.com/p/800/450?q=yoga%20warrior%20video',
+    videoUrl: "https://img.usecurling.com/p/800/450?q=yoga%20warrior%20video",
   },
 ]
 
 export default function ExerciseLibrary() {
   const navigate = useNavigate()
-  const [searchTerm, setSearchTerm] = useState('')
-  const [activeTab, setActiveTab] = useState('todos')
+  const [searchTerm, setSearchTerm] = useState("")
+  const [activeTab, setActiveTab] = useState("todos")
   const [selectedVideo, setSelectedVideo] = useState<Exercise | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
 
@@ -164,20 +164,20 @@ export default function ExerciseLibrary() {
     const matchesSearch = exercise.name
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
-    const matchesTab = activeTab === 'todos' || exercise.category === activeTab
+    const matchesTab = activeTab === "todos" || exercise.category === activeTab
     return matchesSearch && matchesTab
   })
 
   const categories = [
-    { id: 'todos', label: 'Todos', icon: Activity },
-    { id: 'fitness', label: 'Fitness', icon: Dumbbell },
-    { id: 'futebol', label: 'Futebol', icon: Trophy },
-    { id: 'basquete', label: 'Basquete', icon: Flame },
-    { id: 'yoga', label: 'Yoga', icon: Activity },
+    { id: "todos", label: "Todos", icon: Activity },
+    { id: "fitness", label: "Fitness", icon: Dumbbell },
+    { id: "futebol", label: "Futebol", icon: Trophy },
+    { id: "basquete", label: "Basquete", icon: Flame },
+    { id: "yoga", label: "Yoga", icon: Activity },
   ]
 
   const handleSelectExercise = (exercise: Exercise) => {
-    navigate('/ai/motion-analysis', { state: { exercise } })
+    navigate("/ai/motion-analysis", { state: { exercise } })
   }
 
   const handleOpenVideo = (e: React.MouseEvent, exercise: Exercise) => {
@@ -258,7 +258,7 @@ export default function ExerciseLibrary() {
                         </Badge>
                         <div className="flex flex-col items-end text-white text-xs font-medium">
                           <span className="flex items-center gap-1">
-                            <Activity className="w-3 h-3 text-primary" />{' '}
+                            <Activity className="w-3 h-3 text-primary" />{" "}
                             {exercise.calories} kcal
                           </span>
                           <span className="opacity-80">
@@ -327,11 +327,11 @@ export default function ExerciseLibrary() {
             {selectedVideo && (
               <>
                 <img
-                  src={selectedVideo.image.replace('300', '600')}
+                  src={selectedVideo.image.replace("300", "600")}
                   alt="Video Thumbnail"
                   className={cn(
-                    'w-full h-full object-cover opacity-80 transition-opacity',
-                    isPlaying && 'opacity-0 pointer-events-none',
+                    "w-full h-full object-cover opacity-80 transition-opacity",
+                    isPlaying && "opacity-0 pointer-events-none",
                   )}
                 />
                 {!isPlaying ? (

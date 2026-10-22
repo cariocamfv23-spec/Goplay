@@ -1,8 +1,8 @@
-import { mockRetrospectiveHistory } from '@/lib/data'
-import { cn } from '@/lib/utils'
-import { useRetrospectiveStore } from '@/stores/useRetrospectiveStore'
-import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
-import { EvolutionChart } from '@/components/EvolutionChart'
+import { mockRetrospectiveHistory } from "@/lib/data"
+import { cn } from "@/lib/utils"
+import { useRetrospectiveStore } from "@/stores/useRetrospectiveStore"
+import { TrendingUp, TrendingDown, Minus } from "lucide-react"
+import { EvolutionChart } from "@/components/EvolutionChart"
 
 export default function EvolutionSlide() {
   const { getTheme } = useRetrospectiveStore()
@@ -48,10 +48,10 @@ export default function EvolutionSlide() {
                 <span
                   className={
                     growthMatches > 0
-                      ? 'text-green-400'
+                      ? "text-green-400"
                       : growthMatches < 0
-                        ? 'text-red-400'
-                        : 'text-gray-400'
+                        ? "text-red-400"
+                        : "text-gray-400"
                   }
                 >
                   {Math.abs(growthMatches).toFixed(0)}%
@@ -73,10 +73,10 @@ export default function EvolutionSlide() {
                 <span
                   className={
                     growthRating > 0
-                      ? 'text-green-400'
+                      ? "text-green-400"
                       : growthRating < 0
-                        ? 'text-red-400'
-                        : 'text-gray-400'
+                        ? "text-red-400"
+                        : "text-gray-400"
                   }
                 >
                   {Math.abs(growthRating).toFixed(1)}%
@@ -89,8 +89,8 @@ export default function EvolutionSlide() {
         {/* Narrative */}
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500">
           <p className="text-lg leading-relaxed font-light opacity-90">
-            Você jogou <span className="font-bold text-gold">mais</span> e com{' '}
-            <span className="font-bold text-primary">melhor qualidade</span>{' '}
+            Você jogou <span className="font-bold text-gold">mais</span> e com{" "}
+            <span className="font-bold text-primary">melhor qualidade</span>{" "}
             comparado a 2023. O esforço valeu a pena!
           </p>
         </div>
@@ -99,7 +99,7 @@ export default function EvolutionSlide() {
         <div className="flex-1 animate-in fade-in zoom-in duration-700 delay-700 relative">
           <div
             className={cn(
-              'absolute inset-0 bg-gradient-to-t from-black/50 to-transparent z-0 rounded-2xl',
+              "absolute inset-0 bg-gradient-to-t from-black/50 to-transparent z-0 rounded-2xl",
             )}
           />
           <EvolutionChart data={mockRetrospectiveHistory} />

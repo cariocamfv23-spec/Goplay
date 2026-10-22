@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   ArrowLeft,
   Bell,
@@ -26,14 +26,14 @@ import {
   History,
   CheckCircle2,
   AlertCircle,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import useNotificationStore from '@/stores/useNotificationStore'
-import { useFlashbackStore } from '@/stores/useFlashbackStore'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import useNotificationStore from "@/stores/useNotificationStore"
+import { useFlashbackStore } from "@/stores/useFlashbackStore"
+import { cn } from "@/lib/utils"
 
-import { useAuth } from '@/hooks/use-auth'
-import { useRealtimeNotifications } from '@/hooks/useRealtimeFeed'
+import { useAuth } from "@/hooks/use-auth"
+import { useRealtimeNotifications } from "@/hooks/useRealtimeFeed"
 
 export default function Notifications() {
   const navigate = useNavigate()
@@ -57,10 +57,10 @@ export default function Notifications() {
     type: n.type,
     title: n.title,
     message: n.message,
-    date: 'Hoje',
+    date: "Hoje",
     time: n.timeAgo,
     read: n.read,
-    priority: 'medium' as const,
+    priority: "medium" as const,
     link: n.link || undefined,
     imageUrl: undefined as string | undefined,
     avatarUrl: undefined as string | undefined,
@@ -80,86 +80,86 @@ export default function Notifications() {
       : [...mappedReal, ...notifications]
   const unreadCount = allNotifications.filter((n) => !n.read).length
 
-  const isVipAlert = (title: string, message: string = '') => {
-    const text = (title + ' ' + message).toLowerCase()
+  const isVipAlert = (title: string, message: string = "") => {
+    const text = (title + " " + message).toLowerCase()
     return (
-      text.includes('vip') ||
-      text.includes('scout') ||
-      text.includes('sponsor') ||
-      text.includes('olheiro') ||
-      text.includes('patrocinador') ||
-      text.includes('recrutador') ||
-      text.includes('bolsa') ||
-      text.includes('de olho em você')
+      text.includes("vip") ||
+      text.includes("scout") ||
+      text.includes("sponsor") ||
+      text.includes("olheiro") ||
+      text.includes("patrocinador") ||
+      text.includes("recrutador") ||
+      text.includes("bolsa") ||
+      text.includes("de olho em você")
     )
   }
 
-  const getIcon = (type: string, title: string = '', message: string = '') => {
+  const getIcon = (type: string, title: string = "", message: string = "") => {
     switch (type) {
-      case 'challenge':
+      case "challenge":
         return <Trophy className="h-5 w-5 text-gold" />
-      case 'invite':
+      case "invite":
         return <Calendar className="h-5 w-5 text-blue-500" />
-      case 'like':
+      case "like":
         return <Heart className="h-5 w-5 text-red-500" />
-      case 'weather':
+      case "weather":
         return <CloudLightning className="h-5 w-5 text-yellow-500" />
-      case 'scholarship':
+      case "scholarship":
         return <GraduationCap className="h-5 w-5 text-emerald-500" />
-      case 'level_up':
+      case "level_up":
         return <Zap className="h-5 w-5 text-purple-500" />
-      case 'registration_approved':
+      case "registration_approved":
         return <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-      case 'registration_rejected':
+      case "registration_rejected":
         return <AlertCircle className="h-5 w-5 text-red-500" />
-      case 'event_registration':
+      case "event_registration":
         return <Calendar className="h-5 w-5 text-primary" />
-      case 'ranking':
+      case "ranking":
         if (
-          title.toLowerCase().includes('caiu') ||
-          title.toLowerCase().includes('desceu')
+          title.toLowerCase().includes("caiu") ||
+          title.toLowerCase().includes("desceu")
         ) {
           return <TrendingDown className="h-5 w-5 text-orange-500" />
         }
         return <TrendingUp className="h-5 w-5 text-green-500" />
-      case 'event_reminder':
+      case "event_reminder":
         return <Clock className="h-5 w-5 text-orange-500" />
-      case 'goal_deadline':
+      case "goal_deadline":
         return <Target className="h-5 w-5 text-red-500" />
-      case 'verification':
+      case "verification":
         if (
-          title.toLowerCase().includes('scout') ||
-          title.toLowerCase().includes('olheiro')
+          title.toLowerCase().includes("scout") ||
+          title.toLowerCase().includes("olheiro")
         )
           return <Eye className="h-5 w-5 text-blue-500" />
         if (
-          title.toLowerCase().includes('time') ||
-          title.toLowerCase().includes('de olho')
+          title.toLowerCase().includes("time") ||
+          title.toLowerCase().includes("de olho")
         )
           return <Crown className="h-5 w-5 text-emerald-500" />
         if (
-          title.toLowerCase().includes('sponsor') ||
-          title.toLowerCase().includes('patrocinador')
+          title.toLowerCase().includes("sponsor") ||
+          title.toLowerCase().includes("patrocinador")
         )
           return <Handshake className="h-5 w-5 text-emerald-500" />
         if (isVipAlert(title, message)) {
           return <Crown className="h-5 w-5 text-gold" />
         }
         return <ShieldCheck className="h-5 w-5 text-blue-600" />
-      case 'sponsorship_match':
+      case "sponsorship_match":
         return <Handshake className="h-5 w-5 text-indigo-500" />
-      case 'kids_zone':
+      case "kids_zone":
         return <Baby className="h-5 w-5 text-pink-500" />
-      case 'comment':
+      case "comment":
         return <MessageCircle className="h-5 w-5 text-blue-500" />
-      case 'thread_comment':
+      case "thread_comment":
         return <MessageSquare className="h-5 w-5 text-blue-500" />
-      case 'system_update':
+      case "system_update":
         return <Megaphone className="h-5 w-5 text-primary" />
-      case 'memory':
-      case 'time_travel':
+      case "memory":
+      case "time_travel":
         return <History className="h-5 w-5 text-purple-500" />
-      case 'friend_suggestion':
+      case "friend_suggestion":
         return <UserPlus className="h-5 w-5 text-pink-500" />
       default:
         return <Bell className="h-5 w-5 text-primary" />
@@ -168,43 +168,43 @@ export default function Notifications() {
 
   const getPriorityStyle = (
     priority?: string,
-    title: string = '',
-    message: string = '',
+    title: string = "",
+    message: string = "",
     type?: string,
   ) => {
-    if (type === 'friend_suggestion')
-      return 'border-l-4 border-l-pink-500 bg-pink-500/10 dark:bg-pink-900/20'
+    if (type === "friend_suggestion")
+      return "border-l-4 border-l-pink-500 bg-pink-500/10 dark:bg-pink-900/20"
 
-    if (type === 'memory' || type === 'time_travel')
-      return 'border-l-4 border-l-purple-500 bg-purple-500/10 dark:bg-purple-900/20'
+    if (type === "memory" || type === "time_travel")
+      return "border-l-4 border-l-purple-500 bg-purple-500/10 dark:bg-purple-900/20"
 
-    if (priority === 'critical')
-      return 'border-l-4 border-l-red-500 bg-red-500/10 dark:bg-red-900/20'
+    if (priority === "critical")
+      return "border-l-4 border-l-red-500 bg-red-500/10 dark:bg-red-900/20"
 
     if (isVipAlert(title, message)) {
       if (
-        title.toLowerCase().includes('scout') ||
-        title.toLowerCase().includes('olheiro')
+        title.toLowerCase().includes("scout") ||
+        title.toLowerCase().includes("olheiro")
       )
-        return 'border-l-4 border-l-blue-500 bg-blue-500/10 dark:bg-blue-900/20'
+        return "border-l-4 border-l-blue-500 bg-blue-500/10 dark:bg-blue-900/20"
       if (
-        title.toLowerCase().includes('sponsor') ||
-        title.toLowerCase().includes('patrocinador')
+        title.toLowerCase().includes("sponsor") ||
+        title.toLowerCase().includes("patrocinador")
       )
-        return 'border-l-4 border-l-emerald-500 bg-emerald-500/10 dark:bg-emerald-900/20'
-      return 'border-l-4 border-l-gold bg-gold/10 dark:bg-gold/10'
+        return "border-l-4 border-l-emerald-500 bg-emerald-500/10 dark:bg-emerald-900/20"
+      return "border-l-4 border-l-gold bg-gold/10 dark:bg-gold/10"
     }
 
-    if (type === 'registration_approved')
-      return 'border-l-4 border-l-emerald-500 bg-emerald-500/10 dark:bg-emerald-950/20'
+    if (type === "registration_approved")
+      return "border-l-4 border-l-emerald-500 bg-emerald-500/10 dark:bg-emerald-950/20"
 
-    if (type === 'registration_rejected')
-      return 'border-l-4 border-l-red-500 bg-red-500/10 dark:bg-red-950/20'
+    if (type === "registration_rejected")
+      return "border-l-4 border-l-red-500 bg-red-500/10 dark:bg-red-950/20"
 
-    if (priority === 'high')
-      return 'border-l-4 border-l-green-500 bg-green-500/10 dark:bg-green-900/20'
+    if (priority === "high")
+      return "border-l-4 border-l-green-500 bg-green-500/10 dark:bg-green-900/20"
 
-    return 'hover:bg-secondary/30'
+    return "hover:bg-secondary/30"
   }
 
   const handleNotificationClick = (not: any) => {
@@ -216,24 +216,24 @@ export default function Notifications() {
       }
     }
 
-    if (not.type === 'time_travel' || not.type === 'memory') {
+    if (not.type === "time_travel" || not.type === "memory") {
       const memoryId =
-        not.link?.replace('modal:', '')?.replace('/memory/', '') || 'today'
+        not.link?.replace("modal:", "")?.replace("/memory/", "") || "today"
       openFlashback(memoryId)
       return
     }
 
     if (not.link) {
       navigate(not.link)
-    } else if (not.type === 'friend_suggestion') {
-      const profileId = not.suggestedUserId || not.id || 'new-friend'
+    } else if (not.type === "friend_suggestion") {
+      const profileId = not.suggestedUserId || not.id || "new-friend"
       navigate(`/profile/${profileId}`)
     }
   }
 
   const groupedNotifications: Record<string, any[]> = allNotifications.reduce(
     (acc: Record<string, any[]>, not: any) => {
-      const date = not.date || 'Anteriores'
+      const date = not.date || "Anteriores"
       if (!acc[date]) {
         acc[date] = []
       }
@@ -283,18 +283,18 @@ export default function Notifications() {
           Object.entries(groupedNotifications).map(([date, items]) => (
             <div key={date} className="space-y-3">
               <h3 className="text-sm font-semibold text-muted-foreground px-1 uppercase tracking-wide">
-                {date === 'Anteriores' ? 'Anteriores' : date}
+                {date === "Anteriores" ? "Anteriores" : date}
               </h3>
               <div className="space-y-2">
                 {items.map((not) => (
                   <div
                     key={not.id}
                     className={cn(
-                      'p-4 rounded-xl flex gap-4 transition-all relative overflow-hidden border border-border/30 shadow-sm',
-                      not.type === 'friend_suggestion' && 'items-center',
+                      "p-4 rounded-xl flex gap-4 transition-all relative overflow-hidden border border-border/30 shadow-sm",
+                      not.type === "friend_suggestion" && "items-center",
                       not.read
-                        ? 'bg-card opacity-90'
-                        : 'bg-card ring-1 ring-primary/20 shadow-md',
+                        ? "bg-card opacity-90"
+                        : "bg-card ring-1 ring-primary/20 shadow-md",
                       getPriorityStyle(
                         not.priority,
                         not.title,
@@ -302,35 +302,35 @@ export default function Notifications() {
                         not.type,
                       ),
                       (not.link ||
-                        not.type === 'time_travel' ||
-                        not.type === 'memory' ||
-                        not.type === 'friend_suggestion') &&
-                        'cursor-pointer active:scale-[0.98]',
+                        not.type === "time_travel" ||
+                        not.type === "memory" ||
+                        not.type === "friend_suggestion") &&
+                        "cursor-pointer active:scale-[0.98]",
                     )}
                     onClick={() => handleNotificationClick(not)}
                   >
                     {not.user ||
                     not.imageUrl ||
                     not.avatarUrl ||
-                    not.type === 'friend_suggestion' ? (
+                    not.type === "friend_suggestion" ? (
                       <div
                         className={cn(
-                          'relative shrink-0',
-                          not.type !== 'friend_suggestion' && 'mt-1',
+                          "relative shrink-0",
+                          not.type !== "friend_suggestion" && "mt-1",
                         )}
                       >
                         <Avatar
                           className={cn(
-                            'ring-2 ring-offset-2 ring-offset-background',
-                            not.type === 'friend_suggestion'
-                              ? 'h-14 w-14 ring-pink-500'
-                              : 'h-10 w-10',
-                            not.type === 'live_stream'
-                              ? not.link?.includes('/replay/')
-                                ? 'ring-primary'
-                                : 'ring-red-500'
-                              : not.type !== 'friend_suggestion' &&
-                                  'ring-transparent border border-border',
+                            "ring-2 ring-offset-2 ring-offset-background",
+                            not.type === "friend_suggestion"
+                              ? "h-14 w-14 ring-pink-500"
+                              : "h-10 w-10",
+                            not.type === "live_stream"
+                              ? not.link?.includes("/replay/")
+                                ? "ring-primary"
+                                : "ring-red-500"
+                              : not.type !== "friend_suggestion" &&
+                                  "ring-transparent border border-border",
                           )}
                         >
                           {not.user?.avatar || not.avatarUrl || not.imageUrl ? (
@@ -340,30 +340,30 @@ export default function Notifications() {
                                 not.avatarUrl ||
                                 not.imageUrl
                               }
-                              alt={not.user?.name || not.title || 'Usuário'}
+                              alt={not.user?.name || not.title || "Usuário"}
                             />
                           ) : null}
                           <AvatarFallback className="bg-primary/10 text-primary font-bold">
-                            {(not.user?.name || not.title || 'U')
+                            {(not.user?.name || not.title || "U")
                               .substring(0, 2)
                               .toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
-                        {not.type === 'live_stream' &&
-                          !not.link?.includes('/replay/') && (
+                        {not.type === "live_stream" &&
+                          !not.link?.includes("/replay/") && (
                             <span className="absolute -bottom-1 -right-1 h-3 w-3 bg-red-500 border-2 border-background rounded-full animate-pulse" />
                           )}
-                        {not.type === 'comment' && (
+                        {not.type === "comment" && (
                           <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-blue-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
                             <MessageCircle className="h-2 w-2 text-white" />
                           </div>
                         )}
-                        {not.type === 'thread_comment' && (
+                        {not.type === "thread_comment" && (
                           <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-blue-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
                             <MessageSquare className="h-2 w-2 text-white" />
                           </div>
                         )}
-                        {not.type === 'friend_suggestion' && (
+                        {not.type === "friend_suggestion" && (
                           <div className="absolute bottom-0 -right-1 h-5 w-5 bg-pink-500 border-2 border-background rounded-full flex items-center justify-center shadow-sm">
                             <UserPlus className="h-3 w-3 text-white" />
                           </div>
@@ -372,23 +372,23 @@ export default function Notifications() {
                     ) : (
                       <div
                         className={cn(
-                          'mt-1 h-10 w-10 rounded-full flex items-center justify-center shrink-0 border border-border/50',
-                          not.read ? 'bg-secondary/50' : 'bg-secondary',
+                          "mt-1 h-10 w-10 rounded-full flex items-center justify-center shrink-0 border border-border/50",
+                          not.read ? "bg-secondary/50" : "bg-secondary",
                           isVipAlert(not.title, not.message) &&
-                            'bg-gold/10 border-gold/30',
-                          (not.title.toLowerCase().includes('scout') ||
-                            not.title.toLowerCase().includes('olheiro')) &&
-                            'bg-blue-500/10 border-blue-500/30',
-                          (not.title.toLowerCase().includes('sponsor') ||
-                            not.title.toLowerCase().includes('patrocinador')) &&
-                            'bg-emerald-500/10 border-emerald-500/30',
-                          not.type === 'system_update' &&
-                            'bg-primary/10 border-primary/30',
-                          (not.type === 'memory' ||
-                            not.type === 'time_travel') &&
-                            'bg-purple-500/10 border-purple-500/30',
-                          (not.type as string) === 'friend_suggestion' &&
-                            'bg-pink-500/10 border-pink-500/30',
+                            "bg-gold/10 border-gold/30",
+                          (not.title.toLowerCase().includes("scout") ||
+                            not.title.toLowerCase().includes("olheiro")) &&
+                            "bg-blue-500/10 border-blue-500/30",
+                          (not.title.toLowerCase().includes("sponsor") ||
+                            not.title.toLowerCase().includes("patrocinador")) &&
+                            "bg-emerald-500/10 border-emerald-500/30",
+                          not.type === "system_update" &&
+                            "bg-primary/10 border-primary/30",
+                          (not.type === "memory" ||
+                            not.type === "time_travel") &&
+                            "bg-purple-500/10 border-purple-500/30",
+                          not.type as string === "friend_suggestion" &&
+                            "bg-pink-500/10 border-pink-500/30",
                         )}
                       >
                         {getIcon(not.type, not.title, not.message)}
@@ -399,31 +399,31 @@ export default function Notifications() {
                       <div className="flex justify-between items-start gap-2 mb-1">
                         <h4
                           className={cn(
-                            'font-bold text-sm leading-tight',
-                            not.read ? 'text-foreground/80' : 'text-foreground',
-                            not.priority === 'critical' &&
-                              'text-red-600 dark:text-red-400',
-                            isVipAlert(not.title, not.message) && 'text-gold',
-                            (not.title.toLowerCase().includes('scout') ||
-                              not.title.toLowerCase().includes('olheiro')) &&
-                              'text-blue-600 dark:text-blue-400',
-                            (not.title.toLowerCase().includes('sponsor') ||
+                            "font-bold text-sm leading-tight",
+                            not.read ? "text-foreground/80" : "text-foreground",
+                            not.priority === "critical" &&
+                              "text-red-600 dark:text-red-400",
+                            isVipAlert(not.title, not.message) && "text-gold",
+                            (not.title.toLowerCase().includes("scout") ||
+                              not.title.toLowerCase().includes("olheiro")) &&
+                              "text-blue-600 dark:text-blue-400",
+                            (not.title.toLowerCase().includes("sponsor") ||
                               not.title
                                 .toLowerCase()
-                                .includes('patrocinador')) &&
-                              'text-emerald-600 dark:text-emerald-400',
-                            not.type === 'live_stream' &&
-                              !not.link?.includes('/replay/') &&
-                              'text-red-500',
-                            (not.type === 'memory' ||
-                              not.type === 'time_travel') &&
-                              'text-purple-600 dark:text-purple-400',
+                                .includes("patrocinador")) &&
+                              "text-emerald-600 dark:text-emerald-400",
+                            not.type === "live_stream" &&
+                              !not.link?.includes("/replay/") &&
+                              "text-red-500",
+                            (not.type === "memory" ||
+                              not.type === "time_travel") &&
+                              "text-purple-600 dark:text-purple-400",
                           )}
                         >
                           {not.title}
                         </h4>
                       </div>
-                      {not.type === 'friend_suggestion' && (
+                      {not.type === "friend_suggestion" && (
                         <p className="text-xs font-semibold text-pink-500 mb-0.5 uppercase tracking-wider">
                           Sugestão de Amizade
                         </p>
@@ -432,8 +432,8 @@ export default function Notifications() {
                         {not.message}
                       </p>
 
-                      {not.type === 'live_stream' &&
-                      not.link?.includes('/replay/') ? (
+                      {not.type === "live_stream" &&
+                      not.link?.includes("/replay/") ? (
                         <div className="flex items-center gap-2 mt-2">
                           <Badge
                             variant="secondary"
@@ -446,7 +446,7 @@ export default function Notifications() {
                           </span>
                         </div>
                       ) : (
-                        not.type === 'live_stream' && (
+                        not.type === "live_stream" && (
                           <div className="flex items-center gap-2 mt-2">
                             <Badge
                               variant="destructive"
@@ -461,7 +461,7 @@ export default function Notifications() {
                         )
                       )}
 
-                      {not.type === 'friend_suggestion' ? (
+                      {not.type === "friend_suggestion" ? (
                         <div className="mt-3 flex items-center gap-2">
                           <Button
                             size="sm"
@@ -479,34 +479,34 @@ export default function Notifications() {
                             {not.time}
                           </span>
                           {not.priority &&
-                            not.priority !== 'low' &&
-                            not.type !== 'live_stream' && (
+                            not.priority !== "low" &&
+                            not.type !== "live_stream" && (
                               <Badge
                                 variant="outline"
                                 className={cn(
-                                  'text-[10px] h-5 px-1.5 font-normal border-0',
-                                  not.type === 'memory' ||
-                                    not.type === 'time_travel'
-                                    ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300'
-                                    : not.priority === 'critical'
-                                      ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
+                                  "text-[10px] h-5 px-1.5 font-normal border-0",
+                                  not.type === "memory" ||
+                                    not.type === "time_travel"
+                                    ? "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300"
+                                    : not.priority === "critical"
+                                      ? "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300"
                                       : isVipAlert(not.title, not.message)
-                                        ? 'bg-gold/20 text-gold border-gold/30'
-                                        : not.priority === 'high'
-                                          ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
-                                          : 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
+                                        ? "bg-gold/20 text-gold border-gold/30"
+                                        : not.priority === "high"
+                                          ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300"
+                                          : "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
                                 )}
                               >
-                                {not.type === 'memory' ||
-                                not.type === 'time_travel'
-                                  ? 'Flashback'
-                                  : not.priority === 'critical'
-                                    ? 'Urgente'
+                                {not.type === "memory" ||
+                                not.type === "time_travel"
+                                  ? "Flashback"
+                                  : not.priority === "critical"
+                                    ? "Urgente"
                                     : isVipAlert(not.title, not.message)
-                                      ? 'VIP'
-                                      : not.priority === 'high'
-                                        ? 'Importante'
-                                        : 'Info'}
+                                      ? "VIP"
+                                      : not.priority === "high"
+                                        ? "Importante"
+                                        : "Info"}
                               </Badge>
                             )}
                         </div>

@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
-import { useState, useEffect } from 'react'
+import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react"
 import {
   ArrowLeft,
   Ghost,
@@ -13,28 +13,28 @@ import {
   Trash2,
   Loader2,
   Info,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { usePrivacyStore } from '@/stores/usePrivacyStore'
-import { useAuth } from '@/hooks/use-auth'
-import { useAuthStore } from '@/stores/useAuthStore'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { usePrivacyStore } from "@/stores/usePrivacyStore"
+import { useAuth } from "@/hooks/use-auth"
+import { useAuthStore } from "@/stores/useAuthStore"
 import {
   biometricService,
   type BiometricCredentialData,
-} from '@/services/biometrics'
-import { toast } from 'sonner'
-import { supabase } from '@/lib/supabase/client'
-import { Switch } from '@/components/ui/switch'
-import { PaymentDialog } from '@/components/PaymentDialog'
-import { Badge } from '@/components/ui/badge'
+} from "@/services/biometrics"
+import { toast } from "sonner"
+import { supabase } from "@/lib/supabase/client"
+import { Switch } from "@/components/ui/switch"
+import { PaymentDialog } from "@/components/PaymentDialog"
+import { Badge } from "@/components/ui/badge"
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from '@/components/ui/card'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 
 export default function PrivacySettings() {
   const navigate = useNavigate()
@@ -64,7 +64,7 @@ export default function PrivacySettings() {
 
   const handleEnrollBiometrics = async () => {
     if (!user) {
-      toast.error('Você precisa estar logado para ativar a biometria.')
+      toast.error("Você precisa estar logado para ativar a biometria.")
       return
     }
 
@@ -93,17 +93,17 @@ export default function PrivacySettings() {
       const displayName =
         profile?.full_name ||
         user.user_metadata?.full_name ||
-        user.email?.split('@')[0] ||
-        'Atleta Goplay'
+        user.email?.split("@")[0] ||
+        "Atleta Goplay"
 
-      toast.info('Confirme a biometria no seu dispositivo', {
-        description: 'Aproxime o dedo ou use o Face ID no prompt do sistema...',
+      toast.info("Confirme a biometria no seu dispositivo", {
+        description: "Aproxime o dedo ou use o Face ID no prompt do sistema...",
         icon: <Fingerprint className="w-4 h-4 text-primary animate-pulse" />,
       })
 
       const res = await biometricService.enrollBiometrics({
         userId: user.id,
-        userEmail: user.email || '',
+        userEmail: user.email || "",
         userName: displayName,
         sessionTokens: tokens,
       })
@@ -111,18 +111,18 @@ export default function PrivacySettings() {
       if (res.success) {
         const updatedCred = biometricService.getEnrolledCredential()
         setEnrolledCredential(updatedCred)
-        toast.success('Entrada biométrica ativada com sucesso!', {
+        toast.success("Entrada biométrica ativada com sucesso!", {
           description:
-            'Agora você pode usar Touch ID, Face ID ou digital para entrar rapidamente neste aparelho.',
+            "Agora você pode usar Touch ID, Face ID ou digital para entrar rapidamente neste aparelho.",
         })
       } else {
-        toast.error('Não foi possível ativar a biometria', {
+        toast.error("Não foi possível ativar a biometria", {
           description: res.error,
         })
       }
     } catch (err: any) {
-      toast.error('Erro ao registrar biometria', {
-        description: err?.message || 'Tente novamente.',
+      toast.error("Erro ao registrar biometria", {
+        description: err?.message || "Tente novamente.",
       })
     } finally {
       setEnrollingLoading(false)
@@ -132,9 +132,9 @@ export default function PrivacySettings() {
   const handleDisableBiometrics = () => {
     biometricService.disableBiometrics()
     setEnrolledCredential(null)
-    toast.success('Biometria desativada neste aparelho', {
+    toast.success("Biometria desativada neste aparelho", {
       description:
-        'A credencial local foi removida. Você poderá reativá-la a qualquer momento.',
+        "A credencial local foi removida. Você poderá reativá-la a qualquer momento.",
     })
   }
 
@@ -162,8 +162,8 @@ export default function PrivacySettings() {
         {/* Biometrics Card */}
         <Card
           className={cn(
-            'relative overflow-hidden transition-all duration-300 border-border',
-            enrolledCredential && 'border-primary/40 shadow-sm',
+            "relative overflow-hidden transition-all duration-300 border-border",
+            enrolledCredential && "border-primary/40 shadow-sm",
           )}
         >
           <CardHeader className="pb-3">
@@ -171,30 +171,30 @@ export default function PrivacySettings() {
               <div className="flex items-center gap-2">
                 <Fingerprint
                   className={cn(
-                    'w-5 h-5 transition-colors',
+                    "w-5 h-5 transition-colors",
                     enrolledCredential
-                      ? 'text-primary'
-                      : 'text-muted-foreground',
+                      ? "text-primary"
+                      : "text-muted-foreground",
                   )}
                 />
                 Entrada por Biometria
               </div>
               <Badge
-                variant={enrolledCredential ? 'default' : 'secondary'}
+                variant={enrolledCredential ? "default" : "secondary"}
                 className={cn(
-                  'text-[10px] font-semibold',
+                  "text-[10px] font-semibold",
                   enrolledCredential
                     ? enrolledCredential.needsReauth
-                      ? 'bg-amber-500/15 text-amber-600 border border-amber-500/30'
-                      : 'bg-emerald-500/15 text-emerald-600 border border-emerald-500/30'
-                    : 'bg-muted text-muted-foreground',
+                      ? "bg-amber-500/15 text-amber-600 border border-amber-500/30"
+                      : "bg-emerald-500/15 text-emerald-600 border border-emerald-500/30"
+                    : "bg-muted text-muted-foreground",
                 )}
               >
                 {enrolledCredential
                   ? enrolledCredential.needsReauth
-                    ? 'Reativação Pendente'
-                    : 'Ativa neste Aparelho'
-                  : 'Desativada'}
+                    ? "Reativação Pendente"
+                    : "Ativa neste Aparelho"
+                  : "Desativada"}
               </Badge>
             </CardTitle>
             <CardDescription className="text-sm">
@@ -220,7 +220,7 @@ export default function PrivacySettings() {
                       Dispositivo vinculado:
                     </span>
                     <span className="font-semibold text-foreground">
-                      {enrolledCredential.deviceName || 'Este aparelho'}
+                      {enrolledCredential.deviceName || "Este aparelho"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-xs">
@@ -238,7 +238,7 @@ export default function PrivacySettings() {
                     <span className="font-medium text-foreground">
                       {new Date(
                         enrolledCredential.enrolledAt,
-                      ).toLocaleDateString('pt-BR')}
+                      ).toLocaleDateString("pt-BR")}
                     </span>
                   </div>
                 </div>
@@ -298,10 +298,10 @@ export default function PrivacySettings() {
 
         <Card
           className={cn(
-            'relative overflow-hidden transition-all duration-300',
+            "relative overflow-hidden transition-all duration-300",
             isInvisibleMode
-              ? 'border-gold/50 shadow-[0_0_20px_hsl(var(--gold)/0.15)]'
-              : 'border-border',
+              ? "border-gold/50 shadow-[0_0_20px_hsl(var(--gold)/0.15)]"
+              : "border-border",
           )}
         >
           {isInvisibleMode && (
@@ -312,10 +312,10 @@ export default function PrivacySettings() {
               <div className="flex items-center gap-2">
                 <Ghost
                   className={cn(
-                    'w-5 h-5 transition-colors',
+                    "w-5 h-5 transition-colors",
                     isInvisibleMode
-                      ? 'text-gold animate-pulse'
-                      : 'text-primary',
+                      ? "text-gold animate-pulse"
+                      : "text-primary",
                   )}
                 />
                 Modo Invisível
@@ -340,10 +340,10 @@ export default function PrivacySettings() {
               <div className="flex items-center gap-3">
                 <div
                   className={cn(
-                    'p-2 rounded-full transition-colors',
+                    "p-2 rounded-full transition-colors",
                     isInvisibleMode
-                      ? 'bg-gold/20 text-gold'
-                      : 'bg-muted text-muted-foreground',
+                      ? "bg-gold/20 text-gold"
+                      : "bg-muted text-muted-foreground",
                   )}
                 >
                   {isInvisibleMode ? (
@@ -356,23 +356,23 @@ export default function PrivacySettings() {
                   <p className="font-bold text-sm">Status do Modo</p>
                   <p
                     className={cn(
-                      'text-xs font-medium transition-colors',
-                      isInvisibleMode ? 'text-gold' : 'text-muted-foreground',
+                      "text-xs font-medium transition-colors",
+                      isInvisibleMode ? "text-gold" : "text-muted-foreground",
                     )}
                   >
                     {isInvisibleMode
-                      ? 'Ativado (Invisível)'
-                      : 'Desativado (Visível)'}
+                      ? "Ativado (Invisível)"
+                      : "Desativado (Visível)"}
                   </p>
                 </div>
               </div>
 
               <div
                 className={cn(
-                  'relative flex items-center justify-center h-6 w-11 rounded-full ring-2 transition-all',
+                  "relative flex items-center justify-center h-6 w-11 rounded-full ring-2 transition-all",
                   isInvisibleMode
-                    ? 'ring-gold/50 shadow-[0_0_10px_hsl(var(--gold)/0.2)]'
-                    : 'ring-transparent',
+                    ? "ring-gold/50 shadow-[0_0_10px_hsl(var(--gold)/0.2)]"
+                    : "ring-transparent",
                 )}
               >
                 {!isPremium && (
@@ -394,7 +394,7 @@ export default function PrivacySettings() {
                     if (isPremium) toggleInvisibleMode(c)
                   }}
                   className={cn(
-                    isInvisibleMode && 'data-[state=checked]:bg-gold',
+                    isInvisibleMode && "data-[state=checked]:bg-gold",
                   )}
                 />
               </div>
@@ -424,7 +424,7 @@ export default function PrivacySettings() {
             <Button
               variant="ghost"
               className="w-full justify-start h-14 rounded-none px-4 gap-3"
-              onClick={() => navigate('/privacy')}
+              onClick={() => navigate("/privacy")}
             >
               <Shield className="w-5 h-5 text-emerald-500" />
               <div className="flex flex-col items-start text-left">
@@ -439,7 +439,7 @@ export default function PrivacySettings() {
             <Button
               variant="ghost"
               className="w-full justify-start h-14 rounded-none px-4 gap-3"
-              onClick={() => navigate('/terms')}
+              onClick={() => navigate("/terms")}
             >
               <Lock className="w-5 h-5 text-primary" />
               <div className="flex flex-col items-start text-left">

@@ -1,11 +1,11 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Search, Star, MapPin, CreditCard } from 'lucide-react'
-import { mockClinics } from '@/lib/data'
-import { useNavigate } from 'react-router-dom'
-import { DigitalCard } from '@/components/DigitalCard'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Search, Star, MapPin, CreditCard } from "lucide-react"
+import { mockClinics } from "@/lib/data"
+import { useNavigate } from "react-router-dom"
+import { DigitalCard } from "@/components/DigitalCard"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 
 export default function ClinicsList() {
   const navigate = useNavigate()

@@ -1,5 +1,5 @@
-import { mockPsychologicalRankings, mockCurrentUser } from '@/lib/data'
-import { cn } from '@/lib/utils'
+import { mockPsychologicalRankings, mockCurrentUser } from "@/lib/data"
+import { cn } from "@/lib/utils"
 import {
   Brain,
   Shield,
@@ -9,10 +9,10 @@ import {
   Minus,
   Medal,
   Crown,
-} from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Progress } from '@/components/ui/progress'
-import { Badge } from '@/components/ui/badge'
+} from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Progress } from "@/components/ui/progress"
+import { Badge } from "@/components/ui/badge"
 
 export default function EmotionalRanking() {
   const sortedRankings = [...mockPsychologicalRankings].sort(
@@ -58,19 +58,19 @@ export default function EmotionalRanking() {
             <div
               key={rank.id}
               className={cn(
-                'relative flex flex-col gap-3 p-4 rounded-2xl border transition-all duration-300 group',
+                "relative flex flex-col gap-3 p-4 rounded-2xl border transition-all duration-300 group",
                 isTop3
-                  ? 'bg-gradient-to-r from-card to-background border-border/60 shadow-sm'
-                  : 'bg-card border-border/30 hover:border-border/60',
+                  ? "bg-gradient-to-r from-card to-background border-border/60 shadow-sm"
+                  : "bg-card border-border/30 hover:border-border/60",
                 isMe &&
-                  'bg-purple-500/5 border-purple-500/40 shadow-[0_0_15px_rgba(168,85,247,0.1)] scale-[1.01] z-10',
+                  "bg-purple-500/5 border-purple-500/40 shadow-[0_0_15px_rgba(168,85,247,0.1)] scale-[1.01] z-10",
               )}
             >
               <div className="flex items-center gap-4">
                 <div
                   className={cn(
-                    'flex flex-col items-center justify-center w-8 shrink-0',
-                    isTop3 ? 'scale-110' : '',
+                    "flex flex-col items-center justify-center w-8 shrink-0",
+                    isTop3 ? "scale-110" : "",
                   )}
                 >
                   {rank.position === 1 ? (
@@ -99,10 +99,10 @@ export default function EmotionalRanking() {
                 <div className="relative">
                   <Avatar
                     className={cn(
-                      'h-12 w-12 border-2 transition-transform group-hover:scale-105',
+                      "h-12 w-12 border-2 transition-transform group-hover:scale-105",
                       isMe
-                        ? 'border-purple-500 ring-2 ring-purple-500/20'
-                        : 'border-transparent bg-muted',
+                        ? "border-purple-500 ring-2 ring-purple-500/20"
+                        : "border-transparent bg-muted",
                     )}
                   >
                     <AvatarImage
@@ -122,38 +122,38 @@ export default function EmotionalRanking() {
                   <div className="flex items-center gap-2">
                     <p
                       className={cn(
-                        'font-bold text-sm truncate leading-tight',
-                        isMe && 'text-purple-600',
+                        "font-bold text-sm truncate leading-tight",
+                        isMe && "text-purple-600",
                       )}
                     >
-                      {isMe ? 'Você' : rank.user.name}
+                      {isMe ? "Você" : rank.user.name}
                     </p>
                   </div>
                   <p className="text-xs text-muted-foreground truncate leading-tight mt-0.5">
-                    {rank.user.team || 'Atleta Independente'}
+                    {rank.user.team || "Atleta Independente"}
                   </p>
                 </div>
 
                 <div className="text-right flex flex-col items-end">
                   <Badge
                     className={cn(
-                      'text-xs font-bold px-2 py-0.5',
+                      "text-xs font-bold px-2 py-0.5",
                       isMe
-                        ? 'bg-purple-500 hover:bg-purple-600'
-                        : 'bg-primary hover:bg-primary/90',
+                        ? "bg-purple-500 hover:bg-purple-600"
+                        : "bg-primary hover:bg-primary/90",
                     )}
                   >
                     {rank.totalScore.toFixed(1)}
                   </Badge>
 
                   <div className="flex items-center gap-1 mt-1">
-                    {rank.trend === 'up' && (
+                    {rank.trend === "up" && (
                       <TrendingUp className="h-3 w-3 text-emerald-500" />
                     )}
-                    {rank.trend === 'down' && (
+                    {rank.trend === "down" && (
                       <TrendingDown className="h-3 w-3 text-rose-500" />
                     )}
-                    {rank.trend === 'same' && (
+                    {rank.trend === "same" && (
                       <Minus className="h-3 w-3 text-muted-foreground" />
                     )}
                   </div>

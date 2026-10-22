@@ -1,8 +1,8 @@
-import { supabase } from '@/lib/supabase/client'
+import { supabase } from "@/lib/supabase/client"
 
 // VAPID Public Key configurada para Web Push no GoPlay App
 export const DEFAULT_VAPID_PUBLIC_KEY =
-  'BJ8-dVxhiweb7IGbIVr0AuZb1CxEqkIjFVHyGI7hTNZ0q5480qWg6efiYYQV9YIYpjyW_CAPXvjMcOjmZnMsA1M'
+  "BJ8-dVxhiweb7IGbIVr0AuZb1CxEqkIjFVHyGI7hTNZ0q5480qWg6efiYYQV9YIYpjyW_CAPXvjMcOjmZnMsA1M"
 
 /**
  * Converts a base64 or base64url string to a Uint8Array for applicationServerKey
@@ -10,8 +10,8 @@ export const DEFAULT_VAPID_PUBLIC_KEY =
  */
 export function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const cleanKey = base64String.trim()
-  const padding = '='.repeat((4 - (cleanKey.length % 4)) % 4)
-  const base64 = (cleanKey + padding).replace(/-/g, '+').replace(/_/g, '/')
+  const padding = "=".repeat((4 - (cleanKey.length % 4)) % 4)
+  const base64 = (cleanKey + padding).replace(/-/g, "+").replace(/_/g, "/")
 
   const rawData = window.atob(base64)
   const outputArray = new Uint8Array(rawData.length)
@@ -25,7 +25,7 @@ export function urlBase64ToUint8Array(base64String: string): Uint8Array {
 export interface PushStatus {
   supported: boolean
   isStandalone: boolean
-  permission: NotificationPermission | 'unsupported'
+  permission: NotificationPermission | "unsupported"
   isSubscribed: boolean
   iosWithoutPwa: boolean
   registration: ServiceWorkerRegistration | null
@@ -42,7 +42,7 @@ export interface PushTestResult {
   reports?: Array<{
     subId: string
     host: string
-    status: 'delivered' | 'failed' | 'pruned'
+    status: "delivered" | "failed" | "pruned"
     statusCode?: number
     error?: string
   }>
@@ -52,11 +52,11 @@ export interface PushTestResult {
  * Detects if the current environment is running on iOS (Safari/WebKit)
  */
 export function isIOS(): boolean {
-  if (typeof window === 'undefined') return false
-  const ua = window.navigator.userAgent || ''
+  if (typeof window === "undefined") return false
+  const ua = window.navigator.userAgent || ""
   return (
     (/iPad|iPhone|iPod/.test(ua) ||
-      (window.navigator.platform === 'MacIntel' &&
+      (window.navigator.platform === "MacIntel" &&
         window.navigator.maxTouchPoints > 1)) &&
     !(window as any).MSStream
   )
@@ -66,11 +66,11 @@ export function isIOS(): boolean {
  * Detects if the PWA is installed and running in standalone display mode
  */
 export function isStandalonePWA(): boolean {
-  if (typeof window === 'undefined') return false
+  if (typeof window === "undefined") return false
   return (
-    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia("(display-mode: standalone)").matches ||
     (window.navigator as any).standalone === true ||
-    document.referrer.includes('android-app://')
+    document.referrer.includes("android-app://")
   )
 }
 
@@ -78,32 +78,32 @@ export function isStandalonePWA(): boolean {
  * Registers and forces update check for the Service Worker explicitly
  */
 export async function registerServiceWorker(): Promise<ServiceWorkerRegistration | null> {
-  if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
+  if (typeof window === "undefined" || !("serviceWorker" in navigator)) {
     return null
   }
 
   try {
     // updateViaCache: 'none' guarantees the browser ALWAYS bypasses HTTP cache when re-fetching sw.js
-    const reg = await navigator.serviceWorker.register('/sw.js?v=9', {
-      scope: '/',
-      updateViaCache: 'none',
+    const reg = await navigator.serviceWorker.register("/sw.js?v=10", {
+      scope: "/",
+      updateViaCache: "none",
     })
 
     // If an updated worker is already waiting, tell it to take over immediately
     if (reg.waiting) {
-      reg.waiting.postMessage({ type: 'SKIP_WAITING' })
+      reg.waiting.postMessage({ type: "SKIP_WAITING" })
     }
 
-    reg.addEventListener('updatefound', () => {
+    reg.addEventListener("updatefound", () => {
       const installingWorker = reg.installing
       if (installingWorker) {
-        installingWorker.addEventListener('statechange', () => {
+        installingWorker.addEventListener("statechange", () => {
           if (
-            installingWorker.state === 'installed' &&
+            installingWorker.state === "installed" &&
             navigator.serviceWorker.controller
           ) {
             // New version installed while old version was controlling: prompt takeover
-            installingWorker.postMessage({ type: 'SKIP_WAITING' })
+            installingWorker.postMessage({ type: "SKIP_WAITING" })
           }
         })
       }
@@ -119,7 +119,7 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
     await navigator.serviceWorker.ready
     return reg
   } catch (err) {
-    console.error('[WebPush] Falha ao registrar Service Worker:', err)
+    console.error("[WebPush] Falha ao registrar Service Worker:", err)
     return null
   }
 }
@@ -129,28 +129,28 @@ export const pushNotificationService = {
    * Evaluates the push capability and current status of the client device
    */
   async checkStatus(): Promise<PushStatus> {
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       return {
         supported: false,
         isStandalone: false,
-        permission: 'unsupported',
+        permission: "unsupported",
         isSubscribed: false,
         iosWithoutPwa: false,
         registration: null,
       }
     }
 
-    const hasSW = 'serviceWorker' in navigator
-    const hasPushManager = 'PushManager' in window
-    const hasNotification = 'Notification' in window
+    const hasSW = "serviceWorker" in navigator
+    const hasPushManager = "PushManager" in window
+    const hasNotification = "Notification" in window
     const standalone = isStandalonePWA()
     const ios = isIOS()
 
     const iosWithoutPwa = ios && !standalone
     const supported = Boolean(hasSW && hasPushManager && hasNotification)
-    const permission: NotificationPermission | 'unsupported' = hasNotification
+    const permission: NotificationPermission | "unsupported" = hasNotification
       ? Notification.permission
-      : 'unsupported'
+      : "unsupported"
 
     if (!supported) {
       return {
@@ -193,9 +193,9 @@ export const pushNotificationService = {
   async subscribeUser(
     userId: string,
     publicKey: string = DEFAULT_VAPID_PUBLIC_KEY,
-  ): Promise<{ success: boolean; error?: string; permissionDenied?: boolean }> {
+  ): Promise<{ success: boolean error?: string permissionDenied?: boolean }> {
     if (!userId) {
-      return { success: false, error: 'Usuário não autenticado.' }
+      return { success: false, error: "Usuário não autenticado." }
     }
 
     const status = await this.checkStatus()
@@ -204,27 +204,27 @@ export const pushNotificationService = {
         return {
           success: false,
           error:
-            'No iOS, é necessário adicionar o Goplay à Tela de Início (PWA) para habilitar notificações.',
+            "No iOS, é necessário adicionar o Goplay à Tela de Início (PWA) para habilitar notificações.",
         }
       }
       return {
         success: false,
-        error: 'Notificações push não são suportadas neste navegador.',
+        error: "Notificações push não são suportadas neste navegador.",
       }
     }
 
     // 1. Request user permission
     let currentPerm = Notification.permission
-    if (currentPerm === 'default') {
+    if (currentPerm === "default") {
       currentPerm = await Notification.requestPermission()
     }
 
-    if (currentPerm !== 'granted') {
+    if (currentPerm !== "granted") {
       return {
         success: false,
         permissionDenied: true,
         error:
-          'Permissão de notificações recusada no navegador ou dispositivo.',
+          "Permissão de notificações recusada no navegador ou dispositivo.",
       }
     }
 
@@ -237,7 +237,7 @@ export const pushNotificationService = {
       if (!reg) {
         return {
           success: false,
-          error: 'Não foi possível inicializar o Service Worker.',
+          error: "Não foi possível inicializar o Service Worker.",
         }
       }
 
@@ -255,14 +255,14 @@ export const pushNotificationService = {
       if (!subJson.endpoint || !subJson.keys?.p256dh || !subJson.keys?.auth) {
         return {
           success: false,
-          error: 'Chaves da assinatura inválidas pelo navegador.',
+          error: "Chaves da assinatura inválidas pelo navegador.",
         }
       }
 
       // 4. Upsert into Supabase push_subscriptions table
-      const userAgent = navigator.userAgent || 'PWA Client'
+      const userAgent = navigator.userAgent || "PWA Client"
       const { error: dbError } = await (supabase as any)
-        .from('push_subscriptions')
+        .from("push_subscriptions")
         .upsert(
           {
             user_id: userId,
@@ -272,23 +272,23 @@ export const pushNotificationService = {
             user_agent: userAgent,
             updated_at: new Date().toISOString(),
           },
-          { onConflict: 'endpoint' },
+          { onConflict: "endpoint" },
         )
 
       if (dbError) {
-        console.error('[WebPush] Falha ao salvar assinatura no banco:', dbError)
+        console.error("[WebPush] Falha ao salvar assinatura no banco:", dbError)
         return {
           success: false,
-          error: 'Falha ao registrar assinatura no servidor.',
+          error: "Falha ao registrar assinatura no servidor.",
         }
       }
 
       return { success: true }
     } catch (err: any) {
-      console.error('[WebPush] Erro durante subscrição:', err)
+      console.error("[WebPush] Erro durante subscrição:", err)
       return {
         success: false,
-        error: err?.message || 'Falha ao ativar notificações push.',
+        error: err?.message || "Falha ao ativar notificações push.",
       }
     }
   },
@@ -296,11 +296,12 @@ export const pushNotificationService = {
   /**
    * Unsubscribes from push notifications and removes the record from database
    */
-  async unsubscribeUser(
-    userId: string,
-  ): Promise<{ success: boolean; error?: string }> {
+  async unsubscribeUser(userId: string): Promise<{
+    success: boolean
+    error?: string
+  }> {
     try {
-      if ('serviceWorker' in navigator) {
+      if ("serviceWorker" in navigator) {
         const reg = await navigator.serviceWorker.ready
         const sub = await reg.pushManager.getSubscription()
         if (sub) {
@@ -309,20 +310,20 @@ export const pushNotificationService = {
 
           if (userId && endpoint) {
             await (supabase as any)
-              .from('push_subscriptions')
+              .from("push_subscriptions")
               .delete()
-              .eq('endpoint', endpoint)
-              .eq('user_id', userId)
+              .eq("endpoint", endpoint)
+              .eq("user_id", userId)
           }
         }
       }
 
       return { success: true }
     } catch (err: any) {
-      console.error('[WebPush] Erro ao desinscrever:', err)
+      console.error("[WebPush] Erro ao desinscrever:", err)
       return {
         success: false,
-        error: err?.message || 'Falha ao desativar notificações.',
+        error: err?.message || "Falha ao desativar notificações.",
       }
     }
   },
@@ -332,7 +333,7 @@ export const pushNotificationService = {
    */
   async handleLogout(userId?: string): Promise<void> {
     try {
-      if ('serviceWorker' in navigator) {
+      if ("serviceWorker" in navigator) {
         const reg = await navigator.serviceWorker.ready
         const sub = await reg.pushManager.getSubscription()
         if (sub) {
@@ -341,10 +342,10 @@ export const pushNotificationService = {
 
           if (userId && endpoint) {
             await (supabase as any)
-              .from('push_subscriptions')
+              .from("push_subscriptions")
               .delete()
-              .eq('endpoint', endpoint)
-              .eq('user_id', userId)
+              .eq("endpoint", endpoint)
+              .eq("user_id", userId)
           }
         }
       }
@@ -379,29 +380,29 @@ export const pushNotificationService = {
 
       const invokeHeaders: Record<string, string> = {}
       if (accessToken) {
-        invokeHeaders['Authorization'] = `Bearer ${accessToken}`
+        invokeHeaders["Authorization"] = `Bearer ${accessToken}`
       }
 
-      const { data, error } = await supabase.functions.invoke('send-push', {
+      const { data, error } = await supabase.functions.invoke("send-push", {
         body: params,
         headers: invokeHeaders,
       })
 
       if (error) {
-        let detailedError = error.message || 'Erro ao invocar Edge Function'
+        let detailedError = error.message || "Erro ao invocar Edge Function"
         let statusCode: number | undefined
         let responsePayload: any = null
 
         // Handle FunctionsHttpError containing error.context Response object
         if ((error as any)?.context) {
           const contextObj = (error as any).context
-          if (typeof contextObj.status === 'number') {
+          if (typeof contextObj.status === "number") {
             statusCode = contextObj.status
           }
 
           // Try parsing response body if available as cloneable or text/json
           try {
-            if (typeof contextObj.json === 'function') {
+            if (typeof contextObj.json === "function") {
               responsePayload = await contextObj
                 .clone()
                 .json()
@@ -409,11 +410,11 @@ export const pushNotificationService = {
                   const text = await contextObj
                     .clone()
                     .text()
-                    .catch(() => '')
+                    .catch(() => "")
                   return text ? { rawText: text } : null
                 })
-            } else if (typeof contextObj.text === 'function') {
-              const text = await contextObj.text().catch(() => '')
+            } else if (typeof contextObj.text === "function") {
+              const text = await contextObj.text().catch(() => "")
               try {
                 responsePayload = JSON.parse(text)
               } catch {
@@ -439,22 +440,22 @@ export const pushNotificationService = {
         // Clarify specific standard HTTP edge error cases
         if (statusCode === 401) {
           detailedError =
-            detailedError.includes('AUTH_INVALID_TOKEN') ||
-            detailedError.includes('sessão')
+            detailedError.includes("AUTH_INVALID_TOKEN") ||
+            detailedError.includes("sessão")
               ? detailedError
-              : 'Sessão expirada ou não autorizada pelo servidor (HTTP 401). Faça logout e login novamente no app.'
+              : "Sessão expirada ou não autorizada pelo servidor (HTTP 401). Faça logout e login novamente no app."
         } else if (statusCode === 403) {
           detailedError =
-            'Permissão negada pelo servidor para disparar teste neste aparelho (HTTP 403).'
+            "Permissão negada pelo servidor para disparar teste neste aparelho (HTTP 403)."
         } else if (statusCode === 503) {
           detailedError =
-            'Chaves VAPID não configuradas no servidor Supabase (HTTP 503).'
+            "Chaves VAPID não configuradas no servidor Supabase (HTTP 503)."
         } else if (statusCode === 500 && !responsePayload?.error) {
           detailedError = `Erro interno da Edge Function send-push (HTTP 500): ${detailedError}`
         }
 
         console.warn(
-          '[WebPush] Retorno com erro da Edge Function:',
+          "[WebPush] Retorno com erro da Edge Function:",
           detailedError,
           { statusCode, responsePayload },
         )
@@ -468,9 +469,9 @@ export const pushNotificationService = {
 
       return { success: Boolean(data?.success), data, statusCode: 200 }
     } catch (err: any) {
-      console.warn('[WebPush] Falha de conexão ao disparar push:', err)
+      console.warn("[WebPush] Falha de conexão ao disparar push:", err)
       const message =
-        err instanceof Error ? err.message : String(err || 'Erro desconhecido')
+        err instanceof Error ? err.message : String(err || "Erro desconhecido")
       return {
         success: false,
         error: `Falha de rede/cliente ao invocar Edge Function: ${message}`,
@@ -489,7 +490,7 @@ export const pushNotificationService = {
         success: false,
         sentCount: 0,
         totalDevices: 0,
-        error: 'Usuário não autenticado.',
+        error: "Usuário não autenticado.",
       }
     }
 
@@ -502,22 +503,22 @@ export const pushNotificationService = {
           sentCount: 0,
           totalDevices: 0,
           error:
-            'Permissão de notificação negada no navegador. Habilite nas configurações do aparelho.',
+            "Permissão de notificação negada no navegador. Habilite nas configurações do aparelho.",
         }
       }
 
       // 2. Trigger real Edge Function test push
-      const testTimestamp = new Date().toLocaleTimeString('pt-BR', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
+      const testTimestamp = new Date().toLocaleTimeString("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
       })
 
       const invokeRes = await this.triggerServerPush({
         userId,
-        title: 'Goplay App • Teste de Notificação',
+        title: "Goplay App • Teste de Notificação",
         body: `Disparado pelo servidor às ${testTimestamp}. Notificações Web Push funcionando perfeitamente no seu Android!`,
-        url: '/settings/pwa',
+        url: "/settings/pwa",
         tag: `test-${Date.now()}`,
         isTest: true,
       })
@@ -530,7 +531,7 @@ export const pushNotificationService = {
         if (!errorMsg) {
           const statusSuffix = invokeRes.statusCode
             ? ` (HTTP ${invokeRes.statusCode})`
-            : ''
+            : ""
           errorMsg = `Falha ao processar a notificação no servidor Supabase${statusSuffix}. Verifique se a Edge Function send-push está ativa.`
         }
 
@@ -568,7 +569,7 @@ export const pushNotificationService = {
         error:
           err instanceof Error
             ? err.message
-            : 'Erro inesperado ao executar teste de push.',
+            : "Erro inesperado ao executar teste de push.",
       }
     }
   },

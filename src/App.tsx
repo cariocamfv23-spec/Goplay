@@ -1,220 +1,220 @@
-import '@/lib/pwa-inject'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { Toaster } from '@/components/ui/toaster'
-import { Toaster as Sonner } from '@/components/ui/sonner'
-import { TooltipProvider } from '@/components/ui/tooltip'
-import Layout from './components/Layout'
-import { Suspense, lazy, useEffect } from 'react'
-import { PageLoader } from './components/PageLoader'
-import { BrandingProvider } from '@/stores/useBrandingStore'
-import { CartProvider } from '@/stores/useCartStore'
-import { ThemeProvider } from '@/components/ThemeProvider'
-import { AuthProvider } from '@/hooks/use-auth'
-import { useThemeStore } from '@/stores/useThemeStore'
-import useSoundStore from '@/stores/useSoundStore'
-import { ProtectedRoute } from './components/ProtectedRoute'
-import { FlashbackModal } from '@/components/FlashbackModal'
-import { SplashScreen } from '@/components/SplashScreen'
-import Index from './pages/Index'
+import "@/lib/pwa-inject"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { Toaster } from "@/components/ui/toaster"
+import { Toaster as Sonner } from "@/components/ui/sonner"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import Layout from "./components/Layout"
+import { Suspense, lazy, useEffect } from "react"
+import { PageLoader } from "./components/PageLoader"
+import { BrandingProvider } from "@/stores/useBrandingStore"
+import { CartProvider } from "@/stores/useCartStore"
+import { ThemeProvider } from "@/components/ThemeProvider"
+import { AuthProvider } from "@/hooks/use-auth"
+import { useThemeStore } from "@/stores/useThemeStore"
+import useSoundStore from "@/stores/useSoundStore"
+import { ProtectedRoute } from "./components/ProtectedRoute"
+import { FlashbackModal } from "@/components/FlashbackModal"
+import { SplashScreen } from "@/components/SplashScreen"
+import Index from "./pages/Index"
 
 // Lazy load pages
-const Login = lazy(() => import('./pages/auth/Login'))
-const Register = lazy(() => import('./pages/auth/Register'))
-const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'))
-const ResetPassword = lazy(() => import('./pages/auth/ResetPassword'))
-const AuthCallback = lazy(() => import('./pages/auth/AuthCallback'))
-const Onboarding = lazy(() => import('./pages/auth/Onboarding'))
-const ProfileSelection = lazy(() => import('./pages/auth/ProfileSelection'))
+const Login = lazy(() => import("./pages/auth/Login"))
+const Register = lazy(() => import("./pages/auth/Register"))
+const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"))
+const ResetPassword = lazy(() => import("./pages/auth/ResetPassword"))
+const AuthCallback = lazy(() => import("./pages/auth/AuthCallback"))
+const Onboarding = lazy(() => import("./pages/auth/Onboarding"))
+const ProfileSelection = lazy(() => import("./pages/auth/ProfileSelection"))
 
 // Retrospective & Memory Pages
-const Retrospective = lazy(() => import('./pages/retrospective/Retrospective'))
-const MemoryViewer = lazy(() => import('./pages/memory/MemoryViewer'))
+const Retrospective = lazy(() => import("./pages/retrospective/Retrospective"))
+const MemoryViewer = lazy(() => import("./pages/memory/MemoryViewer"))
 
 // Matchmaking
-const Matchmaking = lazy(() => import('./pages/matchmaking/Matchmaking'))
+const Matchmaking = lazy(() => import("./pages/matchmaking/Matchmaking"))
 
 // Sticker Album
-const CopaHub = lazy(() => import('./pages/album/CopaHub'))
-const StickerAlbum = lazy(() => import('./pages/album/StickerAlbum'))
+const CopaHub = lazy(() => import("./pages/album/CopaHub"))
+const StickerAlbum = lazy(() => import("./pages/album/StickerAlbum"))
 const CopaStatsDashboard = lazy(
-  () => import('./pages/album/CopaStatsDashboard'),
+  () => import("./pages/album/CopaStatsDashboard"),
 )
-const CopaMatchSchedule = lazy(() => import('./pages/album/CopaMatchSchedule'))
+const CopaMatchSchedule = lazy(() => import("./pages/album/CopaMatchSchedule"))
 
 // App Map
-const AppMap = lazy(() => import('./pages/AppMap'))
+const AppMap = lazy(() => import("./pages/AppMap"))
 
-const TermsOfService = lazy(() => import('./pages/legal/TermsOfService'))
-const PrivacyPolicy = lazy(() => import('./pages/legal/PrivacyPolicy'))
+const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"))
+const PrivacyPolicy = lazy(() => import("./pages/legal/PrivacyPolicy"))
 
-const Home = lazy(() => import('./pages/home/Home'))
-const Feed = lazy(() => import('./pages/feed/Feed'))
-const Move = lazy(() => import('./pages/move/Move'))
-const Explore = lazy(() => import('./pages/explore/Explore'))
-const CheckIn = lazy(() => import('./pages/checkin/CheckIn'))
+const Home = lazy(() => import("./pages/home/Home"))
+const Feed = lazy(() => import("./pages/feed/Feed"))
+const Move = lazy(() => import("./pages/move/Move"))
+const Explore = lazy(() => import("./pages/explore/Explore"))
+const CheckIn = lazy(() => import("./pages/checkin/CheckIn"))
 
 // Nexus
-const NexusHub = lazy(() => import('./pages/nexus/NexusHub'))
-const TribeProfile = lazy(() => import('./pages/nexus/TribeProfile'))
+const NexusHub = lazy(() => import("./pages/nexus/NexusHub"))
+const TribeProfile = lazy(() => import("./pages/nexus/TribeProfile"))
 
 // Infinity Hub
-const InfinityHub = lazy(() => import('./pages/infinity-hub/InfinityHub'))
+const InfinityHub = lazy(() => import("./pages/infinity-hub/InfinityHub"))
 
 // Arena Go
-const ArenaGo = lazy(() => import('./pages/arena/ArenaGo'))
+const ArenaGo = lazy(() => import("./pages/arena/ArenaGo"))
 
 // Food Sport
-const FoodSport = lazy(() => import('./pages/food-sport/FoodSport'))
+const FoodSport = lazy(() => import("./pages/food-sport/FoodSport"))
 
 // Contracts & Organizer Pages
 const LiveContractsDashboard = lazy(
-  () => import('./pages/contracts/LiveContractsDashboard'),
+  () => import("./pages/contracts/LiveContractsDashboard"),
 )
-const CreateContract = lazy(() => import('./pages/contracts/CreateContract'))
-const ContractDetails = lazy(() => import('./pages/contracts/ContractDetails'))
+const CreateContract = lazy(() => import("./pages/contracts/CreateContract"))
+const ContractDetails = lazy(() => import("./pages/contracts/ContractDetails"))
 const ChampionshipsList = lazy(
-  () => import('./pages/organizer/ChampionshipsList'),
+  () => import("./pages/organizer/ChampionshipsList"),
 )
 const CreateChampionship = lazy(
-  () => import('./pages/organizer/CreateChampionship'),
+  () => import("./pages/organizer/CreateChampionship"),
 )
 const ChampionshipDashboard = lazy(
-  () => import('./pages/organizer/ChampionshipDashboard'),
+  () => import("./pages/organizer/ChampionshipDashboard"),
 )
 
 // Explore Lists
-const TalentsList = lazy(() => import('./pages/explore/TalentsList'))
+const TalentsList = lazy(() => import("./pages/explore/TalentsList"))
 const InvisibleTalentMap = lazy(
-  () => import('./pages/explore/InvisibleTalentMap'),
+  () => import("./pages/explore/InvisibleTalentMap"),
 )
 const PhotographersList = lazy(
-  () => import('./pages/explore/PhotographersList'),
+  () => import("./pages/explore/PhotographersList"),
 )
-const DriversList = lazy(() => import('./pages/explore/DriversList'))
-const EventsList = lazy(() => import('./pages/explore/EventsList'))
-const VenuesList = lazy(() => import('./pages/explore/VenuesList'))
-const GymsList = lazy(() => import('./pages/explore/GymsList'))
-const NutritionList = lazy(() => import('./pages/explore/NutritionList'))
-const ClinicsList = lazy(() => import('./pages/explore/ClinicsList'))
-const Scholarships = lazy(() => import('./pages/explore/Scholarships'))
-const AgenciesList = lazy(() => import('./pages/explore/AgenciesList'))
-const MapEvents = lazy(() => import('./pages/explore/MapEvents'))
+const DriversList = lazy(() => import("./pages/explore/DriversList"))
+const EventsList = lazy(() => import("./pages/explore/EventsList"))
+const VenuesList = lazy(() => import("./pages/explore/VenuesList"))
+const GymsList = lazy(() => import("./pages/explore/GymsList"))
+const NutritionList = lazy(() => import("./pages/explore/NutritionList"))
+const ClinicsList = lazy(() => import("./pages/explore/ClinicsList"))
+const Scholarships = lazy(() => import("./pages/explore/Scholarships"))
+const AgenciesList = lazy(() => import("./pages/explore/AgenciesList"))
+const MapEvents = lazy(() => import("./pages/explore/MapEvents"))
 const InternationalMatch = lazy(
-  () => import('./pages/explore/InternationalMatch'),
+  () => import("./pages/explore/InternationalMatch"),
 )
-const LiveEvents = lazy(() => import('./pages/explore/LiveEvents'))
-const LiveStream = lazy(() => import('./pages/explore/LiveStream'))
-const ReplayStream = lazy(() => import('./pages/explore/ReplayStream'))
-const FuelCredits = lazy(() => import('./pages/explore/FuelCredits'))
+const LiveEvents = lazy(() => import("./pages/explore/LiveEvents"))
+const LiveStream = lazy(() => import("./pages/explore/LiveStream"))
+const ReplayStream = lazy(() => import("./pages/explore/ReplayStream"))
+const FuelCredits = lazy(() => import("./pages/explore/FuelCredits"))
 const PartnerGasStations = lazy(
-  () => import('./pages/explore/PartnerGasStations'),
+  () => import("./pages/explore/PartnerGasStations"),
 )
-const KidsFriendlyList = lazy(() => import('./pages/explore/KidsFriendlyList'))
-const FlyerCreator = lazy(() => import('./pages/explore/FlyerCreator'))
-const SponsorshipMatch = lazy(() => import('./pages/sponsors/SponsorshipMatch'))
+const KidsFriendlyList = lazy(() => import("./pages/explore/KidsFriendlyList"))
+const FlyerCreator = lazy(() => import("./pages/explore/FlyerCreator"))
+const SponsorshipMatch = lazy(() => import("./pages/sponsors/SponsorshipMatch"))
 
 // Details
-const EventDetails = lazy(() => import('./pages/explore/EventDetails'))
-const VenueDetails = lazy(() => import('./pages/venues/VenueDetails'))
-const GymDetails = lazy(() => import('./pages/gyms/GymDetails'))
+const EventDetails = lazy(() => import("./pages/explore/EventDetails"))
+const VenueDetails = lazy(() => import("./pages/venues/VenueDetails"))
+const GymDetails = lazy(() => import("./pages/gyms/GymDetails"))
 const NutritionPartnerDetails = lazy(
-  () => import('./pages/nutrition/NutritionPartnerDetails'),
+  () => import("./pages/nutrition/NutritionPartnerDetails"),
 )
-const ClinicDetails = lazy(() => import('./pages/clinics/ClinicDetails'))
+const ClinicDetails = lazy(() => import("./pages/clinics/ClinicDetails"))
 const HortifrutiDetails = lazy(
-  () => import('./pages/explore/HortifrutiDetails'),
+  () => import("./pages/explore/HortifrutiDetails"),
 )
 const ScholarshipDetails = lazy(
-  () => import('./pages/explore/ScholarshipDetails'),
+  () => import("./pages/explore/ScholarshipDetails"),
 )
-const AgencyDetails = lazy(() => import('./pages/explore/AgencyDetails'))
+const AgencyDetails = lazy(() => import("./pages/explore/AgencyDetails"))
 const ScholarshipApplication = lazy(
-  () => import('./pages/explore/ScholarshipApplication'),
+  () => import("./pages/explore/ScholarshipApplication"),
 )
 
 // Profile & Stats
-const Profile = lazy(() => import('./pages/profile/Profile'))
-const StatsDetail = lazy(() => import('./pages/profile/StatsDetail'))
+const Profile = lazy(() => import("./pages/profile/Profile"))
+const StatsDetail = lazy(() => import("./pages/profile/StatsDetail"))
 const FinancialStatement = lazy(
-  () => import('./pages/profile/FinancialStatement'),
+  () => import("./pages/profile/FinancialStatement"),
 )
-const Wallet = lazy(() => import('./pages/wallet/Wallet'))
+const Wallet = lazy(() => import("./pages/wallet/Wallet"))
 const TransactionHistory = lazy(
-  () => import('./pages/financials/TransactionHistory'),
+  () => import("./pages/financials/TransactionHistory"),
 )
-const ProfileViews = lazy(() => import('./pages/profile/ProfileViews'))
+const ProfileViews = lazy(() => import("./pages/profile/ProfileViews"))
 const EvolutionTimeline = lazy(
-  () => import('./pages/profile/EvolutionTimeline'),
+  () => import("./pages/profile/EvolutionTimeline"),
 )
-const EvolutionMode = lazy(() => import('./pages/profile/EvolutionMode'))
-const SportsPassport = lazy(() => import('./pages/profile/SportsPassport'))
-const ReferralProgram = lazy(() => import('./pages/profile/ReferralProgram'))
+const EvolutionMode = lazy(() => import("./pages/profile/EvolutionMode"))
+const SportsPassport = lazy(() => import("./pages/profile/SportsPassport"))
+const ReferralProgram = lazy(() => import("./pages/profile/ReferralProgram"))
 
 // Messages & Marketplace
-const MessagesList = lazy(() => import('./pages/messages/MessagesList'))
-const ChatRoom = lazy(() => import('./pages/messages/ChatRoom'))
-const NewChat = lazy(() => import('./pages/messages/NewChat'))
-const Marketplace = lazy(() => import('./pages/marketplace/Marketplace'))
-const ProductDetails = lazy(() => import('./pages/marketplace/ProductDetails'))
-const Cart = lazy(() => import('./pages/marketplace/Cart'))
-const OrderHistory = lazy(() => import('./pages/marketplace/OrderHistory'))
-const OrderDetails = lazy(() => import('./pages/marketplace/OrderDetails'))
+const MessagesList = lazy(() => import("./pages/messages/MessagesList"))
+const ChatRoom = lazy(() => import("./pages/messages/ChatRoom"))
+const NewChat = lazy(() => import("./pages/messages/NewChat"))
+const Marketplace = lazy(() => import("./pages/marketplace/Marketplace"))
+const ProductDetails = lazy(() => import("./pages/marketplace/ProductDetails"))
+const Cart = lazy(() => import("./pages/marketplace/Cart"))
+const OrderHistory = lazy(() => import("./pages/marketplace/OrderHistory"))
+const OrderDetails = lazy(() => import("./pages/marketplace/OrderDetails"))
 
 // Jobs
-const JobsList = lazy(() => import('./pages/jobs/JobsList'))
-const JobDetails = lazy(() => import('./pages/jobs/JobDetails'))
-const RecruiterDashboard = lazy(() => import('./pages/jobs/RecruiterDashboard'))
+const JobsList = lazy(() => import("./pages/jobs/JobsList"))
+const JobDetails = lazy(() => import("./pages/jobs/JobDetails"))
+const RecruiterDashboard = lazy(() => import("./pages/jobs/RecruiterDashboard"))
 
 // Services & Driver
-const ScheduledRides = lazy(() => import('./pages/services/ScheduledRides'))
-const RideRequest = lazy(() => import('./pages/services/RideRequest'))
-const DriverDashboard = lazy(() => import('./pages/driver/DriverDashboard'))
-const DriverRequests = lazy(() => import('./pages/driver/DriverRequests'))
-const DriverRewards = lazy(() => import('./pages/driver/DriverRewards'))
-const DriverHistory = lazy(() => import('./pages/driver/DriverHistory'))
-const DriverSettings = lazy(() => import('./pages/driver/DriverSettings'))
+const ScheduledRides = lazy(() => import("./pages/services/ScheduledRides"))
+const RideRequest = lazy(() => import("./pages/services/RideRequest"))
+const DriverDashboard = lazy(() => import("./pages/driver/DriverDashboard"))
+const DriverRequests = lazy(() => import("./pages/driver/DriverRequests"))
+const DriverRewards = lazy(() => import("./pages/driver/DriverRewards"))
+const DriverHistory = lazy(() => import("./pages/driver/DriverHistory"))
+const DriverSettings = lazy(() => import("./pages/driver/DriverSettings"))
 
-const Settings = lazy(() => import('./pages/settings/Settings'))
-const PrivacySettings = lazy(() => import('./pages/settings/Privacy'))
-const PWASettings = lazy(() => import('./pages/settings/PWASettings'))
-const NotFound = lazy(() => import('./pages/NotFound'))
-const Ranking = lazy(() => import('./pages/gamification/Ranking'))
-const Notifications = lazy(() => import('./pages/notifications/Notifications'))
+const Settings = lazy(() => import("./pages/settings/Settings"))
+const PrivacySettings = lazy(() => import("./pages/settings/Privacy"))
+const PWASettings = lazy(() => import("./pages/settings/PWASettings"))
+const NotFound = lazy(() => import("./pages/NotFound"))
+const Ranking = lazy(() => import("./pages/gamification/Ranking"))
+const Notifications = lazy(() => import("./pages/notifications/Notifications"))
 
 // AI
-const AiCoach = lazy(() => import('./pages/ai/AiCoach'))
-const MotionAnalysis = lazy(() => import('./pages/ai/MotionAnalysis'))
-const InjuryScanner = lazy(() => import('./pages/ai/InjuryScanner'))
-const ExerciseLibrary = lazy(() => import('./pages/ai/ExerciseLibrary'))
-const VarzeaEditor = lazy(() => import('./pages/ai/VarzeaEditor'))
-const GhostPlay = lazy(() => import('./pages/ai/GhostPlay'))
-const ArenaMode = lazy(() => import('./pages/ai/ArenaMode'))
-const AiCoachSettings = lazy(() => import('./pages/ai/AiCoachSettings'))
-const PerformanceReports = lazy(() => import('./pages/ai/PerformanceReports'))
-const GoalsDashboard = lazy(() => import('./pages/goals/GoalsDashboard'))
-const AiAvatar = lazy(() => import('./pages/ai/AiAvatar'))
-const Oracle = lazy(() => import('./pages/ai/Oracle'))
-const NftCreator = lazy(() => import('./pages/ai/NftCreator'))
-const BotDaVerdade = lazy(() => import('./pages/ai/BotDaVerdade'))
+const AiCoach = lazy(() => import("./pages/ai/AiCoach"))
+const MotionAnalysis = lazy(() => import("./pages/ai/MotionAnalysis"))
+const InjuryScanner = lazy(() => import("./pages/ai/InjuryScanner"))
+const ExerciseLibrary = lazy(() => import("./pages/ai/ExerciseLibrary"))
+const VarzeaEditor = lazy(() => import("./pages/ai/VarzeaEditor"))
+const GhostPlay = lazy(() => import("./pages/ai/GhostPlay"))
+const ArenaMode = lazy(() => import("./pages/ai/ArenaMode"))
+const AiCoachSettings = lazy(() => import("./pages/ai/AiCoachSettings"))
+const PerformanceReports = lazy(() => import("./pages/ai/PerformanceReports"))
+const GoalsDashboard = lazy(() => import("./pages/goals/GoalsDashboard"))
+const AiAvatar = lazy(() => import("./pages/ai/AiAvatar"))
+const Oracle = lazy(() => import("./pages/ai/Oracle"))
+const NftCreator = lazy(() => import("./pages/ai/NftCreator"))
+const BotDaVerdade = lazy(() => import("./pages/ai/BotDaVerdade"))
 
 // Time Shift & Move Map
-const TimeShift = lazy(() => import('./pages/timeshift/TimeShift'))
-const KidsZoneMap = lazy(() => import('./pages/move/KidsZoneMap'))
+const TimeShift = lazy(() => import("./pages/timeshift/TimeShift"))
+const KidsZoneMap = lazy(() => import("./pages/move/KidsZoneMap"))
 
 // Live Broadcast
 const CreateLiveBroadcast = lazy(
-  () => import('./pages/live/CreateLiveBroadcast'),
+  () => import("./pages/live/CreateLiveBroadcast"),
 )
 
 // Time Capsule
 const TimeCapsuleDashboard = lazy(
-  () => import('./pages/timecapsule/TimeCapsuleDashboard'),
+  () => import("./pages/timecapsule/TimeCapsuleDashboard"),
 )
-const CreateCapsule = lazy(() => import('./pages/timecapsule/CreateCapsule'))
-const CapsuleDetail = lazy(() => import('./pages/timecapsule/CapsuleDetail'))
+const CreateCapsule = lazy(() => import("./pages/timecapsule/CreateCapsule"))
+const CapsuleDetail = lazy(() => import("./pages/timecapsule/CapsuleDetail"))
 
 // Admin Dashboard
-const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"))
 
 const App = () => {
   const { color } = useThemeStore()
@@ -222,13 +222,13 @@ const App = () => {
   useEffect(() => {
     const root = window.document.documentElement
     root.classList.remove(
-      'theme-blue',
-      'theme-green',
-      'theme-orange',
-      'theme-red',
-      'theme-rose',
+      "theme-blue",
+      "theme-green",
+      "theme-orange",
+      "theme-red",
+      "theme-rose",
     )
-    if (color !== 'default') {
+    if (color !== "default") {
       root.classList.add(`theme-${color}`)
     }
   }, [color])
@@ -237,11 +237,11 @@ const App = () => {
     const handleInteraction = () => {
       useSoundStore.getState().initAudio()
     }
-    document.addEventListener('click', handleInteraction, { once: true })
-    document.addEventListener('touchstart', handleInteraction, { once: true })
+    document.addEventListener("click", handleInteraction, { once: true })
+    document.addEventListener("touchstart", handleInteraction, { once: true })
     return () => {
-      document.removeEventListener('click', handleInteraction)
-      document.removeEventListener('touchstart', handleInteraction)
+      document.removeEventListener("click", handleInteraction)
+      document.removeEventListener("touchstart", handleInteraction)
     }
   }, [])
 
@@ -307,7 +307,7 @@ const App = () => {
                       />
                       {/* All Inner Layout Pages are Protected */}
                       <Route element={<ProtectedRoute />}>
-                        <Route path="/home" element={<Home />} />{' '}
+                        <Route path="/home" element={<Home />} />{" "}
                         <Route path="/feed" element={<Feed />} />
                         <Route path="/album" element={<CopaHub />} />
                         <Route

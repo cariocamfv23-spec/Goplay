@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   ArrowLeft,
   Eye,
@@ -14,55 +14,55 @@ import {
   Building2,
   Calendar,
   Filter,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Card, CardContent } from '@/components/ui/card'
-import { PaymentDialog } from '@/components/PaymentDialog'
-import { cn } from '@/lib/utils'
-import { AppIcon } from '@/components/AppIcon'
-import { Badge } from '@/components/ui/badge'
-import { usePrivacyStore } from '@/stores/usePrivacyStore'
-import { GhostEmojiIcon } from '@/components/GhostEmojiIcon'
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Card, CardContent } from "@/components/ui/card"
+import { PaymentDialog } from "@/components/PaymentDialog"
+import { cn } from "@/lib/utils"
+import { AppIcon } from "@/components/AppIcon"
+import { Badge } from "@/components/ui/badge"
+import { usePrivacyStore } from "@/stores/usePrivacyStore"
+import { GhostEmojiIcon } from "@/components/GhostEmojiIcon"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip'
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell } from 'recharts'
+} from "@/components/ui/tooltip"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell } from "recharts"
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart'
+} from "@/components/ui/chart"
 import {
   mockProfileVisitors,
   VISITOR_STATS,
   ProfileVisitor,
   ProfileVisitorType,
-} from '@/lib/profile-views-data'
-import { ProfileViewerPaywallModal } from '@/components/ProfileViewerPaywallModal'
+} from "@/lib/profile-views-data"
+import { ProfileViewerPaywallModal } from "@/components/ProfileViewerPaywallModal"
 
 const DAILY_ENGAGEMENT_DATA = [
-  { time: '00h', views: 18, isPeak: false },
-  { time: '04h', views: 12, isPeak: false },
-  { time: '08h', views: 45, isPeak: false },
-  { time: '12h', views: 85, isPeak: false },
-  { time: '16h', views: 124, isPeak: false },
-  { time: '20h', views: 210, isPeak: true },
-  { time: '23h', views: 65, isPeak: false },
+  { time: "00h", views: 18, isPeak: false },
+  { time: "04h", views: 12, isPeak: false },
+  { time: "08h", views: 45, isPeak: false },
+  { time: "12h", views: 85, isPeak: false },
+  { time: "16h", views: 124, isPeak: false },
+  { time: "20h", views: 210, isPeak: true },
+  { time: "23h", views: 65, isPeak: false },
 ]
 
 const chartConfig = {
   views: {
-    label: 'Visitas',
-    color: 'hsl(var(--primary))',
+    label: "Visitas",
+    color: "hsl(var(--primary))",
   },
   peak: {
-    label: 'Pico',
-    color: 'hsl(var(--gold))',
+    label: "Pico",
+    color: "hsl(var(--gold))",
   },
 } satisfies ChartConfig
 
@@ -77,8 +77,8 @@ export default function ProfileViews() {
     isPreviewLocked,
   } = usePrivacyStore()
 
-  const [activeFilter, setActiveFilter] = useState<'all' | ProfileVisitorType>(
-    'all',
+  const [activeFilter, setActiveFilter] = useState<"all" | ProfileVisitorType>(
+    "all",
   )
   const [selectedVisitor, setSelectedVisitor] = useState<ProfileVisitor | null>(
     null,
@@ -91,10 +91,10 @@ export default function ProfileViews() {
     (acc, curr) => acc + curr.views,
     0,
   )
-  const peakHour = DAILY_ENGAGEMENT_DATA.find((d) => d.isPeak)?.time || '20h'
+  const peakHour = DAILY_ENGAGEMENT_DATA.find((d) => d.isPeak)?.time || "20h"
 
   const filteredVisitors = mockProfileVisitors.filter((v) => {
-    if (activeFilter === 'all') return true
+    if (activeFilter === "all") return true
     return v.type === activeFilter
   })
 
@@ -105,19 +105,19 @@ export default function ProfileViews() {
 
   const getTypeBadge = (type: ProfileVisitorType) => {
     switch (type) {
-      case 'scout':
+      case "scout":
         return (
           <Badge className="bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30 text-[10px] gap-1">
             <Eye className="w-3 h-3" /> Olheiro / Scout
           </Badge>
         )
-      case 'university':
+      case "university":
         return (
           <Badge className="bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30 text-[10px] gap-1">
             <GraduationCap className="w-3 h-3" /> Recrutador Universitário
           </Badge>
         )
-      case 'team':
+      case "team":
         return (
           <Badge className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 text-[10px] gap-1">
             <Users className="w-3 h-3" /> Time / Clube
@@ -219,7 +219,7 @@ export default function ProfileViews() {
               <div className="bg-background px-3 py-1.5 rounded-full text-xs font-bold border border-border/50 shadow-sm flex items-center gap-1.5">
                 <span className="text-primary font-black">
                   +{viewsThisWeek}
-                </span>{' '}
+                </span>{" "}
                 esta semana
               </div>
               {isInvisibleMode && (
@@ -283,10 +283,10 @@ export default function ProfileViews() {
                     <button
                       onClick={() => toggleInvisibleMode(!isInvisibleMode)}
                       className={cn(
-                        'w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-300 shadow-sm',
+                        "w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-300 shadow-sm",
                         isInvisibleMode
-                          ? 'bg-gold/15 border-gold/50 shadow-[0_0_15px_hsl(var(--gold)/0.3)] text-gold'
-                          : 'bg-primary/5 border-primary/20 text-primary',
+                          ? "bg-gold/15 border-gold/50 shadow-[0_0_15px_hsl(var(--gold)/0.3)] text-gold"
+                          : "bg-primary/5 border-primary/20 text-primary",
                       )}
                     >
                       <GhostEmojiIcon
@@ -313,9 +313,9 @@ export default function ProfileViews() {
                   <p>
                     {isPremium
                       ? isInvisibleMode
-                        ? 'Modo Invisível Ativo'
-                        : 'Ativar Modo Invisível'
-                      : 'Modo Invisível (Exclusivo Premium)'}
+                        ? "Modo Invisível Ativo"
+                        : "Ativar Modo Invisível"
+                      : "Modo Invisível (Exclusivo Premium)"}
                   </p>
                 </TooltipContent>
               </Tooltip>
@@ -330,32 +330,32 @@ export default function ProfileViews() {
           </span>
           <Button
             size="sm"
-            variant={activeFilter === 'all' ? 'default' : 'outline'}
-            onClick={() => setActiveFilter('all')}
+            variant={activeFilter === "all" ? "default" : "outline"}
+            onClick={() => setActiveFilter("all")}
             className="h-8 text-xs rounded-full shrink-0"
           >
             Todos ({mockProfileVisitors.length})
           </Button>
           <Button
             size="sm"
-            variant={activeFilter === 'scout' ? 'default' : 'outline'}
-            onClick={() => setActiveFilter('scout')}
+            variant={activeFilter === "scout" ? "default" : "outline"}
+            onClick={() => setActiveFilter("scout")}
             className="h-8 text-xs rounded-full shrink-0 gap-1.5"
           >
             <Eye className="w-3 h-3" /> Olheiros & Scouts
           </Button>
           <Button
             size="sm"
-            variant={activeFilter === 'university' ? 'default' : 'outline'}
-            onClick={() => setActiveFilter('university')}
+            variant={activeFilter === "university" ? "default" : "outline"}
+            onClick={() => setActiveFilter("university")}
             className="h-8 text-xs rounded-full shrink-0 gap-1.5"
           >
             <GraduationCap className="w-3 h-3" /> Faculdades & Bolsas
           </Button>
           <Button
             size="sm"
-            variant={activeFilter === 'team' ? 'default' : 'outline'}
-            onClick={() => setActiveFilter('team')}
+            variant={activeFilter === "team" ? "default" : "outline"}
+            onClick={() => setActiveFilter("team")}
             className="h-8 text-xs rounded-full shrink-0 gap-1.5"
           >
             <Users className="w-3 h-3" /> Times & Clubes
@@ -383,9 +383,9 @@ export default function ProfileViews() {
                   key={visitor.id}
                   onClick={() => handleVisitorClick(visitor)}
                   className={cn(
-                    'border transition-all duration-200 cursor-pointer overflow-hidden relative hover:scale-[1.01]',
-                    'bg-card hover:bg-secondary/20 border-border/60 shadow-sm',
-                    visitor.isLive && 'ring-1 ring-gold/40 border-gold/30',
+                    "border transition-all duration-200 cursor-pointer overflow-hidden relative hover:scale-[1.01]",
+                    "bg-card hover:bg-secondary/20 border-border/60 shadow-sm",
+                    visitor.isLive && "ring-1 ring-gold/40 border-gold/30",
                   )}
                 >
                   <CardContent className="p-4 flex items-center gap-4 relative z-10">
@@ -394,7 +394,7 @@ export default function ProfileViews() {
                         <AvatarImage
                           src={visitor.avatar}
                           className={cn(
-                            !isPremium && 'blur-[4px] grayscale transition-all',
+                            !isPremium && "blur-[4px] grayscale transition-all",
                           )}
                         />
                         <AvatarFallback className="font-bold">
@@ -427,7 +427,7 @@ export default function ProfileViews() {
                             )}
                           </h4>
                           <p className="text-xs text-primary font-medium truncate flex items-center gap-1">
-                            <Building2 className="w-3 h-3" />{' '}
+                            <Building2 className="w-3 h-3" />{" "}
                             {visitor.organization}
                           </p>
                           <p className="text-[11px] text-muted-foreground truncate">
@@ -438,11 +438,11 @@ export default function ProfileViews() {
                         <>
                           <div className="space-y-1">
                             <h4 className="font-bold text-sm text-foreground/90 select-none">
-                              {visitor.type === 'scout'
-                                ? 'Olheiro de Clube da Série A'
-                                : visitor.type === 'university'
-                                  ? 'Recrutador de Universidade Americana'
-                                  : 'Comissão Técnica de Clube Rival'}
+                              {visitor.type === "scout"
+                                ? "Olheiro de Clube da Série A"
+                                : visitor.type === "university"
+                                  ? "Recrutador de Universidade Americana"
+                                  : "Comissão Técnica de Clube Rival"}
                             </h4>
                             <div className="flex items-center gap-2">
                               <div className="h-3.5 w-32 bg-muted-foreground/25 rounded blur-[3px]" />
@@ -457,7 +457,7 @@ export default function ProfileViews() {
                       {/* Visited count note */}
                       <div className="flex items-center gap-2 pt-1 text-[11px] text-muted-foreground">
                         <span>
-                          Visitou seu perfil{' '}
+                          Visitou seu perfil{" "}
                           <strong>{visitor.visitsCount}x</strong>
                         </span>
                         {visitor.scholarshipOffer && (
@@ -504,13 +504,13 @@ export default function ProfileViews() {
             <Badge
               variant="outline"
               className={cn(
-                'text-[9px] uppercase tracking-widest',
+                "text-[9px] uppercase tracking-widest",
                 !isPreviewLocked
-                  ? 'text-gold border-gold/30 bg-gold/5'
-                  : 'text-muted-foreground border-border/50 bg-secondary/50',
+                  ? "text-gold border-gold/30 bg-gold/5"
+                  : "text-muted-foreground border-border/50 bg-secondary/50",
               )}
             >
-              {!isPreviewLocked ? 'Premium' : 'Básico'}
+              {!isPreviewLocked ? "Premium" : "Básico"}
             </Badge>
           </div>
 
@@ -544,9 +544,9 @@ export default function ProfileViews() {
 
             <CardContent
               className={cn(
-                'p-4 pt-6 transition-all duration-500',
+                "p-4 pt-6 transition-all duration-500",
                 isPreviewLocked &&
-                  'opacity-30 grayscale blur-[3px] pointer-events-none select-none',
+                  "opacity-30 grayscale blur-[3px] pointer-events-none select-none",
               )}
             >
               <div className="grid grid-cols-2 gap-4 mb-6">
@@ -594,7 +594,7 @@ export default function ProfileViews() {
                     className="text-[10px] font-medium fill-muted-foreground"
                   />
                   <ChartTooltip
-                    cursor={{ fill: 'hsl(var(--muted)/0.4)' }}
+                    cursor={{ fill: "hsl(var(--muted)/0.4)" }}
                     content={
                       <ChartTooltipContent
                         hideLabel
@@ -604,8 +604,8 @@ export default function ProfileViews() {
                             <div className="flex items-center gap-2">
                               <div
                                 className={cn(
-                                  'w-2 h-2 rounded-full',
-                                  isPeak ? 'bg-gold' : 'bg-primary',
+                                  "w-2 h-2 rounded-full",
+                                  isPeak ? "bg-gold" : "bg-primary",
                                 )}
                               />
                               <span className="font-medium text-foreground">
@@ -628,8 +628,8 @@ export default function ProfileViews() {
                         key={`cell-${index}`}
                         fill={
                           entry.isPeak
-                            ? 'hsl(var(--gold))'
-                            : 'hsl(var(--primary))'
+                            ? "hsl(var(--gold))"
+                            : "hsl(var(--primary))"
                         }
                       />
                     ))}

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from "react"
 import {
   Drawer,
   DrawerContent,
@@ -7,20 +7,20 @@ import {
   DrawerDescription,
   DrawerFooter,
   DrawerClose,
-} from '@/components/ui/drawer'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Check, Palette, Sparkles, Plus, Trash2, RotateCcw } from 'lucide-react'
+} from "@/components/ui/drawer"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Check, Palette, Sparkles, Plus, Trash2, RotateCcw } from "lucide-react"
 import {
   useRetrospectiveStore,
   retroThemes,
   RetroThemeId,
   CustomThemeConfig,
-} from '@/stores/useRetrospectiveStore'
-import { cn } from '@/lib/utils'
-import { toast } from 'sonner'
+} from "@/stores/useRetrospectiveStore"
+import { cn } from "@/lib/utils"
+import { toast } from "sonner"
 
 interface RetrospectiveThemeSelectorProps {
   open: boolean
@@ -38,35 +38,35 @@ export function RetrospectiveThemeSelector({
     addCustomTheme,
     removeCustomTheme,
   } = useRetrospectiveStore()
-  const [activeTab, setActiveTab] = useState<'presets' | 'custom'>('presets')
+  const [activeTab, setActiveTab] = useState<"presets" | "custom">("presets")
   const [isCreating, setIsCreating] = useState(false)
 
   // Editor State
-  const [editorName, setEditorName] = useState('Meu Tema')
+  const [editorName, setEditorName] = useState("Meu Tema")
   const [colors, setColors] = useState({
-    bgStart: '#4c1d95', // violet-900
-    bgMid: '#5b21b6', // violet-800
-    bgEnd: '#000000', // black
-    accent: '#a78bfa', // violet-400
-    text: '#ddd6fe', // violet-200
+    bgStart: "#4c1d95", // violet-900
+    bgMid: "#5b21b6", // violet-800
+    bgEnd: "#000000", // black
+    accent: "#a78bfa", // violet-400
+    text: "#ddd6fe", // violet-200
   })
 
   const handleCreate = () => {
     setIsCreating(true)
     // Initialize with random or default colors
     setColors({
-      bgStart: '#4c1d95',
-      bgMid: '#5b21b6',
-      bgEnd: '#000000',
-      accent: '#a78bfa',
-      text: '#ddd6fe',
+      bgStart: "#4c1d95",
+      bgMid: "#5b21b6",
+      bgEnd: "#000000",
+      accent: "#a78bfa",
+      text: "#ddd6fe",
     })
-    setEditorName('Tema Personalizado')
+    setEditorName("Tema Personalizado")
   }
 
   const handleSave = () => {
     if (!editorName.trim()) {
-      toast.error('Dê um nome ao seu tema')
+      toast.error("Dê um nome ao seu tema")
       return
     }
 
@@ -78,14 +78,14 @@ export function RetrospectiveThemeSelector({
 
     addCustomTheme(newTheme)
     setIsCreating(false)
-    setActiveTab('custom')
-    toast.success('Tema criado com sucesso!')
+    setActiveTab("custom")
+    toast.success("Tema criado com sucesso!")
   }
 
   const handleDelete = (e: React.MouseEvent, id: string) => {
     e.stopPropagation()
     removeCustomTheme(id)
-    toast.success('Tema removido')
+    toast.success("Tema removido")
   }
 
   // Helper to generate preview style for custom themes
@@ -103,12 +103,12 @@ export function RetrospectiveThemeSelector({
             </div>
           </div>
           <DrawerTitle className="text-center text-xl">
-            {isCreating ? 'Criar Novo Tema' : 'Personalize sua Retrospectiva'}
+            {isCreating ? "Criar Novo Tema" : "Personalize sua Retrospectiva"}
           </DrawerTitle>
           <DrawerDescription className="text-center">
             {isCreating
-              ? 'Escolha as cores perfeitas para o seu estilo'
-              : 'Escolha o tema que mais combina com seu momento no esporte.'}
+              ? "Escolha as cores perfeitas para o seu estilo"
+              : "Escolha o tema que mais combina com seu momento no esporte."}
           </DrawerDescription>
         </DrawerHeader>
 
@@ -135,22 +135,22 @@ export function RetrospectiveThemeSelector({
                         key={id}
                         onClick={() => setThemeId(id)}
                         className={cn(
-                          'relative cursor-pointer rounded-xl overflow-hidden border-2 transition-all duration-300 group',
+                          "relative cursor-pointer rounded-xl overflow-hidden border-2 transition-all duration-300 group",
                           isSelected
                             ? `border-foreground ${theme.ring}`
-                            : 'border-transparent hover:border-muted-foreground/30',
+                            : "border-transparent hover:border-muted-foreground/30",
                         )}
                       >
-                        <div className={cn('h-24 w-full', theme.cardGradient)}>
+                        <div className={cn("h-24 w-full", theme.cardGradient)}>
                           <div className="absolute inset-0 bg-black/10" />
                           <div className="absolute inset-0 flex items-center justify-center">
                             <div
                               className={cn(
-                                'px-3 py-1 rounded-full backdrop-blur-md bg-white/10 border border-white/20 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-sm text-white',
+                                "px-3 py-1 rounded-full backdrop-blur-md bg-white/10 border border-white/20 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-sm text-white",
                               )}
                             >
                               <Sparkles
-                                className={cn('h-3 w-3', theme.accentText)}
+                                className={cn("h-3 w-3", theme.accentText)}
                               />
                               Preview
                             </div>
@@ -164,7 +164,7 @@ export function RetrospectiveThemeSelector({
                           {isSelected && (
                             <div
                               className={cn(
-                                'h-5 w-5 rounded-full flex items-center justify-center',
+                                "h-5 w-5 rounded-full flex items-center justify-center",
                                 theme.accent,
                               )}
                             >
@@ -197,10 +197,10 @@ export function RetrospectiveThemeSelector({
                         key={theme.id}
                         onClick={() => setThemeId(theme.id)}
                         className={cn(
-                          'relative cursor-pointer rounded-xl overflow-hidden border-2 transition-all duration-300 group',
+                          "relative cursor-pointer rounded-xl overflow-hidden border-2 transition-all duration-300 group",
                           isSelected
-                            ? 'border-primary ring-2 ring-primary/20'
-                            : 'border-transparent hover:border-muted-foreground/30',
+                            ? "border-primary ring-2 ring-primary/20"
+                            : "border-transparent hover:border-muted-foreground/30",
                         )}
                       >
                         <div
@@ -261,11 +261,11 @@ export function RetrospectiveThemeSelector({
                     className="mt-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-sm"
                     style={{
                       backgroundColor: colors.accent,
-                      color: '#000',
+                      color: "#000",
                     }}
                   >
-                    <Sparkles className="h-3 w-3" style={{ color: '#000' }} />
-                    <span style={{ color: '#000' }}>Preview</span>
+                    <Sparkles className="h-3 w-3" style={{ color: "#000" }} />
+                    <span style={{ color: "#000" }}>Preview</span>
                   </div>
                 </div>
               </div>

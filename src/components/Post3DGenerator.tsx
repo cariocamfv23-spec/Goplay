@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react'
-import { Ghost3DViewer, GhostViewMode } from '@/components/Ghost3DViewer'
-import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useState, useEffect } from "react"
+import { Ghost3DViewer, GhostViewMode } from "@/components/Ghost3DViewer"
+import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from "@/components/ui/select"
 import {
   Check,
   ChevronLeft,
@@ -21,8 +21,8 @@ import {
   Video,
   Box,
   Wand2,
-} from 'lucide-react'
-import { toast } from 'sonner'
+} from "lucide-react"
+import { toast } from "sonner"
 
 interface Post3DGeneratorProps {
   videoFile: File
@@ -31,27 +31,22 @@ interface Post3DGeneratorProps {
   confirmLabel?: string
 }
 
-type GenerationStep =
-  | 'uploading'
-  | 'analyzing'
-  | 'mapping'
-  | 'reconstructing'
-  | 'done'
+type GenerationStep = "uploading" | "analyzing" | "mapping" | "reconstructing" | "done"
 
 export function Post3DGenerator({
   videoFile,
   onConfirm,
   onCancel,
-  confirmLabel = 'Usar este Replay',
+  confirmLabel = "Usar este Replay",
 }: Post3DGeneratorProps) {
-  const [step, setStep] = useState<GenerationStep>('uploading')
+  const [step, setStep] = useState<GenerationStep>("uploading")
   const [progress, setProgress] = useState(0)
-  const [viewMode, setViewMode] = useState<GhostViewMode>('split')
+  const [viewMode, setViewMode] = useState<GhostViewMode>("split")
   const [isPlaying, setIsPlaying] = useState(true)
   const [videoSrc, setVideoSrc] = useState<string | null>(null)
 
   // Simulated AI Detection State
-  const [detectedSport, setDetectedSport] = useState<string>('futebol')
+  const [detectedSport, setDetectedSport] = useState<string>("futebol")
 
   useEffect(() => {
     const url = URL.createObjectURL(videoFile)
@@ -61,47 +56,50 @@ export function Post3DGenerator({
 
   // Simulate AI Pipeline
   useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(timer)
-          setStep('done')
-          toast.success('Reconstrução 3D Concluída!', {
-            icon: <Sparkles className="w-4 h-4 text-gold" />,
-          })
-          return 100
-        }
+    const timer = setInterval(
+      () => {
+        setProgress((prev) => {
+          if (prev >= 100) {
+            clearInterval(timer)
+            setStep("done")
+            toast.success("Reconstrução 3D Concluída!", {
+              icon: <Sparkles className="w-4 h-4 text-gold" />,
+            })
+            return 100
+          }
 
-        // Progression stages
-        if (prev < 20) setStep('uploading')
-        else if (prev < 50) setStep('analyzing')
-        else if (prev < 80) setStep('mapping')
-        else setStep('reconstructing')
+          // Progression stages
+          if (prev < 20) setStep("uploading")
+          else if (prev < 50) setStep("analyzing")
+          else if (prev < 80) setStep("mapping")
+          else setStep("reconstructing")
 
-        return prev + 1 // Slower progression for realism feel
-      })
-    }, 60)
+          return prev + 1 // Slower progression for realism feel
+        })
+      },
+      60,
+    )
     return () => clearInterval(timer)
   }, [])
 
   const getStepLabel = () => {
     switch (step) {
-      case 'uploading':
-        return 'Carregando vídeo para a nuvem...'
-      case 'analyzing':
-        return 'Detectando movimentos e profundidade...'
-      case 'mapping':
-        return 'Mapeando objetos esportivos...'
-      case 'reconstructing':
-        return 'Renderizando cena 3D High-Fidelity...'
-      case 'done':
-        return 'Pronto!'
+      case "uploading":
+        return "Carregando vídeo para a nuvem..."
+      case "analyzing":
+        return "Detectando movimentos e profundidade..."
+      case "mapping":
+        return "Mapeando objetos esportivos..."
+      case "reconstructing":
+        return "Renderizando cena 3D High-Fidelity..."
+      case "done":
+        return "Pronto!"
       default:
-        return 'Iniciando...'
+        return "Iniciando..."
     }
   }
 
-  if (step !== 'done') {
+  if (step !== "done") {
     return (
       <div className="flex flex-col items-center justify-center min-h-[500px] w-full bg-background p-8 space-y-8 relative overflow-hidden">
         {/* Ambient Glow */}

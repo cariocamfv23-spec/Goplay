@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from 'react'
+import { useState, useMemo, useRef } from "react"
 import {
   Search,
   Info,
@@ -14,130 +14,130 @@ import {
   CreditCard,
   QrCode,
   Loader2,
-} from 'lucide-react'
-import * as Dialog from '@radix-ui/react-dialog'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import { useToast } from '@/components/ui/use-toast'
+} from "lucide-react"
+import * as Dialog from "@radix-ui/react-dialog"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { useToast } from "@/components/ui/use-toast"
 
 const mockPosts = [
   {
     id: 1,
-    title: 'Agachamento Perfeito',
-    trainer: 'Carlos Mendes',
-    modality: 'Musculação',
-    intensity: 'Avançado',
-    tip: 'Mantenha a coluna neutra e os joelhos alinhados com as pontas dos pés. Desça até que as coxas fiquem paralelas ao chão.',
+    title: "Agachamento Perfeito",
+    trainer: "Carlos Mendes",
+    modality: "Musculação",
+    intensity: "Avançado",
+    tip: "Mantenha a coluna neutra e os joelhos alinhados com as pontas dos pés. Desça até que as coxas fiquem paralelas ao chão.",
     videoUrl:
-      'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+      "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
     poster:
-      'https://img.usecurling.com/p/800/600?q=squat%20exercise&color=purple',
+      "https://img.usecurling.com/p/800/600?q=squat%20exercise&color=purple",
     steps: [
-      'Posicione os pés na largura dos ombros',
-      'Desça o quadril como se fosse sentar numa cadeira',
-      'Mantenha o peito estufado e olhar à frente',
-      'Retorne à posição inicial contraindo os glúteos',
+      "Posicione os pés na largura dos ombros",
+      "Desça o quadril como se fosse sentar numa cadeira",
+      "Mantenha o peito estufado e olhar à frente",
+      "Retorne à posição inicial contraindo os glúteos",
     ],
     price: 19.9,
     pointsPrice: 500,
   },
   {
     id: 2,
-    title: 'Circuito Queima Gordura',
-    trainer: 'Ana Silva',
-    modality: 'CrossFit',
-    intensity: 'Alta',
-    tip: 'Faça os movimentos de forma contínua, focando na respiração. Não sacrifique a técnica pela velocidade.',
+    title: "Circuito Queima Gordura",
+    trainer: "Ana Silva",
+    modality: "CrossFit",
+    intensity: "Alta",
+    tip: "Faça os movimentos de forma contínua, focando na respiração. Não sacrifique a técnica pela velocidade.",
     videoUrl:
-      'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
+      "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
     poster:
-      'https://img.usecurling.com/p/800/600?q=crossfit%20workout&color=purple',
+      "https://img.usecurling.com/p/800/600?q=crossfit%20workout&color=purple",
     steps: [
-      'Faça 10 burpees rapidamente',
-      'Pule na caixa (box jump) 15 vezes',
-      'Balance kettlebell (kettlebell swing) 20 vezes',
-      'Descanse 1 minuto e repita o circuito',
+      "Faça 10 burpees rapidamente",
+      "Pule na caixa (box jump) 15 vezes",
+      "Balance kettlebell (kettlebell swing) 20 vezes",
+      "Descanse 1 minuto e repita o circuito",
     ],
     price: 24.9,
     pointsPrice: 600,
   },
   {
     id: 3,
-    title: 'Saudação ao Sol',
-    trainer: 'Marta Lima',
-    modality: 'Yoga',
-    intensity: 'Iniciante',
-    tip: 'Sincronize cada movimento com a respiração. Inspire ao expandir e expire ao flexionar.',
+    title: "Saudação ao Sol",
+    trainer: "Marta Lima",
+    modality: "Yoga",
+    intensity: "Iniciante",
+    tip: "Sincronize cada movimento com a respiração. Inspire ao expandir e expire ao flexionar.",
     videoUrl:
-      'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-    poster: 'https://img.usecurling.com/p/800/600?q=yoga%20pose&color=purple',
+      "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+    poster: "https://img.usecurling.com/p/800/600?q=yoga%20pose&color=purple",
     steps: [
-      'Comece na postura da montanha (Tadasana)',
-      'Inspire e levante os braços (Urdhva Hastasana)',
-      'Expire e dobre-se para a frente (Uttanasana)',
-      'Inspire, alongue a coluna e olhe para frente',
+      "Comece na postura da montanha (Tadasana)",
+      "Inspire e levante os braços (Urdhva Hastasana)",
+      "Expire e dobre-se para a frente (Uttanasana)",
+      "Inspire, alongue a coluna e olhe para frente",
     ],
     price: 14.9,
     pointsPrice: 350,
   },
   {
     id: 4,
-    title: 'Técnica de Passada',
-    trainer: 'Beto Costa',
-    modality: 'Corrida',
-    intensity: 'Intermediário',
-    tip: 'Aterrisse com o meio do pé para reduzir o impacto nas articulações. Mantenha os braços num ângulo de 90 graus.',
+    title: "Técnica de Passada",
+    trainer: "Beto Costa",
+    modality: "Corrida",
+    intensity: "Intermediário",
+    tip: "Aterrisse com o meio do pé para reduzir o impacto nas articulações. Mantenha os braços num ângulo de 90 graus.",
     videoUrl:
-      'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+      "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
     poster:
-      'https://img.usecurling.com/p/800/600?q=running%20track&color=purple',
+      "https://img.usecurling.com/p/800/600?q=running%20track&color=purple",
     steps: [
-      'Aqueça com uma caminhada de 5 minutos',
-      'Acelere aos poucos, mantendo o tronco levemente inclinado',
-      'Mantenha a cadência em torno de 170-180 passos por minuto',
-      'Relaxe os ombros e controle a respiração',
+      "Aqueça com uma caminhada de 5 minutos",
+      "Acelere aos poucos, mantendo o tronco levemente inclinado",
+      "Mantenha a cadência em torno de 170-180 passos por minuto",
+      "Relaxe os ombros e controle a respiração",
     ],
     price: 19.9,
     pointsPrice: 500,
   },
   {
     id: 5,
-    title: 'Mobilidade Articular',
-    trainer: 'Lucas Souza',
-    modality: 'Funcional',
-    intensity: 'Iniciante',
-    tip: 'Realize os movimentos de forma lenta e controlada para explorar o máximo de amplitude de cada articulação.',
+    title: "Mobilidade Articular",
+    trainer: "Lucas Souza",
+    modality: "Funcional",
+    intensity: "Iniciante",
+    tip: "Realize os movimentos de forma lenta e controlada para explorar o máximo de amplitude de cada articulação.",
     videoUrl:
-      'https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
-    poster: 'https://img.usecurling.com/p/800/600?q=stretching&color=purple',
+      "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+    poster: "https://img.usecurling.com/p/800/600?q=stretching&color=purple",
     steps: [
-      'Gire os ombros para trás e para frente 10 vezes',
-      'Faça rotações de quadril amplas',
-      'Estenda as pernas e alongue os isquiotibiais',
-      'Mantenha cada alongamento por 30 segundos',
+      "Gire os ombros para trás e para frente 10 vezes",
+      "Faça rotações de quadril amplas",
+      "Estenda as pernas e alongue os isquiotibiais",
+      "Mantenha cada alongamento por 30 segundos",
     ],
     price: 12.9,
     pointsPrice: 300,
   },
   {
     id: 6,
-    title: 'Levantamento Terra',
-    trainer: 'Carlos Mendes',
-    modality: 'Musculação',
-    intensity: 'Avançado',
-    tip: 'O movimento deve partir dos quadris. Contraia o abdômen e mantenha a barra próxima ao corpo durante toda a execução.',
+    title: "Levantamento Terra",
+    trainer: "Carlos Mendes",
+    modality: "Musculação",
+    intensity: "Avançado",
+    tip: "O movimento deve partir dos quadris. Contraia o abdômen e mantenha a barra próxima ao corpo durante toda a execução.",
     videoUrl:
-      'https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
-    poster: 'https://img.usecurling.com/p/800/600?q=deadlift&color=purple',
+      "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+    poster: "https://img.usecurling.com/p/800/600?q=deadlift&color=purple",
     steps: [
-      'Fique próximo à barra com os pés na largura dos ombros',
-      'Segure a barra e abaixe o quadril',
-      'Puxe a barra mantendo as costas retas e o core ativado',
-      'Estenda completamente os quadris e joelhos no topo',
+      "Fique próximo à barra com os pés na largura dos ombros",
+      "Segure a barra e abaixe o quadril",
+      "Puxe a barra mantendo as costas retas e o core ativado",
+      "Estenda completamente os quadris e joelhos no topo",
     ],
     price: 29.9,
     pointsPrice: 800,
@@ -145,26 +145,25 @@ const mockPosts = [
 ]
 
 const categories = [
-  'Todos',
-  'Musculação',
-  'CrossFit',
-  'Yoga',
-  'Corrida',
-  'Funcional',
+  "Todos",
+  "Musculação",
+  "CrossFit",
+  "Yoga",
+  "Corrida",
+  "Funcional",
 ]
 
 export default function InfinityHub() {
-  const [search, setSearch] = useState('')
-  const [activeModality, setActiveModality] = useState('Todos')
-  const [selectedWorkout, setSelectedWorkout] = useState<
-    (typeof mockPosts)[0] | null
-  >(null)
+  const [search, setSearch] = useState("")
+  const [activeModality, setActiveModality] = useState("Todos")
+  const [selectedWorkout, setSelectedWorkout] =
+    useState<typeof mockPosts[0] | null>(null)
 
   const [unlockedVideos, setUnlockedVideos] = useState<number[]>([])
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
-    useState('goplay_credits')
+    useState("goplay_credits")
   const { toast } = useToast()
   const videoRef = useRef<HTMLVideoElement>(null)
 
@@ -188,8 +187,8 @@ export default function InfinityHub() {
       }
     } else {
       toast({
-        title: 'Treino Iniciado!',
-        description: 'Bom treino!',
+        title: "Treino Iniciado!",
+        description: "Bom treino!",
       })
       setSelectedWorkout(null)
     }
@@ -203,8 +202,8 @@ export default function InfinityHub() {
       setUnlockedVideos((prev) => [...prev, selectedWorkout.id])
       setIsPaymentModalOpen(false)
       toast({
-        title: 'Sucesso!',
-        description: 'Treino desbloqueado com sucesso.',
+        title: "Sucesso!",
+        description: "Treino desbloqueado com sucesso.",
       })
       if (videoRef.current) {
         videoRef.current.play()
@@ -218,7 +217,7 @@ export default function InfinityHub() {
         post.title.toLowerCase().includes(search.toLowerCase()) ||
         post.tip.toLowerCase().includes(search.toLowerCase())
       const matchesModality =
-        activeModality === 'Todos' || post.modality === activeModality
+        activeModality === "Todos" || post.modality === activeModality
       return matchesSearch && matchesModality
     })
   }, [search, activeModality])
@@ -258,12 +257,12 @@ export default function InfinityHub() {
             {categories.map((cat) => (
               <Badge
                 key={cat}
-                variant={activeModality === cat ? 'default' : 'secondary'}
+                variant={activeModality === cat ? "default" : "secondary"}
                 className={cn(
-                  'cursor-pointer px-4 py-1.5 rounded-full text-xs transition-all',
+                  "cursor-pointer px-4 py-1.5 rounded-full text-xs transition-all",
                   activeModality === cat
-                    ? 'bg-purple-600 hover:bg-purple-700 text-white shadow-md'
-                    : 'hover:bg-secondary/80 text-muted-foreground',
+                    ? "bg-purple-600 hover:bg-purple-700 text-white shadow-md"
+                    : "hover:bg-secondary/80 text-muted-foreground",
                 )}
                 onClick={() => setActiveModality(cat)}
               >
@@ -290,8 +289,8 @@ export default function InfinityHub() {
               variant="outline"
               className="mt-2 rounded-xl text-purple-600 border-purple-600/30 hover:bg-purple-600/10"
               onClick={() => {
-                setSearch('')
-                setActiveModality('Todos')
+                setSearch("")
+                setActiveModality("Todos")
               }}
             >
               Limpar Filtros
@@ -348,7 +347,7 @@ export default function InfinityHub() {
                     <div>
                       <p className="text-xs font-semibold">{post.trainer}</p>
                       <p className="text-[10px] text-muted-foreground flex items-center gap-1">
-                        <CheckCircle className="w-3 h-3 text-green-500" />{' '}
+                        <CheckCircle className="w-3 h-3 text-green-500" />{" "}
                         Treinador Verificado
                       </p>
                     </div>
@@ -441,7 +440,7 @@ export default function InfinityHub() {
                         {selectedWorkout.trainer}
                       </p>
                       <p className="text-[10px] text-muted-foreground flex items-center gap-1">
-                        <CheckCircle className="w-3 h-3 text-green-500" />{' '}
+                        <CheckCircle className="w-3 h-3 text-green-500" />{" "}
                         Treinador Verificado
                       </p>
                     </div>
@@ -459,7 +458,7 @@ export default function InfinityHub() {
 
                     <div>
                       <h4 className="flex items-center gap-2 font-bold text-foreground mb-4">
-                        <ShieldAlert className="w-4 h-4 text-purple-600" />{' '}
+                        <ShieldAlert className="w-4 h-4 text-purple-600" />{" "}
                         Passo a Passo
                       </h4>
                       <ol className="space-y-4 relative before:absolute before:inset-y-0 before:left-[11px] before:w-[2px] before:bg-secondary">
@@ -521,12 +520,12 @@ export default function InfinityHub() {
 
             <div className="space-y-3 mb-6">
               <button
-                onClick={() => setSelectedPaymentMethod('goplay_credits')}
+                onClick={() => setSelectedPaymentMethod("goplay_credits")}
                 className={cn(
-                  'flex items-center justify-between w-full p-4 rounded-xl border transition-all',
-                  selectedPaymentMethod === 'goplay_credits'
-                    ? 'border-purple-600 bg-purple-600/10'
-                    : 'border-border hover:bg-secondary/50',
+                  "flex items-center justify-between w-full p-4 rounded-xl border transition-all",
+                  selectedPaymentMethod === "goplay_credits"
+                    ? "border-purple-600 bg-purple-600/10"
+                    : "border-border hover:bg-secondary/50",
                 )}
               >
                 <div className="flex items-center gap-3">
@@ -548,12 +547,12 @@ export default function InfinityHub() {
               </button>
 
               <button
-                onClick={() => setSelectedPaymentMethod('credit_card')}
+                onClick={() => setSelectedPaymentMethod("credit_card")}
                 className={cn(
-                  'flex items-center justify-between w-full p-4 rounded-xl border transition-all',
-                  selectedPaymentMethod === 'credit_card'
-                    ? 'border-purple-600 bg-purple-600/10'
-                    : 'border-border hover:bg-secondary/50',
+                  "flex items-center justify-between w-full p-4 rounded-xl border transition-all",
+                  selectedPaymentMethod === "credit_card"
+                    ? "border-purple-600 bg-purple-600/10"
+                    : "border-border hover:bg-secondary/50",
                 )}
               >
                 <div className="flex items-center gap-3">
@@ -570,17 +569,17 @@ export default function InfinityHub() {
                   </div>
                 </div>
                 <span className="font-bold text-foreground">
-                  R$ {selectedWorkout?.price.toFixed(2).replace('.', ',')}
+                  R$ {selectedWorkout?.price.toFixed(2).replace(".", ",")}
                 </span>
               </button>
 
               <button
-                onClick={() => setSelectedPaymentMethod('pix')}
+                onClick={() => setSelectedPaymentMethod("pix")}
                 className={cn(
-                  'flex items-center justify-between w-full p-4 rounded-xl border transition-all',
-                  selectedPaymentMethod === 'pix'
-                    ? 'border-purple-600 bg-purple-600/10'
-                    : 'border-border hover:bg-secondary/50',
+                  "flex items-center justify-between w-full p-4 rounded-xl border transition-all",
+                  selectedPaymentMethod === "pix"
+                    ? "border-purple-600 bg-purple-600/10"
+                    : "border-border hover:bg-secondary/50",
                 )}
               >
                 <div className="flex items-center gap-3">
@@ -595,7 +594,7 @@ export default function InfinityHub() {
                   </div>
                 </div>
                 <span className="font-bold text-foreground">
-                  R$ {selectedWorkout?.price.toFixed(2).replace('.', ',')}
+                  R$ {selectedWorkout?.price.toFixed(2).replace(".", ",")}
                 </span>
               </button>
             </div>
@@ -616,7 +615,7 @@ export default function InfinityHub() {
                 {isProcessingPayment ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
-                  'Confirmar Pagamento'
+                  "Confirmar Pagamento"
                 )}
               </Button>
             </div>

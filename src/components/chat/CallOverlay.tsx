@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { useState, useEffect } from "react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   PhoneOff,
   Mic,
@@ -9,12 +9,12 @@ import {
   VideoOff,
   Maximize2,
   Minimize2,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface CallOverlayProps {
   isOpen: boolean
-  type: 'voice' | 'video'
+  type: "voice" | "video"
   user: {
     name: string
     avatar: string
@@ -29,22 +29,22 @@ export function CallOverlay({
   onEndCall,
 }: CallOverlayProps) {
   const [isMuted, setIsMuted] = useState(false)
-  const [isVideoEnabled, setIsVideoEnabled] = useState(type === 'video')
-  const [callStatus, setCallStatus] = useState<'connecting' | 'connected'>(
-    'connecting',
+  const [isVideoEnabled, setIsVideoEnabled] = useState(type === "video")
+  const [callStatus, setCallStatus] = useState<"connecting" | "connected">(
+    "connecting",
   )
   const [duration, setDuration] = useState(0)
   const [isMinimized, setIsMinimized] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
-      setCallStatus('connecting')
+      setCallStatus("connecting")
       setDuration(0)
       setIsMinimized(false)
-      setIsVideoEnabled(type === 'video')
+      setIsVideoEnabled(type === "video")
 
       const connectTimer = setTimeout(() => {
-        setCallStatus('connected')
+        setCallStatus("connected")
       }, 2000) // Simulate connection delay
 
       return () => clearTimeout(connectTimer)
@@ -53,7 +53,7 @@ export function CallOverlay({
 
   useEffect(() => {
     let interval: NodeJS.Timeout
-    if (isOpen && callStatus === 'connected') {
+    if (isOpen && callStatus === "connected") {
       interval = setInterval(() => {
         setDuration((prev) => prev + 1)
       }, 1000)
@@ -66,7 +66,7 @@ export function CallOverlay({
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
   }
 
   // If minimized, show a small floating bar
@@ -148,19 +148,19 @@ export function CallOverlay({
 
         <h2
           className={cn(
-            'text-2xl font-bold mb-1',
-            isVideoEnabled ? 'text-white drop-shadow-md' : 'text-foreground',
+            "text-2xl font-bold mb-1",
+            isVideoEnabled ? "text-white drop-shadow-md" : "text-foreground",
           )}
         >
           {user.name}
         </h2>
         <p
           className={cn(
-            'text-sm font-medium',
-            isVideoEnabled ? 'text-white/80' : 'text-muted-foreground',
+            "text-sm font-medium",
+            isVideoEnabled ? "text-white/80" : "text-muted-foreground",
           )}
         >
-          {callStatus === 'connecting' ? 'Chamando...' : formatTime(duration)}
+          {callStatus === "connecting" ? "Chamando..." : formatTime(duration)}
         </p>
       </div>
 
@@ -172,10 +172,10 @@ export function CallOverlay({
           size="lg"
           variant="secondary"
           className={cn(
-            'h-14 w-14 rounded-full shadow-lg border-2',
+            "h-14 w-14 rounded-full shadow-lg border-2",
             isMuted
-              ? 'bg-white text-black'
-              : 'bg-secondary/80 backdrop-blur-md',
+              ? "bg-white text-black"
+              : "bg-secondary/80 backdrop-blur-md",
           )}
           onClick={() => setIsMuted(!isMuted)}
         >
@@ -199,10 +199,10 @@ export function CallOverlay({
           size="lg"
           variant="secondary"
           className={cn(
-            'h-14 w-14 rounded-full shadow-lg border-2',
+            "h-14 w-14 rounded-full shadow-lg border-2",
             !isVideoEnabled
-              ? 'bg-white text-black'
-              : 'bg-secondary/80 backdrop-blur-md',
+              ? "bg-white text-black"
+              : "bg-secondary/80 backdrop-blur-md",
           )}
           onClick={() => setIsVideoEnabled(!isVideoEnabled)}
         >

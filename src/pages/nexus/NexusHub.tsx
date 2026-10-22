@@ -1,32 +1,32 @@
-import { useState, useMemo } from 'react'
-import { Orbit } from 'lucide-react'
-import { CreateTribeDialog } from '@/components/nexus/CreateTribeDialog'
-import { useNexusStore } from '@/stores/useNexusStore'
-import { mockUser } from '@/lib/data'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { Button } from '@/components/ui/button'
-import { TribeCard } from '@/components/nexus/TribeCard'
-import { NexusRankingTab } from './tabs/NexusRankingTab'
+import { useState, useMemo } from "react"
+import { Orbit } from "lucide-react"
+import { CreateTribeDialog } from "@/components/nexus/CreateTribeDialog"
+import { useNexusStore } from "@/stores/useNexusStore"
+import { mockUser } from "@/lib/data"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button"
+import { TribeCard } from "@/components/nexus/TribeCard"
+import { NexusRankingTab } from "./tabs/NexusRankingTab"
 
 const CATEGORIES = [
-  'Todos',
-  'Futebol',
-  'Skate',
-  'Bike',
-  'Basquete',
-  'Surf',
-  'Tênis',
-  'Corrida',
-  'E-Sports',
+  "Todos",
+  "Futebol",
+  "Skate",
+  "Bike",
+  "Basquete",
+  "Surf",
+  "Tênis",
+  "Corrida",
+  "E-Sports",
 ]
 
 export default function NexusHub() {
   const { tribes } = useNexusStore()
-  const [activeFilter, setActiveFilter] = useState('Todos')
-  const [mainTab, setMainTab] = useState('explore')
+  const [activeFilter, setActiveFilter] = useState("Todos")
+  const [mainTab, setMainTab] = useState("explore")
 
   const exploreTribes = useMemo(() => {
-    if (activeFilter === 'Todos') return tribes
+    if (activeFilter === "Todos") return tribes
     return tribes.filter((t) => t.category === activeFilter)
   }, [tribes, activeFilter])
 
@@ -43,9 +43,9 @@ export default function NexusHub() {
       <p className="text-muted-foreground text-sm max-w-md leading-relaxed">
         {message}
       </p>
-      {mainTab === 'explore' && activeFilter !== 'Todos' && (
+      {mainTab === "explore" && activeFilter !== "Todos" && (
         <Button
-          onClick={() => setActiveFilter('Todos')}
+          onClick={() => setActiveFilter("Todos")}
           variant="outline"
           className="mt-8 rounded-full h-11 px-6 font-bold"
         >
@@ -104,8 +104,8 @@ export default function NexusHub() {
                     onClick={() => setActiveFilter(cat)}
                     className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                       activeFilter === cat
-                        ? 'bg-background text-primary shadow-sm'
-                        : 'text-muted-foreground hover:text-foreground'
+                        ? "bg-background text-primary shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     {cat}
@@ -130,7 +130,7 @@ export default function NexusHub() {
           <TabsContent value="my-tribes" className="m-0 outline-none">
             {myTribes.length === 0 ? (
               renderEmptyState(
-                'Você ainda não faz parte de nenhuma tribo. Explore as opções e junte-se a uma comunidade!',
+                "Você ainda não faz parte de nenhuma tribo. Explore as opções e junte-se a uma comunidade!",
               )
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">

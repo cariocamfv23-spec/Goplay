@@ -1,6 +1,6 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { foodHighlights } from '@/pages/food-sport/mockData'
+import { Card, CardContent } from "@/components/ui/card"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { foodHighlights } from "@/pages/food-sport/mockData"
 
 export function FoodHighlights() {
   return (

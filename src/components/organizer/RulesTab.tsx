@@ -1,10 +1,10 @@
-import { Championship } from '@/lib/data'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { useChampionshipStore } from '@/stores/useChampionshipStore'
-import { Save } from 'lucide-react'
-import { useState } from 'react'
+import { Championship } from "@/lib/data"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+import { useChampionshipStore } from "@/stores/useChampionshipStore"
+import { Save } from "lucide-react"
+import { useState } from "react"
 
 interface RulesTabProps {
   championship: Championship
@@ -12,7 +12,7 @@ interface RulesTabProps {
 
 export function RulesTab({ championship }: RulesTabProps) {
   const { updateChampionship } = useChampionshipStore()
-  const [rules, setRules] = useState(championship.rules || '')
+  const [rules, setRules] = useState(championship.rules || "")
 
   const handleSave = () => {
     updateChampionship(championship.id, { rules })

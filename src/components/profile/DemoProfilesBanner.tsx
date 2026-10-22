@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Users,
   Trophy,
@@ -12,8 +12,8 @@ import {
   ChevronRight,
   Sparkles,
   ExternalLink,
-} from 'lucide-react'
-import { profileService, type ProfileRow } from '@/services/profiles'
+} from "lucide-react"
+import { profileService, type ProfileRow } from "@/services/profiles"
 
 export function DemoProfilesBanner() {
   const navigate = useNavigate()
@@ -61,7 +61,7 @@ export function DemoProfilesBanner() {
             className="h-7 text-xs border-primary/30 text-primary hover:bg-primary/10"
             onClick={() => setIsOpen(!isOpen)}
           >
-            {isOpen ? 'Ocultar' : 'Ver Perfis'}
+            {isOpen ? "Ocultar" : "Ver Perfis"}
           </Button>
         </div>
 
@@ -75,19 +75,19 @@ export function DemoProfilesBanner() {
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   <Avatar className="w-8 h-8 border border-border">
-                    <AvatarImage src={p.avatar_url || ''} />
-                    <AvatarFallback>{p.full_name?.[0] || 'D'}</AvatarFallback>
+                    <AvatarImage src={p.avatar_url || ""} />
+                    <AvatarFallback>{p.full_name?.[0] || "D"}</AvatarFallback>
                   </Avatar>
                   <div className="min-w-0">
                     <p className="text-xs font-semibold truncate group-hover:text-primary transition-colors">
                       {p.full_name}
                     </p>
                     <p className="text-[10px] text-muted-foreground truncate">
-                      {p.account_type === 'club'
-                        ? 'Clube Oficial'
-                        : p.account_type === 'coach'
-                          ? 'Treinador'
-                          : `${p.sport || 'Atleta'} • ${p.position || 'Goplay'}`}
+                      {p.account_type === "club"
+                        ? "Clube Oficial"
+                        : p.account_type === "coach"
+                          ? "Treinador"
+                          : `${p.sport || "Atleta"} • ${p.position || "Goplay"}`}
                     </p>
                   </div>
                 </div>

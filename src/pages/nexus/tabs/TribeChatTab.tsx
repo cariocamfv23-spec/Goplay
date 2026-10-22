@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect } from 'react'
-import { ChatBubble } from '@/components/chat/ChatBubble'
-import { ChatInput } from '@/components/chat/ChatInput'
-import { ChatMessage } from '@/types/chat'
-import { mockUser, mockFeedUsers } from '@/lib/data'
-import { Tribe } from '@/stores/useNexusStore'
-import { MessageSquare } from 'lucide-react'
+import { useState, useRef, useEffect } from "react"
+import { ChatBubble } from "@/components/chat/ChatBubble"
+import { ChatInput } from "@/components/chat/ChatInput"
+import { ChatMessage } from "@/types/chat"
+import { mockUser, mockFeedUsers } from "@/lib/data"
+import { Tribe } from "@/stores/useNexusStore"
+import { MessageSquare } from "lucide-react"
 
 interface TribeChatTabProps {
   tribe: Tribe
@@ -18,27 +18,27 @@ export function TribeChatTab({ tribe }: TribeChatTabProps) {
 
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
-      id: 'm1',
-      sender: 'them',
+      id: "m1",
+      sender: "them",
       text: `E aí pessoal do ${tribe.name}! Bora marcar o próximo encontro?`,
-      time: '09:00',
-      type: 'text',
+      time: "09:00",
+      type: "text",
       isMe: false,
     },
     {
-      id: 'm2',
-      sender: 'them',
-      text: 'Eu tô dentro! É só avisar o horário.',
-      time: '09:15',
-      type: 'text',
+      id: "m2",
+      sender: "them",
+      text: "Eu tô dentro! É só avisar o horário.",
+      time: "09:15",
+      type: "text",
       isMe: false,
     },
     {
-      id: 'm3',
-      sender: 'them',
-      text: 'Final de semana costuma ser melhor pra todo mundo.',
-      time: '09:30',
-      type: 'text',
+      id: "m3",
+      sender: "them",
+      text: "Final de semana costuma ser melhor pra todo mundo.",
+      time: "09:30",
+      type: "text",
       isMe: false,
     },
   ])
@@ -53,12 +53,12 @@ export function TribeChatTab({ tribe }: TribeChatTabProps) {
   const handleSendMessage = (newMsg: Partial<ChatMessage>) => {
     const message: ChatMessage = {
       id: `msg-${Date.now()}`,
-      sender: 'me',
+      sender: "me",
       time: new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
+        hour: "2-digit",
+        minute: "2-digit",
       }),
-      type: newMsg.type || 'text',
+      type: newMsg.type || "text",
       isMe: true,
       ...newMsg,
     }

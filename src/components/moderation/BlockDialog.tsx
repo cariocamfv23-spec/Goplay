@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from "react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,11 +8,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
-import { moderationService } from '@/services/moderation'
-import { useAuth } from '@/hooks/use-auth'
-import { toast } from 'sonner'
-import { UserX, UserCheck, Loader2 } from 'lucide-react'
+} from "@/components/ui/alert-dialog"
+import { moderationService } from "@/services/moderation"
+import { useAuth } from "@/hooks/use-auth"
+import { toast } from "sonner"
+import { UserX, UserCheck, Loader2 } from "lucide-react"
 
 interface BlockDialogProps {
   open: boolean
@@ -27,7 +27,7 @@ export function BlockDialog({
   open,
   onOpenChange,
   targetUserId,
-  targetUserName = 'este usuário',
+  targetUserName = "este usuário",
   isCurrentlyBlocked = false,
   onBlockChanged,
 }: BlockDialogProps) {
@@ -36,7 +36,7 @@ export function BlockDialog({
 
   const handleAction = async () => {
     if (!user?.id) {
-      toast.error('Você precisa estar logado para realizar esta ação.')
+      toast.error("Você precisa estar logado para realizar esta ação.")
       return
     }
 
@@ -50,13 +50,13 @@ export function BlockDialog({
       setLoading(false)
 
       if (error) {
-        toast.error('Não foi possível desbloquear o usuário: ' + error.message)
+        toast.error("Não foi possível desbloquear o usuário: " + error.message)
         return
       }
 
       toast.success(`${targetUserName} foi desbloqueado(a).`, {
         description:
-          'Você voltará a visualizar o perfil e publicações no feed.',
+          "Você voltará a visualizar o perfil e publicações no feed.",
       })
       onOpenChange(false)
       onBlockChanged?.(false)
@@ -65,13 +65,13 @@ export function BlockDialog({
       setLoading(false)
 
       if (error) {
-        toast.error('Não foi possível bloquear o usuário: ' + error.message)
+        toast.error("Não foi possível bloquear o usuário: " + error.message)
         return
       }
 
       toast.success(`${targetUserName} foi bloqueado(a).`, {
         description:
-          'Vocês não verão mais conteúdos mútuos no feed nem poderão interagir.',
+          "Vocês não verão mais conteúdos mútuos no feed nem poderão interagir.",
       })
       onOpenChange(false)
       onBlockChanged?.(true)
@@ -137,8 +137,8 @@ export function BlockDialog({
             disabled={loading}
             className={`text-xs font-bold gap-1.5 ${
               isCurrentlyBlocked
-                ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                : 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
+                ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                : "bg-destructive text-destructive-foreground hover:bg-destructive/90"
             }`}
           >
             {loading ? (

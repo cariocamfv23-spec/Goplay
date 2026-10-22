@@ -1,16 +1,16 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { CheckCircle2, Plus, FileText, Trash2 } from 'lucide-react'
-import { usePassportStore } from '@/stores/usePassportStore'
-import { toast } from 'sonner'
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { CheckCircle2, Plus, FileText, Trash2 } from "lucide-react"
+import { usePassportStore } from "@/stores/usePassportStore"
+import { toast } from "sonner"
 
 export function Certifications() {
   const { certifications, removeCertification } = usePassportStore()
 
   const handleDelete = (id: string) => {
     removeCertification(id)
-    toast.success('Certificação removida.')
+    toast.success("Certificação removida.")
   }
 
   return (

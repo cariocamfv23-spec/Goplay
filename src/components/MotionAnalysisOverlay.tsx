@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { cn } from '@/lib/utils'
+import { useEffect, useState } from "react"
+import { cn } from "@/lib/utils"
 
 interface Point {
   x: number
@@ -80,7 +80,7 @@ export function MotionAnalysisOverlay({
   if (!active) return null
 
   return (
-    <div className={cn('absolute inset-0 z-10 pointer-events-none', className)}>
+    <div className={cn("absolute inset-0 z-10 pointer-events-none", className)}>
       <svg className="w-full h-full">
         {/* Torso */}
         {drawLine(points.head, points.neck)}

@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   Package,
@@ -7,49 +7,49 @@ import {
   XCircle,
   CheckCircle2,
   ChevronRight,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { Card, CardContent } from '@/components/ui/card'
-import { mockOrders } from '@/lib/mock-orders'
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Card, CardContent } from "@/components/ui/card"
+import { mockOrders } from "@/lib/mock-orders"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 
 export default function OrderHistory() {
   const navigate = useNavigate()
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'delivered':
-        return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800'
-      case 'shipped':
-        return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800'
-      case 'cancelled':
-        return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800'
+      case "delivered":
+        return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800"
+      case "shipped":
+        return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800"
+      case "cancelled":
+        return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800"
       default:
-        return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800'
+        return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800"
     }
   }
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'delivered':
-        return 'Entregue'
-      case 'shipped':
-        return 'Enviado'
-      case 'cancelled':
-        return 'Cancelado'
+      case "delivered":
+        return "Entregue"
+      case "shipped":
+        return "Enviado"
+      case "cancelled":
+        return "Cancelado"
       default:
-        return 'Pendente'
+        return "Pendente"
     }
   }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'delivered':
+      case "delivered":
         return <CheckCircle2 className="h-3 w-3 mr-1" />
-      case 'shipped':
+      case "shipped":
         return <Truck className="h-3 w-3 mr-1" />
-      case 'cancelled':
+      case "cancelled":
         return <XCircle className="h-3 w-3 mr-1" />
       default:
         return <Clock className="h-3 w-3 mr-1" />
@@ -82,7 +82,7 @@ export default function OrderHistory() {
                 Você ainda não realizou nenhuma compra na loja Goplay.
               </p>
             </div>
-            <Button onClick={() => navigate('/marketplace')}>
+            <Button onClick={() => navigate("/marketplace")}>
               Ir para a Loja
             </Button>
           </div>
@@ -106,7 +106,7 @@ export default function OrderHistory() {
                   <Badge
                     variant="outline"
                     className={cn(
-                      'flex items-center text-[10px] py-0.5 px-2 border',
+                      "flex items-center text-[10px] py-0.5 px-2 border",
                       getStatusColor(order.status),
                     )}
                   >

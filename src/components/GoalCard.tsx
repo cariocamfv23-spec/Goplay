@@ -1,8 +1,8 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Target, ChevronRight, Trophy } from 'lucide-react'
-import { Progress } from '@/components/ui/progress'
-import { mockGoals } from '@/lib/data'
-import { useNavigate } from 'react-router-dom'
+import { Card, CardContent } from "@/components/ui/card"
+import { Target, ChevronRight, Trophy } from "lucide-react"
+import { Progress } from "@/components/ui/progress"
+import { mockGoals } from "@/lib/data"
+import { useNavigate } from "react-router-dom"
 
 interface GoalCardProps {
   goal?: {
@@ -19,19 +19,19 @@ export function GoalCard({ goal }: GoalCardProps = {}) {
   const navigate = useNavigate()
   // Pick passed goal, or the first active goal, or mock one if none
   const activeGoal = goal ||
-    mockGoals.find((g) => g.status === 'active') || {
-      id: 'g-mock',
-      title: 'Meta Semanal',
+    mockGoals.find((g) => g.status === "active") || {
+      id: "g-mock",
+      title: "Meta Semanal",
       currentValue: 3,
       targetValue: 5,
-      unit: 'treinos',
+      unit: "treinos",
       progress: 60,
     }
 
   return (
     <Card
       className="border-none shadow-sm bg-gradient-to-br from-card to-secondary/50 overflow-hidden cursor-pointer group hover:border-primary/20 transition-all hover:shadow-md"
-      onClick={() => navigate('/goals')}
+      onClick={() => navigate("/goals")}
     >
       <CardContent className="p-4">
         <div className="flex justify-between items-start mb-2">

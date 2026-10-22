@@ -1,14 +1,14 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from "react"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 import {
   Sparkles,
   Loader2,
@@ -18,18 +18,18 @@ import {
   Zap,
   Target,
   Crown,
-} from 'lucide-react'
+} from "lucide-react"
 import {
   getWinRate,
   suggestOpponent,
   type SuggestionResult,
   type Modality,
-} from '@/lib/matchmaking-data'
-import { TeamRoleBadge } from '@/components/matchmaking/TeamRoleBadge'
-import type { MatchConfigState } from '@/components/matchmaking/MatchConfigCard'
+} from "@/lib/matchmaking-data"
+import { TeamRoleBadge } from "@/components/matchmaking/TeamRoleBadge"
+import type { MatchConfigState } from "@/components/matchmaking/MatchConfigCard"
 
-type SearchState = 'idle' | 'searching' | 'result' | 'no-result'
-type SkillTolerance = 'precise' | 'balanced' | 'wide'
+type SearchState = "idle" | "searching" | "result" | "no-result"
+type SkillTolerance = "precise" | "balanced" | "wide"
 
 interface SuggestOpponentDialogProps {
   open: boolean
@@ -38,10 +38,10 @@ interface SuggestOpponentDialogProps {
   onAccept: (result: SuggestionResult, config: MatchConfigState) => void
 }
 
-const SKILL_OPTIONS: { id: SkillTolerance; label: string; desc: string }[] = [
-  { id: 'precise', label: 'Preciso', desc: '±50 SR' },
-  { id: 'balanced', label: 'Equilibrado', desc: '±100 SR' },
-  { id: 'wide', label: 'Amplo', desc: '±200 SR' },
+const SKILL_OPTIONS: { id: SkillTolerance label: string desc: string }[] = [
+  { id: "precise", label: "Preciso", desc: "±50 SR" },
+  { id: "balanced", label: "Equilibrado", desc: "±100 SR" },
+  { id: "wide", label: "Amplo", desc: "±200 SR" },
 ]
 
 export function SuggestOpponentDialog({
@@ -53,19 +53,19 @@ export function SuggestOpponentDialog({
   const [maxDistance, setMaxDistance] = useState(20)
   const [maxBudget, setMaxBudget] = useState(250)
   const [skillTolerance, setSkillTolerance] =
-    useState<SkillTolerance>('balanced')
-  const [searchState, setSearchState] = useState<SearchState>('idle')
+    useState<SkillTolerance>("balanced")
+  const [searchState, setSearchState] = useState<SearchState>("idle")
   const [suggestion, setSuggestion] = useState<SuggestionResult | null>(null)
 
   useEffect(() => {
     if (!open) {
-      setSearchState('idle')
+      setSearchState("idle")
       setSuggestion(null)
     }
   }, [open])
 
   const handleSearch = useCallback(() => {
-    setSearchState('searching')
+    setSearchState("searching")
     setSuggestion(null)
     setTimeout(() => {
       const result = suggestOpponent(
@@ -74,7 +74,7 @@ export function SuggestOpponentDialog({
         maxBudget,
         skillTolerance,
       )
-      setSearchState(result ? 'result' : 'no-result')
+      setSearchState(result ? "result" : "no-result")
       setSuggestion(result)
     }, 2200)
   }, [modality, maxDistance, maxBudget, skillTolerance])
@@ -85,7 +85,7 @@ export function SuggestOpponentDialog({
       hasReferee: true,
       fieldFee: suggestion.fieldFee,
       refereeFee: suggestion.refereeFee,
-      paymentResponsibility: 'split',
+      paymentResponsibility: "split",
     })
     onOpenChange(false)
   }, [suggestion, onAccept, onOpenChange])
@@ -105,7 +105,7 @@ export function SuggestOpponentDialog({
           </DialogDescription>
         </DialogHeader>
 
-        {searchState === 'idle' && (
+        {searchState === "idle" && (
           <div className="space-y-4">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -154,18 +154,18 @@ export function SuggestOpponentDialog({
                     key={opt.id}
                     onClick={() => setSkillTolerance(opt.id)}
                     className={cn(
-                      'flex flex-col items-center gap-0.5 p-2 rounded-xl border transition-all',
+                      "flex flex-col items-center gap-0.5 p-2 rounded-xl border transition-all",
                       skillTolerance === opt.id
-                        ? 'border-primary bg-primary/10'
-                        : 'border-border/30 bg-secondary/20 hover:border-border/60',
+                        ? "border-primary bg-primary/10"
+                        : "border-border/30 bg-secondary/20 hover:border-border/60",
                     )}
                   >
                     <span
                       className={cn(
-                        'text-[10px] font-black uppercase',
+                        "text-[10px] font-black uppercase",
                         skillTolerance === opt.id
-                          ? 'text-primary'
-                          : 'text-foreground',
+                          ? "text-primary"
+                          : "text-foreground",
                       )}
                     >
                       {opt.label}
@@ -186,7 +186,7 @@ export function SuggestOpponentDialog({
           </div>
         )}
 
-        {searchState === 'searching' && (
+        {searchState === "searching" && (
           <div className="flex flex-col items-center justify-center py-12 gap-4">
             <div className="relative">
               <Loader2 className="w-12 h-12 animate-spin text-primary" />
@@ -203,13 +203,13 @@ export function SuggestOpponentDialog({
           </div>
         )}
 
-        {searchState === 'no-result' && (
+        {searchState === "no-result" && (
           <div className="flex flex-col items-center justify-center py-10 gap-3">
             <p className="text-sm font-bold text-muted-foreground text-center">
               Nenhum adversário encontrado com esses critérios.
             </p>
             <Button
-              onClick={() => setSearchState('idle')}
+              onClick={() => setSearchState("idle")}
               variant="outline"
               className="text-xs font-bold uppercase"
             >
@@ -218,7 +218,7 @@ export function SuggestOpponentDialog({
           </div>
         )}
 
-        {searchState === 'result' && suggestion && (
+        {searchState === "result" && suggestion && (
           <div className="space-y-3">
             <div className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[hsl(var(--gold)/0.15)] to-primary/10 border border-[hsl(var(--gold)/0.3)] p-2.5">
               <Crown className="w-4 h-4 text-[hsl(var(--gold))]" />

@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { useReplayStore } from '@/stores/useReplayStore'
-import { Button } from '@/components/ui/button'
-import { Slider } from '@/components/ui/slider'
+import { useState, useRef, useEffect } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import { useReplayStore } from "@/stores/useReplayStore"
+import { Button } from "@/components/ui/button"
+import { Slider } from "@/components/ui/slider"
 import {
   Play,
   Pause,
@@ -13,8 +13,8 @@ import {
   Calendar,
   Clock,
   MoreVertical,
-} from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+} from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 
 export default function ReplayStream() {
   const { id } = useParams()
@@ -71,13 +71,13 @@ export default function ReplayStream() {
   }
 
   const formatTime = (seconds: number) => {
-    if (isNaN(seconds)) return '00:00'
+    if (isNaN(seconds)) return "00:00"
     const m = Math.floor(seconds / 60)
       .toString()
-      .padStart(2, '0')
+      .padStart(2, "0")
     const s = Math.floor(seconds % 60)
       .toString()
-      .padStart(2, '0')
+      .padStart(2, "0")
     return `${m}:${s}`
   }
 
@@ -132,7 +132,7 @@ export default function ReplayStream() {
         {/* Controls Overlay */}
         <div
           className={`absolute inset-0 bg-black/40 transition-opacity duration-300 flex flex-col justify-end p-6 ${
-            showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            showControls ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >
           {/* Center Play/Pause */}

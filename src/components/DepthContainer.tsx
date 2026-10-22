@@ -1,6 +1,6 @@
-import { ReactNode } from 'react'
-import { cn } from '@/lib/utils'
-import { useTilt3D } from '@/lib/depth-utils'
+import { ReactNode } from "react"
+import { cn } from "@/lib/utils"
+import { useTilt3D } from "@/lib/depth-utils"
 
 interface DepthContainerProps {
   children: ReactNode
@@ -22,7 +22,7 @@ export function DepthContainer({
   return (
     <div
       className={cn(
-        'relative transform-style-3d backface-hidden will-change-transform',
+        "relative transform-style-3d backface-hidden will-change-transform",
         className,
       )}
       style={enableTilt ? style : undefined}

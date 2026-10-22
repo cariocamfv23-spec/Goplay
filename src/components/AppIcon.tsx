@@ -1,7 +1,7 @@
-import { cn } from '@/lib/utils'
-import useBrandingStore, { defaultIcon } from '@/stores/useBrandingStore'
-import { useEffect, useState } from 'react'
-import { GoplayIcon } from '@/components/GoplayIcon'
+import { cn } from "@/lib/utils"
+import useBrandingStore, { defaultIcon } from "@/stores/useBrandingStore"
+import { useEffect, useState } from "react"
+import { GoplayIcon } from "@/components/GoplayIcon"
 
 interface AppIconProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   className?: string
@@ -10,7 +10,7 @@ interface AppIconProps extends React.ImgHTMLAttributes<HTMLImageElement> {
 
 export const AppIcon = ({
   className,
-  alt = 'Goplay App Icon',
+  alt = "Goplay App Icon",
   enableSeasonal = false,
   ...props
 }: AppIconProps) => {
@@ -25,7 +25,7 @@ export const AppIcon = ({
     return (
       <div
         className={cn(
-          'relative flex items-center justify-center transition-transform hover:scale-105 duration-300',
+          "relative flex items-center justify-center transition-transform hover:scale-105 duration-300",
           className,
         )}
       >
@@ -42,7 +42,7 @@ export const AppIcon = ({
     <img
       src={src}
       alt={alt}
-      className={cn('object-contain', className)}
+      className={cn("object-contain", className)}
       onError={() => {
         if (src !== defaultIcon) {
           setSrc(defaultIcon)

@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { mockPointsHistory } from '@/lib/data'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { mockPointsHistory } from "@/lib/data"
 import {
   ArrowLeft,
   Trophy,
@@ -8,10 +8,10 @@ import {
   TrendingUp,
   History,
   Star,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { Progress } from '@/components/ui/progress'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Progress } from "@/components/ui/progress"
+import { cn } from "@/lib/utils"
 
 export default function MyPoints() {
   const navigate = useNavigate()
@@ -56,7 +56,7 @@ export default function MyPoints() {
             <Button
               className="h-auto flex-col py-4 bg-secondary/50 hover:bg-secondary text-foreground border border-border/50"
               variant="ghost"
-              onClick={() => navigate('/marketplace')}
+              onClick={() => navigate("/marketplace")}
             >
               <ShoppingBag className="h-6 w-6 text-primary mb-2" />
               <span className="font-bold text-sm">Trocar Pontos</span>
@@ -67,7 +67,7 @@ export default function MyPoints() {
             <Button
               className="h-auto flex-col py-4 bg-secondary/50 hover:bg-secondary text-foreground border border-border/50"
               variant="ghost"
-              onClick={() => navigate('/ranking')}
+              onClick={() => navigate("/ranking")}
             >
               <TrendingUp className="h-6 w-6 text-green-500 mb-2" />
               <span className="font-bold text-sm">Ranking</span>
@@ -104,13 +104,13 @@ export default function MyPoints() {
                 <div className="flex items-center gap-3">
                   <div
                     className={cn(
-                      'h-10 w-10 rounded-full flex items-center justify-center',
-                      item.type === 'earned'
-                        ? 'bg-primary/10 text-primary'
-                        : 'bg-red-100 text-red-500',
+                      "h-10 w-10 rounded-full flex items-center justify-center",
+                      item.type === "earned"
+                        ? "bg-primary/10 text-primary"
+                        : "bg-red-100 text-red-500",
                     )}
                   >
-                    {item.type === 'earned' ? (
+                    {item.type === "earned" ? (
                       <Star className="h-5 w-5" />
                     ) : (
                       <ShoppingBag className="h-5 w-5" />
@@ -123,11 +123,11 @@ export default function MyPoints() {
                 </div>
                 <span
                   className={cn(
-                    'font-bold text-sm',
-                    item.type === 'earned' ? 'text-green-600' : 'text-red-500',
+                    "font-bold text-sm",
+                    item.type === "earned" ? "text-green-600" : "text-red-500",
                   )}
                 >
-                  {item.points > 0 ? '+' : ''}
+                  {item.points > 0 ? "+" : ""}
                   {item.points}
                 </span>
               </div>

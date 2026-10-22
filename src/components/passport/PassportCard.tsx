@@ -1,8 +1,8 @@
-import { Button } from '@/components/ui/button'
-import { mockPassport, mockCurrentUser } from '@/lib/data'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Logo } from '@/components/Logo'
-import { Globe, ShieldCheck, QrCode } from 'lucide-react'
+import { Button } from "@/components/ui/button"
+import { mockPassport, mockCurrentUser } from "@/lib/data"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Logo } from "@/components/Logo"
+import { Globe, ShieldCheck, QrCode } from "lucide-react"
 
 interface PassportCardProps {
   profile?: any
@@ -15,11 +15,11 @@ export function PassportCard({ profile }: PassportCardProps) {
   const sport = profile?.sport || user.sport
   const position = profile?.position || user.position
   const locationText =
-    [profile?.city, profile?.state].filter(Boolean).join(', ') ||
+    [profile?.city, profile?.state].filter(Boolean).join(", ") ||
     profile?.location ||
-    ''
-  const isClub = profile?.account_type === 'club' || profile?.type === 'club'
-  const isCoach = profile?.account_type === 'coach' || profile?.type === 'coach'
+    ""
+  const isClub = profile?.account_type === "club" || profile?.type === "club"
+  const isCoach = profile?.account_type === "coach" || profile?.type === "coach"
   const identifierCode = (profile?.id || user.id).slice(0, 8).toUpperCase()
 
   return (
@@ -43,9 +43,9 @@ export function PassportCard({ profile }: PassportCardProps) {
               </Avatar>
               <div className="space-y-1">
                 <div className="text-[10px] text-white/60 uppercase tracking-widest">
-                  {sport ? `${sport} • ` : ''}
+                  {sport ? `${sport} • ` : ""}
                   {position ||
-                    (isClub ? 'Clube' : isCoach ? 'Treinador' : 'Atleta')}
+                    (isClub ? "Clube" : isCoach ? "Treinador" : "Atleta")}
                 </div>
                 <h2 className="text-lg font-bold leading-tight line-clamp-1">
                   {displayName}

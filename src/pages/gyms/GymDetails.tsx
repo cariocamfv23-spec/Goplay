@@ -1,9 +1,9 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { mockGyms } from '@/lib/data'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, MapPin, Star, CreditCard } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { PaymentDialog } from '@/components/PaymentDialog'
+import { useParams, useNavigate } from "react-router-dom"
+import { mockGyms } from "@/lib/data"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, MapPin, Star, CreditCard } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { PaymentDialog } from "@/components/PaymentDialog"
 
 export default function GymDetails() {
   const { id } = useParams()
@@ -48,7 +48,7 @@ export default function GymDetails() {
         <PaymentDialog
           title={`Mensalidade ${gym.name}`}
           price={
-            parseFloat(gym.price.replace(/[^\d.,]/g, '').replace(',', '.')) || 0
+            parseFloat(gym.price.replace(/[^\d.,]/g, "").replace(",", ".")) || 0
           }
           onSuccess={() => {}}
         >

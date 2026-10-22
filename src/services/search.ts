@@ -1,9 +1,9 @@
-import { supabase } from '@/lib/supabase/client'
-import type { AccountType, PublicProfileItem } from './profiles'
+import { supabase } from "@/lib/supabase/client"
+import type { AccountType, PublicProfileItem } from "./profiles"
 
 export interface ProfileSearchFilters {
   query?: string
-  accountType?: AccountType | 'all'
+  accountType?: AccountType | "all"
   sport?: string
   city?: string
   state?: string
@@ -40,7 +40,7 @@ export const searchService = {
       const to = from + pageSize - 1
 
       // Safe public fields only
-      let query = supabase.from('profiles').select(
+      let query = supabase.from("profiles").select(
         `
           id,
           full_name,
@@ -58,35 +58,35 @@ export const searchService = {
           specialties,
           created_at
         `,
-        { count: 'exact' },
+        { count: "exact" },
       )
 
       // Filter by account type if provided and not 'all'
-      if (filters.accountType && filters.accountType !== 'all') {
-        query = query.eq('account_type', filters.accountType)
+      if (filters.accountType && filters.accountType !== "all") {
+        query = query.eq("account_type", filters.accountType)
       }
 
       // Filter by sport if provided
       if (
         filters.sport &&
-        filters.sport.trim() !== '' &&
-        filters.sport !== 'Todos'
+        filters.sport.trim() !== "" &&
+        filters.sport !== "Todos"
       ) {
-        query = query.ilike('sport', `%${filters.sport.trim()}%`)
+        query = query.ilike("sport", `%${filters.sport.trim()}%`)
       }
 
       // Filter by city if provided
-      if (filters.city && filters.city.trim() !== '') {
-        query = query.ilike('city', `%${filters.city.trim()}%`)
+      if (filters.city && filters.city.trim() !== "") {
+        query = query.ilike("city", `%${filters.city.trim()}%`)
       }
 
       // Filter by state if provided
-      if (filters.state && filters.state.trim() !== '') {
-        query = query.ilike('state', `%${filters.state.trim()}%`)
+      if (filters.state && filters.state.trim() !== "") {
+        query = query.ilike("state", `%${filters.state.trim()}%`)
       }
 
       // Search text by name or sport or position or club_name
-      if (filters.query && filters.query.trim() !== '') {
+      if (filters.query && filters.query.trim() !== "") {
         const cleanQuery = filters.query.trim()
         query = query.or(
           `full_name.ilike.%${cleanQuery}%,sport.ilike.%${cleanQuery}%,position.ilike.%${cleanQuery}%,club_name.ilike.%${cleanQuery}%,city.ilike.%${cleanQuery}%`,
@@ -94,7 +94,7 @@ export const searchService = {
       }
 
       // Order and range
-      query = query.order('created_at', { ascending: false }).range(from, to)
+      query = query.order("created_at", { ascending: false }).range(from, to)
 
       const { data, count, error } = await query
 
@@ -107,7 +107,7 @@ export const searchService = {
         }
       }
 
-      const profiles = (data as unknown as PublicProfileItem[]) ?? []
+      const profiles = data as unknown as PublicProfileItem[] ?? []
       const totalCount = count ?? 0
       const hasMore = to + 1 < totalCount
 

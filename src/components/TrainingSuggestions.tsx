@@ -3,14 +3,14 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/ui/accordion'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { TrainingSuggestion } from '@/lib/data'
-import { AlertCircle, Zap, CalendarPlus } from 'lucide-react'
-import { toast } from 'sonner'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/accordion"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { TrainingSuggestion } from "@/lib/data"
+import { AlertCircle, Zap, CalendarPlus } from "lucide-react"
+import { toast } from "sonner"
+import { cn } from "@/lib/utils"
 
 interface TrainingSuggestionsProps {
   suggestions: TrainingSuggestion[]
@@ -18,7 +18,7 @@ interface TrainingSuggestionsProps {
 
 export function TrainingSuggestions({ suggestions }: TrainingSuggestionsProps) {
   const handleAddToCalendar = (title: string) => {
-    toast.success('Treino Agendado!', {
+    toast.success("Treino Agendado!", {
       description: `${title} foi adicionado ao seu calendário para amanhã.`,
       icon: <CalendarPlus className="h-4 w-4 text-primary" />,
     })
@@ -68,12 +68,12 @@ export function TrainingSuggestions({ suggestions }: TrainingSuggestionsProps) {
                       <Badge
                         variant="secondary"
                         className={cn(
-                          'ml-auto text-[10px]',
-                          suggestion.difficulty === 'Avançado'
-                            ? 'bg-red-900/30 text-red-400'
-                            : suggestion.difficulty === 'Intermediário'
-                              ? 'bg-yellow-900/30 text-yellow-400'
-                              : 'bg-green-900/30 text-green-400',
+                          "ml-auto text-[10px]",
+                          suggestion.difficulty === "Avançado"
+                            ? "bg-red-900/30 text-red-400"
+                            : suggestion.difficulty === "Intermediário"
+                              ? "bg-yellow-900/30 text-yellow-400"
+                              : "bg-green-900/30 text-green-400",
                         )}
                       >
                         {suggestion.difficulty}

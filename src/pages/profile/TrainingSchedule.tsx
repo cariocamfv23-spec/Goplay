@@ -1,35 +1,35 @@
-import { Calendar } from '@/components/ui/calendar'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { Calendar } from "@/components/ui/calendar"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { useState } from 'react'
-import { mockTrainingEvents } from '@/lib/data'
-import { Plus, Calendar as CalendarIcon, CheckCircle2 } from 'lucide-react'
-import { toast } from 'sonner'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/select"
+import { useState } from "react"
+import { mockTrainingEvents } from "@/lib/data"
+import { Plus, Calendar as CalendarIcon, CheckCircle2 } from "lucide-react"
+import { toast } from "sonner"
+import { cn } from "@/lib/utils"
 
 export default function TrainingSchedule() {
   const [date, setDate] = useState<Date | undefined>(new Date())
   const [events, setEvents] = useState(mockTrainingEvents)
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [newEvent, setNewEvent] = useState({
-    title: '',
-    type: 'training',
+    title: "",
+    type: "training",
   })
 
   const selectedDateEvents = events.filter(
@@ -53,8 +53,8 @@ export default function TrainingSchedule() {
 
     setEvents([...events, event])
     setIsAddOpen(false)
-    setNewEvent({ title: '', type: 'training' })
-    toast.success('Evento adicionado ao calendário!')
+    setNewEvent({ title: "", type: "training" })
+    toast.success("Evento adicionado ao calendário!")
   }
 
   const toggleComplete = (id: string) => {
@@ -135,7 +135,7 @@ export default function TrainingSchedule() {
                 ),
             }}
             modifiersClassNames={{
-              hasEvent: 'font-bold text-primary underline decoration-primary',
+              hasEvent: "font-bold text-primary underline decoration-primary",
             }}
           />
         </div>
@@ -150,24 +150,24 @@ export default function TrainingSchedule() {
             <div
               key={event.id}
               className={cn(
-                'flex items-center justify-between p-3 rounded-xl border transition-all',
+                "flex items-center justify-between p-3 rounded-xl border transition-all",
                 event.completed
-                  ? 'bg-secondary/30 border-transparent opacity-70'
-                  : 'bg-card border-border/50 shadow-sm',
+                  ? "bg-secondary/30 border-transparent opacity-70"
+                  : "bg-card border-border/50 shadow-sm",
               )}
             >
               <div className="flex items-center gap-3">
                 <div
                   className={cn(
-                    'h-10 w-10 rounded-full flex items-center justify-center',
-                    event.type === 'match'
-                      ? 'bg-red-100 text-red-600 dark:bg-red-900/20'
-                      : event.type === 'recovery'
-                        ? 'bg-green-100 text-green-600 dark:bg-green-900/20'
-                        : 'bg-primary/10 text-primary',
+                    "h-10 w-10 rounded-full flex items-center justify-center",
+                    event.type === "match"
+                      ? "bg-red-100 text-red-600 dark:bg-red-900/20"
+                      : event.type === "recovery"
+                        ? "bg-green-100 text-green-600 dark:bg-green-900/20"
+                        : "bg-primary/10 text-primary",
                   )}
                 >
-                  {event.type === 'match' ? (
+                  {event.type === "match" ? (
                     <CalendarIcon className="h-5 w-5" />
                   ) : (
                     <CheckCircle2 className="h-5 w-5" />
@@ -176,8 +176,8 @@ export default function TrainingSchedule() {
                 <div>
                   <h5
                     className={cn(
-                      'font-medium text-sm',
-                      event.completed && 'line-through text-muted-foreground',
+                      "font-medium text-sm",
+                      event.completed && "line-through text-muted-foreground",
                     )}
                   >
                     {event.title}
@@ -192,8 +192,8 @@ export default function TrainingSchedule() {
                 size="icon"
                 onClick={() => toggleComplete(event.id)}
                 className={cn(
-                  'rounded-full',
-                  event.completed ? 'text-green-500' : 'text-muted-foreground',
+                  "rounded-full",
+                  event.completed ? "text-green-500" : "text-muted-foreground",
                 )}
               >
                 <CheckCircle2 className="h-5 w-5" />

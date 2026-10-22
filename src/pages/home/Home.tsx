@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   MapPin,
   Wallet,
@@ -26,32 +26,32 @@ import {
   ShoppingBag,
   Ticket,
   Sparkles,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { mockCurrentUser, mockMatches } from '@/lib/data'
-import { cn } from '@/lib/utils'
-import { StoriesRail } from '@/components/StoriesRail'
-import { useAuth } from '@/hooks/use-auth'
-import { WeatherWidget } from '@/components/WeatherWidget'
-import { GoalCard } from '@/components/GoalCard'
-import { AiToolsRail } from '@/components/AiToolsRail'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { NostalgiaStudio } from '@/components/NostalgiaStudio'
-import { Replay3DWizardDialog } from '@/components/Replay3DWizardDialog'
-import { Replay3DIcon } from '@/components/icons/Replay3DIcon'
-import { DepthContainer } from '@/components/DepthContainer'
-import { SmartNotificationManager } from '@/components/SmartNotificationManager'
-import { BiometricEnrollModal } from '@/components/BiometricEnrollModal'
+} from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { mockCurrentUser, mockMatches } from "@/lib/data"
+import { cn } from "@/lib/utils"
+import { StoriesRail } from "@/components/StoriesRail"
+import { useAuth } from "@/hooks/use-auth"
+import { WeatherWidget } from "@/components/WeatherWidget"
+import { GoalCard } from "@/components/GoalCard"
+import { AiToolsRail } from "@/components/AiToolsRail"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { NostalgiaStudio } from "@/components/NostalgiaStudio"
+import { Replay3DWizardDialog } from "@/components/Replay3DWizardDialog"
+import { Replay3DIcon } from "@/components/icons/Replay3DIcon"
+import { DepthContainer } from "@/components/DepthContainer"
+import { SmartNotificationManager } from "@/components/SmartNotificationManager"
+import { BiometricEnrollModal } from "@/components/BiometricEnrollModal"
 
 export default function Home() {
   const navigate = useNavigate()
@@ -63,173 +63,173 @@ export default function Home() {
   const displayName =
     profile?.full_name?.trim() ||
     user?.user_metadata?.full_name?.trim() ||
-    user?.email?.split('@')[0] ||
+    user?.email?.split("@")[0] ||
     mockCurrentUser.name
-  const firstName = displayName.split(' ')[0]
+  const firstName = displayName.split(" ")[0]
   const displayAvatar =
     profile?.avatar_url ||
     user?.user_metadata?.avatar_url ||
     mockCurrentUser.avatar
   const displayInitials =
-    displayName.length >= 2 ? displayName.substring(0, 2).toUpperCase() : 'GP'
+    displayName.length >= 2 ? displayName.substring(0, 2).toUpperCase() : "GP"
 
   // Priority Shortcuts Configuration
   const shortcuts = [
     {
-      label: 'Check-in',
+      label: "Check-in",
       icon: MapPin,
-      path: '/check-in',
-      color: 'text-primary',
-      bg: 'bg-primary/10',
+      path: "/check-in",
+      color: "text-primary",
+      bg: "bg-primary/10",
     },
     {
-      label: 'Carteira',
+      label: "Carteira",
       icon: Wallet,
-      path: '/wallet',
-      color: 'text-emerald-600',
-      bg: 'bg-emerald-500/10',
+      path: "/wallet",
+      color: "text-emerald-600",
+      bg: "bg-emerald-500/10",
     },
     {
-      label: 'Mensagens',
+      label: "Mensagens",
       icon: MessageSquare,
-      path: '/messages',
-      color: 'text-blue-600',
-      bg: 'bg-blue-500/10',
+      path: "/messages",
+      color: "text-blue-600",
+      bg: "bg-blue-500/10",
     },
     {
-      label: 'Ranking',
+      label: "Ranking",
       icon: Trophy,
-      path: '/ranking',
-      color: 'text-gold',
-      bg: 'bg-[hsl(var(--gold)/0.1)]',
+      path: "/ranking",
+      color: "text-gold",
+      bg: "bg-[hsl(var(--gold)/0.1)]",
     },
     {
-      label: 'Loja',
+      label: "Loja",
       icon: ShoppingBag,
-      path: '/marketplace',
-      color: 'text-purple-600',
-      bg: 'bg-purple-500/10',
+      path: "/marketplace",
+      color: "text-purple-600",
+      bg: "bg-purple-500/10",
     },
     {
-      label: 'Replay 3D',
+      label: "Replay 3D",
       icon: Replay3DIcon,
-      path: '#',
+      path: "#",
       action: () => setWizardOpen(true),
-      color: 'text-primary',
-      bg: 'bg-gradient-to-tr from-primary/20 to-gold/20 border border-primary/20',
+      color: "text-primary",
+      bg: "bg-gradient-to-tr from-primary/20 to-gold/20 border border-primary/20",
       isNew: true,
     },
     {
-      label: 'Marcar Jogo',
+      label: "Marcar Jogo",
       icon: Trophy,
-      path: '/matchmaking',
-      color: 'text-primary',
-      bg: 'bg-gradient-to-tr from-primary/10 to-purple-500/10 border border-primary/10',
+      path: "/matchmaking",
+      color: "text-primary",
+      bg: "bg-gradient-to-tr from-primary/10 to-purple-500/10 border border-primary/10",
       isNew: true,
-      badgeText: 'NOVO',
+      badgeText: "NOVO",
     },
   ]
 
   // Grouped Features Configuration
   const featureGroups = [
     {
-      title: 'Carreira & Oportunidades',
-      description: 'Evolua sua carreira no esporte',
+      title: "Carreira & Oportunidades",
+      description: "Evolua sua carreira no esporte",
       icon: TrendingUp,
-      color: 'text-amber-600',
+      color: "text-amber-600",
       items: [
         {
-          label: 'Bolsas',
+          label: "Bolsas",
           icon: GraduationCap,
-          path: '/explore/scholarships',
-          iconColor: 'text-emerald-600',
-          bg: 'bg-emerald-100 dark:bg-emerald-900/20',
+          path: "/explore/scholarships",
+          iconColor: "text-emerald-600",
+          bg: "bg-emerald-100 dark:bg-emerald-900/20",
         },
         {
-          label: 'Agências',
+          label: "Agências",
           icon: Plane,
-          path: '/explore/agencies',
-          iconColor: 'text-sky-600',
-          bg: 'bg-sky-100 dark:bg-sky-900/20',
+          path: "/explore/agencies",
+          iconColor: "text-sky-600",
+          bg: "bg-sky-100 dark:bg-sky-900/20",
         },
         {
-          label: 'Mundial',
+          label: "Mundial",
           icon: Globe,
-          path: '/explore/international',
-          iconColor: 'text-indigo-600',
-          bg: 'bg-indigo-100 dark:bg-indigo-900/20',
+          path: "/explore/international",
+          iconColor: "text-indigo-600",
+          bg: "bg-indigo-100 dark:bg-indigo-900/20",
         },
         {
-          label: 'Jobs',
+          label: "Jobs",
           icon: Ticket,
-          path: '/explore/jobs',
-          iconColor: 'text-pink-600',
-          bg: 'bg-pink-100 dark:bg-pink-900/20',
+          path: "/explore/jobs",
+          iconColor: "text-pink-600",
+          bg: "bg-pink-100 dark:bg-pink-900/20",
         },
       ],
     },
     {
-      title: 'Saúde & Performance',
-      description: 'Cuide do seu corpo e mente',
+      title: "Saúde & Performance",
+      description: "Cuide do seu corpo e mente",
       icon: Activity,
-      color: 'text-rose-600',
+      color: "text-rose-600",
       items: [
         {
-          label: 'Nutrição',
+          label: "Nutrição",
           icon: Apple,
-          path: '/explore/nutrition',
-          iconColor: 'text-lime-600',
-          bg: 'bg-lime-100 dark:bg-lime-900/20',
+          path: "/explore/nutrition",
+          iconColor: "text-lime-600",
+          bg: "bg-lime-100 dark:bg-lime-900/20",
         },
         {
-          label: 'Clínicas',
+          label: "Clínicas",
           icon: Stethoscope,
-          path: '/explore/clinics',
-          iconColor: 'text-teal-600',
-          bg: 'bg-teal-100 dark:bg-teal-900/20',
+          path: "/explore/clinics",
+          iconColor: "text-teal-600",
+          bg: "bg-teal-100 dark:bg-teal-900/20",
         },
         {
-          label: 'Academias',
+          label: "Academias",
           icon: Dumbbell,
-          path: '/explore/gyms',
-          iconColor: 'text-red-600',
-          bg: 'bg-red-100 dark:bg-red-900/20',
+          path: "/explore/gyms",
+          iconColor: "text-red-600",
+          bg: "bg-red-100 dark:bg-red-900/20",
         },
       ],
     },
     {
-      title: 'Serviços & Lazer',
-      description: 'Facilidades para o seu dia a dia',
+      title: "Serviços & Lazer",
+      description: "Facilidades para o seu dia a dia",
       icon: Star,
-      color: 'text-primary',
+      color: "text-primary",
       items: [
         {
-          label: 'Fotos',
+          label: "Fotos",
           icon: Camera,
-          path: '/explore/photographers',
-          iconColor: 'text-purple-600',
-          bg: 'bg-purple-100 dark:bg-purple-900/20',
+          path: "/explore/photographers",
+          iconColor: "text-purple-600",
+          bg: "bg-purple-100 dark:bg-purple-900/20",
         },
         {
-          label: 'Uber',
+          label: "Uber",
           icon: Car,
-          path: '/explore/drivers',
-          iconColor: 'text-green-600',
-          bg: 'bg-green-100 dark:bg-green-900/20',
+          path: "/explore/drivers",
+          iconColor: "text-green-600",
+          bg: "bg-green-100 dark:bg-green-900/20",
         },
         {
-          label: 'Kids',
+          label: "Kids",
           icon: Baby,
-          path: '/explore/kids',
-          iconColor: 'text-pink-600',
-          bg: 'bg-pink-100 dark:bg-pink-900/20',
+          path: "/explore/kids",
+          iconColor: "text-pink-600",
+          bg: "bg-pink-100 dark:bg-pink-900/20",
         },
         {
-          label: 'Eventos',
+          label: "Eventos",
           icon: Calendar,
-          path: '/explore/events',
-          iconColor: 'text-orange-600',
-          bg: 'bg-orange-100 dark:bg-orange-900/20',
+          path: "/explore/events",
+          iconColor: "text-orange-600",
+          bg: "bg-orange-100 dark:bg-orange-900/20",
         },
       ],
     },
@@ -246,21 +246,21 @@ export default function Home() {
         <div className="flex justify-between items-start mb-4">
           <div className="space-y-1">
             <h1 className="text-2xl font-bold tracking-tight">
-              Olá,{' '}
+              Olá,{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
                 {firstName}
-              </span>{' '}
+              </span>{" "}
               👋
             </h1>
             <p className="text-sm text-muted-foreground">
               {profile?.sport
                 ? `Pronto para os treinos de ${profile.sport}?`
-                : 'Pronto para o jogo de hoje?'}
+                : "Pronto para o jogo de hoje?"}
             </p>
           </div>
           <div
             className="flex flex-col items-end cursor-pointer"
-            onClick={() => navigate('/profile/me')}
+            onClick={() => navigate("/profile/me")}
           >
             <div className="relative">
               <Avatar className="h-12 w-12 border-2 border-primary/20 hover:border-primary transition-colors shadow-lg">
@@ -310,7 +310,7 @@ export default function Home() {
                 <Input
                   placeholder="Buscar no Goplay..."
                   className="pl-9 bg-secondary border-none rounded-xl shadow-inner"
-                  onClick={() => navigate('/explore')}
+                  onClick={() => navigate("/explore")}
                   readOnly
                 />
               </div>
@@ -340,7 +340,7 @@ export default function Home() {
                 >
                   <div
                     className={cn(
-                      'w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-md group-hover:-translate-y-1 relative',
+                      "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-md group-hover:-translate-y-1 relative",
                       shortcut.bg,
                       shortcut.color,
                     )}
@@ -385,7 +385,7 @@ export default function Home() {
                   variant="link"
                   size="sm"
                   className="h-auto p-0 text-xs"
-                  onClick={() => navigate('/profile/passport')}
+                  onClick={() => navigate("/profile/passport")}
                 >
                   Ver agenda
                 </Button>
@@ -393,7 +393,7 @@ export default function Home() {
               <DepthContainer maxRotation={3}>
                 <Card
                   className="border-none shadow-lg bg-gradient-to-br from-primary/90 to-purple-900 text-white overflow-hidden relative cursor-pointer group hover:shadow-xl transition-all h-full"
-                  onClick={() => navigate('/profile/stats')}
+                  onClick={() => navigate("/profile/stats")}
                 >
                   {/* Decorative background elements */}
                   <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
@@ -407,7 +407,7 @@ export default function Home() {
                       <ArrowRight className="w-5 h-5 text-white/70 group-hover:translate-x-1 transition-transform" />
                     </div>
                     <CardTitle className="text-xl mt-2 flex items-center gap-2 drop-shadow-md">
-                      {nextMatch ? nextMatch.teamName : 'Sem jogos agendados'}
+                      {nextMatch ? nextMatch.teamName : "Sem jogos agendados"}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="relative z-10 translate-z-10">
@@ -415,7 +415,7 @@ export default function Home() {
                       <div className="flex items-center gap-4 text-sm text-white/90">
                         <div className="flex items-center gap-1.5">
                           <Calendar className="w-4 h-4" />
-                          <span>{nextMatch.time.split(',')[0]}</span>
+                          <span>{nextMatch.time.split(",")[0]}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
                           <MapPin className="w-4 h-4" />
@@ -456,7 +456,7 @@ export default function Home() {
                         <div className="flex items-center gap-2 mb-1">
                           <div
                             className={cn(
-                              'p-2 rounded-lg bg-secondary shadow-inner',
+                              "p-2 rounded-lg bg-secondary shadow-inner",
                               group.color,
                             )}
                           >
@@ -480,7 +480,7 @@ export default function Home() {
                             >
                               <div
                                 className={cn(
-                                  'w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover/item:scale-110 shadow-sm',
+                                  "w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover/item:scale-110 shadow-sm",
                                   item.bg,
                                   item.iconColor,
                                 )}
@@ -496,7 +496,7 @@ export default function Home() {
                         <Button
                           variant="ghost"
                           className="w-full mt-2 text-xs h-8 text-muted-foreground hover:text-primary"
-                          onClick={() => navigate('/explore')}
+                          onClick={() => navigate("/explore")}
                         >
                           Ver categoria completa
                           <ChevronRight className="w-3 h-3 ml-1" />
@@ -512,7 +512,7 @@ export default function Home() {
                 <Button
                   variant="outline"
                   className="w-full h-12 rounded-xl border-dashed border-2 hover:bg-secondary/50 hover:border-primary/50 group shadow-sm hover:shadow-md transition-all"
-                  onClick={() => navigate('/explore')}
+                  onClick={() => navigate("/explore")}
                 >
                   <Search className="w-4 h-4 mr-2 group-hover:text-primary transition-colors" />
                   <span className="font-semibold text-muted-foreground group-hover:text-foreground transition-colors">

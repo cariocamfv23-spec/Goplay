@@ -1,6 +1,6 @@
-import { ProfileData } from '@/lib/data'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { ProfileData } from "@/lib/data"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   MapPin,
   Star,
@@ -12,10 +12,10 @@ import {
   Globe,
   ArrowLeft,
   ChevronRight,
-} from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { useNavigate } from 'react-router-dom'
+} from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { useNavigate } from "react-router-dom"
 
 export default function ScoutView({ profile }: { profile: ProfileData }) {
   const navigate = useNavigate()
@@ -71,8 +71,8 @@ export default function ScoutView({ profile }: { profile: ProfileData }) {
               <MapPin className="h-4 w-4 text-primary/70" /> {profile.location}
             </span>
             <span className="flex items-center gap-1.5 text-foreground">
-              <Star className="h-4 w-4 fill-gold text-gold" />{' '}
-              {profile.rating || '5.0'}
+              <Star className="h-4 w-4 fill-gold text-gold" />{" "}
+              {profile.rating || "5.0"}
             </span>
           </div>
 
@@ -103,7 +103,7 @@ export default function ScoutView({ profile }: { profile: ProfileData }) {
                 <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
                   Agência / Clube
                 </p>
-                <p className="font-bold">{profile.agency || 'Independente'}</p>
+                <p className="font-bold">{profile.agency || "Independente"}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -115,7 +115,7 @@ export default function ScoutView({ profile }: { profile: ProfileData }) {
                   Experiência
                 </p>
                 <p className="font-bold">
-                  {profile.experience || '+5 anos no mercado'}
+                  {profile.experience || "+5 anos no mercado"}
                 </p>
               </div>
             </div>

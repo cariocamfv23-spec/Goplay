@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from "react"
 import {
   Drawer,
   DrawerContent,
@@ -7,20 +7,20 @@ import {
   DrawerDescription,
   DrawerFooter,
   DrawerClose,
-} from '@/components/ui/drawer'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+} from "@/components/ui/drawer"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { useGoalStore } from '@/stores/useGoalStore'
-import { toast } from 'sonner'
-import { Goal } from '@/lib/data'
+} from "@/components/ui/select"
+import { useGoalStore } from "@/stores/useGoalStore"
+import { toast } from "sonner"
+import { Goal } from "@/lib/data"
 
 interface CreateGoalDrawerProps {
   open: boolean
@@ -35,13 +35,13 @@ export function CreateGoalDrawer({
   const [loading, setLoading] = useState(false)
 
   const [formData, setFormData] = useState({
-    title: '',
-    category: 'physical' as Goal['category'],
-    metric: '',
-    currentValue: '',
-    targetValue: '',
-    unit: '',
-    deadline: '',
+    title: "",
+    category: "physical" as Goal["category"],
+    metric: "",
+    currentValue: "",
+    targetValue: "",
+    unit: "",
+    deadline: "",
   })
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -59,18 +59,18 @@ export function CreateGoalDrawer({
         unit: formData.unit,
         deadline: formData.deadline,
       })
-      toast.success('Meta criada com sucesso!')
+      toast.success("Meta criada com sucesso!")
       setLoading(false)
       onOpenChange(false)
       // Reset form
       setFormData({
-        title: '',
-        category: 'physical',
-        metric: '',
-        currentValue: '',
-        targetValue: '',
-        unit: '',
-        deadline: '',
+        title: "",
+        category: "physical",
+        metric: "",
+        currentValue: "",
+        targetValue: "",
+        unit: "",
+        deadline: "",
       })
     }, 1000)
   }
@@ -184,7 +184,7 @@ export function CreateGoalDrawer({
 
             <DrawerFooter className="px-0 pb-0 pt-4">
               <Button type="submit" disabled={loading}>
-                {loading ? 'Criando...' : 'Criar Meta'}
+                {loading ? "Criando..." : "Criar Meta"}
               </Button>
               <DrawerClose asChild>
                 <Button variant="outline">Cancelar</Button>

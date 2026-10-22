@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
 import {
   ArrowLeft,
   Fuel,
@@ -8,12 +8,12 @@ import {
   CreditCard,
   ArrowUpRight,
   ArrowDownLeft,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { Card, CardContent } from '@/components/ui/card'
-import { DigitalCard } from '@/components/DigitalCard'
-import { mockFuelTransactions } from '@/lib/data'
-import { Badge } from '@/components/ui/badge'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Card, CardContent } from "@/components/ui/card"
+import { DigitalCard } from "@/components/DigitalCard"
+import { mockFuelTransactions } from "@/lib/data"
+import { Badge } from "@/components/ui/badge"
 
 export default function FuelCredits() {
   const navigate = useNavigate()
@@ -81,7 +81,7 @@ export default function FuelCredits() {
             </Card>
             <Card
               className="border-none shadow-sm bg-secondary/30 cursor-pointer hover:bg-secondary/50 transition-colors"
-              onClick={() => navigate('/explore/fuel/stations')}
+              onClick={() => navigate("/explore/fuel/stations")}
             >
               <CardContent className="p-4 flex flex-col items-center text-center gap-2">
                 <div className="p-2 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30">
@@ -125,12 +125,12 @@ export default function FuelCredits() {
                 <div className="flex items-center gap-3">
                   <div
                     className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 ${
-                      transaction.type === 'deposit'
-                        ? 'bg-green-100 text-green-600 dark:bg-green-900/20'
-                        : 'bg-red-100 text-red-600 dark:bg-red-900/20'
+                      transaction.type === "deposit"
+                        ? "bg-green-100 text-green-600 dark:bg-green-900/20"
+                        : "bg-red-100 text-red-600 dark:bg-red-900/20"
                     }`}
                   >
-                    {transaction.type === 'deposit' ? (
+                    {transaction.type === "deposit" ? (
                       <ArrowUpRight className="h-5 w-5" />
                     ) : (
                       <ArrowDownLeft className="h-5 w-5" />
@@ -145,12 +145,12 @@ export default function FuelCredits() {
                 </div>
                 <span
                   className={`font-bold text-sm ${
-                    transaction.type === 'deposit'
-                      ? 'text-green-600'
-                      : 'text-red-600'
+                    transaction.type === "deposit"
+                      ? "text-green-600"
+                      : "text-red-600"
                   }`}
                 >
-                  {transaction.type === 'deposit' ? '+' : '-'} R${' '}
+                  {transaction.type === "deposit" ? "+" : "-"} R${" "}
                   {transaction.amount.toFixed(2)}
                 </span>
               </div>
@@ -163,10 +163,10 @@ export default function FuelCredits() {
           <h3 className="font-bold text-lg mb-4">Rede Parceira</h3>
           <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4">
             {[
-              { name: 'Shell', color: 'red' },
-              { name: 'Ipiranga', color: 'blue' },
-              { name: 'Petrobras', color: 'green' },
-              { name: 'Ale', color: 'cyan' },
+              { name: "Shell", color: "red" },
+              { name: "Ipiranga", color: "blue" },
+              { name: "Petrobras", color: "green" },
+              { name: "Ale", color: "cyan" },
             ].map((partner, i) => (
               <div
                 key={i}

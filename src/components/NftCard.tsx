@@ -1,7 +1,7 @@
-import { Gem, Sticker, Crown } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
-import { mockCurrentUser } from '@/lib/data'
+import { Gem, Sticker, Crown } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
+import { mockCurrentUser } from "@/lib/data"
 
 export type NftStyleConfig = {
   container: string
@@ -16,7 +16,7 @@ export type Accessory = {
   id: string
   emoji: string
   label: string
-  position: { top: string; left: string; scale: number; rotate: number }
+  position: { top: string left: string scale: number rotate: number }
 }
 
 interface NftCardProps {
@@ -34,7 +34,7 @@ interface NftCardProps {
   }
   intensity: number
   customText: string
-  textPosition: 'top' | 'center' | 'bottom'
+  textPosition: "top" | "center" | "bottom"
   stickerMode?: boolean
   accessories?: Accessory[]
   onClick?: () => void
@@ -62,20 +62,20 @@ export function NftCard({
 
   // Sticker Mode overrides some border/shadow styles to create the die-cut effect
   const containerClasses = stickerMode
-    ? 'border-[6px] border-white shadow-[0_8px_16px_rgba(0,0,0,0.25)] rounded-[2.5rem] bg-transparent overflow-hidden'
+    ? "border-[6px] border-white shadow-[0_8px_16px_rgba(0,0,0,0.25)] rounded-[2.5rem] bg-transparent overflow-hidden"
     : cn(activeStyle.container, activeStyle.border)
 
   return (
     <div
       className={cn(
-        'relative w-full aspect-[3/4] transition-all duration-500 group',
+        "relative w-full aspect-[3/4] transition-all duration-500 group",
         // If sticker mode, we remove the default card background to emphasize the shape
         stickerMode
-          ? 'bg-transparent scale-95 hover:scale-100 rotate-1 hover:rotate-0'
-          : 'rounded-2xl shadow-2xl bg-secondary/10 overflow-hidden',
+          ? "bg-transparent scale-95 hover:scale-100 rotate-1 hover:rotate-0"
+          : "rounded-2xl shadow-2xl bg-secondary/10 overflow-hidden",
         !image &&
-          'border-2 border-dashed border-muted-foreground/25 rounded-2xl bg-secondary/10',
-        onClick && 'cursor-pointer hover:border-primary/50',
+          "border-2 border-dashed border-muted-foreground/25 rounded-2xl bg-secondary/10",
+        onClick && "cursor-pointer hover:border-primary/50",
         className,
         // Apply container classes directly if not sticker mode, or wrapper classes if sticker mode
         !stickerMode && containerClasses,
@@ -86,7 +86,7 @@ export function NftCard({
       {stickerMode && image ? (
         <div
           className={cn(
-            'w-full h-full relative overflow-hidden',
+            "w-full h-full relative overflow-hidden",
             containerClasses,
           )}
         >
@@ -155,7 +155,7 @@ function Content({
       {/* Overlay Gradient */}
       <div
         className={cn(
-          'absolute inset-0 pointer-events-none transition-all duration-300',
+          "absolute inset-0 pointer-events-none transition-all duration-300",
           activeStyle.overlay,
         )}
         style={{ opacity: intensity / 100 }}
@@ -183,19 +183,19 @@ function Content({
         <div className="flex justify-between items-start">
           <Badge
             className={cn(
-              'border-0 font-bold uppercase tracking-wider shadow-sm transition-colors',
+              "border-0 font-bold uppercase tracking-wider shadow-sm transition-colors",
               activeStyle.badge,
             )}
           >
-            {styleId === 'gold'
-              ? 'Legendary'
-              : styleId === 'cyberpunk'
-                ? 'Epic'
-                : styleId === 'bored-ape'
-                  ? 'BAYC'
-                  : styleId === 'sticker-cultura'
-                    ? 'Sticker'
-                    : 'Rare'}
+            {styleId === "gold"
+              ? "Legendary"
+              : styleId === "cyberpunk"
+                ? "Epic"
+                : styleId === "bored-ape"
+                  ? "BAYC"
+                  : styleId === "sticker-cultura"
+                    ? "Sticker"
+                    : "Rare"}
           </Badge>
           <div className="flex flex-col items-end">
             <div className="bg-black/40 backdrop-blur-md rounded-lg p-2 text-white border border-white/10 text-xs font-mono shadow-sm">
@@ -212,9 +212,9 @@ function Content({
         {/* Bottom: Info */}
         <div className="space-y-1">
           <div className="flex items-center gap-2 mb-2">
-            {styleId === 'sticker-cultura' ? (
+            {styleId === "sticker-cultura" ? (
               <Sticker className="h-6 w-6 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
-            ) : styleId === 'bored-ape' ? (
+            ) : styleId === "bored-ape" ? (
               <Crown className="h-6 w-6 text-yellow-400 drop-shadow-[0_0_10px_rgba(0,0,0,0.8)] fill-yellow-400" />
             ) : (
               <Gem className="h-6 w-6 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
@@ -222,7 +222,7 @@ function Content({
           </div>
           <h3
             className={cn(
-              'text-2xl font-black uppercase italic tracking-tighter drop-shadow-lg transition-colors',
+              "text-2xl font-black uppercase italic tracking-tighter drop-shadow-lg transition-colors",
               activeStyle.text,
             )}
           >
@@ -230,7 +230,7 @@ function Content({
           </h3>
           <div
             className={cn(
-              'flex justify-between items-end text-xs font-medium opacity-90 transition-colors',
+              "flex justify-between items-end text-xs font-medium opacity-90 transition-colors",
               activeStyle.text,
             )}
           >
@@ -246,15 +246,15 @@ function Content({
       {customText && (
         <div
           className={cn(
-            'absolute w-full px-6 text-center pointer-events-none z-20',
-            textPosition === 'top' && 'top-8',
-            textPosition === 'center' && 'top-1/2 -translate-y-1/2',
-            textPosition === 'bottom' && 'bottom-20',
+            "absolute w-full px-6 text-center pointer-events-none z-20",
+            textPosition === "top" && "top-8",
+            textPosition === "center" && "top-1/2 -translate-y-1/2",
+            textPosition === "bottom" && "bottom-20",
           )}
         >
           <h2
             className={cn(
-              'text-2xl font-black uppercase italic tracking-tighter drop-shadow-lg break-words transition-colors',
+              "text-2xl font-black uppercase italic tracking-tighter drop-shadow-lg break-words transition-colors",
               activeStyle.text,
             )}
           >
@@ -264,13 +264,13 @@ function Content({
       )}
 
       {/* Special Effects */}
-      {styleId === 'holographic' && (
+      {styleId === "holographic" && (
         <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-50 pointer-events-none mix-blend-overlay" />
       )}
-      {styleId === 'pixel' && (
+      {styleId === "pixel" && (
         <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] pointer-events-none z-10" />
       )}
-      {styleId === '3d' && (
+      {styleId === "3d" && (
         <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/20 pointer-events-none rounded-2xl" />
       )}
     </>

@@ -1,9 +1,9 @@
-import { useNavigate } from 'react-router-dom'
-import { useContractStore, LiveContract } from '@/stores/useContractStore'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useNavigate } from "react-router-dom"
+import { useContractStore, LiveContract } from "@/stores/useContractStore"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   ArrowLeft,
   Plus,
@@ -13,32 +13,32 @@ import {
   CheckCircle2,
   XCircle,
   Briefcase,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { cn } from "@/lib/utils"
 
 export default function LiveContractsDashboard() {
   const navigate = useNavigate()
   const { contracts, getContractValue } = useContractStore()
 
   // Filter contracts
-  const activeContracts = contracts.filter((c) => c.status === 'active')
-  const pendingContracts = contracts.filter((c) => c.status === 'pending')
+  const activeContracts = contracts.filter((c) => c.status === "active")
+  const pendingContracts = contracts.filter((c) => c.status === "pending")
   const historyContracts = contracts.filter(
     (c) =>
-      c.status === 'completed' ||
-      c.status === 'rejected' ||
-      c.status === 'draft',
+      c.status === "completed" ||
+      c.status === "rejected" ||
+      c.status === "draft",
   )
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'active':
+      case "active":
         return (
           <Badge className="bg-green-500/10 text-green-600 hover:bg-green-500/20 border-green-500/20 gap-1">
             <TrendingUp className="w-3 h-3" /> Vivo
           </Badge>
         )
-      case 'pending':
+      case "pending":
         return (
           <Badge
             variant="outline"
@@ -47,13 +47,13 @@ export default function LiveContractsDashboard() {
             <Clock className="w-3 h-3" /> Pendente
           </Badge>
         )
-      case 'completed':
+      case "completed":
         return (
           <Badge variant="secondary" className="text-muted-foreground gap-1">
             <CheckCircle2 className="w-3 h-3" /> Concluído
           </Badge>
         )
-      case 'rejected':
+      case "rejected":
         return (
           <Badge
             variant="destructive"
@@ -69,7 +69,7 @@ export default function LiveContractsDashboard() {
 
   const ContractCard = ({ contract }: { contract: LiveContract }) => {
     const currentValue = getContractValue(contract)
-    const isLive = contract.status === 'active'
+    const isLive = contract.status === "active"
 
     return (
       <Card
@@ -106,7 +106,7 @@ export default function LiveContractsDashboard() {
               <div className="flex items-end justify-between bg-secondary/20 rounded-xl p-3 border border-border/30">
                 <div>
                   <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium mb-0.5">
-                    Valor {isLive ? 'Atual' : 'Proposto'}
+                    Valor {isLive ? "Atual" : "Proposto"}
                   </p>
                   <div className="flex items-baseline gap-1">
                     <span className="text-xs font-medium text-muted-foreground">
@@ -114,8 +114,8 @@ export default function LiveContractsDashboard() {
                     </span>
                     <span
                       className={cn(
-                        'text-xl font-bold',
-                        isLive ? 'text-green-600 dark:text-green-400' : '',
+                        "text-xl font-bold",
+                        isLive ? "text-green-600 dark:text-green-400" : "",
                       )}
                     >
                       {currentValue.toLocaleString()}
@@ -191,7 +191,7 @@ export default function LiveContractsDashboard() {
           </div>
           <Button
             size="sm"
-            onClick={() => navigate('/contracts/create')}
+            onClick={() => navigate("/contracts/create")}
             className="h-9 px-3 gap-1 shadow-md bg-primary hover:bg-primary/90"
           >
             <Plus className="h-4 w-4" />

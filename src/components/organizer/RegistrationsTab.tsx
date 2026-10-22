@@ -1,8 +1,8 @@
-import { Championship } from '@/lib/data'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { useChampionshipStore } from '@/stores/useChampionshipStore'
+import { Championship } from "@/lib/data"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { useChampionshipStore } from "@/stores/useChampionshipStore"
 import {
   CheckCircle,
   XCircle,
@@ -10,22 +10,22 @@ import {
   Plus,
   Trash2,
   Users,
-} from 'lucide-react'
+} from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Badge } from '@/components/ui/badge'
-import { useState } from 'react'
+} from "@/components/ui/dropdown-menu"
+import { Badge } from "@/components/ui/badge"
+import { useState } from "react"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog"
 
 interface RegistrationsTabProps {
   championship: Championship
@@ -38,7 +38,7 @@ export function RegistrationsTab({ championship }: RegistrationsTabProps) {
     updateParticipantStatus,
     removeParticipant,
   } = useChampionshipStore()
-  const [newParticipant, setNewParticipant] = useState('')
+  const [newParticipant, setNewParticipant] = useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const championshipParticipants = participants.filter(
@@ -51,7 +51,7 @@ export function RegistrationsTab({ championship }: RegistrationsTabProps) {
       championshipId: championship.id,
       name: newParticipant,
     })
-    setNewParticipant('')
+    setNewParticipant("")
     setIsDialogOpen(false)
   }
 
@@ -103,19 +103,19 @@ export function RegistrationsTab({ championship }: RegistrationsTabProps) {
                     <div className="flex items-center gap-2">
                       <Badge
                         variant={
-                          p.status === 'approved'
-                            ? 'default'
-                            : p.status === 'rejected'
-                              ? 'destructive'
-                              : 'secondary'
+                          p.status === "approved"
+                            ? "default"
+                            : p.status === "rejected"
+                              ? "destructive"
+                              : "secondary"
                         }
                         className="text-[10px]"
                       >
-                        {p.status === 'approved'
-                          ? 'Confirmado'
-                          : p.status === 'rejected'
-                            ? 'Rejeitado'
-                            : 'Pendente'}
+                        {p.status === "approved"
+                          ? "Confirmado"
+                          : p.status === "rejected"
+                            ? "Rejeitado"
+                            : "Pendente"}
                       </Badge>
                       {p.contact && (
                         <span className="text-xs text-muted-foreground">
@@ -134,19 +134,19 @@ export function RegistrationsTab({ championship }: RegistrationsTabProps) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem
-                      onClick={() => updateParticipantStatus(p.id, 'approved')}
+                      onClick={() => updateParticipantStatus(p.id, "approved")}
                     >
                       <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
                       Aprovar
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => updateParticipantStatus(p.id, 'rejected')}
+                      onClick={() => updateParticipantStatus(p.id, "rejected")}
                     >
                       <XCircle className="mr-2 h-4 w-4 text-red-500" />
                       Rejeitar
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => updateParticipantStatus(p.id, 'pending')}
+                      onClick={() => updateParticipantStatus(p.id, "pending")}
                     >
                       Marcar como Pendente
                     </DropdownMenuItem>

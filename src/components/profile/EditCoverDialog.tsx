@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef } from "react"
 import {
   Dialog,
   DialogContent,
@@ -6,11 +6,11 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Loader2,
   Upload,
@@ -20,45 +20,45 @@ import {
   Check,
   AlertCircle,
   Eye,
-} from 'lucide-react'
-import { toast } from 'sonner'
-import { profileService, type ProfileRow } from '@/services/profiles'
-import { useAuth } from '@/hooks/use-auth'
+} from "lucide-react"
+import { toast } from "sonner"
+import { profileService, type ProfileRow } from "@/services/profiles"
+import { useAuth } from "@/hooks/use-auth"
 
 interface EditCoverDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   profile: ProfileRow | null
   currentCover?: string | null
-  currentType?: 'image' | 'video' | string | null
+  currentType?: "image" | "video" | string | null
   currentPosX?: number | null
   currentPosY?: number | null
   currentZoom?: number | null
   onCoverUpdated?: (
     newCoverUrl: string | null,
-    coverType: 'image' | 'video',
-    framing?: { posX: number; posY: number; zoom: number },
+    coverType: "image" | "video",
+    framing?: { posX: number posY: number zoom: number },
   ) => void
 }
 
-import { cn } from '@/lib/utils'
+import { cn } from "@/lib/utils"
 
 export function EditCoverDialog({
   open,
   onOpenChange,
   profile,
   currentCover,
-  currentType = 'image',
+  currentType = "image",
   currentPosX = 50,
   currentPosY = 50,
   currentZoom = 1,
   onCoverUpdated,
 }: EditCoverDialogProps) {
   const { user, refreshProfile } = useAuth()
-  const [activeTab, setActiveTab] = useState<'image' | 'video'>('image')
+  const [activeTab, setActiveTab] = useState<"image" | "video">("image")
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const [directUrl, setDirectUrl] = useState<string>('')
+  const [directUrl, setDirectUrl] = useState<string>("")
   const [isUploading, setIsUploading] = useState(false)
   const [isRemoving, setIsRemoving] = useState(false)
 
@@ -85,7 +85,7 @@ export function EditCoverDialog({
 
   const effectiveCover = previewUrl || directUrl || currentCover || null
   const effectiveType =
-    previewUrl && selectedFile?.type.startsWith('video/') ? 'video' : activeTab
+    previewUrl && selectedFile?.type.startsWith("video/") ? "video" : activeTab
 
   const handleResetFraming = () => {
     setZoom(1)
@@ -132,37 +132,37 @@ export function EditCoverDialog({
 
     // Max 15MB size check
     if (file.size > 15 * 1024 * 1024) {
-      toast.error('O arquivo deve ter no máximo 15MB.')
+      toast.error("O arquivo deve ter no máximo 15MB.")
       return
     }
 
-    const isVideo = file.type.startsWith('video/')
+    const isVideo = file.type.startsWith("video/")
     if (isVideo && !file.type.match(/video\/(mp4|webm)/)) {
       toast.error(
-        'Vídeos suportados: MP4 ou WebM (máximo 15MB / curta duração).',
+        "Vídeos suportados: MP4 ou WebM (máximo 15MB / curta duração).",
       )
       return
     }
 
     setSelectedFile(file)
-    setActiveTab(isVideo ? 'video' : 'image')
+    setActiveTab(isVideo ? "video" : "image")
 
     // Local object URL for preview
     const objectUrl = URL.createObjectURL(file)
     setPreviewUrl(objectUrl)
-    setDirectUrl('')
+    setDirectUrl("")
   }
 
   const handleSave = async () => {
     if (!user?.id) {
-      toast.error('Usuário não autenticado.')
+      toast.error("Usuário não autenticado.")
       return
     }
 
     setIsUploading(true)
     try {
       let finalCoverUrl = directUrl.trim() || currentCover || null
-      let finalType: 'image' | 'video' = activeTab
+      let finalType: "image" | "video" = activeTab
 
       if (selectedFile) {
         // Upload to covers bucket in Supabase Storage
@@ -172,8 +172,8 @@ export function EditCoverDialog({
         )
         if (error || !url) {
           toast.error(
-            'Erro ao fazer upload da capa: ' +
-              (error?.message || 'Falha de conexão'),
+            "Erro ao fazer upload da capa: " +
+              (error?.message || "Falha de conexão"),
           )
           setIsUploading(false)
           return
@@ -195,16 +195,16 @@ export function EditCoverDialog({
       )
 
       if (updateError) {
-        toast.error('Erro ao salvar capa no perfil: ' + updateError.message)
+        toast.error("Erro ao salvar capa no perfil: " + updateError.message)
         setIsUploading(false)
         return
       }
 
       await refreshProfile()
       toast.success(
-        finalType === 'video'
-          ? 'Capa em vídeo salva com sucesso!'
-          : 'Capa atualizada com sucesso!',
+        finalType === "video"
+          ? "Capa em vídeo salva com sucesso!"
+          : "Capa atualizada com sucesso!",
       )
 
       if (onCoverUpdated) {
@@ -219,7 +219,7 @@ export function EditCoverDialog({
       setSelectedFile(null)
       setPreviewUrl(null)
     } catch (err: any) {
-      toast.error(err?.message || 'Erro inesperado ao salvar capa.')
+      toast.error(err?.message || "Erro inesperado ao salvar capa.")
     } finally {
       setIsUploading(false)
     }
@@ -231,20 +231,20 @@ export function EditCoverDialog({
     try {
       const { error } = await profileService.removeCover(user.id)
       if (error) {
-        toast.error('Erro ao remover capa: ' + error.message)
+        toast.error("Erro ao remover capa: " + error.message)
         return
       }
       await refreshProfile()
-      toast.success('Capa removida. Fundo padrão restaurado.')
+      toast.success("Capa removida. Fundo padrão restaurado.")
       setSelectedFile(null)
       setPreviewUrl(null)
-      setDirectUrl('')
+      setDirectUrl("")
       if (onCoverUpdated) {
-        onCoverUpdated(null, 'image')
+        onCoverUpdated(null, "image")
       }
       onOpenChange(false)
     } catch {
-      toast.error('Falha ao remover capa.')
+      toast.error("Falha ao remover capa.")
     } finally {
       setIsRemoving(false)
     }
@@ -267,8 +267,8 @@ export function EditCoverDialog({
           {/* Cover Preview Area with Drag & Zoom */}
           <div
             className={cn(
-              'relative h-48 w-full rounded-xl overflow-hidden bg-muted border border-border/60 shadow-inner group select-none',
-              isDragging ? 'cursor-grabbing' : 'cursor-grab',
+              "relative h-48 w-full rounded-xl overflow-hidden bg-muted border border-border/60 shadow-inner group select-none",
+              isDragging ? "cursor-grabbing" : "cursor-grab",
             )}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
@@ -276,7 +276,7 @@ export function EditCoverDialog({
             onMouseLeave={handleMouseUp}
           >
             {effectiveCover ? (
-              effectiveType === 'video' ? (
+              effectiveType === "video" ? (
                 <video
                   src={effectiveCover}
                   className="w-full h-full object-cover transition-transform duration-75"
@@ -301,7 +301,7 @@ export function EditCoverDialog({
                   }}
                   onError={(e) => {
                     e.currentTarget.src =
-                      'https://img.usecurling.com/p/800/300?q=sports%20stadium'
+                      "https://img.usecurling.com/p/800/300?q=sports%20stadium"
                   }}
                 />
               )

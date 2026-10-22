@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
-import { useFlashbackStore } from '@/stores/useFlashbackStore'
-import useNotificationStore from '@/stores/useNotificationStore'
-import { mockDailyMemories, mockUser } from '@/lib/data'
-import { History, X, Sparkles } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { useEffect, useState } from "react"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
+import { useFlashbackStore } from "@/stores/useFlashbackStore"
+import useNotificationStore from "@/stores/useNotificationStore"
+import { mockDailyMemories, mockUser } from "@/lib/data"
+import { History, X, Sparkles } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 
 export function FlashbackModal() {
   const { isOpen, memoryId, notificationId, closeFlashback } =
@@ -40,7 +40,7 @@ export function FlashbackModal() {
         <div className="relative w-full aspect-[9/16] max-h-[80vh] flex flex-col bg-black/60">
           {/* Background Blur */}
           <div className="absolute inset-0 z-0 pointer-events-none">
-            {currentItem.type === 'video' ? (
+            {currentItem.type === "video" ? (
               <div className="w-full h-full bg-zinc-950" />
             ) : (
               <img
@@ -66,7 +66,7 @@ export function FlashbackModal() {
               </div>
               <div className="flex flex-col">
                 <span className="font-black text-sm tracking-tight text-white drop-shadow-md flex items-center gap-1.5">
-                  Viagem no Tempo{' '}
+                  Viagem no Tempo{" "}
                   <History className="w-3 h-3 text-purple-400" />
                 </span>
                 <span className="text-xs text-white/80 font-medium">
@@ -87,7 +87,7 @@ export function FlashbackModal() {
           {/* Main Content */}
           <div className="relative z-10 flex-1 flex flex-col items-center justify-center w-full p-4">
             <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black/50 backdrop-blur-sm group">
-              {currentItem.type === 'video' ? (
+              {currentItem.type === "video" ? (
                 <video
                   src={currentItem.url}
                   className="w-full h-full object-cover"
@@ -113,7 +113,7 @@ export function FlashbackModal() {
                   </span>
                   <span className="text-xs font-bold uppercase tracking-wider text-purple-100">
                     Há {currentItem.yearsAgo} ano
-                    {currentItem.yearsAgo > 1 ? 's' : ''}
+                    {currentItem.yearsAgo > 1 ? "s" : ""}
                   </span>
                 </div>
               </div>
@@ -142,8 +142,8 @@ export function FlashbackModal() {
                   onClick={() => setCurrentIndex(idx)}
                   className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
                     idx === currentIndex
-                      ? 'bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.8)] scale-y-110'
-                      : 'bg-white/20 hover:bg-white/40'
+                      ? "bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.8)] scale-y-110"
+                      : "bg-white/20 hover:bg-white/40"
                   }`}
                   aria-label={`Ir para o slide ${idx + 1}`}
                 />

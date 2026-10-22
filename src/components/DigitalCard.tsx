@@ -1,5 +1,5 @@
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
-import { CardContent } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { CardContent } from "@/components/ui/card"
 import {
   QrCode,
   CreditCard,
@@ -7,14 +7,14 @@ import {
   Wifi,
   Wallet,
   Fuel,
-} from 'lucide-react'
-import { ReactNode } from 'react'
-import { cn } from '@/lib/utils'
-import { mockCurrentUser } from '@/lib/data'
+} from "lucide-react"
+import { ReactNode } from "react"
+import { cn } from "@/lib/utils"
+import { mockCurrentUser } from "@/lib/data"
 
 interface DigitalCardProps {
   title?: string
-  type?: 'fit' | 'market' | 'recovery' | 'goplay' | 'fuel'
+  type?: "fit" | "market" | "recovery" | "goplay" | "fuel"
   balance?: string
   logoUrl?: string
   children?: ReactNode
@@ -22,37 +22,37 @@ interface DigitalCardProps {
 }
 
 export function DigitalCard({
-  title = 'Goplay Card',
-  type = 'goplay',
-  balance = 'R$ 1.250,00',
+  title = "Goplay Card",
+  type = "goplay",
+  balance = "R$ 1.250,00",
   children,
   triggerClassName,
 }: DigitalCardProps) {
   const getGradient = () => {
     switch (type) {
-      case 'fit':
-        return 'bg-gradient-to-br from-primary to-purple-900'
-      case 'market':
-        return 'bg-gradient-to-br from-emerald-600 to-teal-900'
-      case 'recovery':
-        return 'bg-gradient-to-br from-cyan-600 to-blue-900'
-      case 'fuel':
-        return 'bg-gradient-to-br from-orange-600 via-amber-500 to-yellow-600'
-      case 'goplay':
+      case "fit":
+        return "bg-gradient-to-br from-primary to-purple-900"
+      case "market":
+        return "bg-gradient-to-br from-emerald-600 to-teal-900"
+      case "recovery":
+        return "bg-gradient-to-br from-cyan-600 to-blue-900"
+      case "fuel":
+        return "bg-gradient-to-br from-orange-600 via-amber-500 to-yellow-600"
+      case "goplay":
       default:
-        return 'bg-gradient-to-br from-[#6D28D9] via-[#4C1D95] to-[#B45309]' // Deep Purple to Bronze/Gold
+        return "bg-gradient-to-br from-[#6D28D9] via-[#4C1D95] to-[#B45309]" // Deep Purple to Bronze/Gold
     }
   }
 
   const getIcon = () => {
     switch (type) {
-      case 'fit':
+      case "fit":
         return <CreditCard className="h-6 w-6 text-white/90" />
-      case 'market':
+      case "market":
         return <QrCode className="h-6 w-6 text-white/90" />
-      case 'recovery':
+      case "recovery":
         return <ShieldCheck className="h-6 w-6 text-white/90" />
-      case 'fuel':
+      case "fuel":
         return <Fuel className="h-6 w-6 text-white/90" />
       default:
         return <Wallet className="h-6 w-6 text-white/90" />
@@ -60,10 +60,10 @@ export function DigitalCard({
   }
 
   const getTitle = () => {
-    if (title !== 'Goplay Card') return title
+    if (title !== "Goplay Card") return title
     switch (type) {
-      case 'fuel':
-        return 'Goplay Fuel'
+      case "fuel":
+        return "Goplay Fuel"
       default:
         return title
     }
@@ -77,7 +77,7 @@ export function DigitalCard({
         ) : (
           <button
             className={cn(
-              'flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors',
+              "flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors",
               triggerClassName,
             )}
           >
@@ -90,7 +90,7 @@ export function DigitalCard({
         <div className="perspective-1000 group w-full max-w-[360px]">
           <div
             className={cn(
-              'w-full aspect-[1.586/1] rounded-2xl border border-white/10 shadow-2xl relative overflow-hidden backdrop-blur-xl transition-all duration-500 hover:rotate-y-3 hover:scale-105',
+              "w-full aspect-[1.586/1] rounded-2xl border border-white/10 shadow-2xl relative overflow-hidden backdrop-blur-xl transition-all duration-500 hover:rotate-y-3 hover:scale-105",
               getGradient(),
             )}
           >

@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
-import { LightningChallenge } from '@/lib/data'
-import { Zap, Timer, Trophy } from 'lucide-react'
-import { toast } from 'sonner'
-import useSoundStore from '@/stores/useSoundStore'
+import { useState, useEffect } from "react"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
+import { LightningChallenge } from "@/lib/data"
+import { Zap, Timer, Trophy } from "lucide-react"
+import { toast } from "sonner"
+import useSoundStore from "@/stores/useSoundStore"
 
 interface LightningChallengeOverlayProps {
   challenge: LightningChallenge | null
@@ -24,7 +24,7 @@ export function LightningChallengeOverlay({
   useEffect(() => {
     if (challenge) {
       setTimeLeft(challenge.duration)
-      playSound('notification_invite') // Reusing a sound for alert
+      playSound("notification_invite") // Reusing a sound for alert
       const timer = setInterval(() => {
         setTimeLeft((prev) => {
           if (prev <= 1) {
@@ -39,8 +39,8 @@ export function LightningChallengeOverlay({
   }, [challenge, playSound])
 
   const handleComplete = () => {
-    playSound('notification_points')
-    toast.success('Desafio Concluído!', {
+    playSound("notification_points")
+    toast.success("Desafio Concluído!", {
       description: `Você ganhou +${challenge?.reward} pontos!`,
       icon: <Trophy className="h-5 w-5 text-gold" />,
     })
@@ -76,7 +76,7 @@ export function LightningChallengeOverlay({
           <div className="flex items-center gap-2 mb-8 bg-black/40 px-4 py-2 rounded-full border border-white/10">
             <Timer className="h-4 w-4 text-red-400" />
             <span className="font-mono font-bold text-red-400">
-              00:{timeLeft.toString().padStart(2, '0')}
+              00:{timeLeft.toString().padStart(2, "0")}
             </span>
           </div>
 

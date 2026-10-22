@@ -1,28 +1,28 @@
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, Plus, Target, Award, TrendingUp } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { GoalCard } from '@/components/GoalCard'
-import { CreateGoalDrawer } from '@/components/CreateGoalDrawer'
-import { useGoalStore } from '@/stores/useGoalStore'
-import { StatsHistoryChart } from '@/components/StatsHistoryChart'
-import { mockStatsHistory } from '@/lib/data'
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, Plus, Target, Award, TrendingUp } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { GoalCard } from "@/components/GoalCard"
+import { CreateGoalDrawer } from "@/components/CreateGoalDrawer"
+import { useGoalStore } from "@/stores/useGoalStore"
+import { StatsHistoryChart } from "@/components/StatsHistoryChart"
+import { mockStatsHistory } from "@/lib/data"
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
   CardDescription,
-} from '@/components/ui/card'
+} from "@/components/ui/card"
 
 export default function GoalsDashboard() {
   const navigate = useNavigate()
   const { goals } = useGoalStore()
   const [isCreateOpen, setIsCreateOpen] = useState(false)
 
-  const activeGoals = goals.filter((g) => g.status === 'active')
-  const completedGoals = goals.filter((g) => g.status === 'completed')
+  const activeGoals = goals.filter((g) => g.status === "active")
+  const completedGoals = goals.filter((g) => g.status === "completed")
 
   return (
     <div className="min-h-screen bg-background pb-20 animate-fade-in">

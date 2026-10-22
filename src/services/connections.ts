@@ -1,5 +1,5 @@
-import { supabase } from '@/lib/supabase/client'
-import { pushNotificationService } from '@/services/push-notifications'
+import { supabase } from "@/lib/supabase/client"
+import { pushNotificationService } from "@/services/push-notifications"
 
 // Cast to any to query dynamically created public schema tables
 const db = supabase as any
@@ -28,10 +28,10 @@ export const connectionService = {
       }
 
       const { data, error } = await db
-        .from('user_follows')
-        .select('id')
-        .eq('follower_id', currentUserId)
-        .eq('following_id', targetUserId)
+        .from("user_follows")
+        .select("id")
+        .eq("follower_id", currentUserId)
+        .eq("following_id", targetUserId)
         .maybeSingle()
 
       if (error) return false
@@ -44,21 +44,22 @@ export const connectionService = {
   /**
    * Gets follower count and following count for a given user.
    */
-  async getCounts(
-    userId: string,
-  ): Promise<{ followers: number; following: number }> {
+  async getCounts(userId: string): Promise<{
+    followers: number
+    following: number
+  }> {
     try {
       if (!userId) return { followers: 0, following: 0 }
 
       const { count: followersCount } = await db
-        .from('user_follows')
-        .select('*', { count: 'exact', head: true })
-        .eq('following_id', userId)
+        .from("user_follows")
+        .select("*", { count: "exact", head: true })
+        .eq("following_id", userId)
 
       const { count: followingCount } = await db
-        .from('user_follows')
-        .select('*', { count: 'exact', head: true })
-        .eq('follower_id', userId)
+        .from("user_follows")
+        .select("*", { count: "exact", head: true })
+        .eq("follower_id", userId)
 
       return {
         followers: followersCount || 0,
@@ -72,37 +73,37 @@ export const connectionService = {
   /**
    * Follows a target user safely and returns new status.
    */
-  async follow(
-    followerId: string,
-    followingId: string,
-  ): Promise<{ success: boolean; error: Error | null }> {
+  async follow(followerId: string, followingId: string): Promise<{
+    success: boolean
+    error: Error | null
+  }> {
     try {
-      if (!followerId) throw new Error('Usuário não autenticado.')
+      if (!followerId) throw new Error("Usuário não autenticado.")
       if (followerId === followingId)
-        throw new Error('Você não pode seguir seu próprio perfil.')
+        throw new Error("Você não pode seguir seu próprio perfil.")
 
       const { error } = await db
-        .from('user_follows')
+        .from("user_follows")
         .insert({ follower_id: followerId, following_id: followingId })
 
-      if (error && !error.message.includes('duplicate')) {
+      if (error && !error.message.includes("duplicate")) {
         throw error
       }
 
       // Automatically register a notification for the followed user
       try {
         const { data: followerProf } = await db
-          .from('profiles')
-          .select('full_name')
-          .eq('id', followerId)
+          .from("profiles")
+          .select("full_name")
+          .eq("id", followerId)
           .maybeSingle()
 
-        await db.from('notifications').insert({
+        await db.from("notifications").insert({
           user_id: followingId,
           actor_id: followerId,
-          type: 'follow',
-          title: 'Novo Seguidor',
-          message: `${followerProf?.full_name || 'Um atleta'} começou a seguir você no Goplay!`,
+          type: "follow",
+          title: "Novo Seguidor",
+          message: `${followerProf?.full_name || "Um atleta"} começou a seguir você no Goplay!`,
           link: `/profile/${followerId}`,
         })
 
@@ -110,8 +111,8 @@ export const connectionService = {
         pushNotificationService
           .triggerServerPush({
             userId: followingId,
-            title: 'Novo Seguidor',
-            body: `${followerProf?.full_name || 'Um atleta'} começou a seguir você no Goplay!`,
+            title: "Novo Seguidor",
+            body: `${followerProf?.full_name || "Um atleta"} começou a seguir você no Goplay!`,
             url: `/profile/${followerId}`,
             tag: `follow-${followerId}`,
           })
@@ -132,18 +133,18 @@ export const connectionService = {
   /**
    * Unfollows a target user safely.
    */
-  async unfollow(
-    followerId: string,
-    followingId: string,
-  ): Promise<{ success: boolean; error: Error | null }> {
+  async unfollow(followerId: string, followingId: string): Promise<{
+    success: boolean
+    error: Error | null
+  }> {
     try {
-      if (!followerId) throw new Error('Usuário não autenticado.')
+      if (!followerId) throw new Error("Usuário não autenticado.")
 
       const { error } = await db
-        .from('user_follows')
+        .from("user_follows")
         .delete()
-        .eq('follower_id', followerId)
-        .eq('following_id', followingId)
+        .eq("follower_id", followerId)
+        .eq("following_id", followingId)
 
       if (error) throw error
       return { success: true, error: null }
@@ -161,22 +162,22 @@ export const connectionService = {
   async getFollowers(userId: string): Promise<FollowUserItem[]> {
     try {
       const { data, error } = await db
-        .from('user_follows')
-        .select('follower_id')
-        .eq('following_id', userId)
+        .from("user_follows")
+        .select("follower_id")
+        .eq("following_id", userId)
 
       if (error || !data || data.length === 0) return []
 
       const userIds = data.map((d: any) => d.follower_id)
       const { data: profiles } = await db
-        .from('profiles')
-        .select('id, full_name, avatar_url, account_type, sport, city, state')
-        .in('id', userIds)
+        .from("profiles")
+        .select("id, full_name, avatar_url, account_type, sport, city, state")
+        .in("id", userIds)
 
       return (
         profiles?.map((p: any) => ({
           id: p.id,
-          name: p.full_name || 'Usuário',
+          name: p.full_name || "Usuário",
           avatar:
             p.avatar_url ||
             `https://img.usecurling.com/ppl/thumbnail?seed=${p.id.slice(0, 4)}`,
@@ -197,22 +198,22 @@ export const connectionService = {
   async getFollowing(userId: string): Promise<FollowUserItem[]> {
     try {
       const { data, error } = await db
-        .from('user_follows')
-        .select('following_id')
-        .eq('follower_id', userId)
+        .from("user_follows")
+        .select("following_id")
+        .eq("follower_id", userId)
 
       if (error || !data || data.length === 0) return []
 
       const userIds = data.map((d: any) => d.following_id)
       const { data: profiles } = await db
-        .from('profiles')
-        .select('id, full_name, avatar_url, account_type, sport, city, state')
-        .in('id', userIds)
+        .from("profiles")
+        .select("id, full_name, avatar_url, account_type, sport, city, state")
+        .in("id", userIds)
 
       return (
         profiles?.map((p: any) => ({
           id: p.id,
-          name: p.full_name || 'Usuário',
+          name: p.full_name || "Usuário",
           avatar:
             p.avatar_url ||
             `https://img.usecurling.com/ppl/thumbnail?seed=${p.id.slice(0, 4)}`,

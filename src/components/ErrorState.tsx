@@ -1,7 +1,7 @@
-import { AlertTriangle, Home, RefreshCcw } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { useNavigate } from 'react-router-dom'
-import { cn } from '@/lib/utils'
+import { AlertTriangle, Home, RefreshCcw } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom"
+import { cn } from "@/lib/utils"
 
 interface ErrorStateProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string
@@ -14,12 +14,12 @@ interface ErrorStateProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function ErrorState({
   className,
-  title = 'Algo deu errado',
-  message = 'Não foi possível carregar as informações. Por favor, tente novamente ou verifique sua conexão.',
+  title = "Algo deu errado",
+  message = "Não foi possível carregar as informações. Por favor, tente novamente ou verifique sua conexão.",
   onRetry,
-  retryLabel = 'Tentar novamente',
+  retryLabel = "Tentar novamente",
   showHomeButton = true,
-  backPath = '/home',
+  backPath = "/home",
   ...props
 }: ErrorStateProps) {
   const navigate = useNavigate()
@@ -27,7 +27,7 @@ export function ErrorState({
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center min-h-[50vh] p-6 text-center animate-fade-in',
+        "flex flex-col items-center justify-center min-h-[50vh] p-6 text-center animate-fade-in",
         className,
       )}
       {...props}

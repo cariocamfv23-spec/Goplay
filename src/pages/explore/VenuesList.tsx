@@ -1,24 +1,24 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { Search, Filter, Trophy, Star, MapPin, X } from 'lucide-react'
-import { mockVenues } from '@/lib/data'
-import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
-import { cn } from '@/lib/utils'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Search, Filter, Trophy, Star, MapPin, X } from "lucide-react"
+import { mockVenues } from "@/lib/data"
+import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+import { cn } from "@/lib/utils"
 
 export default function VenuesList() {
   const navigate = useNavigate()
-  const [search, setSearch] = useState('')
-  const [activeFilter, setActiveFilter] = useState('todos')
+  const [search, setSearch] = useState("")
+  const [activeFilter, setActiveFilter] = useState("todos")
 
   const filters = [
-    { id: 'todos', label: 'Todos' },
-    { id: 'futebol', label: 'Futebol' },
-    { id: 'areia', label: 'Areia' },
-    { id: 'raquete', label: 'Raquete' },
-    { id: 'outros', label: 'Outros' },
+    { id: "todos", label: "Todos" },
+    { id: "futebol", label: "Futebol" },
+    { id: "areia", label: "Areia" },
+    { id: "raquete", label: "Raquete" },
+    { id: "outros", label: "Outros" },
   ]
 
   const filteredVenues = mockVenues.filter((venue) => {
@@ -30,24 +30,24 @@ export default function VenuesList() {
 
     // Category Filter
     let matchesFilter = true
-    if (activeFilter !== 'todos') {
+    if (activeFilter !== "todos") {
       const type = venue.type.toLowerCase()
-      if (activeFilter === 'futebol') {
-        matchesFilter = type.includes('futsal') || type.includes('society')
-      } else if (activeFilter === 'areia') {
+      if (activeFilter === "futebol") {
+        matchesFilter = type.includes("futsal") || type.includes("society")
+      } else if (activeFilter === "areia") {
         matchesFilter =
-          type.includes('areia') ||
-          type.includes('beach') ||
-          type.includes('futevôlei') ||
-          type.includes('vôlei')
-      } else if (activeFilter === 'raquete') {
+          type.includes("areia") ||
+          type.includes("beach") ||
+          type.includes("futevôlei") ||
+          type.includes("vôlei")
+      } else if (activeFilter === "raquete") {
         matchesFilter =
-          type.includes('tênis') ||
-          type.includes('padel') ||
-          type.includes('squash')
-      } else if (activeFilter === 'outros') {
+          type.includes("tênis") ||
+          type.includes("padel") ||
+          type.includes("squash")
+      } else if (activeFilter === "outros") {
         matchesFilter =
-          type.includes('basquete') || type.includes('poliesportiva')
+          type.includes("basquete") || type.includes("poliesportiva")
       }
     }
 
@@ -68,7 +68,7 @@ export default function VenuesList() {
             />
             {search && (
               <button
-                onClick={() => setSearch('')}
+                onClick={() => setSearch("")}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
                 <X className="h-3 w-3" />
@@ -84,13 +84,13 @@ export default function VenuesList() {
           {filters.map((filter) => (
             <Button
               key={filter.id}
-              variant={activeFilter === filter.id ? 'default' : 'secondary'}
+              variant={activeFilter === filter.id ? "default" : "secondary"}
               size="sm"
               className={cn(
-                'rounded-full px-4 shadow-sm transition-all',
+                "rounded-full px-4 shadow-sm transition-all",
                 activeFilter === filter.id
-                  ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                  : 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80",
               )}
               onClick={() => setActiveFilter(filter.id)}
             >
@@ -122,7 +122,7 @@ export default function VenuesList() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60" />
                 <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded-md text-xs font-bold shadow-sm flex items-center gap-1">
-                  <Star className="h-3 w-3 fill-gold text-gold" />{' '}
+                  <Star className="h-3 w-3 fill-gold text-gold" />{" "}
                   {venue.rating}
                 </div>
                 <div className="absolute bottom-2 left-2 bg-primary/90 backdrop-blur px-2 py-1 rounded-md text-xs font-bold text-white shadow-sm">
@@ -184,8 +184,8 @@ export default function VenuesList() {
             <Button
               variant="outline"
               onClick={() => {
-                setSearch('')
-                setActiveFilter('todos')
+                setSearch("")
+                setActiveFilter("todos")
               }}
               className="mt-2"
             >

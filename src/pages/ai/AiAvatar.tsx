@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   ArrowLeft,
   History,
@@ -14,8 +14,8 @@ import {
   Layers,
   ChevronRight,
   Target,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
+} from "lucide-react"
+import { cn } from "@/lib/utils"
 
 // Mock Data for demonstration
 const COMPARISON_DATA = {
@@ -27,37 +27,37 @@ const COMPARISON_DATA = {
     overall: 89,
   },
   history: {
-    '1m': {
+    "1m": {
       speed: 31.8,
       strength: 86,
       stamina: 90,
       technique: 84,
       overall: 87,
-      date: 'Mês passado',
+      date: "Mês passado",
     },
-    '3m': {
+    "3m": {
       speed: 30.2,
       strength: 82,
       stamina: 85,
       technique: 80,
       overall: 84,
-      date: '3 Meses atrás',
+      date: "3 Meses atrás",
     },
-    '6m': {
+    "6m": {
       speed: 28.5,
       strength: 75,
       stamina: 78,
       technique: 72,
       overall: 78,
-      date: '6 Meses atrás',
+      date: "6 Meses atrás",
     },
-    '1y': {
+    "1y": {
       speed: 25.0,
       strength: 65,
       stamina: 70,
       technique: 65,
       overall: 70,
-      date: '1 Ano atrás',
+      date: "1 Ano atrás",
     },
   },
 }
@@ -67,7 +67,7 @@ type Timeframe = keyof typeof COMPARISON_DATA.history
 export default function AiAvatar() {
   const navigate = useNavigate()
   const [compareMode, setCompareMode] = useState(false)
-  const [timeframe, setTimeframe] = useState<Timeframe>('3m')
+  const [timeframe, setTimeframe] = useState<Timeframe>("3m")
 
   const currentStats = COMPARISON_DATA.current
   const pastStats = COMPARISON_DATA.history[timeframe]
@@ -82,7 +82,7 @@ export default function AiAvatar() {
     icon: Icon,
     current,
     past,
-    unit = '',
+    unit = "",
   }: {
     label: string
     icon: any
@@ -149,10 +149,10 @@ export default function AiAvatar() {
           variant="ghost"
           size="icon"
           className={cn(
-            'rounded-full transition-all duration-300',
+            "rounded-full transition-all duration-300",
             compareMode
-              ? 'bg-primary text-white shadow-[0_0_15px_hsl(var(--primary)/0.5)]'
-              : 'text-zinc-400 hover:bg-white/10',
+              ? "bg-primary text-white shadow-[0_0_15px_hsl(var(--primary)/0.5)]"
+              : "text-zinc-400 hover:bg-white/10",
           )}
           onClick={() => setCompareMode(!compareMode)}
         >
@@ -169,10 +169,10 @@ export default function AiAvatar() {
           {/* Past Avatar (Ghost) */}
           <div
             className={cn(
-              'absolute inset-0 transition-all duration-700 ease-out transform',
+              "absolute inset-0 transition-all duration-700 ease-out transform",
               compareMode
-                ? 'opacity-60 scale-95 translate-x-[-15%] filter grayscale contrast-125 brightness-50'
-                : 'opacity-0 scale-90',
+                ? "opacity-60 scale-95 translate-x-[-15%] filter grayscale contrast-125 brightness-50"
+                : "opacity-0 scale-90",
             )}
           >
             <img
@@ -188,8 +188,8 @@ export default function AiAvatar() {
           {/* Current Avatar */}
           <div
             className={cn(
-              'relative z-10 w-full h-full transition-all duration-700 transform',
-              compareMode ? 'translate-x-[15%]' : 'translate-x-0',
+              "relative z-10 w-full h-full transition-all duration-700 transform",
+              compareMode ? "translate-x-[15%]" : "translate-x-0",
             )}
           >
             <img
@@ -232,15 +232,15 @@ export default function AiAvatar() {
               <span className="text-primary">{pastStats.date}</span>
             </div>
             <div className="flex justify-between gap-2">
-              {(['1m', '3m', '6m', '1y'] as Timeframe[]).map((t) => (
+              {(["1m", "3m", "6m", "1y"] as Timeframe[]).map((t) => (
                 <button
                   key={t}
                   onClick={() => setTimeframe(t)}
                   className={cn(
-                    'flex-1 py-2 rounded-lg text-xs font-bold transition-all',
+                    "flex-1 py-2 rounded-lg text-xs font-bold transition-all",
                     timeframe === t
-                      ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
-                      : 'bg-white/5 text-zinc-400 hover:bg-white/10',
+                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                      : "bg-white/5 text-zinc-400 hover:bg-white/10",
                   )}
                 >
                   {t.toUpperCase()}

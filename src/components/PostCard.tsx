@@ -1,6 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import {
   Heart,
   MessageCircle,
@@ -14,42 +14,42 @@ import {
   Disc3,
   ShieldAlert,
   UserX,
-} from 'lucide-react'
+} from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { ReportDialog } from '@/components/moderation/ReportDialog'
-import { BlockDialog } from '@/components/moderation/BlockDialog'
+} from "@/components/ui/dropdown-menu"
+import { ReportDialog } from "@/components/moderation/ReportDialog"
+import { BlockDialog } from "@/components/moderation/BlockDialog"
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@/components/ui/carousel'
-import { Badge } from '@/components/ui/badge'
-import { CommentsSheet } from './CommentsSheet'
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { cn } from '@/lib/utils'
-import useSoundStore from '@/stores/useSoundStore'
-import { useLikeInteraction } from '@/hooks/useLikeInteraction'
-import { PostDetailDialog } from '@/components/PostDetailDialog'
-import { NostalgiaFilter } from '@/components/NostalgiaFilter'
-import { DepthContainer } from '@/components/DepthContainer'
-import { FeedVideoPlayer } from '@/components/FeedVideoPlayer'
-import { NarrationConfig } from '@/lib/data'
-import { useAuth } from '@/hooks/use-auth'
-import { feedService } from '@/services/feed'
-import { toast } from 'sonner'
-import { Trash2 } from 'lucide-react'
+} from "@/components/ui/carousel"
+import { Badge } from "@/components/ui/badge"
+import { CommentsSheet } from "./CommentsSheet"
+import { useState, useEffect } from "react"
+import { Link } from "react-router-dom"
+import { cn } from "@/lib/utils"
+import useSoundStore from "@/stores/useSoundStore"
+import { useLikeInteraction } from "@/hooks/useLikeInteraction"
+import { PostDetailDialog } from "@/components/PostDetailDialog"
+import { NostalgiaFilter } from "@/components/NostalgiaFilter"
+import { DepthContainer } from "@/components/DepthContainer"
+import { FeedVideoPlayer } from "@/components/FeedVideoPlayer"
+import { NarrationConfig } from "@/lib/data"
+import { useAuth } from "@/hooks/use-auth"
+import { feedService } from "@/services/feed"
+import { toast } from "sonner"
+import { Trash2 } from "lucide-react"
 
 export interface SocialContext {
-  type: 'like' | 'comment' | 'repost'
+  type: "like" | "comment" | "repost"
   user: {
     id: string
     name: string
@@ -77,7 +77,7 @@ interface PostProps {
     videoUrl?: string
     audioUrl?: string | null
     musicLink?: {
-      platform: 'spotify' | 'youtube' | 'apple' | 'other'
+      platform: "spotify" | "youtube" | "apple" | "other"
       url: string
       title?: string
       artist?: string
@@ -115,7 +115,7 @@ export function PostCard({ post, onDeleted }: PostProps) {
   const [blockOpen, setBlockOpen] = useState(false)
 
   const isSupabasePost =
-    typeof post.id === 'string' &&
+    typeof post.id === "string" &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
       post.id,
     )
@@ -162,7 +162,7 @@ export function PostCard({ post, onDeleted }: PostProps) {
         setRealLikeCount((prev) =>
           !nextLiked ? prev + 1 : Math.max(0, prev - 1),
         )
-        toast.error('Erro ao curtir publicação.')
+        toast.error("Erro ao curtir publicação.")
       }
     } else {
       handleMockLike()
@@ -171,7 +171,7 @@ export function PostCard({ post, onDeleted }: PostProps) {
 
   const handleDeletePost = async () => {
     if (!isSupabasePost || !authUser?.id) return
-    if (!confirm('Deseja realmente excluir esta publicação?')) return
+    if (!confirm("Deseja realmente excluir esta publicação?")) return
 
     setIsDeleting(true)
     const { error } = await feedService.deletePost(
@@ -181,11 +181,11 @@ export function PostCard({ post, onDeleted }: PostProps) {
     setIsDeleting(false)
 
     if (error) {
-      toast.error('Não foi possível excluir a publicação.')
+      toast.error("Não foi possível excluir a publicação.")
       return
     }
 
-    toast.success('Publicação excluída com sucesso.')
+    toast.success("Publicação excluída com sucesso.")
     if (onDeleted) onDeleted(post.id)
   }
 
@@ -198,7 +198,7 @@ export function PostCard({ post, onDeleted }: PostProps) {
     setIsCool(!isCool)
     setCoolCount(isCool ? coolCount - 1 : coolCount + 1)
     if (!isCool) {
-      playSound('like_generic' as any)
+      playSound("like_generic" as any)
     }
   }
 
@@ -214,7 +214,7 @@ export function PostCard({ post, onDeleted }: PostProps) {
   // Prioritize `post.image` (if existing), then fall back to `post.media[0]`.
   // If an error occurred or neither exist, show a fallback placeholder.
   const primaryImage = imgError
-    ? 'https://img.usecurling.com/p/800/400?q=sports%20generic&color=gray'
+    ? "https://img.usecurling.com/p/800/400?q=sports%20generic&color=gray"
     : post.image || post.media?.[0]
 
   const renderSocialContext = () => {
@@ -226,16 +226,16 @@ export function PostCard({ post, onDeleted }: PostProps) {
     let icon = (
       <Heart className="w-3 h-3 text-muted-foreground fill-muted-foreground/30" />
     )
-    let text = 'curtiu isso'
+    let text = "curtiu isso"
 
-    if (type === 'comment') {
+    if (type === "comment") {
       icon = (
         <MessageCircle className="h-3 w-3 text-muted-foreground fill-muted-foreground/10" />
       )
-      text = 'comentou nisso'
-    } else if (type === 'repost') {
+      text = "comentou nisso"
+    } else if (type === "repost") {
       icon = <Share2 className="h-3 w-3 text-muted-foreground" />
-      text = 'compartilhou isso'
+      text = "compartilhou isso"
     }
 
     return (
@@ -247,7 +247,7 @@ export function PostCard({ post, onDeleted }: PostProps) {
             className="font-semibold hover:text-foreground hover:underline transition-colors"
           >
             {user.name}
-          </Link>{' '}
+          </Link>{" "}
           {text}
         </span>
       </div>
@@ -256,7 +256,7 @@ export function PostCard({ post, onDeleted }: PostProps) {
 
   const renderContent = () => {
     switch (post.type) {
-      case 'video':
+      case "video":
         if (post.videoUrl) {
           return (
             <div className="relative mb-3 rounded-xl overflow-hidden shadow-sm">
@@ -295,7 +295,7 @@ export function PostCard({ post, onDeleted }: PostProps) {
                 <div className="h-12 w-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/50 group-hover:scale-110 transition-transform shadow-xl translate-z-30">
                   <div
                     className="h-5 w-5 bg-white ml-1"
-                    style={{ clipPath: 'polygon(0 0, 100% 50%, 0 100%)' }}
+                    style={{ clipPath: "polygon(0 0, 100% 50%, 0 100%)" }}
                   />
                 </div>
               </div>
@@ -306,7 +306,7 @@ export function PostCard({ post, onDeleted }: PostProps) {
           </DepthContainer>
         )
 
-      case 'carousel':
+      case "carousel":
         return (
           <div className="mb-3">
             <Carousel className="w-full">
@@ -337,7 +337,7 @@ export function PostCard({ post, onDeleted }: PostProps) {
             </Carousel>
           </div>
         )
-      case 'article':
+      case "article":
         return (
           <DepthContainer
             className="mb-3 border border-border rounded-xl overflow-hidden bg-secondary/20 hover:bg-secondary/30 transition-colors cursor-pointer"
@@ -396,14 +396,14 @@ export function PostCard({ post, onDeleted }: PostProps) {
       <Card className="border-none shadow-sm rounded-2xl overflow-visible bg-card mb-4 animate-fade-in hover:shadow-md transition-shadow duration-300">
         {renderSocialContext()}
         <CardHeader className="flex flex-row items-center p-4 pb-2 space-y-0 gap-3">
-          <Link to={`/profile/${post.user.id || 'me'}`}>
+          <Link to={`/profile/${post.user.id || "me"}`}>
             <Avatar className="h-10 w-10 border border-border cursor-pointer hover:border-primary transition-colors depth-element-hover">
               <AvatarImage src={post.user.avatar} />
               <AvatarFallback>{post.user.name.substring(0, 2)}</AvatarFallback>
             </Avatar>
           </Link>
           <div className="flex-1 cursor-pointer">
-            <Link to={`/profile/${post.user.id || 'me'}`}>
+            <Link to={`/profile/${post.user.id || "me"}`}>
               <h3 className="text-sm font-semibold hover:text-primary transition-colors">
                 {post.user.name}
               </h3>
@@ -449,7 +449,7 @@ export function PostCard({ post, onDeleted }: PostProps) {
                     navigator.clipboard?.writeText(
                       `${window.location.origin}/post/${post.id}`,
                     )
-                    toast.success('Link copiado para a área de transferência!')
+                    toast.success("Link copiado para a área de transferência!")
                   }}
                   className="cursor-pointer"
                 >
@@ -551,7 +551,7 @@ export function PostCard({ post, onDeleted }: PostProps) {
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
                       <p className="text-xs font-semibold text-foreground truncate">
-                        {post.musicLink.title || 'Música Compartilhada'}
+                        {post.musicLink.title || "Música Compartilhada"}
                       </p>
                       <Badge
                         variant="secondary"
@@ -594,17 +594,17 @@ export function PostCard({ post, onDeleted }: PostProps) {
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  'flex flex-col items-center gap-0 h-auto py-1 px-2 transition-colors active:scale-90',
+                  "flex flex-col items-center gap-0 h-auto py-1 px-2 transition-colors active:scale-90",
                   effectiveLiked
-                    ? 'text-red-500'
-                    : 'text-muted-foreground hover:text-red-400',
+                    ? "text-red-500"
+                    : "text-muted-foreground hover:text-red-400",
                 )}
                 onClick={onLikeClick}
               >
                 <Heart
                   className={cn(
-                    'h-5 w-5 transition-all',
-                    effectiveLiked ? 'fill-current scale-110' : '',
+                    "h-5 w-5 transition-all",
+                    effectiveLiked ? "fill-current scale-110" : "",
                   )}
                 />
                 <span className="text-[10px] font-medium">
@@ -627,10 +627,10 @@ export function PostCard({ post, onDeleted }: PostProps) {
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  'flex flex-col items-center gap-0 h-auto py-1 px-2 transition-colors active:scale-90',
+                  "flex flex-col items-center gap-0 h-auto py-1 px-2 transition-colors active:scale-90",
                   isCool
-                    ? 'text-orange-500'
-                    : 'text-muted-foreground hover:text-orange-400',
+                    ? "text-orange-500"
+                    : "text-muted-foreground hover:text-orange-400",
                 )}
                 onClick={handleCool}
               >

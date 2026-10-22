@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { supabase } from '@/lib/supabase/client'
-import { useAuthStore } from '@/stores/useAuthStore'
-import { profileService, type ProfileRow } from '@/services/profiles'
-import { biometricService } from '@/services/biometrics'
-import { PageLoader } from '@/components/PageLoader'
-import { toast } from 'sonner'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { AlertCircle, ArrowRight } from 'lucide-react'
-import { SportsWallpaper } from '@/components/SportsWallpaper'
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { supabase } from "@/lib/supabase/client"
+import { useAuthStore } from "@/stores/useAuthStore"
+import { profileService, type ProfileRow } from "@/services/profiles"
+import { biometricService } from "@/services/biometrics"
+import { PageLoader } from "@/components/PageLoader"
+import { toast } from "sonner"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { AlertCircle, ArrowRight } from "lucide-react"
+import { SportsWallpaper } from "@/components/SportsWallpaper"
 
 export default function AuthCallback() {
   const navigate = useNavigate()
@@ -21,38 +21,38 @@ export default function AuthCallback() {
     const handleCallback = async () => {
       // 1. Check for error parameters in URL query or hash fragment
       const searchParams = new URLSearchParams(window.location.search)
-      const hash = window.location.hash.startsWith('#')
+      const hash = window.location.hash.startsWith("#")
         ? window.location.hash.substring(1)
         : window.location.hash
       const hashParams = new URLSearchParams(hash)
 
       const error =
-        searchParams.get('error') ||
-        hashParams.get('error') ||
-        searchParams.get('error_code') ||
-        hashParams.get('error_code')
+        searchParams.get("error") ||
+        hashParams.get("error") ||
+        searchParams.get("error_code") ||
+        hashParams.get("error_code")
 
       const errorDescription =
-        searchParams.get('error_description') ||
-        hashParams.get('error_description')
+        searchParams.get("error_description") ||
+        hashParams.get("error_description")
 
       if (error) {
         let userFriendlyError =
-          'Não foi possível concluir o login com o Google.'
+          "Não foi possível concluir o login com o Google."
         if (
-          error === 'access_denied' ||
-          errorDescription?.includes('access_denied')
+          error === "access_denied" ||
+          errorDescription?.includes("access_denied")
         ) {
-          userFriendlyError = 'Login cancelado por você no Google.'
+          userFriendlyError = "Login cancelado por você no Google."
         } else if (
-          errorDescription?.includes('provider is not enabled') ||
-          errorDescription?.includes('Unsupported provider')
+          errorDescription?.includes("provider is not enabled") ||
+          errorDescription?.includes("Unsupported provider")
         ) {
           userFriendlyError =
-            'O provedor Google ainda não foi ativado nas configurações do Supabase.'
+            "O provedor Google ainda não foi ativado nas configurações do Supabase."
         } else if (errorDescription) {
           userFriendlyError = decodeURIComponent(
-            errorDescription.replace(/\+/g, ' '),
+            errorDescription.replace(/\+/g, " "),
           )
         }
 
@@ -64,17 +64,17 @@ export default function AuthCallback() {
       }
 
       // Determine where the user intended to go
-      let targetPath = '/home'
-      const redirectQuery = searchParams.get('redirect')
-      const storedRedirect = localStorage.getItem('goplay_oauth_redirect')
+      let targetPath = "/home"
+      const redirectQuery = searchParams.get("redirect")
+      const storedRedirect = localStorage.getItem("goplay_oauth_redirect")
 
-      if (redirectQuery && redirectQuery.startsWith('/')) {
+      if (redirectQuery && redirectQuery.startsWith("/")) {
         targetPath = redirectQuery
-      } else if (storedRedirect && storedRedirect.startsWith('/')) {
+      } else if (storedRedirect && storedRedirect.startsWith("/")) {
         targetPath = storedRedirect
       }
       try {
-        localStorage.removeItem('goplay_oauth_redirect')
+        localStorage.removeItem("goplay_oauth_redirect")
       } catch {
         // ignore
       }
@@ -98,7 +98,7 @@ export default function AuthCallback() {
           if (!retryData.session?.user) {
             if (!isCancelled) {
               setErrorMessage(
-                'Sessão não identificada no retorno da autenticação.',
+                "Sessão não identificada no retorno da autenticação.",
               )
             }
             return
@@ -108,7 +108,7 @@ export default function AuthCallback() {
         const activeSession = (await supabase.auth.getSession()).data.session
         if (!activeSession?.user) {
           if (!isCancelled) {
-            setErrorMessage('Sessão expirada ou inválida.')
+            setErrorMessage("Sessão expirada ou inválida.")
           }
           return
         }
@@ -135,17 +135,17 @@ export default function AuthCallback() {
           const fullName =
             meta.full_name ||
             meta.name ||
-            user.email?.split('@')[0] ||
-            'Atleta Goplay'
+            user.email?.split("@")[0] ||
+            "Atleta Goplay"
           const avatarUrl = meta.avatar_url || meta.picture || null
-          const rawAccountType = (meta.account_type || 'athlete').toLowerCase()
+          const rawAccountType = (meta.account_type || "athlete").toLowerCase()
           const accountType =
-            rawAccountType === 'club' || rawAccountType === 'coach'
+            rawAccountType === "club" || rawAccountType === "coach"
               ? rawAccountType
-              : 'athlete'
+              : "athlete"
 
           const { data: newProfile } = await supabase
-            .from('profiles')
+            .from("profiles")
             .insert({
               id: user.id,
               full_name: fullName,
@@ -166,16 +166,16 @@ export default function AuthCallback() {
 
         // 5. Clean up OAuth URL fragment (#access_token=...) and query parameters from history
         if (window.history.replaceState) {
-          window.history.replaceState(null, '', window.location.pathname)
+          window.history.replaceState(null, "", window.location.pathname)
         }
 
-        toast.success('Login com Google concluído com sucesso!')
+        toast.success("Login com Google concluído com sucesso!")
 
         // 6. Navigation: do a full page reload / navigation (window.location.replace)
         // This ensures the entire application, CSS stylesheets, layout shell, fonts, and theme tokens
         // bootstrap completely from zero, avoiding SPA style hydration issues after returning from Google OAuth.
         const destination =
-          isFirstTimeUser && targetPath === '/home' ? '/onboarding' : targetPath
+          isFirstTimeUser && targetPath === "/home" ? "/onboarding" : targetPath
 
         // If replaceState is available, clean up the address bar first before reloading to clean destination
         try {
@@ -185,9 +185,9 @@ export default function AuthCallback() {
         }
       } catch (err: any) {
         if (!isCancelled) {
-          console.error('Erro no callback OAuth:', err)
+          console.error("Erro no callback OAuth:", err)
           const msg =
-            err?.message || 'Erro ao processar autenticação com Google.'
+            err?.message || "Erro ao processar autenticação com Google."
           setErrorMessage(msg)
           toast.error(msg)
         }
@@ -217,7 +217,7 @@ export default function AuthCallback() {
               </p>
               <div className="pt-2 flex flex-col gap-2">
                 <Button
-                  onClick={() => navigate('/login', { replace: true })}
+                  onClick={() => navigate("/login", { replace: true })}
                   className="w-full font-bold"
                 >
                   Voltar ao Login
@@ -225,7 +225,7 @@ export default function AuthCallback() {
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => navigate('/', { replace: true })}
+                  onClick={() => navigate("/", { replace: true })}
                   className="w-full"
                 >
                   Página Inicial

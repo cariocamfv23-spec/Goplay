@@ -1,9 +1,9 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import { toast } from 'sonner'
-import { NarrationConfig } from '@/lib/data'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
+import { toast } from "sonner"
+import { NarrationConfig } from "@/lib/data"
 
-type SoundPack = 'varzea' | 'arena' | 'street'
+type SoundPack = "varzea" | "arena" | "street"
 
 interface SoundSettings {
   masterEnabled: boolean
@@ -21,25 +21,12 @@ interface SoundStore extends SoundSettings {
   setNotificationSoundsEnabled: (enabled: boolean) => void
   playSound: (category: SoundCategory, context?: string) => void
   playNarration: (config: NarrationConfig) => void
-  playTone: (type: 'weather' | 'engagement' | 'system') => void
+  playTone: (type: "weather" | "engagement" | "system") => void
   initAudio: () => void
   isPlayingNarration: boolean
 }
 
-type SoundCategory =
-  | 'like_football'
-  | 'like_basketball'
-  | 'like_volleyball'
-  | 'like_futsal'
-  | 'like_tennis'
-  | 'like_workout'
-  | 'like_partner'
-  | 'like_generic'
-  | 'notification_invite'
-  | 'notification_checkin'
-  | 'notification_uber'
-  | 'notification_points'
-  | 'notification_store'
+type SoundCategory = "like_football" | "like_basketball" | "like_volleyball" | "like_futsal" | "like_tennis" | "like_workout" | "like_partner" | "like_generic" | "notification_invite" | "notification_checkin" | "notification_uber" | "notification_points" | "notification_store"
 
 let audioCtx: AudioContext | null = null
 const getAudioCtx = () => {
@@ -55,7 +42,7 @@ const useSoundStore = create<SoundStore>()(
       masterEnabled: true,
       volume: 0.8,
       silentInMatches: false,
-      activePack: 'varzea',
+      activePack: "varzea",
       notificationSoundsEnabled: true,
       isPlayingNarration: false,
 
@@ -69,11 +56,11 @@ const useSoundStore = create<SoundStore>()(
       initAudio: () => {
         try {
           const ctx = getAudioCtx()
-          if (ctx.state === 'suspended') {
+          if (ctx.state === "suspended") {
             ctx.resume().catch(() => {})
           }
         } catch (e) {
-          console.warn('AudioContext init error:', e)
+          console.warn("AudioContext init error:", e)
         }
       },
 
@@ -83,7 +70,7 @@ const useSoundStore = create<SoundStore>()(
 
         try {
           const ctx = getAudioCtx()
-          if (ctx.state === 'suspended') {
+          if (ctx.state === "suspended") {
             ctx.resume().catch(() => {})
           }
 
@@ -114,24 +101,24 @@ const useSoundStore = create<SoundStore>()(
             osc.stop(startTime + duration)
           }
 
-          if (type === 'engagement') {
+          if (type === "engagement") {
             // Subtle, professional "ping" or "chime" sound
-            playOsc(1046.5, 'sine', t, 0.6, 0.3)
-            playOsc(1318.51, 'sine', t + 0.05, 0.8, 0.2)
-          } else if (type === 'system') {
+            playOsc(1046.5, "sine", t, 0.6, 0.3)
+            playOsc(1318.51, "sine", t + 0.05, 0.8, 0.2)
+          } else if (type === "system") {
             // Neutral informative sound
-            playOsc(880, 'triangle', t, 0.3, 0.2)
-            playOsc(880, 'triangle', t + 0.15, 0.3, 0.2)
-          } else if (type === 'weather') {
+            playOsc(880, "triangle", t, 0.3, 0.2)
+            playOsc(880, "triangle", t + 0.15, 0.3, 0.2)
+          } else if (type === "weather") {
             // Distinct, attention-grabbing alert sound for Civil Defense
             for (let i = 0; i < 3; i++) {
               const time = t + i * 0.3
-              playOsc(880, 'square', time, 0.15, 0.15)
-              playOsc(932.33, 'square', time + 0.15, 0.15, 0.15)
+              playOsc(880, "square", time, 0.15, 0.15)
+              playOsc(932.33, "square", time + 0.15, 0.15, 0.15)
             }
           }
         } catch (e) {
-          console.warn('AudioContext error:', e)
+          console.warn("AudioContext error:", e)
         }
       },
 
@@ -140,18 +127,18 @@ const useSoundStore = create<SoundStore>()(
 
         if (!masterEnabled) return
 
-        if ('speechSynthesis' in window) {
+        if ("speechSynthesis" in window) {
           const synth = window.speechSynthesis
-          let textToSpeak = ''
+          let textToSpeak = ""
           let pitch = 1
           let rate = 1.2
 
           switch (category) {
-            case 'like_football': {
+            case "like_football": {
               const footballSounds = [
-                'Que isso hein?!',
-                'Pega essa maçã!',
-                'Humildade passa longe!',
+                "Que isso hein?!",
+                "Pega essa maçã!",
+                "Humildade passa longe!",
               ]
               textToSpeak =
                 footballSounds[
@@ -160,47 +147,47 @@ const useSoundStore = create<SoundStore>()(
               pitch = 0.8
               break
             }
-            case 'like_basketball':
-              textToSpeak = 'Cesta perfeita!'
+            case "like_basketball":
+              textToSpeak = "Cesta perfeita!"
               rate = 1.5
               break
-            case 'like_volleyball':
-              textToSpeak = 'Bateu bonito!'
+            case "like_volleyball":
+              textToSpeak = "Bateu bonito!"
               break
-            case 'like_futsal':
-              textToSpeak = 'Só tapa!'
+            case "like_futsal":
+              textToSpeak = "Só tapa!"
               rate = 1.3
               break
-            case 'like_tennis':
-              textToSpeak = 'Na linha!'
+            case "like_tennis":
+              textToSpeak = "Na linha!"
               break
-            case 'like_workout':
-              textToSpeak = 'Brabo demais!'
+            case "like_workout":
+              textToSpeak = "Brabo demais!"
               pitch = 0.5
               break
-            case 'like_partner':
-              textToSpeak = 'Parceiro!'
+            case "like_partner":
+              textToSpeak = "Parceiro!"
               pitch = 1.2
               break
-            case 'notification_invite':
-              textToSpeak = 'Convocado!'
+            case "notification_invite":
+              textToSpeak = "Convocado!"
               break
-            case 'notification_checkin':
-              textToSpeak = 'Presença confirmada!'
+            case "notification_checkin":
+              textToSpeak = "Presença confirmada!"
               break
-            case 'notification_uber': {
-              const uberSounds = ['Hoje é só chegar!', 'Transporte garantido!']
+            case "notification_uber": {
+              const uberSounds = ["Hoje é só chegar!", "Transporte garantido!"]
               textToSpeak =
                 uberSounds[Math.floor(Math.random() * uberSounds.length)]
               break
             }
-            case 'notification_points':
-              textToSpeak = 'Pontos Goplay!'
+            case "notification_points":
+              textToSpeak = "Pontos Goplay!"
               pitch = 1.5
               rate = 2
               break
-            case 'notification_store':
-              textToSpeak = 'Conquista desbloqueada!'
+            case "notification_store":
+              textToSpeak = "Conquista desbloqueada!"
               break
             default:
               break
@@ -213,7 +200,7 @@ const useSoundStore = create<SoundStore>()(
             utterance.rate = rate
             utterance.pitch = pitch
             const voices = synth.getVoices()
-            const ptVoice = voices.find((v) => v.lang.includes('pt'))
+            const ptVoice = voices.find((v) => v.lang.includes("pt"))
             if (ptVoice) utterance.voice = ptVoice
             synth.speak(utterance)
           }
@@ -224,7 +211,7 @@ const useSoundStore = create<SoundStore>()(
         const { masterEnabled } = get()
         if (!masterEnabled) return
 
-        if ('speechSynthesis' in window) {
+        if ("speechSynthesis" in window) {
           const synth = window.speechSynthesis
           synth.cancel()
 
@@ -232,46 +219,46 @@ const useSoundStore = create<SoundStore>()(
           utterance.volume = config.volume
 
           switch (config.style) {
-            case 'varzea':
+            case "varzea":
               utterance.pitch = 0.8
               utterance.rate = 1.4
               break
-            case 'professional':
+            case "professional":
               utterance.pitch = 1.2
               utterance.rate = 1.1
               break
-            case 'comedy':
+            case "comedy":
               utterance.pitch = 1.5
               utterance.rate = 1.6
               break
-            case 'futuristic':
+            case "futuristic":
               utterance.pitch = 0.6
               utterance.rate = 0.9
               break
-            case 'influencer':
+            case "influencer":
               utterance.pitch = 1.3
               utterance.rate = 1.3
               break
-            case 'tactical':
+            case "tactical":
               utterance.pitch = 0.9
               utterance.rate = 0.9
               break
-            case 'emotion':
+            case "emotion":
               utterance.pitch = 1.1
               utterance.rate = 1.0
               break
-            case 'gringo':
+            case "gringo":
               utterance.pitch = 1.0
               utterance.rate = 1.0
-              utterance.lang = 'en-US'
+              utterance.lang = "en-US"
               break
           }
 
           const voices = synth.getVoices()
-          let targetVoice = voices.find((v) => v.lang.includes('pt'))
+          let targetVoice = voices.find((v) => v.lang.includes("pt"))
 
-          if (config.style === 'gringo') {
-            const enVoice = voices.find((v) => v.lang.includes('en'))
+          if (config.style === "gringo") {
+            const enVoice = voices.find((v) => v.lang.includes("en"))
             if (enVoice) targetVoice = enVoice
           }
 
@@ -283,12 +270,12 @@ const useSoundStore = create<SoundStore>()(
 
           synth.speak(utterance)
         } else {
-          toast.error('Navegador sem suporte a áudio.')
+          toast.error("Navegador sem suporte a áudio.")
         }
       },
     }),
     {
-      name: 'goplay-sound-storage',
+      name: "goplay-sound-storage",
     },
   ),
 )

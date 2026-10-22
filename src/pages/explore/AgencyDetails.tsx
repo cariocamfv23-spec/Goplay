@@ -1,5 +1,5 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { mockAgencies } from '@/lib/data'
+import { useParams, useNavigate } from "react-router-dom"
+import { mockAgencies } from "@/lib/data"
 import {
   ArrowLeft,
   MapPin,
@@ -11,10 +11,10 @@ import {
   Star,
   Plane,
   MessageCircle,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { toast } from 'sonner'
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { toast } from "sonner"
 
 export default function AgencyDetails() {
   const { id } = useParams()
@@ -32,20 +32,20 @@ export default function AgencyDetails() {
     )
   }
 
-  const handleContact = (type: 'website' | 'email' | 'phone' | 'whatsapp') => {
+  const handleContact = (type: "website" | "email" | "phone" | "whatsapp") => {
     switch (type) {
-      case 'website':
-        window.open(agency.website, '_blank')
+      case "website":
+        window.open(agency.website, "_blank")
         break
-      case 'email':
+      case "email":
         window.location.href = `mailto:${agency.email}`
         break
-      case 'phone':
+      case "phone":
         window.location.href = `tel:${agency.phone}`
         break
-      case 'whatsapp':
+      case "whatsapp":
         // Mock whatsapp link
-        toast.success('Redirecionando para o WhatsApp...')
+        toast.success("Redirecionando para o WhatsApp...")
         break
     }
   }
@@ -146,7 +146,7 @@ export default function AgencyDetails() {
               <Button
                 variant="outline"
                 className="justify-start h-12 gap-3"
-                onClick={() => handleContact('website')}
+                onClick={() => handleContact("website")}
               >
                 <ExternalLink className="h-5 w-5 text-muted-foreground" />
                 <div className="flex flex-col items-start">
@@ -160,7 +160,7 @@ export default function AgencyDetails() {
                 <Button
                   variant="outline"
                   className="justify-start h-12 gap-3"
-                  onClick={() => handleContact('email')}
+                  onClick={() => handleContact("email")}
                 >
                   <Mail className="h-5 w-5 text-muted-foreground" />
                   <div className="flex flex-col items-start">
@@ -173,7 +173,7 @@ export default function AgencyDetails() {
                 <Button
                   variant="outline"
                   className="justify-start h-12 gap-3"
-                  onClick={() => handleContact('phone')}
+                  onClick={() => handleContact("phone")}
                 >
                   <Phone className="h-5 w-5 text-muted-foreground" />
                   <div className="flex flex-col items-start">
@@ -194,7 +194,7 @@ export default function AgencyDetails() {
         <Button
           size="lg"
           className="w-full font-bold h-12 text-base rounded-xl bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-900/20"
-          onClick={() => handleContact('whatsapp')}
+          onClick={() => handleContact("whatsapp")}
         >
           <MessageCircle className="mr-2 h-5 w-5" />
           Falar no WhatsApp

@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Input } from '@/components/ui/input'
+import { useState, useEffect, useCallback } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Input } from "@/components/ui/input"
 import {
   Search,
   Filter,
@@ -11,17 +11,17 @@ import {
   Users,
   Loader2,
   MapPin,
-} from 'lucide-react'
-import { mockTalents, ProfileData } from '@/lib/data'
-import { Badge } from '@/components/ui/badge'
-import { TalentUnlockDrawer } from '@/components/TalentUnlockDrawer'
-import { searchService } from '@/services/search'
-import type { PublicProfileItem } from '@/services/profiles'
-import { useNavigate } from 'react-router-dom'
+} from "lucide-react"
+import { mockTalents, ProfileData } from "@/lib/data"
+import { Badge } from "@/components/ui/badge"
+import { TalentUnlockDrawer } from "@/components/TalentUnlockDrawer"
+import { searchService } from "@/services/search"
+import type { PublicProfileItem } from "@/services/profiles"
+import { useNavigate } from "react-router-dom"
 
 export default function TalentsList() {
   const navigate = useNavigate()
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("")
   const [selectedTalent, setSelectedTalent] = useState<ProfileData | null>(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
@@ -34,7 +34,7 @@ export default function TalentsList() {
     try {
       const { data } = await searchService.searchProfiles({
         query: search,
-        accountType: 'all',
+        accountType: "all",
         pageSize: 20,
       })
       setRealProfiles(data)
@@ -54,8 +54,8 @@ export default function TalentsList() {
 
   // Adapt real profiles into displayable cards
   const realTalentCards: ProfileData[] = realProfiles.map((p) => {
-    const name = p.full_name || 'Usuário Goplay'
-    const username = name.toLowerCase().replace(/\s+/g, '')
+    const name = p.full_name || "Usuário Goplay"
+    const username = name.toLowerCase().replace(/\s+/g, "")
     return {
       id: p.id,
       name,
@@ -63,13 +63,13 @@ export default function TalentsList() {
       avatar:
         p.avatar_url ||
         `https://img.usecurling.com/ppl/medium?seed=${p.id.slice(0, 4)}`,
-      cover: 'https://img.usecurling.com/p/800/300?q=sports%20stadium',
+      cover: "https://img.usecurling.com/p/800/300?q=sports%20stadium",
       sport:
-        p.sport || (p.account_type === 'club' ? 'Clube Esportivo' : 'Atleta'),
+        p.sport || (p.account_type === "club" ? "Clube Esportivo" : "Atleta"),
       position:
-        p.position || (p.account_type === 'coach' ? 'Treinador' : 'Goplay'),
-      location: [p.city, p.state].filter(Boolean).join(', ') || 'Brasil',
-      bio: p.bio || '',
+        p.position || (p.account_type === "coach" ? "Treinador" : "Goplay"),
+      location: [p.city, p.state].filter(Boolean).join(", ") || "Brasil",
+      bio: p.bio || "",
       type: p.account_type,
       rating: 4.9,
       stats: { matches: 0, mvp: 0 },
@@ -192,8 +192,8 @@ export default function TalentsList() {
                           </div>
                         </div>
                         <p className="text-xs text-muted-foreground mt-1">
-                          {talent.position}{' '}
-                          {talent.age ? `• ${talent.age} anos` : ''}
+                          {talent.position}{" "}
+                          {talent.age ? `• ${talent.age} anos` : ""}
                         </p>
                         <div className="flex gap-2 mt-2 text-[10px] text-muted-foreground">
                           {talent.height && (
@@ -213,7 +213,7 @@ export default function TalentsList() {
                         <div className="text-[10px]">
                           <span className="font-bold">
                             {talent.stats?.matches || 0}
-                          </span>{' '}
+                          </span>{" "}
                           Jogos
                         </div>
                         <Button

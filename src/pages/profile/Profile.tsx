@@ -1,25 +1,25 @@
-import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { mockCurrentUser, mockProfiles } from '@/lib/data'
-import AthleteView from './AthleteView'
-import PhotographerView from './PhotographerView'
-import DriverView from './DriverView'
-import ClubView from './ClubView'
-import CoachView from './CoachView'
-import ScoutView from './ScoutView'
-import SponsorView from './SponsorView'
-import { BirthdayCelebration } from './BirthdayCelebration'
-import { useAuth } from '@/hooks/use-auth'
-import { profileService, type ProfileRow } from '@/services/profiles'
-import { analyticsService } from '@/services/analytics'
-import { ShareDialog } from '@/components/ShareDialog'
-import { Loader2, Share2, LogIn } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { useState, useEffect } from "react"
+import { useParams } from "react-router-dom"
+import { mockCurrentUser, mockProfiles } from "@/lib/data"
+import AthleteView from "./AthleteView"
+import PhotographerView from "./PhotographerView"
+import DriverView from "./DriverView"
+import ClubView from "./ClubView"
+import CoachView from "./CoachView"
+import ScoutView from "./ScoutView"
+import SponsorView from "./SponsorView"
+import { BirthdayCelebration } from "./BirthdayCelebration"
+import { useAuth } from "@/hooks/use-auth"
+import { profileService, type ProfileRow } from "@/services/profiles"
+import { analyticsService } from "@/services/analytics"
+import { ShareDialog } from "@/components/ShareDialog"
+import { Loader2, Share2, LogIn } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function Profile() {
   const { id } = useParams()
   const { user: authUser, profile: myLiveProfile } = useAuth()
-  const isMe = !id || id === 'me' || (authUser?.id && id === authUser.id)
+  const isMe = !id || id === "me" || (authUser?.id && id === authUser.id)
 
   const [loading, setLoading] = useState(false)
   const [remoteProfile, setRemoteProfile] = useState<ProfileRow | null>(null)
@@ -34,7 +34,7 @@ export default function Profile() {
       return
     }
 
-    if (id && id !== 'me') {
+    if (id && id !== "me") {
       // Check if id looks like a UUID (Supabase profile)
       const isUuid =
         /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
@@ -103,24 +103,24 @@ export default function Profile() {
         ...(fallbackMock || mockCurrentUser),
         id: activeProfileRow.id,
         name:
-          activeProfileRow.full_name || fallbackMock?.name || 'Usuário Goplay',
+          activeProfileRow.full_name || fallbackMock?.name || "Usuário Goplay",
         avatar:
           activeProfileRow.avatar_url ||
           `https://img.usecurling.com/ppl/medium?seed=${activeProfileRow.id.slice(0, 4)}`,
-        sport: activeProfileRow.sport || fallbackMock?.sport || 'Esporte',
+        sport: activeProfileRow.sport || fallbackMock?.sport || "Esporte",
         position:
-          activeProfileRow.position || fallbackMock?.position || 'Goplay',
+          activeProfileRow.position || fallbackMock?.position || "Goplay",
         location:
           [activeProfileRow.city, activeProfileRow.state]
             .filter(Boolean)
-            .join(', ') ||
+            .join(", ") ||
           fallbackMock?.location ||
-          'Brasil',
+          "Brasil",
         bio:
           activeProfileRow.bio ||
           activeProfileRow.institutional_description ||
           fallbackMock?.bio,
-        type: activeProfileRow.account_type || fallbackMock?.type || 'athlete',
+        type: activeProfileRow.account_type || fallbackMock?.type || "athlete",
         cover_url: activeProfileRow.cover_url,
         cover_type: activeProfileRow.cover_type,
         // Real fields attached for views (Note: birth_date is strictly omitted for other users)
@@ -134,9 +134,9 @@ export default function Profile() {
     : fallbackMock || mockCurrentUser
 
   const profileType =
-    activeProfileRow?.account_type || (user as any).type || 'athlete'
+    activeProfileRow?.account_type || (user as any).type || "athlete"
 
-  const shareTargetId = activeProfileRow?.id || id || 'me'
+  const shareTargetId = activeProfileRow?.id || id || "me"
   const shareProfileName = user.name
   const shareSport = user.sport
   const shareUrl = activeProfileRow?.id
@@ -183,17 +183,17 @@ export default function Profile() {
         </div>
       </div>
 
-      {profileType === 'photographer' ? (
+      {profileType === "photographer" ? (
         <PhotographerView profile={user as any} />
-      ) : profileType === 'driver' ? (
+      ) : profileType === "driver" ? (
         <DriverView profile={user as any} />
-      ) : profileType === 'club' ? (
+      ) : profileType === "club" ? (
         <ClubView profile={user as any} isMe={Boolean(isMe)} />
-      ) : profileType === 'coach' ? (
+      ) : profileType === "coach" ? (
         <CoachView profile={user as any} isMe={Boolean(isMe)} />
-      ) : profileType === 'scout' ? (
+      ) : profileType === "scout" ? (
         <ScoutView profile={user as any} />
-      ) : profileType === 'sponsor' ? (
+      ) : profileType === "sponsor" ? (
         <SponsorView profile={user as any} />
       ) : (
         <AthleteView user={user} isMe={Boolean(isMe)} />
@@ -209,7 +209,7 @@ export default function Profile() {
           if (activeProfileRow?.id) {
             analyticsService.trackProfileShare(
               activeProfileRow.id,
-              platform || 'native',
+              platform || "native",
               authUser?.id,
             )
           }

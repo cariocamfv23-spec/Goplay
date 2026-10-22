@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react'
-import { useTimeShiftStore } from '@/stores/useTimeShiftStore'
-import { cn } from '@/lib/utils'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useEffect, useRef } from "react"
+import { useTimeShiftStore } from "@/stores/useTimeShiftStore"
+import { cn } from "@/lib/utils"
+import { motion, AnimatePresence } from "framer-motion"
 
 export function TimeShiftVisualizer() {
   const { timeline, sport, isPlaying } = useTimeShiftStore()
@@ -26,26 +26,26 @@ export function TimeShiftVisualizer() {
 
     const handleSwipe = () => {
       const { cycleTimeline } = useTimeShiftStore.getState()
-      if (touchEndX < touchStartX - 50) cycleTimeline('next')
-      if (touchEndX > touchStartX + 50) cycleTimeline('prev')
+      if (touchEndX < touchStartX - 50) cycleTimeline("next")
+      if (touchEndX > touchStartX + 50) cycleTimeline("prev")
     }
 
-    container.addEventListener('touchstart', handleTouchStart)
-    container.addEventListener('touchend', handleTouchEnd)
+    container.addEventListener("touchstart", handleTouchStart)
+    container.addEventListener("touchend", handleTouchEnd)
 
     return () => {
-      container.removeEventListener('touchstart', handleTouchStart)
-      container.removeEventListener('touchend', handleTouchEnd)
+      container.removeEventListener("touchstart", handleTouchStart)
+      container.removeEventListener("touchend", handleTouchEnd)
     }
   }, [])
 
   const renderScene = () => {
     switch (sport) {
-      case 'football':
+      case "football":
         return <FootballScene timeline={timeline} isPlaying={isPlaying} />
-      case 'martial_arts':
+      case "martial_arts":
         return <MartialArtsScene timeline={timeline} isPlaying={isPlaying} />
-      case 'swimming':
+      case "swimming":
         return <SwimmingScene timeline={timeline} isPlaying={isPlaying} />
       default:
         return null
@@ -63,10 +63,10 @@ export function TimeShiftVisualizer() {
         className="absolute inset-0 opacity-20"
         style={{
           backgroundImage:
-            'linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)',
-          backgroundSize: '40px 40px',
+            "linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
           transform:
-            'perspective(500px) rotateX(60deg) translateY(-100px) scale(2)',
+            "perspective(500px) rotateX(60deg) translateY(-100px) scale(2)",
         }}
       />
 
@@ -86,28 +86,28 @@ export function TimeShiftVisualizer() {
       <div className="absolute top-6 left-6 pointer-events-none">
         <div
           className={cn(
-            'text-xs font-bold px-3 py-1 rounded-full inline-block mb-2 uppercase tracking-widest border',
-            timeline === 'real'
-              ? 'bg-zinc-500/20 border-zinc-500 text-zinc-300'
-              : timeline === 'almost'
-                ? 'bg-orange-500/20 border-orange-500 text-orange-300'
-                : 'bg-emerald-500/20 border-emerald-500 text-emerald-300',
+            "text-xs font-bold px-3 py-1 rounded-full inline-block mb-2 uppercase tracking-widest border",
+            timeline === "real"
+              ? "bg-zinc-500/20 border-zinc-500 text-zinc-300"
+              : timeline === "almost"
+                ? "bg-orange-500/20 border-orange-500 text-orange-300"
+                : "bg-emerald-500/20 border-emerald-500 text-emerald-300",
           )}
         >
           Timeline: {timeline}
         </div>
         <h3 className="text-2xl font-black text-white italic drop-shadow-lg">
-          {sport === 'football' && timeline === 'real' && 'CHUTE DEFENDIDO'}
-          {sport === 'football' && timeline === 'almost' && 'BOLA NA TRAVE'}
-          {sport === 'football' && timeline === 'ideal' && 'GOL NO ÂNGULO'}
+          {sport === "football" && timeline === "real" && "CHUTE DEFENDIDO"}
+          {sport === "football" && timeline === "almost" && "BOLA NA TRAVE"}
+          {sport === "football" && timeline === "ideal" && "GOL NO ÂNGULO"}
 
-          {sport === 'martial_arts' && timeline === 'real' && 'BLOQUEIO TOTAL'}
-          {sport === 'martial_arts' && timeline === 'almost' && 'RASPÃO'}
-          {sport === 'martial_arts' && timeline === 'ideal' && 'KNOCKOUT'}
+          {sport === "martial_arts" && timeline === "real" && "BLOQUEIO TOTAL"}
+          {sport === "martial_arts" && timeline === "almost" && "RASPÃO"}
+          {sport === "martial_arts" && timeline === "ideal" && "KNOCKOUT"}
 
-          {sport === 'swimming' && timeline === 'real' && 'SAÍDA ATRASADA'}
-          {sport === 'swimming' && timeline === 'almost' && 'NO TEMPO'}
-          {sport === 'swimming' && timeline === 'ideal' && 'REAÇÃO PERFEITA'}
+          {sport === "swimming" && timeline === "real" && "SAÍDA ATRASADA"}
+          {sport === "swimming" && timeline === "almost" && "NO TEMPO"}
+          {sport === "swimming" && timeline === "ideal" && "REAÇÃO PERFEITA"}
         </h3>
       </div>
     </div>
@@ -124,22 +124,22 @@ function FootballScene({
   isPlaying: boolean
 }) {
   // SVG Paths for Ball Trajectory
-  const pathReal = 'M 50,350 Q 150,200 250,150' // To keeper hands
-  const pathAlmost = 'M 50,350 Q 100,50 350,50' // To post
-  const pathIdeal = 'M 50,350 Q 120,20 380,20' // To top corner
+  const pathReal = "M 50,350 Q 150,200 250,150" // To keeper hands
+  const pathAlmost = "M 50,350 Q 100,50 350,50" // To post
+  const pathIdeal = "M 50,350 Q 120,20 380,20" // To top corner
 
   const activePath =
-    timeline === 'real'
+    timeline === "real"
       ? pathReal
-      : timeline === 'almost'
+      : timeline === "almost"
         ? pathAlmost
         : pathIdeal
   const color =
-    timeline === 'real'
-      ? '#71717a'
-      : timeline === 'almost'
-        ? '#f97316'
-        : '#10b981'
+    timeline === "real"
+      ? "#71717a"
+      : timeline === "almost"
+        ? "#f97316"
+        : "#10b981"
 
   return (
     <svg
@@ -168,16 +168,16 @@ function FootballScene({
         fill="#3b82f6"
         opacity="0.8"
         animate={
-          timeline === 'real'
+          timeline === "real"
             ? { x: 50, y: -150, scale: 1.2 } // Jumps to save
-            : timeline === 'almost'
+            : timeline === "almost"
               ? { x: 100, y: -100 } // Dives but misses
               : { x: -50, y: -50 } // Wrong side
         }
         transition={{
           duration: 1.5,
           repeat: isPlaying ? Infinity : 0,
-          repeatType: 'reverse',
+          repeatType: "reverse",
         }}
       />
 
@@ -197,19 +197,19 @@ function FootballScene({
         fill="white"
         stroke={color}
         strokeWidth="3"
-        initial={{ offsetDistance: '0%' }}
-        animate={{ offsetDistance: isPlaying ? '100%' : '0%' }}
+        initial={{ offsetDistance: "0%" }}
+        animate={{ offsetDistance: isPlaying ? "100%" : "0%" }}
         style={{ offsetPath: `path("${activePath}")` }}
         transition={{
           duration: 1.5,
-          ease: 'circOut',
+          ease: "circOut",
           repeat: isPlaying ? Infinity : 0,
           repeatDelay: 0.5,
         }}
       />
 
       {/* Impact Effect */}
-      {timeline === 'almost' && (
+      {timeline === "almost" && (
         <motion.circle
           cx="350"
           cy="50"
@@ -225,7 +225,7 @@ function FootballScene({
           }}
         />
       )}
-      {timeline === 'ideal' && (
+      {timeline === "ideal" && (
         <motion.path
           d="M 360,30 L 390,10 L 400,40 Z"
           fill="#10b981"
@@ -249,11 +249,11 @@ function MartialArtsScene({
   isPlaying: boolean
 }) {
   const color =
-    timeline === 'real'
-      ? '#71717a'
-      : timeline === 'almost'
-        ? '#f97316'
-        : '#10b981'
+    timeline === "real"
+      ? "#71717a"
+      : timeline === "almost"
+        ? "#f97316"
+        : "#10b981"
 
   return (
     <svg
@@ -271,7 +271,7 @@ function MartialArtsScene({
           stroke="white"
           strokeWidth="12"
           strokeLinecap="round"
-        />{' '}
+        />{" "}
         {/* Arm */}
         <circle cx="180" cy="200" r="15" fill={color} /> {/* Fist */}
       </motion.g>
@@ -280,9 +280,9 @@ function MartialArtsScene({
       <motion.g
         initial={{ x: 250 }}
         animate={
-          timeline === 'real'
+          timeline === "real"
             ? { x: 220, rotate: -10 } // Blocks firmly
-            : timeline === 'almost'
+            : timeline === "almost"
               ? { x: 240, rotate: 10 } // Stumbles back
               : { x: 300, rotate: 45, opacity: [1, 0.5] } // Knocked back
         }
@@ -299,13 +299,13 @@ function MartialArtsScene({
           strokeLinecap="round"
           opacity="0.5"
         />
-        {timeline === 'real' && (
+        {timeline === "real" && (
           <path d="M -20,20 L -20,80" stroke="#ef4444" strokeWidth="8" /> // Block visual
         )}
       </motion.g>
 
       {/* Impact Flash */}
-      {timeline !== 'real' && (
+      {timeline !== "real" && (
         <motion.circle
           cx="200"
           cy="200"
@@ -331,14 +331,14 @@ function SwimmingScene({
   isPlaying: boolean
 }) {
   const color =
-    timeline === 'real'
-      ? '#71717a'
-      : timeline === 'almost'
-        ? '#f97316'
-        : '#10b981'
+    timeline === "real"
+      ? "#71717a"
+      : timeline === "almost"
+        ? "#f97316"
+        : "#10b981"
 
   // Y position simulates distance/advantage
-  const yPos = timeline === 'real' ? 300 : timeline === 'almost' ? 200 : 100
+  const yPos = timeline === "real" ? 300 : timeline === "almost" ? 200 : 100
 
   return (
     <svg
@@ -408,15 +408,15 @@ function SwimmingScene({
         strokeWidth="20"
         strokeLinecap="round"
         opacity="0.1"
-      />{' '}
+      />{" "}
       {/* Avg */}
       {/* Active Swimmer */}
       <motion.g
         initial={{ y: 400 }}
         animate={{ y: isPlaying ? -50 : 400 }}
         transition={{
-          duration: timeline === 'real' ? 4 : timeline === 'almost' ? 3 : 2,
-          ease: 'linear',
+          duration: timeline === "real" ? 4 : timeline === "almost" ? 3 : 2,
+          ease: "linear",
           repeat: isPlaying ? Infinity : 0,
         }}
       >
@@ -440,7 +440,7 @@ function SwimmingScene({
         cx="350"
         cy="350"
         r="10"
-        fill={timeline === 'real' ? 'red' : 'green'}
+        fill={timeline === "real" ? "red" : "green"}
         animate={{ opacity: [0, 1, 0] }}
         transition={{
           duration: 0.5,

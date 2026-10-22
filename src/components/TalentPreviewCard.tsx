@@ -1,8 +1,8 @@
-import { ProfileData } from '@/lib/data'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
+import { ProfileData } from "@/lib/data"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   Star,
   Trophy,
@@ -12,10 +12,10 @@ import {
   FileSignature,
   Sparkles,
   Zap,
-} from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { cn } from '@/lib/utils'
-import { DepthContainer } from '@/components/DepthContainer'
+} from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { cn } from "@/lib/utils"
+import { DepthContainer } from "@/components/DepthContainer"
 
 interface TalentPreviewCardProps {
   talent?: ProfileData | null
@@ -58,8 +58,8 @@ export function TalentPreviewCard({
   const eligibleForContract = rating >= 4.5
 
   const avatarUrl =
-    talent.avatar || 'https://img.usecurling.com/ppl/medium?gender=male'
-  const talentName = talent.name || 'Usuário'
+    talent.avatar || "https://img.usecurling.com/ppl/medium?gender=male"
+  const talentName = talent.name || "Usuário"
   const coverUrl = talent.cover
 
   return (
@@ -68,10 +68,10 @@ export function TalentPreviewCard({
         {/* Header Banner */}
         <div
           className={cn(
-            'h-24 relative overflow-hidden transition-colors duration-300 shrink-0 translate-z-10',
+            "h-24 relative overflow-hidden transition-colors duration-300 shrink-0 translate-z-10",
             isDiscovered
-              ? 'bg-gradient-to-r from-cyan-900 to-blue-900'
-              : 'bg-gradient-to-r from-primary/20 to-secondary',
+              ? "bg-gradient-to-r from-cyan-900 to-blue-900"
+              : "bg-gradient-to-r from-primary/20 to-secondary",
           )}
         >
           {coverUrl && (
@@ -104,12 +104,12 @@ export function TalentPreviewCard({
             <div className="relative">
               <div
                 className={cn(
-                  'h-20 w-20 rounded-full border-4 border-background overflow-hidden shadow-lg transition-all duration-300 group-hover:scale-105 bg-muted',
+                  "h-20 w-20 rounded-full border-4 border-background overflow-hidden shadow-lg transition-all duration-300 group-hover:scale-105 bg-muted",
                   isDiscovered
-                    ? 'ring-2 ring-cyan-400'
+                    ? "ring-2 ring-cyan-400"
                     : isTopTalent
-                      ? 'ring-2 ring-gold'
-                      : '',
+                      ? "ring-2 ring-gold"
+                      : "",
                 )}
               >
                 <img
@@ -118,7 +118,7 @@ export function TalentPreviewCard({
                   className="h-full w-full object-cover"
                   onError={(e) => {
                     e.currentTarget.src =
-                      'https://img.usecurling.com/ppl/medium?gender=male'
+                      "https://img.usecurling.com/ppl/medium?gender=male"
                   }}
                 />
               </div>
@@ -139,8 +139,8 @@ export function TalentPreviewCard({
                 </span>
                 <span
                   className={cn(
-                    'text-xl',
-                    isDiscovered ? 'text-cyan-500' : 'text-primary',
+                    "text-xl",
+                    isDiscovered ? "text-cyan-500" : "text-primary",
                   )}
                 >
                   {rating.toFixed(1)}
@@ -165,12 +165,12 @@ export function TalentPreviewCard({
             </h3>
             <p className="text-sm text-muted-foreground flex items-center gap-1.5 line-clamp-1">
               <Activity className="w-3.5 h-3.5 shrink-0 text-primary/70" />
-              {talent.position || 'Posição N/A'} •{' '}
-              {talent.sport || 'Esporte N/A'}
+              {talent.position || "Posição N/A"} •{" "}
+              {talent.sport || "Esporte N/A"}
             </p>
             <p className="text-xs text-muted-foreground flex items-center gap-1.5 line-clamp-1">
               <MapPin className="w-3.5 h-3.5 shrink-0 text-primary/70" />
-              {talent.location || 'Localização N/A'}
+              {talent.location || "Localização N/A"}
             </p>
           </div>
 
@@ -210,7 +210,7 @@ export function TalentPreviewCard({
               ) : (
                 <>
                   <span className="block font-bold text-sm">
-                    {talent.age || '-'}
+                    {talent.age || "-"}
                   </span>
                   <span className="text-[9px] text-muted-foreground uppercase font-medium">
                     Idade
@@ -221,8 +221,8 @@ export function TalentPreviewCard({
             <div className="bg-secondary/50 rounded-lg p-2 text-center border border-border/50">
               <span
                 className={cn(
-                  'block font-bold text-sm',
-                  isDiscovered ? 'text-cyan-500' : 'text-gold',
+                  "block font-bold text-sm",
+                  isDiscovered ? "text-cyan-500" : "text-gold",
                 )}
               >
                 {talent.stats?.mvp || 0}
@@ -235,17 +235,17 @@ export function TalentPreviewCard({
 
           <Button
             className={cn(
-              'w-full h-9 font-semibold gap-2 text-xs uppercase tracking-wide translate-z-20',
+              "w-full h-9 font-semibold gap-2 text-xs uppercase tracking-wide translate-z-20",
               isDiscovered
-                ? 'bg-cyan-600 hover:bg-cyan-700 shadow-[0_0_15px_rgba(8,145,178,0.4)]'
-                : 'bg-primary hover:bg-primary/90',
+                ? "bg-cyan-600 hover:bg-cyan-700 shadow-[0_0_15px_rgba(8,145,178,0.4)]"
+                : "bg-primary hover:bg-primary/90",
             )}
             onClick={() => {
               if (talent.id) navigate(`/profile/${talent.id}`)
             }}
             disabled={!talent.id}
           >
-            {isDiscovered ? 'Ver Talento' : 'Ver Perfil Completo'}{' '}
+            {isDiscovered ? "Ver Talento" : "Ver Perfil Completo"}{" "}
             <ArrowRight className="w-3.5 h-3.5" />
           </Button>
         </CardContent>

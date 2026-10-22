@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useChampionshipStore } from '@/stores/useChampionshipStore'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent } from '@/components/ui/card'
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import { useChampionshipStore } from "@/stores/useChampionshipStore"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   ArrowLeft,
   Loader2,
@@ -13,33 +13,33 @@ import {
   AlertCircle,
   LogIn,
   CheckCircle2,
-} from 'lucide-react'
-import { useAuth } from '@/hooks/use-auth'
-import { eventsService } from '@/services/events'
-import { analyticsService } from '@/services/analytics'
-import { toast } from 'sonner'
+} from "lucide-react"
+import { useAuth } from "@/hooks/use-auth"
+import { eventsService } from "@/services/events"
+import { analyticsService } from "@/services/analytics"
+import { toast } from "sonner"
 
-const DRAFT_STORAGE_KEY = 'goplay_create_peneira_draft'
+const DRAFT_STORAGE_KEY = "goplay_create_peneira_draft"
 
 export default function CreateChampionship() {
   const navigate = useNavigate()
   const { user, profile } = useAuth()
   const { addChampionship } = useChampionshipStore()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [type, setType] = useState<'tryout' | 'event'>('tryout')
+  const [type, setType] = useState<"tryout" | "event">("tryout")
   const [formData, setFormData] = useState({
-    title: '',
-    sport: 'Futebol',
-    category: 'Sub-17 / Sub-20',
-    startDate: '',
-    eventTime: '08:30',
-    city: 'São Paulo',
-    state: 'SP',
-    location: '',
-    requirements: '',
-    instructions: '',
-    entryFee: '0',
-    description: '',
+    title: "",
+    sport: "Futebol",
+    category: "Sub-17 / Sub-20",
+    startDate: "",
+    eventTime: "08:30",
+    city: "São Paulo",
+    state: "SP",
+    location: "",
+    requirements: "",
+    instructions: "",
+    entryFee: "0",
+    description: "",
   })
 
   // Restore draft if user was redirected to login
@@ -48,24 +48,24 @@ export default function CreateChampionship() {
       const savedDraft = localStorage.getItem(DRAFT_STORAGE_KEY)
       if (savedDraft) {
         const parsed = JSON.parse(savedDraft)
-        if (parsed && typeof parsed === 'object') {
+        if (parsed && typeof parsed === "object") {
           if (parsed.type) setType(parsed.type)
           if (parsed.formData) {
             setFormData((prev) => ({ ...prev, ...parsed.formData }))
           }
-          toast.info('Rascunho recuperado!', {
-            description: 'Continuamos de onde você parou antes do login.',
+          toast.info("Rascunho recuperado!", {
+            description: "Continuamos de onde você parou antes do login.",
           })
         }
       }
     } catch (err) {
-      console.warn('Erro ao restaurar rascunho:', err)
+      console.warn("Erro ao restaurar rascunho:", err)
     }
   }, [])
 
   // Auto-save draft on changes
   const saveDraft = (
-    currentType: 'tryout' | 'event',
+    currentType: "tryout" | "event",
     currentForm: typeof formData,
   ) => {
     try {
@@ -88,7 +88,7 @@ export default function CreateChampionship() {
     saveDraft(type, updated)
   }
 
-  const handleTypeChange = (newType: 'tryout' | 'event') => {
+  const handleTypeChange = (newType: "tryout" | "event") => {
     setType(newType)
     saveDraft(newType, formData)
   }
@@ -100,39 +100,39 @@ export default function CreateChampionship() {
     let currentUserId = user?.id
     if (!currentUserId) {
       const { data: sessData } = await (
-        await import('@/lib/supabase/client')
+        await import("@/lib/supabase/client")
       ).supabase.auth.getSession()
       currentUserId = sessData.session?.user?.id
     }
     if (!currentUserId) {
       const { data: usrData } = await (
-        await import('@/lib/supabase/client')
+        await import("@/lib/supabase/client")
       ).supabase.auth.getUser()
       currentUserId = usrData.user?.id
     }
 
     if (!currentUserId) {
       saveDraft(type, formData)
-      toast.error('Você precisa estar conectado para publicar.', {
+      toast.error("Você precisa estar conectado para publicar.", {
         description:
-          'Seus dados foram salvos! Faça login para concluir e compartilhar.',
+          "Seus dados foram salvos! Faça login para concluir e compartilhar.",
         duration: 5000,
       })
-      navigate('/login?redirect=/organizer/create')
+      navigate("/login?redirect=/organizer/create")
       return
     }
 
     // 2. Field validations
     if (!formData.title.trim()) {
-      toast.error('Informe o nome da peneira ou evento.')
+      toast.error("Informe o nome da peneira ou evento.")
       return
     }
     if (!formData.startDate) {
-      toast.error('Informe a data de realização da peneira.')
+      toast.error("Informe a data de realização da peneira.")
       return
     }
     if (!formData.location.trim()) {
-      toast.error('Informe o local da peneira (ex: CT, campo, ginásio).')
+      toast.error("Informe o local da peneira (ex: CT, campo, ginásio).")
       return
     }
 
@@ -143,7 +143,7 @@ export default function CreateChampionship() {
         creatorId: currentUserId,
         title: formData.title,
         description: formData.description,
-        type: type === 'tryout' ? 'tryout' : 'championship',
+        type: type === "tryout" ? "tryout" : "championship",
         sport: formData.sport,
         category: formData.category,
         eventDate: formData.startDate,
@@ -158,8 +158,8 @@ export default function CreateChampionship() {
 
       if (error || !data) {
         setIsSubmitting(false)
-        toast.error('Não foi possível criar a peneira', {
-          description: error?.message || 'Tente novamente.',
+        toast.error("Não foi possível criar a peneira", {
+          description: error?.message || "Tente novamente.",
         })
         return
       }
@@ -177,12 +177,12 @@ export default function CreateChampionship() {
         modality: formData.sport,
         description: formData.description,
         location: formData.location,
-        rules: formData.instructions || 'Regulamento oficial Goplay',
+        rules: formData.instructions || "Regulamento oficial Goplay",
       })
 
       // Track metric
       analyticsService.trackEvent({
-        eventName: 'event_published',
+        eventName: "event_published",
         userId: currentUserId,
         targetId: data.id,
         metadata: {
@@ -193,11 +193,11 @@ export default function CreateChampionship() {
       })
 
       toast.success(
-        type === 'tryout'
-          ? '🎉 Peneira criada com sucesso!'
-          : '🎉 Campeonato criado com sucesso!',
+        type === "tryout"
+          ? "🎉 Peneira criada com sucesso!"
+          : "🎉 Campeonato criado com sucesso!",
         {
-          description: 'Pronto para compartilhar via WhatsApp com atletas!',
+          description: "Pronto para compartilhar via WhatsApp com atletas!",
           duration: 4000,
         },
       )
@@ -207,14 +207,14 @@ export default function CreateChampionship() {
       navigate(`/events/${data.id}?share=1`)
     } catch (err: any) {
       setIsSubmitting(false)
-      toast.error('Erro ao processar criação', {
-        description: err?.message || 'Verifique sua conexão e tente novamente.',
+      toast.error("Erro ao processar criação", {
+        description: err?.message || "Verifique sua conexão e tente novamente.",
       })
     }
   }
 
   const isOrganizerRole =
-    profile?.account_type === 'club' || profile?.account_type === 'coach'
+    profile?.account_type === "club" || profile?.account_type === "coach"
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -250,7 +250,7 @@ export default function CreateChampionship() {
                 <Button
                   size="sm"
                   className="text-xs bg-amber-600 hover:bg-amber-700 text-white gap-1.5"
-                  onClick={() => navigate('/login?redirect=/organizer/create')}
+                  onClick={() => navigate("/login?redirect=/organizer/create")}
                 >
                   <LogIn className="w-3.5 h-3.5" /> Fazer Login como Clube ou
                   Organizador
@@ -264,10 +264,10 @@ export default function CreateChampionship() {
         {user && !isOrganizerRole && (
           <div className="p-3 bg-secondary/50 rounded-xl border border-border/40 text-xs text-muted-foreground flex items-center justify-between">
             <span>
-              Perfil atual:{' '}
+              Perfil atual:{" "}
               <strong className="text-foreground">
-                {profile?.full_name || 'Atleta'}
-              </strong>{' '}
+                {profile?.full_name || "Atleta"}
+              </strong>{" "}
               (Atleta). Clubes e Treinadores contam com ferramentas avançadas de
               triagem.
             </span>
@@ -275,7 +275,7 @@ export default function CreateChampionship() {
               variant="link"
               size="sm"
               className="text-xs text-primary p-0 h-auto"
-              onClick={() => navigate('/profile/me')}
+              onClick={() => navigate("/profile/me")}
             >
               Meu Perfil
             </Button>
@@ -287,17 +287,17 @@ export default function CreateChampionship() {
           <div className="flex gap-2">
             <Button
               type="button"
-              variant={type === 'tryout' ? 'default' : 'outline'}
+              variant={type === "tryout" ? "default" : "outline"}
               className="flex-1 text-xs h-10 border-amber-500/40"
-              onClick={() => handleTypeChange('tryout')}
+              onClick={() => handleTypeChange("tryout")}
             >
               ⭐ Peneira / Seletiva Oficial
             </Button>
             <Button
               type="button"
-              variant={type === 'event' ? 'default' : 'outline'}
+              variant={type === "event" ? "default" : "outline"}
               className="flex-1 text-xs h-10"
-              onClick={() => handleTypeChange('event')}
+              onClick={() => handleTypeChange("event")}
             >
               Torneio / Campeonato
             </Button>
@@ -312,7 +312,7 @@ export default function CreateChampionship() {
                 <Input
                   placeholder="Ex: Peneira Sub-17 Clube Atlético 2025"
                   value={formData.title}
-                  onChange={(e) => handleFieldChange('title', e.target.value)}
+                  onChange={(e) => handleFieldChange("title", e.target.value)}
                   required
                 />
               </div>
@@ -325,7 +325,7 @@ export default function CreateChampionship() {
                   <select
                     className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm border border-input focus:outline-none focus:ring-2 focus:ring-primary/20"
                     value={formData.sport}
-                    onChange={(e) => handleFieldChange('sport', e.target.value)}
+                    onChange={(e) => handleFieldChange("sport", e.target.value)}
                   >
                     <option value="Futebol">Futebol</option>
                     <option value="Basquete">Basquete</option>
@@ -344,7 +344,7 @@ export default function CreateChampionship() {
                     placeholder="Ex: Sub-17, Livre"
                     value={formData.category}
                     onChange={(e) =>
-                      handleFieldChange('category', e.target.value)
+                      handleFieldChange("category", e.target.value)
                     }
                   />
                 </div>
@@ -359,7 +359,7 @@ export default function CreateChampionship() {
                     type="date"
                     value={formData.startDate}
                     onChange={(e) =>
-                      handleFieldChange('startDate', e.target.value)
+                      handleFieldChange("startDate", e.target.value)
                     }
                     required
                   />
@@ -373,7 +373,7 @@ export default function CreateChampionship() {
                     placeholder="08:30"
                     value={formData.eventTime}
                     onChange={(e) =>
-                      handleFieldChange('eventTime', e.target.value)
+                      handleFieldChange("eventTime", e.target.value)
                     }
                   />
                 </div>
@@ -387,7 +387,7 @@ export default function CreateChampionship() {
                   <Input
                     placeholder="São Paulo"
                     value={formData.city}
-                    onChange={(e) => handleFieldChange('city', e.target.value)}
+                    onChange={(e) => handleFieldChange("city", e.target.value)}
                     required
                   />
                 </div>
@@ -398,7 +398,7 @@ export default function CreateChampionship() {
                     maxLength={2}
                     value={formData.state}
                     onChange={(e) =>
-                      handleFieldChange('state', e.target.value.toUpperCase())
+                      handleFieldChange("state", e.target.value.toUpperCase())
                     }
                     required
                   />
@@ -413,7 +413,7 @@ export default function CreateChampionship() {
                   placeholder="Ex: CT Ninho das Águias - Campo 1"
                   value={formData.location}
                   onChange={(e) =>
-                    handleFieldChange('location', e.target.value)
+                    handleFieldChange("location", e.target.value)
                   }
                   required
                 />
@@ -428,7 +428,7 @@ export default function CreateChampionship() {
                   rows={2}
                   value={formData.requirements}
                   onChange={(e) =>
-                    handleFieldChange('requirements', e.target.value)
+                    handleFieldChange("requirements", e.target.value)
                   }
                 />
               </div>
@@ -442,7 +442,7 @@ export default function CreateChampionship() {
                   rows={2}
                   value={formData.instructions}
                   onChange={(e) =>
-                    handleFieldChange('instructions', e.target.value)
+                    handleFieldChange("instructions", e.target.value)
                   }
                 />
               </div>
@@ -456,7 +456,7 @@ export default function CreateChampionship() {
                   placeholder="0 para Gratuito"
                   value={formData.entryFee}
                   onChange={(e) =>
-                    handleFieldChange('entryFee', e.target.value)
+                    handleFieldChange("entryFee", e.target.value)
                   }
                 />
               </div>
@@ -470,7 +470,7 @@ export default function CreateChampionship() {
                   rows={3}
                   value={formData.description}
                   onChange={(e) =>
-                    handleFieldChange('description', e.target.value)
+                    handleFieldChange("description", e.target.value)
                   }
                 />
               </div>
@@ -488,7 +488,7 @@ export default function CreateChampionship() {
                 Criando no Supabase...
               </>
             ) : (
-              'Publicar Evento Oficial'
+              "Publicar Evento Oficial"
             )}
           </Button>
         </form>
