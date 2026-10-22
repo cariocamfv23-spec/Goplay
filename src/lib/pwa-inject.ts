@@ -1,8 +1,6 @@
 // PWA injection module:
 // Preserves the authoritative static /manifest.json (with official icons and monochrome support).
 // Sets up Apple touch icons and favicon fallback if not already provided in index.html.
-import goplayIcon from '@/assets/goplay-icon-0e955.png'
-
 const injectPwa = () => {
   if (typeof document === 'undefined') return
 
