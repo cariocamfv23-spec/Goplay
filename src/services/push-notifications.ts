@@ -84,7 +84,7 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
 
   try {
     // updateViaCache: 'none' guarantees the browser ALWAYS bypasses HTTP cache when re-fetching sw.js
-    const reg = await navigator.serviceWorker.register('/sw.js', {
+    const reg = await navigator.serviceWorker.register('/sw.js?v=8', {
       scope: '/',
       updateViaCache: 'none',
     })

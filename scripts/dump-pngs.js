@@ -231,6 +231,10 @@ fs.writeFileSync('public/icon-512.png', icon512)
 const badge96 = renderBadgeIcon(96)
 fs.writeFileSync('public/notification-badge.png', badge96)
 
+const monochrome192 = renderBadgeIcon(192)
+fs.writeFileSync('public/icon-monochrome.png', monochrome192)
+
 console.log('BASE64_192:' + icon192.toString('base64'))
 console.log('BASE64_512:' + icon512.toString('base64'))
 console.log('BASE64_BADGE:' + badge96.toString('base64'))
+console.log('BASE64_MONOCHROME_192:' + monochrome192.toString('base64'))
