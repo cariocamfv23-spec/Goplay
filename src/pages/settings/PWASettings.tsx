@@ -569,7 +569,7 @@ function PWASettingsContent() {
               onClick={handleUpdate}
             >
               <RefreshCw className="h-4 w-4 text-primary" />
-              Verificar Atualizações do App (Atualizar Service Worker v8)
+              Verificar Atualizações do App (Atualizar Service Worker v9)
             </Button>
 
             <Button
@@ -582,8 +582,8 @@ function PWASettingsContent() {
             </Button>
           </div>
           <p className="text-[11px] text-muted-foreground px-2">
-            Versão do Service Worker: <code>2026.10.22-v8</code> • Manifest:{' '}
-            <code>v8</code> com ícone monocromático.
+            Versão do Service Worker: <code>2026.10.22-v9</code> • Manifest:{' '}
+            <code>v9</code> com ícone monocromático 200.
           </p>
         </div>
       </div>

@@ -18,8 +18,7 @@ interface PushRequestPayload {
 }
 
 // Fallback high-compatibility official PNG icons for Android & Samsung OneUI
-const DEFAULT_ICON_PNG =
-  'https://goplay-app-screens-11312.goskip.app/icon-192.png'
+const DEFAULT_ICON_PATH = '/icon-192.png'
 
 Deno.serve(async (req: Request) => {
   // Handle CORS preflight
@@ -431,8 +430,23 @@ Deno.serve(async (req: Request) => {
 
     // Android/Samsung notification guidelines:
     // Avoid SVGs in icon: use official raster PNG to guarantee native system banner display.
-    // Notice: badge is deliberately NEVER included in the push payload so Android/OneUI never creates a secondary monochrome badge circle.
-    const safeIcon = icon && !icon.endsWith('.svg') ? icon : DEFAULT_ICON_PNG
+    // Determine origin from caller Request (Origin or Referer) or keep origin-relative path.
+    const callerOrigin =
+      req.headers.get('Origin') ||
+      req.headers.get('origin') ||
+      (req.headers.get('Referer') ? new URL(req.headers.get('Referer')!).origin : '')
+
+    // Resolve icon URL:
+    // If client supplied an icon, use it. Otherwise, prefer origin-relative '/icon-192.png'
+    // or absolute URL with the caller's current origin (preview or production).
+    let resolvedIcon = DEFAULT_ICON_PATH
+    if (icon && !icon.endsWith('.svg')) {
+      resolvedIcon = icon
+    } else if (callerOrigin) {
+      resolvedIcon = `${callerOrigin.replace(/\/+$/, '')}/icon-192.png`
+    }
+
+    const safeIcon = resolvedIcon
 
     // Top-level payload for RFC 8030 Web Push data.
     // Note: FCM web-push encryption transports this data directly to the client's PushEvent handler in sw.js.

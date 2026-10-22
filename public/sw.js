@@ -1,13 +1,13 @@
 // Goplay App - Service Worker with Robust Web Push & Background Support
-// Version: 2026.10.22-v8 (monochrome icon support + dynamic WebAPK cache bust)
+// Version: 2026.10.22-v9 (monochrome icon 200 + origin-relative push notification icon)
 
 importScripts(
   'https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js',
 )
 
-// High-compatibility official raster icons for Android & OneUI (avoids SVG blank notification issue)
+// High-compatibility official raster icons for Android & OneUI (origin-relative URL)
 const DEFAULT_NOTIFICATION_ICON = '/icon-192.png'
-const SW_VERSION = '2026.10.22-v8'
+const SW_VERSION = '2026.10.22-v9'
 
 // Automated update & lifecycle logic - immediate takeover
 self.addEventListener('install', (event) => {
@@ -19,13 +19,13 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     Promise.all([
       self.clients.claim(),
-      // Prune old caches on version bump
+      // Prune old caches on version bump to v9
       caches
         .keys()
         .then((keys) =>
           Promise.all(
             keys
-              .filter((k) => k.startsWith('goplay-') && !k.endsWith('-v8'))
+              .filter((k) => k.startsWith('goplay-') && !k.endsWith('-v9'))
               .map((k) => caches.delete(k)),
           ),
         ),
@@ -68,11 +68,18 @@ self.addEventListener('push', (event) => {
     }
   }
 
-  // Ensure icons are valid PNG raster URLs for Android system tray & lockscreen
-  const iconUrl =
-    data.icon && !data.icon.endsWith('.svg')
-      ? data.icon
-      : DEFAULT_NOTIFICATION_ICON
+  // Ensure icons are valid PNG raster URLs for Android system tray & lockscreen.
+  // Convert any origin-relative path to full absolute URL on the current client origin.
+  let iconUrl = DEFAULT_NOTIFICATION_ICON
+  if (data.icon && !data.icon.endsWith('.svg')) {
+    try {
+      iconUrl = new URL(data.icon, self.location.origin).href
+    } catch {
+      iconUrl = new URL(DEFAULT_NOTIFICATION_ICON, self.location.origin).href
+    }
+  } else {
+    iconUrl = new URL(DEFAULT_NOTIFICATION_ICON, self.location.origin).href
+  }
 
   // Complete NotificationOptions compliant with Android Notification Drawer & Heads-up banners.
   // Note: badge is deliberately omitted so Android/OneUI does not render a secondary monochrome badge/symbol.
@@ -98,9 +105,10 @@ self.addEventListener('push', (event) => {
       .showNotification(data.title, notificationOptions)
       .catch((showErr) => {
         // Fallback without vibration or extra options if device rejects specific parameters
+        const fallbackIcon = new URL(DEFAULT_NOTIFICATION_ICON, self.location.origin).href
         return self.registration.showNotification(data.title, {
           body: data.body,
-          icon: DEFAULT_NOTIFICATION_ICON,
+          icon: fallbackIcon,
           data: { url: data.url || '/' },
         })
       }),
@@ -151,7 +159,7 @@ if (typeof workbox !== 'undefined' && workbox) {
   workbox.routing.registerRoute(
     ({ url }) => /\.(js|css|html|svg|png|ico|woff2)$/i.test(url.pathname),
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: 'goplay-assets-v8',
+      cacheName: 'goplay-assets-v9',
     }),
   )
 
@@ -159,7 +167,7 @@ if (typeof workbox !== 'undefined' && workbox) {
   workbox.routing.registerRoute(
     ({ url }) => url.pathname === '/' || url.pathname === '/index.html',
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: 'goplay-index-v8',
+      cacheName: 'goplay-index-v9',
     }),
   )
 
@@ -171,7 +179,7 @@ if (typeof workbox !== 'undefined' && workbox) {
         const response = await fetch(request)
         return response
       } catch (error) {
-        const cache = await caches.open('goplay-index-v8')
+        const cache = await caches.open('goplay-index-v9')
         const cachedResponse =
           (await cache.match('/index.html')) || (await cache.match('/'))
         if (cachedResponse) {
