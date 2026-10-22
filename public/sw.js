@@ -1,5 +1,5 @@
 // Goplay App - Service Worker with Robust Web Push & Background Support
-// Version: 2026.10.22-v5
+// Version: 2026.10.22-v6
 
 importScripts(
   'https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js',
@@ -8,8 +8,6 @@ importScripts(
 // High-compatibility official raster icons for Android & OneUI (avoids SVG blank notification issue)
 const DEFAULT_NOTIFICATION_ICON =
   'https://goplay-app-screens-11312.goskip.app/icon-192.png'
-const DEFAULT_NOTIFICATION_BADGE =
-  'https://goplay-app-screens-11312.goskip.app/notification-badge.png'
 
 // Automated update & lifecycle logic
 self.addEventListener('install', (event) => {
@@ -27,7 +25,7 @@ self.addEventListener('activate', (event) => {
         .then((keys) =>
           Promise.all(
             keys
-              .filter((k) => k.startsWith('goplay-') && !k.endsWith('-v5'))
+              .filter((k) => k.startsWith('goplay-') && !k.endsWith('-v6'))
               .map((k) => caches.delete(k)),
           ),
         ),
@@ -45,7 +43,6 @@ self.addEventListener('push', (event) => {
     url: '/',
     tag: 'goplay-alert',
     icon: DEFAULT_NOTIFICATION_ICON,
-    badge: DEFAULT_NOTIFICATION_BADGE,
   }
 
   if (event.data) {
@@ -69,16 +66,12 @@ self.addEventListener('push', (event) => {
     data.icon && !data.icon.endsWith('.svg')
       ? data.icon
       : DEFAULT_NOTIFICATION_ICON
-  const badgeUrl =
-    data.badge && !data.badge.endsWith('.svg')
-      ? data.badge
-      : DEFAULT_NOTIFICATION_BADGE
 
-  // Complete NotificationOptions compliant with Android Notification Drawer & Heads-up banners
+  // Complete NotificationOptions compliant with Android Notification Drawer & Heads-up banners.
+  // Note: badge is deliberately omitted so Android/OneUI does not render a secondary monochrome badge/symbol.
   const notificationOptions = {
     body: data.body,
     icon: iconUrl,
-    badge: badgeUrl,
     tag: data.tag || `goplay-${Date.now()}`,
     data: {
       url: data.url || '/',
@@ -150,7 +143,7 @@ if (typeof workbox !== 'undefined' && workbox) {
   workbox.routing.registerRoute(
     ({ url }) => /\.(js|css|html|svg|png|ico|woff2)$/i.test(url.pathname),
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: 'goplay-assets-v5',
+      cacheName: 'goplay-assets-v6',
     }),
   )
 
@@ -158,7 +151,7 @@ if (typeof workbox !== 'undefined' && workbox) {
   workbox.routing.registerRoute(
     ({ url }) => url.pathname === '/' || url.pathname === '/index.html',
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: 'goplay-index-v5',
+      cacheName: 'goplay-index-v6',
     }),
   )
 
@@ -170,7 +163,7 @@ if (typeof workbox !== 'undefined' && workbox) {
         const response = await fetch(request)
         return response
       } catch (error) {
-        const cache = await caches.open('goplay-index-v5')
+        const cache = await caches.open('goplay-index-v6')
         const cachedResponse =
           (await cache.match('/index.html')) || (await cache.match('/'))
         if (cachedResponse) {

@@ -20,8 +20,6 @@ interface PushRequestPayload {
 // Fallback high-compatibility official PNG icons for Android & Samsung OneUI
 const DEFAULT_ICON_PNG =
   'https://goplay-app-screens-11312.goskip.app/icon-192.png'
-const DEFAULT_BADGE_PNG =
-  'https://goplay-app-screens-11312.goskip.app/notification-badge.png'
 
 Deno.serve(async (req: Request) => {
   // Handle CORS preflight
@@ -432,18 +430,20 @@ Deno.serve(async (req: Request) => {
     }
 
     // Android/Samsung notification guidelines:
-    // Avoid SVGs in icon and badge: use raster PNGs to guarantee native system banner display
+    // Avoid SVGs in icon: use official raster PNG to guarantee native system banner display.
+    // Notice: badge is omitted by default so Android/OneUI does not inject secondary monochrome circle/letters.
     const safeIcon = icon && !icon.endsWith('.svg') ? icon : DEFAULT_ICON_PNG
-    const safeBadge =
-      badge && !badge.endsWith('.svg') ? badge : DEFAULT_BADGE_PNG
 
-    const payload = {
+    const payload: Record<string, any> = {
       title,
       body: messageBody || '',
       url: url || '/',
       tag: tag || (isTest ? `goplay-test-${Date.now()}` : 'goplay-alert'),
       icon: safeIcon,
-      badge: safeBadge,
+    }
+
+    if (badge && !badge.endsWith('.svg')) {
+      payload.badge = badge
     }
 
     let successCount = 0
