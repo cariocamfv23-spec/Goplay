@@ -259,6 +259,35 @@ function renderBadgeIcon(size) {
   return makePng(size, size, buf)
 }
 
+// Make an ICO file from 16x16, 32x32 and 48x48 PNG buffers
+function makeIco(images) {
+  // ICONDIR header: 6 bytes
+  // reserved (2) = 0, type (2) = 1 (ico), count (2) = images.length
+  const header = Buffer.alloc(6)
+  header.writeUInt16LE(0, 0)
+  header.writeUInt16LE(1, 2)
+  header.writeUInt16LE(images.length, 4)
+
+  const dirEntries = []
+  let offset = 6 + images.length * 16
+
+  for (const img of images) {
+    const entry = Buffer.alloc(16)
+    entry.writeUInt8(img.width >= 256 ? 0 : img.width, 0)
+    entry.writeUInt8(img.height >= 256 ? 0 : img.height, 1)
+    entry.writeUInt8(0, 2) // color palette
+    entry.writeUInt8(0, 3) // reserved
+    entry.writeUInt16LE(1, 4) // color planes
+    entry.writeUInt16LE(32, 6) // bits per pixel
+    entry.writeUInt32LE(img.buffer.length, 8)
+    entry.writeUInt32LE(offset, 12)
+    dirEntries.push(entry)
+    offset += img.buffer.length
+  }
+
+  return Buffer.concat([header, ...dirEntries, ...images.map((i) => i.buffer)])
+}
+
 export function generateAssets(publicDir) {
   console.log('Generating official PNG assets...')
 
@@ -277,14 +306,29 @@ export function generateAssets(publicDir) {
     badge96.length,
   )
 
-  const monochrome192 = renderBadgeIcon(192)
-  fs.writeFileSync(path.join(publicDir, 'icon-monochrome.png'), monochrome192)
+  const monochrome512 = renderBadgeIcon(512)
+  fs.writeFileSync(path.join(publicDir, 'icon-monochrome.png'), monochrome512)
   console.log(
-    'Created public/icon-monochrome.png (192x192), size:',
-    monochrome192.length,
+    'Created public/icon-monochrome.png (512x512), size:',
+    monochrome512.length,
   )
 
-  console.log('All PNG assets generated successfully!')
+  // Favicon PNG (48x48) and ICO (16, 32, 48)
+  const fav48 = renderGoplayIcon(48)
+  const fav32 = renderGoplayIcon(32)
+  const fav16 = renderGoplayIcon(16)
+  fs.writeFileSync(path.join(publicDir, 'favicon.png'), fav48)
+  console.log('Created public/favicon.png (48x48), size:', fav48.length)
+
+  const icoBuf = makeIco([
+    { width: 16, height: 16, buffer: fav16 },
+    { width: 32, height: 32, buffer: fav32 },
+    { width: 48, height: 48, buffer: fav48 },
+  ])
+  fs.writeFileSync(path.join(publicDir, 'favicon.ico'), icoBuf)
+  console.log('Created public/favicon.ico (multi-res), size:', icoBuf.length)
+
+  console.log('All PNG/ICO assets generated successfully!')
 }
 
 // Run immediately if executed via node

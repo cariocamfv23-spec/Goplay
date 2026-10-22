@@ -2,21 +2,6 @@ import type { Config } from 'tailwindcss'
 import animatePlugin from 'tailwindcss-animate'
 import typographyPlugin from '@tailwindcss/typography'
 import aspectRatioPlugin from '@tailwindcss/aspect-ratio'
-import fs from 'node:fs'
-import path from 'node:path'
-
-// Ensure public/icon-monochrome.png exists from official notification-badge.png
-try {
-  const publicDir = path.resolve(process.cwd(), 'public')
-  const monoPath = path.join(publicDir, 'icon-monochrome.png')
-  const badgePath = path.join(publicDir, 'notification-badge.png')
-  if (!fs.existsSync(monoPath) && fs.existsSync(badgePath)) {
-    fs.copyFileSync(badgePath, monoPath)
-  }
-} catch {
-  // Silent fallback
-}
-
 export default {
   darkMode: ['class'],
   content: [

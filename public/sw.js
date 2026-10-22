@@ -1,5 +1,5 @@
 // Goplay App - Service Worker with Robust Web Push & Background Support
-// Version: 2026.10.22-v9 (monochrome icon 200 + origin-relative push notification icon)
+// Version: 2026.10.22-v9 (monochrome 512 + clean favicon + origin-relative push notification icon)
 
 importScripts(
   'https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js',
@@ -19,7 +19,7 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     Promise.all([
       self.clients.claim(),
-      // Prune old caches on version bump to v9
+      // Prune old caches on version bump to v9 (cleans legacy v1-v8 caches)
       caches
         .keys()
         .then((keys) =>
@@ -105,7 +105,10 @@ self.addEventListener('push', (event) => {
       .showNotification(data.title, notificationOptions)
       .catch((showErr) => {
         // Fallback without vibration or extra options if device rejects specific parameters
-        const fallbackIcon = new URL(DEFAULT_NOTIFICATION_ICON, self.location.origin).href
+        const fallbackIcon = new URL(
+          DEFAULT_NOTIFICATION_ICON,
+          self.location.origin,
+        ).href
         return self.registration.showNotification(data.title, {
           body: data.body,
           icon: fallbackIcon,

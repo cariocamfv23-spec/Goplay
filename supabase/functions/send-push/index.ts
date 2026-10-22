@@ -430,26 +430,38 @@ Deno.serve(async (req: Request) => {
 
     // Android/Samsung notification guidelines:
     // Avoid SVGs in icon: use official raster PNG to guarantee native system banner display.
-    // Determine origin from caller Request (Origin or Referer) or keep origin-relative path.
+    // Origin strategy: NEVER rely on a hardcoded production or staging domain.
+    // 1. Caller request Origin / Referer header (when invoked by active client)
+    // 2. User-Agent / Subscription origin if available
+    // 3. Fallback to origin-relative '/icon-192.png' (which sw.js resolves against self.location.origin on the device)
     const callerOrigin =
       req.headers.get('Origin') ||
       req.headers.get('origin') ||
-      (req.headers.get('Referer') ? new URL(req.headers.get('Referer')!).origin : '')
+      (req.headers.get('Referer')
+        ? (() => {
+            try {
+              return new URL(req.headers.get('Referer')!).origin
+            } catch {
+              return ''
+            }
+          })()
+        : '')
 
-    // Resolve icon URL:
-    // If client supplied an icon, use it. Otherwise, prefer origin-relative '/icon-192.png'
-    // or absolute URL with the caller's current origin (preview or production).
+    // Resolve base icon path:
     let resolvedIcon = DEFAULT_ICON_PATH
     if (icon && !icon.endsWith('.svg')) {
       resolvedIcon = icon
     } else if (callerOrigin) {
       resolvedIcon = `${callerOrigin.replace(/\/+$/, '')}/icon-192.png`
+    } else {
+      // Relative path - sw.js on the client resolves new URL('/icon-192.png', self.location.origin)
+      resolvedIcon = DEFAULT_ICON_PATH
     }
 
     const safeIcon = resolvedIcon
 
     // Top-level payload for RFC 8030 Web Push data.
-    // Note: FCM web-push encryption transports this data directly to the client's PushEvent handler in sw.js.
+    // FCM web-push encryption transports this data directly to the client's PushEvent handler in sw.js.
     // In sw.js, self.registration.showNotification(data.title, notificationOptions) receives these properties.
     const payload: Record<string, any> = {
       title,
