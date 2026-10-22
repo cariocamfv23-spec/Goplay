@@ -431,19 +431,18 @@ Deno.serve(async (req: Request) => {
 
     // Android/Samsung notification guidelines:
     // Avoid SVGs in icon: use official raster PNG to guarantee native system banner display.
-    // Notice: badge is omitted by default so Android/OneUI does not inject secondary monochrome circle/letters.
+    // Notice: badge is deliberately NEVER included in the push payload so Android/OneUI never creates a secondary monochrome badge circle.
     const safeIcon = icon && !icon.endsWith('.svg') ? icon : DEFAULT_ICON_PNG
 
+    // Top-level payload for RFC 8030 Web Push data.
+    // Note: FCM web-push encryption transports this data directly to the client's PushEvent handler in sw.js.
+    // In sw.js, self.registration.showNotification(data.title, notificationOptions) receives these properties.
     const payload: Record<string, any> = {
       title,
       body: messageBody || '',
       url: url || '/',
       tag: tag || (isTest ? `goplay-test-${Date.now()}` : 'goplay-alert'),
       icon: safeIcon,
-    }
-
-    if (badge && !badge.endsWith('.svg')) {
-      payload.badge = badge
     }
 
     let successCount = 0

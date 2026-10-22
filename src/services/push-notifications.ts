@@ -83,13 +83,39 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
   }
 
   try {
-    const reg = await navigator.serviceWorker.register('/sw.js', { scope: '/' })
-    // Force background check for newer sw.js version
+    // updateViaCache: 'none' guarantees the browser ALWAYS bypasses HTTP cache when re-fetching sw.js
+    const reg = await navigator.serviceWorker.register('/sw.js', {
+      scope: '/',
+      updateViaCache: 'none',
+    })
+
+    // If an updated worker is already waiting, tell it to take over immediately
+    if (reg.waiting) {
+      reg.waiting.postMessage({ type: 'SKIP_WAITING' })
+    }
+
+    reg.addEventListener('updatefound', () => {
+      const installingWorker = reg.installing
+      if (installingWorker) {
+        installingWorker.addEventListener('statechange', () => {
+          if (
+            installingWorker.state === 'installed' &&
+            navigator.serviceWorker.controller
+          ) {
+            // New version installed while old version was controlling: prompt takeover
+            installingWorker.postMessage({ type: 'SKIP_WAITING' })
+          }
+        })
+      }
+    })
+
+    // Force immediate network update check for sw.js
     try {
       reg.update().catch(() => {})
     } catch {
       /* ignore */
     }
+
     await navigator.serviceWorker.ready
     return reg
   } catch (err) {

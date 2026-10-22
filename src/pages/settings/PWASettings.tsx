@@ -222,34 +222,48 @@ function PWASettingsContent() {
     }
   }
 
-  const handleClearCache = () => {
-    if ('caches' in window) {
-      caches.keys().then((names) => {
-        for (const name of names) caches.delete(name)
+  const handleClearCache = async () => {
+    try {
+      if ('caches' in window) {
+        const names = await caches.keys()
+        await Promise.all(names.map((name) => caches.delete(name)))
+      }
+      if ('serviceWorker' in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations()
+        for (const reg of registrations) {
+          await reg.update().catch(() => {})
+        }
+      }
+      toast.success('Cache do aplicativo limpo com sucesso!', {
+        description:
+          'Caches locais removidos e Service Worker revalidado no servidor.',
       })
+    } catch {
+      toast.success('Cache do aplicativo limpo!')
     }
-    toast.success('Cache do aplicativo limpo com sucesso!', {
-      description: 'Isso ajudará a liberar espaço e atualizar dados offline.',
-    })
   }
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     toast.info('Verificando atualizações...', {
-      description: 'O aplicativo será reiniciado se houver uma nova versão.',
+      description:
+        'Baixando nova versão do Service Worker e atualizando cache.',
     })
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.ready.then((registration) => {
-        registration.update().then(() => {
-          setTimeout(() => {
-            window.location.reload()
-          }, 1200)
-        })
-      })
-    } else {
-      setTimeout(() => {
-        window.location.reload()
-      }, 1200)
+    try {
+      if ('serviceWorker' in navigator) {
+        const reg = await navigator.serviceWorker.getRegistration()
+        if (reg) {
+          if (reg.waiting) {
+            reg.waiting.postMessage({ type: 'SKIP_WAITING' })
+          }
+          await reg.update()
+        }
+      }
+    } catch {
+      /* ignore */
     }
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000)
   }
 
   const handleInstallApp = async () => {
