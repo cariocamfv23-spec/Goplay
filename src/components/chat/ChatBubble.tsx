@@ -10,11 +10,15 @@ import {
   TrendingDown,
   TrendingUp,
   Target,
+  Maximize2,
+  X,
 } from 'lucide-react'
+import { useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 
 interface ChatBubbleProps {
   message: ChatMessage
@@ -27,6 +31,7 @@ export function ChatBubble({
   senderAvatar,
   senderName,
 }: ChatBubbleProps) {
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false)
   const isMe = message.isMe
   const isBot = message.sender === 'bot'
 
@@ -167,12 +172,52 @@ export function ChatBubble({
 
         {/* Image Message */}
         {message.type === 'image' && (
-          <div className="rounded-lg overflow-hidden my-1 shadow-sm">
-            <img
-              src={message.mediaUrl}
-              alt="Sent image"
-              className="w-full h-auto max-h-[300px] object-cover"
-            />
+          <div className="space-y-1.5 my-1">
+            <div
+              className="rounded-lg overflow-hidden shadow-xs relative group cursor-pointer bg-black/5"
+              onClick={() => setIsLightboxOpen(true)}
+            >
+              <img
+                src={message.mediaUrl}
+                alt="Foto enviada no chat"
+                className="w-full h-auto max-h-[300px] object-cover rounded-lg group-hover:scale-[1.02] transition-transform duration-200"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                <span className="p-2 rounded-full bg-black/50 text-white backdrop-blur-xs">
+                  <Maximize2 className="h-4 w-4" />
+                </span>
+              </div>
+            </div>
+
+            {/* Lightbox / Zoom em tela cheia */}
+            <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
+              <DialogContent className="max-w-4xl p-1 bg-black/95 border-none text-white overflow-hidden shadow-2xl">
+                <DialogTitle className="sr-only">
+                  Visualizar Imagem em Tela Cheia
+                </DialogTitle>
+                <div className="relative flex flex-col items-center justify-center max-h-[85vh] p-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsLightboxOpen(false)}
+                    className="absolute top-2 right-2 z-30 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+                    title="Fechar"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                  <img
+                    src={message.mediaUrl}
+                    alt="Foto em tela cheia"
+                    className="max-h-[80vh] w-auto max-w-full object-contain rounded-md"
+                  />
+                  {message.text && (
+                    <p className="text-xs text-zinc-300 mt-2 px-3 py-1 bg-white/10 rounded-full text-center">
+                      {message.text}
+                    </p>
+                  )}
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         )}
 

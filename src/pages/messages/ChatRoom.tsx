@@ -362,7 +362,13 @@ export default function ChatRoom() {
       </div>
 
       {/* Input de envio */}
-      {!isBlocked && <ChatInput onSendMessage={handleSendMessage} />}
+      {!isBlocked && (
+        <ChatInput
+          onSendMessage={handleSendMessage}
+          currentUserId={user?.id}
+          disabled={loading || sending}
+        />
+      )}
     </div>
   )
 }

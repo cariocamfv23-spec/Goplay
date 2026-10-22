@@ -337,15 +337,21 @@ export const chatService = {
       if (recipientId && recipientId !== currentUserId) {
         const senderName = senderProfile?.name || 'Alguém'
         const snippet =
-          messageType === 'text'
-            ? content.slice(0, 100)
-            : messageType === 'image'
-              ? '📷 Envio de imagem'
-              : messageType === 'video'
-                ? '🎥 Envio de vídeo'
-                : messageType === 'audio'
-                  ? '🎙️ Mensagem de áudio'
-                  : '📄 Arquivo anexo'
+          messageType === 'image'
+            ? content
+              ? `📷 Foto: ${content.slice(0, 80)}`
+              : '📷 Foto'
+            : messageType === 'video'
+              ? content
+                ? `🎥 Vídeo: ${content.slice(0, 80)}`
+                : '🎥 Vídeo'
+              : messageType === 'audio'
+                ? '🎙️ Mensagem de áudio'
+                : messageType === 'document'
+                  ? fileName
+                    ? `📄 Documento: ${fileName}`
+                    : '📄 Arquivo anexo'
+                  : content.slice(0, 100) || 'Nova mensagem'
 
         // Cria registro na tabela notifications
         db.from('notifications')
