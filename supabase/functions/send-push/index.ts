@@ -218,9 +218,7 @@ Deno.serve(async (req: Request) => {
     }
 
     const vapidPublicKey = rawPublicKey ? sanitizeVapidKey(rawPublicKey) : null
-    const vapidPrivateKey = rawPrivateKey
-      ? sanitizeVapidKey(rawPrivateKey)
-      : null
+    const vapidPrivateKey = rawPrivateKey ? sanitizeVapidKey(rawPrivateKey) : null
     const vapidSubject = sanitizeVapidSubject(rawSubject)
 
     // Detailed diagnostic logging for VAPID env (without exposing secret values)
@@ -245,12 +243,7 @@ Deno.serve(async (req: Request) => {
       str: string,
       label: string,
       rawLen: number,
-    ): {
-      valid: boolean
-      length: number
-      bytes?: Uint8Array
-      error?: string
-    } => {
+    ): { valid: boolean; length: number; bytes?: Uint8Array; error?: string } => {
       try {
         if (!str || typeof str !== 'string') {
           return {
