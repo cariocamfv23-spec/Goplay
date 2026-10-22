@@ -18,6 +18,7 @@ import {
   X,
   Loader2,
   Filter,
+  MessageSquare,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '@/components/ui/badge'
@@ -619,6 +620,17 @@ export default function ChampionshipsList() {
                       onClick={() => navigate(`/profile/${r.userId}`)}
                     >
                       Ver Perfil
+                    </Button>
+
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="h-8 text-xs gap-1 bg-secondary hover:bg-secondary/80 text-foreground"
+                      onClick={() => navigate(`/messages/user-${r.userId}`)}
+                      title="Enviar mensagem direta ao atleta"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5 mr-1" />
+                      Mensagem
                     </Button>
 
                     <Button
