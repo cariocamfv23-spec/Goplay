@@ -595,7 +595,7 @@ function PWASettingsContent() {
               onClick={handleUpdate}
             >
               <RefreshCw className="h-4 w-4 text-primary" />
-              Verificar Atualizações do App (Atualizar Service Worker v14)
+              Verificar Atualizações do App (Atualizar Service Worker v15)
             </Button>
 
             <Button
@@ -608,9 +608,9 @@ function PWASettingsContent() {
             </Button>
           </div>
           <p className="text-[11px] text-muted-foreground px-2">
-            Versão do Service Worker: <code>2026.10.23-v14</code> • Formato
-            TikTok: logo oficial à esquerda, avatar no <code>icon</code> à
-            direita e sem imagem expandida.
+            Versão do Service Worker: <code>2026.10.23-v15</code> • Formato
+            TikTok: logo oficial à esquerda, avatar circular no{" "}
+            <code>icon</code> à direita e sem imagem expandida.
           </p>{" "}
         </div>
       </div>

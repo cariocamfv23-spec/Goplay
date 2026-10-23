@@ -455,9 +455,12 @@ Deno.serve(async (req: Request) => {
       ? `${callerOrigin.replace(/\/+$/, "")}/icon-192.png`
       : DEFAULT_ICON_PATH
 
-    // Helper to sanitize avatar / image URLs and optimize for square crop if on Supabase storage
+    // Helper to sanitize avatar / image URLs
+    // allowSquareTransform: if true, appends Supabase width/height/resize for square fallback
+    // For circular PNG variants (-round.png), keep uncompressed/untransformed so alpha channel remains intact
     const sanitizeImageUrl = (
       rawUrl: string | undefined | null,
+      allowSquareTransform = false,
     ): string | null => {
       if (!rawUrl || typeof rawUrl !== "string") return null
       const trimmed = rawUrl.trim()
@@ -473,9 +476,9 @@ Deno.serve(async (req: Request) => {
       try {
         const parsed = new URL(trimmed, callerOrigin || "https://goplay.app")
         if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-          // If this is a Supabase public storage object URL (e.g. /storage/v1/object/public/...)
-          // and doesn't already have transformation params, append square resize hint for crisp avatar display
+          // If square transformation is requested and it's Supabase public storage without transform params
           if (
+            allowSquareTransform &&
             parsed.pathname.includes("/storage/v1/object/public/") &&
             !parsed.searchParams.has("width")
           ) {
@@ -489,6 +492,54 @@ Deno.serve(async (req: Request) => {
         return null
       }
       return null
+    }
+
+    /**
+     * Resolves avatar variant URL with cascading fallback:
+     * 1. Circular PNG variant (-round.png with alpha) if exists
+     * 2. Original / square avatar URL (with 192x192 cover transform)
+     * 3. Fallback: null (caller will fall back to official Goplay logo)
+     */
+    const resolveCircularOrSquareAvatar = async (
+      rawAvatarUrl: string | null | undefined,
+    ): Promise<string | null> => {
+      if (!rawAvatarUrl || typeof rawAvatarUrl !== "string") return null
+
+      // If the incoming URL is already the circular variant
+      if (rawAvatarUrl.includes("-round.png")) {
+        const sanitized = sanitizeImageUrl(rawAvatarUrl, false)
+        if (sanitized) return sanitized
+      }
+
+      // Check if it belongs to Supabase avatars bucket
+      if (rawAvatarUrl.includes("/storage/v1/object/public/avatars/")) {
+        // Derive potential circular variant path
+        // e.g. .../avatars/<userId>/avatar_123.jpg -> .../avatars/<userId>/avatar_123-round.png
+        const roundCandidateUrl = rawAvatarUrl.replace(
+          /\.[a-zA-Z0-9]+(\?.*)?$/,
+          "-round.png",
+        )
+        if (roundCandidateUrl !== rawAvatarUrl) {
+          try {
+            // Quick HEAD check to verify if circular file actually exists in storage bucket
+            const headRes = await fetch(roundCandidateUrl, { method: "HEAD" })
+            if (headRes.ok) {
+              const sanitizedRound = sanitizeImageUrl(roundCandidateUrl, false)
+              if (sanitizedRound) {
+                return sanitizedRound
+              }
+            }
+          } catch {
+            // Non-blocking fallback to square original
+          }
+        }
+
+        // Fallback to square original with cover transform
+        return sanitizeImageUrl(rawAvatarUrl, true)
+      }
+
+      // External or standard URL: return with square transform if applicable
+      return sanitizeImageUrl(rawAvatarUrl, true)
     }
 
     // Determine the actor's profile photo to display on the RIGHT of the notification (in the `icon` slot)
@@ -505,15 +556,15 @@ Deno.serve(async (req: Request) => {
       candidateAvatarInput = image
     }
 
-    let resolvedAvatar: string | null = sanitizeImageUrl(candidateAvatarInput)
-
     // If an actorId is provided (e.g. author of like/comment/follow/message) or actor was the caller,
     // fetch their public avatar from profiles if not already explicitly supplied
     const effectiveActorId =
       actorId ||
       (callerUser.id !== "service-role" && !isTest ? callerUser.id : null)
 
-    if (!resolvedAvatar && effectiveActorId) {
+    let rawAvatarToResolve = candidateAvatarInput || null
+
+    if (!rawAvatarToResolve && effectiveActorId) {
       try {
         const { data: actorProfile } = await adminDb
           .from("profiles")
@@ -522,7 +573,7 @@ Deno.serve(async (req: Request) => {
           .maybeSingle()
 
         if (actorProfile?.avatar_url) {
-          resolvedAvatar = sanitizeImageUrl(actorProfile.avatar_url)
+          rawAvatarToResolve = actorProfile.avatar_url
         }
       } catch (errProfile) {
         console.warn(
@@ -532,11 +583,15 @@ Deno.serve(async (req: Request) => {
       }
     }
 
+    // Resolve circular -> square -> null
+    const resolvedAvatar: string | null =
+      await resolveCircularOrSquareAvatar(rawAvatarToResolve)
+
     // TikTok layout rule:
     // Android One UI displays the app identity (GoPlay logo) on the left automatically.
     // The `icon` parameter in NotificationOptions is rendered on the RIGHT aligned with the text.
-    // Therefore, if we have the actor's profile photo, send it as `icon`.
-    // If not, fallback to the official Goplay logo.
+    // Therefore, if we have the actor's profile photo (preferably circular PNG with alpha), send it as `icon`.
+    // If not, fallback in cascade to the official Goplay logo.
     const finalIcon = resolvedAvatar || officialLogoPath
 
     // Top-level payload for RFC 8030 Web Push data.

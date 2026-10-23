@@ -162,19 +162,24 @@ export const profileService = {
    */
   async uploadAvatar(userId: string, file: File): Promise<{
     url: string | null
+    roundUrl?: string | null
     error: Error | null
   }> {
     try {
       if (!userId) {
         return {
-          data: null,
+          url: null,
+          roundUrl: null,
           error: new Error("Usuário não autenticado."),
-        } as any
+        }
       }
 
+      const timestamp = Date.now()
       const fileExt = file.name.split(".").pop()?.toLowerCase() || "jpg"
-      const filePath = `${userId}/avatar_${Date.now()}.${fileExt}`
+      const filePath = `${userId}/avatar_${timestamp}.${fileExt}`
+      const roundFilePath = `${userId}/avatar_${timestamp}-round.png`
 
+      // 1. Upload original photo
       const { error: uploadError } = await supabase.storage
         .from("avatars")
         .upload(filePath, file, {
@@ -183,14 +188,52 @@ export const profileService = {
         })
 
       if (uploadError) {
-        return { url: null, error: new Error(uploadError.message) }
+        return {
+          url: null,
+          roundUrl: null,
+          error: new Error(uploadError.message),
+        }
       }
 
       const { data } = supabase.storage.from("avatars").getPublicUrl(filePath)
-      return { url: data.publicUrl, error: null }
+      const publicUrl = data.publicUrl
+      let roundPublicUrl: string | null = null
+
+      // 2. Generate circular PNG variant (192x192 with alpha) for Android/One UI push notifications
+      try {
+        const { createCircularAvatarBlob } = await import("@/lib/avatar-round")
+        const roundBlob = await createCircularAvatarBlob(file, { size: 192 })
+        const { error: roundUploadError } = await supabase.storage
+          .from("avatars")
+          .upload(roundFilePath, roundBlob, {
+            upsert: true,
+            contentType: "image/png",
+          })
+
+        if (!roundUploadError) {
+          const { data: roundData } = supabase.storage
+            .from("avatars")
+            .getPublicUrl(roundFilePath)
+          roundPublicUrl = roundData.publicUrl
+        } else {
+          console.warn(
+            "[uploadAvatar] Circular avatar upload failed:",
+            roundUploadError,
+          )
+        }
+      } catch (roundErr) {
+        // Non-blocking: original avatar upload was already successful
+        console.warn(
+          "[uploadAvatar] Circular variant generation failed:",
+          roundErr,
+        )
+      }
+
+      return { url: publicUrl, roundUrl: roundPublicUrl, error: null }
     } catch (err: any) {
       return {
         url: null,
+        roundUrl: null,
         error: err instanceof Error ? err : new Error(String(err)),
       }
     }
