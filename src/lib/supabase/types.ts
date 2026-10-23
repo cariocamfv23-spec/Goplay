@@ -1,7 +1,11 @@
 // AVOID UPDATING THIS FILE DIRECTLY. It is automatically generated.
-export type Json = string | number | boolean | null | {
-  [key: string]: Json | undefined
-} | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
@@ -108,13 +112,15 @@ export type Database = {
           read_at?: string | null
           sender_id?: string
         }
-        Relationships: [{
-          foreignKeyName: "direct_messages_conversation_id_fkey"
-          columns: ["conversation_id"]
-          isOneToOne: false
-          referencedRelation: "conversations"
-          referencedColumns: ["id"]
-        }]
+        Relationships: [
+          {
+            foreignKeyName: "direct_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       event_registrations: {
         Row: {
@@ -141,13 +147,15 @@ export type Database = {
           status?: string
           user_id?: string
         }
-        Relationships: [{
-          foreignKeyName: "event_registrations_event_id_fkey"
-          columns: ["event_id"]
-          isOneToOne: false
-          referencedRelation: "events"
-          referencedColumns: ["id"]
-        }]
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       events: {
         Row: {
@@ -282,13 +290,15 @@ export type Database = {
           post_id?: string
           user_id?: string
         }
-        Relationships: [{
-          foreignKeyName: "post_comments_post_id_fkey"
-          columns: ["post_id"]
-          isOneToOne: false
-          referencedRelation: "posts"
-          referencedColumns: ["id"]
-        }]
+        Relationships: [
+          {
+            foreignKeyName: "post_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       post_likes: {
         Row: {
@@ -309,13 +319,15 @@ export type Database = {
           post_id?: string
           user_id?: string
         }
-        Relationships: [{
-          foreignKeyName: "post_likes_post_id_fkey"
-          columns: ["post_id"]
-          isOneToOne: false
-          referencedRelation: "posts"
-          referencedColumns: ["id"]
-        }]
+        Relationships: [
+          {
+            foreignKeyName: "post_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       posts: {
         Row: {
@@ -570,29 +582,26 @@ export type Database = {
         Relationships: []
       }
     }
-    Views: { [_ in never]: never }
+    Views: {
+      [_ in never]: never
+    }
     Functions: {
       decide_event_registration: {
-        Args: {
-          p_new_status: string;
-          p_registration_id: string;
-        }
+        Args: { p_new_status: string; p_registration_id: string }
         Returns: Json
       }
       get_or_create_conversation: {
-        Args: {
-          other_user_id: string;
-        }
+        Args: { other_user_id: string }
         Returns: string
       }
-      is_current_user_admin: {
-        Args: Record<string, never>
-        Returns: boolean
-      }    }
+      is_current_user_admin: { Args: never; Returns: boolean }
+    }
     Enums: {
       account_type_enum: "athlete" | "club" | "coach"
     }
-    CompositeTypes: { [_ in never]: never }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
 }
 
@@ -720,3 +729,4 @@ export const Constants = {
     },
   },
 } as const
+
