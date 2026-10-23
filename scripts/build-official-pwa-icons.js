@@ -339,6 +339,11 @@ export function runGenerator() {
   }
 }
 
-// Execute immediately when run with node
-const stats = runGenerator()
-console.log("GENERATOR_SUCCESS:", JSON.stringify(stats, null, 2))
+// Execute when run directly with node
+if (
+  process.argv[1] &&
+  process.argv[1].endsWith("build-official-pwa-icons.js")
+) {
+  const stats = runGenerator()
+  console.log("GENERATOR_SUCCESS:", JSON.stringify(stats, null, 2))
+}

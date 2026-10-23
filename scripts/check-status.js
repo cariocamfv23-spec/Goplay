@@ -3,6 +3,13 @@ import path from "node:path"
 import zlib from "node:zlib"
 
 const files = [
+  "public/icon-512-v2.png",
+  "public/icon-192-v2.png",
+  "public/icon-512-maskable-v2.png",
+  "public/icon-192-maskable-v2.png",
+  "public/icon-monochrome-v2.png",
+  "public/favicon-v2.png",
+  "public/notification-badge-v2.png",
   "public/icon-512.png",
   "public/icon-192.png",
   "public/icon-512-maskable.png",
