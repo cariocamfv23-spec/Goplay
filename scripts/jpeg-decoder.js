@@ -96,9 +96,16 @@ function decodeScan(
     var node = tree,
       bit
     while ((bit = readBit()) !== null) {
+      if (!node) {
+        if (opts && opts.tolerantDecoding) return 0
+        throw new Error("invalid huffman sequence")
+      }
       node = node[bit]
       if (typeof node === "number") return node
-      if (typeof node !== "object") throw new Error("invalid huffman sequence")
+      if (typeof node !== "object" || node === null) {
+        if (opts && opts.tolerantDecoding) return 0
+        throw new Error("invalid huffman sequence")
+      }
     }
     return null
   }

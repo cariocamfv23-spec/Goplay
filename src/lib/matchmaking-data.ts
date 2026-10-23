@@ -559,11 +559,13 @@ const SKILL_TOLERANCE_MAP: Record<string, number> = {
   wide: 200,
 }
 
+export type SkillTolerance = "precise" | "balanced" | "wide"
+
 export function suggestOpponent(
   modality: Modality,
   maxDistance: number,
   maxBudget: number,
-  skillTolerance: "precise" | "balanced" | "wide",
+  skillTolerance: SkillTolerance,
 ): SuggestionResult | null {
   const tolerance = SKILL_TOLERANCE_MAP[skillTolerance] ?? 100
   const candidates = MOCK_TEAMS.filter((t) => t.modality === modality)

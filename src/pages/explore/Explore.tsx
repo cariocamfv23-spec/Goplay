@@ -259,10 +259,12 @@ export default function Explore() {
   }
 
   // Map Supabase events to Event shape for MapEventCard
-  const mappedRealEvents: Event & {
+  type DisplayEvent = Event & {
     isRegistered?: boolean
     rawType?: string
-  }[] = realEvents.map((e) => ({
+  }
+
+  const mappedRealEvents: DisplayEvent[] = realEvents.map((e) => ({
     id: e.id,
     title: e.title,
     category: e.type === "tryout" ? "Peneira Oficial" : "Campeonato",
@@ -286,15 +288,14 @@ export default function Explore() {
     isRegistered: e.isRegistered,
   }))
 
-  const allDisplayEvents = [...mappedRealEvents, ...mockEvents]
+  const allDisplayEvents: DisplayEvent[] = [...mappedRealEvents, ...mockEvents]
 
-  const filteredEvents = allDisplayEvents.filter(
+  const filteredEvents: DisplayEvent[] = allDisplayEvents.filter(
     (e) =>
       (e.title || "").toLowerCase().includes(search.toLowerCase()) ||
       (e.modality || "").toLowerCase().includes(search.toLowerCase()) ||
       (e.city || "").toLowerCase().includes(search.toLowerCase()),
   )
-
   const filteredVenues = mockVenues.filter(
     (v) =>
       v.name.toLowerCase().includes(search.toLowerCase()) ||

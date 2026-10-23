@@ -1,7 +1,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import zlib from "node:zlib"
-import { decodeJpeg } from "./jpeg-decoder.js"
+import jpeg from "jpeg-js"
 
 // 1. Pure JS PNG encoder
 function crc32(buf) {
@@ -195,7 +195,10 @@ export function buildPwaIcons() {
 
   console.log("Loading source image from:", sourcePath)
   const sourceRaw = fs.readFileSync(sourcePath)
-  const decoded = decodeJpeg(sourceRaw)
+  const decoded = (jpeg.decode || jpeg)(sourceRaw, {
+    tolerantDecoding: true,
+    formatAsRGBA: true,
+  })
   console.log(
     `Source image decoded: ${decoded.width}x${decoded.height}, RGBA bytes: ${decoded.data.length}`,
   )
