@@ -3,7 +3,6 @@ import path from "node:path"
 import zlib from "node:zlib"
 import jpeg from "jpeg-js"
 
-// 1. Pure JS PNG encoder
 function crc32(buf) {
   let table = crc32.table
   if (!table) {
@@ -63,12 +62,10 @@ function makePng(width, height, rgbaBuffer) {
   return Buffer.concat([sig, ihdrChunk, idatChunk, iendChunk])
 }
 
-// 2. High-quality bilinear / area-averaging resizer
 function resizeRgba(srcBuf, srcW, srcH, dstW, dstH, options = {}) {
   const { padding = 0, bgColor = [255, 255, 255, 255] } = options
   const outBuf = Buffer.alloc(dstW * dstH * 4)
 
-  // Fill background
   for (let i = 0; i < dstW * dstH; i++) {
     outBuf[i * 4] = bgColor[0]
     outBuf[i * 4 + 1] = bgColor[1]
@@ -120,11 +117,7 @@ function resizeRgba(srcBuf, srcW, srcH, dstW, dstH, options = {}) {
   return outBuf
 }
 
-// 3. Generate Monochrome (white play silhouette on transparent)
-// From the official art, the golden play triangle is near center and has distinct chromatic hue (gold)
-// or we can detect the play region: x around 35%-65%, y around 35%-65%, golden yellow vs white/purple
 function generateMonochrome(srcBuf, srcW, srcH, size) {
-  // First resize to size x size
   const resized = resizeRgba(srcBuf, srcW, srcH, size, size)
   const monoBuf = Buffer.alloc(size * size * 4)
 
@@ -135,13 +128,9 @@ function generateMonochrome(srcBuf, srcW, srcH, size) {
       const g = resized[idx + 1]
       const b = resized[idx + 2]
 
-      // Foreground detection: any non-white pixel in the official art (purple C arc + golden play)
-      // Standard monochrome PWA icon specification: "The monochrome purpose specifies that an icon is intended to be used as a silhouette... All transparent pixels remain transparent, and non-transparent pixels are recolored by the user agent."
-      // So any non-background element (both the purple C arc and the play triangle) should have solid white with alpha = (255 - luminance of bg)
       const isWhiteBg = r > 245 && g > 245 && b > 245
 
       if (!isWhiteBg) {
-        // Compute alpha based on distance from white background
         const distFromWhite = Math.max(255 - r, 255 - g, 255 - b)
         const alpha = Math.min(255, Math.round(distFromWhite * 1.5))
         monoBuf[idx] = 255
@@ -152,7 +141,7 @@ function generateMonochrome(srcBuf, srcW, srcH, size) {
         monoBuf[idx] = 255
         monoBuf[idx + 1] = 255
         monoBuf[idx + 2] = 255
-        monoBuf[idx + 3] = 0 // Transparent
+        monoBuf[idx + 3] = 0
       }
     }
   }
@@ -160,7 +149,6 @@ function generateMonochrome(srcBuf, srcW, srcH, size) {
   return makePng(size, size, monoBuf)
 }
 
-// 4. Multi-resolution ICO builder
 function makeIco(images) {
   const header = Buffer.alloc(6)
   header.writeUInt16LE(0, 0)
@@ -187,95 +175,49 @@ function makeIco(images) {
   return Buffer.concat([header, ...dirEntries, ...images.map((i) => i.buffer)])
 }
 
-export function buildPwaIcons() {
+export function runGenerator() {
   const sourcePath = path.resolve(
     "src/assets/screenshot20261022203052chrome-d2bdf.jpg",
   )
   const publicDir = path.resolve("public")
 
-  console.log("Loading source image from:", sourcePath)
   const sourceRaw = fs.readFileSync(sourcePath)
-  const decoded = (jpeg.decode || jpeg)(sourceRaw, {
+  const decodeFn = jpeg.decode || jpeg
+  const decoded = decodeFn(sourceRaw, {
     tolerantDecoding: true,
     formatAsRGBA: true,
   })
-  console.log(
-    `Source image decoded: ${decoded.width}x${decoded.height}, RGBA bytes: ${decoded.data.length}`,
-  )
 
-  // 1. icon-512.png (512x512, any)
-  console.log("Generating public/icon-512.png...")
-  const rgba512 = resizeRgba(
-    decoded.data,
-    decoded.width,
-    decoded.height,
-    512,
-    512,
-  )
+  // 1. icon-512.png
+  const rgba512 = resizeRgba(decoded.data, decoded.width, decoded.height, 512, 512)
   const png512 = makePng(512, 512, rgba512)
   fs.writeFileSync(path.join(publicDir, "icon-512.png"), png512)
 
-  // 2. icon-192.png (192x192, any)
-  console.log("Generating public/icon-192.png...")
-  const rgba192 = resizeRgba(
-    decoded.data,
-    decoded.width,
-    decoded.height,
-    192,
-    192,
-  )
+  // 2. icon-192.png
+  const rgba192 = resizeRgba(decoded.data, decoded.width, decoded.height, 192, 192)
   const png192 = makePng(192, 192, rgba192)
   fs.writeFileSync(path.join(publicDir, "icon-192.png"), png192)
 
-  // 3. Maskable icons (512 and 192). Safe zone in maskable icons is 80% diameter (10% padding on each side).
-  // The source image already has white background and comfortable margins, but adding a slight padding ensures no clipping in circular/squircle masks.
-  console.log("Generating maskable icons...")
-  const rgba512Maskable = resizeRgba(
-    decoded.data,
-    decoded.width,
-    decoded.height,
-    512,
-    512,
-    {
-      padding: 32, // safe zone margin on white
-      bgColor: [255, 255, 255, 255],
-    },
-  )
+  // 3. Maskable icons
+  const rgba512Maskable = resizeRgba(decoded.data, decoded.width, decoded.height, 512, 512, {
+    padding: 32,
+    bgColor: [255, 255, 255, 255],
+  })
   const png512Maskable = makePng(512, 512, rgba512Maskable)
-  fs.writeFileSync(
-    path.join(publicDir, "icon-512-maskable.png"),
-    png512Maskable,
-  )
+  fs.writeFileSync(path.join(publicDir, "icon-512-maskable.png"), png512Maskable)
 
-  const rgba192Maskable = resizeRgba(
-    decoded.data,
-    decoded.width,
-    decoded.height,
-    192,
-    192,
-    {
-      padding: 12,
-      bgColor: [255, 255, 255, 255],
-    },
-  )
+  const rgba192Maskable = resizeRgba(decoded.data, decoded.width, decoded.height, 192, 192, {
+    padding: 12,
+    bgColor: [255, 255, 255, 255],
+  })
   const png192Maskable = makePng(192, 192, rgba192Maskable)
-  fs.writeFileSync(
-    path.join(publicDir, "icon-192-maskable.png"),
-    png192Maskable,
-  )
+  fs.writeFileSync(path.join(publicDir, "icon-192-maskable.png"), png192Maskable)
 
-  // 4. icon-monochrome.png (512x512)
-  console.log("Generating public/icon-monochrome.png...")
-  const pngMono = generateMonochrome(
-    decoded.data,
-    decoded.width,
-    decoded.height,
-    512,
-  )
+  // 4. icon-monochrome.png
+  const pngMono = generateMonochrome(decoded.data, decoded.width, decoded.height, 512)
   fs.writeFileSync(path.join(publicDir, "icon-monochrome.png"), pngMono)
 
-  // 5. Favicon 48x48 PNG and favicon.ico (16, 32, 48)
-  console.log("Generating favicon.png and favicon.ico...")
+  // 5. Favicon PNG and ICO
   const rgba48 = resizeRgba(decoded.data, decoded.width, decoded.height, 48, 48)
   const png48 = makePng(48, 48, rgba48)
   fs.writeFileSync(path.join(publicDir, "favicon.png"), png48)
@@ -293,16 +235,23 @@ export function buildPwaIcons() {
   ])
   fs.writeFileSync(path.join(publicDir, "favicon.ico"), icoBuf)
 
-  // Also notification-badge.png (96x96 monochrome for Android notification status bar)
-  const badgeMono = generateMonochrome(
-    decoded.data,
-    decoded.width,
-    decoded.height,
-    96,
-  )
+  // 6. notification-badge.png
+  const badgeMono = generateMonochrome(decoded.data, decoded.width, decoded.height, 96)
   fs.writeFileSync(path.join(publicDir, "notification-badge.png"), badgeMono)
 
-  console.log("All PWA icons successfully generated from official art!")
+  return {
+    sourceWidth: decoded.width,
+    sourceHeight: decoded.height,
+    icon512Bytes: png512.length,
+    icon192Bytes: png192.length,
+    icon512MaskableBytes: png512Maskable.length,
+    icon192MaskableBytes: png192Maskable.length,
+    iconMonoBytes: pngMono.length,
+    fav48Bytes: png48.length,
+    icoBytes: icoBuf.length,
+    badgeBytes: badgeMono.length,
+  }
 }
 
-buildPwaIcons()
+const stats = runGenerator()
+console.log("GENERATOR_RESULT:", JSON.stringify(stats))
