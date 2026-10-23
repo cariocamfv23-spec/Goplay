@@ -127,3 +127,27 @@ export function verifyAllIcons() {
 
   return report
 }
+
+// Auto-run when executed directly: node scripts/verify-icons.mjs
+const isDirectRun =
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url))
+
+if (isDirectRun) {
+  const results = verifyAllIcons()
+  let hasFailure = false
+  console.log("=== GOPLAY ICONS INTEGRITY VERIFICATION ===")
+  for (const r of results) {
+    const status = r.dimMatch && r.cornersAreExpected ? "PASS" : "FAIL"
+    if (status === "FAIL") hasFailure = true
+    console.log(
+      `[${status}] ${r.name} -> dim: ${r.dim} (expected ${r.expectedDim}), ratio: ${r.contentRatio}, cornersOK: ${r.cornersAreExpected}, bbox: ${r.bbox}`,
+    )
+  }
+  if (hasFailure) {
+    console.error("Verification failed for some icons!")
+    process.exit(1)
+  } else {
+    console.log("All 7 -v2 icons passed integrity check!")
+  }
+}
