@@ -1,7 +1,7 @@
 import fs from "node:fs"
 import path from "node:path"
 
-const file = path.resolve("src/assets/screenshot20261022203052chrome-d2bdf.jpg")
+const file = path.resolve("src/assets/screenshot20261022203052chrome-07272.jpg")
 const buf = fs.readFileSync(file)
 
 console.log("File size:", buf.length)

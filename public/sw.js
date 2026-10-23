@@ -1,14 +1,14 @@
 // Goplay App - Service Worker with Robust Web Push & Background Support
-// Version: 2026.10.23-v15 (TikTok style push notifications: circular avatar in icon, official logo at left, no expanded big image)
+// Version: 2026.10.23-v16 (TikTok style push notifications: circular avatar in icon, official logo at left, no expanded big image, v2 versioned icons)
 
 importScripts(
   "https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js",
 )
 
 // High-compatibility official raster icons for Android & OneUI (origin-relative URL)
-const DEFAULT_NOTIFICATION_ICON = "/icon-192.png"
-const NOTIFICATION_BADGE_ICON = "/notification-badge.png"
-const SW_VERSION = "2026.10.23-v15"
+const DEFAULT_NOTIFICATION_ICON = "/icon-192-v2.png"
+const NOTIFICATION_BADGE_ICON = "/notification-badge-v2.png"
+const SW_VERSION = "2026.10.23-v16"
 
 // Automated update & lifecycle logic - immediate takeover
 self.addEventListener("install", (event) => {
@@ -20,13 +20,13 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     Promise.all([
       self.clients.claim(),
-      // Prune old caches on version bump to v15 (cleans legacy v1-v14 caches)
+      // Prune old caches on version bump to v16 (cleans legacy v1-v15 caches)
       caches
         .keys()
         .then((keys) =>
           Promise.all(
             keys
-              .filter((k) => k.startsWith("goplay-") && !k.endsWith("-v15"))
+              .filter((k) => k.startsWith("goplay-") && !k.endsWith("-v16"))
               .map((k) => caches.delete(k)),
           ),
         ),
@@ -73,9 +73,9 @@ self.addEventListener("push", (event) => {
   // 1. Official Goplay logo is kept at the left by the OS/PWA application identity.
   // 2. The `icon` property is rendered by Android/One UI on the RIGHT, aligned with the notification text.
   //    We set `icon` to the real profile photo of the user/actor who generated the event (like, comment, follower, message).
-  //    If no actor photo is present, fallback to the official Goplay raster logo (/icon-192.png).
+  //    If no actor photo is present, fallback to the official Goplay raster logo (/icon-192-v2.png).
   // 3. The `image` property is STRICTLY OMITTED to prevent the giant expanded photo banner below the text.
-  // 4. The `badge` property uses the official monochrome badge icon (/notification-badge.png).
+  // 4. The `badge` property uses the official monochrome badge icon (/notification-badge-v2.png).
 
   // Resolve actor avatar or fallback icon:
   // Accept photo URL from `data.icon`, `data.avatarUrl`, or `data.image` (for payload backward compatibility)
@@ -201,7 +201,7 @@ if (typeof workbox !== "undefined" && workbox) {
   workbox.routing.registerRoute(
     ({ url }) => /\.(js|css|html|svg|png|ico|woff2)$/i.test(url.pathname),
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: "goplay-assets-v15",
+      cacheName: "goplay-assets-v16",
     }),
   )
 
@@ -209,7 +209,7 @@ if (typeof workbox !== "undefined" && workbox) {
   workbox.routing.registerRoute(
     ({ url }) => url.pathname === "/" || url.pathname === "/index.html",
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: "goplay-index-v15",
+      cacheName: "goplay-index-v16",
     }),
   )
 
@@ -221,7 +221,7 @@ if (typeof workbox !== "undefined" && workbox) {
         const response = await fetch(request)
         return response
       } catch (error) {
-        const cache = await caches.open("goplay-index-v15")
+        const cache = await caches.open("goplay-index-v16")
         const cachedResponse =
           (await cache.match("/index.html")) || (await cache.match("/"))
         if (cachedResponse) {

@@ -20,7 +20,7 @@ interface PushRequestPayload {
 }
 
 // Fallback high-compatibility official PNG icons for Android & Samsung OneUI
-const DEFAULT_ICON_PATH = "/icon-192.png"
+const DEFAULT_ICON_PATH = "/icon-192-v2.png"
 
 Deno.serve(async (req: Request) => {
   // Handle CORS preflight
@@ -452,7 +452,7 @@ Deno.serve(async (req: Request) => {
 
     // Official Goplay default icon (origin-relative fallback)
     const officialLogoPath = callerOrigin
-      ? `${callerOrigin.replace(/\/+$/, "")}/icon-192.png`
+      ? `${callerOrigin.replace(/\/+$/, "")}/icon-192-v2.png`
       : DEFAULT_ICON_PATH
 
     // Helper to sanitize avatar / image URLs
@@ -604,7 +604,7 @@ Deno.serve(async (req: Request) => {
       url: url || "/",
       tag: tag || (isTest ? `goplay-test-${Date.now()}` : "goplay-alert"),
       icon: finalIcon,
-      badge: badge || "/notification-badge.png",
+      badge: badge || "/notification-badge-v2.png",
       avatarUrl: resolvedAvatar || null,
     }
 
