@@ -40,18 +40,18 @@ function makePng(width, height, rgbaBuffer) {
   const ihdrData = Buffer.alloc(13)
   ihdrData.writeUInt32BE(width, 0)
   ihdrData.writeUInt32BE(height, 4)
-  ihdrData[8] = 8
-  ihdrData[9] = 6
-  ihdrData[10] = 0
-  ihdrData[11] = 0
-  ihdrData[12] = 0
+  ihdrData[8] = 8 // 8 bits per channel
+  ihdrData[9] = 6 // color type 6: RGBA
+  ihdrData[10] = 0 // deflate
+  ihdrData[11] = 0 // filter
+  ihdrData[12] = 0 // interlace
 
   const ihdrChunk = createChunk("IHDR", ihdrData)
   const rowLen = width * 4
   const rawData = Buffer.alloc((1 + rowLen) * height)
   for (let y = 0; y < height; y++) {
     const rowOffset = y * (1 + rowLen)
-    rawData[rowOffset] = 0
+    rawData[rowOffset] = 0 // filter type 0
     rgbaBuffer.copy(rawData, rowOffset + 1, y * rowLen, (y + 1) * rowLen)
   }
 
@@ -62,10 +62,12 @@ function makePng(width, height, rgbaBuffer) {
   return Buffer.concat([sig, ihdrChunk, idatChunk, iendChunk])
 }
 
+// Bilinear resize into dstW x dstH with optional padding (for maskable safe zone) and background fill
 function resizeRgba(srcBuf, srcW, srcH, dstW, dstH, options = {}) {
   const { padding = 0, bgColor = [255, 255, 255, 255] } = options
   const outBuf = Buffer.alloc(dstW * dstH * 4)
 
+  // Initialize with background color (default pure white #ffffff)
   for (let i = 0; i < dstW * dstH; i++) {
     outBuf[i * 4] = bgColor[0]
     outBuf[i * 4 + 1] = bgColor[1]
@@ -117,6 +119,8 @@ function resizeRgba(srcBuf, srcW, srcH, dstW, dstH, options = {}) {
   return outBuf
 }
 
+// Generate monochrome icon (512x512) or badge (96x96):
+// White silhouette with alpha channel derived from non-white areas (the purple arc + gold play logo)
 function generateMonochrome(srcBuf, srcW, srcH, size) {
   const resized = resizeRgba(srcBuf, srcW, srcH, size, size)
   const monoBuf = Buffer.alloc(size * size * 4)
@@ -128,20 +132,22 @@ function generateMonochrome(srcBuf, srcW, srcH, size) {
       const g = resized[idx + 1]
       const b = resized[idx + 2]
 
-      const isWhiteBg = r > 245 && g > 245 && b > 245
+      // Detect background: near-white background
+      const isWhiteBg = r > 242 && g > 242 && b > 242
 
       if (!isWhiteBg) {
+        // Distance from pure white gives the shape intensity
         const distFromWhite = Math.max(255 - r, 255 - g, 255 - b)
-        const alpha = Math.min(255, Math.round(distFromWhite * 1.5))
-        monoBuf[idx] = 255
-        monoBuf[idx + 1] = 255
-        monoBuf[idx + 2] = 255
+        const alpha = Math.min(255, Math.round(distFromWhite * 1.6))
+        monoBuf[idx] = 255 // White
+        monoBuf[idx + 1] = 255 // White
+        monoBuf[idx + 2] = 255 // White
         monoBuf[idx + 3] = alpha
       } else {
         monoBuf[idx] = 255
         monoBuf[idx + 1] = 255
         monoBuf[idx + 2] = 255
-        monoBuf[idx + 3] = 0
+        monoBuf[idx + 3] = 0 // Transparent
       }
     }
   }
@@ -151,9 +157,9 @@ function generateMonochrome(srcBuf, srcW, srcH, size) {
 
 function makeIco(images) {
   const header = Buffer.alloc(6)
-  header.writeUInt16LE(0, 0)
-  header.writeUInt16LE(1, 2)
-  header.writeUInt16LE(images.length, 4)
+  header.writeUInt16LE(0, 0) // reserved
+  header.writeUInt16LE(1, 2) // type: 1 = ICO
+  header.writeUInt16LE(images.length, 4) // count
 
   const dirEntries = []
   let offset = 6 + images.length * 16
@@ -164,8 +170,8 @@ function makeIco(images) {
     entry.writeUInt8(img.height >= 256 ? 0 : img.height, 1)
     entry.writeUInt8(0, 2)
     entry.writeUInt8(0, 3)
-    entry.writeUInt16LE(1, 4)
-    entry.writeUInt16LE(32, 6)
+    entry.writeUInt16LE(1, 4) // planes
+    entry.writeUInt16LE(32, 6) // bits per pixel
     entry.writeUInt32LE(img.buffer.length, 8)
     entry.writeUInt32LE(offset, 12)
     dirEntries.push(entry)
@@ -181,6 +187,10 @@ export function runGenerator() {
   )
   const publicDir = path.resolve("public")
 
+  if (!fs.existsSync(sourcePath)) {
+    throw new Error(`Source screenshot not found at ${sourcePath}`)
+  }
+
   const sourceRaw = fs.readFileSync(sourcePath)
   const decodeFn = jpeg.decode || jpeg
   const decoded = decodeFn(sourceRaw, {
@@ -188,7 +198,9 @@ export function runGenerator() {
     formatAsRGBA: true,
   })
 
-  // 1. icon-512.png and icon-512-v2.png
+  console.log(`Source decoded successfully: ${decoded.width}x${decoded.height}`)
+
+  // 1. icon-512-v2.png and legacy icon-512.png (512x512, official art, white background)
   const rgba512 = resizeRgba(
     decoded.data,
     decoded.width,
@@ -197,10 +209,11 @@ export function runGenerator() {
     512,
   )
   const png512 = makePng(512, 512, rgba512)
-  fs.writeFileSync(path.join(publicDir, "icon-512.png"), png512)
   fs.writeFileSync(path.join(publicDir, "icon-512-v2.png"), png512)
+  fs.writeFileSync(path.join(publicDir, "icon-512.png"), png512)
+  console.log(`Wrote icon-512-v2.png and icon-512.png (${png512.length} bytes)`)
 
-  // 2. icon-192.png and icon-192-v2.png
+  // 2. icon-192-v2.png and legacy icon-192.png (192x192)
   const rgba192 = resizeRgba(
     decoded.data,
     decoded.width,
@@ -209,11 +222,12 @@ export function runGenerator() {
     192,
   )
   const png192 = makePng(192, 192, rgba192)
-  fs.writeFileSync(path.join(publicDir, "icon-192.png"), png192)
   fs.writeFileSync(path.join(publicDir, "icon-192-v2.png"), png192)
+  fs.writeFileSync(path.join(publicDir, "icon-192.png"), png192)
+  console.log(`Wrote icon-192-v2.png and icon-192.png (${png192.length} bytes)`)
 
-  // 3. Maskable icons (with ~80% safe zone and pure white background)
-  // For 512x512, 10% padding on each side gives 80% safe zone (inner 410x410)
+  // 3. Maskable icons (art centered within ~80% safe zone, white background, purpose maskable)
+  // 512x512 with 51px padding on all sides -> inner size is 410x410 (~80.1% safe zone)
   const rgba512Maskable = resizeRgba(
     decoded.data,
     decoded.width,
@@ -227,14 +241,18 @@ export function runGenerator() {
   )
   const png512Maskable = makePng(512, 512, rgba512Maskable)
   fs.writeFileSync(
-    path.join(publicDir, "icon-512-maskable.png"),
-    png512Maskable,
-  )
-  fs.writeFileSync(
     path.join(publicDir, "icon-512-maskable-v2.png"),
     png512Maskable,
   )
+  fs.writeFileSync(
+    path.join(publicDir, "icon-512-maskable.png"),
+    png512Maskable,
+  )
+  console.log(
+    `Wrote icon-512-maskable-v2.png and icon-512-maskable.png (${png512Maskable.length} bytes)`,
+  )
 
+  // 192x192 with 19px padding on all sides -> inner size is 154x154 (~80.2% safe zone)
   const rgba192Maskable = resizeRgba(
     decoded.data,
     decoded.width,
@@ -248,29 +266,35 @@ export function runGenerator() {
   )
   const png192Maskable = makePng(192, 192, rgba192Maskable)
   fs.writeFileSync(
-    path.join(publicDir, "icon-192-maskable.png"),
-    png192Maskable,
-  )
-  fs.writeFileSync(
     path.join(publicDir, "icon-192-maskable-v2.png"),
     png192Maskable,
   )
+  fs.writeFileSync(
+    path.join(publicDir, "icon-192-maskable.png"),
+    png192Maskable,
+  )
+  console.log(
+    `Wrote icon-192-maskable-v2.png and icon-192-maskable.png (${png192Maskable.length} bytes)`,
+  )
 
-  // 4. icon-monochrome.png and icon-monochrome-v2.png
+  // 4. icon-monochrome-v2.png and legacy icon-monochrome.png (512x512, white silhouette with alpha)
   const pngMono = generateMonochrome(
     decoded.data,
     decoded.width,
     decoded.height,
     512,
   )
-  fs.writeFileSync(path.join(publicDir, "icon-monochrome.png"), pngMono)
   fs.writeFileSync(path.join(publicDir, "icon-monochrome-v2.png"), pngMono)
+  fs.writeFileSync(path.join(publicDir, "icon-monochrome.png"), pngMono)
+  console.log(
+    `Wrote icon-monochrome-v2.png and icon-monochrome.png (${pngMono.length} bytes)`,
+  )
 
-  // 5. Favicon PNG and ICO
+  // 5. favicon-v2.png (48x48) and favicon.ico (16, 32, 48 px multi-resolution)
   const rgba48 = resizeRgba(decoded.data, decoded.width, decoded.height, 48, 48)
   const png48 = makePng(48, 48, rgba48)
-  fs.writeFileSync(path.join(publicDir, "favicon.png"), png48)
   fs.writeFileSync(path.join(publicDir, "favicon-v2.png"), png48)
+  fs.writeFileSync(path.join(publicDir, "favicon.png"), png48)
 
   const rgba32 = resizeRgba(decoded.data, decoded.width, decoded.height, 32, 32)
   const png32 = makePng(32, 32, rgba32)
@@ -284,16 +308,22 @@ export function runGenerator() {
     { width: 48, height: 48, buffer: png48 },
   ])
   fs.writeFileSync(path.join(publicDir, "favicon.ico"), icoBuf)
+  console.log(
+    `Wrote favicon-v2.png (${png48.length} bytes) and favicon.ico (${icoBuf.length} bytes)`,
+  )
 
-  // 6. notification-badge.png and notification-badge-v2.png
+  // 6. notification-badge-v2.png and legacy notification-badge.png (96x96 monochrome silhouette)
   const badgeMono = generateMonochrome(
     decoded.data,
     decoded.width,
     decoded.height,
     96,
   )
-  fs.writeFileSync(path.join(publicDir, "notification-badge.png"), badgeMono)
   fs.writeFileSync(path.join(publicDir, "notification-badge-v2.png"), badgeMono)
+  fs.writeFileSync(path.join(publicDir, "notification-badge.png"), badgeMono)
+  console.log(
+    `Wrote notification-badge-v2.png and notification-badge.png (${badgeMono.length} bytes)`,
+  )
 
   return {
     sourceWidth: decoded.width,
@@ -309,6 +339,6 @@ export function runGenerator() {
   }
 }
 
+// Execute immediately when run with node
 const stats = runGenerator()
-// Stats printed on invocation:
-// console.log("GENERATOR_RESULT:", JSON.stringify(stats))
+console.log("GENERATOR_SUCCESS:", JSON.stringify(stats, null, 2))

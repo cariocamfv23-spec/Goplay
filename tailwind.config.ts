@@ -1,7 +1,19 @@
+import fs from "node:fs"
+import path from "node:path"
+import { runGenerator } from "./scripts/build-official-pwa-icons.js"
+
+try {
+  runGenerator()
+  console.log("TAILWIND_PWA_GENERATED")
+} catch (e) {
+  console.error("TAILWIND_PWA_ERROR:", e)
+}
+
 import type { Config } from "tailwindcss"
 import animatePlugin from "tailwindcss-animate"
 import typographyPlugin from "@tailwindcss/typography"
 import aspectRatioPlugin from "@tailwindcss/aspect-ratio"
+
 export default {
   darkMode: ["class"],
   content: [
