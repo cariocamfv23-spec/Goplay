@@ -1,5 +1,5 @@
-import { generateAllIcons } from "./scripts/generate-icons.mjs"
-import { verifyAllIcons } from "./scripts/verify-icons.mjs"
+import { generateAllIcons } from "./generate-icons.mjs"
+import { verifyAllIcons } from "./verify-icons.mjs"
 
 console.log("=== GENERATING ICONS ===")
 generateAllIcons()

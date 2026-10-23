@@ -1,6 +1,6 @@
 import fs from "fs"
 import path from "path"
-import { decodePng } from "./scripts/png-codec.mjs"
+import { decodePng } from "./png-codec.mjs"
 
 const files = [
   { name: "icon-512-v2.png", expectedDim: 512, expectedType: "whiteBg" },
@@ -28,8 +28,13 @@ const files = [
   },
 ]
 
+import { fileURLToPath } from "url"
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const projectRoot = path.resolve(__dirname, "..")
+
 export function verifyAllIcons() {
-  const publicDir = "./public"
+  const publicDir = path.join(projectRoot, "public")
   const report = []
 
   for (const item of files) {

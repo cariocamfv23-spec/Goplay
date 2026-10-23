@@ -2,8 +2,14 @@ import fs from "fs"
 import path from "path"
 import { decodePng, encodePng } from "./png-codec.mjs"
 
+import { fileURLToPath } from "url"
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const projectRoot = path.resolve(__dirname, "..")
+
 // Load source PNG
-const sourceBuf = fs.readFileSync("./src/assets/goplay-icon-0e955.png")
+const sourcePath = path.join(projectRoot, "src/assets/goplay-icon-0e955.png")
+const sourceBuf = fs.readFileSync(sourcePath)
 const src = decodePng(sourceBuf)
 
 console.log(`Source image loaded: ${src.width}x${src.height}`)
@@ -171,7 +177,7 @@ function renderTransparentSilhouetteIcon(
 // 7. notification-badge-v2.png: 96x96, status bar badge, transparent bg, white silhouette, ~70% content
 
 export function generateAllIcons() {
-  const publicDir = "./public"
+  const publicDir = path.join(projectRoot, "public")
 
   console.log("Generating icon-512-v2.png (512x512, 65% content, white bg)...")
   const buf512 = renderWhiteBgIcon(512, 0.65)
