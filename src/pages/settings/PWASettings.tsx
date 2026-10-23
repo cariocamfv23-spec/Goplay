@@ -595,7 +595,7 @@ function PWASettingsContent() {
               onClick={handleUpdate}
             >
               <RefreshCw className="h-4 w-4 text-primary" />
-              Verificar Atualizações do App (Atualizar Service Worker v12)
+              Verificar Atualizações do App (Atualizar Service Worker v13)
             </Button>
 
             <Button
