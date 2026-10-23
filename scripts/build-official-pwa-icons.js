@@ -189,32 +189,69 @@ export function runGenerator() {
   })
 
   // 1. icon-512.png
-  const rgba512 = resizeRgba(decoded.data, decoded.width, decoded.height, 512, 512)
+  const rgba512 = resizeRgba(
+    decoded.data,
+    decoded.width,
+    decoded.height,
+    512,
+    512,
+  )
   const png512 = makePng(512, 512, rgba512)
   fs.writeFileSync(path.join(publicDir, "icon-512.png"), png512)
 
   // 2. icon-192.png
-  const rgba192 = resizeRgba(decoded.data, decoded.width, decoded.height, 192, 192)
+  const rgba192 = resizeRgba(
+    decoded.data,
+    decoded.width,
+    decoded.height,
+    192,
+    192,
+  )
   const png192 = makePng(192, 192, rgba192)
   fs.writeFileSync(path.join(publicDir, "icon-192.png"), png192)
 
   // 3. Maskable icons
-  const rgba512Maskable = resizeRgba(decoded.data, decoded.width, decoded.height, 512, 512, {
-    padding: 32,
-    bgColor: [255, 255, 255, 255],
-  })
+  const rgba512Maskable = resizeRgba(
+    decoded.data,
+    decoded.width,
+    decoded.height,
+    512,
+    512,
+    {
+      padding: 32,
+      bgColor: [255, 255, 255, 255],
+    },
+  )
   const png512Maskable = makePng(512, 512, rgba512Maskable)
-  fs.writeFileSync(path.join(publicDir, "icon-512-maskable.png"), png512Maskable)
+  fs.writeFileSync(
+    path.join(publicDir, "icon-512-maskable.png"),
+    png512Maskable,
+  )
 
-  const rgba192Maskable = resizeRgba(decoded.data, decoded.width, decoded.height, 192, 192, {
-    padding: 12,
-    bgColor: [255, 255, 255, 255],
-  })
+  const rgba192Maskable = resizeRgba(
+    decoded.data,
+    decoded.width,
+    decoded.height,
+    192,
+    192,
+    {
+      padding: 12,
+      bgColor: [255, 255, 255, 255],
+    },
+  )
   const png192Maskable = makePng(192, 192, rgba192Maskable)
-  fs.writeFileSync(path.join(publicDir, "icon-192-maskable.png"), png192Maskable)
+  fs.writeFileSync(
+    path.join(publicDir, "icon-192-maskable.png"),
+    png192Maskable,
+  )
 
   // 4. icon-monochrome.png
-  const pngMono = generateMonochrome(decoded.data, decoded.width, decoded.height, 512)
+  const pngMono = generateMonochrome(
+    decoded.data,
+    decoded.width,
+    decoded.height,
+    512,
+  )
   fs.writeFileSync(path.join(publicDir, "icon-monochrome.png"), pngMono)
 
   // 5. Favicon PNG and ICO
@@ -236,7 +273,12 @@ export function runGenerator() {
   fs.writeFileSync(path.join(publicDir, "favicon.ico"), icoBuf)
 
   // 6. notification-badge.png
-  const badgeMono = generateMonochrome(decoded.data, decoded.width, decoded.height, 96)
+  const badgeMono = generateMonochrome(
+    decoded.data,
+    decoded.width,
+    decoded.height,
+    96,
+  )
   fs.writeFileSync(path.join(publicDir, "notification-badge.png"), badgeMono)
 
   return {
@@ -254,4 +296,5 @@ export function runGenerator() {
 }
 
 const stats = runGenerator()
-console.log("GENERATOR_RESULT:", JSON.stringify(stats))
+// Stats printed on invocation:
+// console.log("GENERATOR_RESULT:", JSON.stringify(stats))
