@@ -34,7 +34,11 @@ export default function LiveStream() {
   const [poll, setPoll] = useState<{
     id: string
     question: string
-    options: { id: number text: string votes: number }[]
+    options: {
+      id: number
+      text: string
+      votes: number
+    }[]
     totalVotes: number
     isActive: boolean
   } | null>(null)

@@ -64,7 +64,11 @@ export interface TrainingSuggestion {
   description: string
   difficulty: string
   reason: string
-  exercises: { name: string sets: number reps: number }[]
+  exercises: {
+    name: string
+    sets: number
+    reps: number
+  }[]
 }
 
 export interface Notification {
@@ -106,7 +110,10 @@ export interface TimelineEvent {
   type: "match" | "training" | "achievement" | "milestone" | "ai_insight"
   title: string
   description: string
-  stats?: { label: string value: string | number }[]
+  stats?: {
+    label: string
+    value: string | number
+  }[]
   image?: string
 }
 
@@ -124,7 +131,11 @@ export interface ProfileData {
   type: "athlete" | "photographer" | "driver" | "club" | "coach" | "team" | "scout" | "sponsor"
   categories?: string[]
   portfolio?: string[]
-  packages?: { title: string price: string description: string }[]
+  packages?: {
+    title: string
+    price: string
+    description: string
+  }[]
   portfolioProjects?: {
     id: string
     title: string
@@ -160,7 +171,10 @@ export interface ProfileData {
   isDiscovered?: boolean // New field for map markers
   discoveryReason?: string
   engagement?: number
-  coordinates?: { x: number y: number }
+  coordinates?: {
+    x: number
+    y: number
+  }
   interests?: string[]
   distanceValue?: number
 
@@ -227,7 +241,10 @@ export interface Event {
   price: number
   description: string
   organizer: string
-  coordinates?: { x: number y: number }
+  coordinates?: {
+    x: number
+    y: number
+  }
   weather?: {
     temp: number
     condition: WeatherCondition
@@ -338,7 +355,10 @@ export interface Agency {
   phone: string
   whatsapp?: string
   instagram?: string
-  programs: { title: string description: string }[]
+  programs: {
+    title: string
+    description: string
+  }[]
 }
 
 export interface KidsVenue {
@@ -542,7 +562,10 @@ export interface KidZone {
   status: "open" | "closed" | "full" | "maintenance"
   activities: string[]
   monitors: string[]
-  coordinates: { x: number y: number }
+  coordinates: {
+    x: number
+    y: number
+  }
   rules: string[]
   image: string
 }
@@ -561,7 +584,10 @@ export interface Venue {
   amenities: string[]
   description: string
   openHours?: string
-  coordinates?: { x: number y: number }
+  coordinates?: {
+    x: number
+    y: number
+  }
 }
 
 export interface Gym {

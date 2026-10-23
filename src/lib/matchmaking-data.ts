@@ -448,13 +448,21 @@ export const MOCK_SCHEDULED: ScheduledMatch[] = [
   },
 ]
 
-export const MODALITIES: { id: Modality label: string sublabel: string }[] = [
+export const MODALITIES: {
+  id: Modality
+  label: string
+  sublabel: string
+}[] = [
   { id: "futsal", label: "Futsal", sublabel: "Futebol de Salão" },
   { id: "campo", label: "Campo", sublabel: "Futebol de Campo" },
   { id: "society", label: "Society", sublabel: "Futebol Society" },
 ]
 
-export const CATEGORIES: { id: Category label: string sublabel: string }[] = [
+export const CATEGORIES: {
+  id: Category
+  label: string
+  sublabel: string
+}[] = [
   { id: "competitivo", label: "Competitivo", sublabel: "Esporte" },
   { id: "veterano", label: "Veterano", sublabel: "35+ anos" },
   { id: "master", label: "Master", sublabel: "45+ anos" },
@@ -537,7 +545,10 @@ export interface SuggestionResult {
   team: MatchTeam
   field: MatchField
   score: number
-  reasons: { label: string detail: string }[]
+  reasons: {
+    label: string
+    detail: string
+  }[]
   fieldFee: string
   refereeFee: string
 }

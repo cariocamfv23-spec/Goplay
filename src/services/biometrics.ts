@@ -197,7 +197,10 @@ export const biometricService = {
       refresh_token: string
       expires_at?: number
     }
-  }): Promise<{ success: boolean error?: string }> {
+  }): Promise<{
+    success: boolean
+    error?: string
+  }> {
     if (!this.isWebAuthnSupported()) {
       return {
         success: false,
@@ -464,7 +467,10 @@ export const biometricService = {
    */
   syncSessionIfEnrolled(
     session: {
-      user?: { id?: string email?: string }
+      user?: {
+        id?: string
+        email?: string
+      }
       access_token?: string
       refresh_token?: string
       expires_at?: number

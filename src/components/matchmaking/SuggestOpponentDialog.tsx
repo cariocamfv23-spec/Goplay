@@ -39,7 +39,13 @@ interface SuggestOpponentDialogProps {
   onAccept: (result: SuggestionResult, config: MatchConfigState) => void
 }
 
-const SKILL_OPTIONS: { id: SkillTolerance label: string desc: string }[] = [
+type SkillOption = {
+  id: SkillTolerance
+  label: string
+  desc: string
+}
+
+const SKILL_OPTIONS: SkillOption[] = [
   { id: "precise", label: "Preciso", desc: "±50 SR" },
   { id: "balanced", label: "Equilibrado", desc: "±100 SR" },
   { id: "wide", label: "Amplo", desc: "±200 SR" },

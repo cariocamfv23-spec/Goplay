@@ -565,7 +565,11 @@ export function useRealtimeNotifications(userId?: string | null) {
           if (!newRow?.id) return
 
           // Fetch actor profile
-          let actorData: { id: string name: string avatar: string } | undefined
+          let actorData: {
+            id: string
+            name: string
+            avatar: string
+          } | undefined
           if (newRow.actor_id) {
             try {
               const { data: prof } = await supabase

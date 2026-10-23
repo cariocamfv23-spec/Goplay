@@ -74,7 +74,10 @@ export const eventsService = {
     type?: string
     sport?: string
     currentUserId?: string
-  }): Promise<{ data: EventItem[] error: Error | null }> {
+  }): Promise<{
+    data: EventItem[]
+    error: Error | null
+  }> {
     try {
       let query = db
         .from("events")
@@ -285,7 +288,10 @@ export const eventsService = {
     registrationDeadline?: string
     maxParticipants?: number
     price?: number
-  }): Promise<{ data: EventItem | null error: Error | null }> {
+  }): Promise<{
+    data: EventItem | null
+    error: Error | null
+  }> {
     try {
       // 1. Resolve active user session from Supabase client if not passed or to guarantee fresh session
       let activeUserId = params.creatorId
@@ -421,7 +427,10 @@ export const eventsService = {
     eventId: string
     userId: string
     notes?: string
-  }): Promise<{ success: boolean error: Error | null }> {
+  }): Promise<{
+    success: boolean
+    error: Error | null
+  }> {
     try {
       const { eventId, userId, notes } = params
       if (!userId)

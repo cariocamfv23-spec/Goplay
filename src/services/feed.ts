@@ -81,7 +81,10 @@ export const feedService = {
     authorUserId: string,
     currentViewerId?: string | null,
     limit = 30,
-  ): Promise<{ data: PostItem[] error: Error | null }> {
+  ): Promise<{
+    data: PostItem[]
+    error: Error | null
+  }> {
     try {
       if (!authorUserId) return { data: [], error: null }
 
@@ -185,7 +188,10 @@ export const feedService = {
     currentUserId?: string | null,
     limit = 20,
     blockedUserIds?: Set<string>,
-  ): Promise<{ data: PostItem[] error: Error | null }> {
+  ): Promise<{
+    data: PostItem[]
+    error: Error | null
+  }> {
     try {
       const { data: rawPosts, error: postsError } = await db
         .from("posts")
@@ -298,7 +304,10 @@ export const feedService = {
     musicLink?: PostMusicLink | null
     mentions?: PostMention[]
     postType?: "text" | "image" | "video"
-  }): Promise<{ data: PostItem | null error: Error | null }> {
+  }): Promise<{
+    data: PostItem | null
+    error: Error | null
+  }> {
     try {
       const {
         userId,
@@ -527,7 +536,10 @@ export const feedService = {
     postId: string,
     userId: string,
     currentlyLiked: boolean,
-  ): Promise<{ isLiked: boolean error: Error | null }> {
+  ): Promise<{
+    isLiked: boolean
+    error: Error | null
+  }> {
     try {
       if (!userId) throw new Error("Usuário não autenticado.")
 
@@ -687,7 +699,10 @@ export const feedService = {
     postId: string
     userId: string
     content: string
-  }): Promise<{ data: PostCommentItem | null error: Error | null }> {
+  }): Promise<{
+    data: PostCommentItem | null
+    error: Error | null
+  }> {
     try {
       const { postId, userId, content } = params
       if (!userId) throw new Error("Usuário não autenticado.")

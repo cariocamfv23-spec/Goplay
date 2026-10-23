@@ -286,8 +286,14 @@ export const chatService = {
   async sendMessage(
     payload: SendMessagePayload,
     currentUserId: string,
-    senderProfile?: { name?: string avatar?: string },
-  ): Promise<{ message: ChatMessage | null error: Error | null }> {
+    senderProfile?: {
+      name?: string
+      avatar?: string
+    },
+  ): Promise<{
+    message: ChatMessage | null
+    error: Error | null
+  }> {
     try {
       const {
         conversationId,

@@ -28,7 +28,10 @@ export default function TimeShift() {
   const [showPublisher, setShowPublisher] = useState(false)
 
   // Demo sports list
-  const sports: { id: SportType label: string }[] = [
+  const sports: {
+    id: SportType
+    label: string
+  }[] = [
     { id: "football", label: "Futebol" },
     { id: "martial_arts", label: "Artes Marciais" },
     { id: "swimming", label: "Natação" },

@@ -16,7 +16,10 @@ export function ResultsTab({ championship }: ResultsTabProps) {
     (m) => m.championshipId === championship.id,
   )
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [scores, setScores] = useState<{ a: string b: string }>({
+  const [scores, setScores] = useState<{
+    a: string
+    b: string
+  }>({
     a: "",
     b: "",
   })

@@ -849,7 +849,12 @@ function PlayerStatsDialog({
   )
 }
 
-function TeamCard({ team, rank }: { team: TeamStat rank: number }) {
+type TeamCardProps = {
+  team: TeamStat
+  rank: number
+}
+
+function TeamCard({ team, rank }: TeamCardProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   const radarData = Object.entries(team.stats).map(([subject, value]) => ({

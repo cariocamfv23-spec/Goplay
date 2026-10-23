@@ -193,7 +193,11 @@ export const pushNotificationService = {
   async subscribeUser(
     userId: string,
     publicKey: string = DEFAULT_VAPID_PUBLIC_KEY,
-  ): Promise<{ success: boolean error?: string permissionDenied?: boolean }> {
+  ): Promise<{
+    success: boolean
+    error?: string
+    permissionDenied?: boolean
+  }> {
     if (!userId) {
       return { success: false, error: "Usuário não autenticado." }
     }

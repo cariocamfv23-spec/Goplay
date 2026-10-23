@@ -22,25 +22,40 @@ interface AuthContextType {
       full_name?: string
       account_type?: "athlete" | "club" | "coach"
     },
-  ) => Promise<{ data?: any error: any }>
+  ) => Promise<{
+    data?: any
+    error: any
+  }>
   signIn: (
     email: string,
     password: string,
-  ) => Promise<{ data?: any error: any }>
+  ) => Promise<{
+    data?: any
+    error: any
+  }>
   signInWithGoogle: (
     redirectPath?: string,
-  ) => Promise<{ data?: any error: any }>
+  ) => Promise<{
+    data?: any
+    error: any
+  }>
   signOut: (options?: { scope?: "local" | "global" | "others" }) => Promise<{
     error: any
   }>
   unlockWithBiometrics: (tokens?: {
     access_token: string
     refresh_token: string
-  }) => Promise<{ data?: any error: any }>
+  }) => Promise<{
+    data?: any
+    error: any
+  }>
   restoreSessionWithTokens: (tokens: {
     access_token: string
     refresh_token: string
-  }) => Promise<{ data?: any error: any }>
+  }) => Promise<{
+    data?: any
+    error: any
+  }>
   resetPasswordForEmail: (email: string) => Promise<{ error: any }>
   updateUserPassword: (password: string) => Promise<{ error: any }>
   refreshProfile: () => Promise<void>

@@ -7,7 +7,11 @@ import { Button } from "@/components/ui/button"
 export function TimelineSwitcher() {
   const { timeline, setTimeline, isPlaying, togglePlay } = useTimeShiftStore()
 
-  const timelines: { id: TimelineType label: string color: string }[] = [
+  const timelines: {
+    id: TimelineType
+    label: string
+    color: string
+  }[] = [
     { id: "real", label: "Real", color: "bg-zinc-500" },
     { id: "almost", label: "Quase", color: "bg-orange-500" },
     { id: "ideal", label: "Ideal", color: "bg-emerald-500" },

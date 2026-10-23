@@ -37,7 +37,11 @@ interface EditCoverDialogProps {
   onCoverUpdated?: (
     newCoverUrl: string | null,
     coverType: "image" | "video",
-    framing?: { posX: number posY: number zoom: number },
+    framing?: {
+      posX: number
+      posY: number
+      zoom: number
+    },
   ) => void
 }
 

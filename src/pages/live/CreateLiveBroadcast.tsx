@@ -69,7 +69,10 @@ export default function CreateLiveBroadcast() {
   const [pollOptions, setPollOptions] = useState(["", ""])
   const [activePoll, setActivePoll] = useState<{
     question: string
-    options: { text: string votes: number }[]
+    options: {
+      text: string
+      votes: number
+    }[]
     totalVotes: number
     isActive: boolean
   } | null>(null)
