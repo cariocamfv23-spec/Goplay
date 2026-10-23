@@ -450,24 +450,12 @@ Deno.serve(async (req: Request) => {
           })()
         : "")
 
-    // Resolve base icon path:
-    let resolvedIcon = DEFAULT_ICON_PATH
-    if (icon && !icon.endsWith(".svg")) {
-      resolvedIcon = icon
-    } else if (callerOrigin) {
-      resolvedIcon = `${callerOrigin.replace(/\/+$/, "")}/icon-192.png`
-    } else {
-      // Relative path - sw.js on the client resolves new URL('/icon-192.png', self.location.origin)
-      resolvedIcon = DEFAULT_ICON_PATH
-    }
+    // Official Goplay default icon (origin-relative fallback)
+    const officialLogoPath = callerOrigin
+      ? `${callerOrigin.replace(/\/+$/, "")}/icon-192.png`
+      : DEFAULT_ICON_PATH
 
-    const safeIcon = resolvedIcon
-
-    // Helper to sanitize avatar / image URLs
-    // Privacy and security rules:
-    // - Must be an absolute http/https URL or origin-relative path
-    // - Reject signed query params containing sensitive tokens or credentials
-    // - Accept public storage objects from Supabase or valid avatars
+    // Helper to sanitize avatar / image URLs and optimize for square crop if on Supabase storage
     const sanitizeImageUrl = (
       rawUrl: string | undefined | null,
     ): string | null => {
@@ -485,6 +473,16 @@ Deno.serve(async (req: Request) => {
       try {
         const parsed = new URL(trimmed, callerOrigin || "https://goplay.app")
         if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+          // If this is a Supabase public storage object URL (e.g. /storage/v1/object/public/...)
+          // and doesn't already have transformation params, append square resize hint for crisp avatar display
+          if (
+            parsed.pathname.includes("/storage/v1/object/public/") &&
+            !parsed.searchParams.has("width")
+          ) {
+            parsed.searchParams.set("width", "192")
+            parsed.searchParams.set("height", "192")
+            parsed.searchParams.set("resize", "cover")
+          }
           return parsed.href
         }
       } catch {
@@ -493,8 +491,21 @@ Deno.serve(async (req: Request) => {
       return null
     }
 
-    // Determine the user image to display (TikTok style notification with actor avatar)
-    let resolvedImage: string | null = sanitizeImageUrl(image)
+    // Determine the actor's profile photo to display on the RIGHT of the notification (in the `icon` slot)
+    // Accept candidate from `icon` (if not the default logo) or `image`
+    let candidateAvatarInput: string | undefined = undefined
+    if (
+      icon &&
+      !icon.endsWith(".svg") &&
+      !icon.includes("icon-192") &&
+      !icon.includes("icon-512")
+    ) {
+      candidateAvatarInput = icon
+    } else if (image && !image.endsWith(".svg")) {
+      candidateAvatarInput = image
+    }
+
+    let resolvedAvatar: string | null = sanitizeImageUrl(candidateAvatarInput)
 
     // If an actorId is provided (e.g. author of like/comment/follow/message) or actor was the caller,
     // fetch their public avatar from profiles if not already explicitly supplied
@@ -502,7 +513,7 @@ Deno.serve(async (req: Request) => {
       actorId ||
       (callerUser.id !== "service-role" && !isTest ? callerUser.id : null)
 
-    if (!resolvedImage && effectiveActorId) {
+    if (!resolvedAvatar && effectiveActorId) {
       try {
         const { data: actorProfile } = await adminDb
           .from("profiles")
@@ -511,7 +522,7 @@ Deno.serve(async (req: Request) => {
           .maybeSingle()
 
         if (actorProfile?.avatar_url) {
-          resolvedImage = sanitizeImageUrl(actorProfile.avatar_url)
+          resolvedAvatar = sanitizeImageUrl(actorProfile.avatar_url)
         }
       } catch (errProfile) {
         console.warn(
@@ -521,20 +532,25 @@ Deno.serve(async (req: Request) => {
       }
     }
 
+    // TikTok layout rule:
+    // Android One UI displays the app identity (GoPlay logo) on the left automatically.
+    // The `icon` parameter in NotificationOptions is rendered on the RIGHT aligned with the text.
+    // Therefore, if we have the actor's profile photo, send it as `icon`.
+    // If not, fallback to the official Goplay logo.
+    const finalIcon = resolvedAvatar || officialLogoPath
+
     // Top-level payload for RFC 8030 Web Push data.
     // FCM web-push encryption transports this data directly to the client's PushEvent handler in sw.js.
-    // In sw.js, self.registration.showNotification(data.title, notificationOptions) receives these properties.
+    // Notice: we also pass `avatarUrl` for explicit semantic clarity, and DO NOT send `image`
+    // to ensure the large expanded photo banner is never rendered.
     const payload: Record<string, any> = {
       title,
       body: messageBody || "",
       url: url || "/",
       tag: tag || (isTest ? `goplay-test-${Date.now()}` : "goplay-alert"),
-      icon: safeIcon,
-    }
-
-    // Add image only when a valid, publicly accessible profile picture is present
-    if (resolvedImage) {
-      payload.image = resolvedImage
+      icon: finalIcon,
+      badge: badge || "/notification-badge.png",
+      avatarUrl: resolvedAvatar || null,
     }
 
     let successCount = 0

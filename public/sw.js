@@ -1,5 +1,5 @@
 // Goplay App - Service Worker with Robust Web Push & Background Support
-// Version: 2026.10.23-v13 (TikTok style push notifications with real user photo + image property support)
+// Version: 2026.10.23-v14 (TikTok style push notifications: real user avatar in icon, official logo at left, no expanded big image)
 
 importScripts(
   "https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js",
@@ -7,7 +7,8 @@ importScripts(
 
 // High-compatibility official raster icons for Android & OneUI (origin-relative URL)
 const DEFAULT_NOTIFICATION_ICON = "/icon-192.png"
-const SW_VERSION = "2026.10.23-v13"
+const NOTIFICATION_BADGE_ICON = "/notification-badge.png"
+const SW_VERSION = "2026.10.23-v14"
 
 // Automated update & lifecycle logic - immediate takeover
 self.addEventListener("install", (event) => {
@@ -19,13 +20,13 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     Promise.all([
       self.clients.claim(),
-      // Prune old caches on version bump to v13 (cleans legacy v1-v12 caches)
+      // Prune old caches on version bump to v14 (cleans legacy v1-v13 caches)
       caches
         .keys()
         .then((keys) =>
           Promise.all(
             keys
-              .filter((k) => k.startsWith("goplay-") && !k.endsWith("-v13"))
+              .filter((k) => k.startsWith("goplay-") && !k.endsWith("-v14"))
               .map((k) => caches.delete(k)),
           ),
         ),
@@ -68,49 +69,63 @@ self.addEventListener("push", (event) => {
     }
   }
 
-  // Ensure icons are valid PNG raster URLs for Android system tray & lockscreen.
-  // Convert any origin-relative path to full absolute URL on the current client origin.
-  let iconUrl = DEFAULT_NOTIFICATION_ICON
-  if (data.icon && !data.icon.endsWith(".svg")) {
-    try {
-      iconUrl = new URL(data.icon, self.location.origin).href
-    } catch {
-      iconUrl = new URL(DEFAULT_NOTIFICATION_ICON, self.location.origin).href
+  // TikTok-style push notification layout for Android / Samsung OneUI:
+  // 1. Official Goplay logo is kept at the left by the OS/PWA application identity.
+  // 2. The `icon` property is rendered by Android/One UI on the RIGHT, aligned with the notification text.
+  //    We set `icon` to the real profile photo of the user/actor who generated the event (like, comment, follower, message).
+  //    If no actor photo is present, fallback to the official Goplay raster logo (/icon-192.png).
+  // 3. The `image` property is STRICTLY OMITTED to prevent the giant expanded photo banner below the text.
+  // 4. The `badge` property uses the official monochrome badge icon (/notification-badge.png).
+
+  // Resolve actor avatar or fallback icon:
+  // Accept photo URL from `data.icon`, `data.avatarUrl`, or `data.image` (for payload backward compatibility)
+  const candidateAvatar = data.avatarUrl || data.icon || data.image || null
+  let resolvedIconUrl = null
+
+  if (candidateAvatar && typeof candidateAvatar === "string") {
+    const trimmed = candidateAvatar.trim()
+    if (trimmed && !trimmed.endsWith(".svg")) {
+      try {
+        const parsed = new URL(trimmed, self.location.origin)
+        if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+          resolvedIconUrl = parsed.href
+        }
+      } catch {
+        resolvedIconUrl = null
+      }
     }
-  } else {
-    iconUrl = new URL(DEFAULT_NOTIFICATION_ICON, self.location.origin).href
   }
 
-  // TikTok-style rich media: evaluate 'image' property for the actor's real profile picture.
-  // On Android, 'image' renders a prominent expanded preview banner / big picture.
-  // The official Goplay logo is strictly preserved in 'icon', ensuring brand recognition.
-  let resolvedImageUrl = null
-  if (data.image && typeof data.image === "string") {
-    try {
-      const parsedImage = new URL(data.image, self.location.origin)
-      // Only accept safe HTTP/HTTPS images
-      if (
-        parsedImage.protocol === "http:" ||
-        parsedImage.protocol === "https:"
-      ) {
-        resolvedImageUrl = parsedImage.href
-      }
-    } catch {
-      resolvedImageUrl = null
-    }
+  // Fallback to official Goplay raster logo if no valid profile avatar is present
+  if (!resolvedIconUrl) {
+    resolvedIconUrl = new URL(DEFAULT_NOTIFICATION_ICON, self.location.origin)
+      .href
+  }
+
+  // Resolve official monochrome badge for the status bar
+  let resolvedBadgeUrl = null
+  try {
+    const candidateBadge = data.badge || NOTIFICATION_BADGE_ICON
+    resolvedBadgeUrl = new URL(candidateBadge, self.location.origin).href
+  } catch {
+    resolvedBadgeUrl = new URL(NOTIFICATION_BADGE_ICON, self.location.origin)
+      .href
   }
 
   // Complete NotificationOptions compliant with Android Notification Drawer & Heads-up banners.
-  // Note: badge is deliberately omitted so Android/OneUI does not render an ambiguous monochrome symbol.
+  // Note: NO `image` property is included, matching the TikTok compact layout.
   const notificationOptions = {
     body: data.body || "",
-    icon: iconUrl,
+    icon: resolvedIconUrl,
+    badge: resolvedBadgeUrl,
     tag: data.tag || `goplay-${Date.now()}`,
     data: {
       url: data.url || "/",
       dateOfArrival: Date.now(),
       swVersion: SW_VERSION,
-      hasActorPhoto: Boolean(resolvedImageUrl),
+      hasActorPhoto:
+        resolvedIconUrl !==
+        new URL(DEFAULT_NOTIFICATION_ICON, self.location.origin).href,
     },
     // Vibrant pattern: [vibrate, pause, vibrate] to wake up Android vibration motors
     vibrate: [200, 100, 200],
@@ -119,26 +134,22 @@ self.addEventListener("push", (event) => {
     silent: false,
   }
 
-  if (resolvedImageUrl) {
-    notificationOptions.image = resolvedImageUrl
-  }
-
   // event.waitUntil guarantees the Service Worker process stays alive until Android posts notification
   event.waitUntil(
     self.registration
       .showNotification(data.title, notificationOptions)
       .catch((showErr) => {
         console.warn(
-          "[SW] Rich notification failed, trying safe fallback:",
+          "[SW] Push notification display failed, trying safe fallback:",
           showErr,
         )
-        // Fallback without image or vibration if device OS/browser rejects extended parameters
+        // Fallback without badge/vibration if device OS/browser rejects extended parameters
         const fallbackIcon = new URL(
           DEFAULT_NOTIFICATION_ICON,
           self.location.origin,
         ).href
         return self.registration.showNotification(data.title, {
-          body: data.body,
+          body: data.body || "",
           icon: fallbackIcon,
           data: { url: data.url || "/" },
         })
@@ -190,7 +201,7 @@ if (typeof workbox !== "undefined" && workbox) {
   workbox.routing.registerRoute(
     ({ url }) => /\.(js|css|html|svg|png|ico|woff2)$/i.test(url.pathname),
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: "goplay-assets-v13",
+      cacheName: "goplay-assets-v14",
     }),
   )
 
@@ -198,7 +209,7 @@ if (typeof workbox !== "undefined" && workbox) {
   workbox.routing.registerRoute(
     ({ url }) => url.pathname === "/" || url.pathname === "/index.html",
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: "goplay-index-v13",
+      cacheName: "goplay-index-v14",
     }),
   )
 
@@ -210,7 +221,7 @@ if (typeof workbox !== "undefined" && workbox) {
         const response = await fetch(request)
         return response
       } catch (error) {
-        const cache = await caches.open("goplay-index-v13")
+        const cache = await caches.open("goplay-index-v14")
         const cachedResponse =
           (await cache.match("/index.html")) || (await cache.match("/"))
         if (cachedResponse) {

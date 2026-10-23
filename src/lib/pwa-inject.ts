@@ -19,12 +19,12 @@ const injectPwa = () => {
     document.head.appendChild(ogMeta)
   }
 
-  // Ensure link[rel="manifest"] points directly to /manifest.json?v=13
+  // Ensure link[rel="manifest"] points directly to /manifest.json?v=14
   const manifestLink = document.querySelector(
     'link[rel="manifest"]',
   ) as HTMLLinkElement | null
   if (manifestLink) {
-    manifestLink.href = "/manifest.json?v=13"
+    manifestLink.href = "/manifest.json?v=14"
   }
 }
 
