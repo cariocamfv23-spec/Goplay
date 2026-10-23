@@ -1,5 +1,5 @@
 // Goplay App - Service Worker with Robust Web Push & Background Support
-// Version: 2026.10.22-v12 (Bump version + cache v12 + purge v1-v11)
+// Version: 2026.10.23-v13 (TikTok style push notifications with real user photo + image property support)
 
 importScripts(
   "https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js",
@@ -7,7 +7,7 @@ importScripts(
 
 // High-compatibility official raster icons for Android & OneUI (origin-relative URL)
 const DEFAULT_NOTIFICATION_ICON = "/icon-192.png"
-const SW_VERSION = "2026.10.22-v12"
+const SW_VERSION = "2026.10.23-v13"
 
 // Automated update & lifecycle logic - immediate takeover
 self.addEventListener("install", (event) => {
@@ -19,13 +19,13 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     Promise.all([
       self.clients.claim(),
-      // Prune old caches on version bump to v12 (cleans legacy v1-v11 caches)
+      // Prune old caches on version bump to v13 (cleans legacy v1-v12 caches)
       caches
         .keys()
         .then((keys) =>
           Promise.all(
             keys
-              .filter((k) => k.startsWith("goplay-") && !k.endsWith("-v12"))
+              .filter((k) => k.startsWith("goplay-") && !k.endsWith("-v13"))
               .map((k) => caches.delete(k)),
           ),
         ),
@@ -81,8 +81,27 @@ self.addEventListener("push", (event) => {
     iconUrl = new URL(DEFAULT_NOTIFICATION_ICON, self.location.origin).href
   }
 
+  // TikTok-style rich media: evaluate 'image' property for the actor's real profile picture.
+  // On Android, 'image' renders a prominent expanded preview banner / big picture.
+  // The official Goplay logo is strictly preserved in 'icon', ensuring brand recognition.
+  let resolvedImageUrl = null
+  if (data.image && typeof data.image === "string") {
+    try {
+      const parsedImage = new URL(data.image, self.location.origin)
+      // Only accept safe HTTP/HTTPS images
+      if (
+        parsedImage.protocol === "http:" ||
+        parsedImage.protocol === "https:"
+      ) {
+        resolvedImageUrl = parsedImage.href
+      }
+    } catch {
+      resolvedImageUrl = null
+    }
+  }
+
   // Complete NotificationOptions compliant with Android Notification Drawer & Heads-up banners.
-  // Note: badge is deliberately omitted so Android/OneUI does not render a secondary monochrome badge/symbol.
+  // Note: badge is deliberately omitted so Android/OneUI does not render an ambiguous monochrome symbol.
   const notificationOptions = {
     body: data.body || "",
     icon: iconUrl,
@@ -91,6 +110,7 @@ self.addEventListener("push", (event) => {
       url: data.url || "/",
       dateOfArrival: Date.now(),
       swVersion: SW_VERSION,
+      hasActorPhoto: Boolean(resolvedImageUrl),
     },
     // Vibrant pattern: [vibrate, pause, vibrate] to wake up Android vibration motors
     vibrate: [200, 100, 200],
@@ -99,12 +119,20 @@ self.addEventListener("push", (event) => {
     silent: false,
   }
 
+  if (resolvedImageUrl) {
+    notificationOptions.image = resolvedImageUrl
+  }
+
   // event.waitUntil guarantees the Service Worker process stays alive until Android posts notification
   event.waitUntil(
     self.registration
       .showNotification(data.title, notificationOptions)
       .catch((showErr) => {
-        // Fallback without vibration or extra options if device rejects specific parameters
+        console.warn(
+          "[SW] Rich notification failed, trying safe fallback:",
+          showErr,
+        )
+        // Fallback without image or vibration if device OS/browser rejects extended parameters
         const fallbackIcon = new URL(
           DEFAULT_NOTIFICATION_ICON,
           self.location.origin,
@@ -162,7 +190,7 @@ if (typeof workbox !== "undefined" && workbox) {
   workbox.routing.registerRoute(
     ({ url }) => /\.(js|css|html|svg|png|ico|woff2)$/i.test(url.pathname),
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: "goplay-assets-v12",
+      cacheName: "goplay-assets-v13",
     }),
   )
 
@@ -170,7 +198,7 @@ if (typeof workbox !== "undefined" && workbox) {
   workbox.routing.registerRoute(
     ({ url }) => url.pathname === "/" || url.pathname === "/index.html",
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: "goplay-index-v12",
+      cacheName: "goplay-index-v13",
     }),
   )
 
@@ -182,7 +210,7 @@ if (typeof workbox !== "undefined" && workbox) {
         const response = await fetch(request)
         return response
       } catch (error) {
-        const cache = await caches.open("goplay-index-v12")
+        const cache = await caches.open("goplay-index-v13")
         const cachedResponse =
           (await cache.match("/index.html")) || (await cache.match("/"))
         if (cachedResponse) {

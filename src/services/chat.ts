@@ -384,6 +384,8 @@ export const chatService = {
             body: snippet,
             url: `/messages/${conversationId}`,
             tag: `chat-${conversationId}`,
+            actorId: currentUserId,
+            image: senderProfile?.avatar || undefined,
           })
           .then((pushRes) => {
             if (!pushRes.success) {

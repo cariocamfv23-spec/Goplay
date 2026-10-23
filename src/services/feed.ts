@@ -447,7 +447,7 @@ export const feedService = {
                 link: postLink,
               })
 
-              // Trigger real Web Push notification (non-blocking)
+              // Trigger real Web Push notification (non-blocking) with author avatar
               pushNotificationService
                 .triggerServerPush({
                   userId: mention.id,
@@ -457,6 +457,8 @@ export const feedService = {
                   }`,
                   url: postLink,
                   tag: `mention-${inserted.id}`,
+                  actorId: userId,
+                  image: prof?.avatar_url || undefined,
                 })
                 .catch(() => {})
             }
@@ -593,11 +595,12 @@ export const feedService = {
             if (!existingNotif || existingNotif.length === 0) {
               const { data: actorProfile } = await db
                 .from("profiles")
-                .select("full_name")
+                .select("full_name, avatar_url")
                 .eq("id", userId)
                 .maybeSingle()
 
               const actorName = actorProfile?.full_name || "Um atleta"
+              const actorAvatar = actorProfile?.avatar_url || undefined
 
               await db.from("notifications").insert({
                 user_id: postData.user_id,
@@ -608,7 +611,7 @@ export const feedService = {
                 link: postLink,
               })
 
-              // Trigger real Web Push notification (non-blocking)
+              // Trigger real Web Push notification (non-blocking) with TikTok style profile photo
               pushNotificationService
                 .triggerServerPush({
                   userId: postData.user_id,
@@ -616,6 +619,8 @@ export const feedService = {
                   body: `${actorName} curtiu a sua publicação.`,
                   url: postLink,
                   tag: `like-${postId}`,
+                  actorId: userId,
+                  image: actorAvatar,
                 })
                 .catch(() => {})
             }
@@ -755,7 +760,7 @@ export const feedService = {
             link: postLink,
           })
 
-          // Trigger real Web Push notification (non-blocking)
+          // Trigger real Web Push notification (non-blocking) with TikTok style profile photo
           pushNotificationService
             .triggerServerPush({
               userId: postData.user_id,
@@ -763,6 +768,8 @@ export const feedService = {
               body: `${actorName} comentou: "${preview}"`,
               url: postLink,
               tag: `comment-${postId}`,
+              actorId: userId,
+              image: prof?.avatar_url || undefined,
             })
             .catch(() => {})
         }

@@ -84,7 +84,7 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
 
   try {
     // updateViaCache: 'none' guarantees the browser ALWAYS bypasses HTTP cache when re-fetching sw.js
-    const reg = await navigator.serviceWorker.register("/sw.js?v=10", {
+    const reg = await navigator.serviceWorker.register("/sw.js?v=13", {
       scope: "/",
       updateViaCache: "none",
     })
@@ -370,6 +370,8 @@ export const pushNotificationService = {
     tag?: string
     icon?: string
     badge?: string
+    image?: string
+    actorId?: string
     isTest?: boolean
   }): Promise<{
     success: boolean
@@ -488,7 +490,13 @@ export const pushNotificationService = {
    * Sends a REAL server-side push notification ONLY to the current authenticated user's device.
    * Ensures subscription exists in the DB first, then invokes send-push with isTest: true.
    */
-  async sendSelfTestPush(userId: string): Promise<PushTestResult> {
+  async sendSelfTestPush(
+    userId: string,
+    options?: {
+      includeAvatar?: boolean
+      avatarUrl?: string
+    },
+  ): Promise<PushTestResult> {
     if (!userId) {
       return {
         success: false,
@@ -521,9 +529,13 @@ export const pushNotificationService = {
       const invokeRes = await this.triggerServerPush({
         userId,
         title: "Goplay App • Teste de Notificação",
-        body: `Disparado pelo servidor às ${testTimestamp}. Notificações Web Push funcionando perfeitamente no seu Android!`,
+        body: options?.includeAvatar
+          ? `Disparado às ${testTimestamp} com formato estilo TikTok (sua foto de perfil em destaque)!`
+          : `Disparado pelo servidor às ${testTimestamp}. Notificações Web Push funcionando perfeitamente no seu Android!`,
         url: "/settings/pwa",
         tag: `test-${Date.now()}`,
+        image: options?.avatarUrl,
+        actorId: options?.includeAvatar ? userId : undefined,
         isTest: true,
       })
 

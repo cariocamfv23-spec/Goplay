@@ -83,7 +83,7 @@ class PWASettingsErrorBoundary extends React.Component<{
 
 function PWASettingsContent() {
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, profile: userProfile } = useAuth()
   const [isLoading, setIsLoading] = useState(true)
   const [pushStatus, setPushStatus] = useState<PushStatus | null>(null)
   const [autoUpdate, setAutoUpdate] = useState(true)
@@ -187,7 +187,7 @@ function PWASettingsContent() {
     }
   }
 
-  const handleRunPushTest = async () => {
+  const handleRunPushTest = async (options?: { includeAvatar?: boolean }) => {
     if (!user) {
       toast.error("Faça login para realizar o teste de push.")
       return
@@ -197,10 +197,17 @@ function PWASettingsContent() {
     setLastTestResult(null)
 
     toast.info("Disparando teste de push no servidor...", {
-      description: "O servidor Supabase está enviando via Edge Function.",
+      description: options?.includeAvatar
+        ? "Enviando push estilo TikTok (com foto real de perfil e logo oficial)..."
+        : "O servidor Supabase está enviando via Edge Function.",
     })
 
-    const result = await pushNotificationService.sendSelfTestPush(user.id)
+    const result = await pushNotificationService.sendSelfTestPush(user.id, {
+      includeAvatar: Boolean(options?.includeAvatar),
+      avatarUrl: options?.includeAvatar
+        ? userProfile?.avatar_url || undefined
+        : undefined,
+    })
     setIsTestingPush(false)
     setLastTestResult(result)
 
@@ -418,24 +425,45 @@ function PWASettingsContent() {
                   </div>
                 </div>
 
-                <Button
-                  onClick={handleRunPushTest}
-                  disabled={isTestingPush || isTogglingPush}
-                  className="w-full gap-2 font-medium shadow-sm"
-                  variant="outline"
-                >
-                  {isTestingPush ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                      Enviando push real pelo servidor...
-                    </>
-                  ) : (
-                    <>
-                      <SendHorizontal className="h-4 w-4 text-primary" />
-                      Enviar Notificação de Teste no Meu Aparelho
-                    </>
-                  )}
-                </Button>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <Button
+                    onClick={() => handleRunPushTest({ includeAvatar: true })}
+                    disabled={isTestingPush || isTogglingPush}
+                    className="w-full gap-2 font-medium shadow-sm"
+                    variant="default"
+                  >
+                    {isTestingPush ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin text-primary-foreground" />
+                        Disparando...
+                      </>
+                    ) : (
+                      <>
+                        <SendHorizontal className="h-4 w-4" />
+                        Testar Foto Real (Estilo TikTok)
+                      </>
+                    )}
+                  </Button>
+
+                  <Button
+                    onClick={() => handleRunPushTest({ includeAvatar: false })}
+                    disabled={isTestingPush || isTogglingPush}
+                    className="w-full gap-2 font-medium shadow-sm"
+                    variant="outline"
+                  >
+                    {isTestingPush ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                        Disparando...
+                      </>
+                    ) : (
+                      <>
+                        <SendHorizontal className="h-4 w-4 text-primary" />
+                        Testar Padrão (Logo Goplay)
+                      </>
+                    )}
+                  </Button>
+                </div>
 
                 <p className="text-[11px] text-muted-foreground/80 leading-normal">
                   💡 <em>Dica de validação:</em> toque no botão acima e
@@ -580,9 +608,9 @@ function PWASettingsContent() {
             </Button>
           </div>
           <p className="text-[11px] text-muted-foreground px-2">
-            Versão do Service Worker: <code>2026.10.22-v12</code> • Manifest:{" "}
-            <code>v12</code> com ícones PNG oficiais prioritários (WebAPK One
-            UI).
+            Versão do Service Worker: <code>2026.10.23-v13</code> • Formato
+            TikTok: <code>image</code> com foto real + <code>icon</code> oficial
+            Goplay.
           </p>{" "}
         </div>
       </div>

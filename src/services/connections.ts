@@ -94,7 +94,7 @@ export const connectionService = {
       try {
         const { data: followerProf } = await db
           .from("profiles")
-          .select("full_name")
+          .select("full_name, avatar_url")
           .eq("id", followerId)
           .maybeSingle()
 
@@ -107,7 +107,7 @@ export const connectionService = {
           link: `/profile/${followerId}`,
         })
 
-        // Push notification (non-blocking)
+        // Push notification (non-blocking) with follower's profile photo
         pushNotificationService
           .triggerServerPush({
             userId: followingId,
@@ -115,6 +115,8 @@ export const connectionService = {
             body: `${followerProf?.full_name || "Um atleta"} começou a seguir você no Goplay!`,
             url: `/profile/${followerId}`,
             tag: `follow-${followerId}`,
+            actorId: followerId,
+            image: followerProf?.avatar_url || undefined,
           })
           .catch(() => {})
       } catch {

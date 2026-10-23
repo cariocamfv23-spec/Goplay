@@ -14,6 +14,8 @@ interface PushRequestPayload {
   tag?: string
   icon?: string
   badge?: string
+  image?: string
+  actorId?: string
   isTest?: boolean
 }
 
@@ -58,6 +60,8 @@ Deno.serve(async (req: Request) => {
       tag,
       icon,
       badge,
+      image,
+      actorId,
       isTest,
     } = body
 
@@ -78,7 +82,10 @@ Deno.serve(async (req: Request) => {
     }
 
     const token = authHeader.replace(/^Bearer\s+/i, "").trim()
-    let callerUser: { id: string email?: string } | null = null
+    let callerUser: {
+      id: string
+      email?: string
+    } | null = null
 
     if (serviceRoleKey && token === serviceRoleKey) {
       callerUser = { id: "service-role", email: "service@supabase.internal" }
@@ -456,6 +463,64 @@ Deno.serve(async (req: Request) => {
 
     const safeIcon = resolvedIcon
 
+    // Helper to sanitize avatar / image URLs
+    // Privacy and security rules:
+    // - Must be an absolute http/https URL or origin-relative path
+    // - Reject signed query params containing sensitive tokens or credentials
+    // - Accept public storage objects from Supabase or valid avatars
+    const sanitizeImageUrl = (
+      rawUrl: string | undefined | null,
+    ): string | null => {
+      if (!rawUrl || typeof rawUrl !== "string") return null
+      const trimmed = rawUrl.trim()
+      if (!trimmed) return null
+      // Do not allow URLs with auth bearer tokens or explicit key query params
+      if (
+        /[?&](token|access_token|apikey|secret)=/i.test(trimmed) ||
+        trimmed.startsWith("javascript:") ||
+        trimmed.startsWith("data:")
+      ) {
+        return null
+      }
+      try {
+        const parsed = new URL(trimmed, callerOrigin || "https://goplay.app")
+        if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+          return parsed.href
+        }
+      } catch {
+        return null
+      }
+      return null
+    }
+
+    // Determine the user image to display (TikTok style notification with actor avatar)
+    let resolvedImage: string | null = sanitizeImageUrl(image)
+
+    // If an actorId is provided (e.g. author of like/comment/follow/message) or actor was the caller,
+    // fetch their public avatar from profiles if not already explicitly supplied
+    const effectiveActorId =
+      actorId ||
+      (callerUser.id !== "service-role" && !isTest ? callerUser.id : null)
+
+    if (!resolvedImage && effectiveActorId) {
+      try {
+        const { data: actorProfile } = await adminDb
+          .from("profiles")
+          .select("avatar_url")
+          .eq("id", effectiveActorId)
+          .maybeSingle()
+
+        if (actorProfile?.avatar_url) {
+          resolvedImage = sanitizeImageUrl(actorProfile.avatar_url)
+        }
+      } catch (errProfile) {
+        console.warn(
+          "[send-push] Could not fetch actor profile avatar:",
+          errProfile,
+        )
+      }
+    }
+
     // Top-level payload for RFC 8030 Web Push data.
     // FCM web-push encryption transports this data directly to the client's PushEvent handler in sw.js.
     // In sw.js, self.registration.showNotification(data.title, notificationOptions) receives these properties.
@@ -465,6 +530,11 @@ Deno.serve(async (req: Request) => {
       url: url || "/",
       tag: tag || (isTest ? `goplay-test-${Date.now()}` : "goplay-alert"),
       icon: safeIcon,
+    }
+
+    // Add image only when a valid, publicly accessible profile picture is present
+    if (resolvedImage) {
+      payload.image = resolvedImage
     }
 
     let successCount = 0
