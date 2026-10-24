@@ -294,6 +294,226 @@ export const feedService = {
   },
 
   /**
+   * Fetches only posts with video (post_type = 'video' or video_url is not null),
+   * joining author profile, like count, comment count and whether the current viewer likes/follows them.
+   * Controlled cost: limits rows, parallel queries, avoids redundant fetches.
+   */
+  async getVideoPosts(params?: {
+    currentUserId?: string | null
+    sport?: string | null
+    followingOnly?: boolean
+    limit?: number
+    offset?: number
+    blockedUserIds?: Set<string>
+  }): Promise<{
+    data: PostItem[]
+    hasMore: boolean
+    error: Error | null
+  }> {
+    try {
+      const {
+        currentUserId,
+        sport,
+        followingOnly = false,
+        limit = 15,
+        offset = 0,
+        blockedUserIds,
+      } = params || {}
+
+      // If filtering by followed users only, resolve the list of followed IDs first
+      let followedUserIds: string[] = []
+      if (followingOnly) {
+        if (!currentUserId) {
+          return { data: [], hasMore: false, error: null }
+        }
+        const { data: followRows, error: followErr } = await db
+          .from("user_follows")
+          .select("following_id")
+          .eq("follower_id", currentUserId)
+
+        if (followErr) throw followErr
+        followedUserIds = (followRows || []).map((r: any) => r.following_id)
+        if (followedUserIds.length === 0) {
+          return { data: [], hasMore: false, error: null }
+        }
+      }
+
+      // Query posts with video
+      // Using .or to match either video_url not null or post_type == video
+      let query = db
+        .from("posts")
+        .select("*")
+        .or("video_url.not.is.null,post_type.eq.video")
+        .order("created_at", { ascending: false })
+
+      if (followingOnly) {
+        query = query.in("user_id", followedUserIds)
+      }
+
+      // Fetch limit + 1 to detect if there is a next page
+      const fetchLimit = Math.min(limit, 30)
+      query = query.range(offset, offset + fetchLimit)
+
+      const { data: rawPosts, error: postsError } = await query
+      if (postsError) throw postsError
+      if (!rawPosts || rawPosts.length === 0) {
+        return { data: [], hasMore: false, error: null }
+      }
+
+      // Extract raw items up to limit
+      let candidatePosts = rawPosts.slice(0, fetchLimit)
+      const hasMore = rawPosts.length > fetchLimit
+
+      // Filter blocked users if any
+      if (blockedUserIds && blockedUserIds.size > 0) {
+        candidatePosts = candidatePosts.filter(
+          (p: any) => !blockedUserIds.has(p.user_id),
+        )
+      }
+
+      if (candidatePosts.length === 0) {
+        return { data: [], hasMore, error: null }
+      }
+
+      const userIds = Array.from(
+        new Set(candidatePosts.map((p: any) => p.user_id)),
+      )
+      const postIds = candidatePosts.map((p: any) => p.id)
+
+      // Parallel lookups: profiles, likes, comments, and following status
+      const [profilesRes, likesRes, commentsRes, viewerFollowsRes] =
+        await Promise.all([
+          db
+            .from("profiles")
+            .select("id, full_name, avatar_url, account_type, sport")
+            .in("id", userIds),
+          db
+            .from("post_likes")
+            .select("post_id, user_id")
+            .in("post_id", postIds),
+          db.from("post_comments").select("post_id").in("post_id", postIds),
+          currentUserId
+            ? db
+                .from("user_follows")
+                .select("following_id")
+                .eq("follower_id", currentUserId)
+                .in("following_id", userIds)
+            : Promise.resolve({ data: [], error: null }),
+        ])
+
+      if (profilesRes.error) throw profilesRes.error
+      if (likesRes.error) throw likesRes.error
+      if (commentsRes.error) throw commentsRes.error
+
+      const profileMap = new Map<string, any>()
+      profilesRes.data?.forEach((p: any) => profileMap.set(p.id, p))
+
+      const followedByViewerSet = new Set<string>()
+      if (viewerFollowsRes?.data) {
+        viewerFollowsRes.data.forEach((r: any) =>
+          followedByViewerSet.add(r.following_id),
+        )
+      }
+
+      const likesByPost = new Map<string, number>()
+      const userLikedSet = new Set<string>()
+      likesRes.data?.forEach((like: any) => {
+        likesByPost.set(like.post_id, (likesByPost.get(like.post_id) || 0) + 1)
+        if (currentUserId && like.user_id === currentUserId) {
+          userLikedSet.add(like.post_id)
+        }
+      })
+
+      const commentsByPost = new Map<string, number>()
+      commentsRes.data?.forEach((c: any) => {
+        commentsByPost.set(c.post_id, (commentsByPost.get(c.post_id) || 0) + 1)
+      })
+
+      // Normalize string for fuzzy match (remove accents & lowercase)
+      const normalize = (val?: string | null) =>
+        (val || "")
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .trim()
+
+      const targetSportNorm = sport ? normalize(sport) : null
+
+      const formattedPosts: PostItem[] = []
+      for (const p of candidatePosts) {
+        const prof = profileMap.get(p.user_id)
+        const authorSport = prof?.sport || null
+        const authorSportNorm = normalize(authorSport)
+
+        // If sport filter is specified, check author's sport
+        if (
+          targetSportNorm &&
+          targetSportNorm !== "all" &&
+          targetSportNorm !== "todos"
+        ) {
+          // Check if matches author's sport or content mentions the sport
+          const contentNorm = normalize(p.content)
+          const matchesSport =
+            authorSportNorm.includes(targetSportNorm) ||
+            targetSportNorm.includes(authorSportNorm) ||
+            contentNorm.includes(targetSportNorm)
+          if (!matchesSport) continue
+        }
+
+        // Must have an actual video URL (either in video_url or first media_url)
+        const actualVideoUrl =
+          p.video_url ||
+          (Array.isArray(p.media_urls)
+            ? p.media_urls.find((u: string) =>
+                /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(u),
+              ) || (p.post_type === "video" ? p.media_urls[0] : null)
+            : null)
+
+        if (!actualVideoUrl) continue
+
+        formattedPosts.push({
+          id: p.id,
+          userId: p.user_id,
+          user: {
+            id: p.user_id,
+            name: prof?.full_name || "Atleta GoPlay",
+            avatar:
+              prof?.avatar_url ||
+              `https://img.usecurling.com/ppl/thumbnail?seed=${p.user_id.slice(0, 4)}`,
+            type:
+              prof?.account_type === "club"
+                ? "Clube"
+                : prof?.account_type === "coach"
+                  ? "Treinador"
+                  : "Atleta",
+            sport: prof?.sport,
+          },
+          content: p.content || "",
+          media: Array.isArray(p.media_urls) ? p.media_urls : [],
+          type: "video",
+          videoUrl: actualVideoUrl,
+          audioUrl: p.audio_url || null,
+          musicLink: p.music_link || null,
+          mentions: Array.isArray(p.mentions) ? p.mentions : [],
+          likesCount: likesByPost.get(p.id) || 0,
+          commentsCount: commentsByPost.get(p.id) || 0,
+          isLiked: userLikedSet.has(p.id),
+          createdAt: p.created_at,
+          timeAgo: formatRelativeTime(p.created_at),
+        })
+      }
+
+      return { data: formattedPosts, hasMore, error: null }
+    } catch (err: any) {
+      return {
+        data: [],
+        hasMore: false,
+        error: err instanceof Error ? err : new Error(String(err)),
+      }
+    }
+  },
+
+  /**
    * Creates a new post in Supabase with optional media uploads.
    */
   async createPost(params: {

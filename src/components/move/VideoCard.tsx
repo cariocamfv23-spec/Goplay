@@ -51,9 +51,14 @@ export interface VideoData {
 interface VideoCardProps {
   video: VideoData
   isActive: boolean
+  shouldPreload?: boolean
 }
 
-export function VideoCard({ video, isActive }: VideoCardProps) {
+export function VideoCard({
+  video,
+  isActive,
+  shouldPreload = false,
+}: VideoCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(true)
@@ -172,14 +177,14 @@ export function VideoCard({ video, isActive }: VideoCardProps) {
       {/* Video Element */}
       <video
         ref={videoRef}
-        src={video.url}
-        poster={video.thumbnail}
-        className="absolute inset-0 w-full h-full object-cover bg-black"
+        src={video.url || undefined}
+        poster={video.thumbnail || undefined}
+        className="absolute inset-0 w-full h-full object-cover bg-black cursor-pointer"
         loop
         playsInline
-        muted={
-          isMuted // Controlled by state
-        }
+        webkit-playsinline="true"
+        preload={isActive ? "auto" : shouldPreload ? "metadata" : "none"}
+        muted={isMuted}
         onClick={togglePlay}
         onTimeUpdate={handleTimeUpdate}
         onLoadStart={handleLoadStart}

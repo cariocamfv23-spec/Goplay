@@ -1,307 +1,293 @@
-import { useState, useRef, useEffect } from "react"
-import { tribes, mockCurrentUser } from "@/lib/data"
+import { useState, useRef, useEffect, useCallback } from "react"
+import { useNavigate } from "react-router-dom"
+import { tribes } from "@/lib/data"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
-import { Zap, Map as MapIcon } from "lucide-react"
+import {
+  Zap,
+  Map as MapIcon,
+  Loader2,
+  AlertCircle,
+  RefreshCw,
+} from "lucide-react"
 import { VideoCard, VideoData } from "@/components/move/VideoCard"
-import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
+import { feedService, PostItem } from "@/services/feed"
+import { moderationService } from "@/services/moderation"
+import { connectionService } from "@/services/connections"
+import { useAuth } from "@/hooks/use-auth"
+import { supabase } from "@/lib/supabase/client"
 
-// High-Quality Sports Highlights Data
-// Replacing generic media with authentic sports content as per user story
-const MOVE_VIDEOS: VideoData[] = [
-  // --- FUTEBOL (High Priority) ---
-  {
-    id: "fut_highlight_1",
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    thumbnail:
-      "https://img.usecurling.com/p/720/1280?q=soccer%20free%20kick%20goal%20stadium&color=green&dpr=2",
-    title: "Cobrança de falta magistral! ⚽🎯",
-    description:
-      "Aquele chute no ângulo que o goleiro nem viu a cor da bola. Técnica pura e precisão cirúrgica.",
-    likes: 15420,
-    comments: 432,
-    shares: 2100,
-    user: {
-      id: "u_pro_1",
-      name: "Camisa 10",
-      avatar: "https://img.usecurling.com/ppl/medium?gender=male&seed=10",
-      isFollowing: false,
-    },
-    music: { title: "Gol de Placa", artist: "Torcida" },
-    modality: "futebol",
-  },
-  {
-    id: "fut_highlight_2",
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-    thumbnail:
-      "https://img.usecurling.com/p/720/1280?q=soccer%20dribbling%20skill%20close%20up&color=green&dpr=2",
-    title: "Entortando a zaga 🔥",
-    description:
-      "Sequência de dribles rápidos em espaço curto. Controle de bola absurdo para escapar da marcação.",
-    likes: 8950,
-    comments: 215,
-    shares: 840,
-    user: {
-      id: "u_pro_2",
-      name: "Rei do Drible",
-      avatar: "https://img.usecurling.com/ppl/medium?gender=male&seed=22",
-      isFollowing: true,
-    },
-    music: { title: "Ousadia", artist: "Samba Ball" },
-    modality: "futebol",
-  },
+/**
+ * Maps a real PostItem from Supabase to VideoData expected by VideoCard.
+ * Generates an appropriate sports thumbnail if the post does not provide one.
+ */
+function postItemToVideoData(
+  post: PostItem,
+  followedUserIds: Set<string>,
+): VideoData {
+  // Infer sport/modality from author sport or content
+  const authorSport = post.user.sport?.toLowerCase() || ""
+  let modality = "futebol"
 
-  // --- BASKETBALL ---
-  {
-    id: "bball_1",
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-    thumbnail:
-      "https://img.usecurling.com/p/720/1280?q=basketball%20slam%20dunk%20action&color=orange&dpr=2",
-    title: "Dunk Contest Winner 🏀👑",
-    description:
-      "Saltou da linha do lance livre! Gravidade zero confirmada na quadra central.",
-    likes: 28500,
-    comments: 1200,
-    shares: 5600,
-    user: {
-      id: "u_bball_1",
-      name: "Air Mike",
-      avatar: "https://img.usecurling.com/ppl/medium?gender=male&seed=23",
-      isFollowing: true,
-    },
-    music: { title: "Hype Beast", artist: "Court Flow" },
-    modality: "basketball",
-  },
-  {
-    id: "bball_2",
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-    thumbnail:
-      "https://img.usecurling.com/p/720/1280?q=basketball%203%20point%20shot&color=orange&dpr=2",
-    title: "Chuva de 3 pontos! 👌",
-    description:
-      "Mão quente no treino de hoje. Ninguém segura quando entra nesse ritmo.",
-    likes: 12300,
-    comments: 450,
-    shares: 890,
-    user: {
-      id: "u_bball_2",
-      name: "Sniper 3pts",
-      avatar: "https://img.usecurling.com/ppl/medium?gender=female&seed=24",
-      isFollowing: false,
-    },
-    music: null,
-    modality: "basketball",
-  },
+  if (authorSport.includes("basquete") || authorSport.includes("basket")) {
+    modality = "basketball"
+  } else if (authorSport.includes("surf")) {
+    modality = "surf"
+  } else if (authorSport.includes("skate")) {
+    modality = "skate"
+  } else if (
+    authorSport.includes("crossfit") ||
+    authorSport.includes("musculacao")
+  ) {
+    modality = "crossfit"
+  } else if (
+    authorSport.includes("volei") ||
+    authorSport.includes("volleyball")
+  ) {
+    modality = "volleyball"
+  } else if (authorSport.includes("futsal")) {
+    modality = "futsal"
+  } else if (authorSport.includes("bike") || authorSport.includes("ciclismo")) {
+    modality = "bike"
+  } else if (authorSport.includes("tenis") || authorSport.includes("tennis")) {
+    modality = "tennis"
+  } else if (
+    authorSport.includes("corrida") ||
+    authorSport.includes("running")
+  ) {
+    modality = "running"
+  } else if (
+    authorSport.includes("natacao") ||
+    authorSport.includes("swimming")
+  ) {
+    modality = "swimming"
+  } else if (
+    authorSport.includes("boxe") ||
+    authorSport.includes("luta") ||
+    authorSport.includes("judo")
+  ) {
+    modality = "boxing"
+  }
 
-  // --- SURF ---
-  {
-    id: "surf_1",
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    thumbnail:
-      "https://img.usecurling.com/p/720/1280?q=surfing%20huge%20barrel%20wave%20ocean&color=cyan&dpr=2",
-    title: "Tubo Gigante em Nazaré 🌊🏄‍♂️",
-    description:
-      "A força da natureza é impressionante. Drop insano na onda gigante do canhão.",
-    likes: 42000,
-    comments: 890,
-    shares: 12000,
-    user: {
-      id: "u_surf_1",
-      name: "Maya Ocean",
-      avatar: "https://img.usecurling.com/ppl/medium?gender=female&seed=45",
-      isFollowing: false,
-    },
-    music: { title: "Ocean Drive", artist: "Chill Waves" },
-    modality: "surf",
-  },
+  // Determine thumbnail
+  const imageMedia = post.media?.find((m) =>
+    /\.(jpg|jpeg|png|webp|gif)(\?.*)?$/i.test(m),
+  )
+  const thumbnail =
+    imageMedia ||
+    `https://img.usecurling.com/p/720/1280?q=sports%20${modality}&color=black&dpr=2`
 
-  // --- SKATE ---
-  {
-    id: "skate_1",
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    thumbnail:
-      "https://img.usecurling.com/p/720/1280?q=skateboarding%20kickflip%20stairs%20urban&color=gray&dpr=2",
-    title: "Kickflip 360 na Escadaria 🛹🚀",
-    description:
-      "Acertou de primeira! Estilo e técnica dominando o pico de rua em SP.",
-    likes: 18900,
-    comments: 340,
-    shares: 900,
-    user: {
-      id: "u_skate_1",
-      name: "Sk8 Or Die",
-      avatar: "https://img.usecurling.com/ppl/medium?gender=male&seed=66",
-      isFollowing: true,
-    },
-    music: { title: "Punk Rocker", artist: "Street Bands" },
-    modality: "skate",
-  },
+  const videoUrl = post.videoUrl || (post.media && post.media[0]) || ""
 
-  // --- CROSSFIT ---
-  {
-    id: "cf_1",
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-    thumbnail:
-      "https://img.usecurling.com/p/720/1280?q=crossfit%20clean%20and%20jerk%20heavy%20gym&color=black&dpr=2",
-    title: "Novo PR de Clean & Jerk! 🏋️‍♂️💪",
-    description:
-      "120kg pra conta! Foco, força e superação diária no box. A técnica vence a força.",
-    likes: 9800,
-    comments: 210,
-    shares: 150,
+  return {
+    id: post.id,
+    url: videoUrl,
+    thumbnail,
+    title: post.content
+      ? post.content.slice(0, 80)
+      : "Lance esportivo no GoPlay",
+    description: post.content && post.content.length > 80 ? post.content : "",
+    likes: post.likesCount,
+    comments: post.commentsCount,
+    shares: 0,
     user: {
-      id: "u_cf_1",
-      name: "Iron Lady",
-      avatar: "https://img.usecurling.com/ppl/medium?gender=female&seed=88",
-      isFollowing: true,
+      id: post.user.id,
+      name: post.user.name,
+      avatar: post.user.avatar,
+      isFollowing: followedUserIds.has(post.user.id),
     },
-    music: { title: "Beast Mode", artist: "Gym Motivation" },
-    modality: "crossfit",
-  },
-
-  // --- VOLLEYBALL ---
-  {
-    id: "volley_1",
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-    thumbnail:
-      "https://img.usecurling.com/p/720/1280?q=volleyball%20spike%20match%20action&color=yellow&dpr=2",
-    title: "Monster Block! 🏐⛔",
-    description:
-      "Paredão subiu e não passou nada. Defesa ganha jogo! O time vibra muito.",
-    likes: 11200,
-    comments: 180,
-    shares: 400,
-    user: {
-      id: "u_volley_1",
-      name: "Volei Pro",
-      avatar: "https://img.usecurling.com/ppl/medium?gender=female&seed=99",
-      isFollowing: false,
-    },
-    music: null,
-    modality: "volleyball",
-  },
-
-  // --- FUTSAL ---
-  {
-    id: "futsal_1",
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    thumbnail:
-      "https://img.usecurling.com/p/720/1280?q=futsal%20dribbling%20skill%20indoor&color=blue&dpr=2",
-    title: "Rabiscando na Ala 🔥⚽",
-    description:
-      "Futsal arte na veia. Drible curto, velocidade e finalização no canto.",
-    likes: 8700,
-    comments: 120,
-    shares: 300,
-    user: {
-      id: "u_futsal_1",
-      name: "Falcão Jr",
-      avatar: "https://img.usecurling.com/ppl/medium?gender=male&seed=77",
-      isFollowing: true,
-    },
-    music: { title: "Samba Beat", artist: "Brasil" },
-    modality: "futsal",
-  },
-
-  // --- BIKE / CYCLING ---
-  {
-    id: "bike_1",
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-    thumbnail:
-      "https://img.usecurling.com/p/720/1280?q=road%20cycling%20mountain%20sprint&color=orange&dpr=2",
-    title: "Sprint Final na Serra 🚴‍♂️💨",
-    description:
-      "Subida de 12% de inclinação e ainda sobrou perna pro sprint. Paisagem incrível!",
-    likes: 6500,
-    comments: 150,
-    shares: 200,
-    user: {
-      id: "u_bike_1",
-      name: "Pedal Forte",
-      avatar: "https://img.usecurling.com/ppl/medium?gender=male&seed=55",
-      isFollowing: false,
-    },
-    music: null,
-    modality: "bike",
-  },
-
-  // --- TENNIS ---
-  {
-    id: "tennis_1",
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-    thumbnail:
-      "https://img.usecurling.com/p/720/1280?q=tennis%20serve%20action%20clay&color=green&dpr=2",
-    title: "Ace no Match Point! 🎾🏆",
-    description:
-      "Saque a 210km/h para fechar o jogo. Concentração total e execução perfeita.",
-    likes: 14200,
-    comments: 320,
-    shares: 500,
-    user: {
-      id: "u_tennis_1",
-      name: "Ace Queen",
-      avatar: "https://img.usecurling.com/ppl/medium?gender=female&seed=33",
-      isFollowing: true,
-    },
-    music: { title: "Match Point", artist: "Tennis Courts" },
-    modality: "tennis",
-  },
-]
+    music: post.musicLink
+      ? {
+          title: post.musicLink.title || "Trilha",
+          artist: post.musicLink.artist || "GoPlay",
+        }
+      : null,
+    modality,
+  }
+}
 
 export default function Move() {
   const navigate = useNavigate()
+  const { user, profile } = useAuth()
 
   // Logic to determine initial tribe based on User Profile
   const getInitialTribe = () => {
-    if (!mockCurrentUser?.sport) return "all"
-
-    // Normalize sport name to match tribe IDs
-    const userSportId = mockCurrentUser.sport
+    if (!profile?.sport) return "all"
+    const userSportId = profile.sport
       .toLowerCase()
       .replace("ê", "e")
       .replace("ç", "c")
       .replace("ã", "a")
+      .trim()
 
-    // Check if the user's sport exists in our tribes list
     const tribeExists = tribes.some((t) => t.id === userSportId)
-
     return tribeExists ? userSportId : "all"
   }
 
   const [activeIndex, setActiveIndex] = useState(0)
-  const [activeTribe, setActiveTribe] = useState(getInitialTribe())
+  const [activeTribe, setActiveTribe] = useState<string>(() =>
+    getInitialTribe(),
+  )
   const [feedType, setFeedType] = useState<"foryou" | "following">("foryou")
-  const containerRef = useRef<HTMLDivElement>(null)
 
+  const [videos, setVideos] = useState<VideoData[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [loadingMore, setLoadingMore] = useState<boolean>(false)
+  const [hasMore, setHasMore] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const containerRef = useRef<HTMLDivElement>(null)
+  const followedSetRef = useRef<Set<string>>(new Set())
+
+  // Carrega lista de usuários seguidos pelo viewer atual
+  const loadFollowedUsers = useCallback(async () => {
+    if (!user?.id) {
+      followedSetRef.current = new Set()
+      return new Set<string>()
+    }
+    try {
+      const followingList = await connectionService.getFollowing(user.id)
+      const followedSet = new Set(followingList.map((f) => f.id))
+      followedSetRef.current = followedSet
+      return followedSet
+    } catch {
+      return new Set<string>()
+    }
+  }, [user?.id])
+
+  // Ref para rastrear quantidade atual de vídeos para evitar re-criação desnecessária de fetchVideos
+  const videosLengthRef = useRef(0)
+  videosLengthRef.current = videos.length
+
+  // Busca publicações com vídeo reais do Supabase
+  const fetchVideos = useCallback(
+    async (isLoadMore = false) => {
+      try {
+        if (!isLoadMore) {
+          setLoading(true)
+          setError(null)
+        } else {
+          setLoadingMore(true)
+        }
+
+        const [followedSet, blockedSet] = await Promise.all([
+          loadFollowedUsers(),
+          user?.id
+            ? moderationService.getBlockedUserIds(user.id)
+            : Promise.resolve(new Set<string>()),
+        ])
+
+        const currentOffset = isLoadMore ? videosLengthRef.current : 0
+        const sportParam = activeTribe === "all" ? null : activeTribe
+
+        const res = await feedService.getVideoPosts({
+          currentUserId: user?.id || null,
+          sport: sportParam,
+          followingOnly: feedType === "following",
+          limit: 10,
+          offset: currentOffset,
+          blockedUserIds: blockedSet,
+        })
+
+        if (res.error) {
+          throw res.error
+        }
+
+        const mappedVideos = (res.data || []).map((p) =>
+          postItemToVideoData(p, followedSet),
+        )
+
+        setHasMore(res.hasMore)
+        if (isLoadMore) {
+          setVideos((prev) => {
+            const existingIds = new Set(prev.map((v) => v.id))
+            const newOnes = mappedVideos.filter((v) => !existingIds.has(v.id))
+            return [...prev, ...newOnes]
+          })
+        } else {
+          setVideos(mappedVideos)
+          setActiveIndex(0)
+          if (containerRef.current) {
+            containerRef.current.scrollTop = 0
+          }
+        }
+      } catch (err: any) {
+        console.error("[Move] Erro ao carregar vídeos:", err)
+        setError(
+          err?.message ||
+            "Não foi possível carregar os vídeos do MOVE. Verifique sua conexão.",
+        )
+      } finally {
+        setLoading(false)
+        setLoadingMore(false)
+      }
+    },
+    [user?.id, activeTribe, feedType, loadFollowedUsers],
+  )
+
+  // Dispara busca inicial e ao alternar filtro de esporte ou modo Para Você/Seguindo
+  useEffect(() => {
+    fetchVideos(false)
+  }, [fetchVideos])
+
+  // Escuta novos posts de vídeo em tempo real (Supabase Realtime) para refletir no feed
+  useEffect(() => {
+    const channel = supabase
+      .channel("public:posts:move_feed")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "posts" },
+        async (payload) => {
+          const newPost = payload.new as any
+          if (
+            !newPost ||
+            (!newPost.video_url && newPost.post_type !== "video")
+          ) {
+            return
+          }
+          // Recarrega lista sutilmente para incluir o novo vídeo publicado
+          fetchVideos(false)
+        },
+      )
+      .on(
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: "posts" },
+        (payload) => {
+          const oldPost = payload.old as any
+          if (oldPost?.id) {
+            setVideos((prev) => prev.filter((v) => v.id !== oldPost.id))
+          }
+        },
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [fetchVideos])
+
+  // Tratamento da rolagem vertical para identificar o vídeo ativo e carregar mais vídeos
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const container = e.currentTarget
     const index = Math.round(container.scrollTop / container.clientHeight)
     if (index !== activeIndex) {
       setActiveIndex(index)
     }
+
+    // Paginação: se o usuário estiver próximo ao fim e houver mais itens
+    const isNearBottom =
+      container.scrollTop + container.clientHeight >=
+      container.scrollHeight - container.clientHeight * 1.5
+
+    if (isNearBottom && hasMore && !loading && !loadingMore) {
+      fetchVideos(true)
+    }
   }
-
-  // Improved Filtering Logic
-  const filteredVideos = MOVE_VIDEOS.filter((video) => {
-    // 1. Filter by Feed Type (Following vs For You)
-    if (feedType === "following" && !video.user.isFollowing) {
-      return false
-    }
-
-    // 2. Filter by Tribe (if activeTribe is not 'all')
-    if (feedType === "following") {
-      return true
-    }
-
-    // For 'For You', we respect the tribe filter strictly
-    if (activeTribe === "all") return true
-    return video.modality === activeTribe
-  })
 
   const handleTribeChange = (tribeId: string) => {
     setActiveTribe(tribeId)
-    setFeedType("foryou") // Switch to For You when selecting a tribe to show results
+    setFeedType("foryou")
     setActiveIndex(0)
     if (containerRef.current) {
       containerRef.current.scrollTop = 0
@@ -315,13 +301,6 @@ export default function Move() {
       containerRef.current.scrollTop = 0
     }
   }
-
-  // Effect to ensure we start at the top when filter changes
-  useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollTop = 0
-    }
-  }, [activeTribe, feedType])
 
   return (
     <div className="h-full w-full bg-black relative">
@@ -367,7 +346,7 @@ export default function Move() {
           </Button>
         </div>
 
-        {/* Tribes Scroll - Only visible in For You mode or optionally in Following */}
+        {/* Tribes Scroll - Only visible in For You mode */}
         <div
           className={cn(
             "w-full transition-all duration-300 overflow-hidden",
@@ -418,16 +397,52 @@ export default function Move() {
         className="h-full w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth no-scrollbar"
         onScroll={handleScroll}
       >
-        {filteredVideos.length > 0 ? (
-          filteredVideos.map((video, index) => (
-            <div key={video.id} className="h-full w-full snap-start">
-              <VideoCard video={video} isActive={index === activeIndex} />
+        {loading ? (
+          <div className="h-full w-full flex flex-col items-center justify-center text-white bg-zinc-950 gap-3">
+            <Loader2 className="h-8 w-8 text-primary animate-spin" />
+            <p className="text-xs text-zinc-400">
+              Carregando vídeos do MOVE...
+            </p>
+          </div>
+        ) : error ? (
+          <div className="h-full w-full flex flex-col items-center justify-center text-white p-6 text-center bg-zinc-950">
+            <div className="bg-red-500/10 p-4 rounded-full mb-4 border border-red-500/20">
+              <AlertCircle className="h-8 w-8 text-red-400" />
             </div>
-          ))
+            <h3 className="text-xl font-bold mb-2">Erro ao carregar</h3>
+            <p className="text-zinc-400 text-sm max-w-xs mx-auto mb-6">
+              {error}
+            </p>
+            <Button
+              variant="outline"
+              className="border-white/20 text-white hover:bg-white/10 gap-2"
+              onClick={() => fetchVideos(false)}
+            >
+              <RefreshCw className="h-4 w-4" />
+              Tentar novamente
+            </Button>
+          </div>
+        ) : videos.length > 0 ? (
+          <>
+            {videos.map((video, index) => (
+              <div key={video.id} className="h-full w-full snap-start">
+                <VideoCard
+                  video={video}
+                  isActive={index === activeIndex}
+                  shouldPreload={index === activeIndex + 1}
+                />
+              </div>
+            ))}
+            {loadingMore && (
+              <div className="h-20 w-full flex items-center justify-center text-white bg-zinc-950">
+                <Loader2 className="h-6 w-6 text-primary animate-spin" />
+              </div>
+            )}
+          </>
         ) : (
           <div className="h-full w-full flex flex-col items-center justify-center text-white p-6 text-center bg-zinc-950">
-            <div className="bg-zinc-900 p-6 rounded-full mb-6 animate-pulse">
-              <Zap className="h-10 w-10 text-zinc-500" />
+            <div className="bg-zinc-900 p-6 rounded-full mb-6">
+              <Zap className="h-10 w-10 text-primary" />
             </div>
             <h3 className="text-2xl font-bold mb-3">
               {feedType === "following"
@@ -436,22 +451,36 @@ export default function Move() {
             </h3>
             <p className="text-zinc-400 max-w-xs mx-auto leading-relaxed">
               {feedType === "following"
-                ? "Siga mais atletas e times para ver os lances deles aqui."
-                : `Não encontramos lances para ${activeTribe}. Tente selecionar outra tribo ou volte mais tarde!`}
+                ? "Siga atletas e perfis esportivos que publicam vídeos para ver os lances deles aqui."
+                : activeTribe !== "all"
+                  ? `Nenhum vídeo encontrado para a modalidade selecionada. Tente outro esporte ou veja todos os lances!`
+                  : "Ainda não existem vídeos publicados no GoPlay. Seja o primeiro a publicar um lance no feed!"}
             </p>
-            <Button
-              variant="outline"
-              className="mt-8 border-white/20 text-white hover:bg-white/10 px-8"
-              onClick={() =>
-                feedType === "following"
-                  ? handleFeedTypeChange("foryou")
-                  : handleTribeChange("all")
-              }
-            >
-              {feedType === "following"
-                ? "Explorar Para Você"
-                : "Ver todos os esportes"}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-3 mt-8">
+              {feedType === "following" ? (
+                <Button
+                  variant="outline"
+                  className="border-white/20 text-white hover:bg-white/10 px-8"
+                  onClick={() => handleFeedTypeChange("foryou")}
+                >
+                  Explorar Para Você
+                </Button>
+              ) : activeTribe !== "all" ? (
+                <Button
+                  variant="outline"
+                  className="border-white/20 text-white hover:bg-white/10 px-8"
+                  onClick={() => handleTribeChange("all")}
+                >
+                  Ver todos os esportes
+                </Button>
+              ) : null}
+              <Button
+                className="bg-primary text-white hover:bg-primary/90 px-6 font-semibold"
+                onClick={() => navigate("/feed")}
+              >
+                Ir para o Feed
+              </Button>
+            </div>
           </div>
         )}
       </div>
