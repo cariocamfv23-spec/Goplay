@@ -3,6 +3,31 @@ import path from "path"
 import { decodePng } from "./png-codec.mjs"
 
 const files = [
+  // Legacy icons (requested by user / production URL)
+  { name: "icon-512.png", expectedDim: 512, expectedType: "whiteBg" },
+  { name: "icon-192.png", expectedDim: 192, expectedType: "whiteBg" },
+  {
+    name: "icon-512-maskable.png",
+    expectedDim: 512,
+    expectedType: "whiteBg",
+  },
+  {
+    name: "icon-192-maskable.png",
+    expectedDim: 192,
+    expectedType: "whiteBg",
+  },
+  { name: "favicon.png", expectedDim: 48, expectedType: "whiteBg" },
+  {
+    name: "icon-monochrome.png",
+    expectedDim: 512,
+    expectedType: "transparent",
+  },
+  {
+    name: "notification-badge.png",
+    expectedDim: 96,
+    expectedType: "transparent",
+  },
+  // -v2 icons
   { name: "icon-512-v2.png", expectedDim: 512, expectedType: "whiteBg" },
   { name: "icon-192-v2.png", expectedDim: 192, expectedType: "whiteBg" },
   {
@@ -144,10 +169,30 @@ if (isDirectRun) {
       `[${status}] ${r.name} -> dim: ${r.dim} (expected ${r.expectedDim}), ratio: ${r.contentRatio}, cornersOK: ${r.cornersAreExpected}, bbox: ${r.bbox}`,
     )
   }
+  // Also verify favicon.ico existence and header
+  const icoPath = path.join(publicDir, "favicon.ico")
+  if (fs.existsSync(icoPath)) {
+    const icoBuf = fs.readFileSync(icoPath)
+    const reserved = icoBuf.readUInt16LE(0)
+    const type = icoBuf.readUInt16LE(2)
+    const count = icoBuf.readUInt16LE(4)
+    if (reserved === 0 && type === 1 && count >= 1) {
+      console.log(
+        `[PASS] favicon.ico -> valid ICO with ${count} images (${icoBuf.length} bytes)`,
+      )
+    } else {
+      console.error(`[FAIL] favicon.ico -> invalid ICO format`)
+      hasFailure = true
+    }
+  } else {
+    console.error(`[FAIL] favicon.ico -> missing`)
+    hasFailure = true
+  }
+
   if (hasFailure) {
     console.error("Verification failed for some icons!")
     process.exit(1)
   } else {
-    console.log("All 7 -v2 icons passed integrity check!")
+    console.log("All icons (legacy + v2 + ico) passed integrity check!")
   }
 }

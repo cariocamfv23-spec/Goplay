@@ -1,6 +1,6 @@
 import fs from "fs"
 import path from "path"
-import { decodePng, encodePng } from "./png-codec.mjs"
+import { decodePng, encodePng, encodeIco } from "./png-codec.mjs"
 
 import { fileURLToPath } from "url"
 
@@ -179,64 +179,95 @@ function renderTransparentSilhouetteIcon(
 export function generateAllIcons() {
   const publicDir = path.join(projectRoot, "public")
 
-  console.log("Generating icon-512-v2.png (512x512, 65% content, white bg)...")
-  const buf512 = renderWhiteBgIcon(512, 0.65)
-  fs.writeFileSync(
-    path.join(publicDir, "icon-512-v2.png"),
-    encodePng(512, 512, buf512),
-  )
-
-  console.log("Generating icon-192-v2.png (192x192, 65% content, white bg)...")
-  const buf192 = renderWhiteBgIcon(192, 0.65)
-  fs.writeFileSync(
-    path.join(publicDir, "icon-192-v2.png"),
-    encodePng(192, 192, buf192),
-  )
-
+  // 1. icon-512-v2.png and legacy icon-512.png (512x512, 65% content, white bg)
   console.log(
-    "Generating icon-512-maskable-v2.png (512x512, 70% content, white bg)...",
+    "Generating icon-512-v2.png & legacy icon-512.png (512x512, 65% content, white bg)...",
+  )
+  const buf512 = renderWhiteBgIcon(512, 0.65)
+  const encoded512 = encodePng(512, 512, buf512)
+  fs.writeFileSync(path.join(publicDir, "icon-512-v2.png"), encoded512)
+  fs.writeFileSync(path.join(publicDir, "icon-512.png"), encoded512)
+
+  // 2. icon-192-v2.png and legacy icon-192.png (192x192, 65% content, white bg)
+  console.log(
+    "Generating icon-192-v2.png & legacy icon-192.png (192x192, 65% content, white bg)...",
+  )
+  const buf192 = renderWhiteBgIcon(192, 0.65)
+  const encoded192 = encodePng(192, 192, buf192)
+  fs.writeFileSync(path.join(publicDir, "icon-192-v2.png"), encoded192)
+  fs.writeFileSync(path.join(publicDir, "icon-192.png"), encoded192)
+
+  // 3. icon-512-maskable-v2.png and legacy icon-512-maskable.png (512x512, 70% content, white bg)
+  console.log(
+    "Generating icon-512-maskable-v2.png & legacy icon-512-maskable.png (512x512, 70% content, white bg)...",
   )
   const buf512Maskable = renderWhiteBgIcon(512, 0.7)
+  const encoded512Maskable = encodePng(512, 512, buf512Maskable)
   fs.writeFileSync(
     path.join(publicDir, "icon-512-maskable-v2.png"),
-    encodePng(512, 512, buf512Maskable),
+    encoded512Maskable,
+  )
+  fs.writeFileSync(
+    path.join(publicDir, "icon-512-maskable.png"),
+    encoded512Maskable,
   )
 
+  // 4. icon-192-maskable-v2.png and legacy icon-192-maskable.png (192x192, 70% content, white bg)
   console.log(
-    "Generating icon-192-maskable-v2.png (192x192, 70% content, white bg)...",
+    "Generating icon-192-maskable-v2.png & legacy icon-192-maskable.png (192x192, 70% content, white bg)...",
   )
   const buf192Maskable = renderWhiteBgIcon(192, 0.7)
+  const encoded192Maskable = encodePng(192, 192, buf192Maskable)
   fs.writeFileSync(
     path.join(publicDir, "icon-192-maskable-v2.png"),
-    encodePng(192, 192, buf192Maskable),
+    encoded192Maskable,
   )
-
-  console.log("Generating favicon-v2.png (48x48, 68% content, white bg)...")
-  const bufFavicon = renderWhiteBgIcon(48, 0.68)
   fs.writeFileSync(
-    path.join(publicDir, "favicon-v2.png"),
-    encodePng(48, 48, bufFavicon),
+    path.join(publicDir, "icon-192-maskable.png"),
+    encoded192Maskable,
   )
 
+  // 5. favicon-v2.png and legacy favicon.png (48x48, 68% content, white bg) + favicon.ico (16, 32, 48)
+  console.log("Generating favicon-v2.png & legacy favicon.png / favicon.ico...")
+  const bufFavicon = renderWhiteBgIcon(48, 0.68)
+  const encodedFavicon48 = encodePng(48, 48, bufFavicon)
+  fs.writeFileSync(path.join(publicDir, "favicon-v2.png"), encodedFavicon48)
+  fs.writeFileSync(path.join(publicDir, "favicon.png"), encodedFavicon48)
+
+  const bufFavicon16 = renderWhiteBgIcon(16, 0.68)
+  const encodedFavicon16 = encodePng(16, 16, bufFavicon16)
+  const bufFavicon32 = renderWhiteBgIcon(32, 0.68)
+  const encodedFavicon32 = encodePng(32, 32, bufFavicon32)
+
+  const encodedIco = encodeIco([
+    { width: 16, height: 16, pngBuffer: encodedFavicon16 },
+    { width: 32, height: 32, pngBuffer: encodedFavicon32 },
+    { width: 48, height: 48, pngBuffer: encodedFavicon48 },
+  ])
+  fs.writeFileSync(path.join(publicDir, "favicon.ico"), encodedIco)
+
+  // 6. icon-monochrome-v2.png and legacy icon-monochrome.png (512x512, 65% content, transparent silhouette)
   console.log(
-    "Generating icon-monochrome-v2.png (512x512, 65% content, transparent silhouette)...",
+    "Generating icon-monochrome-v2.png & legacy icon-monochrome.png (512x512, 65% content, transparent silhouette)...",
   )
   const bufMono = renderTransparentSilhouetteIcon(512, 0.65, "white")
-  fs.writeFileSync(
-    path.join(publicDir, "icon-monochrome-v2.png"),
-    encodePng(512, 512, bufMono),
-  )
+  const encodedMono = encodePng(512, 512, bufMono)
+  fs.writeFileSync(path.join(publicDir, "icon-monochrome-v2.png"), encodedMono)
+  fs.writeFileSync(path.join(publicDir, "icon-monochrome.png"), encodedMono)
 
+  // 7. notification-badge-v2.png and legacy notification-badge.png (96x96, 70% content, transparent silhouette)
   console.log(
-    "Generating notification-badge-v2.png (96x96, 70% content, transparent silhouette)...",
+    "Generating notification-badge-v2.png & legacy notification-badge.png (96x96, 70% content, transparent silhouette)...",
   )
   const bufBadge = renderTransparentSilhouetteIcon(96, 0.7, "white")
+  const encodedBadge = encodePng(96, 96, bufBadge)
   fs.writeFileSync(
     path.join(publicDir, "notification-badge-v2.png"),
-    encodePng(96, 96, bufBadge),
+    encodedBadge,
   )
+  fs.writeFileSync(path.join(publicDir, "notification-badge.png"), encodedBadge)
 
-  console.log("All 7 icons generated successfully!")
+  console.log("All 15 icon files (8 legacy + 7 v2) generated successfully!")
 }
 
 generateAllIcons()
