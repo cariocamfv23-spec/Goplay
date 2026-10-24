@@ -65,6 +65,7 @@ export function VideoCard({
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
+  const [hasAudioTrack, setHasAudioTrack] = useState<boolean | null>(null)
   const [hasError, setHasError] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
@@ -93,10 +94,12 @@ export function VideoCard({
     if (!videoEl) return
 
     if (isActive) {
-      // Reset error flag when becoming active if it wasn't a permanent failure
+      // Regra TikTok: ao focar em um novo card, volta para mudo por padrão para garantir autoplay suave
+      setIsMuted(true)
+      videoEl.muted = true
+
       const attemptPlay = () => {
-        // Enforce muted on initial programmatic autoplay (required by modern mobile & desktop browsers)
-        videoEl.muted = isMuted
+        videoEl.muted = true
         const playPromise = videoEl.play()
         if (playPromise !== undefined) {
           playPromise
@@ -105,27 +108,11 @@ export function VideoCard({
               setIsLoading(false)
             })
             .catch((error: any) => {
-              // NotAllowedError is typical if unmuted autoplay is blocked by user agent
-              if (error?.name === "NotAllowedError") {
-                if (!videoEl.muted) {
-                  setIsMuted(true)
-                  videoEl.muted = true
-                  videoEl
-                    .play()
-                    .then(() => {
-                      setIsPlaying(true)
-                      setIsLoading(false)
-                    })
-                    .catch((err2) => {
-                      console.warn(
-                        "[VideoCard] Autoplay silenciado também recusado:",
-                        err2,
-                      )
-                      setIsPlaying(false)
-                    })
-                }
-              } else if (error?.name !== "AbortError") {
-                console.warn("[VideoCard] Erro ao reproduzir:", error)
+              if (error?.name !== "AbortError") {
+                console.warn(
+                  "[VideoCard] Erro ao reproduzir no autoplay:",
+                  error,
+                )
                 setIsPlaying(false)
               }
             })
@@ -136,17 +123,20 @@ export function VideoCard({
     } else {
       videoEl.pause()
       setIsPlaying(false)
-      // Paused and inactive: rewind slightly for clean next view
+      // Ao sair de foco, garante que o elemento volte ao estado mudo e reposicione para início suave
+      videoEl.muted = true
+      setIsMuted(true)
       if (!Number.isNaN(videoEl.currentTime)) {
         videoEl.currentTime = 0
       }
     }
-  }, [isActive, isMuted, video.url])
+  }, [isActive, video.url])
 
-  // Sync mute state directly
+  // Sync mute state directly com o elemento de vídeo
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.muted = isMuted
+    const videoEl = videoRef.current
+    if (videoEl && videoEl.muted !== isMuted) {
+      videoEl.muted = isMuted
     }
   }, [isMuted])
 
@@ -196,9 +186,39 @@ export function VideoCard({
     }
   }
 
-  const toggleMute = (e: React.MouseEvent) => {
+  const toggleMute = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    setIsMuted(!isMuted)
+    const videoEl = videoRef.current
+    if (!videoEl) return
+
+    if (isMuted) {
+      // Usuário quer ativar o som
+      try {
+        videoEl.muted = false
+        // Se estiver pausado ou precisando retomar com som
+        const playPromise = videoEl.play()
+        if (playPromise !== undefined) {
+          await playPromise
+        }
+        setIsMuted(videoEl.muted)
+        setIsPlaying(!videoEl.paused)
+        toast.info("Áudio ativado", { duration: 1500 })
+      } catch (err: any) {
+        console.warn("[VideoCard] Navegador bloqueou reprodução com som:", err)
+        // Reverte para mudo de forma segura sem travar o vídeo
+        videoEl.muted = true
+        setIsMuted(true)
+        videoEl.play().catch(() => {})
+        toast.error("Toque no vídeo para permitir áudio no navegador", {
+          duration: 2500,
+        })
+      }
+    } else {
+      // Usuário quer silenciar
+      videoEl.muted = true
+      setIsMuted(true)
+      toast.info("Áudio silenciado", { duration: 1200 })
+    }
   }
 
   const handleFollow = (e: React.MouseEvent) => {
@@ -225,6 +245,31 @@ export function VideoCard({
   const handleLoadedMetadata = () => {
     // Metadata loaded (duration, dimensions)
     setHasError(false)
+    const videoEl = videoRef.current
+    if (videoEl) {
+      // Sincroniza estado inicial real do vídeo
+      setIsMuted(videoEl.muted)
+
+      // Inspeciona se o elemento expõe trilhas de áudio (se suportado pelo navegador)
+      const audioTracks = (videoEl as any).audioTracks
+      const mozHasAudio = (videoEl as any).mozHasAudio
+      const webkitAudioDecodedByteCount = (videoEl as any)
+        .webkitAudioDecodedByteCount
+
+      if (audioTracks && typeof audioTracks.length === "number") {
+        setHasAudioTrack(audioTracks.length > 0)
+      } else if (typeof mozHasAudio === "boolean") {
+        setHasAudioTrack(mozHasAudio)
+      } else if (typeof webkitAudioDecodedByteCount === "number") {
+        setHasAudioTrack(webkitAudioDecodedByteCount > 0)
+      }
+    }
+  }
+
+  const handleVolumeChange = () => {
+    if (videoRef.current) {
+      setIsMuted(videoRef.current.muted)
+    }
   }
 
   const handleCanPlay = () => {
@@ -316,6 +361,7 @@ export function VideoCard({
         onWaiting={handleWaiting}
         onPlaying={handlePlaying}
         onPause={handlePause}
+        onVolumeChange={handleVolumeChange}
         onError={handleError}
       />
 
@@ -358,13 +404,37 @@ export function VideoCard({
 
       {/* Play/Pause Center Icon Overlay */}
       {!isPlaying && !isLoading && !hasError && (
-        <div
-          className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 cursor-pointer"
-          onClick={togglePlay}
-        >
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
           <div className="bg-black/50 rounded-full p-4 backdrop-blur-sm animate-in fade-in zoom-in duration-300 border border-white/20 shadow-2xl">
             <Play className="h-12 w-12 text-white fill-white ml-1" />
           </div>
+        </div>
+      )}
+
+      {/* Floating Audio Button (TikTok Style) - Top Right */}
+      {!hasError && (
+        <div className="absolute top-20 right-4 z-30 animate-in fade-in duration-200">
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={toggleMute}
+            className={cn(
+              "h-10 w-10 rounded-full backdrop-blur-md shadow-lg transition-all duration-300 border",
+              isMuted
+                ? "bg-black/50 hover:bg-black/70 text-white/90 border-white/20"
+                : "bg-primary text-white hover:bg-primary/90 border-primary/50 shadow-[0_0_15px_rgba(var(--primary),0.6)] scale-105",
+            )}
+            title={isMuted ? "Ativar áudio" : "Silenciar áudio"}
+            aria-label={
+              isMuted ? "Ativar som do vídeo" : "Desativar som do vídeo"
+            }
+          >
+            {isMuted ? (
+              <VolumeX className="h-5 w-5 drop-shadow-md" />
+            ) : (
+              <Volume2 className="h-5 w-5 drop-shadow-md animate-pulse" />
+            )}
+          </Button>
         </div>
       )}
 
@@ -466,12 +536,19 @@ export function VideoCard({
               )}
             </div>
 
-            {/* Mute Button */}
+            {/* Mute Button (Bottom Pill) */}
             <Button
               size="icon"
               variant="ghost"
-              className="h-8 w-8 rounded-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-md border border-white/10"
+              className={cn(
+                "h-8 w-8 rounded-full backdrop-blur-md border transition-colors",
+                isMuted
+                  ? "bg-white/20 hover:bg-white/30 text-white border-white/10"
+                  : "bg-primary text-white hover:bg-primary/90 border-primary/40",
+              )}
               onClick={toggleMute}
+              title={isMuted ? "Ativar áudio" : "Silenciar áudio"}
+              aria-label={isMuted ? "Ativar som" : "Desativar som"}
             >
               {isMuted ? (
                 <VolumeX className="h-4 w-4" />

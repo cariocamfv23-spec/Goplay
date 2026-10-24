@@ -186,8 +186,8 @@ export function runIntegrityCheck() {
     throw new Error("Verification failed for some icons!")
   } else {
     console.log("All icons (legacy + v2 + ico) passed integrity check!")
+    return results
   }
-  return results
 }
 
 // Auto-run if executed directly via node scripts/verify-icons.mjs
