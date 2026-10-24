@@ -35,6 +35,9 @@ import {
   pushNotificationService,
   PushStatus,
   PushTestResult,
+  SW_VERSION,
+  SW_QUERY_VERSION,
+  registerServiceWorker,
 } from "@/services/push-notifications"
 import goplayIcon from "@/assets/goplay-icon-0e955.png"
 
@@ -96,11 +99,80 @@ function PWASettingsContent() {
   const [lastTestResult, setLastTestResult] = useState<PushTestResult | null>(
     null,
   )
+  const [activeSwVersion, setActiveSwVersion] = useState<string | null>(null)
+
+  const queryActiveSwVersion = async (): Promise<string | null> => {
+    if (typeof window === "undefined" || !("serviceWorker" in navigator)) {
+      return null
+    }
+
+    try {
+      const reg = await navigator.serviceWorker.getRegistration()
+      const worker = reg?.active || navigator.serviceWorker.controller
+
+      if (!worker) return null
+
+      // Check URL query param first if scriptURL is available
+      if (worker.scriptURL) {
+        try {
+          const parsed = new URL(worker.scriptURL)
+          const queryVer = parsed.searchParams.get("v")
+          if (queryVer) {
+            // Check if postMessage responds with full version tag
+          }
+        } catch {
+          /* ignore */
+        }
+      }
+
+      // Query real version string from the SW via MessageChannel
+      return new Promise<string | null>((resolve) => {
+        const messageChannel = new MessageChannel()
+        const timeout = setTimeout(() => {
+          // Fallback to scriptURL analysis if postMessage timed out
+          if (worker.scriptURL) {
+            try {
+              const parsed = new URL(worker.scriptURL)
+              const v = parsed.searchParams.get("v")
+              if (v) resolve(`v${v}`)
+              else resolve(null)
+            } catch {
+              resolve(null)
+            }
+          } else {
+            resolve(null)
+          }
+        }, 1500)
+
+        messageChannel.port1.onmessage = (event) => {
+          clearTimeout(timeout)
+          if (event.data?.version) {
+            resolve(event.data.version)
+          } else {
+            resolve(null)
+          }
+        }
+
+        try {
+          worker.postMessage({ type: "GET_VERSION" }, [messageChannel.port2])
+        } catch {
+          clearTimeout(timeout)
+          resolve(null)
+        }
+      })
+    } catch {
+      return null
+    }
+  }
 
   const loadStatus = async () => {
     try {
       const status = await pushNotificationService.checkStatus()
       setPushStatus(status)
+      const detectedVersion = await queryActiveSwVersion()
+      if (detectedVersion) {
+        setActiveSwVersion(detectedVersion)
+      }
     } catch (err) {
       console.error("Falha ao verificar status push:", err)
     } finally {
@@ -251,17 +323,24 @@ function PWASettingsContent() {
 
   const handleUpdate = async () => {
     toast.info("Verificando atualizações...", {
-      description:
-        "Baixando nova versão do Service Worker e atualizando cache.",
+      description: `Forçando atualização do Service Worker v${SW_QUERY_VERSION} e limpando caches antigos...`,
     })
     try {
       if ("serviceWorker" in navigator) {
-        const reg = await navigator.serviceWorker.getRegistration()
+        // Re-register with fresh cache-busted URL
+        const reg = await registerServiceWorker()
         if (reg) {
           if (reg.waiting) {
             reg.waiting.postMessage({ type: "SKIP_WAITING" })
           }
-          await reg.update()
+          await reg.update().catch(() => {})
+        }
+        const registrations = await navigator.serviceWorker.getRegistrations()
+        for (const r of registrations) {
+          if (r.waiting) {
+            r.waiting.postMessage({ type: "SKIP_WAITING" })
+          }
+          await r.update().catch(() => {})
         }
       }
     } catch {
@@ -269,7 +348,7 @@ function PWASettingsContent() {
     }
     setTimeout(() => {
       window.location.reload()
-    }, 1200)
+    }, 1000)
   }
 
   const handleInstallApp = async () => {
@@ -595,7 +674,8 @@ function PWASettingsContent() {
               onClick={handleUpdate}
             >
               <RefreshCw className="h-4 w-4 text-primary" />
-              Verificar Atualizações do App (Atualizar Service Worker v15)
+              Verificar Atualizações do App (Atualizar Service Worker v
+              {SW_QUERY_VERSION})
             </Button>
 
             <Button
@@ -608,8 +688,15 @@ function PWASettingsContent() {
             </Button>
           </div>
           <p className="text-[11px] text-muted-foreground px-2">
-            Versão do Service Worker: <code>2026.10.23-v15</code> • Formato
-            TikTok: logo oficial à esquerda, avatar circular no{" "}
+            Versão do Service Worker:{" "}
+            <code>{activeSwVersion || SW_VERSION}</code>
+            {activeSwVersion && activeSwVersion !== SW_VERSION && (
+              <span className="text-amber-500 font-medium ml-1">
+                (atualização pendente para {SW_VERSION} — toque em Verificar
+                Atualizações)
+              </span>
+            )}{" "}
+            • Formato TikTok: logo oficial à esquerda, avatar circular no{" "}
             <code>icon</code> à direita e sem imagem expandida.
           </p>{" "}
         </div>

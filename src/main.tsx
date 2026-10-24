@@ -4,11 +4,26 @@ import App from "./App.tsx"
 import "./main.css"
 import { registerServiceWorker } from "./services/push-notifications"
 
-// Register Service Worker early on browser boot
+// Register Service Worker early on browser boot and check for updates
 if (typeof window !== "undefined" && "serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    registerServiceWorker().catch(() => {})
+    registerServiceWorker()
+      .then((reg) => {
+        reg?.update().catch(() => {})
+      })
+      .catch(() => {})
+  })
+
+  // Periodically check for SW updates when user returns to the app
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      navigator.serviceWorker
+        .getRegistration()
+        .then((reg) => reg?.update().catch(() => {}))
+        .catch(() => {})
+    }
   })
 }
 
-createRoot(document.getElementById("root")!).render(<App />)
+const rootElement = document.getElementById("root")
+createRoot(rootElement!).render(<App />)

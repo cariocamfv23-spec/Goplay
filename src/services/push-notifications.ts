@@ -1,5 +1,10 @@
 import { supabase } from "@/lib/supabase/client"
 
+// Centralized Service Worker version matching public/sw.js
+export const SW_VERSION = "2026.10.23-v17"
+export const SW_QUERY_VERSION = "17"
+export const SW_SCRIPT_URL = `/sw.js?v=${SW_QUERY_VERSION}`
+
 // VAPID Public Key configurada para Web Push no GoPlay App
 export const DEFAULT_VAPID_PUBLIC_KEY =
   "BJ8-dVxhiweb7IGbIVr0AuZb1CxEqkIjFVHyGI7hTNZ0q5480qWg6efiYYQV9YIYpjyW_CAPXvjMcOjmZnMsA1M"
@@ -84,14 +89,18 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
 
   try {
     // updateViaCache: 'none' guarantees the browser ALWAYS bypasses HTTP cache when re-fetching sw.js
-    const reg = await navigator.serviceWorker.register("/sw.js?v=16", {
+    const reg = await navigator.serviceWorker.register(SW_SCRIPT_URL, {
       scope: "/",
       updateViaCache: "none",
     })
 
     // If an updated worker is already waiting, tell it to take over immediately
     if (reg.waiting) {
-      reg.waiting.postMessage({ type: "SKIP_WAITING" })
+      try {
+        reg.waiting.postMessage({ type: "SKIP_WAITING" })
+      } catch {
+        /* ignore */
+      }
     }
 
     reg.addEventListener("updatefound", () => {
@@ -103,13 +112,17 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
             navigator.serviceWorker.controller
           ) {
             // New version installed while old version was controlling: prompt takeover
-            installingWorker.postMessage({ type: "SKIP_WAITING" })
+            try {
+              installingWorker.postMessage({ type: "SKIP_WAITING" })
+            } catch {
+              /* ignore */
+            }
           }
         })
       }
     })
 
-    // Force immediate network update check for sw.js
+    // Force immediate network update check for sw.js on every load/register
     try {
       reg.update().catch(() => {})
     } catch {

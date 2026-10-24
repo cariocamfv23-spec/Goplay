@@ -1,5 +1,5 @@
 // Goplay App - Service Worker with Robust Web Push & Background Support
-// Version: 2026.10.23-v16 (TikTok style push notifications: circular avatar in icon, official logo at left, no expanded big image, v2 versioned icons)
+// Version: 2026.10.23-v17 (TikTok style push notifications: circular avatar in icon, official logo at left, no expanded big image, v2 versioned icons)
 
 importScripts(
   "https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js",
@@ -8,7 +8,7 @@ importScripts(
 // High-compatibility official raster icons for Android & OneUI (origin-relative URL)
 const DEFAULT_NOTIFICATION_ICON = "/icon-192-v2.png"
 const NOTIFICATION_BADGE_ICON = "/notification-badge-v2.png"
-const SW_VERSION = "2026.10.23-v16"
+const SW_VERSION = "2026.10.23-v17"
 
 // Automated update & lifecycle logic - immediate takeover
 self.addEventListener("install", (event) => {
@@ -20,13 +20,13 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     Promise.all([
       self.clients.claim(),
-      // Prune old caches on version bump to v16 (cleans legacy v1-v15 caches)
+      // Prune old caches on version bump to v17 (cleans legacy v1-v16 caches)
       caches
         .keys()
         .then((keys) =>
           Promise.all(
             keys
-              .filter((k) => k.startsWith("goplay-") && !k.endsWith("-v16"))
+              .filter((k) => k.startsWith("goplay-") && !k.endsWith("-v17"))
               .map((k) => caches.delete(k)),
           ),
         ),
@@ -34,10 +34,25 @@ self.addEventListener("activate", (event) => {
   )
 })
 
-// Listen for explicit update/skip-waiting messages from the client
+// Listen for messages from the client (skip-waiting or version queries)
 self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
+  if (!event.data) return
+
+  if (event.data.type === "SKIP_WAITING") {
     self.skipWaiting()
+  } else if (event.data.type === "GET_VERSION") {
+    if (event.ports && event.ports[0]) {
+      event.ports[0].postMessage({
+        version: SW_VERSION,
+        scriptURL: self.location.href,
+      })
+    } else if (event.source && "postMessage" in event.source) {
+      event.source.postMessage({
+        type: "SW_VERSION_RESPONSE",
+        version: SW_VERSION,
+        scriptURL: self.location.href,
+      })
+    }
   }
 })
 
@@ -201,7 +216,7 @@ if (typeof workbox !== "undefined" && workbox) {
   workbox.routing.registerRoute(
     ({ url }) => /\.(js|css|html|svg|png|ico|woff2)$/i.test(url.pathname),
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: "goplay-assets-v16",
+      cacheName: "goplay-assets-v17",
     }),
   )
 
@@ -209,7 +224,7 @@ if (typeof workbox !== "undefined" && workbox) {
   workbox.routing.registerRoute(
     ({ url }) => url.pathname === "/" || url.pathname === "/index.html",
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: "goplay-index-v16",
+      cacheName: "goplay-index-v17",
     }),
   )
 
@@ -221,7 +236,7 @@ if (typeof workbox !== "undefined" && workbox) {
         const response = await fetch(request)
         return response
       } catch (error) {
-        const cache = await caches.open("goplay-index-v16")
+        const cache = await caches.open("goplay-index-v17")
         const cachedResponse =
           (await cache.match("/index.html")) || (await cache.match("/"))
         if (cachedResponse) {
