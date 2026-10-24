@@ -2,10 +2,7 @@ import fs from "fs"
 import path from "path"
 import { decodePng, encodePng, encodeIco } from "./png-codec.mjs"
 
-import { fileURLToPath } from "url"
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const projectRoot = path.resolve(__dirname, "..")
+const projectRoot = process.cwd()
 
 // Load source PNG
 const sourcePath = path.join(projectRoot, "src/assets/goplay-icon-0e955.png")
@@ -88,9 +85,9 @@ function sampleSrc(sx, sy) {
 /**
  * Render standard icon (with white background)
  * @param {number} targetDim 512, 192, 48
- * @param {number} contentRatio fraction of targetDim occupied by content (e.g. 0.65 for any, 0.78 for maskable)
+ * @param {number} contentRatio fraction of targetDim occupied by content (e.g. 0.65 for any, 0.70 for maskable)
  */
-function renderWhiteBgIcon(targetDim, contentRatio) {
+export function renderWhiteBgIcon(targetDim, contentRatio) {
   const buf = Buffer.alloc(targetDim * targetDim * 4)
   const targetContentSize = targetDim * contentRatio
   const scale = targetContentSize / bboxMaxDim
@@ -98,14 +95,12 @@ function renderWhiteBgIcon(targetDim, contentRatio) {
 
   for (let ty = 0; ty < targetDim; ty++) {
     for (let tx = 0; tx < targetDim; tx++) {
-      // Map target (tx, ty) back to source coords
       const sx = (tx - targetCenter) / scale + bboxCenterX
       const sy = (ty - targetCenter) / scale + bboxCenterY
 
       const pixel = sampleSrc(sx, sy)
       const outIdx = (ty * targetDim + tx) * 4
 
-      // If source had alpha, composite over white
       const a = pixel[3] / 255
       buf[outIdx] = Math.round(pixel[0] * a + 255 * (1 - a))
       buf[outIdx + 1] = Math.round(pixel[1] * a + 255 * (1 - a))
@@ -118,12 +113,12 @@ function renderWhiteBgIcon(targetDim, contentRatio) {
 
 /**
  * Render monochrome / badge icon with transparency:
- * Dark/purple/gold logo becomes solid silhouette (white or dark) with transparent background
+ * Dark/purple/gold logo becomes solid silhouette with transparent background
  * @param {number} targetDim
  * @param {number} contentRatio
  * @param {'white'|'dark'} colorMode
  */
-function renderTransparentSilhouetteIcon(
+export function renderTransparentSilhouetteIcon(
   targetDim,
   contentRatio,
   colorMode = "white",
@@ -145,12 +140,9 @@ function renderTransparentSilhouetteIcon(
       const pixel = sampleSrc(sx, sy)
       const outIdx = (ty * targetDim + tx) * 4
 
-      // Whiteness distance: source background is ~255,255,255
       const whiteness = (pixel[0] + pixel[1] + pixel[2]) / 3
-      // Non-whiteness = alpha of the logo silhouette
       let alpha = 0
       if (whiteness < 240) {
-        // Linear fade between 240 and 210 for smooth antialiased edges
         if (whiteness <= 210) {
           alpha = 255
         } else {
@@ -166,15 +158,6 @@ function renderTransparentSilhouetteIcon(
   }
   return buf
 }
-
-// Generate the 7 icons:
-// 1. icon-512-v2.png: 512x512, any, white bg, ~65% content
-// 2. icon-192-v2.png: 192x192, any, white bg, ~65% content
-// 3. icon-512-maskable-v2.png: 512x512, maskable, white bg, safe zone ~78-80% (65% fits safely within 80% circle)
-// 4. icon-192-maskable-v2.png: 192x192, maskable, white bg, safe zone ~78-80%
-// 5. favicon-v2.png: 48x48, any, white bg, ~68% content
-// 6. icon-monochrome-v2.png: 512x512, monochrome, transparent bg, white silhouette, ~65% content
-// 7. notification-badge-v2.png: 96x96, status bar badge, transparent bg, white silhouette, ~70% content
 
 export function generateAllIcons() {
   const publicDir = path.join(projectRoot, "public")

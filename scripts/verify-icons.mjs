@@ -53,10 +53,7 @@ const files = [
   },
 ]
 
-import { fileURLToPath } from "url"
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const projectRoot = path.resolve(__dirname, "..")
+const projectRoot = process.cwd()
 
 export function verifyAllIcons() {
   const publicDir = path.join(projectRoot, "public")
@@ -153,12 +150,8 @@ export function verifyAllIcons() {
   return report
 }
 
-// Auto-run when executed directly: node scripts/verify-icons.mjs
-const isDirectRun =
-  process.argv[1] &&
-  path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url))
-
-if (isDirectRun) {
+export function runIntegrityCheck() {
+  const publicDir = path.join(projectRoot, "public")
   const results = verifyAllIcons()
   let hasFailure = false
   console.log("=== GOPLAY ICONS INTEGRITY VERIFICATION ===")
@@ -190,9 +183,9 @@ if (isDirectRun) {
   }
 
   if (hasFailure) {
-    console.error("Verification failed for some icons!")
-    process.exit(1)
+    throw new Error("Verification failed for some icons!")
   } else {
     console.log("All icons (legacy + v2 + ico) passed integrity check!")
   }
+  return results
 }
