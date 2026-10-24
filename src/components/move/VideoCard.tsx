@@ -200,9 +200,13 @@ export function VideoCard({
         if (playPromise !== undefined) {
           await playPromise
         }
-        setIsMuted(videoEl.muted)
+        // Confirma estado real do elemento
+        const realMuted = videoEl.muted
+        setIsMuted(realMuted)
         setIsPlaying(!videoEl.paused)
-        toast.info("Áudio ativado", { duration: 1500 })
+        if (!realMuted) {
+          toast.info("Áudio ativado", { duration: 1500 })
+        }
       } catch (err: any) {
         console.warn("[VideoCard] Navegador bloqueou reprodução com som:", err)
         // Reverte para mudo de forma segura sem travar o vídeo
