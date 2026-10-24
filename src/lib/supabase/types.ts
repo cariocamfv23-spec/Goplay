@@ -1,11 +1,7 @@
 // AVOID UPDATING THIS FILE DIRECTLY. It is automatically generated.
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | {
+  [key: string]: Json | undefined
+} | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
@@ -112,15 +108,13 @@ export type Database = {
           read_at?: string | null
           sender_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "direct_messages_conversation_id_fkey"
-            columns: ["conversation_id"]
-            isOneToOne: false
-            referencedRelation: "conversations"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: [{
+          foreignKeyName: "direct_messages_conversation_id_fkey"
+          columns: ["conversation_id"]
+          isOneToOne: false
+          referencedRelation: "conversations"
+          referencedColumns: ["id"]
+        }]
       }
       email_campaign_recipients: {
         Row: {
@@ -156,15 +150,13 @@ export type Database = {
           sent_at?: string | null
           status?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "email_campaign_recipients_campaign_id_fkey"
-            columns: ["campaign_id"]
-            isOneToOne: false
-            referencedRelation: "email_campaigns"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: [{
+          foreignKeyName: "email_campaign_recipients_campaign_id_fkey"
+          columns: ["campaign_id"]
+          isOneToOne: false
+          referencedRelation: "email_campaigns"
+          referencedColumns: ["id"]
+        }]
       }
       email_campaigns: {
         Row: {
@@ -224,15 +216,13 @@ export type Database = {
           total_recipients?: number
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "email_campaigns_target_event_id_fkey"
-            columns: ["target_event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: [{
+          foreignKeyName: "email_campaigns_target_event_id_fkey"
+          columns: ["target_event_id"]
+          isOneToOne: false
+          referencedRelation: "events"
+          referencedColumns: ["id"]
+        }]
       }
       event_evaluations: {
         Row: {
@@ -274,15 +264,13 @@ export type Database = {
           updated_at?: string
           visible_to_athlete?: boolean
         }
-        Relationships: [
-          {
-            foreignKeyName: "event_evaluations_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: [{
+          foreignKeyName: "event_evaluations_event_id_fkey"
+          columns: ["event_id"]
+          isOneToOne: false
+          referencedRelation: "events"
+          referencedColumns: ["id"]
+        }]
       }
       event_registrations: {
         Row: {
@@ -318,15 +306,13 @@ export type Database = {
           status_updated_at?: string | null
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "event_registrations_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: [{
+          foreignKeyName: "event_registrations_event_id_fkey"
+          columns: ["event_id"]
+          isOneToOne: false
+          referencedRelation: "events"
+          referencedColumns: ["id"]
+        }]
       }
       events: {
         Row: {
@@ -461,15 +447,13 @@ export type Database = {
           post_id?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "post_comments_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "posts"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: [{
+          foreignKeyName: "post_comments_post_id_fkey"
+          columns: ["post_id"]
+          isOneToOne: false
+          referencedRelation: "posts"
+          referencedColumns: ["id"]
+        }]
       }
       post_likes: {
         Row: {
@@ -490,15 +474,13 @@ export type Database = {
           post_id?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "post_likes_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "posts"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: [{
+          foreignKeyName: "post_likes_post_id_fkey"
+          columns: ["post_id"]
+          isOneToOne: false
+          referencedRelation: "posts"
+          referencedColumns: ["id"]
+        }]
       }
       posts: {
         Row: {
@@ -763,9 +745,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      can_manage_email_campaigns: { Args: never; Returns: boolean }
+      can_manage_email_campaigns: {
+        Args: never
+        Returns: boolean
+      }
       decide_event_registration: {
-        Args: { p_new_status: string; p_registration_id: string }
+        Args: {
+          p_new_status: string
+          p_registration_id: string
+        }
         Returns: Json
       }
       get_audience_count: {
@@ -777,16 +765,25 @@ export type Database = {
         Returns: number
       }
       get_or_create_conversation: {
-        Args: { other_user_id: string }
+        Args: {
+          other_user_id: string
+        }
         Returns: string
       }
-      is_current_user_admin: { Args: never; Returns: boolean }
+      is_current_user_admin: {
+        Args: never
+        Returns: boolean
+      }
       populate_campaign_recipients: {
-        Args: { p_campaign_id: string }
+        Args: {
+          p_campaign_id: string
+        }
         Returns: Json
       }
       unsubscribe_user_email: {
-        Args: { target_user_id: string }
+        Args: {
+          target_user_id: string
+        }
         Returns: Json
       }
     }
@@ -799,33 +796,30 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
-
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
-
 export type Tables<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+  PublicTableNameOrOptions extends
+    | keyof (Database["public"]["Tables"] & Database["public"]["Views"])
+    | {
+        schema: "public"
+      },
+  TableName extends PublicTableNameOrOptions extends {
+    schema: "public"
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never) = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+    ? keyof (Database["public"]["Tables"] & Database["public"]["Views"])
+    : never = never,
+> = PublicTableNameOrOptions extends {
+  schema: "public"
 }
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+  ? (Database["public"]["Tables"] &
+      Database["public"]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof (Database["public"]["Tables"] &
+        Database["public"]["Views"])
+    ? (Database["public"]["Tables"] &
+        Database["public"]["Views"])[PublicTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -833,24 +827,26 @@ export type Tables<
     : never
 
 export type TablesInsert<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+  PublicTableNameOrOptions extends
+    | keyof Database["public"]["Tables"]
+    | {
+        schema: "public"
+      },
+  TableName extends PublicTableNameOrOptions extends {
+    schema: "public"
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never) = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+    ? keyof Database["public"]["Tables"]
+    : never = never,
+> = PublicTableNameOrOptions extends {
+  schema: "public"
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? Database["public"]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
+    ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -858,24 +854,26 @@ export type TablesInsert<
     : never
 
 export type TablesUpdate<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+  PublicTableNameOrOptions extends
+    | keyof Database["public"]["Tables"]
+    | {
+        schema: "public"
+      },
+  TableName extends PublicTableNameOrOptions extends {
+    schema: "public"
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never) = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+    ? keyof Database["public"]["Tables"]
+    : never = never,
+> = PublicTableNameOrOptions extends {
+  schema: "public"
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? Database["public"]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
+    ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -883,37 +881,41 @@ export type TablesUpdate<
     : never
 
 export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+  PublicEnumNameOrOptions extends
+    | keyof Database["public"]["Enums"]
+    | {
+        schema: "public"
+      },
+  EnumName extends PublicEnumNameOrOptions extends {
+    schema: "public"
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never) = never,
-> = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+    ? keyof Database["public"]["Enums"]
+    : never = never,
+> = PublicEnumNameOrOptions extends {
+  schema: "public"
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+  ? Database["public"]["Enums"][EnumName]
+  : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
+    ? Database["public"]["Enums"][PublicEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    | keyof Database["public"]["CompositeTypes"]
+    | {
+        schema: "public"
+      },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: "public"
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never) = never,
+    ? keyof Database["public"]["CompositeTypes"]
+    : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: "public"
 }
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  ? Database["public"]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof Database["public"]["CompositeTypes"]
+    ? Database["public"]["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {
@@ -923,4 +925,3 @@ export const Constants = {
     },
   },
 } as const
-
