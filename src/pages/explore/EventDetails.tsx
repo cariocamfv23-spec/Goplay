@@ -22,6 +22,12 @@ import {
   ExternalLink,
   ShieldCheck,
   Search,
+  Award,
+  Star,
+  UserCheck,
+  UserX,
+  ThumbsUp,
+  Sparkles,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import {
@@ -29,6 +35,7 @@ import {
   type EventItem,
   type RegistrationItem,
   type RegistrationStatus,
+  type EventEvaluation,
 } from "@/services/events"
 import { useAuth } from "@/hooks/use-auth"
 import { analyticsService } from "@/services/analytics"
@@ -63,6 +70,11 @@ export default function EventDetails() {
   const [regFilter, setRegFilter] =
     useState<"all" | "pending" | "approved" | "rejected">("all")
   const [isShareOpen, setIsShareOpen] = useState(false)
+
+  // Athlete Evaluation state (visible_to_athlete = true enforced by RLS)
+  const [athleteEvaluation, setAthleteEvaluation] =
+    useState<EventEvaluation | null>(null)
+  const [evalLoading, setEvalLoading] = useState(false)
 
   // Check if ?share=1 is present in URL to trigger share dialog automatically
   useEffect(() => {
@@ -100,6 +112,20 @@ export default function EventDetails() {
           eventsService.getEventRegistrations(id).then((regs) => {
             setRegistrations(regs)
           })
+        }
+
+        // If current user is registered, fetch athlete evaluation (RLS allows only if visible_to_athlete = true)
+        if (user?.id && data.isRegistered) {
+          setEvalLoading(true)
+          eventsService
+            .getAthleteEvaluation({
+              eventId: id,
+              athleteId: user.id,
+            })
+            .then(({ data: evalData }) => {
+              setEvalLoading(false)
+              setAthleteEvaluation(evalData)
+            })
         }
       })
     } else {
@@ -449,6 +475,170 @@ export default function EventDetails() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Card: Meu Resultado na Peneira (Exibido para atletas inscritos) */}
+        {isRegistered && realEvent && (
+          <Card className="border-2 border-primary/30 bg-gradient-to-br from-primary/5 via-background to-secondary/30 shadow-md overflow-hidden">
+            <div className="h-1.5 bg-gradient-to-r from-primary via-purple-600 to-amber-500" />
+            <CardContent className="p-4 sm:p-5 space-y-4">
+              <div className="flex items-center justify-between gap-2 border-b border-border/40 pb-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-primary/10 text-primary">
+                    <Award className="w-5 h-5 text-amber-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-black text-foreground flex items-center gap-2">
+                      Meu Resultado na Seletiva
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      Acompanhamento em tempo real da comissão técnica
+                    </p>
+                  </div>
+                </div>
+
+                {/* Athlete Status Pill */}
+                {realEvent.myRegistration?.athleteStatus ? (
+                  <Badge
+                    className={
+                      realEvent.myRegistration.athleteStatus === "aprovado" ||
+                      realEvent.myRegistration.athleteStatus === "convocado"
+                        ? "bg-amber-500 text-black font-extrabold text-xs px-3 py-1"
+                        : realEvent.myRegistration.athleteStatus ===
+                            "compareceu"
+                          ? "bg-blue-600 text-white font-bold text-xs px-3 py-1"
+                          : realEvent.myRegistration.athleteStatus ===
+                              "nao_selecionado"
+                            ? "bg-zinc-700 text-white font-medium text-xs px-3 py-1"
+                            : "bg-primary text-white font-bold text-xs px-3 py-1"
+                    }
+                  >
+                    {realEvent.myRegistration.athleteStatus === "aprovado"
+                      ? "⭐ Aprovado"
+                      : realEvent.myRegistration.athleteStatus === "convocado"
+                        ? "🏆 Convocado"
+                        : realEvent.myRegistration.athleteStatus ===
+                            "compareceu"
+                          ? "✓ Compareceu"
+                          : realEvent.myRegistration.athleteStatus ===
+                              "nao_selecionado"
+                            ? "Não Selecionado"
+                            : "Inscrito"}
+                  </Badge>
+                ) : (
+                  <Badge
+                    variant="outline"
+                    className="border-primary/40 text-primary bg-primary/10 text-xs font-semibold"
+                  >
+                    Inscrito
+                  </Badge>
+                )}
+              </div>
+
+              {/* Status and Attendance Summary Cards */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 rounded-xl bg-background/80 border border-border/50">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
+                    Presença no Evento
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    {realEvent.myRegistration?.attendance === "present" ? (
+                      <>
+                        <UserCheck className="w-4 h-4 text-emerald-500" />
+                        <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                          Presença Confirmada
+                        </span>
+                      </>
+                    ) : realEvent.myRegistration?.attendance === "absent" ? (
+                      <>
+                        <UserX className="w-4 h-4 text-red-500" />
+                        <span className="text-xs font-bold text-red-600 dark:text-red-400">
+                          Ausente
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <Clock className="w-4 h-4 text-amber-500" />
+                        <span className="text-xs font-medium text-muted-foreground">
+                          Aguardando chamada
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-background/80 border border-border/50">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
+                    Status da Avaliação
+                  </span>
+                  <span className="text-xs font-bold text-foreground capitalize">
+                    {realEvent.myRegistration?.athleteStatus
+                      ? realEvent.myRegistration.athleteStatus.replace("_", " ")
+                      : "Aguardando seletiva"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Technical Evaluation Section (Visible only when club enabled visible_to_athlete) */}
+              {evalLoading ? (
+                <div className="py-4 flex items-center justify-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                  <span className="text-xs text-muted-foreground">
+                    Carregando avaliação técnica...
+                  </span>
+                </div>
+              ) : athleteEvaluation ? (
+                <div className="p-4 rounded-xl bg-secondary/40 border border-border/60 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                      <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                      Feedback do Treinador / Scout
+                    </span>
+                    {athleteEvaluation.rating && (
+                      <Badge className="bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 font-black text-xs">
+                        Nota Técnica: {athleteEvaluation.rating} / 10
+                      </Badge>
+                    )}
+                  </div>
+
+                  {athleteEvaluation.strengths && (
+                    <div className="space-y-1">
+                      <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                        <ThumbsUp className="w-3.5 h-3.5" />
+                        Pontos Fortes Observados:
+                      </span>
+                      <p className="text-xs text-foreground/90 whitespace-pre-line bg-background/70 p-2.5 rounded-lg border border-border/30">
+                        {athleteEvaluation.strengths}
+                      </p>
+                    </div>
+                  )}
+
+                  {athleteEvaluation.improvements && (
+                    <div className="space-y-1">
+                      <span className="text-[11px] font-bold text-primary flex items-center gap-1">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        Recomendações e Próximos Passos:
+                      </span>
+                      <p className="text-xs text-foreground/90 whitespace-pre-line bg-background/70 p-2.5 rounded-lg border border-border/30">
+                        {athleteEvaluation.improvements}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="p-3.5 rounded-xl bg-secondary/30 border border-border/40 text-center space-y-1">
+                  <p className="text-xs font-semibold text-foreground/80">
+                    Aguardando resultado e avaliação técnica do clube
+                  </p>
+                  <p className="text-[11px] text-muted-foreground max-w-md mx-auto">
+                    Assim que a comissão técnica avaliar seu desempenho na
+                    peneira e liberar o feedback, sua nota técnica e
+                    considerações aparecerão aqui.
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Description */}
         <div className="space-y-2">

@@ -10,7 +10,7 @@ export interface EventItem {
   description: string
   type: "event" | "tryout" | "championship"
   sport: string
-  category: string
+  category?: string
   eventDate: string
   eventTime: string
   city: string
@@ -23,7 +23,7 @@ export interface EventItem {
   registrationDeadline?: string
   maxParticipants?: number
   price: number
-  status: "open" | "closed" | "canceled"
+  status: "draft" | "open" | "closed" | "canceled"
   createdAt: string
   creator?: {
     id: string
@@ -33,9 +33,33 @@ export interface EventItem {
   }
   registrationsCount?: number
   isRegistered?: boolean
+  myRegistration?: {
+    id: string
+    status: RegistrationStatus
+    attendance?: AttendanceStatus
+    athleteStatus?: AthleteEvaluationStatus
+    statusUpdatedAt?: string | null
+  } | null
 }
-
 export type RegistrationStatus = "pending" | "approved" | "rejected" | "confirmed" | "canceled" | "waitlist"
+
+export type AttendanceStatus = "present" | "absent" | null
+
+export type AthleteEvaluationStatus = "inscrito" | "compareceu" | "aprovado" | "convocado" | "nao_selecionado" | null
+
+export interface EventEvaluation {
+  id: string
+  eventId: string
+  athleteId: string
+  clubId: string
+  rating: number | null
+  strengths: string | null
+  improvements: string | null
+  internalNotes: string | null
+  visibleToAthlete: boolean
+  createdAt: string
+  updatedAt: string
+}
 
 export interface RegistrationItem {
   id: string
@@ -43,6 +67,9 @@ export interface RegistrationItem {
   userId: string
   status: RegistrationStatus
   notes?: string
+  attendance?: AttendanceStatus
+  athleteStatus?: AthleteEvaluationStatus
+  statusUpdatedAt?: string | null
   createdAt: string
   eventTitle?: string
   participant?: {
@@ -213,14 +240,24 @@ export const eventsService = {
         .eq("event_id", eventId)
 
       let isRegistered = false
+      let myRegistration: any = null
       if (currentUserId) {
         const { data: reg } = await db
           .from("event_registrations")
-          .select("id, status")
+          .select("id, status, attendance, athlete_status, status_updated_at")
           .eq("event_id", eventId)
           .eq("user_id", currentUserId)
           .maybeSingle()
         isRegistered = !!reg && reg.status !== "canceled"
+        if (reg) {
+          myRegistration = {
+            id: reg.id,
+            status: reg.status,
+            attendance: reg.attendance || null,
+            athleteStatus: reg.athlete_status || null,
+            statusUpdatedAt: reg.status_updated_at || null,
+          }
+        }
       }
 
       const item: EventItem = {
@@ -255,6 +292,7 @@ export const eventsService = {
         },
         registrationsCount: count || 0,
         isRegistered,
+        myRegistration,
       }
 
       return { data: item, error: null }
@@ -630,6 +668,9 @@ export const eventsService = {
           userId: r.user_id,
           status: r.status as RegistrationStatus,
           notes: r.notes,
+          attendance: r.attendance || null,
+          athleteStatus: r.athlete_status || null,
+          statusUpdatedAt: r.status_updated_at || null,
           createdAt: r.created_at,
           participant: {
             id: r.user_id,
@@ -790,6 +831,9 @@ export const eventsService = {
           userId: r.user_id,
           status: r.status as RegistrationStatus,
           notes: r.notes,
+          attendance: r.attendance || null,
+          athleteStatus: r.athlete_status || null,
+          statusUpdatedAt: r.status_updated_at || null,
           createdAt: r.created_at,
           eventTitle: eventMap.get(r.event_id) || "Evento",
           participant: {
@@ -918,6 +962,299 @@ export const eventsService = {
     } catch (err: any) {
       return {
         success: false,
+        error: err instanceof Error ? err : new Error(String(err)),
+      }
+    }
+  },
+
+  /**
+   * Updates registration attendance and/or athlete status.
+   * If athlete_status changes, sends a friendly PT-BR notification and server push.
+   */
+  async updateAthleteTryoutStatus(params: {
+    registrationId: string
+    organizerId: string
+    attendance?: AttendanceStatus
+    athleteStatus?: AthleteEvaluationStatus
+    previousAthleteStatus?: AthleteEvaluationStatus
+  }): Promise<{
+    success: boolean
+    error: Error | null
+  }> {
+    try {
+      const {
+        registrationId,
+        organizerId,
+        attendance,
+        athleteStatus,
+        previousAthleteStatus,
+      } = params
+
+      if (!organizerId) {
+        throw new Error("Organizador não autenticado.")
+      }
+
+      // Fetch registration and event to ensure permissions and context
+      const { data: reg, error: regErr } = await db
+        .from("event_registrations")
+        .select("id, event_id, user_id, attendance, athlete_status")
+        .eq("id", registrationId)
+        .single()
+
+      if (regErr || !reg) {
+        throw new Error("Inscrição não encontrada.")
+      }
+
+      const { data: event, error: eventErr } = await db
+        .from("events")
+        .select("id, title, creator_id")
+        .eq("id", reg.event_id)
+        .single()
+
+      if (eventErr || !event) {
+        throw new Error("Evento não encontrado.")
+      }
+
+      if (event.creator_id !== organizerId) {
+        throw new Error(
+          "Apenas o organizador do evento pode atualizar o status do atleta.",
+        )
+      }
+
+      const updatePayload: Record<string, any> = {
+        status_updated_at: new Date().toISOString(),
+      }
+
+      if (attendance !== undefined) {
+        updatePayload.attendance = attendance
+      }
+
+      if (athleteStatus !== undefined) {
+        updatePayload.athlete_status = athleteStatus
+      }
+
+      const { error: updErr } = await db
+        .from("event_registrations")
+        .update(updatePayload)
+        .eq("id", registrationId)
+
+      if (updErr) {
+        throw updErr
+      }
+
+      // Determine if a real status change happened that warrants a notification
+      const oldStatus =
+        previousAthleteStatus !== undefined
+          ? previousAthleteStatus
+          : reg.athlete_status
+      const newStatus =
+        athleteStatus !== undefined ? athleteStatus : reg.athlete_status
+
+      const statusChanged = Boolean(newStatus && newStatus !== oldStatus)
+
+      if (statusChanged && newStatus) {
+        try {
+          const { data: orgProfile } = await supabase
+            .from("profiles")
+            .select("full_name, club_name")
+            .eq("id", organizerId)
+            .maybeSingle()
+
+          const orgName =
+            orgProfile?.club_name ||
+            orgProfile?.full_name ||
+            "O Clube / Organizador"
+
+          let notifTitle = "Atualização na Seletiva"
+          let notifMessage = `${orgName} atualizou o status da sua avaliação na peneira "${event.title}".`
+
+          if (newStatus === "aprovado") {
+            notifTitle = "Aprovado na Peneira! 🎉"
+            notifMessage = `Parabéns! Você foi aprovado por ${orgName} na peneira "${event.title}". Fique atento aos próximos passos!`
+          } else if (newStatus === "convocado") {
+            notifTitle = "Convocado para o Elenco! 🏆"
+            notifMessage = `Grande notícia! Você foi convocado por ${orgName} para integrar a equipe após a peneira "${event.title}".`
+          } else if (newStatus === "compareceu") {
+            notifTitle = "Presença Confirmada na Peneira"
+            notifMessage = `Sua presença na peneira "${event.title}" foi confirmada por ${orgName}. Aguarde a avaliação técnica.`
+          } else if (newStatus === "nao_selecionado") {
+            notifTitle = "Resultado da Peneira"
+            notifMessage = `${orgName} agradece sua dedicação e participação na peneira "${event.title}". Desta vez seu perfil não foi selecionado para esta vaga específica, mas continue firme nos treinos!`
+          } else if (newStatus === "inscrito") {
+            notifTitle = "Inscrição Registrada"
+            notifMessage = `Sua inscrição na peneira "${event.title}" está com status inicial registrado.`
+          }
+
+          // Insert into notifications
+          await db.from("notifications").insert({
+            user_id: reg.user_id,
+            actor_id: organizerId,
+            type: "athlete_status_update",
+            title: notifTitle,
+            message: notifMessage,
+            link: `/events/${event.id}`,
+          })
+
+          // Trigger push
+          pushNotificationService
+            .triggerServerPush({
+              userId: reg.user_id,
+              title: notifTitle,
+              body: notifMessage,
+              url: `/events/${event.id}`,
+              tag: `tryout-status-${event.id}`,
+              actorId: organizerId,
+            })
+            .catch(() => {})
+        } catch (notifErr) {
+          console.warn(
+            "Falha ao enviar notificação de status de seletiva:",
+            notifErr,
+          )
+        }
+      }
+
+      return { success: true, error: null }
+    } catch (err: any) {
+      return {
+        success: false,
+        error: err instanceof Error ? err : new Error(String(err)),
+      }
+    }
+  },
+
+  /**
+   * Fetches the evaluation for a given athlete in an event.
+   * RLS automatically controls visibility:
+   * - Organizer sees everything (including internal_notes)
+   * - Athlete sees only if visible_to_athlete = true (RLS blocks if false)
+   */
+  async getAthleteEvaluation(params: {
+    eventId: string
+    athleteId: string
+  }): Promise<{
+    data: EventEvaluation | null
+    error: Error | null
+  }> {
+    try {
+      const { eventId, athleteId } = params
+
+      const { data, error } = await db
+        .from("event_evaluations")
+        .select("*")
+        .eq("event_id", eventId)
+        .eq("athlete_id", athleteId)
+        .maybeSingle()
+
+      if (error) {
+        throw error
+      }
+
+      if (!data) {
+        return { data: null, error: null }
+      }
+
+      const item: EventEvaluation = {
+        id: data.id,
+        eventId: data.event_id,
+        athleteId: data.athlete_id,
+        clubId: data.club_id,
+        rating: data.rating,
+        strengths: data.strengths,
+        improvements: data.improvements,
+        internalNotes: data.internal_notes,
+        visibleToAthlete: data.visible_to_athlete,
+        createdAt: data.created_at,
+        updatedAt: data.updated_at,
+      }
+
+      return { data: item, error: null }
+    } catch (err: any) {
+      return {
+        data: null,
+        error: err instanceof Error ? err : new Error(String(err)),
+      }
+    }
+  },
+
+  /**
+   * Upserts an evaluation for an athlete in an event.
+   * Strictly checked by RLS: caller must be the creator of the event (club_id = auth.uid()).
+   */
+  async saveAthleteEvaluation(params: {
+    eventId: string
+    athleteId: string
+    clubId: string
+    rating: number | null
+    strengths?: string | null
+    improvements?: string | null
+    internalNotes?: string | null
+    visibleToAthlete: boolean
+  }): Promise<{
+    data: EventEvaluation | null
+    error: Error | null
+  }> {
+    try {
+      const {
+        eventId,
+        athleteId,
+        clubId,
+        rating,
+        strengths,
+        improvements,
+        internalNotes,
+        visibleToAthlete,
+      } = params
+
+      if (!clubId) {
+        throw new Error("Clube não autenticado.")
+      }
+
+      if (rating !== null && rating !== undefined) {
+        if (rating < 1 || rating > 10) {
+          throw new Error("A nota deve ser um valor entre 1 e 10.")
+        }
+      }
+
+      const payload = {
+        event_id: eventId,
+        athlete_id: athleteId,
+        club_id: clubId,
+        rating: rating ?? null,
+        strengths: strengths?.trim() || null,
+        improvements: improvements?.trim() || null,
+        internal_notes: internalNotes?.trim() || null,
+        visible_to_athlete: visibleToAthlete,
+      }
+
+      const { data, error } = await db
+        .from("event_evaluations")
+        .upsert(payload, { onConflict: "event_id,athlete_id" })
+        .select()
+        .single()
+
+      if (error) {
+        throw error
+      }
+
+      const item: EventEvaluation = {
+        id: data.id,
+        eventId: data.event_id,
+        athleteId: data.athlete_id,
+        clubId: data.club_id,
+        rating: data.rating,
+        strengths: data.strengths,
+        improvements: data.improvements,
+        internalNotes: data.internal_notes,
+        visibleToAthlete: data.visible_to_athlete,
+        createdAt: data.created_at,
+        updatedAt: data.updated_at,
+      }
+
+      return { data: item, error: null }
+    } catch (err: any) {
+      return {
+        data: null,
         error: err instanceof Error ? err : new Error(String(err)),
       }
     }

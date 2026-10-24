@@ -4,27 +4,33 @@ import { Card, CardContent } from "@/components/ui/card"
 import {
   Plus,
   Trophy,
-  ArrowRight,
   Calendar,
   Users,
   Search,
   CheckCircle,
   XCircle,
   Clock,
-  Sparkles,
   ExternalLink,
-  ChevronRight,
   Check,
   X,
   Loader2,
-  Filter,
   MessageSquare,
+  Award,
+  UserCheck,
+  UserX,
 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { useState, useEffect, useCallback } from "react"
 import { useAuth } from "@/hooks/use-auth"
 import {
@@ -32,7 +38,10 @@ import {
   type EventItem,
   type RegistrationItem,
   type RegistrationStatus,
+  type AttendanceStatus,
+  type AthleteEvaluationStatus,
 } from "@/services/events"
+import { TryoutEvaluationModal } from "@/components/organizer/TryoutEvaluationModal"
 import { toast } from "sonner"
 import {
   AlertDialog,
@@ -51,14 +60,27 @@ export default function ChampionshipsList() {
   const navigate = useNavigate()
   const [search, setSearch] = useState("")
   const [activeTab, setActiveTab] =
-    useState<"events" | "registrations" | "tournaments">("events")
+    useState<"peneiras" | "events" | "registrations" | "tournaments">(
+      "peneiras",
+    )
   const [statusFilter, setStatusFilter] =
     useState<"all" | "pending" | "approved" | "rejected">("all")
+
+  // Selected event filter for Peneiras tab
+  const [selectedTryoutId, setSelectedTryoutId] = useState<string>("all")
 
   const [realEvents, setRealEvents] = useState<EventItem[]>([])
   const [realRegistrations, setRealRegistrations] =
     useState<RegistrationItem[]>([])
   const [loading, setLoading] = useState(true)
+
+  // Evaluation modal state
+  const [evaluationModalReg, setEvaluationModalReg] =
+    useState<RegistrationItem | null>(null)
+  const [isEvaluationOpen, setIsEvaluationOpen] = useState(false)
+
+  // Updating registration attendance/status spinner
+  const [updatingRegId, setUpdatingRegId] = useState<string | null>(null)
 
   // Decision state for confirmation modal
   const [decisionItem, setDecisionItem] = useState<{
@@ -163,6 +185,103 @@ export default function ChampionshipsList() {
         : "Inscrição recusada com sucesso. O atleta foi notificado.",
     )
     setDecisionItem(null)
+  }
+
+  // Handle Attendance mark (Present / Absent)
+  const handleAttendanceChange = async (
+    reg: RegistrationItem,
+    newAttendance: AttendanceStatus,
+  ) => {
+    if (!user?.id) return
+    setUpdatingRegId(reg.id)
+
+    // Automatically set athlete_status to 'compareceu' if marking present and not already decided
+    let nextAthleteStatus = reg.athleteStatus
+    if (
+      newAttendance === "present" &&
+      (!reg.athleteStatus || reg.athleteStatus === "inscrito")
+    ) {
+      nextAthleteStatus = "compareceu"
+    }
+
+    const { error, success } = await eventsService.updateAthleteTryoutStatus({
+      registrationId: reg.id,
+      organizerId: user.id,
+      attendance: newAttendance,
+      athleteStatus: nextAthleteStatus,
+      previousAthleteStatus: reg.athleteStatus,
+    })
+    setUpdatingRegId(null)
+
+    if (error || !success) {
+      toast.error(error?.message || "Erro ao atualizar presença do atleta.")
+      return
+    }
+
+    setRealRegistrations((prev) =>
+      prev.map((r) =>
+        r.id === reg.id
+          ? {
+              ...r,
+              attendance: newAttendance,
+              athleteStatus: nextAthleteStatus,
+              statusUpdatedAt: new Date().toISOString(),
+            }
+          : r,
+      ),
+    )
+
+    toast.success(
+      newAttendance === "present"
+        ? "Presença confirmada no treino/peneira!"
+        : "Atleta marcado como ausente.",
+    )
+  }
+
+  // Handle Athlete Status change (inscrito | compareceu | aprovado | convocado | nao_selecionado)
+  const handleAthleteStatusChange = async (
+    reg: RegistrationItem,
+    newStatus: AthleteEvaluationStatus,
+  ) => {
+    if (!user?.id) return
+    setUpdatingRegId(reg.id)
+
+    const { error, success } = await eventsService.updateAthleteTryoutStatus({
+      registrationId: reg.id,
+      organizerId: user.id,
+      athleteStatus: newStatus,
+      previousAthleteStatus: reg.athleteStatus,
+    })
+    setUpdatingRegId(null)
+
+    if (error || !success) {
+      toast.error(error?.message || "Erro ao atualizar status do atleta.")
+      return
+    }
+
+    setRealRegistrations((prev) =>
+      prev.map((r) =>
+        r.id === reg.id
+          ? {
+              ...r,
+              athleteStatus: newStatus,
+              statusUpdatedAt: new Date().toISOString(),
+            }
+          : r,
+      ),
+    )
+
+    const labelMap: Record<string, string> = {
+      inscrito: "Inscrito",
+      compareceu: "Compareceu",
+      aprovado: "Aprovado",
+      convocado: "Convocado",
+      nao_selecionado: "Não Selecionado",
+    }
+
+    toast.success(
+      `Status atualizado para "${labelMap[newStatus || ""] || newStatus}". O atleta foi notificado!`,
+    )
   }
 
   const getStatusColor = (status: string) => {
@@ -328,12 +447,18 @@ export default function ChampionshipsList() {
         onValueChange={(val) => setActiveTab(val as any)}
         className="w-full"
       >
-        <TabsList className="w-full h-auto p-1 bg-secondary/50 rounded-xl mb-4 grid grid-cols-3">
+        <TabsList className="w-full h-auto p-1 bg-secondary/50 rounded-xl mb-4 grid grid-cols-2 sm:grid-cols-4 gap-1">
+          <TabsTrigger
+            value="peneiras"
+            className="rounded-lg text-xs font-semibold py-2 data-[state=active]:bg-background data-[state=active]:shadow-xs text-amber-500 font-bold"
+          >
+            ⭐ Peneiras Operantes
+          </TabsTrigger>
           <TabsTrigger
             value="events"
             className="rounded-lg text-xs font-semibold py-2 data-[state=active]:bg-background data-[state=active]:shadow-xs"
           >
-            Peneiras & Eventos ({realEvents.length})
+            Meus Eventos ({realEvents.length})
           </TabsTrigger>
           <TabsTrigger
             value="registrations"
@@ -354,17 +479,335 @@ export default function ChampionshipsList() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder={
-              activeTab === "registrations"
-                ? "Buscar atleta pelo nome, modalidade, cidade ou evento..."
-                : activeTab === "events"
-                  ? "Buscar por título, modalidade ou cidade..."
-                  : "Buscar campeonato..."
+              activeTab === "peneiras"
+                ? "Buscar atleta ou peneira pelo nome..."
+                : activeTab === "registrations"
+                  ? "Buscar atleta pelo nome, modalidade, cidade ou evento..."
+                  : activeTab === "events"
+                    ? "Buscar por título, modalidade ou cidade..."
+                    : "Buscar campeonato..."
             }
             className="pl-9 bg-secondary/50 border border-border/40 rounded-xl h-10 text-xs sm:text-sm"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
+
+        {/* TAB 0: Peneiras Operantes (Presença, Status do Atleta e Avaliação Técnica) */}
+        <TabsContent value="peneiras" className="space-y-4">
+          {/* Tryout filter dropdown */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-secondary/30 rounded-xl border border-border/40">
+            <div className="space-y-0.5">
+              <span className="text-xs font-bold text-foreground">
+                Selecione a Peneira / Evento
+              </span>
+              <p className="text-[11px] text-muted-foreground">
+                Gerencie presença, notas técnicas e status de aprovação de cada
+                candidato
+              </p>
+            </div>
+            <div className="w-full sm:w-64">
+              <Select
+                value={selectedTryoutId}
+                onValueChange={(val) => setSelectedTryoutId(val)}
+              >
+                <SelectTrigger className="h-9 text-xs bg-background">
+                  <SelectValue placeholder="Todas as minhas peneiras" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas as minhas peneiras</SelectItem>
+                  {realEvents.map((ev) => (
+                    <SelectItem key={ev.id} value={ev.id}>
+                      {ev.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="py-12 flex flex-col items-center justify-center gap-2">
+              <Loader2 className="w-6 h-6 animate-spin text-primary" />
+              <span className="text-xs text-muted-foreground">
+                Carregando atletas inscritos na seletiva...
+              </span>
+            </div>
+          ) : (
+            (() => {
+              const tryoutRegistrations = realRegistrations.filter((r) => {
+                if (
+                  selectedTryoutId !== "all" &&
+                  r.eventId !== selectedTryoutId
+                ) {
+                  return false
+                }
+                if (search.trim()) {
+                  const q = search.toLowerCase()
+                  const name = r.participant?.name?.toLowerCase() || ""
+                  const evTitle = r.eventTitle?.toLowerCase() || ""
+                  const pos = r.participant?.position?.toLowerCase() || ""
+                  return (
+                    name.includes(q) || evTitle.includes(q) || pos.includes(q)
+                  )
+                }
+                return true
+              })
+
+              if (tryoutRegistrations.length === 0) {
+                return (
+                  <Card className="border-dashed border-border/60 bg-secondary/20">
+                    <CardContent className="py-10 text-center space-y-2">
+                      <Award className="h-10 w-10 mx-auto text-amber-500/40" />
+                      <p className="font-semibold text-sm">
+                        Nenhum atleta inscrito nesta peneira ainda.
+                      </p>
+                      <p className="text-xs text-muted-foreground max-w-sm mx-auto">
+                        Divulgue sua peneira para receber inscrições. Quando os
+                        atletas se inscreverem, você poderá marcar presença,
+                        avaliar nota técnica de 1 a 10 e definir se foi aprovado
+                        ou convocado.
+                      </p>
+                    </CardContent>
+                  </Card>
+                )
+              }
+
+              return (
+                <div className="space-y-3">
+                  {tryoutRegistrations.map((r) => {
+                    const isUpdating = updatingRegId === r.id
+                    const athleteStatusLabel =
+                      r.athleteStatus === "aprovado"
+                        ? "Aprovado"
+                        : r.athleteStatus === "convocado"
+                          ? "Convocado"
+                          : r.athleteStatus === "compareceu"
+                            ? "Compareceu"
+                            : r.athleteStatus === "nao_selecionado"
+                              ? "Não Selecionado"
+                              : r.athleteStatus === "inscrito"
+                                ? "Inscrito"
+                                : "Sem status"
+
+                    return (
+                      <Card
+                        key={r.id}
+                        className="border border-border/40 shadow-xs hover:border-border/80 transition-all overflow-hidden"
+                      >
+                        <CardContent className="p-4 space-y-3">
+                          {/* Top row: Athlete identity and Quick Info */}
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div className="flex items-start gap-3 min-w-0">
+                              <Avatar
+                                className="w-12 h-12 border border-border cursor-pointer hover:opacity-85 shrink-0"
+                                onClick={() => navigate(`/profile/${r.userId}`)}
+                              >
+                                <AvatarImage src={r.participant?.avatar} />
+                                <AvatarFallback>
+                                  {r.participant?.name?.[0] || "A"}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <h4
+                                    onClick={() =>
+                                      navigate(`/profile/${r.userId}`)
+                                    }
+                                    className="font-bold text-sm sm:text-base text-foreground hover:text-primary cursor-pointer transition-colors"
+                                  >
+                                    {r.participant?.name}
+                                  </h4>
+
+                                  {/* Attendance badge */}
+                                  {r.attendance === "present" && (
+                                    <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30 text-[10px] font-bold">
+                                      <UserCheck className="w-3 h-3 mr-1" />
+                                      Presente
+                                    </Badge>
+                                  )}
+                                  {r.attendance === "absent" && (
+                                    <Badge className="bg-red-500/10 text-red-600 border-red-500/30 text-[10px] font-bold">
+                                      <UserX className="w-3 h-3 mr-1" />
+                                      Ausente
+                                    </Badge>
+                                  )}
+
+                                  {/* Athlete status badge */}
+                                  {r.athleteStatus && (
+                                    <Badge
+                                      variant="outline"
+                                      className={
+                                        r.athleteStatus === "aprovado" ||
+                                        r.athleteStatus === "convocado"
+                                          ? "bg-amber-500/10 text-amber-500 border-amber-500/40 text-[10px] font-bold"
+                                          : r.athleteStatus ===
+                                              "nao_selecionado"
+                                            ? "bg-zinc-500/10 text-zinc-500 border-zinc-500/30 text-[10px]"
+                                            : "bg-blue-500/10 text-blue-500 border-blue-500/30 text-[10px]"
+                                      }
+                                    >
+                                      {athleteStatusLabel}
+                                    </Badge>
+                                  )}
+                                </div>
+
+                                <p className="text-xs text-muted-foreground mt-0.5">
+                                  <strong className="text-foreground/90">
+                                    {r.participant?.sport || "Atleta"}
+                                  </strong>
+                                  {r.participant?.position &&
+                                    ` • ${r.participant.position}`}
+                                  {r.participant?.city &&
+                                    ` • ${r.participant.city}/${r.participant.state || ""}`}
+                                </p>
+
+                                <p className="text-[11px] text-primary truncate font-medium mt-0.5">
+                                  Peneira: {r.eventTitle}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Quick profile actions */}
+                            <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="h-8 text-xs"
+                                onClick={() => navigate(`/profile/${r.userId}`)}
+                              >
+                                Ver Perfil
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                className="h-8 text-xs"
+                                onClick={() =>
+                                  navigate(`/messages/user-${r.userId}`)
+                                }
+                              >
+                                <MessageSquare className="w-3.5 h-3.5 mr-1" />
+                                Mensagem
+                              </Button>
+                            </div>
+                          </div>
+
+                          {/* Interactive Controls Row: Attendance + Status + Evaluation */}
+                          <div className="pt-2 border-t border-border/40 grid grid-cols-1 sm:grid-cols-3 gap-2.5 items-center">
+                            {/* Attendance toggle buttons */}
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[11px] font-bold text-muted-foreground shrink-0 w-16">
+                                Presença:
+                              </span>
+                              <div className="flex items-center gap-1 flex-1">
+                                <Button
+                                  size="sm"
+                                  variant={
+                                    r.attendance === "present"
+                                      ? "default"
+                                      : "outline"
+                                  }
+                                  disabled={isUpdating}
+                                  onClick={() =>
+                                    handleAttendanceChange(r, "present")
+                                  }
+                                  className={`h-8 flex-1 text-xs ${
+                                    r.attendance === "present"
+                                      ? "bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+                                      : "border-border/60 hover:bg-emerald-500/10 hover:text-emerald-600"
+                                  }`}
+                                >
+                                  <UserCheck className="w-3.5 h-3.5 mr-1" />
+                                  Presente
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant={
+                                    r.attendance === "absent"
+                                      ? "default"
+                                      : "outline"
+                                  }
+                                  disabled={isUpdating}
+                                  onClick={() =>
+                                    handleAttendanceChange(r, "absent")
+                                  }
+                                  className={`h-8 flex-1 text-xs ${
+                                    r.attendance === "absent"
+                                      ? "bg-red-600 hover:bg-red-700 text-white font-bold"
+                                      : "border-border/60 hover:bg-red-500/10 hover:text-red-600"
+                                  }`}
+                                >
+                                  <UserX className="w-3.5 h-3.5 mr-1" />
+                                  Ausente
+                                </Button>
+                              </div>
+                            </div>
+
+                            {/* Athlete status selector */}
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[11px] font-bold text-muted-foreground shrink-0">
+                                Status:
+                              </span>
+                              <div className="flex-1">
+                                <Select
+                                  value={r.athleteStatus || "inscrito"}
+                                  disabled={isUpdating}
+                                  onValueChange={(val) =>
+                                    handleAthleteStatusChange(
+                                      r,
+                                      val as AthleteEvaluationStatus,
+                                    )
+                                  }
+                                >
+                                  <SelectTrigger className="h-8 text-xs bg-background">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="inscrito">
+                                      Inscrito
+                                    </SelectItem>
+                                    <SelectItem value="compareceu">
+                                      Compareceu
+                                    </SelectItem>
+                                    <SelectItem value="aprovado">
+                                      Aprovado ⭐
+                                    </SelectItem>
+                                    <SelectItem value="convocado">
+                                      Convocado 🏆
+                                    </SelectItem>
+                                    <SelectItem value="nao_selecionado">
+                                      Não Selecionado
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+
+                            {/* Open Evaluation modal button */}
+                            <div className="flex justify-end">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                  setEvaluationModalReg(r)
+                                  setIsEvaluationOpen(true)
+                                }}
+                                className="w-full sm:w-auto h-8 text-xs font-bold border-amber-500/40 text-amber-500 hover:bg-amber-500/10 gap-1.5"
+                              >
+                                <Award className="w-3.5 h-3.5" />
+                                Avaliação Técnica (1–10)
+                              </Button>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )
+                  })}
+                </div>
+              )
+            })()
+          )}
+        </TabsContent>
 
         {/* TAB 1: Peneiras & Eventos Oficiais */}
         <TabsContent value="events" className="space-y-3">
@@ -788,6 +1231,14 @@ export default function ChampionshipsList() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Tryout Evaluation Modal */}
+      <TryoutEvaluationModal
+        open={isEvaluationOpen}
+        onOpenChange={setIsEvaluationOpen}
+        registration={evaluationModalReg}
+        currentUserId={user?.id || ""}
+      />
     </div>
   )
 }
