@@ -425,14 +425,14 @@ export default function Move() {
         ) : videos.length > 0 ? (
           <>
             {videos.map((video, index) => (
-              <div key={video.id} className="h-full w-full snap-start">
+              <div key={video.id} className="h-full w-full snap-start relative">
                 <VideoCard
                   video={video}
                   isActive={index === activeIndex}
-                  shouldPreload={index === activeIndex + 1}
+                  shouldPreload={Math.abs(index - activeIndex) <= 1}
                 />
               </div>
-            ))}
+            ))}{" "}
             {loadingMore && (
               <div className="h-20 w-full flex items-center justify-center text-white bg-zinc-950">
                 <Loader2 className="h-6 w-6 text-primary animate-spin" />

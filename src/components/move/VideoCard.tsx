@@ -11,6 +11,8 @@ import {
   Volume2,
   VolumeX,
   Loader2,
+  AlertCircle,
+  RefreshCw,
 } from "lucide-react"
 import { AiAnalysisDrawer } from "@/components/AiAnalysisDrawer"
 import { CommentsSheet } from "@/components/CommentsSheet"
@@ -63,6 +65,8 @@ export function VideoCard({
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
+  const [hasError, setHasError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
 
   const [showAnalysis, setShowAnalysis] = useState(false)
@@ -76,40 +80,70 @@ export function VideoCard({
     false,
   )
 
+  // Reset error when URL changes
+  useEffect(() => {
+    setHasError(false)
+    setErrorMessage(null)
+    setIsLoading(true)
+  }, [video.url])
+
   // Handle Active State Changes
   useEffect(() => {
+    const videoEl = videoRef.current
+    if (!videoEl) return
+
     if (isActive) {
-      const playPromise = videoRef.current?.play()
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlaying(true)
-          })
-          .catch((error) => {
-            console.error("Autoplay prevented:", error)
-            setIsPlaying(false)
-            // If failed (likely due to unmuted), try muted
-            // We check videoRef.current.muted directly to avoid adding isMuted to dependency array
-            if (videoRef.current && !videoRef.current.muted) {
-              setIsMuted(true)
-              videoRef.current.muted = true
-              videoRef.current
-                .play()
-                .then(() => setIsPlaying(true))
-                .catch(() => {})
-            }
-          })
+      // Reset error flag when becoming active if it wasn't a permanent failure
+      const attemptPlay = () => {
+        // Enforce muted on initial programmatic autoplay (required by modern mobile & desktop browsers)
+        videoEl.muted = isMuted
+        const playPromise = videoEl.play()
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlaying(true)
+              setIsLoading(false)
+            })
+            .catch((error: any) => {
+              // NotAllowedError is typical if unmuted autoplay is blocked by user agent
+              if (error?.name === "NotAllowedError") {
+                if (!videoEl.muted) {
+                  setIsMuted(true)
+                  videoEl.muted = true
+                  videoEl
+                    .play()
+                    .then(() => {
+                      setIsPlaying(true)
+                      setIsLoading(false)
+                    })
+                    .catch((err2) => {
+                      console.warn(
+                        "[VideoCard] Autoplay silenciado também recusado:",
+                        err2,
+                      )
+                      setIsPlaying(false)
+                    })
+                }
+              } else if (error?.name !== "AbortError") {
+                console.warn("[VideoCard] Erro ao reproduzir:", error)
+                setIsPlaying(false)
+              }
+            })
+        }
       }
+
+      attemptPlay()
     } else {
-      videoRef.current?.pause()
+      videoEl.pause()
       setIsPlaying(false)
-      if (videoRef.current) {
-        videoRef.current.currentTime = 0
+      // Paused and inactive: rewind slightly for clean next view
+      if (!Number.isNaN(videoEl.currentTime)) {
+        videoEl.currentTime = 0
       }
     }
-  }, [isActive])
+  }, [isActive, isMuted, video.url])
 
-  // Sync mute state
+  // Sync mute state directly
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.muted = isMuted
@@ -117,14 +151,48 @@ export function VideoCard({
   }, [isMuted])
 
   const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause()
-        setIsPlaying(false)
-      } else {
-        videoRef.current.play()
-        setIsPlaying(true)
+    const videoEl = videoRef.current
+    if (!videoEl) return
+
+    if (isPlaying) {
+      videoEl.pause()
+      setIsPlaying(false)
+    } else {
+      setHasError(false)
+      const playPromise = videoEl.play()
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true)
+            setIsLoading(false)
+          })
+          .catch((err) => {
+            console.warn("[VideoCard] Falha ao dar play manual:", err)
+            setIsPlaying(false)
+          })
       }
+    }
+  }
+
+  const handleRetry = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    const videoEl = videoRef.current
+    if (!videoEl) return
+    setHasError(false)
+    setErrorMessage(null)
+    setIsLoading(true)
+    videoEl.load()
+    const playPromise = videoEl.play()
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setIsPlaying(true)
+          setIsLoading(false)
+        })
+        .catch(() => {
+          // If still blocked, user can tap play overlay
+          setIsPlaying(false)
+        })
     }
   }
 
@@ -149,12 +217,67 @@ export function VideoCard({
     }
   }
 
-  const handleLoadStart = () => setIsLoading(true)
-  const handleCanPlay = () => setIsLoading(false)
-  const handleWaiting = () => setIsLoading(true)
+  const handleLoadStart = () => {
+    setIsLoading(true)
+    setHasError(false)
+  }
+
+  const handleLoadedMetadata = () => {
+    // Metadata loaded (duration, dimensions)
+    setHasError(false)
+  }
+
+  const handleCanPlay = () => {
+    setIsLoading(false)
+    setHasError(false)
+  }
+
+  const handleWaiting = () => {
+    setIsLoading(true)
+  }
+
   const handlePlaying = () => {
     setIsLoading(false)
     setIsPlaying(true)
+    setHasError(false)
+  }
+
+  const handlePause = () => {
+    setIsPlaying(false)
+  }
+
+  const handleError = () => {
+    const videoEl = videoRef.current
+    const mediaError = videoEl?.error
+    let detail = "Não foi possível carregar o vídeo."
+    if (mediaError) {
+      switch (mediaError.code) {
+        case mediaError.MEDIA_ERR_ABORTED:
+          detail = "Carregamento interrompido pelo usuário."
+          break
+        case mediaError.MEDIA_ERR_NETWORK:
+          detail = "Erro de rede ao baixar o vídeo."
+          break
+        case mediaError.MEDIA_ERR_DECODE:
+          detail = "Erro ao decodificar formato do vídeo."
+          break
+        case mediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+          detail =
+            "Formato ou fonte de vídeo não suportada (verifique URL/CORS)."
+          break
+        default:
+          detail = mediaError.message || detail
+      }
+    }
+    console.error("[VideoCard] Erro de mídia:", {
+      code: mediaError?.code,
+      message: mediaError?.message,
+      url: video.url,
+    })
+    setIsLoading(false)
+    setIsPlaying(false)
+    setHasError(true)
+    setErrorMessage(detail)
   }
 
   const enrichedAiData = {
@@ -178,7 +301,7 @@ export function VideoCard({
       <video
         ref={videoRef}
         src={video.url || undefined}
-        poster={video.thumbnail || undefined}
+        poster={!isPlaying ? video.thumbnail || undefined : undefined}
         className="absolute inset-0 w-full h-full object-cover bg-black cursor-pointer"
         loop
         playsInline
@@ -188,15 +311,45 @@ export function VideoCard({
         onClick={togglePlay}
         onTimeUpdate={handleTimeUpdate}
         onLoadStart={handleLoadStart}
+        onLoadedMetadata={handleLoadedMetadata}
         onCanPlay={handleCanPlay}
         onWaiting={handleWaiting}
         onPlaying={handlePlaying}
+        onPause={handlePause}
+        onError={handleError}
       />
 
       {/* Loading Overlay */}
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/20 z-10 pointer-events-none">
-          <Loader2 className="w-10 h-10 text-white animate-spin" />
+      {isLoading && !hasError && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 z-10 pointer-events-none gap-2">
+          <Loader2 className="w-10 h-10 text-primary animate-spin" />
+          <span className="text-white/80 text-xs font-medium drop-shadow-md">
+            Carregando lance...
+          </span>
+        </div>
+      )}
+
+      {/* Error Overlay with Retry */}
+      {hasError && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 z-20 p-6 text-center">
+          <div className="p-3 bg-red-500/20 rounded-full border border-red-500/40 mb-3">
+            <AlertCircle className="w-8 h-8 text-red-400" />
+          </div>
+          <h4 className="text-white font-bold text-sm mb-1">
+            Falha na reprodução
+          </h4>
+          <p className="text-white/70 text-xs mb-4 max-w-xs leading-relaxed">
+            {errorMessage || "Não foi possível carregar o vídeo."}
+          </p>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleRetry}
+            className="border-white/30 text-white hover:bg-white/10 gap-2 text-xs"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            Tentar novamente
+          </Button>
         </div>
       )}
 
@@ -204,9 +357,12 @@ export function VideoCard({
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80 pointer-events-none" />
 
       {/* Play/Pause Center Icon Overlay */}
-      {!isPlaying && !isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-          <div className="bg-black/40 rounded-full p-4 backdrop-blur-sm animate-in fade-in zoom-in duration-300">
+      {!isPlaying && !isLoading && !hasError && (
+        <div
+          className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 cursor-pointer"
+          onClick={togglePlay}
+        >
+          <div className="bg-black/50 rounded-full p-4 backdrop-blur-sm animate-in fade-in zoom-in duration-300 border border-white/20 shadow-2xl">
             <Play className="h-12 w-12 text-white fill-white ml-1" />
           </div>
         </div>
