@@ -189,3 +189,13 @@ export function runIntegrityCheck() {
   }
   return results
 }
+
+// Auto-run if executed directly via node scripts/verify-icons.mjs
+if (process.argv[1] && process.argv[1].endsWith("verify-icons.mjs")) {
+  try {
+    runIntegrityCheck()
+  } catch (err) {
+    console.error(err.message)
+    process.exit(1)
+  }
+}
