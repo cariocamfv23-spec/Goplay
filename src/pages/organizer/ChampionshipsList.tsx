@@ -42,6 +42,8 @@ import {
   type AthleteEvaluationStatus,
 } from "@/services/events"
 import { TryoutEvaluationModal } from "@/components/organizer/TryoutEvaluationModal"
+import MassEmailManager from "@/components/organizer/MassEmailManager"
+import { Mail } from "lucide-react"
 import { toast } from "sonner"
 import {
   AlertDialog,
@@ -60,7 +62,7 @@ export default function ChampionshipsList() {
   const navigate = useNavigate()
   const [search, setSearch] = useState("")
   const [activeTab, setActiveTab] =
-    useState<"peneiras" | "events" | "registrations" | "tournaments">(
+    useState<"peneiras" | "events" | "registrations" | "emails" | "tournaments">(
       "peneiras",
     )
   const [statusFilter, setStatusFilter] =
@@ -447,24 +449,31 @@ export default function ChampionshipsList() {
         onValueChange={(val) => setActiveTab(val as any)}
         className="w-full"
       >
-        <TabsList className="w-full h-auto p-1 bg-secondary/50 rounded-xl mb-4 grid grid-cols-2 sm:grid-cols-4 gap-1">
+        <TabsList className="w-full h-auto p-1 bg-secondary/50 rounded-xl mb-4 grid grid-cols-2 sm:grid-cols-5 gap-1">
           <TabsTrigger
             value="peneiras"
             className="rounded-lg text-xs font-semibold py-2 data-[state=active]:bg-background data-[state=active]:shadow-xs text-amber-500 font-bold"
           >
-            ⭐ Peneiras Operantes
+            ⭐ Peneiras
           </TabsTrigger>
           <TabsTrigger
             value="events"
             className="rounded-lg text-xs font-semibold py-2 data-[state=active]:bg-background data-[state=active]:shadow-xs"
           >
-            Meus Eventos ({realEvents.length})
+            Eventos ({realEvents.length})
           </TabsTrigger>
           <TabsTrigger
             value="registrations"
             className="rounded-lg text-xs font-semibold py-2 data-[state=active]:bg-background data-[state=active]:shadow-xs"
           >
             Inscrições ({realRegistrations.length})
+          </TabsTrigger>
+          <TabsTrigger
+            value="emails"
+            className="rounded-lg text-xs font-semibold py-2 data-[state=active]:bg-background data-[state=active]:shadow-xs text-primary font-bold flex items-center justify-center gap-1"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            E-mails
           </TabsTrigger>
           <TabsTrigger
             value="tournaments"
@@ -1105,6 +1114,11 @@ export default function ChampionshipsList() {
               </Card>
             ))
           )}
+        </TabsContent>
+
+        {/* TAB: E-mails em Massa */}
+        <TabsContent value="emails" className="space-y-4">
+          <MassEmailManager />
         </TabsContent>
 
         {/* TAB 3: Torneios e Chaveamentos */}

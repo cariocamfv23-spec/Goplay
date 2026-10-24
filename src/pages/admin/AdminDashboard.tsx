@@ -19,6 +19,7 @@ import {
   UserCheck,
   Calendar,
   Share2,
+  Mail,
   TrendingUp,
   CheckCircle2,
   XCircle,
@@ -44,6 +45,7 @@ import {
   type ReportStatus,
 } from "@/services/moderation"
 import { supabase } from "@/lib/supabase/client"
+import MassEmailManager from "@/components/organizer/MassEmailManager"
 import { toast } from "sonner"
 
 export default function AdminDashboard() {
@@ -257,6 +259,13 @@ export default function AdminDashboard() {
           <TabsTrigger value="users" className="gap-2 text-xs font-semibold">
             <Users className="w-4 h-4" />
             Base de Usuários ({realProfiles.length})
+          </TabsTrigger>
+          <TabsTrigger
+            value="emails"
+            className="gap-2 text-xs font-semibold text-primary"
+          >
+            <Mail className="w-4 h-4" />
+            E-mails em Massa
           </TabsTrigger>
         </TabsList>
 
@@ -728,6 +737,11 @@ export default function AdminDashboard() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Tab: E-mails em Massa */}
+        <TabsContent value="emails" className="space-y-4 animate-fade-in">
+          <MassEmailManager />
         </TabsContent>
 
         {/* Tab 3: Usuários Registrados */}

@@ -1,5 +1,6 @@
 {
   "_versions": {
-    "send-push": 53
+    "send-push": 53,
+    "send-mass-email": 1
   }
 }

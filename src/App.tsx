@@ -46,6 +46,7 @@ const AppMap = lazy(() => import("./pages/AppMap"))
 
 const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"))
 const PrivacyPolicy = lazy(() => import("./pages/legal/PrivacyPolicy"))
+const UnsubscribePage = lazy(() => import("./pages/legal/UnsubscribePage"))
 
 const Home = lazy(() => import("./pages/home/Home"))
 const Feed = lazy(() => import("./pages/feed/Feed"))
@@ -265,6 +266,10 @@ const App = () => {
                     {/* Public Legal & Compliance Routes */}
                     <Route path="/terms" element={<TermsOfService />} />
                     <Route path="/privacy" element={<PrivacyPolicy />} />
+                    <Route
+                      path="/unsubscribe/:userId"
+                      element={<UnsubscribePage />}
+                    />
 
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
