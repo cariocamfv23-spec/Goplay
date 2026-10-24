@@ -136,7 +136,7 @@ export async function runTryoutAcceptanceTests(): Promise<TestResult[]> {
 
     // Step 5: Verify RLS policy constraints on event_evaluations
     // An evaluation with visible_to_athlete = false is hidden from athlete query via RLS policy
-    const { data: testHiddenEval, error: hiddenErr } =
+    const { data: _testHiddenEval, error: _hiddenErr } =
       await eventsService.saveAthleteEvaluation({
         eventId: testEventId,
         athleteId: athleteBId,
