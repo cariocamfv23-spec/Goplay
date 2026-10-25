@@ -91,6 +91,7 @@ function postItemToVideoData(
     likes: post.likesCount,
     comments: post.commentsCount,
     shares: 0,
+    isLiked: post.isLiked,
     user: {
       id: post.user.id,
       name: post.user.name,
@@ -267,6 +268,29 @@ export default function Move() {
     }
   }, [fetchVideos])
 
+  // Callbacks para manter os contadores sincronizados no array de vídeos do MOVE
+  const handleLikeChange = useCallback(
+    (videoId: string, isLiked: boolean, likesCount: number) => {
+      setVideos((prev) =>
+        prev.map((v) =>
+          v.id === videoId ? { ...v, isLiked, likes: likesCount } : v,
+        ),
+      )
+    },
+    [],
+  )
+
+  const handleCommentsCountChange = useCallback(
+    (videoId: string, commentsCount: number) => {
+      setVideos((prev) =>
+        prev.map((v) =>
+          v.id === videoId ? { ...v, comments: commentsCount } : v,
+        ),
+      )
+    },
+    [],
+  )
+
   // Tratamento da rolagem vertical para identificar o vídeo ativo e carregar mais vídeos
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const container = e.currentTarget
@@ -430,6 +454,8 @@ export default function Move() {
                   video={video}
                   isActive={index === activeIndex}
                   shouldPreload={Math.abs(index - activeIndex) <= 1}
+                  onLikeChange={handleLikeChange}
+                  onCommentsCountChange={handleCommentsCountChange}
                 />
               </div>
             ))}{" "}

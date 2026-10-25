@@ -39,6 +39,7 @@ interface CommentsSheetProps {
   onOpenChange: (open: boolean) => void
   postId?: string | number
   videoId?: string
+  onCommentCountChange?: (count: number) => void
 }
 
 const MOCK_COMMENTS: Comment[] = [
@@ -130,8 +131,11 @@ const DEFAULT_FALLBACK_COMMENTS: Comment[] = [
 export function CommentsSheet({
   open,
   onOpenChange,
-  postId,
+  postId: directPostId,
+  videoId,
+  onCommentCountChange,
 }: CommentsSheetProps) {
+  const postId = directPostId || videoId
   const { user, profile } = useAuth()
   const [newComment, setNewComment] = useState("")
   const [submitting, setSubmitting] = useState(false)
@@ -196,6 +200,18 @@ export function CommentsSheet({
 
   const displayComments = isSupabasePost ? mappedRealComments : mockComments
   const loading = isSupabasePost ? realtimeLoading : false
+
+  // Notifica o componente pai sobre a quantidade atualizada de comentários reais
+  useEffect(() => {
+    if (isSupabasePost && !realtimeLoading && onCommentCountChange) {
+      onCommentCountChange(mappedRealComments.length)
+    }
+  }, [
+    isSupabasePost,
+    realtimeLoading,
+    mappedRealComments.length,
+    onCommentCountChange,
+  ])
 
   const handleSend = async () => {
     if (!newComment.trim() || submitting) return

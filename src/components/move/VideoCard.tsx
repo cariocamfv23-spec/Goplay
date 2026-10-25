@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react"
+import { useNavigate } from "react-router-dom"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -26,6 +27,9 @@ import {
 import { NostalgiaFilter } from "@/components/NostalgiaFilter"
 import { SportsReactionButton } from "@/components/move/SportsReactionButton"
 import { useLikeInteraction } from "@/hooks/useLikeInteraction"
+import { useAuth } from "@/hooks/use-auth"
+import { feedService } from "@/services/feed"
+import { connectionService } from "@/services/connections"
 import { cn } from "@/lib/utils"
 
 export interface VideoData {
@@ -37,6 +41,7 @@ export interface VideoData {
   likes: number
   comments: number
   shares: number
+  isLiked?: boolean
   user: {
     id: string
     name: string
@@ -54,13 +59,19 @@ interface VideoCardProps {
   video: VideoData
   isActive: boolean
   shouldPreload?: boolean
+  onLikeChange?: (videoId: string, isLiked: boolean, likesCount: number) => void
+  onCommentsCountChange?: (videoId: string, commentsCount: number) => void
 }
 
 export function VideoCard({
   video,
   isActive,
   shouldPreload = false,
+  onLikeChange,
+  onCommentsCountChange,
 }: VideoCardProps) {
+  const navigate = useNavigate()
+  const { user: authUser } = useAuth()
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(true)
@@ -75,11 +86,114 @@ export function VideoCard({
   const [showShare, setShowShare] = useState(false)
   const [isFollowing, setIsFollowing] = useState(video.user.isFollowing)
 
-  const { isLiked, likeCount, handleLike } = useLikeInteraction(
+  const isSupabaseVideo =
+    typeof video.id === "string" &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      video.id,
+    )
+
+  // Estados locais para curtida e contagem de comentários reais
+  const [realLiked, setRealLiked] = useState<boolean>(Boolean(video.isLiked))
+  const [realLikesCount, setRealLikesCount] = useState<number>(video.likes || 0)
+  const [commentsCount, setCommentsCount] = useState<number>(
+    video.comments || 0,
+  )
+
+  // Sincroniza com as propriedades recebidas quando o post mudar
+  useEffect(() => {
+    setRealLiked(Boolean(video.isLiked))
+    setRealLikesCount(video.likes || 0)
+    setCommentsCount(video.comments || 0)
+    setIsFollowing(video.user.isFollowing)
+  }, [
+    video.id,
+    video.isLiked,
+    video.likes,
+    video.comments,
+    video.user.isFollowing,
+  ])
+
+  const {
+    isLiked: mockIsLiked,
+    likeCount: mockLikeCount,
+    handleLike: handleMockLike,
+  } = useLikeInteraction(
     { content: video.title, hashtags: [video.modality] },
     video.likes,
-    false,
+    Boolean(video.isLiked),
   )
+
+  const effectiveLiked = isSupabaseVideo ? realLiked : mockIsLiked
+  const effectiveLikeCount = isSupabaseVideo ? realLikesCount : mockLikeCount
+
+  const handleLikeClick = async () => {
+    if (isSupabaseVideo && authUser?.id) {
+      // Efeito sonoro temático do esporte no like
+      handleMockLike()
+
+      const previousLiked = realLiked
+      const previousCount = realLikesCount
+      const nextLiked = !previousLiked
+      const nextCount = nextLiked
+        ? previousCount + 1
+        : Math.max(0, previousCount - 1)
+
+      // Atualização otimista imediata
+      setRealLiked(nextLiked)
+      setRealLikesCount(nextCount)
+      if (onLikeChange) {
+        onLikeChange(video.id, nextLiked, nextCount)
+      }
+
+      const { isLiked: confirmedLiked, error } = await feedService.toggleLike(
+        video.id,
+        authUser.id,
+        previousLiked,
+      )
+
+      if (error) {
+        // Reversão em caso de erro
+        setRealLiked(previousLiked)
+        setRealLikesCount(previousCount)
+        if (onLikeChange) {
+          onLikeChange(video.id, previousLiked, previousCount)
+        }
+        toast.error("Não foi possível registrar a curtida.")
+      } else {
+        // Sincroniza com retorno se necessário
+        if (confirmedLiked !== nextLiked) {
+          setRealLiked(confirmedLiked)
+          const adjustedCount = confirmedLiked
+            ? previousCount + 1
+            : Math.max(0, previousCount - 1)
+          setRealLikesCount(adjustedCount)
+          if (onLikeChange) {
+            onLikeChange(video.id, confirmedLiked, adjustedCount)
+          }
+        }
+      }
+    } else if (isSupabaseVideo && !authUser?.id) {
+      toast.info("Faça login para curtir os lances no GoPlay.")
+    } else {
+      handleMockLike()
+    }
+  }
+
+  const handleOpenAuthorProfile = (e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation()
+    }
+    const authorId = video.user.id
+    if (!authorId) return
+
+    // Se for o próprio usuário autenticado, abre /profile/me
+    if (authUser?.id && authorId === authUser.id) {
+      navigate("/profile/me")
+      return
+    }
+
+    navigate(`/profile/${authorId}`)
+  }
 
   // Reset error when URL changes
   useEffect(() => {
@@ -225,12 +339,32 @@ export function VideoCard({
     }
   }
 
-  const handleFollow = (e: React.MouseEvent) => {
+  const handleFollow = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    setIsFollowing(!isFollowing)
-    toast.success(
-      isFollowing ? "Deixou de seguir" : `Você agora segue ${video.user.name}`,
-    )
+    if (!authUser?.id) {
+      toast.info("Faça login para seguir atletas.")
+      return
+    }
+    if (video.user.id === authUser.id) {
+      return
+    }
+
+    const previousState = isFollowing
+    const nextState = !previousState
+    setIsFollowing(nextState)
+
+    try {
+      if (nextState) {
+        await connectionService.follow(authUser.id, video.user.id)
+        toast.success(`Você agora segue ${video.user.name}`)
+      } else {
+        await connectionService.unfollow(authUser.id, video.user.id)
+        toast.success(`Deixou de seguir ${video.user.name}`)
+      }
+    } catch {
+      setIsFollowing(previousState)
+      toast.error("Erro ao atualizar seguidor.")
+    }
   }
 
   const handleTimeUpdate = () => {
@@ -446,14 +580,19 @@ export function VideoCard({
       <div className="absolute right-2 bottom-24 flex flex-col items-center gap-6 z-20 pb-4">
         {/* Profile Avatar */}
         <div className="relative mb-2">
-          <Avatar className="h-12 w-12 border-2 border-white shadow-lg cursor-pointer transition-transform hover:scale-110">
-            <AvatarImage src={video.user.avatar} />
+          <Avatar
+            onClick={handleOpenAuthorProfile}
+            className="h-12 w-12 border-2 border-white shadow-lg cursor-pointer transition-transform hover:scale-110"
+            title={`Ver perfil de ${video.user.name}`}
+          >
+            <AvatarImage src={video.user.avatar} alt={video.user.name} />
             <AvatarFallback>{video.user.name[0]}</AvatarFallback>
           </Avatar>
-          {!isFollowing && (
+          {!isFollowing && (!authUser?.id || video.user.id !== authUser.id) && (
             <button
               onClick={handleFollow}
               className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-primary text-white rounded-full p-0.5 shadow-md hover:bg-primary/90 transition-colors"
+              title={`Seguir ${video.user.name}`}
             >
               <Plus className="h-3 w-3" />
             </button>
@@ -462,9 +601,9 @@ export function VideoCard({
 
         <SportsReactionButton
           modality={video.modality}
-          isLiked={isLiked}
-          likesCount={likeCount}
-          onLike={handleLike}
+          isLiked={effectiveLiked}
+          likesCount={effectiveLikeCount}
+          onLike={handleLikeClick}
         />
 
         <div className="flex flex-col items-center gap-1">
@@ -473,11 +612,12 @@ export function VideoCard({
             variant="ghost"
             className="h-12 w-12 rounded-full bg-transparent hover:bg-transparent text-white"
             onClick={() => setShowComments(true)}
+            title="Ver comentários"
           >
             <MessageCircle className="h-8 w-8 drop-shadow-md" />
           </Button>
           <span className="text-white text-xs font-bold drop-shadow-md">
-            {video.comments}
+            {commentsCount}
           </span>
         </div>
 
@@ -513,9 +653,15 @@ export function VideoCard({
       {/* Bottom Info (Left) */}
       <div className="absolute bottom-0 left-0 right-16 p-4 pb-6 z-20 pointer-events-none text-left">
         <div className="pointer-events-auto">
-          <h3 className="text-white font-bold text-base shadow-black drop-shadow-md mb-1">
-            {video.user.name}
-          </h3>
+          <button
+            type="button"
+            onClick={handleOpenAuthorProfile}
+            className="text-left group flex items-center gap-1.5"
+          >
+            <h3 className="text-white font-bold text-base shadow-black drop-shadow-md mb-1 group-hover:text-primary transition-colors cursor-pointer">
+              {video.user.name}
+            </h3>
+          </button>
           <p className="text-white/90 text-sm mb-3 line-clamp-2 drop-shadow-md leading-snug">
             {video.title}{" "}
             <span className="text-white/70 font-normal">
@@ -596,6 +742,12 @@ export function VideoCard({
         open={showComments}
         onOpenChange={setShowComments}
         videoId={video.id}
+        onCommentCountChange={(count) => {
+          setCommentsCount(count)
+          if (onCommentsCountChange) {
+            onCommentsCountChange(video.id, count)
+          }
+        }}
       />
 
       <ShareDialog
